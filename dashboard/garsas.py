@@ -3,10 +3,11 @@
 Garso perklausos puslapis (vidinis, tik Tailscale).
 
 Tikslas: lietuvišką žodyną turi patvirtinti lietuviškai kalbantis žmogus.
-Automatinė patikra (`scripts/verify_audio.py`) pagauna grubias klaidas, bet
-galutinį sprendimą apie tartį priima klausytojas. Šiame puslapyje kiekvienas
+Joks automatinis atpažintuvas negali pasakyti, ar kirtis padėtas teisingai —
+tą girdi tik gimtakalbis. Todėl šiame puslapyje kiekvienas
 žodis/skiemenis/sakinys grojamas vienu paspaudimu, o abejotini pažymimi vienu
-mygtuku; pažymėtieji pergeneruojami (`scripts/fix_flagged_audio.py`).
+mygtuku; pažymėtieji pergeneruojami kitu varikliu
+(`scripts/fix_flagged_audio.py`).
 """
 
 from __future__ import annotations

@@ -314,3 +314,22 @@ svg { max-width: 100%; height: auto; }
   .hero-art { display: none; }
   body { font-size: 1.02rem; }
 }
+
+/* Užuomina, kai naršyklė blokuoja garsą (rodoma kartą, dingsta pati) */
+.sound-hint {
+  position: fixed;
+  left: 50%;
+  bottom: max(1.2rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 60;
+  max-width: min(92vw, 26rem);
+  padding: .85rem 1.1rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--r-md, 16px);
+  background: var(--paper, #fdf8ef);
+  box-shadow: 0 10px 24px rgb(0 0 0 / .18);
+  font-weight: 700;
+  text-align: center;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.sound-hint--out { opacity: 0; transform: translate(-50%, .6rem); }

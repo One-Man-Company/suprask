@@ -99,13 +99,58 @@ Klasės mokymosi tvarka gyvena `content/lt/grade-XX/path.json` (`sequence` sąra
 
 ## Garsas
 
-Lietuviškas garsas generuojamas iš anksto, ne naršyklėje:
+Lietuviškas garsas generuojamas iš anksto, ne naršyklėje.
 
-- `scripts/generate_audio.py` → `assets/audio/lt/{n|s}/<sha256-prefix>.mp3` (balsas `lt-LT-OnaNeural`, `edge-tts`);
-- `assets/js/speech.js` ieško teksto `assets/audio/lt/manifest.json` faile — **be `crypto.subtle`**, kad veiktų ir naršyklėse su griežtais privatumo skydais (Brave, Safari privatus režimas);
-- du variantai: `n` (normalus, −4 %, pitch +2 %) ir `s` (lėtas, −12 %, pitch +2 % — skiemenims ir atskiriems žodžiams);
-- `prime()` iš anksto įkelia modulio garso failus, kad pirmas paspaudimas negrotų tuščiai;
-- naršyklės balsas naudojamas tik jei teksto nėra manifests **ir** yra lietuviškas balsas; angliškas balsas lietuviško teksto neskaito.
+### Kodėl toks variklis
+
+Lietuvių kalboje **kirtis yra leksinis**: „kártis" (kartis pakarti) ir „kartìs" (kartis kartoti) skiriasi tik kirčiu, o rašyba ta pati. Todėl balsas, kuris kirtį *spėlioja*, natūraliai klysta maždaug puseje daugiažodžių atvejų — būtent tai lietuviškai kalbantis žmogus girdi kaip „neteisingą tarimą".
+
+Išnagrinėti variantai (2026-11):
+
+| Variklis | Kirtis | Kaina | Pastaba |
+|---|---|---|---|
+| Azure/Edge `lt-LT-Ona/LeonasNeural` | spėliojamas | nemokamas (edge-tts) | Microsoft skelbia MOS **4.35**, suprantamumą 99,25 % — žemiausia iš penkių to meto mažai išteklių kalbų (estų 4.52, latvių 4.51, airių 4.62) |
+| Google Chirp 3: HD `lt-LT` | spėliojamas | mokamas API | geriausia kokybės klasė, bet `lt-LT` neturi „custom pronunciation", tad kirčio taisyti negalima |
+| **Piper `lt_LT-reginute1`** | **iš žodyno** | nemokamas, lokalus | LIEPA studijinis korpusas (VU), **189 262 formų kirčio žodynas**, IPA su trimis kirčio ženklais |
+
+Pasirinktas **Piper**: vienintelis laisvai prieinamas balsas, kuris lietuvių kirčio ne spėlioja, o ima iš žodyno. Šį pasirinkimą remia ir tyrimai, rodantys, kad kirčio ženklai lietuvių sintezėje reikšmingai gerina kokybę (Kasparaitis ir kt., 2023, *Baltic J. Modern Computing* 11(2), DOI 10.22364/bjmc.2023.11.2.05).
+
+Azure balsas paliktas kaip **atsarginis** (`--engine edge`) — jei perklausoje žmogus pažymi konkretų žodį, `scripts/fix_flagged_audio.py` jam išbando alternatyvas ir palieka geriausią pagal atpažintuvo perskaitymą.
+
+### Kaip veikia
+
+- `scripts/generate_audio.py --engine piper` → `assets/audio/lt/{n|s}/<sha256-prefix>.mp3` (22 050 Hz, mono, 64 kbps);
+- du variantai: `n` (`length_scale` 1,05) ir `s` (1,30 — skiemenims ir atskiriems žodžiams);
+- `assets/js/speech.js` ieško teksto `assets/audio/lt/manifest.json` faile — **be `crypto.subtle`**, kad veiktų ir naršyklėse su griežtais privatumo skydais (Brave, Safari privatus režimas); groja vieną `<audio>` elementą, failus iš anksto parsisiųsdamas kaip Blob, todėl paspaudimas negali „nutilti";
+- `prime()` iš anksto įkelia modulio garso failus (iki 8 tekstų), kad pirmas paspaudimas negrotų tuščiai;
+- naršyklės balsas naudojamas tik jei teksto nėra manifests **ir** yra lietuviškas balsas; angliškas balsas lietuviško teksto neskaito;
+- `scripts/check_audio.py` (CI) — kiekvienas simuliacijų tariamas tekstas **privalo** turėti abu įrašus, kitaip build'as krenta.
+
+### Balso įdiegimas (vienkartinis)
+
+```bash
+pip install piper-tts onnxruntime
+mkdir -p ~/workspace/.tools/piper-lt && cd ~/workspace/.tools/piper-lt
+base=https://huggingface.co/RobertasTa/lt_LT-reginute1-medium/resolve/main
+for f in lt_LT-reginute1-medium.onnx lt_LT-reginute1-medium.onnx.json \
+         phonemize_lithuanian.py lt_kirciai.tsv lt_raides.tsv lt_kreipiniai.tsv \
+         skaiciu_pletiklis.py zodziai_trumpi.txt synth_reginute.py; do
+  curl -sL -O "$base/$f"
+done
+```
+
+Kitą katalogą nurodyk `SUPRASK_PIPER_DIR`.
+
+### Atribucija (privaloma pagal CC BY 4.0)
+
+- Balsas: **lt_LT-reginute1-medium**, autorius Robertas Tarasevičius, CC BY 4.0.
+- Korpusas: **LIEPA** (2013–2015), Vilniaus universitetas su Lietuvių kalbos institutu, LEU ir Šiaulių universitetu; paskelbtas `meldynamics/liepa-tts`, CC BY 4.0.
+- Kirčio žodynas: iš LIEPA anotacijų ir Arūno Smaliuko `g2p-lt-lexicon` (CC BY 4.0).
+- Garso failai sugeneruoti mašininiu būdu — tai nurodoma „Apie" puslapyje (ES AI aktas, 50 str.).
+
+### Perklausa (vidinė)
+
+`http://zoltanas.tail4bbf34.ts.net:9410/garsas` — kiekvienas žodis grojamas vienu paspaudimu, abejotini žymimi ✗. Pažymėtieji pergeneruojami: `python3 scripts/fix_flagged_audio.py`.
 
 ## Dashboard (vidinis)
 

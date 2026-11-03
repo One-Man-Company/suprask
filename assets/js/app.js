@@ -396,6 +396,7 @@ function viewAbout() {
       <p>Platforma remiasi oficialiomis Lietuvos bendrosiomis ugdymo programomis ir „Švietimo kelrodžio 2035“ (Švietimas #1) dešimties žingsnių kryptimi: mažiau temų, daugiau gylio; aiškūs mokymosi rezultatai; pagalba laiku; augimo mąstysena.</p>
       <p>Nereikia registracijos, nereikia el. pašto, nerenkami jokie duomenys. Pažanga saugoma tik tavo naršyklėje.</p>
       <p>Turinys platinamas pagal CC BY-SA 4.0, kodas — MIT licencija. Projektą kuria ir prižiūri atvira bendruomenė bei automatizuoti agentai, kurie nuolat tikrina, tyrinėja ir papildo medžiagą.</p>
+      <p><strong>Apie balsą.</strong> Žodžius taria mašininis lietuviškas balsas, sugeneruotas iš Vilniaus universiteto LIEPA studijinio korpuso (balsas <em>lt_LT-reginute1</em>, autorius Robertas Tarasevičius, CC BY 4.0). Kirtis imamas iš 189 262 žodžių formų kirčio žodyno, o ne spėliojamas — lietuvių kalboje kirtis keičia žodžio reikšmę. Visi garso įrašai yra mašininiai, ne žmogaus balso įrašai.</p>
       <p class="strand-meta">Pradėta 2026 m. lapkritį. Pirmoji pilna klasė — 1-oji.</p>
     </div>`;
 }
@@ -458,6 +459,20 @@ function heroArt() {
 
 /* ------------------------------------------------------------------ */
 bindHeaderToggle(document.getElementById("sound-toggle"), document.getElementById("sound-icon"));
+
+/* Jei naršyklė blokuoja garsą, pasakome tai žodžiais — o ne tyla. */
+let soundHintShown = false;
+window.addEventListener("suprask:sound-blocked", () => {
+  if (soundHintShown) return;
+  soundHintShown = true;
+  const hint = document.createElement("div");
+  hint.className = "sound-hint";
+  hint.setAttribute("role", "status");
+  hint.textContent = "Garsas užblokuotas. Paliesk ekraną dar kartą — tada įsijungs.";
+  document.body.appendChild(hint);
+  setTimeout(() => hint.classList.add("sound-hint--out"), 5000);
+  setTimeout(() => hint.remove(), 5600);
+});
 
 /* ---------- apsauga nuo amžino „Kraunama…" ----------
  * Jei naršyklė blokuoja API (Brave Shields: localStorage, crypto) arba

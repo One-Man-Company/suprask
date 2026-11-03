@@ -24,6 +24,9 @@ jobs:
       - name: Turinio validacija
         run: python3 scripts/validate_content.py
 
+      - name: Garso pilnumas
+        run: python3 scripts/check_audio.py
+
       - name: Simuliacijų registras
         run: |
           python3 - <<'PY'

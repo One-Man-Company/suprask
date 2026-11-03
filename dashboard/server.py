@@ -32,7 +32,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "agents"))
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import db  # noqa: E402
+import garsas  # noqa: E402
 
 HOST = os.environ.get("SUPRASK_DASH_HOST", "100.118.226.11")
 PORT = int(os.environ.get("SUPRASK_DASH_PORT", "9410"))
@@ -206,6 +208,16 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(row)
         if path == "/api/proposals":
             return self._json(db.proposals(100))
+        if path == "/garsas":
+            return self._send(200, garsas.HTML.encode("utf-8"))
+        if path == "/api/audio":
+            return self._json(garsas.items())
+        if path.startswith("/audio/"):
+            rel = urllib.parse.unquote(path[len("/audio/"):])
+            target = (garsas.AUDIO / rel).resolve()
+            if not str(target).startswith(str(garsas.AUDIO.resolve())) or not target.is_file():
+                return self._send(404, b'{"error":"nera"}', "application/json")
+            return self._send(200, target.read_bytes(), "audio/mpeg")
         return self._send(404, b"<h1>404</h1>")
 
     def do_POST(self):  # noqa: N802
@@ -228,6 +240,16 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"ok": False, "error": f"nežinomas vaidmuo {role}"})
             ok, msg = run_now(role)
             return self._json({"ok": ok, "message": msg})
+        if self.path == "/api/audio-flag":
+            text = str(payload.get("text", "")).strip()
+            status = str(payload.get("status", "")).strip()
+            if not text:
+                return self._json({"ok": False, "error": "nėra teksto"})
+            try:
+                garsas.set_flag(text, status)
+                return self._json({"ok": True})
+            except Exception as exc:  # noqa: BLE001
+                return self._json({"ok": False, "error": str(exc)})
         if self.path == "/api/proposal-status":
             try:
                 db.set_proposal_status(int(payload["id"]), str(payload["status"]))

@@ -20,7 +20,9 @@ import argparse
 import asyncio
 import hashlib
 import json
+import os
 import pathlib
+import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -33,10 +35,30 @@ VOICES = {"ona": "lt-LT-OnaNeural", "leonas": "lt-LT-LeonasNeural"}
 # −4 % ir −12 % skamba natūraliau nei −6 %/−16 %, o vaikui vis dar aiškiau už įprastą tempą.
 RATES = {"n": "-4%", "s": "-12%"}  # n = sakiniai, s = skiemenys / pavieniai žodžiai
 
+# --------------------------------------------------------------------------
+# Piper (lt_LT-reginute1) — PAGRINDINIS variklis.
+#
+# Kodėl ne debesų balsas: lietuvių kalboje kirtis yra leksinis („kártis" ir
+# „kartìs" skiriasi), o debesų varikliai kirtį SPĖLIOJA. Piper balsas
+# sugeneruotas iš Vilniaus universiteto LIEPA studijinio korpuso ir turi
+# 189 262 žodžių formų kirčio žodyną — kirtis imamas iš žodyno, ne spėjamas.
+# Tai vienintelis laisvai prieinamas balsas, kuris lietuvių kalbai kirtį
+# nustato iš esmės teisingai (žr. docs/ARCHITEKTURA.md, „Garsas").
+# Licencija: balsas CC BY 4.0 (atribucija būtina), kodas MIT.
+# --------------------------------------------------------------------------
+PIPER_DIR = pathlib.Path(os.environ.get("SUPRASK_PIPER_DIR") or (pathlib.Path.home() / "workspace" / ".tools" / "piper-lt"))
+PIPER_MODEL = PIPER_DIR / "lt_LT-reginute1-medium.onnx"
+# length_scale: 1.0 = įprastas tempas; didesnis = lėtesnis
+RATES_PIPER = {"n": 1.05, "s": 1.30}
+_PIPER = None
+
 # Simuliacijų ir sąsajos tekstai, kurių nėra modulių JSON (jie gyvena JS kode)
 EXTRA = [
     # skaičiai
     *[str(i) for i in range(0, 101)],
+    # dinaminiai simuliacijų tekstai (šablonai JS kode)
+    *[f"Diena {i}" for i in range(1, 31)],
+    *[f"{i} blokus" for i in range(1, 21)],
     # metų laikai
     "Pavasaris", "Vasara", "Ruduo", "Žiema",
     "Sniegas tirpsta, paukščiai grįžta, medžiai žydi.",
@@ -55,6 +77,7 @@ EXTRA = [
     "Laimėjai", "Pralaimėjai", "Lygiosios",
     "Sąžininga!", "Tiltas pastatytas — perėjo abu!",
     # grįžtamasis ryšys ir sąsaja
+    "Dešimt. Puiku!", "Visos figūros savo vietose. Puiku!",
     "Teisingai!", "Puiku!", "Pabandyk dar kartą.", "Paklausyk dar kartą.",
     "Pabandyk pats", "Pasitikrink", "Ką suprasi", "Pagalvok ir pasakyk",
     "Garsas įjungtas", "Garsas išjungtas", "Skaityk kartu", "Kitas žodis",
@@ -71,26 +94,33 @@ def sha(text: str) -> str:
 
 
 def walk_strings(obj, keys: set[str]):
-    """Renka tekstus iš modulio JSON pagal raktų pavadinimus."""
+    """Renka tekstus iš modulio JSON pagal raktų pavadinimus.
+
+    Svarbu: reikšmė po raktu gali būti ne tik eilutė, bet ir sąrašas žodynų
+    (pvz. `words: [{word, syllables}]`). Anksčiau tokie įrašai būdavo
+    praleidžiami — dėl to dalis skiemenų ir žodžių neturėjo įrašo.
+    """
     if isinstance(obj, dict):
         for k, v in obj.items():
-            if k in keys and isinstance(v, str):
-                yield v
-            elif k in keys and isinstance(v, list):
-                for item in v:
-                    if isinstance(item, str):
-                        yield item
-            elif k == "items" and isinstance(v, list):
-                for item in v:
-                    if isinstance(item, dict):
-                        for kk in ("word", "letter", "label"):
-                            if isinstance(item.get(kk), str):
-                                yield item[kk]
+            if k in keys:
+                yield from _all_strings(v)
             else:
                 yield from walk_strings(v, keys)
     elif isinstance(obj, list):
         for v in obj:
             yield from walk_strings(v, keys)
+
+
+def _all_strings(v):
+    """Visos eilutės bet kokiame įdėtame darinyje."""
+    if isinstance(v, str):
+        yield v
+    elif isinstance(v, list):
+        for x in v:
+            yield from _all_strings(x)
+    elif isinstance(v, dict):
+        for x in v.values():
+            yield from _all_strings(x)
 
 
 def collect() -> list[str]:
@@ -130,8 +160,48 @@ async def synth(voice: str, text: str, rate: str, out: pathlib.Path) -> bool:
     return False
 
 
-async def run(voice_key: str, only_missing: bool, prune: bool, workers: int = 4) -> int:
+def piper_synth(text: str, length_scale: float, out: pathlib.Path) -> bool:
+    """Sintetizuoja vieną tekstą lokaliniu Piper balsu ir įrašo MP3."""
+    global _PIPER
+    if _PIPER is None:
+        if not PIPER_MODEL.exists():
+            print(f"KLAIDA: nėra Piper balso modelio: {PIPER_MODEL}")
+            print("Žr. docs/ARCHITEKTURA.md → „Garsas“ (kaip atsisiųsti balsą).")
+            return False
+        sys.path.insert(0, str(PIPER_DIR))
+        from piper import PiperVoice  # type: ignore
+        from phonemize_lithuanian import LithuanianPhonemizer  # type: ignore
+        from synth_reginute import ReginuteSynth, i_int16  # type: ignore
+
+        _PIPER = (PiperVoice.load(str(PIPER_MODEL)), LithuanianPhonemizer(), ReginuteSynth, i_int16)
+
+    voice, phonemizer, Synth, i16 = _PIPER
+    import wave
+
+    wav = out.with_suffix(".wav")
+    try:
+        audio = Synth(voice, phonemizer, length_scale=length_scale).synthesize(text)
+        with wave.open(str(wav), "wb") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(voice.config.sample_rate)
+            w.writeframes(i16(audio))
+        subprocess.run(
+            ["ffmpeg", "-v", "error", "-y", "-i", str(wav), "-codec:a", "libmp3lame",
+             "-b:a", "64k", "-ar", "22050", "-ac", "1", str(out)],
+            check=True,
+        )
+        return out.exists() and out.stat().st_size > 800
+    except Exception as exc:  # noqa: BLE001
+        print(f"  FAIL {text!r}: {exc}")
+        return False
+    finally:
+        wav.unlink(missing_ok=True)
+
+
+async def run(voice_key: str, only_missing: bool, prune: bool, workers: int = 4, engine: str = "piper") -> int:
     voice = VOICES[voice_key]
+    rates = RATES_PIPER if engine == "piper" else RATES
     texts = collect()
     AUDIO.mkdir(parents=True, exist_ok=True)
     for variant in RATES:
@@ -147,7 +217,7 @@ async def run(voice_key: str, only_missing: bool, prune: bool, workers: int = 4)
     jobs = []
     for text in texts:
         entry = manifest.setdefault(text, {})
-        for variant, rate in RATES.items():
+        for variant, rate in rates.items():
             rel = f"{variant}/{sha(text)}.mp3"
             dest = AUDIO / rel
             entry[variant] = rel
@@ -155,23 +225,34 @@ async def run(voice_key: str, only_missing: bool, prune: bool, workers: int = 4)
                 continue
             jobs.append((text, rate, dest))
 
-    print(f"Balsas: {voice} · tekstų: {len(texts)} · generuoti: {len(jobs)}")
-    sem = asyncio.Semaphore(workers)
-    done = 0
-    failed = 0
-
-    async def one(text: str, rate: str, dest: pathlib.Path):
-        nonlocal done, failed
-        async with sem:
-            ok = await synth(voice, text, rate, dest)
-            if ok:
+    if engine == "piper":
+        print(f"Balsas: Piper lt_LT-reginute1 (LIEPA) · tekstų: {len(texts)} · generuoti: {len(jobs)}")
+        done = failed = 0
+        for i, (text, rate, dest) in enumerate(jobs, 1):
+            if piper_synth(text, rate, dest):
                 done += 1
-                if done % 25 == 0:
-                    print(f"  … {done}/{len(jobs)}")
             else:
                 failed += 1
+            if i % 25 == 0:
+                print(f"  … {i}/{len(jobs)}")
+    else:
+        print(f"Balsas: {voice} · tekstų: {len(texts)} · generuoti: {len(jobs)}")
+        sem = asyncio.Semaphore(workers)
+        done = 0
+        failed = 0
 
-    await asyncio.gather(*(one(t, r, d) for t, r, d in jobs))
+        async def one(text: str, rate: str, dest: pathlib.Path):
+            nonlocal done, failed
+            async with sem:
+                ok = await synth(voice, text, rate, dest)
+                if ok:
+                    done += 1
+                    if done % 25 == 0:
+                        print(f"  … {done}/{len(jobs)}")
+                else:
+                    failed += 1
+
+        await asyncio.gather(*(one(t, r, d) for t, r, d in jobs))
 
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
 
@@ -191,13 +272,15 @@ async def run(voice_key: str, only_missing: bool, prune: bool, workers: int = 4)
 
 def main() -> int:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--engine", choices=["piper", "edge"], default="piper",
+                    help="piper = lokalus lt_LT balsas su kirčio žodynu (numatytas), edge = Azure/Edge debesų balsas")
     ap.add_argument("--voice", choices=sorted(VOICES), default="ona")
     ap.add_argument("--all", action="store_true", help="pergeneruoti ir esamus")
     ap.add_argument("--prune", action="store_true")
     ap.add_argument("--workers", type=int, default=4)
     args = ap.parse_args()
     try:
-        return asyncio.run(run(args.voice, not args.all, args.prune, args.workers))
+        return asyncio.run(run(args.voice, not args.all, args.prune, args.workers, args.engine))
     except KeyboardInterrupt:
         return 130
 

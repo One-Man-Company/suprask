@@ -12,7 +12,9 @@ agents/runs.db-wal
 agents/runs.db-shm
 agents/.run.lock
 agents/work/
-agents/log/*.md
+agents/log/
+!agents/log/.gitkeep
+agents/audio-flags.json
 
 # OS
 .DS_Store

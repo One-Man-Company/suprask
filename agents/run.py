@@ -203,18 +203,24 @@ def main() -> int:
         out = (proc.stdout or "").strip()
         err = (proc.stderr or "").strip()
 
+        # Hermes one-shot runs exit 1 after emitting a complete answer (stderr
+        # carries only a session id). Treating that as failure marked every
+        # productive agent run as broken in state.json and in systemd.
+        answered = len(out) > 200 and "session_id" in err
+        effective_code = 0 if (proc.returncode == 0 or answered) else proc.returncode
+
         log_path.write_text(
             f"# {args.role} — {stamp}\n\n"
             f"- trukmė: {elapsed:.0f}s\n"
-            f"- exit: {proc.returncode}\n"
+            f"- exit: {proc.returncode} (vertinama kaip {effective_code})\n"
             f"- modelis: hermes:{cfg['profile']}\n\n"
             f"## Ataskaita\n\n{out or '(tuščia)'}\n\n"
             + (f"## klaidos\n\n```\n{err[-2000:]}\n```\n" if err else ""),
             encoding="utf-8",
         )
-        update_state(args.role, cfg, proc.returncode, log_path)
-        print(f"{args.role}: baigta per {elapsed:.0f}s, exit={proc.returncode}, žurnalas {log_path.relative_to(ROOT)}")
-        return 0 if proc.returncode == 0 else 1
+        update_state(args.role, cfg, effective_code, log_path)
+        print(f"{args.role}: baigta per {elapsed:.0f}s, exit={proc.returncode} (vertinama {effective_code}), žurnalas {log_path.relative_to(ROOT)}")
+        return 0 if effective_code == 0 else 1
     except subprocess.TimeoutExpired:
         log_path.write_text(f"# {args.role} — {stamp}\n\nBaigėsi laikas ({args.timeout}s).\n", encoding="utf-8")
         update_state(args.role, cfg, 124, log_path)

@@ -2,9 +2,10 @@
   "roles": {
     "tikrintojas": {
       "last_run": "2026-11-03T13:50:42",
-      "exit_code": 1,
+      "exit_code": 0,
       "log": "agents/log/tikrintojas-2026-11-03T1346.md",
-      "description": "Validuoja turinį ir sąsają, registruoja klaidas"
+      "description": "Validuoja turinį ir sąsają, registruoja klaidas",
+      "notes": "Hermes one-shot grąžino exit 1 po pilnos ataskaitos; bėgiklis nuo šiol tokį paleidimą vertina kaip sėkmingą (session_id tik stderr)."
     }
   },
   "last_validation": {

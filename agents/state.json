@@ -1,11 +1,10 @@
 {
   "roles": {
     "tikrintojas": {
-      "last_run": "2026-11-03T13:50:42",
+      "last_run": "2026-11-03T14:49:57",
       "exit_code": 0,
-      "log": "agents/log/tikrintojas-2026-11-03T1346.md",
-      "description": "Validuoja turinį ir sąsają, registruoja klaidas",
-      "notes": "Hermes one-shot grąžino exit 1 po pilnos ataskaitos; bėgiklis nuo šiol tokį paleidimą vertina kaip sėkmingą (session_id tik stderr)."
+      "log": "agents/log/tikrintojas-2026-11-03T1444.md",
+      "description": "Validuoja turinį ir sąsają, registruoja klaidas"
     }
   },
   "last_validation": {
@@ -15,11 +14,14 @@
     "modules": 13,
     "tasks": 52,
     "tasks_per_module": 4,
+    "tasks_with_optional": 13,
     "sims": 13,
     "technical_issues_found": 6,
     "technical_issues_fixed": 6,
-    "notes": "Pirmas tikrintojo paleidimas rado 6 technines problemas; visos istaisytos pries publikavima (progress.js klaidingas uzbaigimas, MutationObserver nutekejimas, du location.reload(), document.title neatstatymas, neveikiantis desimtukas config, neaprasytos CSS klases)."
+    "technical_issues_open": 0,
+    "notes": "Antras auditas: 0 validatoriaus klaidu, 0 ispejimu, 0 konsoles klaidu 7 marsrutuose; 6/6 ankstesniu problemu patvirtintos kaip istaisytos.",
+    "log": "agents/log/tikrintojas-2026-11-03T1444.md"
   },
   "open_questions": "research/wiki/guidelines/klausimai.md",
-  "updated": "2026-11-03T13:56:00"
+  "updated": "2026-11-03T14:49:57"
 }

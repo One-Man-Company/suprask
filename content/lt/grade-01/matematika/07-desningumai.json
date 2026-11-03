@@ -1,0 +1,153 @@
+{
+  "id": "07-desningumai",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Dėsningumai",
+  "subtitle": "Seka, kurią gali numatyti",
+  "minutes": 9,
+  "outcomes": [
+    "Pastebiu pasikartojančią seką ir ją tęsiu.",
+    "Paaiškinu sekos taisyklę savais žodžiais.",
+    "Sugalvoju savo seką ir ją užrašau."
+  ],
+  "concept": {
+    "title": "Taisyklė, kuri kartojasi",
+    "big_idea": "Dėsningumas — tai tvarka, kuri kartojasi. Kai ją atrandi, gali numatyti, kas bus toliau, net nematęs.",
+    "steps": [
+      "Pažiūrėk į seką: raudonas, mėlynas, raudonas, mėlynas…",
+      "Taisyklė: du skirtingi elementai kartojasi iš eilės.",
+      "Todėl toliau bus raudonas. Tai jau prognozė, o ne spėjimas."
+    ],
+    "example": "Seka: 🟡🟡🟢 🟡🟡🟢 … Taisyklė „du geltoni, vienas žalias“. Kas bus po antro geltono? Žalias."
+  },
+  "sim": {
+    "component": "desningumai",
+    "config": {
+      "tasks": [
+        {
+          "seq": [
+            "🔴",
+            "🔵",
+            "🔴",
+            "🔵",
+            "?"
+          ],
+          "options": [
+            "🔵",
+            "🔴",
+            "🟢"
+          ],
+          "answer": 1,
+          "prompt": "Kokia spalva eina toliau?"
+        },
+        {
+          "seq": [
+            "🟡",
+            "🟡",
+            "🟢",
+            "🟡",
+            "🟡",
+            "?"
+          ],
+          "options": [
+            "🟢",
+            "🟡",
+            "🔴"
+          ],
+          "answer": 0,
+          "prompt": "Seka kartojasi po trijų. Kas toliau?"
+        },
+        {
+          "seq": [
+            "🟠",
+            "🟢",
+            "🔵",
+            "🟠",
+            "🟢",
+            "?"
+          ],
+          "options": [
+            "🔵",
+            "🟠",
+            "🟢"
+          ],
+          "answer": 0,
+          "prompt": "Trys skirtingi elementai. Kas toliau?"
+        },
+        {
+          "seq": [
+            "🟣",
+            "🟣",
+            "🟣",
+            "🟠",
+            "🟣",
+            "🟣",
+            "🟣",
+            "?"
+          ],
+          "options": [
+            "🟠",
+            "🟣",
+            "🔵"
+          ],
+          "answer": 0,
+          "prompt": "Kiek kartų kartojasi pirmoji spalva?"
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Seka: 1, 2, 1, 2, 1, … Kas toliau?",
+      "options": [
+        "2",
+        "1",
+        "3"
+      ],
+      "answer": 0,
+      "hint": "Suskaičiuok, kiek skaičių sudaro pasikartojančią dalį.",
+      "why": "Kartojasi pora 1, 2 — todėl po 1 eina 2."
+    },
+    {
+      "q": "Seka: 🔺🔺🔻 🔺🔺🔻 … Kas bus po dviejų trikampių?",
+      "options": [
+        "🔺",
+        "🔻",
+        "⬛"
+      ],
+      "answer": 1,
+      "hint": "Rask taisyklę: kiek aukštyn, kiek žemyn?",
+      "why": "Taisyklė „du aukštyn, vienas žemyn“."
+    },
+    {
+      "q": "Kodėl dėsningumas naudingas?",
+      "options": [
+        "Nes jis gražus",
+        "Nes jį lengva nukopijuoti",
+        "Nes padeda numatyti, kas bus toliau"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok apie prognozę.",
+      "why": "Radęs taisyklę, gali numatyti tolesnius elementus."
+    }
+  ],
+  "reflect": "Sugalvok savo seką iš trijų spalvų ir pasakyk ją draugui. Ar jis atspės taisyklę?",
+  "teacher": {
+    "goal": "Algoritminio mąstymo pradmenys: pasikartojančios struktūros atpažinimas ir tęsimas.",
+    "prompt": "Kokia taisyklė šioje sekoje? Kaip sužinojai?",
+    "offline": "Duokite vaikui du rinkinius spalvotų kaladėlių ar sagų ir paprašykite sudėti savo seką, kurią draugas turės tęsti.",
+    "misconceptions": [
+      "Vaikai tęsia pagal paskutinį elementą, o ne pagal visą taisyklę.",
+      "Seka painiojama su simetrija — padeda aiškus „kartojasi“ pavyzdys.",
+      "Kai seka ilga, prarandama vieta — padeda žymėjimas pirštu ar plojimu."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, sritis „Modeliai ir sąryšiai“, dėsningumai 1 kl.",
+    "Matematikos bendroji programa (2022): modelių ir sąryšių sritis 1–2 klasėje."
+  ],
+  "svietimas1": [
+    "1 žingsnis — gylis: dėsningumas siejamas su prognozavimu, ne tik su kopijavimu",
+    "3 žingsnis — pažanga: kiekviena seka iškart tikrinama, klaida paaiškinama"
+  ]
+}

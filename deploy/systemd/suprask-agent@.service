@@ -1,0 +1,19 @@
+[Unit]
+Description=SUPRASK agentas: %i
+Documentation=file:/home/zoltanas/workspace/suprask/agents/README.md
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/zoltanas/workspace/suprask
+# hermes lives in ~/.local/bin, which systemd's default PATH omits.
+Environment="PATH=/home/zoltanas/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="SUPRASK_HERMES_BIN=/home/zoltanas/.local/bin/hermes"
+ExecStart=/usr/bin/python3 /home/zoltanas/workspace/suprask/agents/run.py %i
+# An agent run can legitimately take many minutes; do not kill it early.
+TimeoutStartSec=3900
+Nice=10
+StandardOutput=journal
+StandardError=journal

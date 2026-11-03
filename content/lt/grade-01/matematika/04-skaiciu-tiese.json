@@ -1,0 +1,90 @@
+{
+  "id": "04-skaiciu-tiese",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Skaičių tiesė",
+  "subtitle": "Sudėti ir atimti reiškia judėti tiese",
+  "minutes": 9,
+  "outcomes": [
+    "Rodau skaičių skaičių tiesėje ir judu ja į dešinę arba į kairę.",
+    "Paaiškinu, kad pridėti — reiškia judėti į dešinę, o atimti — į kairę.",
+    "Suskaičiuoju, kiek žingsnių liko iki tikslo."
+  ],
+  "concept": {
+    "title": "Skaičiai turi savo vietas",
+    "big_idea": "Skaičių tiesė — tai kelias, kuriame kiekvienas skaičius turi savo vietą. Sudėtis — ėjimas į priekį, atimtis — atgal.",
+    "steps": [
+      "Rask skaičių 5. Jis yra tarp 4 ir 6.",
+      "Pridėti 3 — tai trys žingsniai į dešinę: 5 → 6 → 7 → 8.",
+      "Atimti 2 — du žingsniai į kairę: 8 → 7 → 6."
+    ],
+    "example": "Pradėk nuo 7 ir pridėk 3. Žingsniai: 7 → 8 → 9 → 10. Nereikia mintinai — tiesė parodo."
+  },
+  "sim": {
+    "component": "skaiciu-tiese",
+    "config": {
+      "max": 20,
+      "targets": [
+        5,
+        8,
+        12,
+        15,
+        19
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Pradedi nuo 8 ir pridedi 2. Kur atsidursi?",
+      "options": [
+        "10",
+        "9",
+        "6"
+      ],
+      "answer": 0,
+      "hint": "Du žingsniai į dešinę nuo 8: 9, 10.",
+      "why": "8 + 2 = 10."
+    },
+    {
+      "q": "Atimti reiškia judėti…",
+      "options": [
+        "į dešinę",
+        "į kairę",
+        "stovėti vietoje"
+      ],
+      "answer": 1,
+      "hint": "Skaičiai mažėja — kuria kryptimi?",
+      "why": "Atimant skaičius mažėja, todėl judame į kairę."
+    },
+    {
+      "q": "Kuris skaičius yra tarp 11 ir 13?",
+      "options": [
+        "14",
+        "10",
+        "12"
+      ],
+      "answer": 2,
+      "hint": "Rask 11, tada vieną žingsnį į dešinę.",
+      "why": "12 yra tarp 11 ir 13."
+    }
+  ],
+  "reflect": "Sugalvok judėjimą: nuo kurio skaičiaus pradėsi, kiek žingsnių eisi ir kur atsidursi? Pasakyk draugui — jis turi atspėti tavo kelią.",
+  "teacher": {
+    "goal": "Skaičių tiesės kaip modelio naudojimas sudėčiai ir atimčiai iki 20 (programoje — iki 100).",
+    "prompt": "Kodėl sudėdami einame į dešinę?",
+    "offline": "Ant grindų lipnia juosta padarykite skaičių tiesę 0–20. Vaikas vaikšto pagal jūsų sakomą veiksmą („nuo 6 pirmyn 4“).",
+    "misconceptions": [
+      "Vaikai skaičiuoja įskaitant pradinį skaičių („8, 9“ vietoj „9, 10“) — padeda ėjimas pirštu nuo taško.",
+      "Atimties negalima atlikti „į priekį“ — kryptis turi būti aiški.",
+      "Skaičiai tarp 10 ir 20 dažnai painiojami su jų skaitmenų tvarka."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, sritis „Skaičiai ir skaičiavimai“, 1–2 kl.",
+    "Matematikos bendroji programa (2022): 1 klasėje natūralieji skaičiai 100 ribose; sudėtis ir atimtis peržengiant dešimtį."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: vienas modelis (tiesė), taikomas daugeliui uždavinių",
+    "3 žingsnis — pagalba laiku: kiekvienas žingsnis matomas, klaida iš karto parodoma"
+  ]
+}

@@ -1,0 +1,15 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Dideli šaltinių PDF — repo laikomi tik išgauti tekstai (žr. sources/README.md)
+sources/*.pdf
+
+# Agentų vykdymo artefaktai
+agents/.run.lock
+agents/log/*.md
+
+# OS
+.DS_Store
+Thumbs.db

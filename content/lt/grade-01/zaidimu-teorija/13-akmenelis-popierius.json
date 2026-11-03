@@ -1,0 +1,81 @@
+{
+  "id": "13-akmenelis-popierius",
+  "grade": 1,
+  "strand": "zaidimu-teorija",
+  "title": "Akmenėlis, žirklės, popierius",
+  "subtitle": "Kodėl negalima tiksliai numatyti",
+  "minutes": 10,
+  "outcomes": [
+    "Paaiškinu, kad kai variantai lygūs, laimėjimas priklauso nuo atsitiktinumo.",
+    "Stebiu rezultatus ir lyginu juos su lūkesčiu.",
+    "Nustoju tikėti „karšta ranka“ — po daug bandymų rezultatas artėja prie trečdalio."
+  ],
+  "concept": {
+    "title": "Atsitiktinumas nėra „sėkmės serija“",
+    "big_idea": "Žaidime trys lygūs pasirinkimai. Nė vienas nelaimi dažniau, jei abu žaidėjai renkasi atsitiktinai. Po daug ėjimų kiekvienas rezultatas pasitaiko maždaug trečdalį kartų.",
+    "steps": [
+      "Yra trys ėjimai: akmenėlis, žirklės, popierius. Kiekvienas nugali vieną ir pralaimi kitam.",
+      "Todėl vieno ėjimo „stiprumas“ yra tik vienas iš trijų.",
+      "Jei žaidi 30 kartų, laimėjimų skaičius bus arti 10 — bet ne tiksliai 10."
+    ],
+    "example": "Laimėjai 5 kartus iš eilės? Tai ne „karšta ranka“ — tai atsitiktinumas. Po 30 ėjimų rezultatas visada grįžta prie maždaug trečdalio."
+  },
+  "sim": {
+    "component": "akmenelis-popierius",
+    "config": {}
+  },
+  "tasks": [
+    {
+      "q": "Kiek šansų laimėti vienu ėjimu prieš atsitiktinį ėjimą?",
+      "options": [
+        "Vienas iš trijų",
+        "Vienas iš dviejų",
+        "Visi trys"
+      ],
+      "answer": 0,
+      "hint": "Yra trys ėjimai: vienas laimi, vienas pralaimi, vienas lygiosios.",
+      "why": "Iš trijų galimybių viena laimi — maždaug 1/3."
+    },
+    {
+      "q": "Po 30 ėjimų, kiek maždaug bus lygiųjų?",
+      "options": [
+        "Apie 25",
+        "Apie 10",
+        "Nulis"
+      ],
+      "answer": 1,
+      "hint": "Trečdalis iš 30.",
+      "why": "30 : 3 = 10, todėl apie 10."
+    },
+    {
+      "q": "Jei laimėjai 5 kartus iš eilės, tai reiškia…",
+      "options": [
+        "Kad visada laimėsi",
+        "Kad varžovas klysta",
+        "Kad taip atsitiko — tai dar ne taisyklė"
+      ],
+      "answer": 2,
+      "hint": "Ar simuliacijoje tai kartosis visada?",
+      "why": "Trumpa sėkmės seka dar neįrodo, kad laimėsi ir toliau."
+    }
+  ],
+  "reflect": "Sužaisk su draugu 20 ėjimų ir suskaičiuok, kiek kartų laimėjo kiekvienas. Ar buvo netikėta?",
+  "teacher": {
+    "goal": "Tikimybės ir atsitiktinumo intuicija; apsauga nuo „karštos rankos“ klaidos.",
+    "prompt": "Kaip sužinoti, ar žaidimas sąžiningas?",
+    "offline": "Sužaiskite 30 ėjimų ir baltame lape braukite po vieną brūkšnį kiekvienam rezultatui. Suskaičiuokite ir palyginkite su trečdaliu.",
+    "misconceptions": [
+      "Vaikai tiki „sėkmės serijomis“ ir strategija, kurios nėra.",
+      "„Trys variantai“ painiojami su „50/50“, nes dažnos poros.",
+      "Po kelių lygiųjų tikimasi, kad kitas ėjimas būtinai laimės."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, sritis „Duomenys ir tikimybės“, 1–2 kl.",
+    "Matematikos bendroji programa (2022): duomenų rinkimas, dažnių palyginimas, atsitiktinumo idėja 1–2 klasėje."
+  ],
+  "svietimas1": [
+    "1 žingsnis — gylis: tikimybė parodoma per savo paties duomenis, ne per formulę",
+    "3 žingsnis — pažanga: rezultatas skaičiuojamas iškart, palyginama su lūkesčiu"
+  ]
+}

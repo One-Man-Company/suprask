@@ -1,0 +1,12 @@
+[Unit]
+Description=SUPRASK — tyrėjas (pirmadienis)
+
+[Timer]
+# Pirmadienis: savaitė prasideda nuo tyrimų, kad kūrėjas antradienį turėtų naujausią bazę.
+OnCalendar=Mon *-*-* 07:00:00
+Persistent=true
+RandomizedDelaySec=600
+Unit=suprask-agent@tyrejas.service
+
+[Install]
+WantedBy=timers.target

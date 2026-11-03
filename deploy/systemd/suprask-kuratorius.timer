@@ -1,0 +1,11 @@
+[Unit]
+Description=SUPRASK — savaitės suvestinė (sekmadienis)
+
+[Timer]
+OnCalendar=Sun *-*-* 18:00:00
+Persistent=true
+RandomizedDelaySec=600
+Unit=suprask-agent@kuratorius.service
+
+[Install]
+WantedBy=timers.target

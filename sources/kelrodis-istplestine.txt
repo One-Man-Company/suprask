@@ -1,0 +1,763 @@
+Švietimo
+kelrodis
+Kiekvienam Lietuvos vaikui –
+geriausias švietimas Europoje
+Analitikų komanda:
+Išplėstinė versija
+ĮVADAS
+Švietimo ﬁnansavimas vienam mokiniui Lietuvoje auga sparčiau nei bet kurioje kitoje
+Ekonominio bendradarbiavimo ir plėtros organizacijos (EBPO) šalyje: 2023–2024 m. jis
+padidėjo 10,2 proc. (EBPO, 2026b). Nepaisant to, Lietuvos mokinių pasiekimai negerėja.
+Remiantis PISA 2025 m. rezultatais, pagal bendrą matematikos, skaitymo ir gamtos mokslų
+taškų sumą Lietuva užima 12-ą vietą tarp tyrime dalyvaujančių Europos šalių. Nors Lietuvos
+rezultatai viršija Europos Sąjungos (ES) ir EBPO vidurkius, jie, palyginti su 2022 m., nepagerėjo,
+bet kitose šalyse krito labiau (EBPO, 2026a).
+Lietuvos švietimo sistemoje netrūksta tikslų, strategijų ir reformų, tačiau dauguma jų numato
+nekoncentruotus, inkrementinius pokyčius, kurie dažniausiai neatneša siekiamo ilgalaikio
+rezultato. Šiuo alternatyviu Švietimo kelrodžiu Švietimas #1 kartu su ISM Vadybos ir
+ekonomikos universitetu kelia ambicingą tikslą – sukurti geriausią švietimo sistemą
+Europoje kiekvienam Lietuvos vaikui. Kelrodyje išgryninti svarbiausi Lietuvos bendrojo
+ugdymo iššūkiai, pasiūlyta 10 konkrečių žingsnių ir jų įgyvendinimo veiksmai, reikalingi
+pagrindiniam tikslui pasiekti trijose srityse – kokybiškos ugdymo programos, profesionali
+vadyba ir motyvuoti mokytojai.
+Kelrodžio paskirtis – sutelkti dėmesį į esmines pokyčio sritis ir parodyti, kokie sisteminiai
+sprendimai galėtų turėti didžiausią poveikį bendrojo ugdymo mokinių rezultatams ir visos
+švietimo sistemos kokybei. Kelrodžio ambicija – sąmoningai aukšta. Siekis sukurti geriausią
+švietimo sistemą Europoje reiškia ne pavienių priemonių tobulinimą ar inkrementinius esamos
+sistemos pakeitimus, bet esminį kokybinį šuolį. Kelrodžio įgyvendinimo stebėsenai numatyti
+konkretūs rodikliai, kurie padės pamatuoti pasiektą rezultatą.
+Kelrodis parengtas derinant Visionary Analytics atliktą analizę ir švietimo bendruomenės
+ekspertines įžvalgas. Kelrodyje pateikta esamos situacijos apžvalga, žingsniai, veiksmai ir
+rodikliai grindžiami nacionaliniais ir tarptautiniais duomenimis bei tyrimais paremtu Lietuvos
+švietimo sistemos stiprybių, silpnybių, galimybių ir grėsmių vertinimu ir užsienio šalių patirties
+analize. Rengiant kelrodį papildomai remtasi ateities įžvalgų (angl. foresight) metodu, padėjusiu
+įvertinti, kokios tendencijos veiks švietimą artimiausiais dešimtmečiais. Remiantis šiomis
+įžvalgomis, strateginių sesijų su Lietuvos švietimo lyderiais ir praktikais metu buvo suformuoti
+šiame dokumente išdėstyti tikslai, žingsniai, veiksmai ir rodikliai.
+ŠVIETIMO KELRODIS
+2
+KELRODŽIO STRUKTŪRA
+Kelrodį sudaro trys pagrindinės dalys, aptariančios kiekvieną iš išskirtų svarbiausių švietimo
+sistemos sričių – kokybiškas ugdymo turinys, profesionali vadyba ir motyvuoti mokytojai.
+Kiekvienoje dalyje pateikti 3–4 konkretūs žingsniai, kuriuos būtina įgyvendinti siekiant sukurti
+geriausią švietimo sistemą Europoje, ir šių žingsnių pasirinkimo analitinis pagrindimas.
+Kiekvienam žingsniui detalizuoti taip pat pasiūlyti konkretūs veiksmai.
+10 žingsnių tam, kad Lietuvos švietimas taptų geriausiu Europoje
+Kokybiškos ugdymo
+programos
+1 Mažesnės apimties,
+bet gilesnės
+ugdymo programos
+2 Mokinių pasiekimai
+visur vertinami
+vienodai
+3 Stebima kiekvieno
+mokinio pažanga ir
+laiku užtikrinama
+pagalba
+Profesionali vadyba
+4 Profesionalūs ir
+autonomiškai
+veikiantys mokyklų
+vadovai
+5 Mokyklose kuriama
+pozityvi darbo ir
+mokymosi aplinka
+6 Švietimo sistemos
+pažanga vykdoma
+per pilotinius
+modelius
+7 Kokybiškas mokyklų
+tinklas: perėjimas
+prie 6+3+3 ugdymo
+struktūros
+Motyvuoti mokytojai
+8 Mokytojai darbui
+rengiami praktiškai,
+o ne teoriškai
+9 Mokytojai dirba
+komandoje ir gauna
+nuolatinę profesinę
+pagalbą
+10 Mokytojų karjera
+susieta su darbo
+kokybe, o ne
+išdirbtu laiku
+ŠVIETIMO KELRODIS
+3
+KUR ESAME ŠIANDIEN?
+Siekiant, kad Lietuvos švietimo sistema būtų geriausia Europoje, kiekvienas Lietuvos vaikas
+turi gauti vienodai kokybišką išsilavinimą, kuris suteiktų tvirtus mokymosi pagrindus, padėtų
+atskleisti jo gebėjimus ir leistų siekti aukštų rezultatų. Tačiau šiandien švietimas Lietuvoje vis
+dar per dažnai primena loteriją: daug lemia tai, kur vaikas gyvena, į kokią mokyklą patenka, kas jį
+moko ir kaip tai mokyklai vadovaujama. Visuomenė iš mokinių taip pat tikisi per mažai, o patys
+mokiniai nepakankamai tiki savo galimybėmis tobulėti. Todėl vieni mokiniai gauna stiprų
+pagrindą tolesniam augimui, o kiti savo potencialo taip ir neatskleidžia.
+1. IŠ MOKINIŲ TIKIMĖS PER MAŽAI – PER MAŽAI JŲ PASIEKIA
+AUKŠČIAUSIUS REZULTATUS
+Per mažai Lietuvos mokinių pasiekia aukščiausius pasiekimų lygius. Aukščiausius (5 ir 6) PISA
+pasiekimų lygius Lietuvoje pasiekia tik 6 proc. mokinių matematikoje (EBPO vidurkis – 7,8
+proc.), 4,8 proc. gamtos moksluose (EBPO – 7,2 proc.) ir 3,8 proc. skaityme (EBPO – 5,5 proc.).
+Palyginti su 2022 m., nė vienoje srityje aukščiausius pasiekimų lygius pasiekiančių mokinių dalis
+Lietuvoje nepadidėjo (EBPO, 2026a). Bent vienoje iš trijų sričių aukščiausius lygius pasiekia 8,7
+proc. Lietuvos mokinių, kai EBPO vidurkis yra 11,9 proc. (EBPO, 2026a).
+Per didelė dalis mokinių neįgyja net bazinių gebėjimų. Bazinio (2-ojo) PISA pasiekimų lygio
+nepasiekia beveik 3 iš 10 Lietuvos penkiolikmečių matematikoje (28,7 proc.) ir skaityme (27,7
+proc.) bei kas penktas gamtos moksluose (19,7 proc.). Skaitymo srityje tokių mokinių dalis,
+palyginti su 2022 m., statistiškai reikšmingai padidėjo 2,8 procentinio punkto (EBPO, 2026a).
+Šie rodikliai yra geresni už EBPO vidurkius, tačiau gerokai atsilieka nuo ES siekio, kad iki 2030
+m. bazinių gebėjimų neįgijusių penkiolikmečių dalis kiekvienoje srityje būtų mažesnė nei 15
+proc. (ES Taryba, 2021). Tokį pat, tik ilgesnio laikotarpio, tikslą – kad iki 2050 m. tokių mokinių
+visose srityse būtų ne daugiau kaip 15 proc. – kelia ir Lietuvos ateities vizija „Lietuva 2050“.
+Panašią situaciją rodo ir nacionaliniai patikrinimai. 2026 m. Nacionalinio mokinių pasiekimų
+patikrinimo duomenimis, patenkinamo matematikos pasiekimų lygio nepasiekė beveik kas
+penktas aštuntokas (19,9 proc.). 10,8 proc. aštuntokų turėjo tik pačius matematikos pradmenis,
+o 9,1 proc. nepasiekė net jų. Lietuvių kalbos ir literatūros (skaitymo) patenkinamo lygio
+6 %
+7,8 %
+13 %
+3,8 %
+5,5 %
+9 %
+4,8 %
+7,2 %
+11 %
+Matematika Skaitymas Gamtos mokslai
+Lietuva EBPO vidurkis Estija
+Aukščiausius PISA lygius
+matematikoje pasiekia vos kas
+šešioliktas mokinys (6 %), skaityme –
+kas dvidešimt penktas (3,8 %), o
+gamtos moksluose – kas
+dvidešimtas (4,8 %).
+ŠVIETIMO KELRODIS
+4
+nepasiekė 1,2 proc. aštuntokų (NŠA, 2026a). ŠMSM siekė, kad 2026 m. šios dalys būtų
+atitinkamai 9,5 ir 0,5 proc. (ŠMSM, NŠA, 2025). Tais pačiais metais matematikos pagrindinio
+ugdymo pasiekimų patikrinimo (PUPP) neišlaikė beveik 17 proc. dešimtokų (NŠA, 2026b).
+Lietuvoje didelė dalis mokinių taip pat linkusi netikėti, kad jie gali augti ir pasiekti daugiau. PISA
+2025 m. duomenimis, augimo mąstysenos, t. y. įsitikinimo, kad savo gebėjimus galima ugdyti,
+laikosi tik kas antras Lietuvos penkiolikmetis (52 proc.). EBPO šalyse vidutiniškai taip mano
+beveik 7 iš 10 mokinių (69 proc.), o Estijoje – daugiau kaip 8 iš 10 (83 proc.) (EBPO, 2026a).
+2. KOKYBIŠKAS ŠVIETIMAS LIETUVOJE – VIS DAR LOTERIJA
+Mokinio pasiekimai Lietuvoje vis dar labai priklauso nuo to, kur yra jo mokykla. Didžiųjų miestų
+(daugiau kaip 100 tūkst. gyventojų) ir kaimo vietovių (mažiau nei 3 tūkst. gyventojų) mokyklų
+mokinių gamtos mokslų rezultatų atotrūkis Lietuvoje siekia 65 taškus. Tai beveik dvigubai
+daugiau nei EBPO vidurkis (33 taškai) ir gerokai daugiau nei Estijoje ar Suomijoje (po 17 taškų)
+(ŠMSM, 2026a).
+Didelius skirtumus rodo ir savivaldybių rezultatai. 2025 m. matematikos PUPP savivaldybėse
+išlaikė nuo 53 iki 93 proc. mokinių. Pavyzdžiui, Ignalinos r. savivaldybėje išlaikė daugiau kaip 9 iš
+10 mokinių (92 proc.), o Zarasų r. – tik kiek daugiau nei pusė (53 proc.). Vidutinis įvertinimas
+šiose savivaldybėse skyrėsi daugiau kaip 3 balais – 7,22 ir 4,17. Panašūs skirtumai matomi ir
+brandos egzaminų rezultatuose: 2024 m. matematikos valstybinį brandos egzaminą
+savivaldybėse išlaikė nuo 76 iki 98 proc. mokinių (NŠA, 2024).
+Mokinių pasiekimai vis dar priklauso ir nuo šeimos socialinės ir ekonominės aplinkos, nors šis
+ryšys silpnėja. PISA 2025 m. duomenimis, palankiausios aplinkos mokiniai Lietuvoje gamtos
+moksluose lenkia nepalankiausios aplinkos mokinius 63 taškais. EBPO vertinimu, maždaug 20
+28,7 %
+35 %
+17 %
+27,7 %
+31 %
+17 % 19,7 %
+26 %
+10 %
+Matematika Skaitymas Gamtos mokslai
+Lietuva EBPO vidurkis Estija
+Bazinių matematikos ir skaitymo
+gebėjimų neįgyja beveik 3 iš 10
+penkiolikmečių (atitinkamai 28,7 % ir
+27,7 %), gamtos mokslų – kas
+penktas (19,7 %).
+Tik kas antras Lietuvos
+penkiolikmetis tiki, kad savo
+gebėjimus gali ugdyti (52 %). EBPO
+šalyse taip mano beveik 7 iš 10
+(69 %), Estijoje – daugiau kaip 8 iš
+10 mokinių (83 %).
+Lietuva 52 %
+EBPO 69 %
+Estija 83 %
+ŠVIETIMO KELRODIS
+5
+taškų apytiksliai atitinka vienerius mokslo metus, tad šis skirtumas prilygsta maždaug trejiems
+mokymosi metams. Vis dėlto socialinės ir ekonominės aplinkos poveikis Lietuvoje yra mažesnis
+nei vidutiniškai EBPO šalyse: EBPO vidurkis yra 85 taškai, o mokinių socialinis, ekonominis ir
+kultūrinis statusas paaiškina 7,9 proc. pasiekimų skirtumų (EBPO – 11,6 proc.). Be to, palyginti su
+2022 m., šis atotrūkis sumažėjo nuo 88 iki 63 taškų (EBPO, 2026a; ŠMSM, 2026a).
+3. NEPRITRAUKIAME IR NEIŠLAIKOME STIPRIŲ MOKYTOJŲ
+Lietuvos mokytojų bendruomenė yra viena seniausių EBPO, todėl jau dabar jaučiamas
+mokytojų trūkumas artimiausiais metais didės. Mokytojų trūkumas jau dabar lemia mažiau
+dėmesio mokiniams. 2015–2024 m. pradinių klasių mokinių skaičius Lietuvoje išaugo apie 12
+proc., o mokytojų sumažėjo apie 16 proc. Dėl to vienam mokytojui tenkantis mokinių skaičius
+padidėjo apie 34 proc., daugiausia tarp EBPO šalių (EBPO, 2026b).
+2024 m. 55 metų ir vyresni mokytojai sudarė 42 proc. visų pradinio ir vidurinio ugdymo
+mokytojų: tai didžiausia dalis tarp EBPO šalių, turinčių palyginamus duomenis (EBPO vidurkis –
+23 proc.). Jaunesnių nei 35 metų mokytojų dalis siekė tik 10 proc. (EBPO – 22 proc.), ir
+mažesnė ji buvo tik Portugalijoje (EBPO, 2026b). Prognozuojama, kad 2026–2031 mokslo
+metais Lietuvoje reikės apie 6,7 tūkst. naujų dalyko mokytojų, o bus parengta tik apie 4,2 tūkst.
+Taigi net ir visiems absolventams įsidarbinus mokyklose trūktų apie 2,5 tūkst. dalyko mokytojų
+(NŠA, 2025a).
+Tačiau ne visi pedagogikos absolventai ateina dirbti į mokyklas. 2024–2025 mokslo metais
+pedagoginio darbo nedirbo 21 proc. 2024 m. ikimokyklinio, priešmokyklinio, pradinio ugdymo
+ir (ar) vaikystės pedagogikos studijas baigusių absolventų, 28 proc. profesinių pedagogikos
+studijų absolventų ir 45 proc. pirmosios pakopos dalyko pedagogikos studijų absolventų (NŠA,
+2025a).
+Net ir atėjusius į mokyklas jaunus mokytojus išlaikome sunkiai. EBPO duomenimis, pusė (50
+proc.) jaunesnių nei 30 metų Lietuvos mokytojų per artimiausius penkerius metus ketina palikti
+profesiją, kai EBPO vidurkis yra 20 proc. (EBPO, 2025a). Nacionalinės švietimo agentūros
+(NŠA) atliktoje ekspertų apklausoje pažymima, kad jauni pedagogai susiduria su dideliu darbo
+krūviu, atsakomybės ir atlygio neatitikimu, emocine ir psichologine įtampa, o jiems trūksta
+palaikymo ir karjeros galimybių (NŠA, 2025a).
+Beveik kas antras pirmosios
+pakopos pedagogikos studijų
+absolventas 2024–2025 m. m. po
+(45 %)  o mentorių turi tik maždaug
+kas ketvirtas pradedantysis
+mokytojas (26 %).
+45 %
+Neįsidarbina
+mokykloje
+26 %
+Turi mentorių
+studijų mokykloje neįsidarbino
+ŠVIETIMO KELRODIS
+6
+Mokytojai savo darbu patenkinti mažiau nei kiti panašų išsilavinimą turintys darbuotojai, o
+profesijos patrauklumą („prestižą“) vertina žemai. Bendras mokytojų pasitenkinimas darbu
+Lietuvoje yra 13 procentinių punktų mažesnis nei panašų išsilavinimą turinčių kitų darbuotojų
+(EBPO, 2026b). 2023 m. reprezentatyvioje Lietuvos mokytojų apklausoje kaip svarbius ar labai
+svarbius mokytojų patiriamus iššūkius dauguma apklaustųjų įvardijo sumaištį keliančias
+reformas (91,9 proc.), didelius darbo krūvius (91,2 proc.) ir mokinių elgesio problemas (90,5
+proc.). Dauguma mokytojų (60 proc.) mokytojo profesijos patrauklumą („prestižą“) vertino kaip
+žemą, o aukštu jį laikė vos 3 proc. (Pilietinės visuomenės institutas, 2023).
+Beveik kas antras jaunesnis nei 30
+per artimiausius penkerius metus
+palikti profesiją (apie 50 %), kai
+EBPO vidurkis – apie 20 %.
+Lietuva ~50 %
+EBPO ~20 %
+metų mokytojas Lietuvoje ketina
+ŠVIETIMO KELRODIS
+7
+Kaip matuosime sėkmę?
+Rodiklis Dabartinėsituacija Siekis
+Augimo mąstysena
+Mokinių, tikinčių, kad jų gebėjimai gali būti ugdomi
+Aukšti mokinių pasiekimai
+Matematika
+Skaitymo gebėjimai
+Gamtos mokslai
+Mokinių pasiekimų skirtumas tarp savivaldybių
+Skirtumas tarp didžiausios ir mažiausios PUPP neišlaikiusių mokinių dalies savivaldybėse
+Matematika 15 p. p.
+Lietuvių kalba ir literatūra 15 p. p.
+Bazinės mokinių žinios
+Matematika
+Skaitymo gebėjimai
+Gamtos mokslai
+Patraukli mokytojo karjera
+Gyventojų dalis, sutinkanti su teiginiu „Jei artimas
+žmogus svarstytų mokytojo ar mokyklos vadovo karjerą,
+aš jį palaikyčiau ir rekomenduočiau šį kelią“
+rodikliai stebimi kasmet rodikliai stebimi EBPO PISA tyrimo metu
+1
+Lietuvos reputacijos indekso tyrimas, 2026
+ŠVIETIMO KELRODIS
+1,2
+OECD, PISA 2025 Results (Volume I): Future-Ready Students, PISA, OECD Publishing, 2026
+2
+pastangomis ir grįžtamuoju ryšiu, dalis, %
+52 % 80 %
+6 %
+20 %3,8 %
+4,8 %
+39,3 p. p.
+36,5 p. p.
+PISA bazinio pasiekimų lygio (2 lygio) nepasiekiančių mokinių dalis, %
+28,7 % 15 %
+27,7 % 15 %
+19,7 % 10 %
+29 % 70 %
+Aukščiausius PISA pasiekimų lygius (5–6) pasiekiančių mokinių dalis, %
+8
+1. MAŽESNĖS APIMTIES, BET GILESNĖS UGDYMO PROGRAMOS
+EBPO ugdymo turinio siaurinimą ir sutelkimą įvardija kaip vieną iš svarbiausių geresnės
+švietimo sistemos veiksnių. Rekomenduojama teikti pirmenybę mokymosi gyliui, o ne apimčiai.
+Geriau apimti mažiau esminių temų, bet mokyti taip, kad mokiniai jas iš tiesų suprastų, o ne
+paviršutiniškai perbėgti ilgą temų sąrašą (EBPO, 2026a). Tyrimai taip pat rodo, kad mokiniai,
+mokomi pagal mažiau temų apimančias, bet jas giliau nagrinėjančias programas, išsiugdo
+turtingesnį dalyko supratimą ir lengvai į naujas situacijas perkeliamus aukštesnio lygio mąstymo
+gebėjimus (EBPO, 2020a).
+Lietuvoje irgi įtvirtintas principas, kad keičiant bendrojo ugdymo programas pirmenybė
+teikiama jų gyliui, o ne plačiai mokymosi turinio aprėpčiai (NŠA, 2025b). Tačiau praktikoje šis
+principas neįgyvendintas. 2022 m. Lietuvoje atnaujinant bendrojo ugdymo programas siekta
+padaryti mokymosi turinį aktualesnį ir tinkamesnį šiuolaikiniams ugdymo poreikiams. Tačiau
+atnaujintos bendrojo ugdymo programos sulaukė daug kritikos dėl jų platumo, sudėtingumo ir
+abstraktumo (LRT, 2025a; LRT, 2026a). 2026 m. rugpjūtį septynių dalykų programos buvo
+koreguojamos būtent dėl to, kad mokytojai jas vertina kaip per plačias (ŠMSM, 2026b).
+VEIKSMAI
+2. MOKINIŲ PASIEKIMAI VISUR VERTINAMI VIENODAI
+Lietuvoje reguliarus bendrųjų programų peržiūros ciklas nėra įtvirtintas – programos
+peržiūrimos atsižvelgiant į nuolat teikiamus suinteresuotų šalių siūlymus, visą programų
+peržiūrą vykdant ne dažniau kaip kas penkerius metus (NŠA, 2025b). O aukštus PISA rezultatus
+pasiekiančioje Suomijoje nacionalinės ugdymo programos peržiūrimos reguliariai, maždaug kas
+dešimtmetį (EBPO, 2020b). EBPO vertinimu, būtent įtvirtintas reguliarus ugdymo programų
+peržiūros ciklas leidžia sumažinti ugdymo turinio priklausomybę nuo politinės kaitos (EBPO,
+2020b).
+Mokyklos nurodo, kad ugdymo programose pasigendama ir aiškių kriterijų, pagal kuriuos būtų
+galima vertinti mokinių pasiekimus (Švietimas #1, 2025a). Europos Komisija taip pat yra
+pastebėjusi, kad nors Lietuvoje diegiamas kompetencijomis grįstas vertinimas, tačiau
+Sumažinti ugdymo programų apimtį pagal principą „mažiau temų, daugiau gylio“,
+skiriant daugiau laiko svarbiausioms žinioms ir gebėjimams.
+Aiškiai įvardinti, ką mokinys turi išmokti kiekviename ugdymo etape, ir atskirti, kas yra
+būtina, o kas – papildoma ar pasirenkama.
+Kokybiškos ugdymo
+programos
+ŠVIETIMO KELRODIS
+9
+mokytojai kriterijus bei standartus, pagal kuriuos kompetencijos vertinamos, supranta ir taiko
+nevienodai (Europos Komisija, 2023). Geriausius PISA rezultatus demonstruojančiose šalyse
+vertinimo vienodumui skiriama daugiau dėmesio. Pavyzdžiui, Airijoje kiekvienam dalykui
+sukurti aiškūs „kokybės požymiai“ – nacionalinio lygmens aprašai, pagal kuriuos mokytojai
+vertina mokinių darbus. Šie požymiai leidžia mokytojams mokinių darbus vertinti nuosekliai.
+Tam, kad tie patys požymiai būtų suprantami vienodai, mokyklose numatytas atskiras laikas
+dalyko mokytojų susitikimams, kuriuose kartu aptariami konkretūs mokinių darbų pavyzdžiai ir
+derinami vertinimo sprendimai (NCCA, s. d.).
+Dažni Lietuvos valstybinių egzaminų sistemos pokyčiai ir jos trūkumai – egzaminų rezultatų
+koregavimas, netinkamai parengtos ar pernelyg sudėtingos užduotys bei jose pasitaikančios
+klaidos – taip pat apsunkina mokinių pasiekimų vertinimą ir mažina pasitikėjimą švietimo
+sistema (LRT, 2025d; LPAVT, 2024; LRT, 2025b). Dalis šių iššūkių gali būti susiję su Lietuvoje
+pasirinkta egzaminų užduočių rengimo sistema, kai egzaminų užduočių rengėjai kasmet
+atrenkami viešojo konkurso būdu. Tai neužtikrina institucinės atminties ir egzaminų užduočių
+nuoseklumo, nes rengiant užduotis patirties įgiję ekspertai nebūtinai bus pakviesti jas rengti
+vėlesniais metais.
+VEIKSMAI
+3. STEBIMA KIEKVIENO MOKINIO PAŽANGA IR LAIKU UŽTIKRINAMA
+PAGALBA
+Individualios mokinio pažangos stebėsena Lietuvos mokyklose vykdoma nevienodai ir ne
+visada sistemingai. 2020 m. dauguma (38 iš 53 tyrime dalyvavusių) mokyklų vertino daugiau
+nei vieną pažangos rodiklį, tačiau 9 mokyklos (17 proc.) atsižvelgė tik į pažymių pokytį, o 6
+mokyklos (apie 11 proc.) individualios pažangos nestebėjo iš viso (VK, 2020). Mokykloms
+trūksta bendros pažangos vertinimo sistemos, aiškių kriterijų, rodiklių ir praktinių pavyzdžių,
+kaip surinktus duomenis panaudoti planuojant ugdymą. Geriausius mokinių pasiekimus
+Vienoje, atskiroje nacionalinėje institucijoje sutelkti atsakomybę rengti bendrąsias
+ugdymo programas, egzaminus ir patikrinimus, mokinių pasiekimų vertinimo kriterijus
+– taip užtikrinant, kad visi jie derėtų tarpusavyje. Institucijoje užtikrinti nuolatinę
+ekspertinę kompetenciją, kad svarbiausios funkcijos būtų atliekamos nuosekliai, o ne
+kiekvieną kartą perkamos kaip atskiros paslaugos iš skirtingų ekspertų.
+Pokyčius grįsti duomenimis: nustatyti aiškų ugdymo programų atnaujinimo ciklą, jo
+nuosekliai laikytis ir prieš diegiant pakeitimus nacionaliniu mastu juos išbandyti.
+Užtikrinti, kad nepriklausomi tarptautiniai ekspertai periodiškai vertintų programų
+kokybę ir vertinimo sistemą.
+Nustatyti bendrą vertinimo standartą ir reguliariai derinti mokinių darbų vertinimą
+tarp mokytojų ir mokyklų, kad tas pats pasiekimų lygis visose mokyklose reikštų
+panašų rezultatą.
+ŠVIETIMO KELRODIS
+10
+demonstruojančiose šalyse mokinių pažangos stebėsenai ir individualizuoto ugdymo
+stiprinimui pasitelkiami duomenys naudojant skaitmenines technologijas. Pavyzdžiui, Estijos
+švietimo ir jaunimo agentūra (Harno) technologijas naudoja mokinių mokymosi analitikai, kuri
+padeda mokytojams matyti kiekvieno mokinio žinių spragas ir pritaikyti tolesnius žingsnius
+(Masters, 2024).
+Reali mokytojo pagalba mokiniui Lietuvoje yra nepakankama ir toliau mažėja. 2025 m. tik 48
+proc. Lietuvos penkiolikmečių nurodė, kad gamtos mokslų mokytojas domisi kiekvieno mokinio
+mokymusi (EBPO vidurkis – 69 proc.), 63 proc. – kad prireikus suteikia papildomą pagalbą
+(EBPO – 73 proc.), ir 57 proc. – kad mokytojas aiškina tol, kol mokiniai supranta (EBPO – 66
+proc.) (EBPO, 2026a). Lietuvos švietimo sistema patenka tarp tų, kuriose mokiniai rečiausiai
+jaučia, kad mokytojas gamtos mokslų pamokose domisi jų mokymusi. Pagal šį rodiklį prastesni
+rezultatai užﬁksuoti tik vienoje iš 84 tyrime analizuotų švietimo sistemų. Be to, 2015–2025 m.
+mokinių vertinimu mokytojų parama Lietuvoje sumažėjo labiau nei beveik visose kitose
+švietimo sistemose – tik Lenkijoje ir Graikijoje šis sumažėjimas buvo didesnis (EBPO, 2026a).
+Individualus dėmesys mokiniui reikalauja papildomų išteklių. Tik trečdalis 2024 m. apklaustų
+mokytojų nurodė, kad mato galimybę individualizuoti mokymą su esamais ištekliais (ŠMSM,
+NŠA, 2025).
+Pažangos stebėsenos ir pagalbos sistema nemato ir tų, kuriems sekasi geriau. 2022 m. NŠA
+atliktos analizės duomenimis, gabūs mokiniai Lietuvoje sistemingai neatpažįstami: nėra nei jų
+registro, nei procedūros, kuri gabumus oﬁcialiai nustatytų ir suteiktų teisę į pagalbą (NŠA,
+2022; Mokinių, turinčių specialiųjų ugdymosi poreikių, ugdymo organizavimo aprašas).
+Pamokoje aukštesnių gebėjimų mokiniui dažniausiai pasiūloma tik sudėtingesnė užduotis ar
+praplėstas turinys, o ugdymo spartinimas – kai mokinys peršoka klasę arba dalyko mokosi
+pagal aukštesnės klasės programą – dėl išteklių stokos taikomas retai. Papildomos tobulėjimo
+galimybės – olimpiados, neformalusis švietimas, pavyzdžiui, Nacionalinė moksleivių akademija,
+nuo 2004 m. ugdanti mokslui ir muzikai gabius vaikus, – telkiasi už mokyklos ribų ir yra
+prieinamos tik daliai mokinių (NŠA, 2022). Pastaruoju metu šiai mokinių grupei skiriama
+daugiau dėmesio. NŠA mokytojams parengė didelį mokymosi potencialą turinčių mokinių
+atpažinimo priemones, metodinę medžiagą ir daugiau kaip 100 specialių modulių 3–10 klasių
+mokiniams. Vis dėlto vieningos nacionalinės gabumų nustatymo procedūros kol kas nėra –
+skaitmeninį tokių mokinių atpažinimo įrankį planuojama įdiegti tik 2027 m. pabaigoje (NŠA,
+2026d).
+VEIKSMAI
+Nuosekliai stebėti kiekvieno mokinio pažangą: vienoje sistemoje kaupti svarbiausią
+informaciją apie pasiekimus, pažangą, savijautą, mokymosi sunkumus, specialiuosius
+poreikius, suteiktą pagalbą ir sutartus tolesnius mokymosi tikslus. Užtikrinti, kad ji
+būtų matoma mokiniui, tėvams ir mokytojams bei keliautų kartu su mokiniu keičiant
+mokyklą ar ugdymo pakopą.
+ŠVIETIMO KELRODIS
+11
+Nustatyti, kad reikšmingai pasikeitus mokinio pažangai sistema siųstų signalą
+mokytojų komandai. Ji kartu su mokiniu, tėvais, mokyklos vadovu ir, kai reikia,
+švietimo pagalbos specialistais susitartų dėl svarbiausių pagalbos ir pažangos
+gerinimo prioritetų bei stebėtų rezultatą.
+Bazinio lygio nepasiekiantiems mokiniams užtikrinti intensyvią pagalbą. Jei pagalba
+neveiksminga, ją keisti arba stiprinti, kol mokinys pasiekia bazinį lygį.
+Aukštesnių pasiekimų mokiniams sudaryti sąlygas mokytis giliau, nepriklausomai nuo
+mokyklos galimybių: nacionaliniu mastu užtikrinti prieigą prie aukštesnio lygio kursų,
+aukštųjų mokyklų programų, sudėtingesnių užduočių, mentorystės, pasirengimo
+olimpiadoms, mokslo projektų ir laboratorinių užsiėmimų.
+ŠVIETIMO KELRODIS
+12
+4. PROFESIONALŪS IR AUTONOMIŠKAI VEIKIANTYS MOKYKLŲ
+VADOVAI
+Vienas iš ryškiausių švietimo vadybos iššūkių Lietuvoje – senstanti mokyklų vadovų karta ir
+ribotas naujų kandidatų srautas. 2025–2026 m. m. vidutinis mokyklų vadovų amžius Lietuvoje
+siekė 54,9 metų. Taip pat 2025 m. net 21 ugdymo įstaiga neturėjo nuolatinio vadovo, o
+vidutiniškai viename mokyklų vadovų konkurse dalyvauja vos du pretendentai (ŠVIS, s. d.; LRT,
+2025c).
+Mokyklų vadovų trūkumą iš dalies lemia sudėtingos darbo sąlygos. 2021 m. Lietuvos švietimo
+įstaigų vadovų profesinės sąjungos ir Lietuvos pagrindinių mokyklų asociacijos atliktoje
+apklausoje daugiau kaip 60 proc. vadovų nurodė darbo santykiuose su darbdaviu patiriantys
+emocinę įtampą, psichologinį spaudimą ir (ar) diskriminaciją. Didžiausią įtampą vadovams
+darbe kelia didelė atsakomybė (59 proc.), darbo krūvis (46 proc.), kadencijų sistema (34 proc.)
+ir politikų kišimasis į vadovo veiklą (22 proc.) (LRT, 2021). Mokyklų vadovai taip pat turi ribotą
+laisvę valdyti įstaigų biudžetus, nes iš valstybės biudžeto lėšos skiriamos pagal nustatytas
+formules apskaičiuojant, kiek ir kokioms reikmėms galima išleisti, o savivaldybės skiriamas
+ﬁnansavimas taip pat numatomas konkrečioms reikmėms (Mokymo lėšų apskaičiavimo,
+paskirstymo ir panaudojimo aprašas). Nuo 2024 m. mokyklos organizacinę struktūrą ir
+pareigybių sąrašą formaliai nustato pats vadovas (LR biudžetinių įstaigų įstatymas), tačiau
+naujos pareigybės, pavyzdžiui, duomenų analitiko ar projektų koordinatoriaus, steigti dažnai
+nėra iš ko, nes lėšos skiriamos konkrečioms reikmėms. Todėl vadovai iš esmės sprendžia tik tai,
+kaip panaudoti jau paskirtas lėšas, bet ne kam jas skirti. Tai riboja jų autonomiją ir rodo žemą
+pasitikėjimą jais.
+EBPO, siekdama geresnės švietimo valdymo kokybės, rekomenduoja dažniau mokyklų
+vadovaujančiose komandose darbinti skirtingą patirtį ir kompetencijas turinčius profesionalus,
+aktyviai ieškoti galimų švietimo lyderių, ne tik tarp švietimo profesionalų, skatinti juos plėtoti
+lyderystės gebėjimus ir dalyvauti mokymų programose siekiant tapti vadovais (EBPO, 2011a).
+Lietuvoje švietimo įstaigų vadovų rezervas sukurtas siekiant telkti lyderystės gebėjimų
+turinčius asmenis ir padėti jiems pasirengti vadovauti švietimo įstaigai, įskaitant kompetencijų
+tobulinimą. Tačiau rezervo formavimas yra ne proaktyvus, o reaktyvus. Į rezervą patenkama jau
+pateikus prašymą vertinti ar įsivertinus vadovavimo kompetencijas, pradėjus dirbti vadovu,
+anksčiau vadovavus švietimo įstaigai arba įgijus mentoriaus statusą. Taigi jis nėra pildomas
+perspektyviais švietimo sistemos ar kitų sričių specialistais, kurie ateityje galėtų tapti švietimo
+įstaigų vadovais (Švietimo įstaigų vadovų rezervo reglamentas).
+Palaikymas svarbus ne tik planuojantiems dirbti, bet ir jau dirbantiems mokyklų vadovams.
+Siekiant užtikrinti mokyklų vadovų pasirengimą ir jų darbo kokybę, Europos Komisija
+Profesionali vadyba
+ŠVIETIMO KELRODIS
+13
+rekomenduoja karjeros sistemose numatyti įvairias profesinio mokymosi galimybes:
+mentorystę, darbo stebėjimą, kolegialų mokymąsi ir tarptautinį mobilumą, mokymus bei
+komandiruotes naujoms kompetencijoms įgyti. Kartu ji siūlo teikti aiškią informaciją apie
+paramą, kurią karjerai plėtoti gali gauti mokyklų vadovai (Europos Komisija, 2022).
+Estijoje mokyklų vadovai mokosi iš verslo per specialią švietimo lyderių praktikos programą: jie
+bent 10 savaičių praleidžia įmonėse su stipria vadybos ir mentorystės kultūra, o vėliau grįžta į
+mokyklas įgyvendinti pokyčių. Vadovai dirba su mentoriais, analizuoja lyderystės, strateginio
+planavimo, duomenimis grįstos vadybos ir komandos darbo procesus, kad šias praktikas
+pritaikytų mokyklose (Heateo Sihtasutus, Haridusjuhtide praktikaprogramm, 2026).
+Lietuvoje mokyklų vadovams ir jų komandoms siūlomos įvairios tobulėjimo galimybės,
+pavyzdžiui, NŠA seminarai ir konsultacijos, Vytauto Didžiojo universiteto (VDU) Švietimo
+akademijos mokymai, regioninių švietimo centrų veiklos, Švietimas #1 vadovų klubas ir
+mentorystė (NŠA, 2026c, p. 26; VDU PTI, 2025; KŠIC, s. d.; Švietimas #1, s. d. b). Tačiau šios
+galimybės pasiekia ne visus vadovus. Pavyzdžiui, ilgalaikė mentorystė skiriama tik pirmus
+dvejus metus dirbantiems vadovams, o jos mastas nedidelis: 2025 m. ją gavo vos 12 švietimo
+įstaigų vadovų (NŠA, 2026c). Dalis paramos vadovams teikiama savivaldybių lygmeniu.
+Pavyzdžiui, Vilniaus miesto „Lyderystės akademija“ pradedantiesiems vadovams siūlo
+mentorystę su patyrusiais kitų miesto mokyklų vadovais ir mokymų ciklą, o visiems miesto
+švietimo įstaigų vadovams rengia kasmetinius forumus (EDU Vilnius, s. d.). Tačiau tokias
+paramos priemones taiko ne visos savivaldybės, o apskritai informacija apie tobulėjimo
+galimybes vadovams nėra susisteminta ir pateikta patogiu formatu.
+VEIKSMAI
+Esamiems ir būsimiems mokyklų vadovams suteikti praktinį pasirengimą ir pagalbą:
+mentorystę, mokymus, stažuotes ir galimybę mokytis iš stiprių švietimo, verslo bei
+technologijų organizacijų vadovų.
+Sistemingai pastebėti ir atrinkti lyderystės potencialą turinčius žmones – švietimo ir
+kitų sričių profesionalus – ir aktyviai kviesti juos rengtis mokyklų vadovų darbui.
+Sukurti realų ir aiškų kelią kitų sričių lyderiams tapti mokyklų vadovais. Pašalinti
+perteklines patekimo kliūtis, kartu užtikrinant kryptingą pasirengimą darbui
+mokykloje.
+Suteikti mokyklų vadovams daugiau laisvės valdyti ﬁnansus – savarankiškai
+perskirstyti mokyklos biudžeto lėšas pagal svarbiausius poreikius, jei tai padeda
+gerinti ugdymo kokybę ir mokinių pasiekimus.
+Suteikti mokyklų vadovams daugiau laisvės formuoti komandą pagal mokyklos
+poreikius – neapsiriboti nustatytu pareigybių sąrašu ar darbuotojų skaičiumi, jei tam
+nereikia papildomų biudžeto lėšų.
+ŠVIETIMO KELRODIS
+14
+5. MOKYKLOSE KURIAMA POZITYVI DARBO IR MOKYMOSI APLINKA
+Pozityvios mokyklos aplinkos, užtikrinančios gerą mokinių ir mokytojų savijautą, kūrimas
+Lietuvoje išlieka iššūkiu. Tik 62,1 proc. Lietuvos mokinių teigia jaučiantys, kad priklauso
+mokyklai (EBPO vidurkis – 76,2 proc.). Bent vieną patyčių formą patyrė 45,3 proc. mokinių –
+šiek tiek mažiau nei vidutiniškai EBPO šalyse (47,5 proc.), tačiau, palyginti su 2022 m., ši dalis
+Lietuvoje padidėjo, o EBPO šalyse sumažėjo. Mokinių savijauta aiškiai siejama su pasiekimais:
+mokinių, kurie jaučiasi priklausantys mokyklai ar saugūs, gamtos mokslų raštingumo rezultatai
+yra aukštesni (ŠMSM, 2026a).
+Lietuvos mokytojai vidutiniškai dažniau nei kitų EBPO šalių mokytojai patiria stresą dėl
+atsakomybės už mokinių pasiekimus (72,6 proc., EBPO vidurkis – 45 proc.) ir nuolatinių vietos,
+savivaldos ir nacionalinių institucijų keliamų darbo ir atskaitomybės reikalavimų pokyčių (71,7
+proc., EBPO vidurkis – 39,3 proc.) (EBPO, 2025b). Taip pat Lietuvoje net 74 proc. mokytojų
+perdegimą įvardija kaip labai svarbią problemą, tik 45 proc. savo savijautą vertina kaip gerą ar
+labai gerą (Pilietinės visuomenės institutas, 2023). Maždaug pusė apklaustų pedagogų yra
+patyrę verbalinį (51 proc.) ar socialinį (50,8 proc.) mokinių smurtą. Patyčias pedagogai patiria
+ne tik iš mokinių, bet ir iš suaugusiųjų: beveik trečdalis jų yra patyrę patyčias iš mokyklos
+administracijos (31,1 proc.), daugiau nei ketvirtadalis – iš kolegų (27,1 proc.) ar mokinių tėvų
+(25,6 proc.) (LŠMPS, 2023).
+Geriausius mokinių mokymosi rezultatus pasiekiančiose užsienio šalyse, pavyzdžiui, Estijoje,
+mokyklose vykdomi ne tik savanoriški žinių ir bendrųjų kompetencijų testai, bet ir reguliarios
+mokinių, mokytojų bei tėvų apklausos. Jos suteikia duomenų apie bendruomenės gerovę,
+pasitenkinimą švietimu, tarpusavio santykius, mokytojų bendradarbiavimą, patyčias,
+mokymosi aplinką ir kitus mokyklos veiklai svarbius veiksnius. Kiekviena mokykla gauna
+išsamias grįžtamojo ryšio ataskaitas ir jos rezultatų palyginimą su nacionaliniais vidurkiais. Tai
+leidžia aiškiau nustatyti stiprybes, problemines sritis ir tobulinimo prioritetus (Education
+Estonia, s. d.). Šis modelis veikia todėl, kad duomenys naudojami pirmiausia ne išorinei
+kontrolei, bet reﬂeksijai, bendruomenės įtraukimui ir mokyklos tobulinimui. Airijos mokyklose
+duomenimis grįstas problemų sprendimas organizuojamas per privalomą procesą, paremtą
+šešių etapų ciklu: pasirenkama tobulintina sritis, renkami ir analizuojami duomenys,
+formuluojamos išvados, rengiamas ir įgyvendinamas veiklos gerinimo planas, o vėliau stebimas
+jo poveikis. Mokyklos remiasi „Žvilgsnio į savo mokyklą“ (angl. „Looking at Our School“) kokybės
+sistema, kuri padeda įvertinti įvairias pačių mokyklų pasirenkamas prioritetines veiklos sritis,
+įskaitant mokyklos gerovę. Sprendimai grindžiami įvairiais mokyklos duomenimis, pagal kuriuos
+nustatomi tikslai, planuojamos priemonės ir vertinama pažanga. Ši prieiga veikia dėl vidinio
+įsivertinimo ir išorinio vertinimo derinimo. Išoriniai vertintojai atsižvelgia į mokyklos atliktą
+savianalizę, o tai suteikia mokykloms daugiau įtakos sprendimų priėmimo procese (Gardezi,
+2024).
+ŠVIETIMO KELRODIS
+15
+VEIKSMAI
+6. ŠVIETIMO SISTEMOS PAŽANGA VYKDOMA PER PILOTINIUS
+MODELIUS
+Lietuvos švietimo sistemoje sprendimai dažnai priimami ir reformos diegiamos be
+sistemingos analizės ir reformų pilotavimo. Nėra pilotavimą reglamentuojančio bendro teisinio
+pagrindo, apibrėžiančio tokių projektų poreikį ar reikalavimus, tokius kaip viešai prieinama
+rezultatų analizė. Tai mažina galimybes įvertinti intervencijų veiksmingumą, surinkti grįžtamąjį
+ryšį iš suinteresuotų grupių, stiprinti įgyvendinimo gebėjimus ir ištaisyti galimus trūkumus bei
+prisideda prie mažėjančio pasitikėjimo švietimo politika (LRT, 2026b; LPAVT, 2024; Schleicher,
+2016).
+Kai kuriose Europos šalyse pilotavimas yra sistemingas ir teisiškai įtvirtintas. Pavyzdžiui,
+Prancūzijos Švietimo kodeksas leidžia mokykloms iki penkerių metų išbandyti naujus ugdymo
+organizavimo sprendimus. Kiekvienam eksperimentui privalomas vertinimo protokolas su
+poveikio rodikliais ir galutine ataskaita, vertinimo rezultatai pristatomi mokyklos tarybai ir
+mokinių tėvams, regionų švietimo vadovai kasmet rengia eksperimentų apžvalgą, o teigiamai
+įvertinti eksperimentai gali būti pratęsti ar išplėsti (Éduscol, s. d.). Anglijoje Švietimo fondas
+naujas programas pirmiausia išbando 10–20 ugdymo įstaigų, vėliau 50–100, o į didesnio
+masto etapą atrenkamos tik tos, kurių ankstesnis vertinimas parodė teigiamą poveikį mokinių
+pažangai (EEF, s. d. a). Visų projektų poveikį vertina nepriklausomi vertintojai, o jų ataskaitos
+skelbiamos viešai, nepriklausomai nuo rezultatų (EEF, s. d. b).
+VEIKSMAI
+Kasmet pagal vienodą, nacionalinę metodiką vertinti darbo ir mokymosi aplinką,
+apklausiant mokinius, mokytojus ir tėvus.
+Kiekvienai mokyklai pateikti aiškų ir rezultatais grįstą jos darbo ir mokymosi aplinkos
+pokytį bei palyginimą su panašiomis mokyklomis.
+Pagal rezultatus pasirinkti 2–3 svarbiausius darbo ir mokymosi aplinkos gerinimo
+prioritetus bei numatyti konkrečius veiksmus, stebėti, ar situacija gerėja, ir pagal
+rezultatus koreguoti veiksmus.
+Mokykloms, susiduriančioms su ilgalaikėmis problemomis, suteikti tikslinę išorinę
+specialistų pagalbą.
+Sukurti viešą nacionalinę sistemą, kurioje būtų registruojami ir koordinuojami švietimo
+pilotiniai projektai – kas, kur ir kokiu tikslu išbandoma.
+Viešai skelbti visų pilotinių projektų rezultatus.
+Nacionaliniu mastu plėsti tik tuos sprendimus, kurių nauda įrodyta duomenimis –
+kitus tobulinti arba stabdyti.
+ŠVIETIMO KELRODIS
+16
+7. KOKYBIŠKAS MOKYKLŲ TINKLAS: PERĖJIMAS PRIE 6+3+3
+UGDYMO STRUKTŪROS
+Žvelgiant į ugdymo pakopų organizavimą, dalis geriausius pasiekimus demonstruojančių
+Europos šalių, pavyzdžiui, Estija ir Suomija, bendrąjį ugdymą organizuoja pagal vientisos
+struktūros modelį. Jame pradinis ir pagrindinis ugdymas sujungti į vieną nepertraukiamą 9
+metų programą (1–9 klasės), po kurios mokiniai gali tęsti 3 metų vidurinį ugdymą (Eurydice,
+2026c; Eurydice, 2026d). Lietuvoje bendrasis ugdymas trunka 12 metų ir atskiria pradinę ir
+pagrindinę pakopas – pradinis mokymas trunka 4, pagrindinis 6, o vidurinis ugdymas – 2
+metus (SKVC, s. d.). Tyrimai rodo neigiamą koreliaciją tarp ugdymo pakopų / mokyklų perėjimo
+ir mokinių akademinių pasiekimų bei emocinės gerovės, o tai rodo vientiso modelio pranašumą
+prieš kitokias ugdymo organizavimo sistemas (Rockoff ir Lockwood, 2010; Kaur ir kt., 2022).
+Tarptautiniai duomenys rodo, kad mokyklų autonomija siejama su geresniais mokinių
+pasiekimais, kai ją lydi aiški atskaitomybė, pavyzdžiui, viešai skelbiami mokyklų pasiekimų
+duomenys (EBPO, 2011b). Lietuvoje už švietimo kokybę atsako mokykla ir jos savininkas
+(dažniausiai savivaldybė), o išorinį vertinimą vykdo NŠA (LR švietimo įstatymas). Tačiau nė
+viename iš šių trijų lygmenų kokybės užtikrinimas neveikia pakankamai veiksmingai.
+Mokyklose įsivertinimas dažnai lieka formalus. 2023–2024 m. rizikos vertinime dalyvavusiose
+mokyklose nustatyti įsivertinimo reguliarumo, bendruomenės įsitraukimo ir kompetencijų atlikti
+kokybišką įsivertinimą trūkumai (NŠA, 2025c). Taip pat beveik du trečdaliai mokyklų vadovų
+nurodo, kad mokinių pasiekimai jų mokyklose analizuojami tik 2–3 kartus per metus, ir patys
+tai laiko nepakankamu dažnumu. Pagrindinės to priežastys yra laiko ir žmogiškųjų išteklių stoka.
+Analizę atlieka skirtingų pareigybių darbuotojai, kurių kvaliﬁkacija duomenų analizės srityje
+nevienoda, o galimybės skirti laiko šiai funkcijai labai ribotos (KTU, 2025). Mokyklų vadovai
+didelę dalį savo laiko skiria administravimui. Pavyzdžiui, keliose mokyklose atlikto tyrimo
+duomenimis, biurokratiniai procesai užima iki 50 proc. jų vadovų darbo laiko (Švietimas #1,
+2025b). Jungiant mokyklas į klasterius su bendra administracija, šias funkcijas galėtų atlikti
+bendra profesionali komanda, o vadovai daugiau laiko skirtų ugdymo kokybei. Pavyzdžiui, Velse
+administravimo specialistai dirbo mokyklų klasteriams (Conwy slėnio klasteryje trys
+darbuotojai aptarnavo 21 mokyklą), ir 70 proc. dalyvavusių vadovų nurodė sumažėjusį
+administracinį krūvį (Welsh Government, 2019).
+Savivaldybių lygmeniu pasireiškia EBPO decentralizuotose sistemose pastebėtas iššūkis:
+savininkų gebėjimai ir įsipareigojimas vertinti kokybę labai skiriasi, o jų taikomi kriterijai
+nacionaliniu mastu nepalyginami (EBPO, 2013). Pavyzdžiui, nors rizikos grupės mokyklose NŠA
+nustatė esminių trūkumų, 26 iš 27 jų vadovų veikla mokyklos savininko buvo įvertinta labai
+gerai arba gerai (NŠA, 2025c).
+Nacionaliniu lygmeniu išorinis vertinimas iš visuotinio tapo tiksliniu. 2007–2020 m. visuminiais
+vertinimais įvertinta apie 71 proc. bendrojo ugdymo mokyklų (ŠMSM, 2021), o 2020–2024 m.
+vykdyti tik teminiai ir rizikos vertinimai (NŠA, 2024; NŠA, 2025c). Šiuo metu NŠA svarsto
+naujas vertinimo koncepcijas (15min, 2026).
+ŠVIETIMO KELRODIS
+17
+VEIKSMAI
+Pereiti nuo dabartinės 4+6+2 ugdymo struktūros prie 6+3+3: pradinį ugdymą pratęsti
+nuo 4 iki 6 metų, pagrindinį ugdymą baigti 9-oje, o ne 10-oje klasėje, o vidurinį
+ugdymą pailginti iki trejų metų ir organizuoti 10–12, o ne 11–12 klasėse.
+Nustatyti bendrą nacionalinį mokyklos kokybės standartą: kiekviena mokykla būtų
+vertinama ne tik pagal mokinių rezultatus, bet ir pagal pasiektą vaiko pažangą,
+suteikiamą pagalbą, mokymosi aplinką, mokytojų darbo sąlygas ir bendrą mokyklos
+mikroklimatą. Mokykloms, nepasiekusioms šio standarto, teikti tikslinę pagalbą.
+Aiškiai nustatyti mokyklos savininko atsakomybę už mokyklos pažangą: įpareigoti jį
+stebėti rezultatus, užtikrinti reikalingą pagalbą ir prisiimti atsakomybę už pokytį.
+Savivaldybės lygmens mokyklų kokybės ir pažangos rezultatus skelbti viešai.
+Skatinti mokyklas jungtis į klasterius ar stambesnius juridinius vienetus su bendra
+vadovybe ir administracija.
+ŠVIETIMO KELRODIS
+18
+8. MOKYTOJAI DARBUI RENGIAMI PRAKTIŠKAI, O NE TEORIŠKAI
+Šiuo metu aukštosios mokyklos pedagogikos studentams siūlo ribotas praktikos galimybes –
+nuo 2024 m. pedagogikos studijose privalomos praktikos mokyklose apimtis tesiekia 30
+kreditų, kurie sudaro apie aštuntadalį pedagogikos bakalauro studijų ir nuo ketvirtadalio iki
+pusės profesinių pedagogikos studijų programos apimties. Geriausius mokinių pasiekimus
+demonstruojančiose Europos šalyse pedagogikos studijos yra labai glaudžiai susietos su
+praktika. Pavyzdžiui, Suomijoje universitetams suteikiama didelė autonomija organizuojant
+pedagoginę praktiką, įskaitant jos trukmės nustatymą, o ji vykdoma specializuotose praktinio
+mokymo mokyklose. Praktinis rengimas Suomijoje apima pamokų stebėjimą ir planavimą,
+savarankiškai ar bendradarbiaujant vedamas pamokas, reguliarias reﬂeksijas su prižiūrinčiais
+mentoriais ir universitetų dėstytojais (Mankki ir kt., 2025; European Agency for Special Needs
+and Inclusive Education, 2025).
+Pedagogikos studijų programos Lietuvoje taip pat nėra universalios. Lietuvoje pradinio
+ugdymo mokytojai rengiami atskirose programose, o pagrindinio ir vidurinio ugdymo
+mokytojai rengiami kaip vieno dalyko specialistai. Kai kuriose šalyse taikomi kitokie modeliai.
+Pavyzdžiui, Danijoje pradinės ir pagrindinės mokyklos (1–9 kl.) mokytojai rengiami pagal
+integruotą keturių metų bakalauro programą, kurios metu įgyjama kvaliﬁkacija dėstyti tris
+dalykus (Eurydice, 2026a). Mokytojų rengimas pagal tokį modelį bent iš dalies padeda spręsti jų
+trūkumo iššūkius ir suteikia jiems geresnes profesines perspektyvas.
+Pastebėtina ir nepakankama parama mokytojams pirmaisiais darbo metais. Nors
+pradedantiesiems mokytojams, turintiems iki 2 metų pedagoginio darbo stažo, įstatymu
+nustatytas beveik 15 proc. mažesnis kontaktinių valandų skaičius nei kitiems bendrojo ugdymo
+mokytojams (LR biudžetinių įstaigų darbuotojų darbo apmokėjimo ir komisijų narių atlygio už
+darbą įstatymas), mentorių turi tik 26 proc. pradedančiųjų pagrindinio ugdymo mokytojų
+(EBPO, 2025b). Pagal PISA tyrimo rezultatus Lietuvą lenkiančiose Europos šalyse, pavyzdžiui,
+Airijoje, Lenkijoje ir Jungtinėje Karalystėje, mentorystė yra privaloma pradedančiųjų mokytojų
+įvadinio laikotarpio dalis (Eurydice, 2021).
+VEIKSMAI
+Nuo pirmųjų studijų metų skirti daugiau praktikos mokyklose. Būsimiesiems
+mokytojams praktiką leisti atlikti tik pasirengusiose praktikai mokyklose, kuriose yra
+parengti mentoriai ir aiški praktikos kokybės sistema. Jie turėtų palaipsniui pereiti
+nuo pamokų stebėjimo prie savarankiško mokymo su skirtingo amžiaus mokiniais.
+Motyvuoti mokytojai
+ŠVIETIMO KELRODIS
+19
+9. MOKYTOJAI DIRBA KOMANDOJE IR GAUNA NUOLATINĘ
+PROFESINĘ PAGALBĄ
+Profesinė pagalba, apimanti kvaliﬁkacijos tobulinimą ir grįžtamąjį ryšį, svarbi ne tik
+pradedantiesiems, bet ir ilgiau dirbantiems mokytojams. Kartu svarbu užtikrinti, kad ši pagalba
+būtų kokybiška ir efektyvi. Pedagogų kvaliﬁkacijos tobulinime 2024 m. dalyvavo beveik visi
+Lietuvos pagrindinio ugdymo mokytojai (99,8 proc., palyginti, EBPO vidurkis – 96 proc.), tačiau
+tik 54,4 proc. jų teigė, kad šios veiklos turėjo „gana didelę“ arba „labai didelę“ teigiamą įtaką jų
+mokymui (EBPO, 2025b). Grįžtamąjį ryšį apie savo darbą gauna beveik visi Lietuvos mokytojai:
+2018 m. tokių buvo 98 proc. (NŠA, 2020). Grįžtamąjį ryšį mokytojai vertina palankiau: jie
+dažniausiai nurodo, kad gautas grįžtamasis ryšys lėmė teigiamų pokyčių dalyko mokymo
+pedagoginėse kompetencijose (79,8 proc.), naudojant mokinių vertinimo rezultatus mokymuisi
+gerinti (78 proc.) ir gilinant savo srities žinias bei supratimą (76 proc.) (EBPO, 2025b).
+Tačiau nuosekliam mokinių rezultatų gerinimui Lietuvoje trūksta mokytojų bendradarbiavimo.
+Tik 37 proc. Lietuvos pagrindinio ugdymo mokytojų bent kartą per mėnesį tariasi su kolegomis
+dėl konkrečių mokinių pažangos, kai EBPO šalyse vidutiniškai tai daro 60 proc., Estijoje – 66
+proc., o Suomijoje – 79 proc. mokytojų. Taip pat tik 27 proc. Lietuvos pagrindinio ugdymo
+mokytojų bent kartą per mėnesį bendradarbiauja su kolegomis siekdami užtikrinti bendrus
+mokinių vertinimo standartus (EBPO vidurkis – 41 proc., Suomijoje – 47 proc., Lenkijoje – 57
+proc.) (EBPO, 2025b). Tik apie 4 proc. Lietuvos mokytojų pagrindiniame ugdyme kartą per
+mėnesį stebi kolegų vedamas pamokas ir teikia grįžtamąjį ryšį (EBPO šalyse – 9 proc.) (EBPO,
+2025b).
+Pasirūpinti, kad praktiką mokykloje stebėtų ir vertintų ne tik mokyklos mentorius, bet
+ir aukštųjų mokyklų mentorius. Taip pat, kad būsimieji mokytojai reguliariai gautų
+grįžtamąjį ryšį.
+Pirmuosius trejus darbo metus naujam mokytojui skirti apmokamą mentorių ir
+mažesnį pamokų krūvį: 30 proc. pirmaisiais, 20 proc. antraisiais ir 10 proc. trečiaisiais
+metais. Mentorystę taip pat užtikrinti mokytojams, pradėjusiems mokyti naują dalyką
+ar dirbti kitoje ugdymo pakopoje.
+Geriausius ir labiausiai patyrusius mokytojus įtraukti į būsimų mokytojų rengimą
+aukštosiose mokyklose. Dalį pedagogikos studijų dalykų turėtų dėstyti aukštos
+profesinės kompetencijos mokytojai, kurie teorines žinias gali susieti su realia
+mokyklos patirtimi.
+Mokytojus rengti lanksčiau. Pertvarkyti pedagogikos studijas taip, kad būsimas
+pagrindinės mokyklos mokytojas būtų rengiamas ne vienam dalykui ar vienai amžiaus
+grupei, o baigęs studijas jis galėtų mokyti bent dviejų mokomųjų dalykų.
+Aukštąjį išsilavinimą ir reikiamų dalykinių žinių turintiems kitų sričių specialistams
+plėsti lankstų ir nemokamą kelią į mokytojo profesiją – sudaryti galimybę pedagoginį
+pasirengimą derinti su apmokamu darbu mokykloje ir užtikrinti praktinę bei teorinę
+pagalbą karjeros pradžioje.
+ŠVIETIMO KELRODIS
+20
+Biurokratinė našta reikšmingai nukreipia mokytojų dėmesį nuo ugdymo. Didžiausią perteklinį
+krūvį kuria dvigubas duomenų teikimas. Dalis institucijų prašomos informacijos yra visiškai
+tapati jau pateiktai, kita dalis pakartotinai teikiama tarpusavyje nesusikalbančiose sistemose
+(ŠVIS, mokinių ir mokytojų registrai, SABIS, „Ecocost“, „Avilys“ ir kt.), o kai kuriuos dokumentus
+tenka papildomai siųsti el. paštu ar teikti popieriuje. Net savivaldybės, turinčios prieigą prie tų
+pačių sistemų, iš mokyklų vis tiek prašo tų pačių duomenų ataskaitų ar lentelių pavidalu, nors
+Valstybės informacinių išteklių valdymo įstatymas įpareigoja institucijas reikalingus duomenis
+pirmiausia gauti iš kitų valstybės informacinių sistemų ir registrų (Švietimas #1, 2025b).
+VEIKSMAI
+10. MOKYTOJŲ KARJERA SUSIETA SU DARBO KOKYBE, O NE
+IŠDIRBTU LAIKU
+EBPO pažymi, kad mokytojo profesija yra patrauklesnė tose šalyse, kuriose aiškiai apibrėžta, į
+kokias pareigas mokytojas gali kilti ir ko tam reikia, o aukštesnės pareigos suteikia daugiau
+atsakomybės, statuso ir sprendimų galios. Taip pat tai, kaip mokytojai vertina savo karjeros
+galimybes, yra susiję su jų pasitenkinimu darbu ir noru likti profesijoje (EBPO, 2026b).
+Šiuo metu Lietuvoje mokytojams suteikiamos keturios kvaliﬁkacinės kategorijos: mokytojo,
+vyresniojo mokytojo, mokytojo metodininko ir mokytojo eksperto. Atestacijos mokytojas gali
+siekti savo noru, o aukštesnei kategorijai gauti būtinas minimalus darbo stažas: ne mažiau kaip
+ketveri, penkeri ir šešeri dalyko mokymo metai atitinkamai vyresniojo mokytojo, metodininko ir
+eksperto kategorijai. Suteikta kategorija galioja neterminuotai ir nėra susieta su papildomomis
+pareigomis ar atsakomybėmis mokykloje (Mokytojų ir pagalbos mokiniui specialistų atestacijos
+nuostatai). Mokyklų vadovų vertinimu, atestacijos procesas yra neproporcingas jo naudai.
+Reikia surinkti daug dokumentų apie ankstesnių metų veiklą, o atlyginimas padidėja minimaliai,
+Mokytojų darbo laiku numatyti reguliarų laiką darbui komandomis: kartu planuoti
+ugdymą, aptarti mokinių pažangą, stebėti kolegų pamokas ir mokytis vieniems iš kitų.
+Kiekvienam mokytojui kelis kartus per metus užtikrinti kolegialų grįžtamąjį ryšį.
+Sukurti nacionalinį mentorių ir dalykinių konsultantų tinklą. Jei mokytojui neužtenka
+pagalbos savo mokykloje, jis galėtų kreiptis į savo dalyko ar konkrečios problemos
+ekspertą.
+Mokytojų kvaliﬁkacijos tobulinimo programų kokybę vertinti pagal jų realią naudą.
+Programas akredituoti remiantis ne tik formaliais kriterijais, bet ir jose dalyvavusių
+mokytojų grįžtamuoju ryšiu: ar mokymai turi teigiamą įtaką jų mokymui ir ar padeda
+gerinti mokinių mokymąsi. Akreditaciją privaloma peržiūrėti reguliariai, pavyzdžiui, kas
+trejus metus, o neveiksmingų ar prastai vertinamų programų nebeakredituoti ir
+nebeﬁnansuoti.
+Mažinti mokytojų administracinį krūvį, atsisakant pasikartojančių reikalavimų ir
+sukuriant patogias naudoti integruotas sistemas.
+ŠVIETIMO KELRODIS
+21
+todėl dalis mokytojų net nesiryžta atestuotis. Be to, formali kategorija dažnai mažai susijusi su
+realia mokytojo kompetencija, o pasiekę aukščiausią kategoriją mokytojai neretai tobulėja
+mažiau (Švietimas #1, 2025b). ŠMSM 2026–2028 m. pedagogų pritraukimo ir išlaikymo plane
+numatyta keisti pedagoginių darbuotojų atestacijos nuostatus, magistro laipsnio kvaliﬁkaciją
+susiejant su vyresniojo mokytojo, o daktaro laipsnio – su metodininko kvaliﬁkacine kategorija
+be atestacijos procedūrų (ŠMSM, 2026c).
+Žvelgiant į užsienio praktiką, Estijoje veikia keturių pakopų mokytojų karjeros modelis, kuris
+profesinį augimą tiesiogiai sieja su didesnėmis atsakomybėmis ir atlygiu. Aukštesnės pakopos
+suteikiamos ne už stažą, o už įrodytas kompetencijas pagal mokytojo profesinius standartus.
+Vyresniesiems mokytojams ir meistrams mokytojams numatomi vaidmenys konsultuojant
+kolegas, koordinuojant ugdymo turinio tobulinimą ir vystant mentorystę, o jų atlyginimas yra
+atitinkamai bent 10 ir 30 proc. didesnis nei mokytojo. Pakopa suteikiama penkeriems metams,
+o jos iš naujo nesiekiančiam mokytojui suteikiama bazinė mokytojo pakopa (Eurydice, 2026b;
+HTM, 2026).
+VEIKSMAI
+Dabartines mokytojų kvaliﬁkacines kategorijas pakeisti profesinio augimo pakopomis,
+kurios būtų suteikiamos ne už išdirbtą laiką, o už pasiektus rezultatus, prisiimtą
+atsakomybę ir profesinę lyderystę.
+Numatyti, kad aukštesnės pakopos mokytojai dalį darbo laiko skirtų mentorystei,
+kolegų konsultavimui, būsimų mokytojų rengimui ir naujų sprendimų išbandymui.
+Už šias papildomas atsakomybes jiems skirti didesnį atlygį, o pakopą suteikti ribotam
+laikotarpiui ir reguliariai ją peržiūrėti.
+ŠVIETIMO KELRODIS
+22
+Švietimo
+kelrodis
+Kiekvienam Lietuvos vaikui –
+geriausias švietimas Europoje
+Analitikų komanda:
+kelrodis.svietimas.lt
+2026

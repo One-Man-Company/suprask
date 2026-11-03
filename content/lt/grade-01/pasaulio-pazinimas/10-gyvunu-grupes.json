@@ -1,0 +1,81 @@
+{
+  "id": "10-gyvunu-grupes",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Gyvūnų grupės",
+  "subtitle": "Žinduoliai, paukščiai, žuvys",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu tris gyvūnų grupes pagal požymius.",
+    "Paaiškinu, kuo gyvūnai dengti ir kuo kvėpuoja.",
+    "Sugrupuoju gyvūnus pagal bendrą požymį."
+  ],
+  "concept": {
+    "title": "Grupuojame pagal požymius",
+    "big_idea": "Gyvūnus galima grupuoti pagal tai, kuo jie dengti, kaip kvėpuoja ir kur gyvena. Tai padeda pastebėti tvarką gamtoje.",
+    "steps": [
+      "Žinduoliai turi kailį arba plaukus, maitina jauniklius pienu.",
+      "Paukščiai turi plunksnas, deda kiaušinius, dauguma skraido.",
+      "Žuvys gyvena vandenyje, kvėpuoja žiaunomis, turi žvynus."
+    ],
+    "example": "Šuo turi kailį ir žinda pieną — žinduolis. Antis turi plunksnas ir deda kiaušinius — paukštis. Ešerys turi žvynus ir žiaunas — žuvis."
+  },
+  "sim": {
+    "component": "gyvunu-grupes",
+    "config": {}
+  },
+  "tasks": [
+    {
+      "q": "Kuris gyvūnas yra žinduolis?",
+      "options": [
+        "Karvė",
+        "Varnas",
+        "Karosas"
+      ],
+      "answer": 0,
+      "hint": "Kuris maitina jauniklius pienu?",
+      "why": "Karvė maitina veršiuką pienu — tai žinduolis."
+    },
+    {
+      "q": "Kuo kvėpuoja žuvys?",
+      "options": [
+        "Plaučiais",
+        "Žiaunomis",
+        "Oda"
+      ],
+      "answer": 1,
+      "hint": "Jos gyvena vandenyje — kuo jos ima deguonį iš vandens?",
+      "why": "Žuvys kvėpuoja žiaunomis."
+    },
+    {
+      "q": "Kuris požymis būdingas paukščiams?",
+      "options": [
+        "Žvynai",
+        "Kailis",
+        "Plunksnos"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok apie pagalvę, bet ne apie jos turinį.",
+      "why": "Paukščiai padengti plunksnomis."
+    }
+  ],
+  "reflect": "Kokį gyvūną matai kieme dažniausiai? Kuriai grupei jis priklauso ir kodėl?",
+  "teacher": {
+    "goal": "Klasifikavimo įgūdis pagal aiškius požymius, o ne pagal išvaizdos įspūdį.",
+    "prompt": "Pagal ką žinai, kad tai paukštis, o ne žinduolis?",
+    "offline": "Padarykite tris dėžutes su užrašais ir surūšiuokite žaislinius gyvūnus. Aptarkite kiekvieną sprendimą.",
+    "misconceptions": [
+      "Šikšnosparnis priskiriamas paukščiams, nes skraido — jis žinduolis.",
+      "Delfinas laikomas žuvimi, nes gyvena vandenyje — jis žinduolis.",
+      "Pingvinas laikomas žuvimi arba „ne paukščiu“, nes neskraido."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Gamtos mokslai“, gyvūnų įvairovė 1–2 kl.",
+    "Pasaulio pažinimo programa: gyvūnų grupės ir jų požymiai."
+  ],
+  "svietimas1": [
+    "1 žingsnis — gylis: trys grupės nagrinėjamos per tuos pačius požymius (danga, kvėpavimas)",
+    "3 žingsnis — pagalba: kiekvienas priskyrimas iškart paaiškinamas požymiu"
+  ]
+}

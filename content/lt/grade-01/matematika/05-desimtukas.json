@@ -1,0 +1,83 @@
+{
+  "id": "05-desimtukas",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Dešimtukas",
+  "subtitle": "Kodėl dešimt yra patogus skaičius",
+  "minutes": 8,
+  "outcomes": [
+    "Suskaičiuoju, kiek daiktų yra dešimtuke, ir kiek trūksta iki dešimt.",
+    "Suskirstau skaičių į „penkis ir dar tiek“.",
+    "Paaiškinu, kodėl dešimtukas padeda greičiau skaičiuoti."
+  ],
+  "concept": {
+    "title": "Dešimt — mūsų rankų skaičius",
+    "big_idea": "Dešimtukas — tai dvi eilės po penkis langelius. Kai matai, kiek langelių pilna, gali pasakyti skaičių iš karto, neskaičiuodamas po vieną.",
+    "steps": [
+      "Pilnas dešimtukas — 10. Tuščias — 0.",
+      "Jei pilni 7 langeliai, trūksta 3 iki dešimties. 7 + 3 = 10.",
+      "Pusė dešimtuko — 5. Tai padeda atpažinti skaičių akimis, neskaičiuojant."
+    ],
+    "example": "Įsivaizduok 8 obuolius dėžėje, kur telpa 10. Kiek vietų liko? Dvi. Taigi 8 + 2 = 10."
+  },
+  "sim": {
+    "component": "desimtukas",
+    "config": {
+      "cells": 10
+    }
+  },
+  "tasks": [
+    {
+      "q": "Dešimtuke pilni 6 langeliai. Kiek trūksta iki 10?",
+      "options": [
+        "4",
+        "6",
+        "3"
+      ],
+      "answer": 0,
+      "hint": "Suskaičiuok tuščius langelius.",
+      "why": "6 + 4 = 10."
+    },
+    {
+      "q": "Kiek yra pusė dešimtuko?",
+      "options": [
+        "10",
+        "5",
+        "2"
+      ],
+      "answer": 1,
+      "hint": "Padalink dešimtuką į dvi lygias dalis.",
+      "why": "10 padalintas pusiau yra 5."
+    },
+    {
+      "q": "Kodėl dešimtukas patogus?",
+      "options": [
+        "Nes jis didelis",
+        "Nes jį galima nuspalvinti",
+        "Nes iš karto matau, kiek yra ir kiek trūksta"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, ar tau reikia skaičiuoti po vieną, kai langeliai pilni.",
+      "why": "Dešimtukas leidžia skaičių atpažinti akimis — tai greitesnis būdas nei skaičiavimas po vieną."
+    }
+  ],
+  "reflect": "Pažiūrėk į savo rankas. Kiek pirštų? O kiek pirštų liko, jei du suspaudi į kumštį?",
+  "teacher": {
+    "goal": "Skaičiaus 10 sandaros supratimas ir „subitizing“ (kiekio atpažinimas akimis) iki 10.",
+    "prompt": "Kiek trūksta iki 10? Kaip sužinojai, neskaičiuodamas?",
+    "offline": "Paimkite kiaušinių dėtuvę (10 vietų) ir pupeles. Uždarykite kelias vietas — vaikas sako, kiek liko ir kiek trūksta.",
+    "misconceptions": [
+      "Vaikai skaičiuoja po vieną net tada, kai kiekį galima atpažinti akimis — verta skatinti „pažiūrėk ir pasakyk“.",
+      "„Pusė“ painiojama su „bet kokia dalis“.",
+      "Dešimtukas painiojamas su skaičiumi 10 kaip simboliu — modelis padeda susieti."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, „Skaičiai ir skaičiavimai“.",
+    "Matematikos bendroji programa (2022): skaičiaus sandara, mintino skaičiavimo strategijos 1–2 kl."
+  ],
+  "svietimas1": [
+    "1 žingsnis — gylis prieš plotį: dešimtukas nagrinėjamas iš kelių pusių, ne tik kaip skaičius",
+    "3 žingsnis — pažanga: mokytojas iškart mato, ar vaikas skaičiuoja, ar atpažįsta"
+  ]
+}

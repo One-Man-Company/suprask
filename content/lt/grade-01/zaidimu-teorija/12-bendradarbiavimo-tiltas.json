@@ -1,0 +1,81 @@
+{
+  "id": "12-bendradarbiavimo-tiltas",
+  "grade": 1,
+  "strand": "zaidimu-teorija",
+  "title": "Bendradarbiavimo tiltas",
+  "subtitle": "Kai vienas negali, o dviese — gali",
+  "minutes": 10,
+  "outcomes": [
+    "Paaiškinu, kada bendradarbiavimas padeda labiau nei pasilikimas sau.",
+    "Pastebiu, kad kai kurie tikslai nepasiekiami vienam.",
+    "Susitariu dėl sąžiningo indėlio."
+  ],
+  "concept": {
+    "title": "Kartu galima tai, kas neįmanoma vienam",
+    "big_idea": "Jei tiltui reikia šešių blokų, o draugas turi keturis, vienas jo nepastatysi. Duodamas du savo blokus, gauni kelią per upę — ir tu, ir draugas.",
+    "steps": [
+      "Tikslas: pastatyti tiltą. Reikia 6 blokų.",
+      "Tu turi 4, draugas turi 4. Vienas nepastatysi — trūksta 2.",
+      "Kai duodi 2, draugas duoda 4 — bendrai 6. Tiltas pastatytas ir abu pereina."
+    ],
+    "example": "Kai pasilieki visus keturis blokus, tiltas nebaigtas ir įstrigote abu. Kai pasidalini, laimi abu — nors vienas jų atidavė daugiau."
+  },
+  "sim": {
+    "component": "bendradarbiavimo-tiltas",
+    "config": {}
+  },
+  "tasks": [
+    {
+      "q": "Tiltui reikia 6 blokų. Tu turi 4, draugas 4. Kiek turi duoti, kad tiltas būtų pastatytas?",
+      "options": [
+        "Bent 2",
+        "0",
+        "4"
+      ],
+      "answer": 0,
+      "hint": "Kiek blokų davus, iš viso surinksime 6?",
+      "why": "Jei duodi 2, bendrai 2 + 4 = 6 — pakanka."
+    },
+    {
+      "q": "Kai pasilieki visus savo blokus, kas nutinka?",
+      "options": [
+        "Tu pereini vienas",
+        "Niekas neperžengia upės",
+        "Draugas pereina vienas"
+      ],
+      "answer": 1,
+      "hint": "Simuliacijoje išbandyk 0 blokų.",
+      "why": "Be bendro tilto perėti negali niekas."
+    },
+    {
+      "q": "Kodėl šiame žaidime „laimi abu“?",
+      "options": [
+        "Nes blokų daug",
+        "Nes kas nors atidavė daugiau",
+        "Nes tikslas pasiekiamas tik kartu"
+      ],
+      "answer": 2,
+      "hint": "Ar galėjo laimėti tik vienas, jei tiltas bendras?",
+      "why": "Tikslas bendras, todėl laimėjimas negali būti vieno."
+    }
+  ],
+  "reflect": "Kada tau padėjo draugas, o kada padėjai tu? Papasakok vieną atvejį.",
+  "teacher": {
+    "goal": "Kooperacijos ir bendro tikslo supratimas; įžanga į socialines dilemas be termino.",
+    "prompt": "Ar galėjai laimėti vienas, jei draugas liktų kitame krante?",
+    "offline": "Pastatykite tiltą iš kėdžių: reikia 6 dalių, vienam mokiniui duodama 4, kitam 4. Leiskite patiems susitarti, kiek kas duos.",
+    "misconceptions": [
+      "Vaikai mano, kad dalyvauti sąžininga tik tada, kai indėlis lygus (po 3), nors tikslui pakanka ir 2.",
+      "Bendradarbiavimas painiojamas su „mano blokai — mano sprendimas“.",
+      "Kai rezultatas bendras, pralaimėjimas suvokiamas kaip „kito kaltė“ — padeda bendro tikslo formulavimas."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), socialinė, emocinė ir sveikos gyvensenos kompetencija; „Gyvenimo įgūdžių ugdymas“.",
+    "Kooperatyvinio mokymosi tyrimai: bendradarbiavimo struktūros ir socialinių įgūdžių ugdymas."
+  ],
+  "svietimas1": [
+    "5 žingsnis — pozityvi aplinka: bendradarbiavimas, o ne konkurencija",
+    "3 žingsnis — pagalba laiku: modelis parodo pasekmes iškart, be moralizavimo"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "id": "11-saziningas-dalijimasis",
+  "grade": 1,
+  "strand": "zaidimu-teorija",
+  "title": "Sąžiningas dalijimasis",
+  "subtitle": "Kas yra „po lygiai“",
+  "minutes": 10,
+  "outcomes": [
+    "Daliju daiktą į lygias dalis ir paaiškinu, kodėl tai sąžininga.",
+    "Pastebiu, kad „sąžininga“ ne visada reiškia „po lygiai“.",
+    "Pasakau, ką jaustų kitas žmogus, gavęs mažiau."
+  ],
+  "concept": {
+    "title": "Sąžininga — kai niekas neapgautas",
+    "big_idea": "Kai dalijamės, svarbu ne tik kiek gaunu aš, bet ir kiek gauna kitas. Jei vienas gauna daug daugiau, žaidimas nebėra smagus abiem.",
+    "steps": [
+      "Padalink tortą pusiau: 4 gabaliukai tau, 4 draugui. Tai po lygiai.",
+      "Ar visada po lygiai yra sąžininga? Jei draugas nevalgė visą dieną, gal jam reikia daugiau?",
+      "Sąžiningumo taisyklė: prieš dalijantis pasakyk, kaip dalinsi, ir leisk kitam pasirinkti."
+    ],
+    "example": "Du vaikai dalijasi 8 gabaliukų picą. Vienas dalija, kitas renkasi pirmas. Taip dalijantysis stengsis padalinti lygiai — nes kitaip jam liks mažesnė dalis."
+  },
+  "sim": {
+    "component": "saziningas-dalijimasis",
+    "config": {}
+  },
+  "tasks": [
+    {
+      "q": "Tortas padalintas į 8 dalis. Kiek dalių kiekvienam, kad būtų po lygiai?",
+      "options": [
+        "Po 4",
+        "Po 3",
+        "Po 5"
+      ],
+      "answer": 0,
+      "hint": "8 padalink į dvi lygias dalis.",
+      "why": "8 : 2 = 4, todėl kiekvienam po 4."
+    },
+    {
+      "q": "Tu paėmei 6 dalis, draugas — 2. Kas nutiko?",
+      "options": [
+        "Sąžininga, nes tu dalijai",
+        "Nesąžininga — draugas gavo mažiau",
+        "Nieko svarbaus"
+      ],
+      "answer": 1,
+      "hint": "Kaip jaustumeisi, jei tau liktų 2?",
+      "why": "Dalijantis svarbu, kad abu gautų panašiai."
+    },
+    {
+      "q": "Kodėl gera taisyklė „vienas dalija, kitas renkasi pirmas“?",
+      "options": [
+        "Nes taip greičiau",
+        "Nes taip niekas nevalgo",
+        "Nes dalijantysis stengsis padalinti lygiai"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kokią dalį dalijantysis norėtų pasilikti sau.",
+      "why": "Jei dalijantysis žino, kad kitas rinksis pirmas, jam apsimoka dalinti sąžiningai."
+    }
+  ],
+  "reflect": "Prisimink, kada paskutinį kartą su kuo nors nesutikai dėl dalijimosi. Kaip galėjote pasielgti kitaip?",
+  "teacher": {
+    "goal": "Teisingumo samprata per konkrečią patirtį; „fair division“ principo (dalink ir rinkis) įvedimas.",
+    "prompt": "Ar „po lygiai“ visada yra sąžininga? Kodėl?",
+    "offline": "Padalinkite obuolį ar sausainiuką. Duokite vienam dalinti, kitam rinktis pirmam. Aptarkite, ar dalijimas buvo lygus.",
+    "misconceptions": [
+      "„Sąžininga“ tapatinama su „po lygiai“ — poreikiai gali skirtis.",
+      "Vaikai dalija pagal tai, kas kam patinka, ir tai gali atrodyti nesąžininga.",
+      "Manoma, kad dalijantysis turi teisę imti didesnę dalį „už darbą“."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Etika“ (dorinis ugdymas per kitus dalykus) ir „Visuomeninis ugdymas“.",
+    "Žaidimų teorijos pagrindai: sąžiningo padalijimo (fair division) procedūros; vaikų teisingumo sampratos tyrimai."
+  ],
+  "svietimas1": [
+    "1 žingsnis — gylis: viena moralinė sąvoka, nagrinėjama per veiksmą ir pasekmes",
+    "5 žingsnis — pozityvi aplinka: sprendžiama kartu, ne baudžiama"
+  ]
+}

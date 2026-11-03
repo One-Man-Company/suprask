@@ -1,0 +1,128 @@
+{
+  "id": "02-skiemenu-jungimas",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Skiemenų jungimas",
+  "subtitle": "Kaip du skiemenys tampa žodžiu",
+  "minutes": 8,
+  "outcomes": [
+    "Skaitau žodį skiemenimis ir tada ištariu jį vientisai.",
+    "Pastebiu, kad žodis gali turėti vieną, du ar tris skiemenis.",
+    "Sujungiu skiemenis į prasmingą žodį be pauzių."
+  ],
+  "concept": {
+    "title": "Žodis — tai skiemenų grandinė",
+    "big_idea": "Ilgus žodžius lengviau perskaityti dalimis. Skaičiuojame skiemenis plojimais: ma-ma — du plojimai, du skiemenys.",
+    "steps": [
+      "Pasakyk žodį ir suplok kiekvieną skiemenį: ma-ma.",
+      "Skaitai po vieną skiemenį: „ma“, „ma“.",
+      "Tada skaitai juos kartu be pauzės: „mama“. Tai jau žodis, kurį supranti."
+    ],
+    "example": "„Saulė“ — sau-lė. Du skiemenys. „Obuolys“ — o-buo-lys. Trys. Suplok ir pajusk skirtumą."
+  },
+  "sim": {
+    "component": "skiemenu-jungimas",
+    "config": {
+      "words": [
+        {
+          "word": "mama",
+          "syllables": [
+            "ma",
+            "ma"
+          ]
+        },
+        {
+          "word": "tėtis",
+          "syllables": [
+            "tė",
+            "tis"
+          ]
+        },
+        {
+          "word": "saulė",
+          "syllables": [
+            "sau",
+            "lė"
+          ]
+        },
+        {
+          "word": "pilis",
+          "syllables": [
+            "pi",
+            "lis"
+          ]
+        },
+        {
+          "word": "obuolys",
+          "syllables": [
+            "o",
+            "buo",
+            "lys"
+          ]
+        },
+        {
+          "word": "mokykla",
+          "syllables": [
+            "mo",
+            "kyk",
+            "la"
+          ]
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Kiek skiemenų žodyje „saulė“?",
+      "options": [
+        "Du",
+        "Vienas",
+        "Trys"
+      ],
+      "answer": 0,
+      "hint": "Suplok: sau-lė. Kiek kartų delnai susitiko?",
+      "why": "Sau-lė — du skiemenys."
+    },
+    {
+      "q": "Kuris variantas yra vientisas žodis?",
+      "options": [
+        "mo-kyk-la",
+        "mokykla",
+        "mok- yk - la"
+      ],
+      "answer": 1,
+      "hint": "Skaitydamas žodį sustoji tik tada, kai baigiasi žodis.",
+      "why": "Rašydami ir skaitydami žodį, jo viduryje pauzių nedarome."
+    },
+    {
+      "q": "Skiemenys „o“ ir „buo“ ir „lys“ sudaro žodį…",
+      "options": [
+        "obuoliai",
+        "obelis",
+        "obuolys"
+      ],
+      "answer": 2,
+      "hint": "Skaityk skiemenis iš eilės, be pauzių.",
+      "why": "o-buo-lys — obuolys."
+    }
+  ],
+  "reflect": "Suplok savo vardą. Kiek skiemenų? O draugo vardas — kiek? Kuris ilgesnis?",
+  "teacher": {
+    "goal": "Skiemeninio skaitymo įgūdis: sintezė (skiemenų jungimas) ir analizė (skiemenų skaičiavimas).",
+    "prompt": "Kaip skaitysi žodį, kurį matai pirmą kartą?",
+    "offline": "Žaisk „plojimų krepšį“: vardink daiktus klasėje, vaikas ploja skiemenis. Sudėk į dvi krūvas — vieno ir dviejų skiemenų.",
+    "misconceptions": [
+      "Vaikai skiemenis skaitydami padaro pauzę, todėl žodis lieka nesuprastas — svarbu kartoti jungimą be pauzių.",
+      "Skiemuo painiojamas su raide: „ma“ yra du garsai, vienas skiemuo.",
+      "Balsių skaičius skiemenyje gali klaidinti — skiemenų tiek, kiek balsių."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“.",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), skaitymo ir teksto suvokimo pasiekimai, 1–2 kl."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena strategija (jungimas) praktikuojama giliai",
+    "3 žingsnis — pažanga laiku: kiekvienas žodis iškart patikrinamas, klaida išgirstama"
+  ]
+}

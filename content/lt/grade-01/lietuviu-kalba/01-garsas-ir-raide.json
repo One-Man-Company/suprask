@@ -1,0 +1,150 @@
+{
+  "id": "01-garsas-ir-raide",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Garsas ir raidė",
+  "subtitle": "Kuo skiriasi tai, ką girdime, nuo to, ką matome",
+  "minutes": 8,
+  "outcomes": [
+    "Skiriu garsą nuo raidės ir paaiškinu skirtumą savais žodžiais.",
+    "Išgirstu pirmą žodžio garsą ir pasakau, kokia raidė jį žymi.",
+    "Randu kelis žodžius, prasidedančius ta pačia raide."
+  ],
+  "concept": {
+    "title": "Vienas dalykas — du veidai",
+    "big_idea": "Garsas yra tai, ką girdime, kai ištariame žodį. Raidė yra ženklas, kuriuo tą garsą užrašome. Garsas — ore, raidė — popieriuje.",
+    "steps": [
+      "Ištark žodį „saulė“. Klausykis pirmo garso: s-s-s.",
+      "Tas garsas užrašomas raide S. Raidė turi vardą „es“, bet žodyje ji skamba kaip „s“.",
+      "Todėl sakome: girdžiu garsą, matau raidę. Raidė garso nepakeičia — ji jį pažymi."
+    ],
+    "example": "Žodis „namas“ prasideda garsu n. Rašome raidę N. Pasakyk žodį lėtai: n-a-m-a-s. Kiek garsų išgirdai?"
+  },
+  "sim": {
+    "component": "garso-raides",
+    "config": {
+      "items": [
+        {
+          "emoji": "🐈",
+          "word": "katė",
+          "letter": "K",
+          "options": [
+            "K",
+            "T",
+            "M",
+            "S"
+          ]
+        },
+        {
+          "emoji": "☀️",
+          "word": "saulė",
+          "letter": "S",
+          "options": [
+            "S",
+            "L",
+            "Š",
+            "R"
+          ]
+        },
+        {
+          "emoji": "🌳",
+          "word": "medis",
+          "letter": "M",
+          "options": [
+            "M",
+            "D",
+            "N",
+            "V"
+          ]
+        },
+        {
+          "emoji": "🍎",
+          "word": "obuolys",
+          "letter": "O",
+          "options": [
+            "O",
+            "A",
+            "U",
+            "E"
+          ]
+        },
+        {
+          "emoji": "🐟",
+          "word": "žuvis",
+          "letter": "Ž",
+          "options": [
+            "Ž",
+            "Z",
+            "Š",
+            "V"
+          ]
+        },
+        {
+          "emoji": "🏠",
+          "word": "namas",
+          "letter": "N",
+          "options": [
+            "N",
+            "M",
+            "R",
+            "L"
+          ]
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Kuris paveikslėlis prasideda ta pačia raide kaip „medis“?",
+      "options": [
+        "mama",
+        "žuvis",
+        "obuolys"
+      ],
+      "answer": 0,
+      "hint": "Pasakyk abu žodžius garsiai ir klausykis pirmo garso.",
+      "why": "„Medis“ ir „mama“ prasideda garsu m."
+    },
+    {
+      "q": "Kuo raidė skiriasi nuo garso?",
+      "options": [
+        "Niekou — tai tas pats",
+        "Raidę matome ir rašome, garsą girdime",
+        "Raidė visada ilgesnė už garsą"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, ką darai su ausimis, o ką su akimis.",
+      "why": "Garsas yra tai, ką girdime; raidė — ženklas, kuriuo jį užrašome."
+    },
+    {
+      "q": "Žodyje „namas“ pirmas garsas yra…",
+      "options": [
+        "a",
+        "m",
+        "n"
+      ],
+      "answer": 2,
+      "hint": "Ištark žodį lėtai ir sustok po pirmo garso.",
+      "why": "n-a-m-a-s — pirmas garsas n."
+    }
+  ],
+  "reflect": "Pasakyk tris žodžius, kurie prasideda tavo vardo pirmąja raide. Kuriuos iš jų gali pamatyti klasėje?",
+  "teacher": {
+    "goal": "Sąmoningai skirti garsą (fonemą) nuo raidės (grafemos) ir girdėti pirmą žodžio garsą.",
+    "prompt": "Kuo skiriasi garsas ir raidė? Parodyk man žodyje.",
+    "offline": "Išdėliok 6 daiktus ant stalo ir paprašyk vaiko sudėti į dvi krūvas: prasidedančius garsu m ir ne m. Tada paprašyk paaiškinti, kaip skyrė.",
+    "misconceptions": [
+      "Vaikai dažnai vadina raidę jos vardu (pvz., „el“) ir mano, kad žodyje ji taip ir skamba. Garsas — „l“.",
+      "Pirmas garsas painiojamas su pirma raide rašte, kai žodis pradedamas didžiąja raide.",
+      "Ilgi žodžiai atrodo turintys daugiau garsų, nei iš tikrųjų yra."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), skyrius „Lietuvių kalba ir literatūra“.",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), pasiekimų sritis D — kalbos pažinimas."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (garsas ≠ raidė), ne visa abėcėlė iš karto",
+    "3 žingsnis — pažanga ir pagalba laiku: klaida iškart paaiškinama, o ne paliekama"
+  ]
+}

@@ -1,0 +1,12 @@
+[Unit]
+Description=SUPRASK — turinio tikrinimas (kasdien)
+
+[Timer]
+# Kasdien anksti: jei agentas rado klaidą, ji matoma prieš mokslo dienos pradžią.
+OnCalendar=*-*-* 06:40:00
+Persistent=true
+RandomizedDelaySec=300
+Unit=suprask-agent@tikrintojas.service
+
+[Install]
+WantedBy=timers.target

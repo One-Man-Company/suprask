@@ -1,0 +1,12 @@
+[Unit]
+Description=SUPRASK — kūrėjas (antradienis)
+
+[Timer]
+# Antradienis: po tyrėjo paleidimo, kad naujas modulis remtųsi atnaujinta baze.
+OnCalendar=Tue *-*-* 07:30:00
+Persistent=true
+RandomizedDelaySec=600
+Unit=suprask-agent@kurejas.service
+
+[Install]
+WantedBy=timers.target

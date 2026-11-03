@@ -1,0 +1,18 @@
+{
+  "updated": "2026-11-03",
+  "language": "lt",
+  "grades": [
+    { "grade": 1, "status": "live", "age": "6–7 metai", "modules": 13 },
+    { "grade": 2, "status": "planned", "age": "7–8 metai" },
+    { "grade": 3, "status": "planned", "age": "8–9 metai" },
+    { "grade": 4, "status": "planned", "age": "9–10 metų" },
+    { "grade": 5, "status": "planned", "age": "10–11 metų" },
+    { "grade": 6, "status": "planned", "age": "11–12 metų" },
+    { "grade": 7, "status": "planned", "age": "12–13 metų" },
+    { "grade": 8, "status": "planned", "age": "13–14 metų" },
+    { "grade": 9, "status": "planned", "age": "14–15 metų" },
+    { "grade": 10, "status": "planned", "age": "15–16 metų" },
+    { "grade": 11, "status": "planned", "age": "16–17 metų" },
+    { "grade": 12, "status": "planned", "age": "17–18 metų" }
+  ]
+}

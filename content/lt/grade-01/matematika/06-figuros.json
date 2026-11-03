@@ -1,0 +1,81 @@
+{
+  "id": "06-figuros",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Figūros aplink mus",
+  "subtitle": "Trikampis, keturkampis, apskritimas",
+  "minutes": 9,
+  "outcomes": [
+    "Atpažįstu trikampį, keturkampį ir apskritimą.",
+    "Skiriu figūras pagal kraštines ir kampus.",
+    "Randu šias figūras realiuose daiktuose ir paaiškinu, kodėl ratas yra apskritimas, o durys — keturkampis."
+  ],
+  "concept": {
+    "title": "Figūra — tai forma",
+    "big_idea": "Figūros skiriasi tuo, kiek turi kraštinių ir kokių kampų. Apskritimas neturi kampų, trikampis turi tris kampus, keturkampis — keturis.",
+    "steps": [
+      "Trikampis: trys kraštinės, trys kampai.",
+      "Keturkampis: keturios kraštinės, keturi kampai. Kvadratas — keturkampis, kurio visos kraštinės lygios.",
+      "Apskritimas: jokių kampų, tik viena lenkta linija aplinkui."
+    ],
+    "example": "Pažiūrėk pro langą: lango stiklas — keturkampis, saulė — apskritimas, stogo frontonas — trikampis."
+  },
+  "sim": {
+    "component": "figuros",
+    "config": {}
+  },
+  "tasks": [
+    {
+      "q": "Kiek kampų turi trikampis?",
+      "options": [
+        "Tris",
+        "Keturis",
+        "Nė vieno"
+      ],
+      "answer": 0,
+      "hint": "Pavadinime yra užuomina.",
+      "why": "Trikampis turi tris kampus ir tris kraštines."
+    },
+    {
+      "q": "Kuri figūra neturi kampų?",
+      "options": [
+        "Kvadratas",
+        "Apskritimas",
+        "Trikampis"
+      ],
+      "answer": 1,
+      "hint": "Kuri figūra rieda?",
+      "why": "Apskritimas neturi kampų, todėl gali riedėti."
+    },
+    {
+      "q": "Kvadratas yra…",
+      "options": [
+        "trikampis",
+        "apskritimas",
+        "keturkampis"
+      ],
+      "answer": 2,
+      "hint": "Suskaičiuok jo kraštines.",
+      "why": "Kvadratas turi keturias lygias kraštines — tai keturkampis."
+    }
+  ],
+  "reflect": "Apžiūrėk klasę ir rask po vieną trikampį, keturkampį ir apskritimą. Kurių daugiausia?",
+  "teacher": {
+    "goal": "Geometrinių figūrų atpažinimas pagal apibrėžiančias savybes (kraštinės, kampai), ne tik pagal išvaizdą.",
+    "prompt": "Kaip žinai, kad tai keturkampis, o ne trikampis?",
+    "offline": "Duokite vaikui 10 popieriaus formelių ir paprašykite surūšiuoti. Tada paprašykite rasti po 3 daiktus klasėje, turinčius tą pačią formą.",
+    "misconceptions": [
+      "Trikampis atpažįstamas tik „kaip paveikslėlyje“ — pasukta figūra gali būti neatpažinta.",
+      "Kvadratas laikomas atskira figūra, o ne keturkampio rūšimi.",
+      "Apskritimas painiojamas su rutuliu (2D ir 3D)."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, geometrijos sritis.",
+    "Matematikos bendroji programa (2022): geometrinių figūrų pažinimas 1–2 klasėje."
+  ],
+  "svietimas1": [
+    "1 žingsnis — gylis: figūros mokomos per savybes, o ne per pavadinimų įsiminimą",
+    "5 žingsnis — pozityvi aplinka: klaida rūšiuojant yra bandymas, ne nesėkmė"
+  ]
+}

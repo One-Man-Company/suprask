@@ -1,0 +1,50 @@
+name: Tikrinti turinį
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/**"
+      - "assets/**"
+      - "scripts/**"
+      - "docs/**"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Turinio validacija
+        run: python3 scripts/validate_content.py
+
+      - name: Simuliacijų registras
+        run: |
+          python3 - <<'PY'
+          import re, pathlib, sys
+          ids = set()
+          for f in pathlib.Path("assets/js/sims").glob("*.js"):
+              text = f.read_text(encoding="utf-8")
+              block = re.search(r"export const SIMS\s*=\s*\{(.*?)\n\};", text, re.S)
+              if not block:
+                  continue
+              for m in re.finditer(r'^\s*(?:"([a-z0-9-]+)"|([a-z0-9-]+))\s*[:,]', block.group(1), re.M):
+                  ids.add(m.group(1) or m.group(2))
+          if len(ids) < 5:
+              sys.exit("Per mažai registruotų simuliacijų: %s" % sorted(ids))
+          print("Simuliacijos:", ", ".join(sorted(ids)))
+          PY
+
+      - name: Nėra išorinių resursų
+        run: |
+          if grep -RIn --include="*.html" --include="*.js" --include="*.css" \
+              -E "https?://(cdn|unpkg|jsdelivr|fonts\.googleapis|ajax\.googleapis)" . ; then
+            echo "Rastas išorinis CDN resursas — draudžiama."; exit 1
+          fi
+          echo "Švaru."

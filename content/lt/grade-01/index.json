@@ -1,0 +1,56 @@
+{
+  "grade": 1,
+  "age": "6–7 metai",
+  "note": "Pirmoji klasė. Mokomasi skaityti, rašyti ir skaičiuoti iki 100, pažinti pasaulį ir susitarti su kitais.",
+  "strands": [
+    {
+      "id": "lietuviu-kalba",
+      "grade": 1,
+      "title": "Lietuvių kalba",
+      "emoji": "🔤",
+      "intro": "Nuo garso prie raidės, nuo raidės prie žodžio, nuo žodžio prie sakinio.",
+      "modules": [
+        { "id": "01-garsas-ir-raide", "title": "Garsas ir raidė", "subtitle": "Kuo skiriasi tai, ką girdime, nuo to, ką matome", "file": "grade-01/lietuviu-kalba/01-garsas-ir-raide.json", "minutes": 8, "sim": "garso-raides" },
+        { "id": "02-skiemenu-jungimas", "title": "Skiemenų jungimas", "subtitle": "Kaip du skiemenys tampa žodžiu", "file": "grade-01/lietuviu-kalba/02-skiemenu-jungimas.json", "minutes": 8, "sim": "skiemenu-jungimas" },
+        { "id": "03-sakinio-tvarka", "title": "Sakinio tvarka", "subtitle": "Žodžių eilė keičia prasmę", "file": "grade-01/lietuviu-kalba/03-sakinio-tvarka.json", "minutes": 10, "sim": "sakinio-tvarka" }
+      ]
+    },
+    {
+      "id": "matematika",
+      "grade": 1,
+      "title": "Matematika",
+      "emoji": "🔢",
+      "intro": "Skaičius, figūra ir dėsningumas — trys būdai aprašyti pasaulį.",
+      "modules": [
+        { "id": "04-skaiciu-tiese", "title": "Skaičių tiesė", "subtitle": "Sudėti ir atimti reiškia judėti tiese", "file": "grade-01/matematika/04-skaiciu-tiese.json", "minutes": 9, "sim": "skaiciu-tiese" },
+        { "id": "05-desimtukas", "title": "Dešimtukas", "subtitle": "Kodėl dešimt yra patogus skaičius", "file": "grade-01/matematika/05-desimtukas.json", "minutes": 8, "sim": "desimtukas" },
+        { "id": "06-figuros", "title": "Figūros aplink mus", "subtitle": "Trikampis, keturkampis, apskritimas", "file": "grade-01/matematika/06-figuros.json", "minutes": 9, "sim": "figuros" },
+        { "id": "07-desningumai", "title": "Dėsningumai", "subtitle": "Seka, kurią gali numatyti", "file": "grade-01/matematika/07-desningumai.json", "minutes": 9, "sim": "desningumai" }
+      ]
+    },
+    {
+      "id": "pasaulio-pazinimas",
+      "grade": 1,
+      "title": "Pasaulio pažinimas",
+      "emoji": "🌍",
+      "intro": "Gamta, metų laikai ir gyvybė — stebėk, lygink, klausk „kodėl?“",
+      "modules": [
+        { "id": "08-metu-laikai", "title": "Metų laikai", "subtitle": "Kodėl keičiasi medžiai, oras ir gyvūnai", "file": "grade-01/pasaulio-pazinimas/08-metu-laikai.json", "minutes": 9, "sim": "metu-laikai" },
+        { "id": "09-augalo-gyvenimas", "title": "Augalo gyvenimas", "subtitle": "Ko augalui reikia, kad jis augtų", "file": "grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json", "minutes": 9, "sim": "augalo-gyvenimas" },
+        { "id": "10-gyvunu-grupes", "title": "Gyvūnų grupės", "subtitle": "Žinduoliai, paukščiai, žuvys", "file": "grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json", "minutes": 9, "sim": "gyvunu-grupes" }
+      ]
+    },
+    {
+      "id": "zaidimu-teorija",
+      "grade": 1,
+      "title": "Sąžiningumas ir žaidimai",
+      "emoji": "🤝",
+      "intro": "Kaip dalintis, kaip susitarti ir kodėl kartais laimi abu.",
+      "modules": [
+        { "id": "11-saziningas-dalijimasis", "title": "Sąžiningas dalijimasis", "subtitle": "Kas yra „po lygiai“", "file": "grade-01/zaidimu-teorija/11-saziningas-dalijimasis.json", "minutes": 10, "sim": "saziningas-dalijimasis" },
+        { "id": "12-bendradarbiavimo-tiltas", "title": "Bendradarbiavimo tiltas", "subtitle": "Kai vienas negali, o dviese — gali", "file": "grade-01/zaidimu-teorija/12-bendradarbiavimo-tiltas.json", "minutes": 10, "sim": "bendradarbiavimo-tiltas" },
+        { "id": "13-akmenelis-popierius", "title": "Akmenėlis, žirklės, popierius", "subtitle": "Kodėl negalima tiksliai numatyti", "file": "grade-01/zaidimu-teorija/13-akmenelis-popierius.json", "minutes": 10, "sim": "akmenelis-popierius" }
+      ]
+    }
+  ]
+}

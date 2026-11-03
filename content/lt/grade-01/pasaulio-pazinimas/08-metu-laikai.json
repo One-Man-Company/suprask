@@ -1,0 +1,82 @@
+{
+  "id": "08-metu-laikai",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Metų laikai",
+  "subtitle": "Kodėl keičiasi medžiai, oras ir gyvūnai",
+  "minutes": 9,
+  "outcomes": [
+    "Įvardiju keturis metų laikus ir jų požymius.",
+    "Paaiškinu, kas nutinka medžiui kiekvienu metų laiku.",
+    "Susieju metų laiką su gyvūnų elgesiu ir žmonių darbais."
+  ],
+  "concept": {
+    "title": "Metai turi keturis skyrius",
+    "big_idea": "Metai sukasi ratu: pavasaris, vasara, ruduo, žiema — ir vėl pavasaris. Kiekvienas laikas keičia šviesą, šilumą ir maistą, todėl keičiasi augalai ir gyvūnai.",
+    "steps": [
+      "Pavasarį šilta, sniegas tirpsta, sprogsta pumpurai, grįžta paukščiai.",
+      "Vasarą daug šviesos ir šilumos — augalai auga, vaisiai noksta.",
+      "Rudenį vėsta, lapai gelsta ir krinta, paukščiai skrenda į šiltus kraštus.",
+      "Žiemą šalta ir mažai šviesos — medžiai ilsisi, kai kurie gyvūnai miega."
+    ],
+    "example": "Tas pats medis per metus atrodo keturiais skirtingais būdais. Tai ne skirtingi medžiai — tai vienas medis skirtingu metų laiku."
+  },
+  "sim": {
+    "component": "metu-laikai",
+    "config": {}
+  },
+  "tasks": [
+    {
+      "q": "Kuriuo metų laiku lapai gelsta ir krinta?",
+      "options": [
+        "Rudenį",
+        "Pavasarį",
+        "Vasarą"
+      ],
+      "answer": 0,
+      "hint": "Kada paukščiai ruošiasi skrydžiui?",
+      "why": "Rudenį dienos trumpėja, lapai gelsta ir krinta."
+    },
+    {
+      "q": "Kodėl žiemą medžiai atrodo „be lapų“?",
+      "options": [
+        "Nes medis mirė",
+        "Nes lapai nukrenta, o medis ilsisi",
+        "Nes kas nors juos nuskynė"
+      ],
+      "answer": 1,
+      "hint": "Ar pavasarį tas pats medis vėl žaliuoja?",
+      "why": "Medis nemirė — jis ilsisi ir pavasarį vėl išleis lapus."
+    },
+    {
+      "q": "Kurie paukščiai rudenį skrenda į šiltus kraštus?",
+      "options": [
+        "Žvirbliai ir balandžiai",
+        "Vištos",
+        "Gandrai ir gervės"
+      ],
+      "answer": 2,
+      "hint": "Kurie paukščiai vasarą gyvena prie mūsų namų, o žiemą jų nematome?",
+      "why": "Gandrai, gervės ir kiti migrantai rudenį išskrenda."
+    }
+  ],
+  "reflect": "Kuris metų laikas tau pats mėgstamiausias? Pasakyk du dalykus, kurie tada nutinka gamtoje.",
+  "teacher": {
+    "goal": "Metų laikų kaitos ir jos poveikio gyvajai gamtai supratimas; stebėjimo įgūdis.",
+    "prompt": "Kaip pasikeistų tavo kiemas, jei visus metus būtų vasara?",
+    "offline": "Eikite į kiemą ir surinkite po vieną požymį kiekvienam metų laikui (pvz., lapą, pumpurą). Sudėkite į „metų laikų ratą“ ant grindų.",
+    "misconceptions": [
+      "Vaikai mano, kad žiemą medis miršta, o ne ilsisi.",
+      "Metų laikai siejami tik su oru, nepastebint šviesos trukmės pokyčio.",
+      "„Šilta“ ir „vasara“ tapatinami — Lietuvoje pavasaris gali būti šaltas."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Gamtos mokslai“ ir „Visuomeninis ugdymas“ (Pasaulio pažinimas), 1–2 kl.",
+    "Pasaulio pažinimo programos turinys: gyvoji ir negyvoji gamta, metų laikai, augalai ir gyvūnai."
+  ],
+  "svietimas1": [
+    "1 žingsnis — gylis: vienas modelis (metų ratas) jungia orą, augalus ir gyvūnus",
+    "5 žingsnis — saugi aplinka: klaidingas spėjimas aptariamas, o ne taisomas be paaiškinimo"
+  ]
+}

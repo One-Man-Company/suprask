@@ -263,19 +263,29 @@ async def run(voice_key: str, only_missing: bool, prune: bool, workers: int = 4,
 
         await asyncio.gather(*(one(t, r, d) for t, r, d in jobs))
 
-    MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
+    # Failo vardas turi TURINIO maišą: `n/<teksto-hash>-<turinio-hash>.mp3`.
+    # Taip pasikeitus balsui ar tempui atsiranda naujas URL, ir nei naršyklė,
+    # nei GitHub Pages CDN negali atiduoti seno įrašo. (Užklausos `?v=`
+    # neveikia: medijos elementas su ja lieka `readyState 0`.)
+    renamed = 0
+    for text, entry in manifest.items():
+        for variant in ("n", "s"):
+            rel = entry.get(variant)
+            if not rel:
+                continue
+            path = AUDIO / rel
+            if not path.exists():
+                continue
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()[:8]
+            target = path.with_name(f"{sha(text)}-{digest}.mp3")
+            if path != target:
+                path.replace(target)
+                renamed += 1
+            entry[variant] = f"{variant}/{target.name}"
+    if renamed:
+        print(f"Pervadinta pagal turinį: {renamed}")
 
-    # Turinio versija: garso failų KELIAI nesikeičia (jie iš teksto SHA-256),
-    # nors pats garsas keičiasi (balsas, tempas). Todėl versija skaičiuojama iš
-    # failų TURINIO — kitaip naršyklė ir GitHub Pages CDN amžinai grotų seną įrašą.
-    digest = hashlib.sha256()
-    for path in sorted(AUDIO.rglob("*.mp3")):
-        digest.update(path.relative_to(AUDIO).as_posix().encode("utf-8"))
-        digest.update(hashlib.sha256(path.read_bytes()).digest())
-    version = digest.hexdigest()[:10]
-    (AUDIO / "version.json").write_text(
-        json.dumps({"v": version}, ensure_ascii=False), encoding="utf-8"
-    )
+    MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
 
     if prune:
         keep = {str(AUDIO / p) for e in manifest.values() for p in e.values()}

@@ -14,12 +14,10 @@
 
 const BASE = "./assets/audio/lt/";
 const MANIFEST_URL = `${BASE}manifest.json`;
-const VERSION_URL = `${BASE}version.json`;
 
 let element = null;      // vienintelis Audio elementas
 let manifest = null;
 let manifestReady = null;
-let audioVersion = "";   // ?v=... — kad CDN / naršyklė nepateiktų pasenusio įrašo
 let blobs = new Map();   // url -> objectURL
 let preloading = new Set();
 let playToken = 0;
@@ -35,15 +33,14 @@ function storageSet(key, value) {
 }
 enabled = storageGet("suprask:sound", "on") !== "off";
 
-/* ---------- manifestas + turinio versija ---------- */
-manifestReady = Promise.all([
-  fetch(MANIFEST_URL, { cache: "force-cache" }).then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
-  fetch(VERSION_URL).then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
-]).then(([data, ver]) => {
-  manifest = data || {};
-  audioVersion = ver && ver.v ? `?v=${ver.v}` : "";
-  return manifest;
-});
+/* ---------- manifestas ----------
+ * `no-store`: manifestas turi būti šviežias, nes jame — tiksliniai failų
+ * vardai su turinio maišu. Pats manifestas mažas (~25 KB).
+ */
+manifestReady = fetch(MANIFEST_URL, { cache: "no-store" })
+  .then((r) => (r.ok ? r.json() : {}))
+  .then((data) => { manifest = data || {}; return manifest; })
+  .catch(() => { manifest = {}; return manifest; });
 
 /* ---------- garso elementas ---------- */
 function el() {
@@ -137,7 +134,7 @@ export function speak(text, { rate = 0.92 } = {}) {
     if (!rel) { tts(clean, rate); return; }
 
     const url = BASE + rel;
-    const src = blobs.get(url) || (url + audioVersion);
+    const src = blobs.get(url) || url;
     const a = el();
     const token = ++playToken;
 
@@ -185,7 +182,7 @@ export function prime(texts = [], { limit = 8 } = {}) {
         const url = BASE + rel;
         if (blobs.has(url) || preloading.has(url)) continue;
         preloading.add(url);
-        fetch(url + audioVersion)
+        fetch(url)
           .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
           .then((blob) => { blobs.set(url, URL.createObjectURL(blob)); })
           .catch(() => { /* gros iš tinklo */ })

@@ -1,0 +1,17 @@
+{
+  "role": "ideator",
+  "run_id": 2,
+  "created": "2026-11-03T16:58:00+02:00",
+  "type": "tema",
+  "title": "Laikas: dvi rodyklės sujungtos",
+  "body": "Programa 1 klasei numato suprasti laikrodžio su rodyklėmis rodomą laiką pilnomis valandomis. Pirmokų tyrimai rodo, kad dažniausia klaida — painioti valandų ir minučių rodykles ir rinktis tą, kuri arčiau užrašyto skaičiaus. Siūlau modelį, kuriame rodyklės mechaniškai sujungtos: ilgajai apsisukus per visą ratą, trumpoji pasislenka lygiai vienu skaičiumi. Vaikas sukioja pats ir mato priežastį, kodėl pilną valandą skaito trumpoji rodyklė, o ne ilgoji. Skaitmeninis laikas rodomas šalia kaip patikrinimas, o ne kaip antras mokymosi tikslas. 12 ir 24 valandų sistemas sąmoningai palieku atskiram moduliui, nes modulyje turi būti viena nauja sąvoka. Tekstas „ilgoji rodyklė rodo minutes“ ryšio nepaaiškina — jį parodo tik judantis modelis.",
+  "target": "content/lt/grade-01/matematika/15-laikas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:129 — „laikrodžio su rodyklėmis ir skaitmeninio laikrodžio rodomą laiką… pilnomis valandomis (val., h)“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:49 — tema „Laikas“, modelis „analoginis + skaitmeninis laikrodis greta“",
+    "https://pedagogicalperspective.com/index.php/pub/article/download/11/12/1920 — pirmokai klysta painiodami valandų ir minučių rodykles",
+    "https://jnc.psychopen.eu/index.php/jnc/article/view/5793/5793.html — Williams (2012): valandų rodyklė nustatoma pagal artimiausią skaičių"
+  ]
+}

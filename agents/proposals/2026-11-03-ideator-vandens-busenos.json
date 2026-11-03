@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 2,
+  "created": "2026-11-03T16:58:00+02:00",
+  "type": "tema",
+  "title": "Vandens būsenos: kur dingsta vanduo",
+  "body": "Pasaulio pažinime 1 klasei skirta tema „Vandens būsenos“ (26.3.2): kietosios būsenos formos, dujinis vanduo ore ir perėjimas iš vienos būsenos į kitą, be to, programa prašo tai nustatyti bandymais. Tyrimai rodo, kad 5–6 m. vaikai mano, jog išgaravęs vanduo tiesiog išnyksta, o 7–8 m. — kad jis susigeria į paviršių. Siūlau modelį „Kur dingsta vanduo?“: puodas su vandeniu, šilumos slankiklis (šilta–šalta, be skaičių) ir dangtis; uždėjus vėsų dangtį, ant jo susidaro lašai, kuriuos galima grąžinti į puodą. Taip simuliacija pati pateikia įrodymą, kad vanduo neprapuola, tik keičia formą. Paveikslėlis čia klaidina, nes garus vaizduoja kaip dingimą, o modelis leidžia keisti sąlygas ir stebėti grįžimą. Apie daleles nekalbame — 6–7 m. amžiui pakanka stebimo įrodymo.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:108 — „Kietoji būsena įvairių formų… bandymais nustatoma, kad ore yra dujinės būsenos vandens; kaip vanduo pereina iš vienos būsenos į kitą“",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:131 — metų gale: „Atpažįsta vandens kietąją būseną… ir kad vanduo keičia būsenas“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:59 — modelis „ledo/snaigės/garų kaitos modelis“",
+    "https://files.eric.ed.gov/fulltext/ED587209.pdf — Bar ir Galili (1994) seka: 5–6 m. „vanduo išnyksta“, 7–8 m. „susigeria“",
+    "https://inquiryproject.terc.edu/curriculum/curriculum5/child_and_scientist/carol5_2.cfm.html — kondensacija yra sunkesnė už garavimą, todėl būtent ją reikia parodyti"
+  ]
+}

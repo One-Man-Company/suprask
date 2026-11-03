@@ -1,0 +1,17 @@
+{
+  "role": "ideator",
+  "run_id": 2,
+  "created": "2026-11-03T16:58:00+02:00",
+  "type": "tema",
+  "title": "Pinigai: vertė yra skaičius, ne dydis",
+  "body": "1 klasės matematikos programoje numatyta atpažinti euro banknotus ir monetas pagal vertę ir norimą sumą sudėlioti keliais skirtingais deriniais. Dažna 6–7 m. vaiko klaidinga nuostata — kad didesnė moneta yra vertingesnė, o daugiau monetų reiškia daugiau pinigų; be modelio vaikas vertę spėja iš išvaizdos. Siūlau virtualią piniginę: pasirenkama prekė (pvz., 3 €), o vaikas dėlioja sumą iš monetų ir banknotų, o modelis rodo rinkinio vertę, ne monetų skaičių. Keli teisingi deriniai (2 € + 1 € arba trys 1 € monetos) parodo, kad vertė yra suma, o ne forma. Tekstas ar paveikslėlis čia nepakanka, nes klaida atsiranda būtent lyginant monetos dydį su kaina. Veikla be ekrano lieka ta pati: dėlioti tą pačią sumą iš tikrų monetų.",
+  "target": "content/lt/grade-01/matematika/14-pinigai.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:83 — „1 klasė. Finansinis raštingumas… atpažinti euro banknotus ir monetas pagal vertę… keliais skirtingais banknotų ir monetų deriniais“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:43 — tema „Pinigai“, interaktyvumo galimybė „virtuali piniginė, keli teisingi keliai“",
+    "https://nrich.maths.org/articles/money-problems — vaikams sunku skirti krūvos monetų vertę nuo monetų skaičiaus",
+    "https://education.gov.scot/media/t2udz2wj/money-final.pdf — klaidinga nuostata „kuo didesnė moneta, tuo didesnė vertė“"
+  ]
+}

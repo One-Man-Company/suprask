@@ -256,6 +256,14 @@ async def run(voice_key: str, only_missing: bool, prune: bool, workers: int = 4,
 
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
 
+    # Turinio versija: garso failų keliai nesikeičia (jie iš teksto SHA-256),
+    # bet turinys gali keistis. `speech.js` prideda ?v=<versija>, kad nei
+    # naršyklė, nei GitHub Pages CDN nepateiktų pasenusio įrašo.
+    version = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode("utf-8")).hexdigest()[:10]
+    (AUDIO / "version.json").write_text(
+        json.dumps({"v": version}, ensure_ascii=False), encoding="utf-8"
+    )
+
     if prune:
         keep = {str(AUDIO / p) for e in manifest.values() for p in e.values()}
         removed = 0

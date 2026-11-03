@@ -122,7 +122,7 @@ function tts(text, rate) {
   } catch { /* ignore */ }
 }
 
-/** Groja įrašą. `src` nustatomas ir play() kviečiamas sinchroniškai. */
+/** Groja įrašą. Grojama iš blob (MIME tipas valdomas mūsų), ne iš URL. */
 export function speak(text, { rate = 0.92 } = {}) {
   if (!enabled || !text) return;
   const clean = String(text).trim();
@@ -134,41 +134,74 @@ export function speak(text, { rate = 0.92 } = {}) {
     if (!rel) { tts(clean, rate); return; }
 
     const url = BASE + rel;
-    const src = blobs.get(url) || url;
     const a = el();
     const token = ++playToken;
 
-    // Tas pats įrašas spaudžiamas pakartotinai — pradedame nuo pradžios.
-    try {
-      if (a.src !== src) a.src = src;
-      a.currentTime = 0;
-    } catch { /* ignore */ }
-
-    const p = a.play();
-    if (p && typeof p.catch === "function") {
-      p.catch((err) => {
-        if (token !== playToken) return; // jau groja kitas garsas
-        const retry = () => {
+    const start = (src) => {
+      if (token !== playToken) return;
+      try {
+        if (a.src !== src) a.src = src;
+        a.currentTime = 0;
+      } catch { /* ignore */ }
+      const pr = a.play();
+      if (pr && typeof pr.catch === "function") {
+        pr.catch((err) => {
           if (token !== playToken) return;
-          const q = a.play();
-          if (q && q.catch) q.catch(() => announceBlocked());
-          window.removeEventListener("pointerdown", retry);
-        };
-        window.addEventListener("pointerdown", retry, { once: true });
-        if (!err || err.name !== "NotAllowedError") announceBlocked();
-      });
-    }
+          const retry = () => {
+            if (token !== playToken) return;
+            const q = a.play();
+            if (q && q.catch) q.catch(() => announceBlocked());
+            window.removeEventListener("pointerdown", retry);
+          };
+          window.addEventListener("pointerdown", retry, { once: true });
+          if (!err || err.name !== "NotAllowedError") announceBlocked();
+        });
+      }
+    };
+
+    const cached = blobs.get(url);
+    if (cached) { start(cached); return; }
+
+    // GROJAME IŠ BLOB, o ne tiesiogiai iš URL.
+    // GitHub Pages .mp3 atiduoda su `Content-Type: audio/mp3`, kurio dalis
+    // naršyklių (ypač Safari/iOS) nepriima: <audio> lieka `readyState 0` ir
+    // negrojа niekada. Blob tipą nustatome patys — `audio/mpeg`.
+    fetchAsBlob(url).then(start).catch(() => start(url));
   };
 
   if (manifest) run();
   else manifestReady.then(run);
 }
 
+/** Parsisiunčia įrašą ir grąžina blob: URL su teisingu MIME tipu. */
+async function fetchAsBlob(url) {
+  const known = blobs.get(url);
+  if (known) return known;
+  if (preloading.has(url)) {
+    // jau kraunama — palaukiam, kol atsiras
+    for (let i = 0; i < 40 && !blobs.has(url); i += 1) {
+      await new Promise((r) => setTimeout(r, 50));
+    }
+    if (blobs.has(url)) return blobs.get(url);
+  }
+  preloading.add(url);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(String(res.status));
+    const buf = await res.arrayBuffer();
+    const objectUrl = URL.createObjectURL(new Blob([buf], { type: "audio/mpeg" }));
+    blobs.set(url, objectUrl);
+    return objectUrl;
+  } finally {
+    preloading.delete(url);
+  }
+}
+
 /**
  * Iš anksto parsiunčia garso failus kaip Blob (grojimas be tinklo delsos).
  * Ribojama, kad lėtame mobiliajame tinkle nekonkuruotų su turiniu.
  */
-export function prime(texts = [], { limit = 8 } = {}) {
+export function prime(texts = [], { limit = 20 } = {}) {
   if (!enabled) return;
   const unique = [...new Set(texts.filter((t) => typeof t === "string" && t.trim()))].slice(0, limit);
 
@@ -181,12 +214,7 @@ export function prime(texts = [], { limit = 8 } = {}) {
         if (!rel) continue;
         const url = BASE + rel;
         if (blobs.has(url) || preloading.has(url)) continue;
-        preloading.add(url);
-        fetch(url)
-          .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
-          .then((blob) => { blobs.set(url, URL.createObjectURL(blob)); })
-          .catch(() => { /* gros iš tinklo */ })
-          .finally(() => preloading.delete(url));
+        fetchAsBlob(url).catch(() => { /* gros iš tinklo */ });
       }
     }
   };

@@ -120,9 +120,12 @@ Azure balsas paliktas kaip **atsarginis** (`--engine edge`) — jei perklausoje 
 ### Kaip veikia
 
 - `scripts/generate_audio.py --engine piper` → `assets/audio/lt/{n|s}/<sha256-prefix>.mp3` (22 050 Hz, mono, 64 kbps);
-- du variantai: `n` (sakiniai, 0,80× tempo) ir `s` (skiemenys ir atskiri žodžiai, 0,68× tempo);
-  tempas keičiamas `atempo` filtru jau sugeneruotame garse (aukštis išlieka), nes
-  Piper recepto `length_scale` trukmę normalizuoja ir tempo beveik nekeičia;
+- du variantai: `n` (sakiniai, 0,72× tempo) ir `s` (skiemenys ir atskiri žodžiai, 0,58× tempo);
+  tempas keičiamas `atempo` grandine (po 0,80–0,85 žingsnį, kad balsas neskambėtų metališkai)
+  jau sugeneruotame garse, nes Piper recepto `length_scale` trukmę normalizuoja;
+- pradžioje 150 ms tylos ir pabaigoje 60 ms — be jų pirmas priebalsis nuskamba „nukirptas";
+- `content/audio-overrides.json` — tiksli IPA tam tikriems žodžiams, kai automatinis kirčio
+  dėjimas nesutampa su kirčio žodynu (pvz. „žuvis": žodynas rodo II skiemenį, automatinis — I);
 - `assets/js/speech.js` kraunamas **dinamiškai ir neprivalomai**: jei garso modulis
   neįsikrauna (blokuojami scenarijai, pasenęs kešas), puslapis vis tiek atsidaro, tik be garso —
   statinis `import` tokiu atveju sugriautų visą programą;

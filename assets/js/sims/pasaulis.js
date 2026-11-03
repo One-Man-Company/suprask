@@ -148,7 +148,7 @@ const gyvunuGrupes = {
       { emoji: "🦉", name: "Pelėda", g: "pauksciai" },
       { emoji: "🐟", name: "Ešerys", g: "zuvis" },
       { emoji: "🐠", name: "Karosas", g: "zuvis" },
-      { emoji: "🐡", name: "Pūslėtoji žuvis", g: "zuvis" },
+      { emoji: "🦈", name: "Ryklys", g: "zuvis" },
     ].sort(() => Math.random() - 0.5);
 
     let selected = null;

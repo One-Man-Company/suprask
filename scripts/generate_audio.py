@@ -50,10 +50,33 @@ PIPER_DIR = pathlib.Path(os.environ.get("SUPRASK_PIPER_DIR") or (pathlib.Path.ho
 PIPER_MODEL = PIPER_DIR / "lt_LT-reginute1-medium.onnx"
 # Recepto `length_scale` tempo beveik nekeičia (jis normalizuoja trukmę iki tikslo),
 # todėl tempą valdome tiksliai, jau sugeneruotą garsą sulėtindami `atempo` filtru:
-# 1.0 = kaip yra, 0.80 = 20 % lėčiau, 0.68 = 32 % lėčiau (aukštis išlieka).
-# 6–7 metų vaikui: sakiniai 0.80, atskiri žodžiai ir skiemenys 0.68.
+# 1.0 = kaip yra, 0.72 = 28 % lėčiau, 0.58 = 42 % lėčiau (aukštis išlieka).
+# 6–7 metų vaikui: sakiniai 0.72, atskiri žodžiai ir skiemenys 0.58.
+# Lėtinama grandine po 0,8–0,85 — vienas didelis `atempo` žemiau 0,75 skamba
+# metaliniu garsu.
 LENGTH_SCALE = 1.05
-TEMPO = {"n": 0.80, "s": 0.68}
+TEMPO = {"n": 0.72, "s": 0.58}
+
+# Pauzė pradžioje ir pabaigoje: be jos pirmas priebalsis nuskamba „nukirptas".
+LEAD_IN_MS = 150
+TAIL_PAD_S = 0.06
+
+
+def atempo_chain(target: float) -> list[str]:
+    """Skaido lėtinimą į kelis švelnius žingsnius (kokybei)."""
+    steps: list[str] = []
+    remaining = target
+    while remaining < 0.999:
+        step = 0.85
+        if remaining / step < 0.78:
+            step = 0.80
+        if remaining / step > 0.999:
+            step = remaining
+        steps.append(f"atempo={step:.4f}")
+        remaining /= step
+        if len(steps) > 5:
+            break
+    return steps
 RATES_PIPER = {k: TEMPO[k] for k in TEMPO}
 _PIPER = None
 
@@ -78,7 +101,7 @@ EXTRA = [
     # augalas
     "Sėkla dar nemirkusi", "Daigas", "Jaunas augalas", "Augalas su lapais", "Žydi!",
     # gyvūnai
-    "Karvė", "Lapė", "Kiškis", "Varnas", "Antis", "Pelėda", "Ešerys", "Karosas", "Pūslėtoji žuvis",
+    "Karvė", "Lapė", "Kiškis", "Varnas", "Antis", "Pelėda", "Ešerys", "Karosas", "Ryklys",
     "Žinduoliai", "Paukščiai", "Žuvys",
     # žaidimų teorija
     "Akmenėlis", "Žirklės", "Popierius",
@@ -168,6 +191,33 @@ async def synth(voice: str, text: str, rate: str, out: pathlib.Path) -> bool:
     return False
 
 
+
+OVERRIDES_PATH = ROOT / "content" / "audio-overrides.json"
+
+
+class _OverridePhonemizer:
+    """Leidžia konkrečiam tekstui nurodyti tikslią IPA.
+
+    Reikia, nes automatinis kirčio dėjimas ne visada sutampa su kirčio žodynu
+    (`lt_kirciai.tsv`): pvz. „žuvis" gauna kirtį pirmame skiemenyje, nors
+    žodyne jis antrame.
+    """
+
+    def __init__(self, base):
+        self.base = base
+        try:
+            data = json.loads(OVERRIDES_PATH.read_text(encoding="utf-8"))
+            self.map = {k: v for k, v in data.items() if not k.startswith("_") and isinstance(v, str)}
+        except (OSError, json.JSONDecodeError):
+            self.map = {}
+
+    def phonemize_sentence(self, text: str) -> str:
+        exact = self.map.get(text.strip())
+        if exact:
+            return exact
+        return self.base.phonemize_sentence(text)
+
+
 def piper_synth(text: str, tempo: float, out: pathlib.Path) -> bool:
     """Sintetizuoja vieną tekstą lokaliniu Piper balsu ir įrašo MP3."""
     global _PIPER
@@ -181,7 +231,7 @@ def piper_synth(text: str, tempo: float, out: pathlib.Path) -> bool:
         from phonemize_lithuanian import LithuanianPhonemizer  # type: ignore
         from synth_reginute import ReginuteSynth, i_int16  # type: ignore
 
-        _PIPER = (PiperVoice.load(str(PIPER_MODEL)), LithuanianPhonemizer(), ReginuteSynth, i_int16)
+        _PIPER = (PiperVoice.load(str(PIPER_MODEL)), _OverridePhonemizer(LithuanianPhonemizer()), ReginuteSynth, i_int16)
 
     voice, phonemizer, Synth, i16 = _PIPER
     import wave
@@ -194,7 +244,12 @@ def piper_synth(text: str, tempo: float, out: pathlib.Path) -> bool:
             w.setsampwidth(2)
             w.setframerate(voice.config.sample_rate)
             w.writeframes(i16(audio))
-        filters = ["-filter:a", f"atempo={tempo}"] if tempo and abs(tempo - 1.0) > 0.001 else []
+        # Tvarka svarbi: pauzės pridedamos PRIEŠ lėtinimą — kitaip mp3 kodavimas
+        # gauna „backward in time" laiko žymes ir failas gali būti sugadintas.
+        chain = [f"apad=pad_dur={TAIL_PAD_S}", f"adelay={LEAD_IN_MS}|{LEAD_IN_MS}"]
+        if tempo and abs(tempo - 1.0) > 0.001:
+            chain += atempo_chain(tempo)
+        filters = ["-filter:a", ",".join(chain)]
         subprocess.run(
             ["ffmpeg", "-v", "error", "-y", "-i", str(wav), *filters, "-codec:a", "libmp3lame",
              "-b:a", "64k", "-ar", "22050", "-ac", "1", str(out)],
@@ -223,13 +278,19 @@ async def run(voice_key: str, only_missing: bool, prune: bool, workers: int = 4,
         except json.JSONDecodeError:
             manifest = {}
 
+    # Manifeste neturi likti tekstų, kurių platforma nebetaria (pvz. pakeistas
+    # žodis), kitaip seni failai amžinai kabo repo ir perklausos sąraše.
+    wanted = set(texts)
+    for stale in [k for k in manifest if k not in wanted]:
+        manifest.pop(stale, None)
+
     jobs = []
     for text in texts:
         entry = manifest.setdefault(text, {})
         for variant, rate in rates.items():
-            rel = f"{variant}/{sha(text)}.mp3"
-            dest = AUDIO / rel
-            entry[variant] = rel
+            prev = entry.get(variant)
+            dest = AUDIO / prev if prev else AUDIO / variant / f"{sha(text)}.mp3"
+            entry[variant] = str(dest.relative_to(AUDIO))
             if only_missing and dest.exists() and dest.stat().st_size > 800:
                 continue
             jobs.append((text, rate, dest))

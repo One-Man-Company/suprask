@@ -5,6 +5,8 @@ import { speak, bindHeaderToggle } from "./speech.js";
 const app = document.getElementById("app");
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+const SITE_TITLE = "Suprask! — interaktyvus mokymasis";
+
 let cleanupSim = null;
 let currentRoute = null;
 
@@ -22,6 +24,7 @@ async function route() {
   if (key === currentRoute) return;
   currentRoute = key;
   teardown();
+  document.title = SITE_TITLE;
   app.innerHTML = `<div class="loading">Kraunama…</div>`;
   try {
     if (parts.length === 0) return viewHome();
@@ -203,7 +206,8 @@ async function viewModule(grade, strandId, moduleId) {
 
   const mod = await loadModule(entry.file);
   document.title = `${mod.title} — Suprask!`;
-  progress.markVisited(mod.id);
+  const tasks = Array.isArray(mod.tasks) ? mod.tasks : [];
+  progress.markVisited(mod.id, tasks.length);
 
   const outcomes = (mod.outcomes || []).map((o) => `<li><span>${esc(o)}</span></li>`).join("");
   const steps = (mod.concept && mod.concept.steps ? mod.concept.steps : []).map((s) => `<li><div>${esc(s)}</div></li>`).join("");
@@ -333,13 +337,13 @@ function mountTasks(mod) {
         btn.classList.add("correct");
         fb.className = "task-feedback ok";
         fb.textContent = task.why ? `Teisingai! ${task.why}` : "Teisingai! Puiku, kad pabandei.";
-        progress.markTask(mod.id, true);
+        progress.markTask(mod.id, true, { index: Number(btn.dataset.i), total: tasks.length });
       } else {
         btn.classList.add("wrong");
         btn.disabled = true;
         fb.className = "task-feedback try";
         fb.textContent = task.hint || "Ne visai. Pagalvok dar ir pabandyk kitą atsakymą — klysti yra dalis mokymosi.";
-        progress.markTask(mod.id, false);
+        progress.markTask(mod.id, false, { index: Number(btn.dataset.i), total: tasks.length });
       }
     });
   });

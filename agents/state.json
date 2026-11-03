@@ -1,0 +1,24 @@
+{
+  "roles": {
+    "tikrintojas": {
+      "last_run": "2026-11-03T13:50:42",
+      "exit_code": 1,
+      "log": "agents/log/tikrintojas-2026-11-03T1346.md",
+      "description": "Validuoja turinį ir sąsają, registruoja klaidas"
+    }
+  },
+  "last_validation": {
+    "date": "2026-11-03",
+    "validator_errors": 0,
+    "validator_warnings": 0,
+    "modules": 13,
+    "tasks": 52,
+    "tasks_per_module": 4,
+    "sims": 13,
+    "technical_issues_found": 6,
+    "technical_issues_fixed": 6,
+    "notes": "Pirmas tikrintojo paleidimas rado 6 technines problemas; visos istaisytos pries publikavima (progress.js klaidingas uzbaigimas, MutationObserver nutekejimas, du location.reload(), document.title neatstatymas, neveikiantis desimtukas config, neaprasytos CSS klases)."
+  },
+  "open_questions": "research/wiki/guidelines/klausimai.md",
+  "updated": "2026-11-03T13:56:00"
+}

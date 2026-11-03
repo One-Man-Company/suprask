@@ -129,6 +129,18 @@
       "answer": 2,
       "hint": "Pagalvok apie prognozę.",
       "why": "Radęs taisyklę, gali numatyti tolesnius elementus."
+    },
+    {
+      "q": "Seka: 2, 4, 6, 8, … Kas toliau?",
+      "options": [
+        "10",
+        "9",
+        "12"
+      ],
+      "answer": 0,
+      "hint": "Kiek pridedama kiekvieną kartą?",
+      "why": "Kiekvieną kartą pridedama po 2, todėl toliau 10.",
+      "optional": true
     }
   ],
   "reflect": "Sugalvok savo seką iš trijų spalvų ir pasakyk ją draugui. Ar jis atspės taisyklę?",

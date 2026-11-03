@@ -57,7 +57,7 @@ Taisyklės:
 - `why` — vienas sakinys, susiejantis atsakymą su modeliu ar sąvoka.
 - Klausimai „Ką atsimeni?“, „Kuris teiginys teisingas?“ be konteksto neleidžiami.
 - Bent viena užduotis turi būti perkėlimo (transfer) tipo: ta pati sąvoka kitoje situacijoje.
-- `optional: true` — praplėtimo užduotis greitesniems; turi būti bent viena modulyje, jei modulis skirtas 3–12 klasei (1–2 klasei — neprivaloma).
+- `optional: true` — praplėtimo užduotis greitesniems mokiniams. **Kiekviename modulyje privaloma bent viena** (gairių T3.4), visose klasėse.
 
 ## 4. Simuliacijos sutartis
 

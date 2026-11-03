@@ -59,6 +59,18 @@
       "answer": 2,
       "hint": "Pagalvok, ar tau reikia skaičiuoti po vieną, kai langeliai pilni.",
       "why": "Dešimtukas leidžia skaičių atpažinti akimis — tai greitesnis būdas nei skaičiavimas po vieną."
+    },
+    {
+      "q": "Dešimtuke trys langeliai tušti. Kiek obuolių yra?",
+      "options": [
+        "7",
+        "3",
+        "10"
+      ],
+      "answer": 0,
+      "hint": "Suskaičiuok pilnus langelius, ne tuščius.",
+      "why": "10 − 3 = 7.",
+      "optional": true
     }
   ],
   "reflect": "Pažiūrėk į savo rankas. Kiek pirštų? O kiek pirštų liko, jei du suspaudi į kumštį?",

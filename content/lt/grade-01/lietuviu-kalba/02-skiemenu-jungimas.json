@@ -104,6 +104,18 @@
       "answer": 2,
       "hint": "Skaityk skiemenis iš eilės, be pauzių.",
       "why": "o-buo-lys — obuolys."
+    },
+    {
+      "q": "Kuris žodis turi tris skiemenis?",
+      "options": [
+        "obuolys",
+        "mama",
+        "pilis"
+      ],
+      "answer": 0,
+      "hint": "Suplok žodį ir suskaičiuok plojimus.",
+      "why": "O-buo-lys — trys skiemenys.",
+      "optional": true
     }
   ],
   "reflect": "Suplok savo vardą. Kiek skiemenų? O draugo vardas — kiek? Kuris ilgesnis?",

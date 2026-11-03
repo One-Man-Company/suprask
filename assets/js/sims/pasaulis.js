@@ -207,7 +207,11 @@ const gyvunuGrupes = {
       binsEl.appendChild(bin);
     });
 
-    controls.querySelector("#gg-reset").addEventListener("click", () => location.reload());
+    controls.querySelector("#gg-reset").addEventListener("click", () => {
+      stage.innerHTML = "";
+      controls.innerHTML = "";
+      gyvunuGrupes.mount({ stage, controls, api });
+    });
     drawTray();
     api.readout("Rūšiuok gyvūnus");
     return null;

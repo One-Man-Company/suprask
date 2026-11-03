@@ -10,27 +10,37 @@ const shuffle = (arr) => arr.map((v) => [Math.random(), v]).sort((a, b) => a[0] 
 /* ------------------------------------------------------------------ */
 const garsoRaides = {
   mount({ stage, controls, api, config }) {
-    const items = shuffle(config.items || []);
+    let items = shuffle(config.items || []);
     let i = 0;
-    let revealed = false;
+    let emojiEl = null;
+    let wordEl = null;
+    let hintEl = null;
+    let lettersWrap = null;
 
-    stage.innerHTML = `
-      <div style="text-align:center;max-width:34rem">
-        <button class="picture" data-tap style="border:0;background:transparent;cursor:pointer;padding:.5rem">
-          <span id="gr-emoji" style="font-size:clamp(4rem,18vw,7rem);line-height:1"></span>
-          <span id="gr-word" style="display:block;font-family:var(--font-head);font-weight:900;font-size:clamp(1.4rem,6vw,2rem);margin-top:.4rem;min-height:2.2rem"></span>
-        </button>
-        <p class="sim-note" id="gr-hint">Spausk paveikslėlį ir paklausyk žodžio. Tada pasirink pirmą raidę.</p>
-      </div>`;
-    controls.innerHTML = `<div id="gr-letters" style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center"></div>`;
-    const emojiEl = stage.querySelector("#gr-emoji");
-    const wordEl = stage.querySelector("#gr-word");
-    const hintEl = stage.querySelector("#gr-hint");
-    const lettersWrap = controls.querySelector("#gr-letters");
+    function paintStage() {
+      stage.innerHTML = `
+        <div style="text-align:center;max-width:34rem">
+          <button class="picture" data-tap style="border:0;background:transparent;cursor:pointer;padding:.5rem">
+            <span id="gr-emoji" style="font-size:clamp(4rem,18vw,7rem);line-height:1"></span>
+            <span id="gr-word" style="display:block;font-family:var(--font-head);font-weight:900;font-size:clamp(1.4rem,6vw,2rem);margin-top:.4rem;min-height:2.2rem"></span>
+          </button>
+          <p class="sim-note" id="gr-hint">Spausk paveikslėlį ir paklausyk žodžio. Tada pasirink pirmą raidę.</p>
+        </div>`;
+      controls.innerHTML = `<div id="gr-letters" style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center"></div>`;
+      emojiEl = stage.querySelector("#gr-emoji");
+      wordEl = stage.querySelector("#gr-word");
+      hintEl = stage.querySelector("#gr-hint");
+      lettersWrap = controls.querySelector("#gr-letters");
+      stage.querySelector(".picture").addEventListener("click", () => {
+        const item = items[i % items.length];
+        api.speak(item.word, { rate: .8 });
+        wordEl.textContent = "…";
+        hintEl.textContent = "Klausykis pirmo garso. Kokia raidė jį žymi?";
+      });
+    }
 
     function draw() {
       const item = items[i % items.length];
-      revealed = false;
       emojiEl.textContent = item.emoji;
       wordEl.textContent = "?";
       api.readout(`Žodis ${i + 1} iš ${items.length}`);
@@ -63,18 +73,17 @@ const garsoRaides = {
         <div style="font-size:4rem">🎉</div>
         <p style="font-family:var(--font-head);font-weight:900;font-size:1.4rem">Įveikei visas raides!</p>
         <p class="sim-note">Dabar pasakyk: kurie du žodžiai prasideda ta pačia raide?</p></div>`;
+      api.readout("Visos raidės įveiktos");
       controls.innerHTML = `<button class="btn" id="gr-again">Bandyti dar kartą</button>`;
-      controls.querySelector("#gr-again").addEventListener("click", () => { i = 0; location.reload(); });
+      controls.querySelector("#gr-again").addEventListener("click", () => {
+        i = 0;
+        items = shuffle(items);
+        paintStage();
+        draw();
+      });
     }
 
-    stage.querySelector(".picture").addEventListener("click", () => {
-      const item = items[i % items.length];
-      api.speak(item.word, { rate: .8 });
-      revealed = true;
-      wordEl.textContent = "…";
-      hintEl.textContent = "Klausykis pirmo garso. Kokia raidė jį žymi?";
-    });
-
+    paintStage();
     draw();
     return null;
   },
@@ -87,6 +96,7 @@ const skiemenuJungimas = {
   mount({ stage, controls, api, config }) {
     const words = config.words || [];
     let w = 0;
+    const timers = [];
 
     stage.innerHTML = `
       <div style="text-align:center">
@@ -118,16 +128,16 @@ const skiemenuJungimas = {
     controls.querySelector("#sj-join").addEventListener("click", () => {
       const item = words[w % words.length];
       tilesEl.querySelectorAll("[data-syl]").forEach((b, idx) => {
-        setTimeout(() => {
+        timers.push(setTimeout(() => {
           b.style.background = "var(--sun)";
           b.style.borderColor = "var(--ink)";
-        }, idx * 380);
+        }, idx * 380));
       });
-      setTimeout(() => {
+      timers.push(setTimeout(() => {
         api.speak(item.word, { rate: .85 });
         api.readout(item.word);
         hintEl.textContent = "Dabar pasakyk visą žodį be pauzių — kaip suaugęs.";
-      }, item.syllables.length * 380 + 120);
+      }, item.syllables.length * 380 + 120));
     });
 
     controls.querySelector("#sj-next").addEventListener("click", () => {
@@ -136,7 +146,7 @@ const skiemenuJungimas = {
     });
 
     draw();
-    return null;
+    return () => timers.forEach(clearTimeout);
   },
 };
 
@@ -148,6 +158,7 @@ const sakinioTvarka = {
     const sentences = config.sentences || [];
     let s = 0;
     let chosen = [];
+    let observer = null;
 
     stage.innerHTML = `
       <div style="width:100%;max-width:40rem">
@@ -198,7 +209,7 @@ const sakinioTvarka = {
     controls.querySelector("#st-clear").addEventListener("click", draw);
 
     /* automatinis patikrinimas, kai sudėti visi žodžiai */
-    new MutationObserver(() => {
+    observer = new MutationObserver(() => {
       if (chosen.length !== current().length) return;
       const okWords = chosen.join(" ") === current().join(" ");
       if (okWords) {
@@ -210,10 +221,11 @@ const sakinioTvarka = {
       } else {
         msgEl.textContent = "Dar ne. Perskaityk, kas gavosi — ar sakinys turi prasmę?";
       }
-    }).observe(slotsEl, { childList: true });
+    });
+    observer.observe(slotsEl, { childList: true });
 
     draw();
-    return null;
+    return () => { if (observer) observer.disconnect(); };
   },
 };
 

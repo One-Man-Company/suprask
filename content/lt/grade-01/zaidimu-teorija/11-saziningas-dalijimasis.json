@@ -57,6 +57,18 @@
       "answer": 2,
       "hint": "Pagalvok, kokią dalį dalijantysis norėtų pasilikti sau.",
       "why": "Jei dalijantysis žino, kad kitas rinksis pirmas, jam apsimoka dalinti sąžiningai."
+    },
+    {
+      "q": "Du vaikai dalijasi 6 sausainius. Vienas nori visus. Kaip sąžininga?",
+      "options": [
+        "Po 3",
+        "6 ir 0",
+        "5 ir 1"
+      ],
+      "answer": 0,
+      "hint": "Padalink į dvi lygias dalis.",
+      "why": "6 : 2 = 3, todėl po 3.",
+      "optional": true
     }
   ],
   "reflect": "Prisimink, kada paskutinį kartą su kuo nors nesutikai dėl dalijimosi. Kaip galėjote pasielgti kitaip?",

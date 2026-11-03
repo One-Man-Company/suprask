@@ -66,6 +66,18 @@
       "answer": 2,
       "hint": "Rask 11, tada vieną žingsnį į dešinę.",
       "why": "12 yra tarp 11 ir 13."
+    },
+    {
+      "q": "Pradedi nuo 15 ir atimi 4. Kur atsidursi?",
+      "options": [
+        "11",
+        "19",
+        "12"
+      ],
+      "answer": 0,
+      "hint": "Keturi žingsniai į kairę nuo 15.",
+      "why": "15 − 4 = 11.",
+      "optional": true
     }
   ],
   "reflect": "Sugalvok judėjimą: nuo kurio skaičiaus pradėsi, kiek žingsnių eisi ir kur atsidursi? Pasakyk draugui — jis turi atspėti tavo kelią.",

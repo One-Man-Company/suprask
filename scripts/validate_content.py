@@ -142,8 +142,8 @@ def check_module(path: Path, data: dict, rep: Report, sims: set[str], grades_met
     if answers and len(set(answers)) == 1 and len(answers) >= 3:
         rep.err(f"{rel}: visi teisingi atsakymai tame pačiame indekse ({answers[0]}) — perrašyk variantus")
 
-    if grade >= 3 and not transfer:
-        rep.warn(f"{rel}: nėra praplėtimo („optional“) užduoties")
+    if isinstance(grade, int) and grade >= 1 and not transfer:
+        rep.err(f"{rel}: trūksta praplėtimo užduoties („optional“) — reikalinga kiekviename modulyje")
 
     teacher = data.get("teacher") or {}
     for key in REQUIRED_TEACHER:

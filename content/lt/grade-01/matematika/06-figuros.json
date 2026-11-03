@@ -57,6 +57,18 @@
       "answer": 2,
       "hint": "Suskaičiuok jo kraštines.",
       "why": "Kvadratas turi keturias lygias kraštines — tai keturkampis."
+    },
+    {
+      "q": "Kuri figūra turi keturias lygias kraštines?",
+      "options": [
+        "Kvadratas",
+        "Trikampis",
+        "Apskritimas"
+      ],
+      "answer": 0,
+      "hint": "Suskaičiuok kraštines ir palygink jų ilgį.",
+      "why": "Kvadrato visos keturios kraštinės lygios.",
+      "optional": true
     }
   ],
   "reflect": "Apžiūrėk klasę ir rask po vieną trikampį, keturkampį ir apskritimą. Kurių daugiausia?",

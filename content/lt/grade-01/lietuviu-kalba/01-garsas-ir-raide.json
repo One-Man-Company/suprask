@@ -126,6 +126,18 @@
       "answer": 2,
       "hint": "Ištark žodį lėtai ir sustok po pirmo garso.",
       "why": "n-a-m-a-s — pirmas garsas n."
+    },
+    {
+      "q": "Kuris žodis prasideda tuo pačiu garsu kaip „saulė“?",
+      "options": [
+        "siena",
+        "žuvis",
+        "medis"
+      ],
+      "answer": 0,
+      "hint": "Pasakyk abu žodžius garsiai ir klausykis pirmo garso.",
+      "why": "„Saulė“ ir „siena“ prasideda garsu s.",
+      "optional": true
     }
   ],
   "reflect": "Pasakyk tris žodžius, kurie prasideda tavo vardo pirmąja raide. Kuriuos iš jų gali pamatyti klasėje?",

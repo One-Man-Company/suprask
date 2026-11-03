@@ -57,6 +57,18 @@
       "answer": 2,
       "hint": "Ar galėjo laimėti tik vienas, jei tiltas bendras?",
       "why": "Tikslas bendras, todėl laimėjimas negali būti vieno."
+    },
+    {
+      "q": "Tiltui reikia 6 blokų. Tu duodi 1, draugas 4. Kas nutinka?",
+      "options": [
+        "Trūksta 1 bloko",
+        "Tiltas pastatytas",
+        "Draugas stato vienas"
+      ],
+      "answer": 0,
+      "hint": "Sudėk: 1 + 4 = ? Kiek liko iki 6?",
+      "why": "1 + 4 = 5, todėl trūksta vieno bloko.",
+      "optional": true
     }
   ],
   "reflect": "Kada tau padėjo draugas, o kada padėjai tu? Papasakok vieną atvejį.",

@@ -81,6 +81,18 @@
       "answer": 2,
       "hint": "Kuris sakinys ko nors klausia?",
       "why": "Klaustukas rašomas, kai klausiame."
+    },
+    {
+      "q": "Kuris sakinys parašytas tvarkingai?",
+      "options": [
+        "Vaikai žaidžia kieme.",
+        "vaikai žaidžia kieme.",
+        "Vaikai žaidžia kieme"
+      ],
+      "answer": 0,
+      "hint": "Pažiūrėk į pirmą raidę ir pabaigą.",
+      "why": "Sakinys prasideda didžiąja raide ir baigiasi tašku.",
+      "optional": true
     }
   ],
   "reflect": "Sugalvok sakinį iš trijų žodžių apie savo dieną. Pasakyk jį taip, kad draugas suprastų, kas ką veikia.",

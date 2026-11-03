@@ -58,6 +58,18 @@
       "answer": 2,
       "hint": "Kurie paukščiai vasarą gyvena prie mūsų namų, o žiemą jų nematome?",
       "why": "Gandrai, gervės ir kiti migrantai rudenį išskrenda."
+    },
+    {
+      "q": "Kodėl pavasarį paukščiai grįžta?",
+      "options": [
+        "Nes atšyla ir yra maisto",
+        "Nes jie pavargo",
+        "Nes žiema ilga"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, ko paukščiui reikia, kad galėtų perėti jauniklius.",
+      "why": "Šiluma ir maistas leidžia perėti jauniklius.",
+      "optional": true
     }
   ],
   "reflect": "Kuris metų laikas tau pats mėgstamiausias? Pasakyk du dalykus, kurie tada nutinka gamtoje.",

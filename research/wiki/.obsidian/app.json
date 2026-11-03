@@ -1,0 +1,13 @@
+{
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "research/wiki",
+  "attachmentFolderPath": "assets",
+  "showUnsupportedFiles": true,
+  "userIgnoreFilters": [
+    "sources/",
+    "content/",
+    "assets/",
+    "agents/"
+  ]
+}

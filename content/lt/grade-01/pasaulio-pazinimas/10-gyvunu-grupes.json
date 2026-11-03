@@ -57,6 +57,18 @@
       "answer": 2,
       "hint": "Pagalvok apie pagalvę, bet ne apie jos turinį.",
       "why": "Paukščiai padengti plunksnomis."
+    },
+    {
+      "q": "Kuris gyvūnas yra paukštis, nors neskraido?",
+      "options": [
+        "Pingvinas",
+        "Varnas",
+        "Lapė"
+      ],
+      "answer": 0,
+      "hint": "Paukštį atpažįstame ne pagal skrydį.",
+      "why": "Pingvinas turi plunksnas ir deda kiaušinius — jis paukštis.",
+      "optional": true
     }
   ],
   "reflect": "Kokį gyvūną matai kieme dažniausiai? Kuriai grupei jis priklauso ir kodėl?",

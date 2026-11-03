@@ -57,6 +57,18 @@
       "answer": 2,
       "hint": "Ar simuliacijoje tai kartosis visada?",
       "why": "Trumpa sėkmės seka dar neįrodo, kad laimėsi ir toliau."
+    },
+    {
+      "q": "Kuris ėjimas nugali žirkles?",
+      "options": [
+        "Akmenėlis",
+        "Popierius",
+        "Žirklės"
+      ],
+      "answer": 0,
+      "hint": "Akmenėlis atbukina žirkles.",
+      "why": "Akmenėlis nugali žirkles, žirklės — popierių, popierius — akmenėlį.",
+      "optional": true
     }
   ],
   "reflect": "Sužaisk su draugu 20 ėjimų ir suskaičiuok, kiek kartų laimėjo kiekvienas. Ar buvo netikėta?",

@@ -58,6 +58,18 @@
       "answer": 2,
       "hint": "Kas atsitinka pirmiausia, kai pasėji?",
       "why": "Iš sėklos išauga daigas, tada augalas, galiausiai žiedas."
+    },
+    {
+      "q": "Kodėl augalas prie lango auga geriau nei spintoje?",
+      "options": [
+        "Nes gauna daugiau šviesos",
+        "Nes jis didesnis",
+        "Nes jį dažniau liečia"
+      ],
+      "answer": 0,
+      "hint": "Palygink, kur šviesiau.",
+      "why": "Šviesa reikalinga augalui gaminti maistą.",
+      "optional": true
     }
   ],
   "reflect": "Kuris augalas namie ar klasėje tau patinka? Ką darytum, kad jam būtų geriau?",

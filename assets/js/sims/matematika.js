@@ -90,7 +90,8 @@ const skaiciuTiese = {
 /* 2. Dešimtukas (ten-frame)                                           */
 /* ------------------------------------------------------------------ */
 const desimtukas = {
-  mount({ stage, controls, api }) {
+  mount({ stage, controls, api, config }) {
+    const cells = Number(config.cells) || 10;
     stage.innerHTML = `
       <div style="text-align:center">
         <div id="dt-grid" style="display:grid;grid-template-columns:repeat(5,minmax(2.6rem,3.4rem));grid-template-rows:repeat(2,minmax(2.6rem,3.4rem));gap:.5rem;justify-content:center"></div>
@@ -101,7 +102,7 @@ const desimtukas = {
     const msg = stage.querySelector("#dt-msg");
     const filled = new Set();
 
-    for (let i = 0; i < 10; i += 1) {
+    for (let i = 0; i < cells; i += 1) {
       const b = document.createElement("button");
       b.className = "cell";
       b.style.cssText = "width:100%;aspect-ratio:1;border-radius:14px;border:3px solid var(--line);background:var(--paper);font-size:1.6rem;cursor:pointer;transition:transform .1s";
@@ -116,9 +117,9 @@ const desimtukas = {
 
     function update() {
       const n = filled.size;
-      api.readout(`${n} iš 10. Trūksta ${10 - n}.`);
-      if (n === 10) { msg.textContent = "Pilnas dešimtukas! Dabar atimk 3 — kas lieka?"; api.progress({ correct: true }); api.speak("Dešimt. Puiku!"); }
-      else if (n === 5) { msg.textContent = "Pusė dešimtuko — penki. Kaip dar gali pasakyti penkis?"; }
+      api.readout(`${n} iš ${cells}. Trūksta ${cells - n}.`);
+      if (n === cells) { msg.textContent = "Pilnas dešimtukas! Dabar atimk 3 — kas lieka?"; api.progress({ correct: true }); api.speak("Dešimt. Puiku!"); }
+      else if (n === Math.ceil(cells / 2)) { msg.textContent = "Pusė dešimtuko — penki. Kaip dar gali pasakyti penkis?"; }
       else { msg.textContent = "Spausk langelius ir skaičiuok. Kiek trūksta iki 10?"; }
     }
 
@@ -219,7 +220,11 @@ const figuros = {
       binsEl.appendChild(bin);
     });
 
-    controls.querySelector("#fg-reset").addEventListener("click", () => location.reload());
+    controls.querySelector("#fg-reset").addEventListener("click", () => {
+      stage.innerHTML = "";
+      controls.innerHTML = "";
+      figuros.mount({ stage, controls, api, config });
+    });
 
     drawTray();
     api.readout("Rūšiuok figūras");

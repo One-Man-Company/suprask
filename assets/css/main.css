@@ -202,6 +202,26 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .strand-card h3 { margin: 0; }
 .strand-meta { color: var(--ink-faint); font-size: var(--fs-s); }
 
+/* Tęsk nuo čia */
+.continue-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  margin-top: 1rem; border: 2px solid var(--accent); text-decoration: none;
+  background: color-mix(in srgb, var(--accent) 8%, var(--paper-2));
+}
+.continue-card:hover { box-shadow: var(--shadow-2); }
+.continue-card > div { display: grid; gap: .2rem; }
+.continue-card strong { font-family: var(--font-head); font-size: 1.25rem; }
+.continue-card .btn { flex: 0 0 auto; }
+.continue-card.done { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 8%, var(--paper-2)); }
+.continue-label {
+  text-transform: uppercase; letter-spacing: .1em; font-size: var(--fs-xs);
+  font-weight: 900; color: color-mix(in srgb, var(--accent) 70%, var(--ink));
+}
+@media (max-width: 30rem) {
+  .continue-card { flex-direction: column; align-items: flex-start; }
+  .continue-card .btn { width: 100%; }
+}
+
 /* ---------- modulis ---------- */
 .module-head { margin-bottom: 1.2rem; }
 .crumbs { font-size: var(--fs-s); color: var(--ink-faint); margin-bottom: .6rem; }

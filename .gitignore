@@ -6,8 +6,12 @@ __pycache__/
 # Dideli šaltinių PDF — repo laikomi tik išgauti tekstai (žr. sources/README.md)
 sources/*.pdf
 
-# Agentų vykdymo artefaktai
+# Agentų vykdymo artefaktai (registras atsarginamas atskirai)
+agents/runs.db
+agents/runs.db-wal
+agents/runs.db-shm
 agents/.run.lock
+agents/work/
 agents/log/*.md
 
 # OS

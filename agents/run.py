@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-SUPRASK agentų bėgiklis.
+SUPRASK agentų bėgiklis (v2).
 
-Paleidžia vieną agento vaidmenį per Hermes profilį, įrašo žurnalą ir
-atnaujina būseną. Skirtas systemd timeriams ir rankiniam paleidimui.
+Vienas paleidimas = vienas vaidmuo = vienas įrašas `agents/runs.db`.
+Registras yra vienintelis tiesos šaltinis dashboard'ui.
 
-    python3 agents/run.py kuratorius
-    python3 agents/run.py tyrejas --dry-run
+    python3 agents/run.py kritikas
+    python3 agents/run.py ideator --trigger dashboard
+    python3 agents/run.py kurejas --dry-run
 
 Kiekvienas agentas privalo laikytis docs/SVIETIMAS-1-GAIRES.md.
 """
@@ -24,81 +25,157 @@ import sys
 import tempfile
 from pathlib import Path
 
+import db
+
 ROOT = Path(__file__).resolve().parent.parent
 AGENTS = ROOT / "agents"
 LOG_DIR = AGENTS / "log"
+WORK_DIR = AGENTS / "work"
+PROPOSALS = AGENTS / "proposals"
 STATE_FILE = AGENTS / "state.json"
 LOCK_FILE = AGENTS / ".run.lock"
 
 HERMES = os.environ.get("SUPRASK_HERMES_BIN") or shutil.which("hermes") or "/home/zoltanas/.local/bin/hermes"
 
-ROLES = {
-    "tyrejas": {
-        "file": "roles/tyrejas.md",
-        "profile": "deepseekpro",
-        "toolsets": "terminal,file,web",
-        "max_turns": 40,
-        "budget": 1500,
-        "description": "Tiria naujus metodus ir tyrimus, papildo research/wiki/",
+# Atsarginis profilis, jei pagrindinio providerio raktas atmetamas (401/429).
+FALLBACK_PROFILE = os.environ.get("SUPRASK_FALLBACK_PROFILE", "deepseek41flash")
+
+# Požymiai, kad tai providerio klaida, o ne atsakymas.
+FAIL_MARKERS = (
+    "rejected your api key",
+    "http 401",
+    "http 429",
+    "can't be reached",
+    "provider said",
+    "rate limit",
+)
+
+# Vaidmuo → failas, profilis, įrankių rinkinys, limitai, grafikas
+ROLES: dict[str, dict] = {
+    "ideator": {
+        "file": "roles/ideator.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 30, "budget": 1200, "timeout": 1800,
+        "cadence": "kasdien", "on_calendar": "*-*-* 07:10:00",
+        "description": "Ieško naujų pamokų idėjų ir temų, teikia pasiūlymus",
+    },
+    "metodininkas": {
+        "file": "roles/metodininkas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 40, "budget": 1500, "timeout": 2400,
+        "cadence": "kasdien", "on_calendar": "*-*-* 08:20:00",
+        "description": "Kuria vaizdavimo metodus ir simuliacijų scenarijus pasiūlymams",
     },
     "kurejas": {
-        "file": "roles/kurejas.md",
-        "profile": "deepseekpro",
-        "toolsets": "terminal,file,web",
-        "max_turns": 60,
-        "budget": 2400,
-        "description": "Kuria vieną naują modulį pagal gaires ir atidaro PR",
+        "file": "roles/kurejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 60, "budget": 2400, "timeout": 3600,
+        "cadence": "kasdien", "on_calendar": "*-*-* 09:30:00",
+        "description": "Kuria po vieną modulį pagal patvirtintus metodus, atidaro PR",
+    },
+    "simuliaciju-inzinierius": {
+        "file": "roles/simuliaciju-inzinierius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 60, "budget": 2400, "timeout": 3600,
+        "cadence": "kasdien", "on_calendar": "*-*-* 11:00:00",
+        "description": "Kuria ir tobulina interaktyvias simuliacijas, atidaro PR",
+    },
+    "dizaineris": {
+        "file": "roles/dizaineris.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 30, "budget": 1200, "timeout": 1800,
+        "cadence": "antradieniais, ketvirtadieniais, šeštadieniais", "on_calendar": "Tue,Thu,Sat *-*-* 12:30:00",
+        "description": "Tobulina klasių struktūrą ir sąsają (desktop/tablet pirmiausia)",
+    },
+    "kritikas": {
+        "file": "roles/kritikas.md", "profile": "deepseekv4flashlatest", "toolsets": "terminal,file,web",
+        "max_turns": 40, "budget": 1800, "timeout": 2400,
+        "cadence": "kasdien", "on_calendar": "*-*-* 14:00:00",
+        "description": "Nepriklausoma kritika: pedagogika, UX, turinio teiginiai, gairių laikymasis",
+    },
+    "programos-derintojas": {
+        "file": "roles/programos-derintojas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 40, "budget": 1500, "timeout": 2400,
+        "cadence": "pirmadieniais, ketvirtadieniais", "on_calendar": "Mon,Thu *-*-* 15:00:00",
+        "description": "Derina turinį su oficialia programa ir amžiaus tinkamumu",
+    },
+    "leidejas": {
+        "file": "roles/leidejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 30, "budget": 1200, "timeout": 1800,
+        "cadence": "kasdien", "on_calendar": "*-*-* 16:30:00",
+        "description": "Sujungia patvirtintus PR, atnaujina changelog ir publikavimą",
     },
     "tikrintojas": {
-        "file": "roles/tikrintojas.md",
-        "profile": "deepseek41flash",
-        "toolsets": "terminal,file,web",
-        "max_turns": 30,
-        "budget": 900,
+        "file": "roles/tikrintojas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 30, "budget": 900, "timeout": 1200,
+        "cadence": "kasdien", "on_calendar": "*-*-* 06:40:00",
         "description": "Validuoja turinį ir sąsają, registruoja klaidas",
     },
     "sveikatos-inspektorius": {
-        "file": "roles/sveikatos-inspektorius.md",
-        "profile": "deepseek41flash",
-        "toolsets": "terminal,file,web",
-        "max_turns": 30,
-        "budget": 900,
+        "file": "roles/sveikatos-inspektorius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 30, "budget": 900, "timeout": 1200,
+        "cadence": "ketvirtadieniais", "on_calendar": "Thu *-*-* 06:50:00",
         "description": "Tikrina gyvą svetainę, nuorodas ir našumą",
     },
+    "tyrejas": {
+        "file": "roles/tyrejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 40, "budget": 1500, "timeout": 2400,
+        "cadence": "pirmadieniais", "on_calendar": "Mon *-*-* 07:00:00",
+        "description": "Tiria naujus metodus ir tyrimus, papildo research/wiki/",
+    },
     "kuratorius": {
-        "file": "roles/kuratorius.md",
-        "profile": "deepseek41flash",
-        "toolsets": "terminal,file,web",
-        "max_turns": 30,
-        "budget": 900,
-        "description": "Apibendrina savaitę, atnaujina būseną ir changelog",
+        "file": "roles/kuratorius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        "max_turns": 30, "budget": 900, "timeout": 1200,
+        "cadence": "sekmadieniais", "on_calendar": "Sun *-*-* 18:00:00",
+        "description": "Savaitės suvestinė, changelog, atviri klausimai",
     },
 }
 
-HEADER = """Tu esi SUPRASK platformos agentas. SUPRASK — atvira, nemokama interaktyvi vizualinio mokymosi
-platforma Lietuvos 1–12 klasei (šiuo metu parengta 1 klasė, 13 modulių).
+HEADER = """Tu esi SUPRASK platformos agentas. SUPRASK — atvira, nemokama, interaktyvi vizualinio
+mokymosi platforma Lietuvos 1–12 klasei. Šiuo metu gyva 1 klasė (13 modulių, 13 simuliacijų).
 
 PRIVALOMA TVARKA
 1. Perskaityk: docs/SVIETIMAS-1-GAIRES.md, docs/KURINIO-STANDARTAS.md, docs/ARCHITEKTURA.md.
-2. Perskaityk savo vaidmens failą (jis įtrauktas žemiau) ir agents/state.json.
-3. Dirbk TIK savo vaidmens ribose. Nekeisk kitų vaidmenų failų.
-4. NENAUDOK išorinių paslaugų, mokamų API, CDN. Niekur nerašyk asmens duomenų.
+2. Perskaityk savo vaidmens failą (įtrauktas žemiau), agents/state.json ir agents/proposals/.
+3. Dirbk TIK savo vaidmens ribose. Nekeisk kitų vaidmenų failų, nekeisk AGENTS.md.
+4. NENAUDOK mokamų paslaugų, CDN, išorinių API. Niekur nerašyk asmens duomenų.
 5. Baigęs įrašyk ataskaitą į agents/log/ ir atnaujink agents/state.json.
 
 PROJEKTO KATALOGAS: {root}
 ŠIANDIEN: {today}
+PALEIDIMO NR.: {run_id}
+
+--- PLATFORMOS BŪKLĖ ---
+{stats}
+
+--- PASKUTINIAI PALEIDIMAI ---
+{recent}
+
+--- ATVIRI PASIŪLYMAI ---
+{proposals}
 
 --- VAIDMUO: {role} ---
 {role_text}
 
---- BŪSENA (agents/state.json) ---
-{state}
-
---- PASKUTINĖS ATASKAITOS IŠTRAUKA ---
+--- PASKUTINĖ TAVO ATASKAITA (ištrauka) ---
 {last_log}
 
 --- BAIGTIES SĄLYGA ---
 {definition_of_done}
+"""
+
+PROPOSAL_RULES = """
+--- PASIŪLYMŲ FORMATAS ---
+Jei tavo vaidmuo teikia pasiūlymus, rašyk juos į `agents/proposals/<data>-<vaidmuo>-<slug>.json`:
+
+{
+  "role": "ideator",
+  "run_id": <paleidimo nr.>,
+  "created": "<ISO laikas>",
+  "type": "tema|metodas|simuliacija|struktura|ux|kritika|atitiktis",
+  "title": "trumpas pavadinimas",
+  "body": "kas siūloma ir kodėl (lietuviškai, 3–8 sakiniai)",
+  "target": "content/lt/grade-XX/... arba assets/js/sims/...",
+  "priority": "high|normal|low",
+  "status": "new",
+  "evidence": ["šaltinis arba failas, kuriuo remiamasi"]
+}
+Vienas paleidimas — ne daugiau kaip 3 pasiūlymai. Pasiūlymas be šaltinio arba be konkretaus tikslo yra atmestas.
 """
 
 
@@ -109,122 +186,218 @@ def read(path: Path, default: str = "") -> str:
         return default
 
 
-def last_log_excerpt(role: str, limit: int = 4000) -> str:
+def last_log_excerpt(role: str, limit: int = 3000) -> str:
     logs = sorted(LOG_DIR.glob(f"{role}-*.md"))
     if not logs:
         return "(dar nėra)"
     return read(logs[-1])[-limit:]
 
 
-def build_prompt(role: str, cfg: dict) -> str:
+def platform_stats() -> str:
+    try:
+        return json.dumps(db.content_stats(), ensure_ascii=False)
+    except Exception:  # noqa: BLE001
+        return "{}"
+
+
+def recent_runs_text(limit: int = 12) -> str:
+    try:
+        rows = db.recent_runs(limit)
+    except Exception:  # noqa: BLE001
+        return "(nėra duomenų)"
+    if not rows:
+        return "(dar nėra paleidimų)"
+    lines = ["id | vaidmuo | statusas | trukmė | baigta"]
+    for r in rows:
+        lines.append(f"{r['id']} | {r['role']} | {r['status']} | {r['duration_s'] or '-'}s | {r['finished'] or '-'}")
+    return "\n".join(lines)
+
+
+def open_proposals_text(limit: int = 10) -> str:
+    try:
+        rows = db.proposals(limit, status="new")
+    except Exception:  # noqa: BLE001
+        return "(nėra duomenų)"
+    if not rows:
+        return "(atvirų pasiūlymų nėra)"
+    out = []
+    for r in rows:
+        out.append(f"#{r['id']} [{r['type']}/{r['priority']}] {r['title']} → {r['target']}")
+    return "\n".join(out)
+
+
+def build_prompt(role: str, cfg: dict, run_id: int) -> str:
     role_text = read(AGENTS / cfg["file"])
     if not role_text:
         raise SystemExit(f"Nerastas vaidmens failas: {cfg['file']}")
-    state = read(STATE_FILE, "{}")
-    try:
-        state_obj = json.loads(state)
-        state_pretty = json.dumps(state_obj, ensure_ascii=False, indent=2)
-    except json.JSONDecodeError:
-        state_pretty = state
     dod = ""
     for line in role_text.splitlines():
         if line.lower().startswith("## baigties sąlyga"):
             dod = role_text.split(line, 1)[1].strip()
             break
-    return HEADER.format(
+    body = HEADER.format(
         root=ROOT,
         today=dt.date.today().isoformat(),
+        run_id=run_id,
+        stats=platform_stats(),
+        recent=recent_runs_text(),
+        proposals=open_proposals_text(),
         role=role,
         role_text=role_text.strip(),
-        state=state_pretty[:6000],
         last_log=last_log_excerpt(role),
         definition_of_done=dod or "Įrašyk ataskaitą ir grąžink trumpą santrauką.",
     )
+    if "PASIŪLYMŲ FORMATAS" in role_text or cfg.get("proposals", True):
+        body += PROPOSAL_RULES
+    return body
 
 
-def update_state(role: str, cfg: dict, exit_code: int, log_path: Path) -> None:
+def update_state(role: str, cfg: dict, status: str, log_path: Path) -> None:
     try:
-        state = json.loads(read(STATE_FILE, "{}"))
+        state = json.loads(read(STATE_FILE, "{}") or "{}")
     except json.JSONDecodeError:
         state = {}
     state.setdefault("roles", {})[role] = {
         "last_run": dt.datetime.now().isoformat(timespec="seconds"),
-        "exit_code": exit_code,
+        "status": status,
         "log": str(log_path.relative_to(ROOT)),
         "description": cfg["description"],
+        "cadence": cfg["cadence"],
     }
     state["updated"] = dt.datetime.now().isoformat(timespec="seconds")
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def changed_files(before: str) -> list[str]:
+    try:
+        after = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True, timeout=20).stdout
+    except Exception:  # noqa: BLE001
+        return []
+    before_set = set(before.splitlines())
+    return [ln for ln in after.splitlines() if ln not in before_set][:40]
+
+
+def git_snapshot() -> str:
+    try:
+        return subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True, timeout=20).stdout
+    except Exception:  # noqa: BLE001
+        return ""
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("role", choices=sorted(ROLES))
     ap.add_argument("--dry-run", action="store_true", help="tik parodyti promptą")
-    ap.add_argument("--timeout", type=int, default=3600)
+    ap.add_argument("--trigger", default="manual", choices=["manual", "schedule", "dashboard"])
+    ap.add_argument("--note", default="")
+    ap.add_argument("--timeout", type=int, default=0)
     args = ap.parse_args()
 
     cfg = ROLES[args.role]
-    prompt = build_prompt(args.role, cfg)
-
-    if args.dry_run:
-        print(prompt)
-        return 0
-
+    db.init()
     LOG_DIR.mkdir(parents=True, exist_ok=True)
-    stamp = dt.datetime.now().strftime("%Y-%m-%dT%H%M")
-    log_path = LOG_DIR / f"{args.role}-{stamp}.md"
+    WORK_DIR.mkdir(parents=True, exist_ok=True)
+    PROPOSALS.mkdir(parents=True, exist_ok=True)
 
-    LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
+    # Užraktas: vienu metu dirba vienas agentas (git ir turinio vientisumas)
     lock_handle = open(LOCK_FILE, "w")
     try:
         fcntl.flock(lock_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
-        print(f"{args.role}: kitas agentas jau dirba — praleidžiama")
+        print(f"{args.role}: kitas agentas jau dirba — praleista")
+        run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", "skipped: lock")
+        db.finish_run(run_id, "skipped", None, 0, "", "Kitas agentas jau dirba.")
         return 0
 
+    run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", args.note)
+    prompt = build_prompt(args.role, cfg, run_id)
+
+    if args.dry_run:
+        print(prompt)
+        db.finish_run(run_id, "dry-run", None, 0, "", "Sausas bėgimas.")
+        return 0
+
+    stamp = dt.datetime.now().strftime("%Y-%m-%dT%H%M")
+    log_path = LOG_DIR / f"{args.role}-{stamp}.md"
+    work = WORK_DIR / args.role / f"{run_id:05d}"
+    work.mkdir(parents=True, exist_ok=True)
+
     fd, query_path = tempfile.mkstemp(prefix=f"suprask-{args.role}-", suffix=".txt")
+    before = git_snapshot()
+    started = dt.datetime.now()
+    timeout = args.timeout or cfg["timeout"]
+
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as fh:
             fh.write(prompt)
 
-        cmd = [
-            HERMES, "-p", cfg["profile"], "chat",
-            "--query-file", query_path,
-            "-Q",
-            "-t", cfg["toolsets"],
-            "--max-turns", str(cfg["max_turns"]),
-            "--run-budget", str(cfg["budget"]),
-            "--in", str(ROOT),
-        ]
-        started = dt.datetime.now()
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=args.timeout)
-        elapsed = (dt.datetime.now() - started).total_seconds()
-        out = (proc.stdout or "").strip()
-        err = (proc.stderr or "").strip()
+        def invoke(profile: str):
+            cmd = [
+                HERMES, "-p", profile, "chat",
+                "--query-file", query_path,
+                "-Q",
+                "-t", cfg["toolsets"],
+                "--max-turns", str(cfg["max_turns"]),
+                "--run-budget", str(cfg["budget"]),
+                "--in", str(ROOT),
+            ]
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+            return proc.returncode, (proc.stdout or "").strip(), (proc.stderr or "").strip()
 
-        # Hermes one-shot runs exit 1 after emitting a complete answer (stderr
-        # carries only a session id). Treating that as failure marked every
-        # productive agent run as broken in state.json and in systemd.
-        answered = len(out) > 200 and "session_id" in err
-        effective_code = 0 if (proc.returncode == 0 or answered) else proc.returncode
+        def classify(code: int, out: str, err: str) -> str:
+            low = out.lower()
+            if any(marker in low for marker in FAIL_MARKERS):
+                return "failed"
+            if code == 0:
+                return "ok"
+            # Hermes one-shot išeina su 1 po pilno atsakymo (stderr — tik session_id).
+            if len(out) > 200 and "session_id" in err:
+                return "partial"
+            return "failed"
+
+        code, out, err = invoke(cfg["profile"])
+        status = classify(code, out, err)
+        used_profile = cfg["profile"]
+
+        # Provider failure (401/429) — bandome atsarginį profilį, kad ciklas nenutrūktų.
+        if status == "failed" and FALLBACK_PROFILE and FALLBACK_PROFILE != cfg["profile"]:
+            code2, out2, err2 = invoke(FALLBACK_PROFILE)
+            status2 = classify(code2, out2, err2)
+            if status2 in ("ok", "partial"):
+                code, out, err, status = code2, out2, err2, status2
+                used_profile = FALLBACK_PROFILE
+                out = f"[atsarginis profilis {FALLBACK_PROFILE}]\n\n{out}"
+
+        elapsed = int((dt.datetime.now() - started).total_seconds())
 
         log_path.write_text(
             f"# {args.role} — {stamp}\n\n"
-            f"- trukmė: {elapsed:.0f}s\n"
-            f"- exit: {proc.returncode} (vertinama kaip {effective_code})\n"
-            f"- modelis: hermes:{cfg['profile']}\n\n"
+            f"- paleidimas: #{run_id} ({args.trigger})\n"
+            f"- trukmė: {elapsed}s\n"
+            f"- exit: {code} → {status}\n"
+            f"- modelis: hermes:{used_profile}\n\n"
             f"## Ataskaita\n\n{out or '(tuščia)'}\n\n"
             + (f"## klaidos\n\n```\n{err[-2000:]}\n```\n" if err else ""),
             encoding="utf-8",
         )
-        update_state(args.role, cfg, effective_code, log_path)
-        print(f"{args.role}: baigta per {elapsed:.0f}s, exit={proc.returncode} (vertinama {effective_code}), žurnalas {log_path.relative_to(ROOT)}")
-        return 0 if effective_code == 0 else 1
+
+        files = changed_files(before)
+        db.finish_run(run_id, status, code, elapsed, str(log_path.relative_to(ROOT)), out, files)
+        db.upsert_proposals(sorted(PROPOSALS.glob("*.json")))
+        update_state(args.role, cfg, status, log_path)
+
+        print(f"{args.role} #{run_id}: {status} per {elapsed}s ({used_profile}), failų: {len(files)}, žurnalas {log_path.relative_to(ROOT)}")
+        return 0 if status in ("ok", "partial") else 1
+
     except subprocess.TimeoutExpired:
-        log_path.write_text(f"# {args.role} — {stamp}\n\nBaigėsi laikas ({args.timeout}s).\n", encoding="utf-8")
-        update_state(args.role, cfg, 124, log_path)
-        print(f"{args.role}: baigėsi laikas")
+        elapsed = int((dt.datetime.now() - started).total_seconds())
+        log_path.write_text(
+            f"# {args.role} — {stamp}\n\n- paleidimas: #{run_id}\n- Baigėsi laikas ({timeout}s).\n",
+            encoding="utf-8",
+        )
+        db.finish_run(run_id, "timeout", 124, elapsed, str(log_path.relative_to(ROOT)), f"Baigėsi laikas ({timeout}s).")
+        update_state(args.role, cfg, "timeout", log_path)
+        print(f"{args.role} #{run_id}: timeout")
         return 124
     finally:
         Path(query_path).unlink(missing_ok=True)

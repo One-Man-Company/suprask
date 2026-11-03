@@ -67,7 +67,38 @@ python3 scripts/validate_content.py
 
 ## Agentų sistema
 
-Platformą nuolat prižiūri penki agentai (`agents/`): tyrėjas, kūrėjas, tikrintojas, sveikatos inspektorius ir kuratorius. Jie dirba pagal grafiką, laikosi gairių ir registruoja savo darbą. Žr. [`agents/README.md`](agents/README.md).
+Platformą nuolat vysto dvylika agentų (`agents/`), veikiančių ciklu **ieška → metodas → turinys → simuliacija → kritika → leidimas**:
+
+| Vaidmuo | Ką daro |
+|---|---|
+| `ideator` | ieško naujų pamokų idėjų pagal programos spragas |
+| `metodininkas` | projektuoja mokymo metodą ir simuliacijos scenarijų |
+| `kurejas` | kuria modulį pagal metodą (PR) |
+| `simuliaciju-inzinierius` | kuria ir tobulina simuliacijas (PR) |
+| `dizaineris` | tobulina klasių struktūrą (`path.json`) ir sąsają |
+| `kritikas` | nepriklausoma kritika: pedagogika, UX, teiginiai, gairės |
+| `programos-derintojas` | derina turinį su oficialia programa |
+| `leidejas` | sujungia patikrintus PR, atnaujina changelog |
+| `tyrejas` | papildo tyrimų bazę |
+| `tikrintojas` | validuoja turinį ir sąsają |
+| `sveikatos-inspektorius` | tikrina gyvą svetainę |
+| `kuratorius` | savaitės suvestinė ir prioritetai |
+
+Grafikas — `systemd --user` timeriai (10 paleidimų per dieną), kiekvienas paleidimas registruojamas `agents/runs.db`. Žr. [`agents/README.md`](agents/README.md).
+
+## Vidinis dashboard (Tailscale)
+
+Agentų paleidimų istorija, grafikas, pasiūlymai ir turinio statistika — **ne viešai**:
+
+```
+http://zoltanas.tail4bbf34.ts.net:9410/
+```
+
+HTTP Basic auth; slaptažodis — `~/.config/suprask/dashboard.env`. Žr. [`dashboard/README.md`](dashboard/README.md).
+
+## Garsas
+
+Lietuviškas garsas — iš anksto sugeneruoti neuroninio balso (`lt-LT-OnaNeural`) įrašai, ne naršyklės balsas. 344 įrašai, ~5 MB, generuojami `scripts/generate_audio.py`. Naršyklės balsas naudojamas tik kaip atsarginis variantas dinaminiams sakiniams.
 
 ## Licencijos
 

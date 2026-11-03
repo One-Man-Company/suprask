@@ -1,6 +1,13 @@
-import { loadGrades, loadGradeIndex, loadModule, getSim, makeSimApi } from "./registry.js";
+import { loadGrades, loadGradeIndex, loadModule, loadPath, getSim, makeSimApi } from "./registry.js";
 import * as progress from "./progress.js";
-import { speak, bindHeaderToggle } from "./speech.js";
+import { speak, prime, bindHeaderToggle } from "./speech.js";
+
+const collectStrings = (obj, out = []) => {
+  if (typeof obj === "string") { out.push(obj); return out; }
+  if (Array.isArray(obj)) { obj.forEach((v) => collectStrings(v, out)); return out; }
+  if (obj && typeof obj === "object") Object.values(obj).forEach((v) => collectStrings(v, out));
+  return out;
+};
 
 const app = document.getElementById("app");
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -118,6 +125,31 @@ async function viewGrade(grade) {
   const meta = grades.grades.find((g) => g.grade === grade);
   if (!meta || meta.status !== "live") return comingSoon(meta);
   const g = await loadGradeIndex(grade);
+  const pathDoc = await loadPath(grade);
+
+  const allModules = g.strands.flatMap((s) => s.modules.map((m) => ({ ...m, strand: s })));
+  const byId = new Map(allModules.map((m) => [m.id, m]));
+  const fallbackSeq = allModules.map((m) => m.id);
+  const seq = pathDoc && Array.isArray(pathDoc.sequence) && pathDoc.sequence.length ? pathDoc.sequence : fallbackSeq;
+  const next = seq.map((id) => byId.get(id)).find((m) => m && !progress.isDone(m.id)) || null;
+  const doneCount = allModules.filter((m) => progress.isDone(m.id)).length;
+
+  const continueCard = next
+    ? `<a class="card continue-card" href="#/modulis/${grade}/${next.strand.id}/${next.id}">
+         <div>
+           <span class="continue-label">Tęsk nuo čia</span>
+           <strong>${esc(next.title)}</strong>
+           <span class="strand-meta">${esc(next.strand.title)} · ${next.minutes || 8} min. · ${doneCount} iš ${allModules.length} atlikta</span>
+         </div>
+         <span class="btn">Tęsti →</span>
+       </a>`
+    : `<div class="card continue-card done">
+         <div>
+           <span class="continue-label">Kelias įveiktas</span>
+           <strong>Visi ${allModules.length} moduliai atlikti 🎉</strong>
+           <span class="strand-meta">Gali kartoti bet kurią temą — kartojimas padeda atsiminti.</span>
+         </div>
+       </div>`;
 
   const strands = g.strands.map((s) => {
     const done = progress.count(s.modules.map((m) => m.id));
@@ -140,6 +172,7 @@ async function viewGrade(grade) {
     <div class="crumbs"><a href="#/">Pradžia</a> / ${grade} klasė</div>
     <h1>${grade} klasė</h1>
     <p class="lede" style="color:var(--ink-soft)">${esc(g.age || "")} · ${esc(g.note || "")}</p>
+    ${continueCard}
     ${strands}
   `;
 }
@@ -305,6 +338,8 @@ function mountSim(mod) {
     const result = component.mount({ stage, controls, api, config: mod.sim.config || {} });
     if (typeof result === "function") cleanupSim = result;
     else if (result && typeof result.destroy === "function") cleanupSim = () => result.destroy();
+    // Įkeliam garsą iš anksto, kad pirmas paspaudimas negrotų tuščiai.
+    prime(collectStrings(mod.sim.config || {}).filter((s) => s.length <= 120));
   } catch (err) {
     stage.innerHTML = `<p class="error-box">Simuliacijos klaida: ${esc(err.message)}</p>`;
   }

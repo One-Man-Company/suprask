@@ -5,6 +5,13 @@
       "exit_code": 0,
       "log": "agents/log/tikrintojas-2026-11-03T1444.md",
       "description": "Validuoja turinį ir sąsają, registruoja klaidas"
+    },
+    "ideator": {
+      "last_run": "2026-11-03T16:52:06",
+      "status": "partial",
+      "log": "agents/log/ideator-2026-11-03T1652.md",
+      "description": "Ieško naujų pamokų idėjų ir temų, teikia pasiūlymus",
+      "cadence": "kasdien"
     }
   },
   "last_validation": {
@@ -23,5 +30,5 @@
     "log": "agents/log/tikrintojas-2026-11-03T1444.md"
   },
   "open_questions": "research/wiki/guidelines/klausimai.md",
-  "updated": "2026-11-03T14:49:57"
+  "updated": "2026-11-03T16:52:06"
 }

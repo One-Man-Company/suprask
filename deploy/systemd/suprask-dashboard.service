@@ -1,0 +1,20 @@
+[Unit]
+Description=SUPRASK — agentų dashboard (vidinis, Tailscale)
+Documentation=file:/home/zoltanas/workspace/suprask/dashboard/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/zoltanas/workspace/suprask
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="SUPRASK_DASH_HOST=100.118.226.11"
+Environment="SUPRASK_DASH_PORT=9410"
+ExecStart=/usr/bin/python3 /home/zoltanas/workspace/suprask/dashboard/server.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

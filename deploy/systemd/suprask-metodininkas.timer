@@ -1,0 +1,12 @@
+[Unit]
+Description=SUPRASK — metodininkas (kasdien)
+
+[Timer]
+# Sugeneruota iš agents/run.py ROLES. Nekeisk ranka — paleisk deploy/gen_timers.py.
+OnCalendar=*-*-* 08:20:00
+Persistent=true
+RandomizedDelaySec=240
+Unit=suprask-agent@metodininkas.service
+
+[Install]
+WantedBy=timers.target

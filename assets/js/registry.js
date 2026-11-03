@@ -22,6 +22,15 @@ export const loadGrades = () => getJSON("grades.json");
 export const loadGradeIndex = (grade) => getJSON(`grade-${String(grade).padStart(2, "0")}/index.json`);
 export const loadModule = (file) => getJSON(file);
 
+/** Rekomenduojamas mokymosi kelias; jei failo nėra — null (ne klaida). */
+export async function loadPath(grade) {
+  try {
+    return await getJSON(`grade-${String(grade).padStart(2, "0")}/path.json`);
+  } catch {
+    return null;
+  }
+}
+
 /* ---------- simuliacijų registras ---------- */
 import * as calba from "./sims/calba.js";
 import * as matematika from "./sims/matematika.js";

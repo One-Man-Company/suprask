@@ -1,11 +1,11 @@
 [Unit]
-Description=SUPRASK — kūrėjas (antradienis)
+Description=SUPRASK — kurejas (kasdien)
 
 [Timer]
-# Antradienis: po tyrėjo paleidimo, kad naujas modulis remtųsi atnaujinta baze.
-OnCalendar=Tue *-*-* 07:30:00
+# Sugeneruota iš agents/run.py ROLES. Nekeisk ranka — paleisk deploy/gen_timers.py.
+OnCalendar=*-*-* 09:30:00
 Persistent=true
-RandomizedDelaySec=600
+RandomizedDelaySec=240
 Unit=suprask-agent@kurejas.service
 
 [Install]

@@ -1,11 +1,11 @@
 [Unit]
-Description=SUPRASK — turinio tikrinimas (kasdien)
+Description=SUPRASK — tikrintojas (kasdien)
 
 [Timer]
-# Kasdien anksti: jei agentas rado klaidą, ji matoma prieš mokslo dienos pradžią.
+# Sugeneruota iš agents/run.py ROLES. Nekeisk ranka — paleisk deploy/gen_timers.py.
 OnCalendar=*-*-* 06:40:00
 Persistent=true
-RandomizedDelaySec=300
+RandomizedDelaySec=240
 Unit=suprask-agent@tikrintojas.service
 
 [Install]

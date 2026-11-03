@@ -1,11 +1,11 @@
 [Unit]
-Description=SUPRASK — tyrėjas (pirmadienis)
+Description=SUPRASK — tyrejas (pirmadieniais)
 
 [Timer]
-# Pirmadienis: savaitė prasideda nuo tyrimų, kad kūrėjas antradienį turėtų naujausią bazę.
+# Sugeneruota iš agents/run.py ROLES. Nekeisk ranka — paleisk deploy/gen_timers.py.
 OnCalendar=Mon *-*-* 07:00:00
 Persistent=true
-RandomizedDelaySec=600
+RandomizedDelaySec=240
 Unit=suprask-agent@tyrejas.service
 
 [Install]

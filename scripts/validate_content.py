@@ -242,6 +242,27 @@ def main() -> int:
                     rep.err(f"{mod_path.relative_to(ROOT)}: „strand“ nesutampa su katalogo kryptimi")
                 check_module(mod_path, data, rep, sims, meta_by_grade)
 
+        # rekomenduojamas kelias (path.json) — neprivalomas, bet jei yra, turi būti nuoseklus
+        path_file = index_path.parent / "path.json"
+        if path_file.exists():
+            try:
+                path_doc = json.loads(path_file.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as e:
+                rep.err(f"{path_file.relative_to(ROOT)}: neteisingas JSON: {e}")
+                path_doc = {}
+            seq = path_doc.get("sequence") or []
+            if not isinstance(seq, list):
+                rep.err(f"{path_file.relative_to(ROOT)}: „sequence“ turi būti sąrašas")
+            else:
+                unknown = [s for s in seq if s not in seen_ids]
+                if unknown:
+                    rep.err(f"{path_file.relative_to(ROOT)}: nežinomi moduliai: {', '.join(unknown)}")
+                if len(seq) != len(set(seq)):
+                    rep.err(f"{path_file.relative_to(ROOT)}: pasikartojantys moduliai sekoje")
+                missing = [m for m in seen_ids if m not in seq]
+                if missing:
+                    rep.warn(f"{path_file.relative_to(ROOT)}: sekoje nėra {len(missing)} modulių: {', '.join(sorted(missing))}")
+
     print_report(rep, args)
     if rep.errors:
         return 1

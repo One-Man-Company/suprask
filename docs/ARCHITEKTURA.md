@@ -66,17 +66,53 @@ Hash maršrutizatorius pasirinktas sąmoningai: jis veikia iš bet kurio poaplan
 
 ## Agentų sistema
 
-Agentai gyvena `agents/` kataloge ir yra paleidžiami sistemos grafiku (`systemd --user` timeriai) per `agents/run.py`.
+Agentai gyvena `agents/` kataloge ir paleidžiami `systemd --user` timeriais per `agents/run.py`. Kiekvienas paleidimas įrašomas į `agents/runs.db` (SQLite).
 
-| vaidmuo | dažnis | ką daro |
-|---|---|---|
-| `tyrejas` | pirmadienis | ieško naujų tyrimų ir metodų, papildo `research/wiki/` |
-| `kurejas` | antradienis | kuria naujus modulius pagal gaires, atidaro PR |
-| `tikrintojas` | kasdien | validuoja turinį, tikrina sąsają, registruoja klaidas |
-| `sveikatos-inspektorius` | ketvirtadienis | tikrina gyvą svetainę, nuorodas, našumą |
-| `kuratorius` | sekmadienis | apibendrina savaitę, atnaujina būseną ir gaires |
+| vaidmuo | dažnis | ką daro | išėjimas |
+|---|---|---|---|
+| `tikrintojas` | kasdien 06:40 | validuoja turinį, nuorodas, simuliacijų registrą | ataskaita, issue |
+| `tyrejas` | pirmadienis 07:00 | ieško tyrimų ir metodų | wiki įrašai |
+| `ideator` | kasdien 07:10 | ieško naujų pamokų idėjų pagal programos spragas | 1–3 pasiūlymai |
+| `metodininkas` | kasdien 08:20 | projektuoja mokymo metodą ir simuliacijos scenarijų | metodo pasiūlymas |
+| `kurejas` | kasdien 09:30 | kuria modulį pagal patvirtintą metodą | PR |
+| `simuliaciju-inzinierius` | kasdien 11:00 | kuria ir tobulina simuliacijas | PR |
+| `dizaineris` | II, IV, VI 12:30 | tobulina struktūrą (`path.json`) ir sąsają | PR + pilotas |
+| `kritikas` | kasdien 14:00 | nepriklausoma kritika: pedagogika, UX, teiginiai, gairės | kritikos įrašai, blokavimai |
+| `programos-derintojas` | I, IV 15:00 | derina turinį su oficialia programa | atitikties pasiūlymai |
+| `leidejas` | kasdien 16:30 | sujungia patikrintus PR, atnaujina changelog | sujungti PR |
+| `sveikatos-inspektorius` | ketvirtadienis 06:50 | tikrina gyvą svetainę ir našumą | ataskaita, issue |
+| `kuratorius` | sekmadienis 18:00 | savaitės suvestinė ir prioritetai | suvestinė |
+
+Ciklas: **ieška → metodas → turinys → simuliacija → kritika → leidimas**. Kritikas ir leidėjas yra atskirti sąmoningai: kas kuria, tas nevertina; kas vertina, tas neleidžia; kas leidžia, tas nekuria.
 
 Visi agentai privalo laikytis `docs/SVIETIMAS-1-GAIRES.md`; pažeidimas laikomas klaida, o ne kūrybiškumu.
+
+Pasiūlymai rašomi į `agents/proposals/*.json` ir suindexuojami į DB. Blokavimo žymos — `agents/proposals/blocks/pr-<n>.json`.
+
+## Struktūros kaita
+
+Klasės mokymosi tvarka gyvena `content/lt/grade-XX/path.json` (`sequence` sąrašas). Tai leidžia keisti maršrutą neperrašant turinio:
+
+- `dizaineris` gali pasiūlyti kitą tvarką (ne daugiau 2 pakeitimų per paleidimą), pagrįstą priklausomybėmis;
+- validatorius tikrina, kad visi moduliai egzistuotų ir seka nebūtų tuščia;
+- sąsaja rodo „Tęsk nuo čia“ pagal šią seką — vaikui visada vienas aiškus kitas žingsnis.
+
+## Garsas
+
+Lietuviškas garsas generuojamas iš anksto, ne naršyklėje:
+
+- `scripts/generate_audio.py` → `assets/audio/lt/{n|s}/<sha256-prefix>.mp3` (balsas `lt-LT-OnaNeural`, `edge-tts`);
+- `assets/js/speech.js` parenka failą pagal teksto SHA-256 ir jo groja; jei įrašo nėra (dinaminis sakinys), naudoja naršyklės balsą;
+- du variantai: `n` (normalus, −6 %) ir `s` (lėtas, −16 %, skiemenims ir raidėms);
+- `prime()` iš anksto įkelia modulio garso failus, kad pirmas paspaudimas negrotų tuščiai.
+
+## Dashboard (vidinis)
+
+`dashboard/server.py` — stdlib HTTP serveris, skaitantis `agents/runs.db`. Rodo suplanuotus paleidimus, istoriją, pasiūlymus, turinio statistiką ir leidžia paleisti vaidmenį rankiniu būdu.
+
+- Adresas: `http://100.118.226.11:9410/` (Tailscale), **ne** viešas.
+- HTTP Basic auth; slaptažodis generuojamas `~/.config/suprask/dashboard.env` (0600).
+- `systemd --user suprask-dashboard.service`.
 
 ## Būsena
 

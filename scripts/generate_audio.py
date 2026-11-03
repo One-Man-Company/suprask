@@ -54,6 +54,9 @@ _PIPER = None
 
 # Simuliacijų ir sąsajos tekstai, kurių nėra modulių JSON (jie gyvena JS kode)
 EXTRA = [
+    # lietuvių abėcėlės raidės (pavieniai ženklai tariami kaip raidės)
+    *list("AĄBCČDEĘĖFGHIĮYJKLMNOPRSTUŲŪVZŽ"),
+    *list("aąbcčdeęėfghiįyjklmnoprstuųūvzž"),
     # skaičiai
     *[str(i) for i in range(0, 101)],
     # dinaminiai simuliacijų tekstai (šablonai JS kode)

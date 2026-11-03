@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import json
 import pathlib
+import shutil
+import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -43,16 +45,41 @@ def main() -> int:
             if not rel or not (ROOT / "assets" / "audio" / "lt" / rel).exists():
                 missing.append(f"{text} [{variant}]")
 
-    if missing:
-        print(f"KLAIDA: {len(missing)} tekstų be garso įrašo:")
-        for m in missing[:40]:
-            print("  -", m)
-        if len(missing) > 40:
-            print(f"  … ir dar {len(missing) - 40}")
-        print("\nSugeneruok: .venv/bin/python scripts/generate_audio.py")
+    # Vienas variklis visame korpuse. Skirtingų variklių mišinys atsiranda
+    # tyliai (pvz. senas įrašas nepakeičiamas, nes failas jau yra), o vaikas
+    # tada girdi du skirtingus balsus. Piper balsas — 22 050 Hz.
+    wrong_engine = []
+    if shutil.which("ffprobe"):
+        for text in texts:
+            entry = manifest.get(text) or {}
+            for variant in ("n", "s"):
+                rel = entry.get(variant)
+                if not rel:
+                    continue
+                path = ROOT / "assets" / "audio" / "lt" / rel
+                if not path.exists():
+                    continue
+                out = subprocess.run(
+                    ["ffprobe", "-v", "error", "-select_streams", "a:0",
+                     "-show_entries", "stream=sample_rate", "-of", "csv=p=0", str(path)],
+                    capture_output=True, text=True,
+                ).stdout.strip()
+                if out and out != "22050":
+                    wrong_engine.append(f"{text} [{variant}] → {out} Hz")
+
+    if missing or wrong_engine:
+        if missing:
+            print(f"KLAIDA: {len(missing)} tekstų be garso įrašo:")
+            for m in missing[:40]:
+                print("  -", m)
+        if wrong_engine:
+            print(f"KLAIDA: {len(wrong_engine)} įrašų ne iš Piper balso (laukta 22 050 Hz):")
+            for m in wrong_engine[:20]:
+                print("  -", m)
+        print("\nSugeneruok iš naujo: .venv/bin/python scripts/generate_audio.py --all")
         return 1
 
-    print(f"✔ Garsas pilnas: {len(texts)} tekstų, visi turi po du įrašus.")
+    print(f"✔ Garsas pilnas: {len(texts)} tekstų, visi turi po du įrašus, visi iš Piper balso.")
     return 0
 
 

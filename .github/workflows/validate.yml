@@ -24,6 +24,9 @@ jobs:
       - name: Turinio validacija
         run: python3 scripts/validate_content.py
 
+      - name: ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
       - name: Garso pilnumas
         run: python3 scripts/check_audio.py
 

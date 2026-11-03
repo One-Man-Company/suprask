@@ -483,6 +483,10 @@
   "n": "n/8c1f1046219ddd21.mp3",
   "s": "s/8c1f1046219ddd21.mp3"
  },
+ "A": {
+  "n": "n/559aead08264d579.mp3",
+  "s": "s/559aead08264d579.mp3"
+ },
  "Akmenėlis": {
   "n": "n/db209a986e7c2abf.mp3",
   "s": "s/db209a986e7c2abf.mp3"
@@ -506,6 +510,18 @@
  "Aš myliu mamą": {
   "n": "n/920d19e4b1f3e034.mp3",
   "s": "s/920d19e4b1f3e034.mp3"
+ },
+ "B": {
+  "n": "n/df7e70e5021544f4.mp3",
+  "s": "s/df7e70e5021544f4.mp3"
+ },
+ "C": {
+  "n": "n/6b23c0d5f35d1b11.mp3",
+  "s": "s/6b23c0d5f35d1b11.mp3"
+ },
+ "D": {
+  "n": "n/3f39d5c348e5b79d.mp3",
+  "s": "s/3f39d5c348e5b79d.mp3"
  },
  "Daigas": {
   "n": "n/e9ebf47dd9afa46f.mp3",
@@ -635,9 +651,21 @@
   "n": "n/9857ee5f9d20326c.mp3",
   "s": "s/9857ee5f9d20326c.mp3"
  },
+ "E": {
+  "n": "n/a9f51566bd6705f7.mp3",
+  "s": "s/a9f51566bd6705f7.mp3"
+ },
  "Ešerys": {
   "n": "n/6d27ce5b4ffa8b9a.mp3",
   "s": "s/6d27ce5b4ffa8b9a.mp3"
+ },
+ "F": {
+  "n": "n/f67ab10ad4e4c531.mp3",
+  "s": "s/f67ab10ad4e4c531.mp3"
+ },
+ "G": {
+  "n": "n/333e0a1e27815d0c.mp3",
+  "s": "s/333e0a1e27815d0c.mp3"
  },
  "Garsas išjungtas": {
   "n": "n/baf0cd4ffdbd715c.mp3",
@@ -646,6 +674,18 @@
  "Garsas įjungtas": {
   "n": "n/061db2d7c4edc72f.mp3",
   "s": "s/061db2d7c4edc72f.mp3"
+ },
+ "H": {
+  "n": "n/44bd7ae60f478fae.mp3",
+  "s": "s/44bd7ae60f478fae.mp3"
+ },
+ "I": {
+  "n": "n/a83dd0ccbffe39d0.mp3",
+  "s": "s/a83dd0ccbffe39d0.mp3"
+ },
+ "J": {
+  "n": "n/6da43b944e494e88.mp3",
+  "s": "s/6da43b944e494e88.mp3"
  },
  "Jaunas augalas": {
   "n": "n/26c7dabd254a2784.mp3",
@@ -703,6 +743,10 @@
   "n": "n/6ed7616494dc4ee2.mp3",
   "s": "s/6ed7616494dc4ee2.mp3"
  },
+ "L": {
+  "n": "n/72dfcfb0c470ac25.mp3",
+  "s": "s/72dfcfb0c470ac25.mp3"
+ },
  "Laimėjai": {
   "n": "n/c91cd8edce6c0d11.mp3",
   "s": "s/c91cd8edce6c0d11.mp3"
@@ -730,6 +774,10 @@
  "O": {
   "n": "n/c4694f2e93d5c4e7.mp3",
   "s": "s/c4694f2e93d5c4e7.mp3"
+ },
+ "P": {
+  "n": "n/5c62e091b8c0565f.mp3",
+  "s": "s/5c62e091b8c0565f.mp3"
  },
  "Pabandyk dar kartą.": {
   "n": "n/cde614009bc30075.mp3",
@@ -783,6 +831,10 @@
   "n": "n/c44eada050a6b94e.mp3",
   "s": "s/c44eada050a6b94e.mp3"
  },
+ "R": {
+  "n": "n/8c2574892063f995.mp3",
+  "s": "s/8c2574892063f995.mp3"
+ },
  "Ruduo": {
   "n": "n/6cef84a6159698ce.mp3",
   "s": "s/6cef84a6159698ce.mp3"
@@ -823,6 +875,10 @@
   "n": "n/14a8196466cbae3c.mp3",
   "s": "s/14a8196466cbae3c.mp3"
  },
+ "T": {
+  "n": "n/e632b7095b0bf32c.mp3",
+  "s": "s/e632b7095b0bf32c.mp3"
+ },
  "Teisingai!": {
   "n": "n/3d4e2b06ffc71b06.mp3",
   "s": "s/3d4e2b06ffc71b06.mp3"
@@ -834,6 +890,14 @@
  "Trikampis": {
   "n": "n/bc5649b646cf679f.mp3",
   "s": "s/bc5649b646cf679f.mp3"
+ },
+ "U": {
+  "n": "n/a25513c7e0f6eaa8.mp3",
+  "s": "s/a25513c7e0f6eaa8.mp3"
+ },
+ "V": {
+  "n": "n/de5a6f78116eca62.mp3",
+  "s": "s/de5a6f78116eca62.mp3"
  },
  "Vaikai": {
   "n": "n/09a538658c8a3ee8.mp3",
@@ -855,17 +919,69 @@
   "n": "n/936e4c7947cd9753.mp3",
   "s": "s/936e4c7947cd9753.mp3"
  },
+ "Y": {
+  "n": "n/18f5384d58bcb1bb.mp3",
+  "s": "s/18f5384d58bcb1bb.mp3"
+ },
+ "Z": {
+  "n": "n/bbeebd879e1dff69.mp3",
+  "s": "s/bbeebd879e1dff69.mp3"
+ },
+ "a": {
+  "n": "n/ca978112ca1bbdca.mp3",
+  "s": "s/ca978112ca1bbdca.mp3"
+ },
+ "b": {
+  "n": "n/3e23e8160039594a.mp3",
+  "s": "s/3e23e8160039594a.mp3"
+ },
  "buo": {
   "n": "n/4443b4d940219077.mp3",
   "s": "s/4443b4d940219077.mp3"
+ },
+ "c": {
+  "n": "n/2e7d2c03a9507ae2.mp3",
+  "s": "s/2e7d2c03a9507ae2.mp3"
+ },
+ "d": {
+  "n": "n/18ac3e7343f01689.mp3",
+  "s": "s/18ac3e7343f01689.mp3"
+ },
+ "e": {
+  "n": "n/3f79bb7b435b0532.mp3",
+  "s": "s/3f79bb7b435b0532.mp3"
  },
  "eina": {
   "n": "n/b46aac06506c6c8f.mp3",
   "s": "s/b46aac06506c6c8f.mp3"
  },
+ "f": {
+  "n": "n/252f10c83610ebca.mp3",
+  "s": "s/252f10c83610ebca.mp3"
+ },
+ "g": {
+  "n": "n/cd0aa9856147b6c5.mp3",
+  "s": "s/cd0aa9856147b6c5.mp3"
+ },
  "geria": {
   "n": "n/ae87882bd34b6c51.mp3",
   "s": "s/ae87882bd34b6c51.mp3"
+ },
+ "h": {
+  "n": "n/aaa9402664f1a41f.mp3",
+  "s": "s/aaa9402664f1a41f.mp3"
+ },
+ "i": {
+  "n": "n/de7d1b721a1e0632.mp3",
+  "s": "s/de7d1b721a1e0632.mp3"
+ },
+ "j": {
+  "n": "n/189f40034be7a199.mp3",
+  "s": "s/189f40034be7a199.mp3"
+ },
+ "k": {
+  "n": "n/8254c329a92850f6.mp3",
+  "s": "s/8254c329a92850f6.mp3"
  },
  "katė": {
   "n": "n/8c355f6e873fec60.mp3",
@@ -874,6 +990,10 @@
  "kyk": {
   "n": "n/8b6c2979aad8c381.mp3",
   "s": "s/8b6c2979aad8c381.mp3"
+ },
+ "l": {
+  "n": "n/acac86c0e609ca90.mp3",
+  "s": "s/acac86c0e609ca90.mp3"
  },
  "la": {
   "n": "n/b737ca7ee563ae80.mp3",
@@ -890,6 +1010,10 @@
  "lė": {
   "n": "n/aafe1b4524f72b01.mp3",
   "s": "s/aafe1b4524f72b01.mp3"
+ },
+ "m": {
+  "n": "n/62c66a7a5dd70c31.mp3",
+  "s": "s/62c66a7a5dd70c31.mp3"
  },
  "ma": {
   "n": "n/3c44c3e1b8b78447.mp3",
@@ -923,6 +1047,10 @@
   "n": "n/88f353e98b2f7a45.mp3",
   "s": "s/88f353e98b2f7a45.mp3"
  },
+ "n": {
+  "n": "n/1b16b1df538ba12d.mp3",
+  "s": "s/1b16b1df538ba12d.mp3"
+ },
  "namas": {
   "n": "n/438884ffc7d8d72d.mp3",
   "s": "s/438884ffc7d8d72d.mp3"
@@ -934,6 +1062,10 @@
  "obuolys": {
   "n": "n/fd6d6a9d194e7925.mp3",
   "s": "s/fd6d6a9d194e7925.mp3"
+ },
+ "p": {
+  "n": "n/148de9c5a7a44d19.mp3",
+  "s": "s/148de9c5a7a44d19.mp3"
  },
  "pi": {
   "n": "n/85b42e1702877c85.mp3",
@@ -947,9 +1079,17 @@
   "n": "n/57eab3bff71d38ea.mp3",
   "s": "s/57eab3bff71d38ea.mp3"
  },
+ "r": {
+  "n": "n/454349e422f05297.mp3",
+  "s": "s/454349e422f05297.mp3"
+ },
  "ryte": {
   "n": "n/f031a87bdef1b790.mp3",
   "s": "s/f031a87bdef1b790.mp3"
+ },
+ "s": {
+  "n": "n/043a718774c572bd.mp3",
+  "s": "s/043a718774c572bd.mp3"
  },
  "sau": {
   "n": "n/dfb3c9aac79bac44.mp3",
@@ -958,6 +1098,10 @@
  "saulė": {
   "n": "n/3d0fc6381d32fc43.mp3",
   "s": "s/3d0fc6381d32fc43.mp3"
+ },
+ "t": {
+  "n": "n/e3b98a4da31a127d.mp3",
+  "s": "s/e3b98a4da31a127d.mp3"
  },
  "tis": {
   "n": "n/cd8336b83b08f00a.mp3",
@@ -970,6 +1114,58 @@
  "tėtis": {
   "n": "n/e5d4ea44ce7432aa.mp3",
   "s": "s/e5d4ea44ce7432aa.mp3"
+ },
+ "u": {
+  "n": "n/0bfe935e70c321c7.mp3",
+  "s": "s/0bfe935e70c321c7.mp3"
+ },
+ "v": {
+  "n": "n/4c94485e0c21ae6c.mp3",
+  "s": "s/4c94485e0c21ae6c.mp3"
+ },
+ "y": {
+  "n": "n/a1fce4363854ff88.mp3",
+  "s": "s/a1fce4363854ff88.mp3"
+ },
+ "z": {
+  "n": "n/594e519ae499312b.mp3",
+  "s": "s/594e519ae499312b.mp3"
+ },
+ "Ą": {
+  "n": "n/53ccee140d0804e0.mp3",
+  "s": "s/53ccee140d0804e0.mp3"
+ },
+ "ą": {
+  "n": "n/1ddca08050786f81.mp3",
+  "s": "s/1ddca08050786f81.mp3"
+ },
+ "Č": {
+  "n": "n/c1d393d141445243.mp3",
+  "s": "s/c1d393d141445243.mp3"
+ },
+ "č": {
+  "n": "n/391a70de1fdee94a.mp3",
+  "s": "s/391a70de1fdee94a.mp3"
+ },
+ "Ė": {
+  "n": "n/ad412e2f29d9d8d7.mp3",
+  "s": "s/ad412e2f29d9d8d7.mp3"
+ },
+ "ė": {
+  "n": "n/731213862be15789.mp3",
+  "s": "s/731213862be15789.mp3"
+ },
+ "Ę": {
+  "n": "n/ef9409f53a544fde.mp3",
+  "s": "s/ef9409f53a544fde.mp3"
+ },
+ "ę": {
+  "n": "n/ca56bc8b458cef7e.mp3",
+  "s": "s/ca56bc8b458cef7e.mp3"
+ },
+ "Į": {
+  "n": "n/36d6fa8ed74757e8.mp3",
+  "s": "s/36d6fa8ed74757e8.mp3"
  },
  "į": {
   "n": "n/53274be64bc5ff6a.mp3",
@@ -986,6 +1182,22 @@
  "šviečia": {
   "n": "n/d67909131777db70.mp3",
   "s": "s/d67909131777db70.mp3"
+ },
+ "Ū": {
+  "n": "n/a4c0c391b1c8e4ef.mp3",
+  "s": "s/a4c0c391b1c8e4ef.mp3"
+ },
+ "ū": {
+  "n": "n/fb2d26378886d25f.mp3",
+  "s": "s/fb2d26378886d25f.mp3"
+ },
+ "Ų": {
+  "n": "n/627628a988e7ca81.mp3",
+  "s": "s/627628a988e7ca81.mp3"
+ },
+ "ų": {
+  "n": "n/70e0de7822505e11.mp3",
+  "s": "s/70e0de7822505e11.mp3"
  },
  "Ž": {
   "n": "n/44adc66853ea8fee.mp3",
@@ -1010,6 +1222,10 @@
  "Žydi!": {
   "n": "n/cdfe993b8d2eb096.mp3",
   "s": "s/cdfe993b8d2eb096.mp3"
+ },
+ "ž": {
+  "n": "n/4b6877a9d48058e5.mp3",
+  "s": "s/4b6877a9d48058e5.mp3"
  },
  "žuvis": {
   "n": "n/989380e2150c9683.mp3",

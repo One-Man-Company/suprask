@@ -38,6 +38,12 @@ HOST = os.environ.get("SUPRASK_DASH_HOST", "100.118.226.11")
 PORT = int(os.environ.get("SUPRASK_DASH_PORT", "9410"))
 ENV_FILE = pathlib.Path.home() / ".config" / "suprask" / "dashboard.env"
 
+# Autorizacija išjungta pagal nutylėjimą: serveris klausosi TIK Tailscale IP,
+# todėl pasiekti gali tik įrenginiai, kurie jau yra tailnet'e (juos autentifikuoja
+# pats Tailscale). Jei kada reikės papildomo sluoksnio (pvz., bendrinamas mazgas),
+# užtenka paleisti su SUPRASK_DASH_AUTH=on.
+AUTH_REQUIRED = os.environ.get("SUPRASK_DASH_AUTH", "off").lower() in ("on", "1", "true", "yes")
+
 
 def load_credentials() -> tuple[str, str]:
     user = os.environ.get("SUPRASK_DASH_USER")
@@ -65,7 +71,7 @@ def load_credentials() -> tuple[str, str]:
         encoding="utf-8",
     )
     ENV_FILE.chmod(0o600)
-    print(f"Sugeneruoti prisijungimo duomenys: {ENV_FILE}", file=sys.stderr)
+    print(f"Sugeneruoti prisijungimo duomenys (jei įjungta auth): {ENV_FILE}", file=sys.stderr)
     return user, password
 
 
@@ -133,6 +139,8 @@ class Handler(BaseHTTPRequestHandler):
         sys.stderr.write("%s - %s\n" % (self.address_string(), format % args))
 
     def _auth_ok(self) -> bool:
+        if not AUTH_REQUIRED:
+            return True
         header = self.headers.get("Authorization", "")
         if not header.startswith("Basic "):
             return False
@@ -170,9 +178,11 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/":
             return self._send(200, HTML.encode("utf-8"))
         if path == "/api/overview":
+            runs = db.recent_runs(50)
             return self._json({
                 "stats": db.content_stats(),
                 "roles": db.role_stats(),
+                "last_run": runs[0] if runs else None,
                 "timers": timer_state(),
                 "schedule": [{"role": r, "cadence": c["cadence"], "on_calendar": c["on_calendar"], "description": c["description"]}
                              for r, c in sorted(db_roles().items())],
@@ -275,7 +285,36 @@ pre{background:#0b0e12;border:1px solid var(--line);border-radius:10px;padding:1
 dialog{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:14px;max-width:900px;width:92vw;padding:18px}
 dialog::backdrop{background:rgba(0,0,0,.6)}
 .muted{color:var(--muted)}
+.nowrap{white-space:nowrap}
 .pill{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
+
+/* Telefonas: lentelės virsta kortelėmis, be horizontalaus slinkimo */
+@media (max-width: 720px){
+  header{padding:12px 14px;gap:8px}
+  h1{font-size:16px}
+  main{padding:14px 14px 48px;gap:14px}
+  .grid{grid-template-columns:1fr 1fr;gap:10px}
+  .card{padding:12px;border-radius:12px}
+  .big{font-size:22px}
+  table,tbody,tr,td{display:block;width:100%}
+  thead{display:none}
+  tr{border:1px solid var(--line);border-radius:12px;background:var(--panel2);margin-bottom:10px;padding:8px 12px}
+  tr:hover td{background:transparent}
+  td{border:0;padding:4px 0;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:right}
+  td::before{content:attr(data-label);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;flex:0 0 auto;text-align:left}
+  td[data-label="Vaidmuo"]{display:block;text-align:left;padding-bottom:6px}
+  td[data-label="Vaidmuo"]::before{display:none}
+  td[data-label="Dažnis"]{display:block;text-align:left;padding:2px 0}
+  td[data-label="Dažnis"]::before{display:block;margin-bottom:2px}
+  td button{width:100%}
+  td[data-label="Veiksmas"]{padding-top:8px}
+  td[data-label="Veiksmas"]::before{display:none}
+  select{width:100%}
+  dialog{padding:14px;width:96vw}
+}
+@media (max-width: 380px){
+  .grid{grid-template-columns:1fr}
+}
 </style></head>
 <body>
 <header>
@@ -319,6 +358,18 @@ let roles = [];
 
 async function j(url, opts) { const r = await fetch(url, opts); if(!r.ok) throw new Error(r.status); return r.json(); }
 
+function ago(iso){
+  if(!iso) return "—";
+  const t = new Date(iso).getTime();
+  if(Number.isNaN(t)) return "—";
+  const m = Math.max(0, Math.round((Date.now()-t)/60000));
+  if(m < 1) return "ką tik";
+  if(m < 60) return m + " min.";
+  const h = Math.round(m/60);
+  if(h < 24) return h + " val.";
+  return Math.round(h/24) + " d.";
+}
+
 function statusClass(s){ return ["ok","partial","failed","timeout","running","skipped","dry-run"].includes(s) ? s : ""; }
 
 async function loadOverview(){
@@ -329,7 +380,7 @@ async function loadOverview(){
     <div class="card"><h2>Moduliai</h2><div class="big">${st.modules}</div><div class="kv"><span>užduotys</span><b>${st.tasks}</b></div><div class="kv"><span>simuliacijos</span><b>${st.sims}</b></div></div>
     <div class="card"><h2>Garsas</h2><div class="big">${st.audio_files}</div><div class="kv"><span>įrašai</span><b>${st.audio_mb} MB</b></div><div class="kv"><span>kalba</span><b>lt-LT</b></div></div>
     <div class="card"><h2>Šiandien</h2><div class="big">${d.runs_today}</div><div class="kv"><span>paleidimai</span><b>${d.runs_today}</b></div><div class="kv"><span>atviri pasiūlymai</span><b id="openProp">—</b></div></div>
-    <div class="card"><h2>Vaidmenys</h2><div class="big">${d.schedule.length}</div><div class="kv"><span>aktyvūs</span><b>${d.roles.length}</b></div></div>`;
+    <div class="card"><h2>Paskutinis paleidimas</h2><div class="big">${d.last_run ? esc(d.last_run.status) : "—"}</div><div class="kv"><span>vaidmuo</span><b>${d.last_run ? esc(d.last_run.role) : "—"}</b></div><div class="kv"><span>prieš</span><b>${d.last_run ? ago(d.last_run.finished || d.last_run.started) : "—"}</b></div></div>`;
 
   const timerMap = {};
   (d.timers||[]).forEach(t => { const m = (t.activates||"").match(/suprask-agent@(.+?)\\.service/); if(m) timerMap[m[1]] = t; });
@@ -337,11 +388,11 @@ async function loadOverview(){
   $("#schedule").innerHTML = d.schedule.map(s => {
     const t = timerMap[s.role] || {};
     return `<tr>
-      <td><b>${esc(s.role)}</b><div class="muted" style="font-size:12px">${esc(s.description)}</div></td>
-      <td>${esc(s.cadence)}</td>
-      <td class="muted">${esc((t.next||"—").replace("n/a","—"))}</td>
-      <td class="muted">${esc(t.last||"—")}</td>
-      <td><button data-run="${esc(s.role)}">Paleisti dabar</button></td></tr>`;
+      <td data-label="Vaidmuo"><b>${esc(s.role)}</b><div class="muted" style="font-size:12px">${esc(s.description)}</div></td>
+      <td data-label="Dažnis">${esc(s.cadence)}</td>
+      <td data-label="Kitas" class="muted nowrap">${esc((t.next||"—").replace("n/a","—"))}</td>
+      <td data-label="Paskutinis" class="muted nowrap">${esc(t.last||"—")}</td>
+      <td data-label="Veiksmas"><button data-run="${esc(s.role)}">Paleisti dabar</button></td></tr>`;
   }).join("");
 
   $("#roleFilter").innerHTML = '<option value="">visi vaidmenys</option>' + d.schedule.map(s=>`<option value="${esc(s.role)}">${esc(s.role)}</option>`).join("");
@@ -352,13 +403,13 @@ async function loadRuns(){
   const role = $("#roleFilter").value;
   const rows = await j(`/api/runs?limit=60${role?`&role=${encodeURIComponent(role)}`:""}`);
   $("#runs").innerHTML = rows.map(r => `<tr>
-    <td>${r.id}</td>
-    <td>${esc(r.role)}${r.trigger!=="schedule"?` <span class="pill">${esc(r.trigger)}</span>`:""}</td>
-    <td><span class="status ${statusClass(r.status)}">${esc(r.status)}</span></td>
-    <td>${r.duration_s ?? "—"}s</td>
-    <td class="muted">${esc((r.started||"").replace("T"," ").slice(0,16))}</td>
-    <td class="muted">${(JSON.parse(r.artifacts||"[]")||[]).length}</td>
-    <td><button data-id="${r.id}">Atidaryti</button></td></tr>`).join("") || '<tr><td colspan="7" class="muted">Dar nėra paleidimų</td></tr>';
+    <td data-label="#" class="muted">${r.id}</td>
+    <td data-label="Vaidmuo">${esc(r.role)}${r.trigger!=="schedule"?` <span class="pill">${esc(r.trigger)}</span>`:""}</td>
+    <td data-label="Statusas"><span class="status ${statusClass(r.status)}">${esc(r.status)}</span></td>
+    <td data-label="Trukmė">${r.duration_s ?? "—"}s</td>
+    <td data-label="Pradėta" class="muted nowrap">${esc((r.started||"").replace("T"," ").slice(0,16))}</td>
+    <td data-label="Failai" class="muted">${(JSON.parse(r.artifacts||"[]")||[]).length}</td>
+    <td data-label="Veiksmas"><button data-id="${r.id}">Atidaryti</button></td></tr>`).join("") || '<tr><td colspan="7" class="muted">Dar nėra paleidimų</td></tr>';
   document.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openRun(b.dataset.id));
 }
 

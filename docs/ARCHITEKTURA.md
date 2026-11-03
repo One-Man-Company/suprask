@@ -111,7 +111,7 @@ Lietuviškas garsas generuojamas iš anksto, ne naršyklėje:
 `dashboard/server.py` — stdlib HTTP serveris, skaitantis `agents/runs.db`. Rodo suplanuotus paleidimus, istoriją, pasiūlymus, turinio statistiką ir leidžia paleisti vaidmenį rankiniu būdu.
 
 - Adresas: `http://100.118.226.11:9410/` (Tailscale), **ne** viešas.
-- HTTP Basic auth; slaptažodis generuojamas `~/.config/suprask/dashboard.env` (0600).
+- **Jokio prisijungimo ekrano** — prieigą riboja Tailscale tinklas; serveris klausosi tik tailscale0 IP. Papildomas sluoksnis įjungiamas `SUPRASK_DASH_AUTH=on`.
 - `systemd --user suprask-dashboard.service`.
 
 ## Būsena

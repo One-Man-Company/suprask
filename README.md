@@ -94,7 +94,7 @@ Agentų paleidimų istorija, grafikas, pasiūlymai ir turinio statistika — **n
 http://zoltanas.tail4bbf34.ts.net:9410/
 ```
 
-HTTP Basic auth; slaptažodis — `~/.config/suprask/dashboard.env`. Žr. [`dashboard/README.md`](dashboard/README.md).
+HTTP prieiga ribojama Tailscale tinklu — jokio prisijungimo ekrano. Žr. [`dashboard/README.md`](dashboard/README.md).
 
 ## Garsas
 

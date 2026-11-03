@@ -1,21 +1,24 @@
 # SUPRASK dashboard (vidinis)
 
-Agentų valdymo skydas. **Ne viešas** — pasiekiamas tik per Tailscale, su HTTP Basic auth.
+Agentų valdymo skydas. **Ne viešas** — pasiekiamas tik per Tailscale, **be prisijungimo ekrano**.
 
 ## Adresas
 
 ```
-http://100.118.226.11:9410/
 http://zoltanas.tail4bbf34.ts.net:9410/
+http://100.118.226.11:9410/
 ```
 
-Naudotojas: `admin`. Slaptažodis sugeneruojamas pirmą paleidimą ir laikomas:
+Atidarai ir naudoji — jokio slaptažodžio. Prieigą riboja pats Tailscale: serveris klausosi **tik** tailscale0 IP (`100.118.226.11`), todėl pasiekti gali tik tavo įrenginiai, jau esantys tailnet'e. Iš interneto šis adresas nepasiekiamas.
+
+Jei kada prireiktų papildomo sluoksnio (pvz., bendrinamas mazgas ar komanda), užtenka:
 
 ```bash
-cat ~/.config/suprask/dashboard.env
+systemctl --user edit suprask-dashboard.service   # Environment="SUPRASK_DASH_AUTH=on"
+systemctl --user restart suprask-dashboard.service
 ```
 
-Tas failas turi `0600` teises ir į git nepatenka. Jei jo nėra — serveris sukurs naują slaptažodį.
+Tada naudotojas `admin`, slaptažodis — `~/.config/suprask/dashboard.env` (`0600`).
 
 ## Ką rodo
 

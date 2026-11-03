@@ -10,6 +10,9 @@ WorkingDirectory=/home/zoltanas/workspace/suprask
 Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 Environment="SUPRASK_DASH_HOST=100.118.226.11"
 Environment="SUPRASK_DASH_PORT=9410"
+# Jokio prisijungimo ekrano: prieiga ribojama Tailscale tinklu (serveris klausosi
+# tik tailscale0 IP). Jei reikia papildomo sluoksnio — nustatyk "on".
+Environment="SUPRASK_DASH_AUTH=off"
 ExecStart=/usr/bin/python3 /home/zoltanas/workspace/suprask/dashboard/server.py
 Restart=on-failure
 RestartSec=5

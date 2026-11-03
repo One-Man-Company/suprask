@@ -48,8 +48,13 @@ RATES = {"n": "-4%", "s": "-12%"}  # n = sakiniai, s = skiemenys / pavieniai žo
 # --------------------------------------------------------------------------
 PIPER_DIR = pathlib.Path(os.environ.get("SUPRASK_PIPER_DIR") or (pathlib.Path.home() / "workspace" / ".tools" / "piper-lt"))
 PIPER_MODEL = PIPER_DIR / "lt_LT-reginute1-medium.onnx"
-# length_scale: 1.0 = įprastas tempas; didesnis = lėtesnis
-RATES_PIPER = {"n": 1.05, "s": 1.30}
+# Recepto `length_scale` tempo beveik nekeičia (jis normalizuoja trukmę iki tikslo),
+# todėl tempą valdome tiksliai, jau sugeneruotą garsą sulėtindami `atempo` filtru:
+# 1.0 = kaip yra, 0.80 = 20 % lėčiau, 0.68 = 32 % lėčiau (aukštis išlieka).
+# 6–7 metų vaikui: sakiniai 0.80, atskiri žodžiai ir skiemenys 0.68.
+LENGTH_SCALE = 1.05
+TEMPO = {"n": 0.80, "s": 0.68}
+RATES_PIPER = {k: TEMPO[k] for k in TEMPO}
 _PIPER = None
 
 # Simuliacijų ir sąsajos tekstai, kurių nėra modulių JSON (jie gyvena JS kode)
@@ -163,7 +168,7 @@ async def synth(voice: str, text: str, rate: str, out: pathlib.Path) -> bool:
     return False
 
 
-def piper_synth(text: str, length_scale: float, out: pathlib.Path) -> bool:
+def piper_synth(text: str, tempo: float, out: pathlib.Path) -> bool:
     """Sintetizuoja vieną tekstą lokaliniu Piper balsu ir įrašo MP3."""
     global _PIPER
     if _PIPER is None:
@@ -183,14 +188,15 @@ def piper_synth(text: str, length_scale: float, out: pathlib.Path) -> bool:
 
     wav = out.with_suffix(".wav")
     try:
-        audio = Synth(voice, phonemizer, length_scale=length_scale).synthesize(text)
+        audio = Synth(voice, phonemizer, length_scale=LENGTH_SCALE).synthesize(text)
         with wave.open(str(wav), "wb") as w:
             w.setnchannels(1)
             w.setsampwidth(2)
             w.setframerate(voice.config.sample_rate)
             w.writeframes(i16(audio))
+        filters = ["-filter:a", f"atempo={tempo}"] if tempo and abs(tempo - 1.0) > 0.001 else []
         subprocess.run(
-            ["ffmpeg", "-v", "error", "-y", "-i", str(wav), "-codec:a", "libmp3lame",
+            ["ffmpeg", "-v", "error", "-y", "-i", str(wav), *filters, "-codec:a", "libmp3lame",
              "-b:a", "64k", "-ar", "22050", "-ac", "1", str(out)],
             check=True,
         )
@@ -259,10 +265,14 @@ async def run(voice_key: str, only_missing: bool, prune: bool, workers: int = 4,
 
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
 
-    # Turinio versija: garso failų keliai nesikeičia (jie iš teksto SHA-256),
-    # bet turinys gali keistis. `speech.js` prideda ?v=<versija>, kad nei
-    # naršyklė, nei GitHub Pages CDN nepateiktų pasenusio įrašo.
-    version = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode("utf-8")).hexdigest()[:10]
+    # Turinio versija: garso failų KELIAI nesikeičia (jie iš teksto SHA-256),
+    # nors pats garsas keičiasi (balsas, tempas). Todėl versija skaičiuojama iš
+    # failų TURINIO — kitaip naršyklė ir GitHub Pages CDN amžinai grotų seną įrašą.
+    digest = hashlib.sha256()
+    for path in sorted(AUDIO.rglob("*.mp3")):
+        digest.update(path.relative_to(AUDIO).as_posix().encode("utf-8"))
+        digest.update(hashlib.sha256(path.read_bytes()).digest())
+    version = digest.hexdigest()[:10]
     (AUDIO / "version.json").write_text(
         json.dumps({"v": version}, ensure_ascii=False), encoding="utf-8"
     )

@@ -145,7 +145,11 @@ async def main_async(args) -> int:
     if not args.dry_run:
         MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
         FLAGS.write_text(json.dumps(flags, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
-        version = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode("utf-8")).hexdigest()[:10]
+        digest = hashlib.sha256()
+        for path in sorted(AUDIO.rglob("*.mp3")):
+            digest.update(path.relative_to(AUDIO).as_posix().encode("utf-8"))
+            digest.update(hashlib.sha256(path.read_bytes()).digest())
+        version = digest.hexdigest()[:10]
         (AUDIO / "version.json").write_text(json.dumps({"v": version}), encoding="utf-8")
 
     REPORT.parent.mkdir(parents=True, exist_ok=True)

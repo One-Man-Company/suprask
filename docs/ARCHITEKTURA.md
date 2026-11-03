@@ -120,8 +120,12 @@ Azure balsas paliktas kaip **atsarginis** (`--engine edge`) — jei perklausoje 
 ### Kaip veikia
 
 - `scripts/generate_audio.py --engine piper` → `assets/audio/lt/{n|s}/<sha256-prefix>.mp3` (22 050 Hz, mono, 64 kbps);
-- du variantai: `n` (`length_scale` 1,05) ir `s` (1,30 — skiemenims ir atskiriems žodžiams);
-- `assets/js/speech.js` ieško teksto `assets/audio/lt/manifest.json` faile — **be `crypto.subtle`**, kad veiktų ir naršyklėse su griežtais privatumo skydais (Brave, Safari privatus režimas); groja vieną `<audio>` elementą, failus iš anksto parsisiųsdamas kaip Blob, todėl paspaudimas negali „nutilti";
+- du variantai: `n` (sakiniai, 0,80× tempo) ir `s` (skiemenys ir atskiri žodžiai, 0,68× tempo);
+  tempas keičiamas `atempo` filtru jau sugeneruotame garse (aukštis išlieka), nes
+  Piper recepto `length_scale` trukmę normalizuoja ir tempo beveik nekeičia;
+- `assets/js/speech.js` kraunamas **dinamiškai ir neprivalomai**: jei garso modulis
+  neįsikrauna (blokuojami scenarijai, pasenęs kešas), puslapis vis tiek atsidaro, tik be garso —
+  statinis `import` tokiu atveju sugriautų visą programą;
 - `prime()` iš anksto įkelia modulio garso failus (iki 8 tekstų), kad pirmas paspaudimas negrotų tuščiai;
 - naršyklės balsas naudojamas tik jei teksto nėra manifests **ir** yra lietuviškas balsas; angliškas balsas lietuviško teksto neskaito;
 - `scripts/check_audio.py` (CI) — kiekvienas simuliacijų tariamas tekstas **privalo** turėti abu įrašus, kitaip build'as krenta.

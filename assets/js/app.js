@@ -1,6 +1,27 @@
 import { loadGrades, loadGradeIndex, loadModule, loadPath, getSim, makeSimApi } from "./registry.js";
 import * as progress from "./progress.js";
-import { speak, prime, bindHeaderToggle } from "./speech.js";
+
+/* Garso modulis kraunamas atskirai ir NEPRIVALOMAI.
+ * Jei naršyklė blokuoja ką nors, ko jam reikia (Brave skydai, plėtiniai,
+ * pasenęs kešas), puslapis vis tiek turi atsiverti — tik be garso.
+ * Statinis `import` šiuo atveju sugriautų visą programą, todėl jis dinaminis.
+ */
+const SILENT = {
+  speak() {}, prime() {}, stop() {}, toggle() {},
+  isEnabled: () => false, setEnabled: () => false, bindHeaderToggle() {},
+};
+let speechApi = null;
+function speechLoad() {
+  if (!speechApi) {
+    speechApi = import("./speech.js").catch((err) => {
+      console.warn("Garso modulis neįkeltas — puslapis veikia be garso:", err);
+      return SILENT;
+    });
+  }
+  return speechApi;
+}
+const speak = (text, opts) => { speechLoad().then((m) => { try { m.speak(text, opts); } catch { /* tyliai */ } }); };
+const prime = (texts) => { speechLoad().then((m) => { try { m.prime(texts); } catch { /* tyliai */ } }); };
 
 const collectStrings = (obj, out = []) => {
   if (typeof obj === "string") { out.push(obj); return out; }
@@ -458,7 +479,7 @@ function heroArt() {
 }
 
 /* ------------------------------------------------------------------ */
-bindHeaderToggle(document.getElementById("sound-toggle"), document.getElementById("sound-icon"));
+speechLoad().then((m) => m.bindHeaderToggle(document.getElementById("sound-toggle"), document.getElementById("sound-icon")));
 
 /* Jei naršyklė blokuoja garsą, pasakome tai žodžiais — o ne tyla. */
 let soundHintShown = false;

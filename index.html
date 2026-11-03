@@ -2,6 +2,7 @@
 <html lang="lt">
 <head>
 <meta charset="utf-8" />
+<script>document.documentElement.classList.add("js");</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Suprask! — interaktyvus mokymasis</title>
 <meta name="description" content="Nemokama interaktyvi vizualinio mokymosi platforma Lietuvos 1–12 klasei. Simuliacijos, modeliai ir žaidimai, padedantys suprasti, o ne įsiminti." />
@@ -27,6 +28,21 @@
 <main id="app" tabindex="-1">
   <div class="loading">Kraunama…</div>
 </main>
+
+<!--
+  Atsarginis pranešimas be JavaScript.
+  Jei naršyklė blokuoja scenarijus (Brave skydai „Block scripts", griežti
+  plėtiniai), `<noscript>` neparsodinamas, o puslapis amžinai rodytų
+  „Kraunama…". Todėl šis blokas rodomas grynu CSS — po 6 sekundžių,
+  ir tik tada, kai `<html>` neturi klasės `js` (ji pridedama inline skriptu).
+-->
+<div class="boot-fallback" role="alert">
+  <h1>Puslapis neįsikėlė</h1>
+  <p><strong>Brave naršyklė:</strong> spausk liūto ikoną adreso juostoje ir pasirink
+  „Shields down for this site" (arba sumažink skydus iki „Standard"), tada atnaujink puslapį.</p>
+  <p>Kitos naršyklės: patikrink, ar neblokuoja scenarijų koks nors plėtinys, ir atnaujink puslapį.</p>
+  <button type="button" onclick="location.reload()">Atnaujinti</button>
+</div>
 
 <noscript>
   <div style="max-width:36rem;margin:2rem auto;padding:1.5rem;border:2px solid #e7ddcd;border-radius:18px">

@@ -29,7 +29,9 @@ AUDIO = ROOT / "assets" / "audio" / "lt"
 MANIFEST = AUDIO / "manifest.json"
 
 VOICES = {"ona": "lt-LT-OnaNeural", "leonas": "lt-LT-LeonasNeural"}
-RATES = {"n": "-6%", "s": "-16%"}  # n = normalus, s = lėtas (skiemenims, raidėms)
+# n = normalus (sakiniai), s = lėtas (skiemenys, pavieniai žodžiai).
+# −4 % ir −12 % skamba natūraliau nei −6 %/−16 %, o vaikui vis dar aiškiau už įprastą tempą.
+RATES = {"n": "-4%", "s": "-12%"}  # n = sakiniai, s = skiemenys / pavieniai žodžiai
 
 # Simuliacijų ir sąsajos tekstai, kurių nėra modulių JSON (jie gyvena JS kode)
 EXTRA = [

@@ -102,9 +102,10 @@ Klasės mokymosi tvarka gyvena `content/lt/grade-XX/path.json` (`sequence` sąra
 Lietuviškas garsas generuojamas iš anksto, ne naršyklėje:
 
 - `scripts/generate_audio.py` → `assets/audio/lt/{n|s}/<sha256-prefix>.mp3` (balsas `lt-LT-OnaNeural`, `edge-tts`);
-- `assets/js/speech.js` parenka failą pagal teksto SHA-256 ir jo groja; jei įrašo nėra (dinaminis sakinys), naudoja naršyklės balsą;
-- du variantai: `n` (normalus, −6 %) ir `s` (lėtas, −16 %, skiemenims ir raidėms);
-- `prime()` iš anksto įkelia modulio garso failus, kad pirmas paspaudimas negrotų tuščiai.
+- `assets/js/speech.js` ieško teksto `assets/audio/lt/manifest.json` faile — **be `crypto.subtle`**, kad veiktų ir naršyklėse su griežtais privatumo skydais (Brave, Safari privatus režimas);
+- du variantai: `n` (normalus, −4 %, pitch +2 %) ir `s` (lėtas, −12 %, pitch +2 % — skiemenims ir atskiriems žodžiams);
+- `prime()` iš anksto įkelia modulio garso failus, kad pirmas paspaudimas negrotų tuščiai;
+- naršyklės balsas naudojamas tik jei teksto nėra manifests **ir** yra lietuviškas balsas; angliškas balsas lietuviško teksto neskaito.
 
 ## Dashboard (vidinis)
 
@@ -127,4 +128,4 @@ Lietuviškas garsas generuojamas iš anksto, ne naršyklėje:
 
 - `fetch` reikalingas turiniui; atidarius `index.html` tiesiogiai iš disko (file://), moduliai neįkeliami — reikia serverio (`python3 -m http.server`).
 - Balsas priklauso nuo naršyklės lietuviško balso; jei jo nėra, tekstas skaitomas tyliai (funkcija neblokuoja mokymosi).
-- `localStorage` gali būti išjungtas privataus naršymo režimu — pažanga tiesiog neįsimenama, klaidų nėra.
+- `localStorage` gali būti išjungtas privataus naršymo režimu arba brave shields — pažanga tiesiog neįsimenama, klaidų nėra (visos prieigos apgaubtos `try/catch`).

@@ -458,5 +458,34 @@ function heroArt() {
 
 /* ------------------------------------------------------------------ */
 bindHeaderToggle(document.getElementById("sound-toggle"), document.getElementById("sound-icon"));
+
+/* ---------- apsauga nuo amžino „Kraunama…" ----------
+ * Jei naršyklė blokuoja API (Brave Shields: localStorage, crypto) arba
+ * scenarijus nulūžta, vaikas neturi matyti tuščio ekrano.
+ */
+function showFatal(message) {
+  if (!app) return;
+  app.innerHTML = `
+    <div class="card" style="max-width:36rem;margin:2rem auto">
+      <h1 style="font-size:1.4rem">Nepavyko įkelti</h1>
+      <p>${esc(message)}</p>
+      <p class="strand-meta">Pabandyk atnaujinti puslapį. Jei naudoji Brave su įjungtais skydais,
+      leisk šiam puslapiui veikti (skydų ikona → „Shields down for this site").</p>
+      <button class="btn" onclick="location.reload()">Atnaujinti</button>
+    </div>`;
+}
+
+window.addEventListener("error", (e) => {
+  if (app.querySelector(".loading")) showFatal("Įvyko scenarijaus klaida. " + (e.message || ""));
+}, { once: true });
+
+window.addEventListener("unhandledrejection", () => {
+  if (app.querySelector(".loading")) showFatal("Įvyko klaida įkeliant turinį.");
+}, { once: true });
+
+setTimeout(() => {
+  if (app.querySelector(".loading")) showFatal("Turinys neįsikėlė per 8 sekundes.");
+}, 8000);
+
 window.addEventListener("hashchange", route);
 route();

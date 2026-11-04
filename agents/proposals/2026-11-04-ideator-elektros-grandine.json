@@ -1,0 +1,20 @@
+{
+  "role": "ideator",
+  "run_id": 12,
+  "created": "2026-11-04T19:19:17+02:00",
+  "type": "tema",
+  "title": "Elektra: kelias turi būti vientisas",
+  "body": "Technologijų programoje elektronika pradedama būtent nuo 1 klasės, o 23.4 sritis prašo elektros srovės, šaltinio, prietaiso ir jungiklio. Tyrimai rodo, kad vaikai iki 8–9 m. dažniausiai laikosi „vienpolio“ modelio: elektra iš baterijos vienu laidu nueina į lemputę, todėl pakanka vieno laido, o antrasis atrodo nereikalingas. Siūlau modelį su viena baterija, viena lempute ir dviem laidais: vaikas prijungia vieną laidą — lemputė nešviečia, prijungia antrą — užsidega, o įtraukus jungiklį grandinė vėl nutrūksta. Taip jungiklis tampa ne „mygtuku“, o to paties kelio pertrauka, ir vaikas atranda, kodėl reikia abiejų galų. Elektros kaip matomos medžiagos nepiešiame ir neanimuojame — tyrimai rodo, kad maži vaikai elektros srovę linkę įsivaizduoti kaip daiktą, kurį galima pamatyti ir paimti, o judantis „srautas“ ekrane tą klaidingą nuostatą tik sustiprintų; grįžtamąjį ryšį duoda lemputė. Be skaičių, be laiko limito, su saugaus elgesio priminimu: modelis rodo bateriją, ne rozetę. Tai nauja kryptis platformoje, todėl siūlau atskirą kryptį „technologijos“ (`index.json` `strands[]` įrašas, kodo keisti nereikia).",
+  "target": "content/lt/grade-01/technologijos/01-elektros-grandine.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:54 — „išryškinama elektronikos kryptis ir pradedama plėtoti jau nuo pirmosios klasės“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:64 — 23.4: „elektros srovė, nuolatinės srovės šaltiniai… jungiklis/mygtukas, saugus elgesys“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:144 — prioritetų lentelė: „Elektros grandinės jungiklis (įjungti/išjungti, kas nutinka)“ — vertė „aukšta — nauja kryptis, vizualu“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:74 — tema „Elektronika“, modelis „Grandinės jungiklis: įjungti → lemputė dega“",
+    "https://ejrsme.icrsme.com/article/download/7304/5622 — Chiu ir Lin (2004): vienpolio modelio mokiniai mano, kad pakanka vieno laido nuo baterijos iki lemputės; mokinių intuityvios nuostatos išlieka ir po aiškinimo",
+    "https://scielo.org.za/scielo.php?script=sci_arttext&pid=S0256-01002016000200010 — 108 vaikai 5–6 m.: dauguma savarankiškai ar su pagalba pajungia bateriją, lemputę ir laidus, todėl grandinė šiam amžiui neprašo per daug",
+    "https://www.tused.org/index.php/tused/article/download/976/623/1695 — Cooke ir Howard (2014), cituojama apžvalgoje: maži vaikai linkę manyti, kad elektra yra matoma ir apčiuopiama medžiaga, todėl „srauto“ animacija klaidintų"
+  ]
+}

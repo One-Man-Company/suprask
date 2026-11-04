@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 12,
+  "created": "2026-11-04T19:19:17+02:00",
+  "type": "tema",
+  "title": "Medžiagos: tinkamumą sprendžia bandymas, ne svoris",
+  "body": "Technologijų 23.3 sritis 1–2 klasei prašo pažinti daiktų medžiagiškumą ir savybes (kieta, minkšta, plastiška, blizgi) bei nustatyti tinkamumą darbui, o temų žemėlapis jau siūlo bandymą „kuri tinka laiveliui?“. Tyrimai rodo, kad 6–8 m. vaikas plaukimą aiškina svoriu („plaukia, nes lengva“), o ne medžiaga, todėl lengvas metalinis daiktas, nuskendęs šalia sunkaus medinio, yra tas įvykis, kuris griauna taisyklę. Siūlau modelį su vandens loveliu ir trimis vienodo dydžio skirtingų medžiagų kaladėlėmis: vaikas pirma paspaudžia, kuri plauks, tada nuleidžia ir mato. Antrame žingsnyje prie lovelio atsiranda svarstyklės: didelė medinė kaladėlė sveria daugiau už mažą metalinę, bet plaukia medinė — taip svoris atmetamas ne žodžiais, o tuo pačiu ekranu. Trečiame žingsnyje vaikas parenka laiveliui medžiagą pagal bandymo rezultatą, o ne pagal tai, kuri blizgesnė. Apie tankį ar daleles nekalbame: 6–7 m. amžiui pakanka „medžiaga elgiasi savaip, o tinkamumą parodo bandymas“. Modelio riba pasakoma atvirai — tikrame vandenyje laivą laiko ir forma, todėl ta pati aliuminio folija plokščia plaukia, o sugniaužta į rutuliuką skęsta; tai lieka veiklai be ekrano, kad ekrane liktų vienas kintamasis.",
+  "target": "content/lt/grade-01/technologijos/02-medziagu-bandymas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:63 — 23.3 „Konstrukcinės medžiagos“: „daiktų medžiagiškumas, savybės (kieta, minkšta, plastiška, blizgi)“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:75 — tema „Medžiagų savybės“ (23.3.1), interaktyvumo galimybė „Medžiagų bandymas: kuri tinka laiveliui?“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:145 — prioritetų lentelė: medžiagų savybių rūšiavimas, vertė „aukšta — tiesioginiai bandymai“",
+    "https://onlinelibrary.wiley.com/doi/full/10.1002/tea.21909 — apžvalga: mokiniai dažniausiai teigia, kad daiktas plaukia, nes mažas ar lengvas, o skęsta, nes didelis ar sunkus (Fassoulopoulos ir kt., 2003; Smith ir kt., 1992)",
+    "https://pasithee.library.upatras.gr/mje/article/download/5623/5256 — Piaget stadijos: 6–8 m. vaikai sako „laivai plaukia, nes lengvi“; tankio sąvoka susiformuoja tik apie 9 m., todėl jos 1 klasėje dėstyti negalima"
+  ]
+}

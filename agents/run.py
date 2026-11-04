@@ -445,6 +445,10 @@ def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert
         return {"status": "unpushed", "detail": f"Push nepavyko: {push.stderr.strip()[:200]}", "sha": sha, "validation": validation}
 
     git("push", "-f", "origin", f"HEAD:refs/heads/{branch}")  # šaka ateičiai / atsukimui
+
+    # Lokalus `main` turi sekti paskutinį paskelbtą commit'ą. Be to `git push
+    # origin main` (rankinis ar iš kito vaidmens) atsimušė kaip non-fast-forward.
+    git("branch", "-f", "main", "HEAD")
     closed = close_proposals(files, sha)
 
     detail = f"Paskelbta {len(files)} failų" + (f", uždaryti {closed} pasiūlymai" if closed else "")

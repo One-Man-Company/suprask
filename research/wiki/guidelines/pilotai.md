@@ -31,3 +31,12 @@ Kiekvienas naujas dizaino sprendimas laikomas pilotu (Švietimas #1, 6 žingsnis
 - **Kaip matuojame:** nebegalima — klaida buvo pašalinta prieš publikuojant.
 - **Rezultatas:** pašalinta.
 - **Sprendimas:** taisyklė įtraukta į standartą.
+
+### P-003 — Figūra atpažįstama pagal kampus, ne pagal padėtį
+- **Data:** 2026-11-04
+- **Hipotezė:** jei rūšiavimo simuliacijoje figūros rodomos pasuktos ir vaikas gali jas sukti pats, o dėžės vadinamos kampų skaičiumi (ne figūros vardu), tai mažiau vaikų klysta su pasukta figūra ir dažniau vadovaujasi savybe, nes 1 klasės programoje figūra apibrėžiama kraštinėmis ir kampais, o dažna klaida — atpažinti tik „kaip paveikslėlyje“ (`06-figuros` `teacher.misconceptions`).
+- **Ką keičiame:** `figuros` simuliacija (`assets/js/sims/matematika.js`): figūros pasuktos (0°, 155°, 265°, kvadratas 45°), dėžės žymimos „3 kampai / 4 kampai / 0 kampų“ su figūros kontūru, pridėtas parametras „Pasuk pasirinktą“ ir jungiklis „Rodyk kampus“ (kampai žymimi taškais). Be to, pašalintas 41 px horizontalus slinkimas 360 px ekrane ir figūrų mygtukams suteikti `aria-label`.
+- **Kaip matuojame:** klaidų, kai pasukta figūra įdedama į neteisingą dėžę, dalis pirmame bandyme ir tai, ar vaikas savo žodžiais pasako, kad pasukus kampų skaičius nekinta (refleksijos klausimas). Stebėjimas savanoriškas, duomenys nerenkami.
+- **Rezultatas:** dar nėra.
+- **Sprendimas:** laukiama duomenų.
+

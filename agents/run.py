@@ -404,7 +404,12 @@ def publish(role: str, run_id: int, files: list[str], summary: str) -> dict:
     first_line = (summary or role).strip().splitlines()[0][:90]
     msg = f"[{role}] #{run_id}: {first_line}\n\nPaskelbta automatiškai po validacijos."
 
-    added = git("add", "-A")
+    # Komituojame TIK šio paleidimo failus: `git add -A` kartą įtraukė ir
+    # žmogaus nebaigtus pakeitimus į agento commit'ą.
+    paths = [f for f in files if (ROOT / f).exists()]
+    if not paths:
+        return {"status": "empty", "detail": "Nėra ką commituoti.", "sha": "", "validation": validation}
+    git("add", "--", *paths)
     commit = git("commit", "-m", msg)
     if commit.returncode != 0 and "nothing to commit" not in (commit.stdout + commit.stderr):
         return {"status": "rejected", "detail": f"Commit nepavyko: {commit.stderr.strip()[:200]}", "sha": "", "validation": validation}

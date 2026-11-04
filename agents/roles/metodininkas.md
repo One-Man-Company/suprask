@@ -34,4 +34,11 @@ Paimti **idėją** ir paversti ją **mokymo metodu**: kokia seka, koks modelis, 
 - Nedubliuoti jau esančio metodo kitai temai.
 
 ## Baigties sąlyga
-Vienas išsamus `metodas` pasiūlymas (seka, sim specifikacija, užduočių tipai, klaidingos nuostatos, šaltinis) ir, jei tinka, vienas wiki įrašo papildymas.
+Vienas `metodas` pasiūlymas, kurį inžinierius gali įgyvendinti **neklausdamas nė vieno papildomo klausimo**:
+- 3–5 žingsnių seka su kiekvieno žingsnio tikslu,
+- simuliacijos būsenos (įėjimai, ką vaikas keičia, ką mato, kada gauna grįžtamąjį ryšį),
+- 3–5 užduočių tipai su teisingu atsakymu ir tipine klaida,
+- klaidinga nuostata ir kaip ji paneigiama,
+- bent vienas mokslinis šaltinis su DOI arba wiki nuoroda.
+
+Jei tinka — vienas `research/wiki/grades/01/metodai.md` papildymas. Nerašyk metodo, kurio negalima patikrinti validatoriumi ar rankiniu bandymu.

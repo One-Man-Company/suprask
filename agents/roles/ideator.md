@@ -30,4 +30,10 @@ Jei bent vienas „ne“ — idėja nepatenka į pasiūlymus, o įrašoma į `re
 - Nerašyti ilgų aprašymų: 3–8 sakiniai, ne esė.
 
 ## Baigties sąlyga
-1–3 JSON pasiūlymai su programos sąsaja, klaidinga nuostata ir modelio idėja; ataskaita `agents/log/` su trumpu sąrašu, ką pasiūlei ir ką atmetei (ir kodėl).
+1–3 JSON pasiūlymai, kurių kiekvienas turi:
+- `evidence` su **tiksliu** šaltiniu (`research/wiki/curriculum/...:eilutė` arba oficialios programos punktas),
+- `target` — konkretus būsimas failas (`content/lt/grade-01/<kryptis>/<nr>-<slug>.json`),
+- vieną klaidingą nuostatą, kurią modelis turi parodyti.
+
+Ataskaitoje: ką pasiūlei, ką atmetei ir kodėl, ir **patikra, kad tokios temos dar nėra** (`content/lt/grade-01/index.json`).
+Jei nėra vertos naujos temos — parašyk „šiandien naujos temos nereikia“ ir nerašyk pasiūlymo.

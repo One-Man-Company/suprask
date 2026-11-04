@@ -24,4 +24,10 @@ Kasdien patikrinti, ar turinys ir sąsaja nepažeisti, ir registruoti problemas 
 - Nekeisti taisyklių, kad validatorius praeitų. Taisyklė keičiama tik per `docs/` su pagrindimu.
 
 ## Baigties sąlyga
-Ataskaita su skaičiais, issue numeris (jei klaidų yra) arba aiškus teiginys „0 klaidų“, ir `state.json` atnaujintas.
+Ataskaitoje **tikra komandų išvestis**, ne perfrazė:
+- `python3 scripts/validate_content.py` (paskutinės eilutės),
+- `python3 scripts/check_audio.py` (kiek tekstų, ar visi 22 050 Hz),
+- `python3 scripts/check_ui.py` (kiek klaidų),
+- trijų gyvos svetainės adresų HTTP kodai (`curl -o /dev/null -w "%{http_code}"`).
+
+Jei klaidų yra — kiekviena su failu ir eilute. Jei nėra — aiškus „0 klaidų“ su trimis HTTP kodais. `state.json` atnaujintas.

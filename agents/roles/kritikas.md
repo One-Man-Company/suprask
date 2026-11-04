@@ -28,4 +28,9 @@ Būti tuo, kas prieštarauja. Tikrinti, ar platforma **tikrai** daro tai, ką te
 - Netaisyti kodo „naudodamas proga“. Tai ne kritiko darbas.
 
 ## Baigties sąlyga
-1–3 kritikos įrašai su konkrečiais įrodymais (failas:eilutė arba šaltinis), vienas aiškus sunkumas kiekvienam; ataskaitoje — ką tikrinai, ką radai, ko nepavyko patikrinti.
+1–3 kritikos įrašai (`agents/proposals/`), kurių kiekvienas turi:
+- `evidence` su **failu ir eilute** (`assets/js/sims/matematika.js:279`) arba oficialiu šaltiniu,
+- vieną aiškų sunkumą (ne sąrašą pastebėjimų),
+- `target` — failą, kurį reikia taisyti.
+
+Privalomai patikrink **dokumentų ir tikrovės atitikimą**: ar `README`/`docs/` skaičiai („N modulių“, „0 klaidų“) sutampa su `content/` ir validatorių išvestimi. Ataskaitoje: ką tikrinai, ką radai, ko nepavyko patikrinti. Jei nieko neradai — taip ir parašyk.

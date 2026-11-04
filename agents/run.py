@@ -268,13 +268,29 @@ def update_state(role: str, cfg: dict, status: str, log_path: Path) -> None:
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def parse_porcelain(text: str) -> list[str]:
+    """`git status --porcelain` eilutės → gryni failų keliai."""
+    files: list[str] = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        path = line[3:].strip()
+        if " -> " in path:
+            path = path.split(" -> ", 1)[1]
+        path = path.strip('"')
+        if path:
+            files.append(path)
+    return files
+
+
 def changed_files(before: str) -> list[str]:
+    """Failai, kuriuos pakeitė ŠIS paleidimas (ne buvę prieš jį)."""
     try:
         after = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True, timeout=20).stdout
     except Exception:  # noqa: BLE001
         return []
-    before_set = set(before.splitlines())
-    return [ln for ln in after.splitlines() if ln not in before_set][:40]
+    before_paths = set(parse_porcelain(before))
+    return [f for f in parse_porcelain(after) if f not in before_paths][:40]
 
 
 def git_snapshot() -> str:
@@ -305,18 +321,9 @@ def git(*args: str, timeout: int = 180) -> subprocess.CompletedProcess:
 def changed_list() -> list[str]:
     """Visi pakeisti ir nauji failai (be ignoruojamų)."""
     try:
-        out = git("status", "--porcelain").stdout
+        return parse_porcelain(git("status", "--porcelain").stdout)
     except Exception:  # noqa: BLE001
         return []
-    files: list[str] = []
-    for line in out.splitlines():
-        if not line.strip():
-            continue
-        path = line[3:].strip()
-        if " -> " in path:
-            path = path.split(" -> ", 1)[1]
-        files.append(path)
-    return files
 
 
 def run_checks(files: list[str]) -> tuple[bool, str]:

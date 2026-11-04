@@ -1,0 +1,112 @@
+{
+  "id": "15-laikas",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Laikas: vienas ratas, vienas žingsnis",
+  "subtitle": "Kodėl valandas rodo trumpoji rodyklė",
+  "minutes": 9,
+  "outcomes": [
+    "Parodau, kuri rodyklė rodo valandas.",
+    "Paaiškinu, kodėl po vieno ilgosios rato trumpoji pasislenka vienu skaičiumi.",
+    "Nuskaitau laiką pilnomis valandomis."
+  ],
+  "concept": {
+    "title": "Vienas ratas — vienas žingsnis",
+    "big_idea": "Ilgoji rodyklė apeina visą ratą. Per tą ratą trumpoji pasislenka vienu skaičiumi. Todėl valandas rodo trumpoji.",
+    "steps": [
+      "Ilgoji apeina ratą ir vėl stoja ties 12.",
+      "Per tą ratą trumpoji pasislenka per vieną skaičių.",
+      "Skaičius, ties kuriuo stovi trumpoji, yra valanda."
+    ],
+    "example": "Laikrodis rodo 3 valandas. Ilgoji apeina visą ratą. Trumpoji pasislenka nuo 3 prie 4 — dabar 4 valandos."
+  },
+  "sim": {
+    "component": "laikrodis-sujungtos-rodykles",
+    "config": {
+      "startHour": 12,
+      "words": [
+        "1 valanda",
+        "2 valandos",
+        "3 valandos",
+        "4 valandos",
+        "5 valandos",
+        "6 valandos",
+        "7 valandos",
+        "8 valandos",
+        "9 valandos",
+        "10 valandų",
+        "11 valandų",
+        "12 valandų"
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Ilgoji rodyklė ties 12, trumpoji — ties 7. Kiek dabar valandų?",
+      "options": [
+        "12 valandų",
+        "7 valandos",
+        "5 valandos"
+      ],
+      "answer": 1,
+      "hint": "Kuri rodyklė trumpa? Ilgoji tik parodė, kad ratas baigtas.",
+      "why": "Pilną valandą rodo trumpoji rodyklė, kai ilgoji stovi ties 12."
+    },
+    {
+      "q": "Laikrodis rodo 9 valandas. Ilgoji apeina visą ratą ir vėl stoja ties 12. Kiek dabar valandų?",
+      "options": [
+        "10 valandų",
+        "12 valandų",
+        "9 valandų"
+      ],
+      "answer": 0,
+      "hint": "Vienas ratas — vienas žingsnis trumpąja. Skaičiuok nuo 9 vienu toliau.",
+      "why": "Per vieną ratą trumpoji pasislenka vienu skaičiumi, todėl 9 tampa 10."
+    },
+    {
+      "q": "Rodyklės be žymenų. Per vieną ratą viena rodyklė apėjo visą ratą, kita pasislinko tik per vieną skaičių. Kuri rodo valandas?",
+      "options": [
+        "Ta, kuri apėjo visą ratą",
+        "Ta, kuri pasislinko per vieną skaičių",
+        "Abi rodo tą patį"
+      ],
+      "answer": 1,
+      "hint": "Daugiau judanti rodyklė ne visada skaičiuoja didesnį vienetą. Palygink, kiek pasislinko kiekviena.",
+      "why": "Valandas rodo trumpoji: per vieną ilgosios ratą ji pasislenka tik vienu skaičiumi."
+    },
+    {
+      "q": "Ilgoji nuėjo pusę rato ir sustojo. Ar laikrodis jau rodo kitą valandą?",
+      "options": [
+        "Taip, jau kita valanda",
+        "Ne, ratas dar nebaigtas",
+        "Laikrodis sustojo"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, ar trumpoji jau stovi lygiai ties skaičiumi.",
+      "why": "Valanda pasikeičia tik tada, kai ilgoji užbaigia visą ratą — trumpoji tada stovi lygiai ties skaičiumi.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kiek ratų turi apeiti ilgoji, kol trumpoji apeis visą laikrodį? Pasakyk, kaip sužinojai.",
+  "teacher": {
+    "goal": "Suprasti, kad valandas rodo trumpoji rodyklė, o ilgoji tik parodo, jog ratas baigtas (programa: laikas pilnomis valandomis).",
+    "prompt": "Kuri rodyklė pasislinko mažiau? Ką ji rodo?",
+    "offline": "Padarykite kartoninį laikrodį su dviem popierinėmis rodyklėmis, sujungtomis siūlu. Vaikas apeina kėdę — tai vienas ratas. Po kiekvieno rato paslinkite trumpąją per vieną skaičių.",
+    "misconceptions": [
+      "„Valandas rodo ilgoji rodyklė“ — ji ilgesnė ir labiau juda, todėl atrodo svarbiausia. Padeda žiūrėjimas tik į trumpąją, kai ilgoji ties 12.",
+      "„Rodyklės nepriklausomos“ — piešinyje kiekvieną galima pastatyti atskirai. Sujungtas modelis parodo, kad viena priklauso nuo kitos.",
+      "Artimiausio skaičiaus klaida: kai ilgoji jau beveik ties 12, vaikas gali perskaityti kitą valandą. Padeda tarpinės padėties stebėjimas."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, 9 skyrius: laikas pilnomis valandomis (val., h).",
+    "Matematikos bendroji programa (2022), „Geometriniai matavimai“, 1–2 klasė: analoginio ir skaitmeninio laikrodžio rodmuo.",
+    "Williams, R. F. (2012). Image schemas in clock-reading. Journal of the Learning Sciences, 21(2), 216–246. https://doi.org/10.1080/10508406.2011.553259",
+    "Earnest, D., Gonzales, A. C., & Plant, A. M. (2018). Time as a measure. Journal of Numerical Cognition, 4(1), 188–214. https://doi.org/10.5964/jnc.v4i1.94"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (pilnos valandos), minutės ir 24 valandų sistema sąmoningai neįtrauktos",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina supratimą naujoje situacijoje, ne įsimintą formuluotę",
+    "3 žingsnis — pagalba laiku: spėjimas prieš pirmą judesį ir užuomina kiekvienoje užduotyje"
+  ]
+}

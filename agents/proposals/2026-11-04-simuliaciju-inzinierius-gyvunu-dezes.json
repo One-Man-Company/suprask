@@ -1,0 +1,18 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 7,
+  "created": "2026-11-04T09:22:00+02:00",
+  "type": "simuliacija",
+  "title": "Gyvūnų grupės: dėžės tekstinės, vaikas 6–7 m. dar neperskaito jų per kelias sekundes",
+  "body": "06-figuros simuliacijoje ką tik pašalinau tą pačią ydą, kuri liko 10-gyvunu-grupes: rūšiavimo dėžės apibūdintos tik tekstu, o padėkle gyvūnai — vien emoji be matomo vardo. Dėžės tekstas „Žinduoliai / Paukščiai / Žuvys“ su smulkiu .72rem paaiškinimu yra 12 px šrifto tekstas, kurį 1 klasės vaikas, dar sklandžiai neskaitantis, turi perskaityti tris kartus per bandymą; gairių T5.5 ir P1 reikalauja, kad tekstas nebūtų vienintelis informacijos nešėjas, o interaktyvumo principai (nr. 1) — vieno akivaizdaus veiksmo ekrane. Siūlau dėžėms pridėti požymio piktogramą (plaukas / plunksna / žvynai) ir vardo etiketę ant gyvūno, o grįžtamąjį ryšį sieti su požymiu („Karvė dengta plaukais ir maitina pienu“), ne su grupe. Tai tas pats modelio principas kaip figūrose: rūšiuojama pagal savybę, ne pagal perskaitytą žodį. Vertėtų ir fiksuotos tvarkos (dabar Math.random) — kad mokytojas galėtų numatyti seką.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:182-184 (dėžės tekstas be ikonos, .72rem paaiškinimas)",
+    "assets/js/sims/pasaulis.js:173-176 (emoji be matomo vardo, tik .sr-only)",
+    "docs/SVIETIMAS-1-GAIRES.md T5.5 (prieinamumas, spalva/tekstas ne vienintelis nešėjas)",
+    "research/wiki/foundations/interaktyvumo-principai.md (taisyklė 1 ir 6)",
+    "PR #1 — ta pati pataisa figūrose"
+  ]
+}

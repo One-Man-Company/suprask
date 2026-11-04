@@ -1,0 +1,21 @@
+{
+  "role": "metodininkas",
+  "run_id": 5,
+  "created": "2026-11-04T08:30:00+02:00",
+  "type": "metodas",
+  "title": "Laikas: vienas ratas, vienas žingsnis",
+  "body": "1 klasės programa prašo nusakyti laiką pilnomis valandomis, o tyrimai rodo, kad valandų rodyklė vaikams sunkesnė už minučių ir dažniausiai skaitoma pagal artimiausią skaičių (Williams, 2012; Earnest ir kt., 2018). Metodas jungia dvi rodykles mechaniškai: vaikas traukia ilgąją per vieną ratą, o trumpoji pasislenka lygiai vienu skaičiumi, todėl ryšys matomas, o ne įsimenamas. Seka eina nuo kūno (apeiti kėdę — vienas ratas, vienas popierinės rodyklės žingsnis) prie ekrano, tada prie užrašo „3 val.“ ir perkėlimo, kuriame rodyklės atpažįstamos pagal judėjimą. Minutės ir 24 valandų sistema sąmoningai neįtrauktos — tai antros sąvokos, o tarpinė padėtis rodoma tik tam, kad nesusidarytų artimiausio skaičiaus klaida. Kadangi sujungtos rodyklės atsakymą sukonstruoja pačios (Earnest ir kt., 2017), metodas privalo spėjimą prieš pirmą sukimo judesį ir perkėlimo užduotį apie patį ryšį: teisinga padėtis nelaikoma supratimo įrodymu. Simuliacija turi vieną kintamąjį (kiek rato pasukta), tris įėjimus (tempimas, rodyklės, mygtukas) ir tris būsenas. Visa specifikacija — research/wiki/grades/01/metodai.md, skyrius M-01.",
+  "target": "content/lt/grade-01/matematika/15-laikas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md#M-01 — pilnas metodas: seka, simuliacijos būsenos, užduočių tipai, klaidingos nuostatos, modelio ribos",
+    "research/wiki/curriculum/matematika-1-klase.md:129 — „Mokomasi suprasti laikrodžio su rodyklėmis ir skaitmeninio laikrodžio rodomą laiką… nusakant laiką pilnomis valandomis (val., h)“",
+    "research/wiki/curriculum/matematika-1-klase.md:166 — „Laikas — tik pilnos valandos. Minutės yra 2 klasės turinys“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:49 — tema „Laikas“, modelis „analoginis + skaitmeninis laikrodis greta“",
+    "research/wiki/foundations/sujungti-dydziai.md — sujungtų dydžių modelio taisyklės ir jų ribos",
+    "https://doi.org/10.5964/jnc.v4i1.94 — Earnest, Gonzales ir Plant (2018): valandų rodyklė sunkesnė už minučių; dažniausia strategija — skaičiaus sutapatinimas",
+    "https://files.eric.ed.gov/fulltext/ED581317.pdf — Earnest ir kt. (2017): sujungtos rodyklės pagerina tikslumą, bet sėkmingi mokiniai gali naudotis jomis nesvarstydami mato struktūros",
+    "https://doi.org/10.1080/10508406.2011.553259 — Williams (2012): artimiausio skaičiaus strategija, 2:50 skaitoma kaip 3:50"
+  ]
+}

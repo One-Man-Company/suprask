@@ -279,9 +279,240 @@ const desningumai = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 5. Laikrodis su sujungtomis rodyklėmis                              */
+/*                                                                    */
+/* Modelis: ilgoji apeina vieną ratą, trumpoji pasislenka lygiai per   */
+/* vieną skaičių. Vienas kintamasis — kiek ratų pasukta.               */
+/* ------------------------------------------------------------------ */
+const laikrodisSujungtosRodykles = {
+  mount({ stage, controls, api, config }) {
+    const startHour = Math.min(12, Math.max(1, Number(config.startHour) || 12));
+    const words = Array.isArray(config.words) ? config.words : [];
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let turns = 0;          // kiek ratų pasukta nuo pradžios
+    let locked = true;      // kol vaikas nespėjo, rodyklės nesisuka
+    let raf = 0;
+    let dragAngle = null;
+    let reported = false;
+
+    const hourOf = () => 1 + (((startHour - 1 + Math.floor(turns)) % 12) + 12) % 12;
+    const fracOf = () => turns - Math.floor(turns);
+    const wordOf = (h) => words[h - 1] || `${h} ${h === 1 ? "valanda" : "valandos"}`;
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:24rem;margin:0 auto;text-align:center">
+        <svg id="lk-svg" viewBox="0 0 360 360" width="100%" role="img" tabindex="0"
+             aria-label="Laikrodis su dviem sujungtomis rodyklėmis"
+             style="display:block;touch-action:none;cursor:grab;outline-offset:4px"></svg>
+        <p id="lk-digital" style="font-family:var(--font-head);font-weight:900;font-size:1.5rem;margin:.35rem 0 0">12 val.</p>
+        <p class="sim-note" id="lk-msg"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div id="lk-guess" style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;max-width:34rem">
+        <button class="btn secondary" data-g="0">Pasislinks per vieną skaičių</button>
+        <button class="btn secondary" data-g="1">Apeis visą ratą</button>
+        <button class="btn secondary" data-g="2">Stovės vietoje</button>
+      </div>
+      <div id="lk-turn" style="display:none;gap:.6rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        <button class="btn" id="lk-one">Pasūk vieną ratą</button>
+        <button class="btn ghost" id="lk-reset">Iš naujo</button>
+      </div>`;
+
+    const svg = stage.querySelector("#lk-svg");
+    const digital = stage.querySelector("#lk-digital");
+    const msg = stage.querySelector("#lk-msg");
+
+    /* --- ciferblatas ------------------------------------------------- */
+    svg.appendChild(svgEl("circle", { cx: 180, cy: 180, r: 156, fill: "var(--paper-2)", stroke: "var(--line)", "stroke-width": 6 }));
+
+    for (let h = 1; h <= 12; h += 1) {
+      const a = (h * 30 * Math.PI) / 180;
+      const x1 = 180 + Math.sin(a) * 142;
+      const y1 = 180 - Math.cos(a) * 142;
+      const x2 = 180 + Math.sin(a) * 152;
+      const y2 = 180 - Math.cos(a) * 152;
+      svg.appendChild(svgEl("line", { x1, y1, x2, y2, stroke: "var(--ink-faint)", "stroke-width": 3, "stroke-linecap": "round" }));
+
+      const label = svgEl("text", {
+        x: 180 + Math.sin(a) * 116,
+        y: 180 - Math.cos(a) * 116 + 8,
+        "text-anchor": "middle",
+        fill: "var(--ink-soft)",
+        "font-size": 22,
+        "font-family": "system-ui",
+        "font-weight": 700,
+      });
+      label.textContent = h;
+      svg.appendChild(label);
+    }
+
+    // Tikslas: vieta, kur turi sustoti ilgoji, kai ratas baigtas.
+    svg.appendChild(svgEl("circle", {
+      cx: 180, cy: 180 - 116, r: 20, fill: "none",
+      stroke: "var(--mint)", "stroke-width": 4, "stroke-dasharray": "5 6",
+    }));
+
+    const shortG = svgEl("g", {});
+    shortG.appendChild(svgEl("line", {
+      x1: 180, y1: 180, x2: 180, y2: 118,
+      stroke: "var(--ink)", "stroke-width": 13, "stroke-linecap": "round",
+    }));
+
+    const longG = svgEl("g", {});
+    longG.appendChild(svgEl("line", {
+      x1: 180, y1: 180, x2: 180, y2: 86,
+      stroke: "var(--accent)", "stroke-width": 5, "stroke-linecap": "round",
+    }));
+    longG.appendChild(svgEl("path", { d: "M180 72 L189 96 L171 96 Z", fill: "var(--accent)" }));
+
+    svg.appendChild(shortG);
+    svg.appendChild(longG);
+    svg.appendChild(svgEl("circle", { cx: 180, cy: 180, r: 9, fill: "var(--ink)" }));
+
+    /* --- būsena ------------------------------------------------------ */
+    function paint() {
+      const h = hourOf();
+      const frac = fracOf();
+      longG.setAttribute("transform", `rotate(${frac * 360} 180 180)`);
+      shortG.setAttribute("transform", `rotate(${(h % 12) * 30 + frac * 30} 180 180)`);
+      digital.textContent = `${h} val.`;
+      svg.setAttribute("aria-label", `Laikrodis: ${wordOf(h)}. Ilgoji rodyklė ${frac < 0.001 ? "ties 12" : "dar sukasi"}.`);
+
+      if (locked) return;
+      if (frac > 0.001) {
+        api.readout("Ratas nebaigtas");
+        msg.textContent = "Ilgoji dar neapėjo viso rato. Trumpoji dar tarp skaičių.";
+      } else {
+        api.readout(wordOf(h));
+        msg.textContent = turns === 0
+          ? "Ilgoji ties 12. Suk ją per visą ratą."
+          : "Ratas baigtas: ilgoji ties 12, trumpoji stovi ties skaičiumi.";
+      }
+    }
+
+    function afterRound() {
+      paint();
+      const h = hourOf();
+      msg.textContent = "Vienas ratas — vienas žingsnis. Trumpoji pasislinko per vieną skaičių.";
+      api.speak(wordOf(h), { rate: 0.9 });
+      if (!reported) { reported = true; api.progress({ correct: true }); }
+    }
+
+    // Sukama po truputį; arti sveiko rato reikšmė prisegama, kad 12 smūgių
+    // klaviatūra tikrai baigtų ratą (0,9999… nėra „beveik baigtas“).
+    function applyTurns(d) {
+      turns += d;
+      const near = Math.round(turns);
+      if (Math.abs(turns - near) < 0.004) turns = near;
+    }
+
+    /* --- sukimas ----------------------------------------------------- */
+    function angleAt(evt) {
+      const rect = svg.getBoundingClientRect();
+      const dx = evt.clientX - (rect.left + rect.width / 2);
+      const dy = evt.clientY - (rect.top + rect.height / 2);
+      return (Math.atan2(dx, -dy) * 180) / Math.PI;
+    }
+
+    function onDown(evt) {
+      if (locked) {
+        msg.textContent = "Pirma pasakyk, ką galvoji.";
+        return;
+      }
+      dragAngle = angleAt(evt);
+      svg.style.cursor = "grabbing";
+      if (svg.setPointerCapture) { try { svg.setPointerCapture(evt.pointerId); } catch { /* neprivaloma */ } }
+    }
+
+    function onMove(evt) {
+      if (dragAngle === null) return;
+      const ang = angleAt(evt);
+      let d = ang - dragAngle;
+      if (d > 180) d -= 360;
+      if (d < -180) d += 360;
+      dragAngle = ang;
+      applyTurns(d / 360);
+      paint();
+    }
+
+    function onUp() {
+      if (dragAngle === null) return;
+      dragAngle = null;
+      svg.style.cursor = "grab";
+      if (fracOf() <= 0.001) afterRound();
+      else { paint(); api.note("Pasuk dar — kol ilgoji neapėjo viso rato, valanda dar nepasikeitė."); }
+    }
+
+    function onKey(evt) {
+      if (evt.key !== "ArrowRight" && evt.key !== "ArrowLeft") return;
+      evt.preventDefault();
+      if (locked) { msg.textContent = "Pirma pasakyk, ką galvoji."; return; }
+      applyTurns((evt.key === "ArrowRight" ? 1 : -1) / 12);
+      paint();
+      if (fracOf() <= 0.001) afterRound();
+    }
+
+    function oneRound() {
+      if (locked || raf) return;
+      const target = Math.floor(turns + 1e-6) + 1;
+      if (reduce) { turns = target; afterRound(); return; }
+      const from = turns;
+      const t0 = performance.now();
+      const step = (now) => {
+        const k = Math.min(1, (now - t0) / 1400);
+        turns = from + (target - from) * k;
+        paint();
+        if (k < 1) raf = requestAnimationFrame(step);
+        else { raf = 0; turns = target; afterRound(); }
+      };
+      raf = requestAnimationFrame(step);
+    }
+
+    svg.addEventListener("pointerdown", onDown);
+    svg.addEventListener("pointermove", onMove);
+    svg.addEventListener("pointerup", onUp);
+    svg.addEventListener("pointercancel", onUp);
+    svg.addEventListener("keydown", onKey);
+
+    /* --- spėjimas prieš pirmą judesį -------------------------------- */
+    controls.querySelectorAll("[data-g]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const guess = Number(b.dataset.g);
+        controls.querySelector("#lk-guess").style.display = "none";
+        controls.querySelector("#lk-turn").style.display = "flex";
+        locked = false;
+        paint();
+        msg.textContent = guess === 0
+          ? "Taip: per vieną ratą trumpoji pasislenka per vieną skaičių. Dabar suk ir pažiūrėk."
+          : "Pabandyk: suk ilgąją per visą ratą ir stebėk, ką daro trumpoji.";
+        svg.focus();
+      });
+    });
+
+    controls.querySelector("#lk-one").addEventListener("click", oneRound);
+    controls.querySelector("#lk-reset").addEventListener("click", () => {
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      turns = 0;
+      paint();
+      msg.textContent = "Pradedam iš naujo. Suk ilgąją rodyklę.";
+    });
+
+    paint();
+    api.readout("Ką pasidarys trumpoji, kai ilgoji apeis visą ratą? Pasakyk, tada suk.");
+
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+    };
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
   figuros,
   desningumai,
+  "laikrodis-sujungtos-rodykles": laikrodisSujungtosRodykles,
 };

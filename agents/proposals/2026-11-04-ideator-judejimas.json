@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 4,
+  "created": "2026-11-04T07:15:28+02:00",
+  "type": "tema",
+  "title": "Judėjimas: greitį keičia nuožulnumas, ne daiktas",
+  "body": "Pasaulio pažinime 1 klasei numatytas bandymas su nuožulniąja plokštuma ir klausimai „kokie daiktai juda skirtingu greičiu“ bei „kaip priversti daiktą judėti greičiau ar lėčiau“. Tyrimai su 5–12 m. vaikais rodo, kad 6–7 m. vaikas greitį priskiria daiktui (lengvesnis rieda greičiau), o ne sąlygoms, ir dažniausiai nesvarsto, jog aukštesnė plokštuma ką nors pakeistų. Siūlau modelį su viena plokštuma ir dviem vienodo dydžio, bet skirtingo svorio rutuliais: vaikas pirma numato, kuris nuriedės pirmas, tada leidžia abu ir mato, kad jie atrieda beveik kartu, o pakėlus plokštumą greitis pasikeičia abiem. Vienintelis kintamasis, kurį vaikas keičia, yra plokštumos aukštis, todėl priežastis matoma, o ne įsimenama. Antras žingsnis — tas pats daiktas ant lygaus ir ant statesnio paviršiaus, kad vaikas pats atrastų, jog greitį lemia nuožulnumas. Greičio neskaičiuojame skaičiais ir nelyginame vaikų: tik „pirmas / antras“ ir „greičiau / lėčiau“, nes 1 klasei pakanka kokybinio skirtumo. Tekstas nepadeda, nes klaidinga nuostata atsiranda iš kasdienės patirties, o ją keičia tik bandymas, kuriame sąlyga keičiama vaiko ranka.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/17-judejimas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:110 — „Judėjimas (26.4.1). Kokie daiktai juda skirtingu greičiu? Kas juos priverčia judėti? Kaip priversti daiktą judėti greičiau, ar lėčiau?“; bandymas su nuožulniąja plokštuma",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:132 — pasiekimas: „Nusako, kad daiktai juda skirtingai (tiesiai, lanku) ir skirtingu greičiu“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:60 — tema „Judėjimas“, modelis „Nuožulniosios plokštumos bandymas: ritinys / rutulys / kiaušinis“",
+    "https://www.ejmste.com/download/incline-height-and-object-weight-examining-the-fluidity-of-childrens-commonsense-theories-of-motion-5355.pdf — 144 vaikai 5–12 m.: jaunesni laiko lengvesnį daiktą greitesniu ir neįsivaizduoja, kad plokštumos aukštis ką nors keistų",
+    "https://research.stmarys.ac.uk/id/eprint/1507/1/Final%20reviewed%20version.doc — 5–11 m. vaikų spėjimai apie riedėjimą nuožulnia plokštuma sistemingai klysta, bet teisingą įvykį jie atpažįsta"
+  ]
+}

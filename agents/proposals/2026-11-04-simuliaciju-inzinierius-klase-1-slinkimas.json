@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 7,
+  "created": "2026-11-04T09:20:00+02:00",
+  "type": "ux",
+  "title": "Klasės sąraše liko 34 px horizontalus slinkimas 360 px ekrane",
+  "body": "Per 06-figuros simuliacijos 360 px patikrą išmatavau visus 15 maršrutų: visi moduliai po pataisos netelpa į 360 px ne, o šliaužia, išskyrus maršrutus be simuliacijų — bet #/klase/1 vis dar turi 34 px slinkimą (scrollWidth 394, clientWidth 360). Tai ta pati problema, kurią auditorius užfiksavo agents/log/tikrintojas-2026-11-04T0643.md: trys a.strand-card kortelės išmatuotos 360 px pločio su left=34, nors pirmoji tą patį tinklelį naudojanti kortelė telpa (328 px). Tinklelis aprašytas main.css:137 kaip repeat(auto-fit, minmax(min(100%,17rem),1fr)), o naudojamas app.js:126 viewGrade vaizde. Kadangi 1 klasės tėvai ir mokytojai telefone gali pamatyti nukirptą dešinį kortelės kraštą, siūlau dizaineriui patikrinti būtent šį tinklelį (17rem = 272 px + gap + padding), o ne mažinti kortelių tekstą. Tai ne simuliacijų inžinieriaus sritis, todėl pats nekeičiau.",
+  "target": "assets/css/main.css",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "agents/log/tikrintojas-2026-11-04T0643.md (2 techninės problemos, #1)",
+    "matavimas Chrome headless 360 px, 2026-11-04: #/klase/1 scrollWidth=394, clientWidth=360",
+    "assets/js/app.js:126",
+    "assets/css/main.css:137"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 4,
+  "created": "2026-11-04T07:15:28+02:00",
+  "type": "tema",
+  "title": "Kryptys: kairė priklauso nuo to, į ką žiūri",
+  "body": "1 klasės geometrijoje programa prašo apibūdinti objektų ar žmonių vietą vienas kito atžvilgiu, pasisukti kairėn ar dešinėn ir schemoje parodyti kelią iki paslėpto lobio tinklelyje (B1, C3). Tyrimai rodo, kad sunkiausia dalis yra ne savo, o kito žmogaus pusė: 36 pirmokų tyrime 27–28 žinojo, kuri jų kairė, bet tik 6 teisingai nurodė robotui posūkius kairėn ir dešinėn. Klaidinga nuostata — „kairė yra visiems ta pati pusė“: vaikas savo kairę perkelia veikėjui, kuris žiūri į jį. Siūlau modelį, kuriame varlytė stovi tinklelyje ir pasisuka; vaikas spaudžia „pirmyn“, „kairėn“, „dešinėn“ ir mato, kad ta pati komanda po posūkio veda į kitą langelį. Antroje dalyje judesiai atliekami veikėjo, žiūrinčio į vaiką, kad ta pati komanda duotų skirtingą atsakymą. Tai paruošia dirvą komandų sekos (Bee-Bot) moduliui, kuris be orientacijos reikalautų dviejų naujų sąvokų vienu metu. Statiškas paveikslėlis negali parodyti, kad kryptis priklauso nuo žiūrovo pozicijos — tai parodo tik besisukantis modelis.",
+  "target": "content/lt/grade-01/matematika/17-kryptys-ir-vieta.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:110 — „1 klasė. Transformacijos… apibūdinti objektų ar žmonių vietą ar padėtį vienas kito atžvilgiu (pvz., pasisukti kairėn/dešinėn…; paeiti 3 žingsnius pirmyn/atgal)“",
+    "research/wiki/curriculum/matematika-1-klase.md:113 — užduoties pavyzdys su tinkleliu: „Kuriame langelyje yra drugelis? … Kas pavaizduota C3 langelyje?“",
+    "research/wiki/curriculum/matematika-1-klase.md:154 — pasiekimas: „perskaito tinklelio adresą (B1, C3)“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:46 — tema „Transformacijos / Konstravimas“, modelis „Tinklelis B1/C3 + komandų seka“",
+    "http://merga.net.au/wp-content/uploads/2024/09/6-MERGA-46-2024-Quick-Reads_Way-and-Cartwright.pdf — Way ir Cartwright (MERGA 2024): 36 pirmokai; tik 6 teisingai davė kairės/dešinės komandas robotui",
+    "https://www.rigalrobert.uqam.ca/documents/mental%20rotation.pdf — iki 8 m. vaikas savo orientaciją perkelia kitam žmogui (egocentrinė kryptis)"
+  ]
+}

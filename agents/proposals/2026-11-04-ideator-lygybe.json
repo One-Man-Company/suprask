@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 4,
+  "created": "2026-11-04T07:15:28+02:00",
+  "type": "tema",
+  "title": "Lygybė: abi lygybės pusės sveria tiek pat",
+  "body": "1 klasės matematikos programa reikalauja lygybėse a + b = c rasti trūkstamą skaičių, o rekomendacijos šį pratimą vadina prioritetu, nes jis ugdo lygybės struktūros, o ne skaičiavimo supratimą. Dažna 6–7 m. vaiko klaidinga nuostata — kad „=“ reiškia „skaičiuok“ ir atsakymas rašomas tik dešinėje, todėl į 5 + ▢ = 8 vaikas atsako 13 (Baroody ir Ginsburg, 1983; McNeil ir kt.). Siūlau modelį su dviem lėkštėmis: kairėje penki kubeliai ir uždara dėžutė su ▢ kubelių, dešinėje aštuoni kubeliai, o sija palinksta į sunkesnę pusę. Vaikas deda kubelius į dėžutę tol, kol sija atsistoja lygiai — grįžtamąjį ryšį duoda pati lygybė, ne „teisingai / neteisingai“. Skaičiai iki 10, praplėtime — iki 20; be daugybos ir be raidžių. Tekstas čia neveikia būtent dėl klaidingos nuostatos: sakinį „abi pusės lygios“ vaikas perskaito kaip „skaičiuok kairę ir rašyk dešinėn“, o svyruojanti sija tą patį parodo kūnu. Tai nedubliuoja 04-skaiciu-tiese: ten judama tiese (veiksmas), čia lyginamos dvi išraiškos (struktūra).",
+  "target": "content/lt/grade-01/matematika/16-lygybe-svarstykles.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:45 — „Mokomasi lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių (žymimą pvz. langeliu), kai kiti du skaičiai žinomi“",
+    "research/wiki/curriculum/matematika-1-klase.md:55 — pavyzdys „Trūkstamas dėmuo | 16 + ▢ = 24“",
+    "research/wiki/curriculum/matematika-1-klase.md:164 — „Trūkstamo dėmens pratimai — prioritetas. Jie ugdo lygybės struktūros supratimą, ne tik atsakymo skaičiavimą“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:42 — tema „Trūkstamas dėmuo“, interaktyvumo galimybė „Kiek trūksta?“",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC3374577/ — McNeil ir kt.: vaikai lygybės ženklą skaito kaip „do something“, todėl 12 + 4 = ☐ + 3 atsako 16"
+  ]
+}

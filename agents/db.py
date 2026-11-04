@@ -16,6 +16,22 @@ from datetime import datetime, timezone
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DB_PATH = ROOT / "agents" / "runs.db"
 
+
+# Stulpeliai, atsirandantys vėliau — pridedami saugiai, jei jų dar nėra.
+_EXTRA_COLUMNS = (
+    ("runs", "commit_sha", "TEXT"),
+    ("runs", "pr_url", "TEXT"),
+    ("runs", "validation", "TEXT"),
+    ("proposals", "note", "TEXT"),
+)
+
+
+def _migrate(conn) -> None:
+    for table, column, ctype in _EXTRA_COLUMNS:
+        have = {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}
+        if column not in have:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {ctype}")
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS runs (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,6 +93,7 @@ def connect() -> sqlite3.Connection:
 def init() -> None:
     with connect() as conn:
         conn.executescript(SCHEMA)
+        _migrate(conn)
 
 
 def start_run(role: str, trigger: str, model: str, note: str = "") -> int:
@@ -96,12 +113,17 @@ def finish_run(
     log_path: str,
     summary: str,
     artifacts: list[str] | None = None,
+    commit_sha: str = "",
+    pr_url: str = "",
+    validation: str = "",
 ) -> None:
     with connect() as conn:
         conn.execute(
-            """UPDATE runs SET status=?, finished=?, exit_code=?, duration_s=?, log_path=?, summary=?, artifacts=?
+            """UPDATE runs SET status=?, finished=?, exit_code=?, duration_s=?, log_path=?, summary=?, artifacts=?,
+                               commit_sha=?, pr_url=?, validation=?
                WHERE id=?""",
-            (status, now(), exit_code, duration_s, log_path, summary[:4000], json.dumps(artifacts or [], ensure_ascii=False), run_id),
+            (status, now(), exit_code, duration_s, log_path, summary[:4000],
+             json.dumps(artifacts or [], ensure_ascii=False), commit_sha, pr_url, validation[:2000], run_id),
         )
 
 
@@ -176,9 +198,9 @@ def proposals(limit: int = 100, status: str | None = None) -> list[dict]:
         return [dict(r) for r in conn.execute(q, args)]
 
 
-def set_proposal_status(proposal_id: int, status: str) -> None:
+def set_proposal_status(proposal_id: int, status: str, note: str = "") -> None:
     with connect() as conn:
-        conn.execute("UPDATE proposals SET status=? WHERE id=?", (status, proposal_id))
+        conn.execute("UPDATE proposals SET status=?, note=? WHERE id=?", (status, note, proposal_id))
 
 
 def content_stats() -> dict:

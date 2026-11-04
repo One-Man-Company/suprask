@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 7,
+  "created": "2026-11-04T09:24:00+02:00",
+  "type": "simuliacija",
+  "title": "Metų laikai: dabar tai iliustracija su mygtukais, ne modelis",
+  "body": "metu-laikai simuliacija turi keturis mygtukus, kurie perjungia paruoštą paveikslėlį ir ištaria sezono vardą — vaikas nieko nekeičia ir nieko nenuspėja, todėl ji neatitinka KURINIO-STANDARTAS §4.1 reikalavimo „turi būti modelis, ne animacija“ ir gairių P2 (veiksmas prieš paaiškinimą). Vaikas negali atsakyti į modulio klausimą „kodėl keičiasi medžiai, oras ir gyvūnai“, nes pasekmė nepriklauso nuo jokio jo pasirinkto dydžio. Siūlau vieną kintamąjį, kurį 6–7 metų vaikas jau gali stebėti: saulės aukštį (arba dienos ilgumą) — tempiant slankiklį keičiasi šviesos kiekis, lapų spalva ir paukščių elgsena, o vaikas turi numatyti, kas bus, kai šviesos mažiau. Tai išlaiko vieną didelę idėją (mažiau šviesos ir šilumos → kitokia gamta) ir neįveda Žemės ašies pasvirimo, kuris 1 klasei per abstraktus. Kol pataisa nepadaryta, siūlau modulyje bent jau pažymėti simuliaciją kaip iliustraciją, o ne kaip bandymą.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:57-64 (mygtukai tik perjungia idx ir render())",
+    "docs/KURINIO-STANDARTAS.md §4.1 (modelis, ne animacija; bent vienas keičiamas parametras)",
+    "docs/SVIETIMAS-1-GAIRES.md P2 (veiksmas prieš paaiškinimą)",
+    "content/lt/grade-01/pasaulio-pazinimas/08-metu-laikai.json (subtitle: „Kodėl keičiasi medžiai, oras ir gyvūnai“)"
+  ]
+}

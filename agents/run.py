@@ -284,6 +284,155 @@ def git_snapshot() -> str:
         return ""
 
 
+
+# ---------------------------------------------------------------------------
+# PUBLIKAVIMAS
+#
+# Anksčiau bėgiklis tik užrašydavo, kad agentas kažką pakeitė, ir palikdavo
+# pakeitimus darbinėje kopijoje — todėl svetainėje niekas nesikeitė (agentas
+# paprastai neturi laiko atlikti commit/push/PR). Dabar paskelbimas yra BĖGIKLIO
+# darbas: jis validuoja, commituoja ir stumia į `main`, o jei patikra krenta —
+# pakeitimus atmeta.
+# ---------------------------------------------------------------------------
+
+PROTECTED = ("docs/SVIETIMAS-1-GAIRES.md",)
+
+
+def git(*args: str, timeout: int = 180) -> subprocess.CompletedProcess:
+    return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, timeout=timeout)
+
+
+def changed_list() -> list[str]:
+    """Visi pakeisti ir nauji failai (be ignoruojamų)."""
+    try:
+        out = git("status", "--porcelain").stdout
+    except Exception:  # noqa: BLE001
+        return []
+    files: list[str] = []
+    for line in out.splitlines():
+        if not line.strip():
+            continue
+        path = line[3:].strip()
+        if " -> " in path:
+            path = path.split(" -> ", 1)[1]
+        files.append(path)
+    return files
+
+
+def run_checks(files: list[str]) -> tuple[bool, str]:
+    """Paleidžia validatorius, susijusius su pakeistais failais."""
+    checks: list[tuple[str, list[str]]] = []
+    if any(f.startswith(("content/", "assets/audio/")) for f in files) or not files:
+        checks.append(("turinys", [sys.executable, "scripts/validate_content.py"]))
+        checks.append(("garsas", [sys.executable, "scripts/check_audio.py"]))
+    if any(f.startswith("assets/") for f in files) or not files:
+        checks.append(("sąsaja", [sys.executable, "scripts/check_ui.py"]))
+    if not checks:
+        return True, "validatoriai nereikalingi (pakeitimai tik docs/research/agents)"
+
+    report = []
+    ok = True
+    for name, cmd in checks:
+        try:
+            proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=600)
+        except Exception as exc:  # noqa: BLE001
+            report.append(f"{name}: NEPAVYKO paleisti ({exc})")
+            ok = False
+            continue
+        tail = (proc.stdout or proc.stderr).strip().splitlines()
+        line = " | ".join(tail[-2:]) if tail else ""
+        report.append(f"{name}: {'OK' if proc.returncode == 0 else 'KLAIDA'} — {line[:300]}")
+        if proc.returncode != 0:
+            ok = False
+    return ok, "\n".join(report)
+
+
+def revert(files: list[str]) -> None:
+    """Atmeta agento pakeitimus (kad blogas turinys nepatektų į repo)."""
+    tracked = [f for f in files if git("ls-files", "--error-unmatch", f).returncode == 0]
+    if tracked:
+        git("checkout", "--", *tracked)
+    untracked = [f for f in files if f not in tracked]
+    for f in untracked:
+        if f.startswith(("agents/log/", "agents/work/")):
+            continue
+        target = ROOT / f
+        try:
+            if target.is_file():
+                target.unlink()
+        except OSError:
+            pass
+
+
+def close_proposals(files: list[str], commit_sha: str) -> int:
+    """Pažymi įgyvendintus pasiūlymus, kurių tikslas pateko į commit'ą."""
+    closed = 0
+    try:
+        rows = db.proposals(200, status="new")
+    except Exception:  # noqa: BLE001
+        return 0
+    changed = set(files)
+    for row in rows:
+        target = (row.get("target") or "").strip()
+        if target and target in changed:
+            try:
+                db.set_proposal_status(row["id"], "done", f"įgyvendinta commit {commit_sha[:7]}")
+                closed += 1
+            except Exception:  # noqa: BLE001
+                pass
+    return closed
+
+
+def publish(role: str, run_id: int, files: list[str], summary: str) -> dict:
+    """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą."""
+    if not files:
+        return {"status": "empty", "detail": "Agentas failų nepakeitė — rezultato nėra.", "sha": "", "validation": ""}
+
+    protected = [f for f in files if f in PROTECTED]
+    if protected:
+        revert(files)
+        return {"status": "rejected", "detail": f"Liečia apsaugotą failą: {', '.join(protected)}", "sha": "", "validation": ""}
+
+    ok, validation = run_checks(files)
+    if not ok:
+        revert(files)
+        return {"status": "rejected", "detail": "Validacija nepraėjo — pakeitimai atmesti.", "sha": "", "validation": validation}
+
+    branch = f"agent/{role}-{dt.date.today().isoformat()}"
+    git("checkout", "-B", branch)
+
+    first_line = (summary or role).strip().splitlines()[0][:90]
+    msg = f"[{role}] #{run_id}: {first_line}\n\nPaskelbta automatiškai po validacijos."
+
+    added = git("add", "-A")
+    commit = git("commit", "-m", msg)
+    if commit.returncode != 0 and "nothing to commit" not in (commit.stdout + commit.stderr):
+        return {"status": "rejected", "detail": f"Commit nepavyko: {commit.stderr.strip()[:200]}", "sha": "", "validation": validation}
+
+    sha = git("rev-parse", "HEAD").stdout.strip()
+
+    # Integracija: perkeliame ant naujausio origin/main ir stumiame į main.
+    git("fetch", "origin")
+    rebase = git("rebase", "origin/main")
+    if rebase.returncode != 0:
+        git("rebase", "--abort")
+        return {"status": "conflict", "detail": "Rebase į origin/main nesėkmingas — reikia žmogaus.", "sha": sha, "validation": validation}
+
+    push = git("push", "origin", "HEAD:refs/heads/main", timeout=300)
+    if push.returncode != 0:
+        git("fetch", "origin")
+        git("rebase", "origin/main")
+        push = git("push", "origin", "HEAD:refs/heads/main", timeout=300)
+    if push.returncode != 0:
+        return {"status": "unpushed", "detail": f"Push nepavyko: {push.stderr.strip()[:200]}", "sha": sha, "validation": validation}
+
+    git("push", "-f", "origin", f"HEAD:refs/heads/{branch}")  # šaka ateičiai / atsukimui
+    closed = close_proposals(files, sha)
+
+    detail = f"Paskelbta {len(files)} failų" + (f", uždaryti {closed} pasiūlymai" if closed else "")
+    return {"status": "published", "detail": detail, "sha": sha, "validation": validation}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("role", choices=sorted(ROLES))
@@ -291,6 +440,8 @@ def main() -> int:
     ap.add_argument("--trigger", default="manual", choices=["manual", "schedule", "dashboard"])
     ap.add_argument("--note", default="")
     ap.add_argument("--timeout", type=int, default=0)
+    ap.add_argument("--publish-only", action="store_true",
+                    help="nepaleisti modelio — tik validuoti ir paskelbti jau esančius pakeitimus")
     args = ap.parse_args()
 
     cfg = ROLES[args.role]
@@ -310,6 +461,17 @@ def main() -> int:
         return 0
 
     run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", args.note)
+
+    if args.publish_only:
+        files = changed_list()
+        result = publish(args.role, run_id, files, f"atkurtas {args.role} darbas")
+        db.upsert_proposals(sorted(PROPOSALS.glob("*.json")))
+        db.finish_run(run_id, result["status"], 0, 0, "", result["detail"], files,
+                      commit_sha=result["sha"], validation=result["validation"])
+        print(f"{args.role} #{run_id}: {result['status']} — {result['detail']}"
+              + (f" (commit {result['sha'][:7]})" if result["sha"] else ""))
+        return 0 if result["status"] == "published" else 1
+
     prompt = build_prompt(args.role, cfg, run_id)
 
     if args.dry_run:
@@ -382,12 +544,25 @@ def main() -> int:
         )
 
         files = changed_files(before)
-        db.finish_run(run_id, status, code, elapsed, str(log_path.relative_to(ROOT)), out, files)
         db.upsert_proposals(sorted(PROPOSALS.glob("*.json")))
+
+        # Paskelbimas — bėgiklio, ne agento, darbas.
+        result = publish(args.role, run_id, files, out or args.role)
+        if status in ("ok", "partial"):
+            status = result["status"]
+
+        db.finish_run(
+            run_id, status, code, elapsed, str(log_path.relative_to(ROOT)), out, files,
+            commit_sha=result["sha"], validation=result["validation"],
+        )
         update_state(args.role, cfg, status, log_path)
 
-        print(f"{args.role} #{run_id}: {status} per {elapsed}s ({used_profile}), failų: {len(files)}, žurnalas {log_path.relative_to(ROOT)}")
-        return 0 if status in ("ok", "partial") else 1
+        print(
+            f"{args.role} #{run_id}: {status} per {elapsed}s ({used_profile}), "
+            f"failų: {len(files)}, {result['detail']}"
+            + (f", commit {result['sha'][:7]}" if result["sha"] else "")
+        )
+        return 0 if status in ("ok", "partial", "published", "empty") else 1
 
     except subprocess.TimeoutExpired:
         elapsed = int((dt.datetime.now() - started).total_seconds())

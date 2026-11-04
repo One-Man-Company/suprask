@@ -135,100 +135,306 @@ const desimtukas = {
 };
 
 /* ------------------------------------------------------------------ */
-/* 3. Figūrų rūšiavimas                                                */
+/* 3. Figūrų rūšiavimas pagal kampus                                   */
+/*                                                                    */
+/* Modelis: figūrą apibrėžia kampų skaičius, o ne padėtis ekrane.      */
+/* Vaikas pasuka figūrą ir pamato, kad kampų skaičius nesikeičia —     */
+/* būtent tai griovė ankstesnę versiją, kurioje visos figūros stovėjo  */
+/* „kaip paveikslėlyje“ ir pasukta figūra likdavo neatpažinta.         */
 /* ------------------------------------------------------------------ */
 const figuros = {
-  mount({ stage, controls, api, config }) {
-    const shapes = [
-      { id: "trikampis", label: "Trikampis", path: "M50 16 L90 84 L10 84 Z" },
-      { id: "keturkampis", label: "Keturkampis", path: "M18 20 H82 V84 H18 Z" },
-      { id: "apskritimas", label: "Apskritimas", circle: { cx: 50, cy: 52, r: 34 } },
-    ];
-    const colors = ["#ff8a3d", "#4fc3a1", "#5aa9e6", "#f2708a", "#8f7ae5", "#ffc94d"];
-    const tray = [];
-    shapes.forEach((s) => { for (let k = 0; k < 3; k += 1) tray.push({ ...s, key: `${s.id}-${k}`, color: colors[(tray.length % colors.length)] }); });
-    tray.sort(() => Math.random() - 0.5);
+  mount({ stage, controls, api }) {
+    /* Kiekviena figūra aprašyta viršūnėmis. Apskritimas viršūnių neturi —
+       tai ir yra jo apibrėžtis, o ne „apvali išvaizda“. */
+    const TYPES = {
+      trikampis: { corners: 3, points: [[50, 8], [92, 88], [8, 88]] },
+      keturkampis: { corners: 4, points: [[14, 26], [86, 26], [86, 74], [14, 74]] },
+      kvadratas: { corners: 4, points: [[18, 18], [82, 18], [82, 82], [18, 82]] },
+      trapecija: { corners: 4, points: [[24, 22], [76, 22], [94, 82], [6, 82]] },
+      apskritimas: { corners: 0, circle: { cx: 50, cy: 50, r: 40 } },
+    };
 
-    let selected = null;
-    const placed = { trikampis: 0, keturkampis: 0, apskritimas: 0 };
+    /* Fiksuota tvarka, ne atsitiktinė: mokytojas gali numatyti, ką vaikas
+       matys, o du bandymai lieka palyginami. Pasukimai sąmoningai
+       „negražūs“ — figūra turi būti atpažįstama ne pagal padėtį. */
+    const LAYOUT = [
+      { type: "trikampis", angle: 0 },
+      { type: "keturkampis", angle: 0 },
+      { type: "apskritimas", angle: 0, scale: 0.62 },
+      { type: "kvadratas", angle: 45 },
+      { type: "trikampis", angle: 155 },
+      { type: "trapecija", angle: 0 },
+      { type: "apskritimas", angle: 0 },
+      { type: "trikampis", angle: 265 },
+    ];
+
+    /* Dėžės vadinamos savybe, ne figūros vardu: taip rūšiuojama pagal
+       kampus, o ne pagal perskaitytą žodį. */
+    const BINS = [
+      { corners: 3, sample: "trikampis", label: "3 kampai" },
+      { corners: 4, sample: "keturkampis", label: "4 kampai" },
+      { corners: 0, sample: "apskritimas", label: "0 kampų" },
+    ];
+
+    const cornerWord = (c) => (c === 0 ? "0 kampų" : `${c} kampai`);
+    const turned = (item) => item.angle % 90 !== 0;
+
+    let alive = true;
+    let timers = [];
+    let state = null;
+
+    const later = (fn, ms) => {
+      const id = setTimeout(() => { if (alive) fn(); }, ms);
+      timers.push(id);
+    };
+    const stopTimers = () => { timers.forEach(clearTimeout); timers = []; };
 
     stage.innerHTML = `
-      <div style="width:100%;max-width:44rem">
-        <div id="fg-tray" style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;min-height:6rem;padding:.6rem;border-radius:var(--r-m);background:color-mix(in srgb, var(--sun) 8%, var(--paper))"></div>
-        <div id="fg-bins" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem"></div>
-        <p class="sim-note" id="fg-msg">Pasirink figūrą, tada spausk dėžę, kuriai ji priklauso.</p>
+      <div id="fg-wrap" style="width:100%;max-width:100%;min-width:0;box-sizing:border-box">
+        <p class="sim-note" style="margin:0 0 .55rem;text-align:center">Pasirink figūrą, tada spausk dėžę su tuo pačiu kampų skaičiumi.</p>
+        <div id="fg-tray" role="group" aria-label="Figūros rūšiavimui"
+             style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.45rem;box-sizing:border-box"></div>
+        <div id="fg-bins" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45rem;margin-top:.9rem;box-sizing:border-box"></div>
       </div>`;
-    controls.innerHTML = `<button class="btn ghost" id="fg-reset">Iš naujo</button>`;
+    controls.innerHTML = `
+      <button class="btn secondary" id="fg-turn">Pasuk pasirinktą</button>
+      <button class="btn secondary" id="fg-corners" aria-pressed="false">Rodyk kampus</button>
+      <button class="btn ghost" id="fg-reset">Iš naujo</button>`;
+
     const trayEl = stage.querySelector("#fg-tray");
     const binsEl = stage.querySelector("#fg-bins");
-    const msg = stage.querySelector("#fg-msg");
+    const turnBtn = controls.querySelector("#fg-turn");
+    const cornersBtn = controls.querySelector("#fg-corners");
 
-    function shapeSvg(item, size = 62) {
-      const svg = svgEl("svg", { viewBox: "0 0 100 100", width: size, height: size, "aria-hidden": "true" });
-      if (item.circle) svg.appendChild(svgEl("circle", { ...item.circle, fill: item.color }));
-      else svg.appendChild(svgEl("path", { d: item.path, fill: item.color }));
+    function freshState() {
+      return {
+        items: LAYOUT.map((cfg, i) => ({
+          key: `f${i}`,
+          n: i + 1,
+          angle: cfg.angle,
+          scale: cfg.scale || 1,
+          corners: TYPES[cfg.type].corners,
+          type: cfg.type,
+          done: false,
+        })),
+        selected: null,
+        showCorners: false,
+      };
+    }
+
+    /* SVG figūra: transformacija sukama; kampai žymimi taškais. */
+    function shapeSvg(item, { size = null, dots = false, angle = 0, scale = 1 } = {}) {
+      const svg = svgEl("svg", { viewBox: "0 0 100 100", "aria-hidden": "true", focusable: "false" });
+      if (size) {
+        svg.setAttribute("width", String(size));
+        svg.setAttribute("height", String(size));
+      } else {
+        svg.style.cssText = "display:block;width:100%;height:100%;max-width:100%";
+      }
+      const type = TYPES[item.type];
+      const g = svgEl("g", {
+        transform: `translate(50 50) rotate(${angle}) scale(${scale}) translate(-50 -50)`,
+      });
+      if (type.circle) {
+        g.appendChild(svgEl("circle", {
+          ...type.circle,
+          fill: "color-mix(in srgb, var(--sky) 26%, var(--paper-2))",
+          stroke: "var(--ink)",
+          "stroke-width": 5,
+        }));
+      } else {
+        g.appendChild(svgEl("polygon", {
+          points: type.points.map(([x, y]) => `${x},${y}`).join(" "),
+          fill: "color-mix(in srgb, var(--sun) 42%, var(--paper-2))",
+          stroke: "var(--ink)",
+          "stroke-width": 5,
+          "stroke-linejoin": "round",
+        }));
+        if (dots) {
+          type.points.forEach(([x, y]) => {
+            g.appendChild(svgEl("circle", {
+              cx: x, cy: y, r: 7.5,
+              // Tamsus kontūras: taškas išlieka matomas ir šviesioje, ir tamsioje
+              // temoje, o informaciją neša ne vien spalva.
+              fill: "var(--coral)", stroke: "var(--ink)", "stroke-width": 2.5,
+            }));
+          });
+        }
+      }
+      svg.appendChild(g);
       return svg;
     }
 
-    function drawTray() {
+    function shapeLabel(item) {
+      if (state.showCorners) return `Figūra ${item.n}: ${cornerWord(item.corners)}`;
+      return turned(item) ? `Figūra ${item.n}, pasukta` : `Figūra ${item.n}`;
+    }
+
+    function buildTray() {
       trayEl.innerHTML = "";
-      tray.forEach((item) => {
+      state.items.forEach((item) => {
         const b = document.createElement("button");
-        b.style.cssText = "border:3px solid transparent;background:transparent;border-radius:14px;padding:4px;cursor:pointer;min-width:70px;min-height:70px";
+        b.type = "button";
         b.dataset.key = item.key;
-        b.appendChild(shapeSvg(item));
-        if (selected === item.key) b.style.borderColor = "var(--ink)";
-        b.addEventListener("click", () => {
-          selected = item.key;
-          drawTray();
-          api.speak(item.label, { rate: .9 });
-        });
+        b.style.cssText = "box-sizing:border-box;width:100%;min-width:0;min-height:56px;aspect-ratio:1;" +
+          "padding:4px;border:3px solid transparent;border-radius:14px;background:transparent;" +
+          "cursor:pointer;display:grid;place-items:center;touch-action:manipulation";
+        b.setAttribute("aria-pressed", "false");
+        b.setAttribute("aria-label", shapeLabel(item));
+        b.addEventListener("click", () => select(item));
         trayEl.appendChild(b);
       });
     }
 
-    shapes.forEach((s) => {
-      const bin = document.createElement("button");
-      bin.style.cssText = "display:grid;place-items:center;gap:.3rem;padding:.8rem .4rem;border:3px dashed var(--line);border-radius:var(--r-m);background:var(--paper-2);cursor:pointer;min-height:8rem";
-      bin.innerHTML = `<span style="font-family:var(--font-head);font-weight:900;font-size:.95rem">${s.label}</span>`;
-      const holder = document.createElement("span");
-      holder.style.cssText = "display:flex;gap:2px;flex-wrap:wrap;justify-content:center";
-      bin.appendChild(holder);
-      bin.addEventListener("click", () => {
-        if (!selected) { msg.textContent = "Pirma pasirink figūrą viršuje."; return; }
-        const item = tray.find((x) => x.key === selected);
+    function paintTray() {
+      [...trayEl.children].forEach((b) => {
+        const item = state.items.find((x) => x.key === b.dataset.key);
         if (!item) return;
-        if (item.id === s.id) {
-          placed[s.id] += 1;
-          holder.appendChild(shapeSvg(item, 26));
-          tray.splice(tray.indexOf(item), 1);
-          selected = null;
-          drawTray();
-          api.progress({ correct: true });
-          msg.textContent = "Teisingai!";
-          if (tray.length === 0) {
-            msg.textContent = "Visos figūros surūšiuotos! Suskaičiuok, kiek kiekvienoje dėžėje.";
-            api.readout(`Trikampiai ${placed.trikampis}, keturkampiai ${placed.keturkampis}, apskritimai ${placed.apskritimas}`);
-            api.speak("Visos figūros savo vietose. Puiku!");
-          }
-        } else {
-          bin.classList.add("wiggle");
-          setTimeout(() => bin.classList.remove("wiggle"), 450);
-          msg.textContent = "Tai ne šios dėžės figūra. Apžiūrėk kampus ir kraštines.";
-        }
+        b.hidden = item.done;
+        // `hidden` vienas nepakanka: įterptas `display:grid` nustelbia naršyklės
+        // taisyklę `[hidden]{display:none}`, ir įdėta figūra liktų matoma.
+        b.style.display = item.done ? "none" : "grid";
+        b.innerHTML = "";
+        b.appendChild(shapeSvg(item, { dots: state.showCorners, angle: item.angle, scale: item.scale }));
+        const on = state.selected === item.key;
+        b.style.borderColor = on ? "var(--ink)" : "transparent";
+        b.style.background = on ? "color-mix(in srgb, var(--accent) 16%, transparent)" : "transparent";
+        b.setAttribute("aria-pressed", String(on));
+        b.setAttribute("aria-label", shapeLabel(item));
       });
-      binsEl.appendChild(bin);
-    });
+    }
 
-    controls.querySelector("#fg-reset").addEventListener("click", () => {
-      stage.innerHTML = "";
-      controls.innerHTML = "";
-      figuros.mount({ stage, controls, api, config });
-    });
+    function buildBins() {
+      binsEl.innerHTML = "";
+      BINS.forEach((bin) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.dataset.bin = String(bin.corners);
+        b.style.cssText = "box-sizing:border-box;min-width:0;display:grid;justify-items:center;gap:.2rem;" +
+          "padding:.5rem .3rem;border:3px dashed var(--line);border-radius:var(--r-m);" +
+          "background:var(--paper-2);cursor:pointer;font:inherit;color:inherit;min-height:7rem";
+        b.setAttribute("aria-label", `Dėžė: ${bin.label}`);
+        b.appendChild(shapeSvg({ type: bin.sample }, { size: 40, dots: true }));
+        const strong = document.createElement("strong");
+        strong.style.cssText = "font-size:.9rem;font-family:var(--font-head);font-weight:900;line-height:1.1";
+        strong.textContent = bin.label;
+        b.appendChild(strong);
+        const holder = document.createElement("span");
+        holder.className = "items";
+        holder.style.cssText = "display:flex;flex-wrap:wrap;gap:2px;justify-content:center;min-height:20px";
+        b.appendChild(holder);
+        b.addEventListener("click", () => place(bin, b, holder));
+        binsEl.appendChild(b);
+      });
+    }
 
-    drawTray();
-    api.readout("Rūšiuok figūras");
-    return null;
+    function select(item) {
+      if (!alive || item.done) return;
+      state.selected = item.key;
+      paintTray();
+      api.readout(state.showCorners
+        ? `Figūra ${item.n}. Pažymėti kampai — suskaičiuok juos.`
+        : `Figūra ${item.n}. Kiek ji turi kampų?`);
+      api.note("Dabar spausk dėžę su tuo pačiu kampų skaičiumi.");
+    }
+
+    function place(bin, binEl, holder) {
+      if (!alive) return;
+      const item = state.items.find((x) => x.key === state.selected && !x.done);
+      if (!item) {
+        api.readout("Pirma pasirink figūrą viršuje.");
+        api.note("Pasirink vieną figūrą, tada spausk dėžę.");
+        return;
+      }
+
+      if (item.corners === bin.corners) {
+        item.done = true;
+        state.selected = null;
+        holder.appendChild(shapeSvg(item, { size: 22, angle: item.angle, scale: item.scale }));
+        paintTray();
+        api.speak("Teisingai!");
+
+        const left = state.items.filter((x) => !x.done).length;
+        if (left === 0) {
+          api.readout("Visos figūros savo dėžėse.");
+          api.note("Pasuk bet kurią figūrą: kampų skaičius nesikeis. Kiek kampų turi durys?");
+          api.speak("Visos figūros savo vietose. Puiku!");
+          api.progress({ correct: true });
+        } else {
+          api.readout(`Teisingai: ${cornerWord(item.corners)}. Liko ${left}.`);
+          api.note("Pasirink kitą figūrą. Jei abejoji — įjunk „Rodyk kampus“ ir suskaičiuok.");
+        }
+        return;
+      }
+
+      binEl.classList.add("wiggle");
+      later(() => binEl.classList.remove("wiggle"), 520);
+      api.readout(item.corners === 0
+        ? "Dar ne: ši figūra neturi kampų."
+        : `Dar ne: figūra turi ${item.corners} kampus, o dėžėje — ${bin.corners}.`);
+      api.note(item.corners === 0
+        ? "Apskritimas neturi kampų — ieškok dėžės, kurioje parašyta 0."
+        : "Suskaičiuok figūros kampus ir palygink su skaičiumi ant dėžės.");
+    }
+
+    function rotateSelected() {
+      if (!alive) return;
+      const item = state.items.find((x) => x.key === state.selected && !x.done);
+      if (!item) {
+        api.readout("Pasirink figūrą, tada ją pasuk.");
+        api.note("Pirma spausk vieną figūrą viršuje.");
+        return;
+      }
+      item.angle = (item.angle + 30) % 360;
+      paintTray();
+      if (state.showCorners) {
+        api.readout(`Figūra ${item.n}: ${cornerWord(item.corners)} — pasukus tiek pat.`);
+        api.note("Kampai pažymėti taškais. Pasuk dar kartą: ar skaičius keičiasi?");
+      } else {
+        api.readout(`Figūra ${item.n} pasukta. Ar kampų skaičius pasikeitė?`);
+        api.note("Įjunk „Rodyk kampus“ ir skaičiuok taškus prieš ir po pasukimo.");
+      }
+    }
+
+    function toggleCorners() {
+      if (!alive) return;
+      state.showCorners = !state.showCorners;
+      cornersBtn.setAttribute("aria-pressed", String(state.showCorners));
+      paintTray();
+      const item = state.items.find((x) => x.key === state.selected && !x.done);
+      if (!item) {
+        api.readout(state.showCorners ? "Kampai žymimi taškais." : "Kampai nebežymimi.");
+        api.note("Pasirink figūrą ir skaičiuok pažymėtus taškus.");
+        return;
+      }
+      api.readout(`Figūra ${item.n}: ${cornerWord(item.corners)}.`);
+      api.speak(String(item.corners));
+      api.note(item.corners === 0
+        ? "Apskritimas neturi kampų — nė vieno taško."
+        : "Pažymėti taškai ir yra kampai. Suskaičiuok juos.");
+    }
+
+    function init() {
+      stopTimers();
+      state = freshState();
+      cornersBtn.setAttribute("aria-pressed", "false");
+      buildTray();
+      buildBins();
+      paintTray();
+      api.readout("Pasirink figūrą. Kiek ji turi kampų?");
+      api.note("Spausk figūrą, tada dėžę su tuo pačiu kampų skaičiumi.");
+    }
+
+    turnBtn.addEventListener("click", rotateSelected);
+    cornersBtn.addEventListener("click", toggleCorners);
+    controls.querySelector("#fg-reset").addEventListener("click", init);
+
+    init();
+
+    return () => {
+      alive = false;
+      stopTimers();
+    };
   },
 };
 

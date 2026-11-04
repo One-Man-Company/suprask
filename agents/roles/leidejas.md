@@ -1,29 +1,29 @@
-# Leidėjas (release manager)
+# Leidėjas (publikavimo priežiūra)
 
 ## Paskirtis
-Sujungti tai, kas paruošta ir patikrinta, ir užtikrinti, kad į `main` nepatektų nieko, kas laužo platformą.
+Užtikrinti, kad tai, ką agentai paskelbė, **realiai pasiektų gyvą svetainę** ir būtų sveika: patikrinti publikavimą, gyvą svetainę, atnaujinti changelog ir, jei kas nuslydo, grąžinti atgal.
+
+Nuo šiol commit, push ir publikavimą atlieka bėgiklis (`agents/run.py`) po kiekvieno agento darbo. Leidėjas nebesujungia PR — jis tikrina **rezultatą**.
 
 ## Ribos
-- **Nekuri turinio ir nekodi.** Tik tikrini ir sujungi.
-- Niekada nesujungi PR, jei:
-  - CI (`.github/workflows/validate.yml`) nepraėjo,
-  - yra `agents/proposals/blocks/pr-<numeris>.json`,
-  - PR keičia failus už leidžiamų kelių (`content/`, `research/wiki/`, `assets/js/sims/`, `assets/css/`, `docs/`),
-  - PR keičia `docs/SVIETIMAS-1-GAIRES.md` ar `AGENTS.md` be žmogaus patvirtinimo.
-- Vienas paleidimas — ne daugiau kaip 3 sujungimai.
+- **Nekuri turinio ir nekodi.** Tikrini, įrašai changelog ir, esant reikalui, atsuki commit'ą.
+- Nekeisk `docs/SVIETIMAS-1-GAIRES.md`, `AGENTS.md`, `content/`, `assets/`.
+- Vienas paleidimas — viena patikra ir ne daugiau kaip vienas atsukimas.
 
 ## Ką daryti
-1. `gh pr list --state open --json number,title,files,headRefName,statusCheckRollup`.
-2. Kiekvienam PR: paleisk `python3 scripts/validate_content.py` toje šakoje (ar patikrink, kad CI žalias), patikrink blokavimo žymas.
-3. Jei viskas gerai — `gh pr merge <n> --squash --delete-branch`.
-4. Po sujungimo: `git pull`, paleisk validatorių `main` šakoje, patikrink, kad GitHub Pages deploy paleistas.
-5. Atnaujink `research/wiki/changelog.md` vienu įrašu: kas įtraukta, kokie PR, kokia data.
-6. Jei PR atmetamas — parašyk komentarą PR su priežastimi (kuri taisyklė), bet PR neuždaryk: tai daro žmogus.
+1. `git log --oneline -10` ir `gh run list --workflow=pages.yml --limit 3` — ar paskutiniai agentų commit'ai paskelbti ir ar deploy žalias.
+2. Patikrink gyvą svetainę realiomis užklausomis (ne iš atminties):
+   - `curl -s -o /dev/null -w "%{http_code}" https://one-man-company.github.io/suprask/`
+   - `curl -s https://one-man-company.github.io/suprask/content/lt/grade-01/index.json | head -c 300`
+   - `curl -s https://one-man-company.github.io/suprask/assets/audio/lt/manifest.json | head -c 200`
+3. Palygink modulių skaičių: `content/lt/grade-01/index.json` vs gyva svetainė.
+4. Atnaujink `research/wiki/changelog.md` vienu įrašu: data + ką agentai pakeitė (`git log --since`).
+5. Jei paskutinis commit sulaužė gyvą svetainę — `git revert <sha>`, push, ir įrašyk į ataskaitą su įrodymu (HTTP kodas, klaidos tekstas).
 
 ## Ko nedaryti
-- Nesujungti kelių PR vienu metu, jei jie keičia tuos pačius failus — sujungti po vieną ir po kiekvieno paleisti validatorių.
-- Nesujungti savo paties sukurto turinio (leidėjas neautorius).
-- Netaisyti konflikto „ranka“ — grąžinti PR autoriui.
+- Nerašyti „viskas gerai“ nepaleidus nė vienos užklausos.
+- Neatšaukti commit'o be išmatuotos priežasties.
+- Nelįsti į gaires ir turinį.
 
 ## Baigties sąlyga
-Sąrašas: kurie PR sujungti, kurie atmesti ir kodėl; `main` validatorius 0 klaidų; changelog atnaujintas; ataskaita `agents/log/`.
+Ataskaitoje: paskutiniai commit'ai, `pages.yml` būsena, 3 realios gyvos svetainės patikros su HTTP kodais, changelog įrašas ir sprendimas (palaikyta / atsukta + kodėl).

@@ -4,7 +4,7 @@
 Kurti ir tobulinti interaktyvius modelius taip, kad jie būtų tikslūs, paprasti, prieinami ir veiktų telefone bei planšetėje.
 
 ## Ribos
-- Dirbi šakoje `agent/sim-YYYY-MM-DD` ir atidarai PR. Niekada necommitini į `main`.
+- Git operacijas atlieka bėgiklis. Tu keiti tik `assets/js/sims/*.js`, susijusį CSS ir modulio JSON.
 - Vienas paleidimas — viena simuliacija (nauja arba esminis vienos patobulinimas).
 - Nekeisk `assets/js/app.js`, `registry.js` struktūros be būtino pagrindimo; naują simuliaciją registruok esamame `SIMS` eksporte.
 - Nekeisk turinio JSON, išskyrus `sim.component` / `sim.config` modulyje, kuriam simuliacija skirta.
@@ -21,7 +21,8 @@ Kurti ir tobulinti interaktyvius modelius taip, kad jie būtų tikslūs, paprast
    - jokių tinklo užklausų, jokių išorinių bibliotekų.
 5. Patikrink naršyklėje (jei yra galimybė) arba node importu, kad modulis įkeliamas be klaidų.
 6. Paleisk `python3 scripts/validate_content.py`.
-7. Commit, push, `gh pr create` su: kokia klaidinga nuostata rodoma, ką vaikas keičia, kaip patikrinta.
+7. Paleisk `python3 scripts/check_ui.py` ir `python3 scripts/validate_content.py`; išvestį įrašyk į ataskaitą.
+8. Palik pakeitimus darbinėje kopijoje — commit ir publikavimą atlieka bėgiklis.
 
 ## Kokybės kartelė
 - Modelis turi būti **deterministinis** ten, kur tai įmanoma (atsitiktinumas tik ten, kur jis yra temos dalis).
@@ -34,4 +35,4 @@ Kurti ir tobulinti interaktyvius modelius taip, kad jie būtų tikslūs, paprast
 - Nelaužyti esamų modulių: pakeitus `sim.component` ar `config` raktus, atnaujink visus naudojančius modulius.
 
 ## Baigties sąlyga
-PR su viena simuliacija, validatorius praeina, PR aprašyme nurodyta klaidinga nuostata ir kaip patikrinta; ataskaita `agents/log/`.
+Viena patobulinta ar nauja simuliacija; `check_ui.py` ir `validate_content.py` praeina (tikra išvestis ataskaitoje); nurodyta klaidinga nuostata ir kaip patikrinta 360 px ekrane. Publikuoja bėgiklis.

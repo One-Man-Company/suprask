@@ -390,7 +390,7 @@ def close_proposals(files: list[str], commit_sha: str) -> int:
     return closed
 
 
-def publish(role: str, run_id: int, files: list[str], summary: str) -> dict:
+def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True) -> dict:
     """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą."""
     if not files:
         return {"status": "empty", "detail": "Agentas failų nepakeitė — rezultato nėra.", "sha": "", "validation": ""}
@@ -402,8 +402,14 @@ def publish(role: str, run_id: int, files: list[str], summary: str) -> dict:
 
     ok, validation = run_checks(files)
     if not ok:
-        revert(files)
-        return {"status": "rejected", "detail": "Validacija nepraėjo — pakeitimai atmesti.", "sha": "", "validation": validation}
+        # `--publish-only` neturi ko atsukti: ten pakeitimai galėjo būti padaryti
+        # žmogaus, ne agento. Todėl rankiniu atveju tik pranešame, o neatmetame.
+        if allow_revert:
+            revert(files)
+            detail = "Validacija nepraėjo — pakeitimai atmesti."
+        else:
+            detail = "Validacija nepraėjo — pakeitimai PALIKTI darbinėje kopijoje (rankinis režimas)."
+        return {"status": "rejected", "detail": detail, "sha": "", "validation": validation}
 
     branch = f"agent/{role}-{dt.date.today().isoformat()}"
     git("checkout", "-B", branch)
@@ -476,7 +482,7 @@ def main() -> int:
 
     if args.publish_only:
         files = changed_list()
-        result = publish(args.role, run_id, files, f"atkurtas {args.role} darbas")
+        result = publish(args.role, run_id, files, f"atkurtas {args.role} darbas", allow_revert=False)
         db.upsert_proposals(sorted(PROPOSALS.glob("*.json")))
         db.finish_run(run_id, result["status"], 0, 0, "", result["detail"], files,
                       commit_sha=result["sha"], validation=result["validation"])

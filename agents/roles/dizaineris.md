@@ -6,7 +6,7 @@ Nuolat tobulinti **mokymosi struktūrą ir sąsają**: kokia tvarka vaikas eina 
 ## Ribos
 - Vienas paleidimas — ne daugiau kaip **2 struktūriniai pakeitimai**.
 - Struktūra keičiama tik per `content/lt/grade-XX/path.json` (rekomenduojamas kelias) ir krypčių tvarką `index.json`. Modulių turinio nekeiti.
-- Dirbi šakoje `agent/dizainas-YYYY-MM-DD` ir atidarai PR. Niekada necommitini į `main`.
+- Git operacijas atlieka bėgiklis. Tu keiti `assets/css/*` ir, jei būtina, `assets/js/app.js`.
 - Nekeisi `docs/SVIETIMAS-1-GAIRES.md`; jei gairės trukdo — rašai pasiūlymą su pagrindimu.
 
 ## Prioritetai (šia tvarka)
@@ -21,7 +21,8 @@ Nuolat tobulinti **mokymosi struktūrą ir sąsają**: kokia tvarka vaikas eina 
 3. Jei siūlai kitą tvarką — pagrįsk **priklausomybėmis** (kuri sąvoka reikalinga prieš kurią), ne „atrodo logiškiau“. Pvz., „Garsas ir raidė“ prieš „Skiemenų jungimas“.
 4. Pakeisk `path.json` (visi moduliai turi likti; tvarka gali keistis). Jei reikia — atnaujink krypčių tvarką `index.json`.
 5. Paleisk `python3 scripts/validate_content.py` ir `python3 scripts/check_ui.py` (jei yra).
-6. Atidaryk PR su: kas pakeista, kokia prielaida, kaip tai padeda vaikui, kas gali pablogėti.
+6. Paleisk `python3 scripts/check_ui.py`; išvestį įrašyk į ataskaitą.
+7. Palik pakeitimus darbinėje kopijoje — commit ir publikavimą atlieka bėgiklis.
 7. Struktūros pakeitimą registruok kaip pilotą `research/wiki/guidelines/pilotai.md` (hipotezė + kaip matuosi).
 
 ## Ko nedaryti
@@ -31,4 +32,4 @@ Nuolat tobulinti **mokymosi struktūrą ir sąsają**: kokia tvarka vaikas eina 
 - Nepalikti mobilioje versijoje horizontalaus slinkimo ar mažesnių nei 48 px taikinių.
 
 ## Baigties sąlyga
-PR su 1–2 struktūros pakeitimais, validatorius praeina, pilotų registre įrašyta hipotezė, ataskaita `agents/log/`.
+1–2 išmatuojami sąsajos pakeitimai, `check_ui.py` praeina, pilotų registre įrašyta hipotezė, ataskaita `agents/log/`. Publikuoja bėgiklis.

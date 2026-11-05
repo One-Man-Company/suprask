@@ -11,57 +11,185 @@ const svgEl = (tag, attrs = {}) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* 1. Metų laikai                                                      */
+/* 1. Metų laikai — metų ratas                                         */
 /* ------------------------------------------------------------------ */
+/* Vienas kintamasis — mėnuo. Iš jo išvedama dienos trukmė, saulės
+   kelio aukštis ir medžio būsena. Tai modelis, o ne keturi paruošti
+   paveikslėliai: tempiant per metus matyti, kad pokytis laipsniškas,
+   o ne „persijungia“ tam tikrą dieną. Dienos trukmė — apytikrė
+   Vilniaus platumai (≈55° š. pl.), apvalinta iki 5 min. */
+const MENUO = [
+  { n: "Sausis", acc: "sausį", s: "Žiema", dm: 475, alt: 12, lapai: 0, sniegas: true, pauksciai: false,
+    note: "Mažai šviesos. Medis ilsisi, daug paukščių išskrido." },
+  { n: "Vasaris", acc: "vasarį", s: "Žiema", dm: 575, alt: 20, lapai: 0, sniegas: true, pauksciai: false,
+    note: "Diena jau ilgėja, bet žiema dar laikosi." },
+  { n: "Kovas", acc: "kovą", s: "Pavasaris", dm: 705, alt: 30, lapai: 1, sniegas: false, pauksciai: true,
+    note: "Paukščiai grįžta, ant medžio sprogsta pumpurai." },
+  { n: "Balandis", acc: "balandį", s: "Pavasaris", dm: 845, alt: 43, lapai: 1, sniegas: false, pauksciai: true,
+    note: "Diena sparčiai ilgėja, todėl šilčiau ir žolė žaliuoja." },
+  { n: "Gegužė", acc: "gegužę", s: "Pavasaris", dm: 970, alt: 53, lapai: 2, sniegas: false, pauksciai: true,
+    note: "Beveik ilgiausia diena. Medis jau su lapais." },
+  { n: "Birželis", acc: "birželį", s: "Vasara", dm: 1045, alt: 58, lapai: 3, sniegas: false, pauksciai: true,
+    note: "Ilgiausia diena: daugiausia šviesos ir šilumos." },
+  { n: "Liepa", acc: "liepą", s: "Vasara", dm: 1005, alt: 55, lapai: 3, sniegas: false, pauksciai: true,
+    note: "Diena dar ilga, nors jau pamažu trumpėja." },
+  { n: "Rugpjūtis", acc: "rugpjūtį", s: "Vasara", dm: 885, alt: 47, lapai: 3, sniegas: false, pauksciai: true,
+    note: "Diena trumpėja. Vaisiai noksta, paukščiai ruošiasi." },
+  { n: "Rugsėjis", acc: "rugsėjį", s: "Ruduo", dm: 750, alt: 36, lapai: 4, sniegas: false, pauksciai: false,
+    note: "Lapai gelsta. Gandrai skrenda į šiltus kraštus." },
+  { n: "Spalis", acc: "spalį", s: "Ruduo", dm: 625, alt: 25, lapai: 4, sniegas: false, pauksciai: false,
+    note: "Diena trumpėja greitai. Lapai krinta." },
+  { n: "Lapkritis", acc: "lapkritį", s: "Ruduo", dm: 500, alt: 15, lapai: 5, sniegas: false, pauksciai: false,
+    note: "Šviesos vis mažiau. Medis beveik be lapų." },
+  { n: "Gruodis", acc: "gruodį", s: "Žiema", dm: 435, alt: 11, lapai: 0, sniegas: true, pauksciai: false,
+    note: "Trumpiausia diena. Sniegas, medis ilsisi." },
+];
+
 const metuLaikai = {
   mount({ stage, controls, api }) {
-    const seasons = [
-      { name: "Pavasaris", sky: "#d9f0fb", ground: "#8fd38a", leaf: "#7ed957", sun: "#ffd84d", note: "Sniegas tirpsta, paukščiai grįžta, medžiai žydi." },
-      { name: "Vasara", sky: "#bfe6ff", ground: "#5fbf62", leaf: "#3f9e4a", sun: "#ffb020", note: "Šilta, daug lapų, obuoliai noksta, bitės dūzgia." },
-      { name: "Ruduo", sky: "#e6ecf2", ground: "#c9a56a", leaf: "#e08b3a", sun: "#f0b060", note: "Lapai gelsta ir krinta. Paukščiai ruošiasi skrydžiui." },
-      { name: "Žiema", sky: "#e9f1f7", ground: "#ffffff", leaf: null, sun: "#cfe3f2", note: "Šalta, sniegas, medžiai be lapų, vanduo užšąla." },
-    ];
-    let idx = 0;
+    const M = MENUO;
+    let i = 0;                    // 0..11 — vienintelis modelio kintamasis
+    let lastSeason = "";
+    const seen = new Set();
+    let reported = false;
 
-    stage.innerHTML = `<div style="width:100%;max-width:40rem"><svg id="ml-scene" viewBox="0 0 400 260" role="img" aria-label="Metų laikų scena"></svg></div>`;
-    controls.innerHTML = `<div id="ml-btns" style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center"></div>`;
+    stage.innerHTML = `
+      <div style="width:100%;max-width:26rem;margin:0 auto">
+        <svg id="ml-scene" viewBox="0 0 360 300" role="img" aria-label="Metų laikų modelis"></svg>
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.25rem .5rem;margin:.7rem 0 .3rem">
+          <strong id="ml-hours" style="font-family:var(--font-head);font-size:1.1rem"></strong>
+          <span id="ml-dir" style="font-weight:700;font-size:.9rem"></span>
+        </div>
+        <div id="ml-bar" role="img" style="position:relative;height:18px;border-radius:9px;background:var(--paper-2);border:2px solid var(--line)">
+          <div id="ml-fill" style="height:100%;border-radius:7px;background:#f4b942"></div>
+          <span style="position:absolute;left:30.2%;top:-5px;width:2px;height:28px;background:var(--ink-faint)"></span>
+          <span style="position:absolute;left:72.6%;top:-5px;width:2px;height:28px;background:var(--ink-faint)"></span>
+        </div>
+        <div style="position:relative;height:1.1rem;margin-top:.15rem;font-size:.72rem;color:var(--ink-soft)">
+          <span style="position:absolute;left:30.2%;transform:translateX(-50%)">gruodis</span>
+          <span style="position:absolute;left:72.6%;transform:translateX(-50%)">birželis</span>
+        </div>
+        <p class="sim-note" style="font-size:.8rem;text-align:center">Tai supaprastintas modelis: tikras oras kasdien būna įvairus.</p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.4rem;width:100%;max-width:26rem;margin:0 auto">
+        <label for="ml-month" style="display:block;text-align:center;font-weight:800;font-size:.95rem">Mėnuo: <span id="ml-mname">Sausis</span></label>
+        <input id="ml-month" type="range" min="1" max="12" step="1" value="1"
+               aria-label="Pasirink mėnesį"
+               style="width:100%;height:48px;accent-color:var(--ink)" />
+        <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
+          <button class="btn secondary" id="ml-prev" aria-label="Ankstesnis mėnuo">◀ Ankstesnis</button>
+          <button class="btn secondary" id="ml-next" aria-label="Kitas mėnuo">Kitas ▶</button>
+        </div>
+      </div>`;
+
     const svg = stage.querySelector("#ml-scene");
-    const btns = controls.querySelector("#ml-btns");
+    const hoursEl = stage.querySelector("#ml-hours");
+    const dirEl = stage.querySelector("#ml-dir");
+    const barEl = stage.querySelector("#ml-bar");
+    const fillEl = stage.querySelector("#ml-fill");
+    const mname = controls.querySelector("#ml-mname");
+    const range = controls.querySelector("#ml-month");
 
-    function render() {
-      const s = seasons[idx];
-      svg.innerHTML = `
-        <rect x="0" y="0" width="400" height="210" rx="18" fill="${s.sky}"/>
-        <circle cx="326" cy="52" r="26" fill="${s.sun}"/>
-        <rect x="0" y="185" width="400" height="60" rx="0" fill="${s.ground}"/>
-        <rect x="176" y="140" width="22" height="60" fill="#8a6242" rx="4"/>
-        ${s.leaf ? `
-          <circle cx="187" cy="118" r="44" fill="${s.leaf}"/>
-          <circle cx="150" cy="134" r="30" fill="${s.leaf}"/>
-          <circle cx="224" cy="134" r="30" fill="${s.leaf}"/>` : `
-          <path d="M187 96 L160 128 M187 96 L214 126 M187 96 L187 132" stroke="#8a6242" stroke-width="5" fill="none" stroke-linecap="round"/>`}
-        ${idx === 3 ? `<circle cx="60" cy="60" r="4" fill="#fff"/><circle cx="110" cy="34" r="3" fill="#fff"/><circle cx="250" cy="40" r="4" fill="#fff"/><circle cx="300" cy="96" r="3" fill="#fff"/>` : ""}
-        ${idx === 0 ? `<g fill="#7ec8e3"><ellipse cx="70" cy="48" rx="26" ry="9"/><ellipse cx="96" cy="40" rx="18" ry="8"/></g>` : ""}
-        ${idx === 2 ? `<g fill="#e08b3a" opacity=".95"><circle cx="80" cy="196" r="6"/><circle cx="120" cy="208" r="5"/><circle cx="300" cy="200" r="6"/></g>` : ""}
-        <text x="200" y="243" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="700" fill="#3a342b">${s.name}</text>`;
-      api.readout(s.name);
-      api.note(s.note);
-      api.speak(s.name, { rate: .9 });
-      [...btns.children].forEach((b, k) => {
-        b.setAttribute("aria-pressed", String(k === idx));
-        b.style.background = k === idx ? "var(--ink)" : "var(--paper-2)";
-        b.style.color = k === idx ? "var(--paper)" : "var(--ink)";
-      });
+    const hm = (min) => `${Math.floor(min / 60)} val. ${String(min % 60).padStart(2, "0")} min.`;
+
+    /* Medis: tas pats medis, penki jo metų etapai. */
+    function tree(d) {
+      const trunk = `<rect x="50" y="146" width="12" height="60" rx="4" fill="#8a6242"/>`;
+      const branch = `<path d="M56 150 L38 130 M56 150 L74 128 M56 148 L56 118"
+        stroke="#8a6242" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+      const c = (x, y, r, col) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${col}"/>`;
+      if (d.lapai === 0) return trunk + branch;
+      if (d.lapai === 1) return trunk + branch
+        + c(40, 132, 5, "#8ed081") + c(72, 130, 5, "#8ed081") + c(56, 116, 6, "#8ed081");
+      if (d.lapai === 2) return trunk + branch
+        + c(56, 138, 18, "#8ed081") + c(38, 146, 12, "#8ed081") + c(74, 146, 12, "#8ed081");
+      if (d.lapai === 3) return trunk
+        + c(56, 134, 30, "#4f9e4a") + c(34, 148, 20, "#4f9e4a") + c(78, 148, 20, "#4f9e4a");
+      if (d.lapai === 4) return trunk
+        + c(56, 134, 30, "#d98324") + c(34, 148, 20, "#d98324") + c(78, 148, 20, "#d98324");
+      return trunk + branch
+        + c(40, 136, 10, "#d98324") + c(72, 138, 10, "#d98324") + c(56, 126, 9, "#d98324");
     }
 
-    seasons.forEach((s, k) => {
-      const b = document.createElement("button");
-      b.className = "btn secondary";
-      b.style.fontSize = ".95rem";
-      b.textContent = s.name;
-      b.addEventListener("click", () => { idx = k; render(); });
-      btns.appendChild(b);
-    });
+    const GROUND = {
+      "Žiema": "#f1f7fb",
+      "Pavasaris": "#a9d98a",
+      "Vasara": "#6dbb62",
+      "Ruduo": "#c9b05e",
+    };
+
+    function render() {
+      const d = M[i];
+      const half = 40 + ((d.dm - 435) / 610) * 90;   // kuo ilgesnė diena, tuo platesnis lankas
+      const top = 205 - (d.alt / 58) * 120;           // kuo aukščiau saulė, tuo aukštesnis lankas
+      const cy = 2 * top - 205;
+      const snow = d.sniegas
+        ? `<g fill="#ffffff"><circle cx="120" cy="209" r="4"/><circle cx="168" cy="215" r="3"/>
+             <circle cx="232" cy="210" r="4"/><circle cx="292" cy="216" r="3"/>
+             <circle cx="326" cy="208" r="3"/></g>`
+        : "";
+      const birds = d.pauksciai
+        ? `<path d="M118 62 q7 -7 14 0 M148 46 q6 -6 12 0" stroke="#4a4a4a"
+             stroke-width="3" fill="none" stroke-linecap="round"/>`
+        : "";
+
+      svg.innerHTML = `
+        <rect x="0" y="0" width="360" height="205" rx="16" fill="#e4f1fb"/>
+        <path d="M${215 - half} 205 Q215 ${cy} ${215 + half} 205" fill="none"
+              stroke="#b9cddd" stroke-width="3" stroke-dasharray="5 6"/>
+        <g stroke="#f4b942" stroke-width="3" stroke-linecap="round">
+          <line x1="${215 - 22}" y1="${top}" x2="${215 - 14}" y2="${top}"/>
+          <line x1="${215 + 14}" y1="${top}" x2="${215 + 22}" y2="${top}"/>
+          <line x1="215" y1="${top - 22}" x2="215" y2="${top - 14}"/>
+          <line x1="215" y1="${top + 14}" x2="215" y2="${top + 22}"/>
+        </g>
+        <circle cx="215" cy="${top}" r="13" fill="#f4b942"/>
+        ${birds}
+        <rect x="0" y="205" width="360" height="95" fill="#cbb287"/>
+        <rect x="0" y="205" width="360" height="14" fill="${GROUND[d.s]}"/>
+        ${snow}
+        ${tree(d)}
+        <text x="20" y="40" font-family="system-ui" font-size="22" font-weight="800" fill="#3a342b">${d.n}</text>
+        <text x="20" y="62" font-family="system-ui" font-size="15" font-weight="600" fill="#5f574d">${d.s}</text>`;
+
+      svg.setAttribute("aria-label",
+        `Metų laikų modelis: ${d.n}, ${d.s.toLowerCase()}, šviesu ${hm(d.dm)}`);
+
+      mname.textContent = d.n;
+      range.value = String(i + 1);
+      range.setAttribute("aria-valuetext", `${d.n}, šviesu ${hm(d.dm)}`);
+
+      hoursEl.textContent = `Šviesu ${hm(d.dm)}`;
+      const prev = M[(i + 11) % 12];
+      const diff = d.dm - prev.dm;
+      dirEl.textContent = diff > 0 ? `↗ ilgesnė nei ${prev.acc}`
+        : diff < 0 ? `↘ trumpesnė nei ${prev.acc}`
+        : `→ tokia pati kaip ${prev.acc}`;
+      fillEl.style.width = `${(d.dm / 1440) * 100}%`;
+      barEl.setAttribute("aria-label",
+        `Dienos ilgis ${hm(d.dm)} iš 24 valandų; trumpiausia diena gruodį, ilgiausia birželį`);
+
+      api.readout(`${d.n} — ${d.s.toLowerCase()}. Šviesu ${hm(d.dm)}`);
+      api.note(d.note);
+      if (d.s !== lastSeason) {
+        lastSeason = d.s;
+        api.speak(d.s, { rate: .9 });
+      }
+
+      /* Rezultatas — kai vaikas palygino abu galus, o ne kai „surinko“ mėnesius. */
+      seen.add(i + 1);
+      if (!reported && seen.has(6) && seen.has(12)) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    const step = (n) => { i = (i + n + 12) % 12; render(); };
+    controls.querySelector("#ml-prev").addEventListener("click", () => step(-1));
+    controls.querySelector("#ml-next").addEventListener("click", () => step(1));
+    range.addEventListener("input", () => { i = Number(range.value) - 1; render(); });
 
     render();
     return null;

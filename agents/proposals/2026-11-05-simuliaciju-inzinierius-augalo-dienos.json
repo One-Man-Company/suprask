@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 19,
+  "created": "2026-11-05T11:11:40+02:00",
+  "type": "simuliacija",
+  "title": "Augalo gyvenimas: po 10 dienos „Diena →“ nebekeičia nieko",
+  "body": "`augalo-gyvenimas` augimą skaičiuoja kaip `min(vanduo, šviesa) / 5 * min(diena / 10, 1)`. Kai diena pasiekia 10, daugiklis visam laikui tampa 1, todėl tolesnis mygtuko „Diena →“ spaudimas nekeičia nieko — augalas jau žydi, o iki 30 dienos ekrane niekas nejuda. Vaikas, įpratęs kad kiekvienas jo veiksmas turi pasekmę, tokį modelį perskaito kaip sugedusį mygtuką arba kaip taisyklę „laikas po žydėjimo nesvarbus“. Tai prieštarauja tam pačiam reikalavimui, dėl kurio šiandien perrašiau metų laikus (§4.1: naudotojas keičia parametrą ir mato pasekmę). Siūlau po žydėjimo įvesti antrą fazę (vaisius / lapų kritimas / ramybė), kuri priklausytų nuo dienos skaičiaus, o pasiekus modelio pabaigą — aiškiai pasakyti tekstu („Modelis baigiasi 30 dieną“), o ne leisti mygtukui tyliai nieko nedaryti. Be to, žymėjimui reikėtų vieno parametro „kiek vandens“ vietoj keturių panašaus svorio mygtukų — 6–7 metų vaikui tai per daug vienodų pasirinkimų (interaktyvumo principas 1).",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:91-96 (growth(): min(day / 10, 1))",
+    "assets/js/sims/pasaulis.js:125 (day = Math.min(30, day + 1) — virš 30 tyliai sustoja)",
+    "docs/KURINIO-STANDARTAS.md §4.1, §4.2 (modelis keičia pasekmę; jokia būsena be grįžtamojo ryšio)",
+    "research/wiki/foundations/interaktyvumo-principai.md (taisyklė 1 — vienas akivaizdus veiksmas)"
+  ]
+}

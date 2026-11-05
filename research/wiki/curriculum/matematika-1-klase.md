@@ -90,7 +90,18 @@ Tai vienas dėkingiausių interaktyvių modelių: virtuali piniginė, keli teisi
 > „**1 klasė. Sekos.** Tyrinėjamos objektų sekos iš **2–3 pasikartojančių narių grupių** (pvz. **ABAB…, AABAAB…**), mokomasi jas **atpažinti ir apibūdinti, pratęsti, rasti trūkstamus narius, sudaryti seką pagal nurodytą taisyklę, sukurti savo**.“
 > — *9 skyrius; taip pat Matematika, Modeliai ir sąryšiai, 1–2 klasė*
 
-Tai **nauja tema** atnaujintoje programoje („Atnaujintoje programoje išskirta nauja tema „Dėsningumai““). 1 klasėje — tik 2–3 narių pasikartojančios grupės; sudėtingesnės sekos, skaičių sekos — 2 klasėje.
+Tai **nauja tema** atnaujintoje programoje („Atnaujintoje programoje išskirta nauja tema „Dėsningumai““). 1 klasėje — tik pasikartojančios grupės; sudėtingesnės sekos — vėlesnėse klasėse.
+
+> **Tikslumas (2026-11-05, programos derintojo patikra).** Du pirminio teksto liudijimai skiriasi:
+> 1 klasės aprašas sako „**2–3** pasikartojančių narių grupių“ (`sources/pradinio-bp-rekomendacijos-2024.txt:33563`),
+> o 1–2 klasių lentelė — „objektų sekas iš **2–4** pasikartojančių narių grupių“ (ten pat, `:12297`).
+> Saugi platformos riba — 2–3 narių grupė (siauresnė iš dviejų), 4 narių grupę galima naudoti tik kaip
+> mokytojo pasirinktą praplėtimą. Augančios sekos programoje įvardytos ne 1-oje, o **3–4 klasėje**
+> („kai kiekvieną kitą sekos objektą sudaro vis daugiau (mažiau) elementų“, `:12321–12322`), todėl
+> 1 klasei jos netinka. Ankstesnis šio įrašo sakinys „skaičių sekos — 2 klasėje“ pirminiame tekste
+> tiesiogiai nepasakytas ir lieka **[PATIKRINTI]** (2 klasės sekų aprašo rekomendacijose nėra atskirai).
+> Privalomas, bet platformoje dar nepanaudotas elementas — **„rasti trūkstamus narius“** (trūkstamas narys
+> ne sekos gale, o viduryje).
 
 ## 4. Geometrija, orientacija, transformacijos
 
@@ -164,6 +175,22 @@ Naujovė: „Duomenis mokiniai mokysis pavaizduoti ne tik grafiškai (piktograma
 3. **Trūkstamo dėmens pratimai — prioritetas.** Jie ugdo lygybės struktūros supratimą, ne tik atsakymo skaičiavimą.
 4. **Matavimas = spėjimas prieš matavimą.** Kiekviename matavimo modelyje pirmas žingsnis: „tavo nuomone, kiek?“.
 5. **Laikas — tik pilnos valandos.** Minutės yra 2 klasės turinys.
+
+## 9. Modulių atitikties patikra — 2026-11-05
+
+Patikrinti visi 6 gyvi matematikos moduliai (paleidimas #22, `programos-derintojas`). Nuorodos `:N` — eilutės
+faile `sources/pradinio-bp-rekomendacijos-2024.txt`; modulių eilutės — failo eilutės.
+
+| Modulis | Verdiktas | Programa (`sources/…txt`) | Pastaba |
+|---|---|---|---|
+| `04-skaiciu-tiese` | **iš dalies** | „1 klasė. Skaičiai nuo 0 iki 100… Tyrinėjama, kaip sudaryta 100-o skaičių lentelė, skaičių tiesė“ (`:33739–33740`); trys sudėties/atimties atvejai (`:33520–33521`) | Tema teisinga, apimtis ne: sim `max: 20`, nė vienos užduoties su perėjimu per dešimtį (8 + 5; 16 + 7; 16 + 12) |
+| `05-desimtukas` | **iš dalies** | „2-oje klasėje mokiniai susipažins su vieneto sąvoka, aiškinsis, ką reiškia pusė, trečdalis…“ (`:795–800`) | Dešimtuko sandara 1 klasei tinka, bet „pusė dešimtuko“ (`concept.steps[2]`, `tasks[1]`) — 2 klasės sąvoka |
+| `06-figuros` | **neatitinka** | 1 kl.: „taško, tiesės, spindulio, atkarpos – vaizdavimo brėžinyje…“ (`:1030–1033`); 2 kl.: „uždara laužtė, kampas, daugiakampis, daugiakampio kampas, daugiakampio kraštinė… jis turi tiek kampų, kiek ir kraštinių“ (`:1033–1037`) | Visas modulis (kampai, kraštinės, „trikampis turi tris kampus“) — 2 klasės turinys; trūksta 1 kl. branduolio |
+| `07-desningumai` | **iš esmės atitinka** | 1 kl.: „objektų sekos iš 2–3 pasikartojančių narių grupių“ (`:33563`); augančios sekos — 3–4 kl. (`:12321–12322`) | `tasks[3]` (2, 4, 6, 8…) yra auganti skaičių seka, ne 1 kl. tipas; trūksta „trūkstamo nario“ viduryje |
+| `15-laikas` | **neatitinka apimties** | „1 klasė. Masė, laikas… laiką pilnomis valandomis (val., h), 12 val. ir 24 val. laiko sistemose“ (`:33894–33895`) | 24 val. sistema programoje privaloma 1 klasei, o modulis `svietimas1` teigia ją „sąmoningai neįtraukusią“; ideator #135 jau siūlo temą |
+| `16-lygybe-svarstykles` | **atitinka** | „Mokomasi lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“ (`:33521`) | Svarstyklės — modelis tai pačiai sąvokai; visos užduotys ≤ 10, `optional` 4 + 3 = 5 + 2 neprieštarauja programai |
+
+Naujausi pasiūlymai: `agents/proposals/2026-11-05-programos-derintojas-*.json`.
 
 Susiję: [[lietuviu-kalba-1-klase]] · [[pasaulio-pazinimas-1-klase]] · [[kti-dalykai-1-klase]] · [[1-klases-temų-žemėlapis]]
 

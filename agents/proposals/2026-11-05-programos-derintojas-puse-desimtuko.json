@@ -1,0 +1,18 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 22,
+  "created": "2026-11-05T15:06:40+02:00",
+  "type": "atitiktis",
+  "title": "„Pusė dešimtuko“ — 2 klasės sąvoka 1 klasės modulyje",
+  "body": "Modulyje „Dešimtukas“ trečias žingsnis skelbia „Pusė dešimtuko — 5. Tai padeda atpažinti skaičių akimis“, o antra užduotis klausia „Kiek yra pusė dešimtuko?“. Programa dalies sąvoką priskiria antrai klasei ir tai sako tiesiogiai: „Kaip ir anksčiau, 2-oje klasėje mokiniai susipažins su vieneto sąvoka, aiškinsis, ką reiškia pusė, trečdalis, ketvirtadalis, aštuntadalis“ (rekomendacijų 795–800 eilutės). Pirmos klasės skaičių turinyje dalies nėra, o „pusė“ čia dar ir dviprasmė: dešimtuke ji reiškia dvi eiles po penkis, ne vienodo dydžio dalis. Antra problema tos pačios užduoties tipo: „Kiek yra pusė dešimtuko?“ yra apibrėžimo atsiminimas, o ne supratimo patikra naujoje situacijoje, todėl ji prieštarauja gairių T2.2. Dešimtuko sandaros branduolys (kiek pilna, kiek trūksta, du penketai) 1 klasei tinka ir yra vertingas — siūlau jį palikti, o „pusės“ formuluotę pakeisti penketų struktūra: žingsnį perrašyti kaip „Dešimtukas — dvi eilės po penkis. Penki ir penki — visada dešimt“, o antrą užduotį pakeisti į perėjimo tipo klausimą, pvz. į dvi eiles po penkis sukrauti 8 kubeliai — kiek jų antroje eilėje (atsakymas 3, o ne atsiminta „5“).",
+  "target": "content/lt/grade-01/matematika/05-desimtukas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/05-desimtukas.json:19 — concept.steps[2]: „Pusė dešimtuko — 5…“",
+    "content/lt/grade-01/matematika/05-desimtukas.json:42-50 — tasks[1]: „Kiek yra pusė dešimtuko?“ (answer 1 = „5“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:795-800 — „2-oje klasėje mokiniai susipažins su vieneto sąvoka, aiškinsis, ką reiškia pusė, trečdalis, ketvirtadalis, aštuntadalis“",
+    "research/wiki/curriculum/matematika-1-klase.md:71 — „Trupmenų — propedeutika 2 kl., sąvoka apibrėžiama 3 kl.“",
+    "docs/SVIETIMAS-1-GAIRES.md:37 — T2.2: savikontrolės užduotys vertina supratimą naujoje situacijoje, ne įsimintą formuluotę"
+  ]
+}

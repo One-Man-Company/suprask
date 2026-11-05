@@ -1,0 +1,18 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 22,
+  "created": "2026-11-05T15:06:50+02:00",
+  "type": "atitiktis",
+  "title": "Dėsningumų modulyje — auganti skaičių seka ir nėra trūkstamo nario viduryje",
+  "body": "Modulio „Dėsningumai“ praplėtimo užduotis yra „Seka: 2, 4, 6, 8, … Kas toliau?“ su paaiškinimu „Kiekvieną kartą pridedama po 2“. Tai auganti skaičių seka su aritmetine taisykle, o ne pirmos klasės sekos tipas: programa pirmai klasei aprašo „objektų sekas iš 2–3 pasikartojančių narių grupių (pvz. ABAB.., AABAAB…)“ (rekomendacijų 33563 eilutė), o augančias sekas, kuriose „kiekvieną kitą sekos objektą sudaro vis daugiau (mažiau) elementų“, įvardija 3–4 klasės skiltyje (12321–12322 eilutės). Be to, ši užduotis prieštarauja paties modulio rezultatui „Pastebiu pasikartojančią seką ir ją tęsiu“ — joje niekas nesikartoja, o veiksmas yra sudėtis. Antra spraga toje pačioje programos citatoje: reikalaujama mokėti „rasti trūkstamus narius“, o visos modulio sekos turi klausimą tik gale („?“ paskutinėje vietoje). Siūlau praplėtimo užduotį pakeisti perkėlimo tipo užduotimi, kuri lieka pirmos klasės ribose: ilgesnė AABAAB seka, kurioje trūksta vidurinio nario (pvz. 🔺🔺🔻 🔺▢🔻 …), ir klausti, kas turi stovėti tuščioje vietoje; tai patikrina tą pačią sąvoką naujoje situacijoje ir uždaro programos reikalavimą, kurio dabar nedengia nė viena užduotis.",
+  "target": "content/lt/grade-01/matematika/07-desningumai.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/07-desningumai.json:134-143 — tasks[3]: „Seka: 2, 4, 6, 8, … Kas toliau?“, why: „Kiekvieną kartą pridedama po 2“",
+    "content/lt/grade-01/matematika/07-desningumai.json:9 — outcomes: „Pastebiu pasikartojančią seką ir ją tęsiu“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33563-33564 — „1 klasė. Sekos… Tyrinėjamos objektų sekos iš 2–3 pasikartojančių narių grupių… pratęsti, rasti trūkstamus narius“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:12321-12322 — 3–4 klasė: „kai kiekvieną kitą sekos objektą sudaro vis daugiau (mažiau) elementų“",
+    "research/wiki/curriculum/matematika-1-klase.md — 2026-11-05 tikslumo pastaba dėl 2–3 vs 2–4 narių grupių"
+  ]
+}

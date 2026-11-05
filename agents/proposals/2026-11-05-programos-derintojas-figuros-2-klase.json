@@ -1,0 +1,19 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 22,
+  "created": "2026-11-05T15:06:30+02:00",
+  "type": "atitiktis",
+  "title": "Figūrų modulis moko 2 klasės geometrijos, o 1 klasės branduolio trūksta",
+  "body": "Modulis „Figūros aplink mus“ kaip rezultatą skelbia „Skiriu figūras pagal kraštines ir kampus“, o jo žingsniai moko, kad „trikampis turi tris kampus“, „keturkampis — keturis“, „kvadratas — keturkampis, kurio visos kraštinės lygios“. Programa šias sąvokas priskiria antrai klasei: „2-oje klasėje mokiniai išsiaiškins, ką reiškia tokios sąvokos, kaip uždara laužtė, kampas, daugiakampis, daugiakampio kampas, daugiakampio kraštinė“ ir „jis turi tiek kampų, kiek ir kraštinių“ (rekomendacijų 1033–1037 eilutės). Pirmai klasei programa skiria kitą branduolį: „Pažintį su plokščiomis geometrinėmis figūromis 1-oje klasėje mokiniai pradės nuo paprasčiausių figūrų – taško, tiesės, spindulio, atkarpos – vaizdavimo brėžinyje ir mokymosi apibūdinti šių figūrų padėtį viena kitos atžvilgiu“ (1030–1033). Taigi modulis ne tik peržengia į kitą klasę — jis kartu palieka neišmokytą privalomą pirmos klasės temą, kuri turi akivaizdų interaktyvumo potencialą (taško padėtis tiesėje, ar taškas priklauso spinduliui, taškas dalija tiesę į du spindulius, atkarpa kerta tiesę). Siūlau vieną iš dviejų kelių, ne abu: (a) 06 modulį performuoti į pirmos klasės geometrijos branduolį (taškas, tiesė, spindulys, atkarpa ir jų padėtis), o kampų ir daugiakampių turinį perkelti į 2 klasės planą; arba (b) modulį palikti kaip figūrų atpažinimą, bet iš `outcomes` ir `concept.steps` pašalinti kampų skaičiavimą ir kraštinių lyginimą bei uždėti žymą, kad jis perkeliamas į 2 klasę. Pirmasis kelias uždarytų ir ideator #137 spragą, todėl atskiro 18-ojo modulio tam pačiam dalykui nereikėtų.",
+  "target": "content/lt/grade-01/matematika/06-figuros.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/06-figuros.json:10 — outcomes: „Skiriu figūras pagal kraštines ir kampus“",
+    "content/lt/grade-01/matematika/06-figuros.json:15 — big_idea: „trikampis turi tris kampus, keturkampis — keturis“",
+    "content/lt/grade-01/matematika/06-figuros.json:17-19 — concept.steps: kraštinių ir kampų skaičiavimas, kvadrato apibrėžimas",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1033-1037 — „2-oje klasėje mokiniai išsiaiškins, ką reiškia tokios sąvokos, kaip uždara laužtė, kampas, daugiakampis, daugiakampio kampas, daugiakampio kraštinė… jis turi tiek kampų, kiek ir kraštinių“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1030-1033 — „Pažintį su plokščiomis geometrinėmis figūromis 1-oje klasėje mokiniai pradės nuo paprasčiausių figūrų – taško, tiesės, spindulio, atkarpos“",
+    "docs/SVIETIMAS-1-GAIRES.md:75 — temos vartai: „Programos sąsaja“ ir „Amžiaus tinkamumas“ turi atsakyti „taip“"
+  ]
+}

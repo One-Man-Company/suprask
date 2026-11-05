@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 16,
+  "created": "2026-11-05T07:16:30+02:00",
+  "type": "tema",
+  "title": "Laikas: 14 val. ir 2 val. — tas pats momentas",
+  "body": "Programa 1 klasei prašo nusakyti laiką pilnomis valandomis tiek 12, tiek 24 valandų sistemoje, tačiau ką tik pasirodęs modulis 15-laikas antrąją sistemą sąmoningai paliko kitam moduliui, o metodo apraše tai įvardyta kaip antra sąvoka. To modulio nėra, todėl 24 valandų rodmuo platformoje šiandien neegzistuoja. Klaidinga nuostata — „14:00 yra kita valanda nei 2 val.“: vaikas 14 supranta kaip atskirą momentą arba kaip „14 valandų trukmę“, o ne kaip tą pačią popietės valandą kitu vardu. Siūlau modelį su vienu ciferblatu ir vienu skaitmeniniu lauku: mygtukas „rytas / po pietų“ nejudina rodyklių, bet pakeičia užrašą iš 2:00 į 14:00, o ekranas pasako, kad rankos liko toje pačioje vietoje. Atimties iš 12 nemokome — modelis rodo tapatumą, ne perskaičiavimo taisyklę. Ribos pasakomos atvirai: minučių nėra, o vidurnakčio ir vidurdienio dviprasmybė (00:00 ir 12:00) paliekama vėlesniam moduliui.",
+  "target": "content/lt/grade-01/matematika/20-laikas-12-ir-24-val.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:129 — „nusakant laiką pilnomis valandomis (val., h), 12 val. ir 24 val. laiko sistemose“",
+    "research/wiki/curriculum/matematika-1-klase.md:166 — „Laikas — tik pilnos valandos. Minutės yra 2 klasės turinys“",
+    "content/lt/grade-01/matematika/15-laikas.json:108 — „viena sąvoka (pilnos valandos), minutės ir 24 valandų sistema sąmoningai neįtrauktos“",
+    "research/wiki/grades/01/metodai.md:76 — „24 valandų sistema yra atskiras modulis, nes tai antra sąvoka“",
+    "https://ncetm.org.uk/classroom-resources/cp-year-4-unit-11-time/ — NCETM: 24 val. sistemos perskaičiavimas (13 = 12 + 1, „atimti 12“) mokomas 4 klasėje (8–9 m.), todėl 6–7 m. modelis negali remtis aritmetika, tik tapatumo parodymu"
+  ]
+}

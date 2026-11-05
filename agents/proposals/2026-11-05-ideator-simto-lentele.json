@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 16,
+  "created": "2026-11-05T07:16:30+02:00",
+  "type": "tema",
+  "title": "Šimto lentelė: vienas žingsnis žemyn — dešimt daugiau",
+  "body": "1 klasės programa prašo skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus iki 100 ir tyrinėti, kaip sudaryta 100-o skaičių lentelė. Platformoje skaičių tiesė sukonfigūruota tik iki 20, todėl 0–100 skaičiavimas realiai neturi jokio modelio, nors klasės aprašas žada skaičiavimą iki 100. Klaidinga nuostata — lentelę skaityti kaip knygą, eilutė po eilutės: po 19 vaikas laukia 20, nors žemiau stovi 29. Siūlau 10×10 lentelę su vienu bakstelėtu langeliu ir keturiomis kryptimis: į dešinę skaičius padidėja vienu, žemyn — dešimčia, o ekranas parodo, kas tiksliai pasikeitė (pabaiga ta pati, pradžia kita). Kad nesusidarytų antra klaida — „didesnis skaičius yra aukščiau“ — žemėjimas niekada nevaizduojamas kaip vertė; dešimties eilutė parodoma kaip viena juosta, o ne kaip aukštis. Modelis netikrina atsakymų, o leidžia judėti ir spėti: vaikas pirma pasako, kas bus po žingsnio, tada paspaudžia.",
+  "target": "content/lt/grade-01/matematika/19-simto-skaiciu-lentele.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:23 — „1 klasė. Skaičiai nuo 0 iki 100… Tyrinėjama, kaip sudaryta 100-o skaičių lentelė, skaičių tiesė“",
+    "research/wiki/curriculum/matematika-1-klase.md:38 — „Skaičiuoja pirmyn ir atgal nuo bet kurio skaičiaus (ne tik nuo 1!)“",
+    "research/wiki/curriculum/matematika-1-klase.md:148 — metų gale: „Naudojasi 100-o skaičių lentele ir skaičių tiese“",
+    "research/wiki/curriculum/matematika-1-klase.md:61 — metodinis reikalavimas „nuolat naudoti kelis tuos pačius… vaizdinius modelius (… šimto skaičių lentelę, skaičių tiesę)“",
+    "content/lt/grade-01/matematika/04-skaiciu-tiese.json:26 — sim.config.max = 20; modulio teacher.goal tai pripažįsta („programoje — iki 100“), bet modelio nėra",
+    "https://www.nctm.org/Publications/Teaching-Children-Mathematics/2017/Vol24/Issue3/WEB-ONLY_Bay-Williams(1)/ — Bay-Williams (2017), Teaching Children Mathematics: pridedant dešimtį, judama žemyn, todėl kyla „directional conflict“ tarp „daugiau“ ir „aukščiau“; siūloma lentelę dėlioti iš apačios"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 16,
+  "created": "2026-11-05T07:16:30+02:00",
+  "type": "tema",
+  "title": "Taškas, tiesė, spindulys, atkarpa: skiriasi galai, ne ilgis",
+  "body": "1 klasės geometrija prasideda nuo taško, tiesės, spindulio ir atkarpos, o programa prašo būtent santykių: „taškas yra/nėra tiesėje“, „taškas dalija tiesę į du spindulius“, „atkarpa kerta tiesę“. Platformoje šios temos nėra: 06-figuros moko uždarų figūrų, o brėžinio objektų nė vienas modulis neliečia. Klaidinga nuostata — „viskas, ką nupiešiu, turi galus, todėl tiesė ir atkarpa skiriasi tik ilgiu“; popieriuje tai tiesa, todėl žodinis paaiškinimas klaidos negriauna. Siūlau modelį, kuriame vaikas baksteli tiesę ir pastato tašką: taškas gali būti ant tiesės arba šalia, o antras bakstelėjimas toje pačioje vietoje padalija tiesę į du spindulius. Uždėjus antrą tašką tarp jų atsiranda atkarpa, o mygtukas „pratęsk“ ją ilgina tol, kol ji tampa tokia pat ilga kaip tiesė — ir vis tiek turi du galus. Taip skirtumas parodomas galų skaičiumi, o ne matmenimis; kampų ir ilgių vienetų modelis neįveda (jų 1 klasėje dar nėra).",
+  "target": "content/lt/grade-01/matematika/18-taskas-tiese-spindulys-atkarpa.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:99 — „1-oje klasėje mokiniai pradės nuo paprasčiausių figūrų – taško, tiesės, spindulio, atkarpos – vaizdavimo brėžinyje… (pvz., taškas yra/nėra tiesėje, taškas priklauso/nepriklauso spinduliui, taškas dalija tiesę į du spindulius, atkarpa kerta tiesę)“",
+    "research/wiki/curriculum/matematika-1-klase.md:153 — metų gale: „Atvaizduoja tašką, tiesę, spindulį, atkarpą ir apibūdina jų padėtį vienas kito atžvilgiu“",
+    "research/wiki/curriculum/matematika-1-klase.md:102 — apimties riba: „1 klasėje nėra kampo, daugiakampio, trikampio savybių“ — modelis neįveda kampų ir matavimo vienetų",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:45 — tema „Taškas, tiesė, spindulys, atkarpa“, modelis „brėžinys su „taškas yra/ne tiesėje“ patikra“",
+    "https://dergipark.org.tr/tr/download/article-file/3839137 — mokinių „concept image“ tyrimas: dalis mokinių klysta painiodami tiesę, atkarpą ir spindulį, o jų piešiniai atitinka susidarytą vaizdinį; klaida išlieka ir po aiškinimo, jei vaizdinys nepakeistas",
+    "https://mathorio.com/en/learn/geometry/basics/points-lines-planes/teacher — mokytojams skirta klaidų lentelė: „Thinking a line has endpoints… we often draw lines with endpoints on paper because we cannot draw infinitely“"
+  ]
+}

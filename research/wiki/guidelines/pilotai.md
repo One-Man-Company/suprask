@@ -47,3 +47,11 @@ Kiekvienas naujas dizaino sprendimas laikomas pilotu (Švietimas #1, 6 žingsnis
 - **Kaip matuojame:** perkėlimo užduoties (rodyklių atpažinimas pagal judėjimą) teisingumas pirmu bandymu ir tai, ar refleksijoje vaikas įvardija patį ryšį („ratas — žingsnis“), o ne tik pakartoja valandą. Duomenys nerenkami automatiškai — tik savanoriškas mokytojo stebėjimas.
 - **Rezultatas:** dar nėra.
 - **Sprendimas:** laukiama duomenų. Jei vaikai atsakys teisingai, bet neįvardys ryšio, jungtis lieka, o spėjimo žingsnis ir perkėlimo užduotis stiprinami.
+
+### P-005 — Svarstyklės su uždara dėžute ir perskaitymu kita kryptimi
+- **Data:** 2026-11-05
+- **Hipotezė:** jei modelis grįžtamąjį ryšį duoda kaip santykį (sija palinksta į sunkesnę pusę), o tą pačią lygią būseną galima perskaityti abiem kryptimis (`5 + 3 = 8` ir `8 = 5 + 3`), tai daugiau pirmokų priims apverstą lygybės formą ir teisingai atsakys į užduotį be vieno skaičiaus pusėje, nes ženklas mokomas kaip būsena, o ne kaip nurodymas rašyti atsakymą (McNeil ir Alibali, 2005; Stephens ir kt., 2022; `research/wiki/foundations/zenklas-kaip-busena.md`).
+- **Ką keičiame:** pirmoji simuliacija su uždara nežinomojo dėžute ir pirmoji, kurios grįžtamasis ryšys yra tolydus santykis (pakrypimo kampas), o ne diskreti būsena. Modulis `16-lygybe-svarstykles`, komponentas `svarstykles-lygybe`. Mygtukas „Perskaityk kitaip“ — pirmas atvejis platformoje, kai tas pats modelis parodomas dviem užrašo kryptimis.
+- **Kaip matuojame:** perkėlimo užduoties (`8 = 5 + ▢`) ir praplėtimo užduoties (`4 + 3 = 5 + 2`) teisingumas pirmu bandymu; ar refleksijoje vaikas pasako, kad lygiose pusėse skaičiai gali skirtis; ar vaikas naudojasi „Perskaityk kitaip“ (jei nenaudoja — ar mygtukas pastebimas). Duomenys nerenkami automatiškai, tik savanoriškas mokytojo stebėjimas.
+- **Rezultatas:** dar nėra.
+- **Sprendimas:** laukiama duomenų. Jei vaikai sprendžia siją, bet neatmeta operacinio skaitymo, stiprinamas spėjimo žingsnis ir apverstos formos užduotis; jei „Perskaityk kitaip“ lieka nepastebėtas, mygtukas keliamas virš sijos, o ne šalinamas.

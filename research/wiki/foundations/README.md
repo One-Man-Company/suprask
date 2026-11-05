@@ -10,6 +10,7 @@
 | [[kognityvine-apkrova]] | darbinė atmintis, pavyzdžiai, perteklius | vienas kintamasis simuliacijoje, tikslas visada matomas |
 | [[simuliacijos-ir-modeliai]] | PhET, konkretybės nykimas, produktyvi nesėkmė | veiksmas prieš paaiškinimą, modelio ribos pasakomos |
 | [[interaktyvumo-principai]] | UI 6–7 metų vaikams, taikiniai, grįžtamasis ryšys | ≥48 px, jokių laikmačių, klaida ne aklavietė |
+| [[zenklas-kaip-busena]] | lygybės ženklas kaip būsena, operaciniai šablonai, modelio išdėstymas | modelis rodo abi lygybės kryptis ir bent vieną atvejį be vieno skaičiaus pusėje |
 | [[ivertinimas-ir-growth-mindset]] | grįžtamasis ryšys, augimo mąstysena ir jos ribos | `hint` + `why` privalomi, jokių balų |
 
 ## Žaidimų teorijos dalis

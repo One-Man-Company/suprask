@@ -1,0 +1,23 @@
+{
+  "role": "metodininkas",
+  "run_id": 17,
+  "created": "2026-11-05T08:31:00+02:00",
+  "type": "metodas",
+  "title": "Lygybė: abi pusės sveria tiek pat",
+  "body": "1 klasės programa prašo lygybėse a + b = c rasti trūkstamą skaičių, o rekomendacijos tai vadina prioritetu, nes pratimas ugdo lygybės struktūros, o ne skaičiavimo supratimą. Tyrimai rodo, kad pirmokai ženklą dažniausiai skaito operaciškai („suskaičiuok ir parašyk“), o šis šablonas ne tik išlieka, bet ir trukdo vėliau mokytis lygčių (Baroody ir Ginsburg, 1983; McNeil ir Alibali, 2005). Metodas M-02 griauja šį skaitymą sija: kairėje 5 kubeliai ir uždara dėžutė su ▢, dešinėje 8 kubeliai, o vaikas įdeda arba išima po vieną, kol sija atsistoja lygiai. Kai sija lygi, po ja pasirodo kortelė „5 + 3 = 8“, o mygtukas „Perskaityk kitaip“ apverčia ją į „8 = 5 + 3“ — sija nejuda, todėl abi kryptys matomos kaip ta pati būsena, o ne kaip dvi taisyklės. Grįžtamąjį ryšį duoda pati sija („Kairė sunkesnė“ / „Dešinė sunkesnė“ / „Abi pusės lygios“), ne „teisingai / neteisingai“, o perpildyta dėžutė yra informacija, ne bauda. Kadangi modelis pats gali sukonstruoti teisingą būseną, prieš pirmą judesį vaikas spėja žodžiu, o perkėlimo užduotis klausia apie formą be vieno skaičiaus pusėje (4 + 3 = 5 + 2) — būtent tokiais atvejais Stephens ir kt. (2022) matė, kad vaikai praleidžia lygybės puses ir sprendžia „sudėk viską“. Visa specifikacija su būsenomis, keturiomis užduotimis, užuominomis ir modelio ribomis — research/wiki/grades/01/metodai.md, skyrius M-02.",
+  "target": "content/lt/grade-01/matematika/16-lygybe-svarstykles.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md#M-02 — pilnas metodas: seka, simuliacijos būsenos, keturios užduotys su tipinėmis klaidomis, modelio ribos",
+    "research/wiki/foundations/zenklas-kaip-busena.md — bendresnė įžvalga: modelio išdėstymas gali įtvirtinti operacinį lygybės skaitymą, todėl būtinas perskaitymas kita kryptimi",
+    "research/wiki/curriculum/matematika-1-klase.md:45 — „Mokomasi lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių (žymimą pvz. langeliu), kai kiti du skaičiai žinomi“",
+    "research/wiki/curriculum/matematika-1-klase.md:164 — „Trūkstamo dėmens pratimai — prioritetas. Jie ugdo lygybės struktūros supratimą, ne tik atsakymo skaičiavimą“",
+    "agents/proposals/2026-11-04-ideator-lygybe.json — ideatoriaus pasiūlymas #12 (tema/high), kurio pagrindu metodas sukurtas",
+    "https://doi.org/10.1086/461356 — Baroody ir Ginsburg (1983): po septynių mėnesių mokymo tik 20 % pirmokų ženklą apibūdino kaip „tas pats“",
+    "https://doi.org/10.1111/j.1467-8624.2005.00884.x — McNeil ir Alibali (2005): operaciniai šablonai (visi veiksmai su visais skaičiais, „veiksmai = atsakymas“, „=“ kaip „viso“) trukdo mokytis lygčių",
+    "https://doi.org/10.5951/TCM.6.4.0232 — Falkner, Levi ir Carpenter (1999): 8 + 4 = __ + 5 vaikai atsako 12",
+    "https://doi.org/10.1080/10986065.2020.1793055 — Stephens ir kt. (2022): K–2 vaikai su svarstyklėmis; 6 = 3 + 2 dėlioja puses neteisingai arba ieško 11",
+    "https://doi.org/10.1186/s40594-019-0183-2 — Otten, Van den Heuvel-Panhuizen ir Veldhuis (2019): 34 straipsnių apžvalga, modelio ribos (atimtis, neigiami skaičiai)"
+  ]
+}

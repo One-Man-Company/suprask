@@ -1,0 +1,18 @@
+{
+  "role": "kritikas",
+  "run_id": 21,
+  "created": "2026-11-05T14:03:10+02:00",
+  "type": "kritika",
+  "title": "Augalo modelis moko priešingai, nei pats modulis įvardija kaip klaidą",
+  "body": "Modulio „Augalo gyvenimas“ simuliacija augimą skaičiuoja kaip `min(vanduo, šviesa)/5 × min(diena/10, 1)`, todėl augimas monotoniškai didėja iki vandens = 5 ir perlaistymas niekada nekenkia — nėra jokios viršutinės ribos ar baudos. Tuo pat metu modulio `teacher.misconceptions` antras punktas teigia priešingai: „Daug vandens“ laikoma geriau — perlaistytas augalas gali žūti“, o tai yra būtent ta klaidinga nuostata, kurią modelis turėjo padėti išnaudoti, o vietoj to ją sustiprina. Antra problema ta pati: `outcomes` žada, kad vaikas įvardys vandenį, šviesą, šilumą ir dirvožemį, o modelis turi tik du kintamuosius (`water`, `light`) ir `pasaulis.js:204–206` — šilumos ir dirvožemio keisti negalima, tad dviejų iš keturių sąlygų vaikas negali nei atrasti, nei patikrinti. Trečia — pirmos užduoties teisingas atsakymas „Vandens ir šviesos“ pagal modelį yra teisingas, bet prieštarauja `outcomes` ir `big_idea` tekstui, kuriame šiluma įvardyta kaip būtina. Taisymas: pridėti vandens pertekliaus ribą (pvz., virš 4 augimas mažėja arba augalas vysta) ir arba pridėti šilumos kintamąjį, arba iš `outcomes`/`big_idea` pašalinti šilumą ir dirvožemį — bet nepalikti teksto ir modelio prieštaraujančių.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:219-223 — growth(): `Math.min(water, light) / 5` × `Math.min(day / 10, 1)`; vanduo 5 visada geriau už 4",
+    "assets/js/sims/pasaulis.js:204-206 — modelis turi tik `water`, `light`, `day`; šilumos ir dirvožemio nėra",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:82 — „perlaistytas augalas gali žūti“ įvardyta kaip klaidinga nuostata, kurią modelis turi griauti",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:9 — outcomes: „vandens, šviesos, šilumos, dirvožemio“",
+    "docs/SVIETIMAS-1-GAIRES.md:20 — P2: simuliacija yra pagrindinė mokymosi vieta, ne iliustracija"
+  ]
+}

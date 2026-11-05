@@ -1,0 +1,18 @@
+{
+  "role": "kritikas",
+  "run_id": 21,
+  "created": "2026-11-05T14:03:10+02:00",
+  "type": "kritika",
+  "title": "Užuomina tiesiogine fraze pasako teisingą atsakymą",
+  "body": "Modulyje „Skaičių tiesė“ pirmos užduoties užuomina yra „Du žingsniai į dešinę nuo 8: 9, 10.“, o teisingas variantas — „10“. Vaikas neieško sprendimo, o perskaito jau išspręstą veiksmą, todėl užduotis netenka prasmės ir prieštarauja gairių T3.1 bei standarto 3 skyriaus reikalavimui, kad užuomina nukreiptų į klaidą, o ne į atsakymą. Tas pats pasikartoja modulyje „Akmenėlis, žirklės, popierius“: užuomina „Akmenėlis atbukina žirkles.“ yra tiesioginis atsakymas į klausimą „Kuris ėjimas nugali žirkles?“. Abu atvejus validatorius praleidžia, nes `scripts/validate_content.py:132–135` tikrina tik tai, ar `hint` ne tuščias ir ne ilgesnis nei 200 simbolių — atsakymo atskleidimo patikros nėra. Todėl klaida kartosis kiekviename naujame modulyje, kol nebus neištaisyta turinyje, nei uždaryta validatoriu. Taisymas: performuluoti abi užuominas taip, kad jos nurodytų kryptį ar modelį (pvz., „Skaičiuok žingsnius į dešinę ir sustok, kai praeisi 8“), ir papildyti validatorių bent įspėjimu, kai `hint` tekste yra `options[answer]`.",
+  "target": "content/lt/grade-01/matematika/04-skaiciu-tiese.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/04-skaiciu-tiese.json:45 — „hint“: „Du žingsniai į dešinę nuo 8: 9, 10.“, o „answer“: 0 → „10“",
+    "content/lt/grade-01/zaidimu-teorija/13-akmenelis-popierius.json:69 — „hint“: „Akmenėlis atbukina žirkles.“, o „answer“: 0 → „Akmenėlis“",
+    "docs/KURINIO-STANDARTAS.md:56 — „hint ... jame draudžiama rašyti teisingą atsakymą“",
+    "docs/SVIETIMAS-1-GAIRES.md:44 — T3.1: užuomina nukreipia į klaidą, o ne į teisingą atsakymą",
+    "scripts/validate_content.py:132-135 — tikrinamas tik „hint“ buvimas ir ilgis (≤200 simbolių), atsakymo atskleidimas netikrinamas"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "role": "kritikas",
+  "run_id": 21,
+  "created": "2026-11-05T14:03:10+02:00",
+  "type": "kritika",
+  "title": "README ir ARCHITEKTURA tebeteigia 13 modulių, nurodo netinkamą balsą ir neturi CC BY atribucijos",
+  "body": "Repozitorijoje yra 15 modulių (`content/lt/grade-01/*/*.json` be `index.json`) ir 15 registruotų simuliacijų (`SIMS` raktai calba/matematika/pasaulis/zaidimai), o `content/lt/grade-01/index.json` sumuoja 15 įrašų: lietuvių kalba 3, matematika 6, pasaulio pažinimas 3, žaidimų teorija 3. Vis dėlto `README.md:12` ir `:113` bei `docs/ARCHITEKTURA.md:172` teigia „13 modulių, 13 simuliacijų“, o matematikos lentelėje (`README.md:17`) išvardyti tik 4 moduliai — trūksta „Laikas: 12 ir 24 val.“ ir „Lygybė: svarstyklės“. Tai ne kosmetika: tai viešas platformos pajėgumo teiginys, kuris neatitinka failų, ir jis jau antrą paleidimą iš eilės kartoja tą pačią klaidą, kurią `kurejas` pripažino savo ataskaitoje. Antra to paties dokumento problema — garsas: `README.md:101` teigia, kad įrašai sukurti balsu `lt-LT-OnaNeural` ir jų yra „344 įrašai, ~5 MB“, o iš tikrųjų `assets/audio/lt/` turi 648 failus (324 tekstai × du variantai `n`/`s`) ir 13,7 MB, o `scripts/generate_audio.py:367` numatytasis variklis yra `piper` — būtent tas, kurį `docs/ARCHITEKTURA.md:114` pasirinko dėl kirčio žodyno. Trečia, dėl tos pačios priežasties README neturi privalomos atribucijos: `docs/ARCHITEKTURA.md:151–156` reikalauja nurodyti `lt_LT-reginute1-medium` (Robertas Tarasevičius, CC BY 4.0) ir LIEPA korpusą, o README priskyrimo bloke (`README.md:103–106`) yra tik MIT ir CC BY-SA eilutės. Neteisingas balso priskyrimas ir trūkstama CC BY atribucija yra ne tik faktinė, bet ir licencijos sąlygų klaida. Taisymas: perskaičiuoti skaičius iš `index.json` ir `assets/audio/lt/manifest.json`, įtraukti trūkstamus du matematikos modulius į lentelę ir perkelti balso aprašymą bei atribuciją iš `docs/ARCHITEKTURA.md` 3 skyriaus.",
+  "target": "README.md",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "README.md:12 — „1 klasė — 4 kryptys, 13 modulių, 13 interaktyvių simuliacijų“",
+    "README.md:17 — matematikos eilutėje 4 moduliai, o `content/lt/grade-01/index.json` matematikoje turi 6 (įskaitant 15-laikas, 16-lygybe-svarstykles)",
+    "README.md:113 — „Parengta | 1 klasė (13 modulių)“",
+    "docs/ARCHITEKTURA.md:172 — „1 klasė — 4 kryptys, 13 modulių, 13 simuliacijų“",
+    "README.md:101 — „lt-LT-OnaNeural“ ir „344 įrašai, ~5 MB“; tikrovė: `assets/audio/lt/n` 324 + `assets/audio/lt/s` 324 = 648 failai, 13,7 MB (manifest.json — 324 tekstai)",
+    "scripts/generate_audio.py:367 — numatytasis `--engine` yra `piper`, ne edge",
+    "docs/ARCHITEKTURA.md:114 — pasirinktas Piper `lt_LT-reginute1`; docs/ARCHITEKTURA.md:151-156 — CC BY 4.0 atribucija privaloma, README jos neturi",
+    "python3 scripts/validate_content.py — 0 klaidų, 0 įspėjimų, t. y. skaičių neatitikimo validatorius nepagauna"
+  ]
+}

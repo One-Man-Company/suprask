@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="lt">
+<body style="margin:0">
+<pre id="out">pending</pre>
+<iframe id="f" style="width:360px;height:900px;border:0" src="about:blank"></iframe>
+<script>
+const WIDTHS = [360, 414, 768, 1024, 1440];
+const ROUTES = ["#/", "#/klase/1", "#/modulis/1/matematika/04-skaiciu-tiese"];
+const lines = [];
+let w = 0, r = 0, stable = 0;
+const f = document.getElementById("f");
+const out = document.getElementById("out");
+
+function next() {
+  stable = 0;
+  if (r >= ROUTES.length) { r = 0; w++; }
+  if (w >= WIDTHS.length) { out.textContent = lines.join("\n"); document.title = "DONE"; return; }
+  f.style.width = WIDTHS[w] + "px";
+  f.src = "index.html" + ROUTES[r];
+}
+
+setInterval(() => {
+  if (document.title === "DONE") return;
+  try {
+    const d = f.contentDocument;
+    if (!d || !d.documentElement || d.readyState !== "complete") { stable = 0; return; }
+    const loading = d.querySelector(".loading");
+    if (loading) { stable = 0; return; }
+    const de = d.documentElement;
+    const cw = de.clientWidth;
+    const sw = de.scrollWidth;
+    const small = [];
+    for (const el of d.querySelectorAll("a, button, [role=button], summary, input")) {
+      const cs = d.defaultView.getComputedStyle(el);
+      if (cs.display === "none" || cs.visibility === "hidden") continue;
+      const rect = el.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) continue;
+      if (rect.height < 47.5 || rect.width < 47.5) {
+        small.push((el.textContent.trim().slice(0, 14) || el.className || el.tagName) + " " + Math.round(rect.width) + "x" + Math.round(rect.height));
+      }
+    }
+    const cont = d.querySelector(".continue-card");
+    const contTop = cont ? Math.round(cont.getBoundingClientRect().top) : -1;
+    const nextLink = d.querySelector("[data-next-module]");
+    const footerBtns = [...d.querySelectorAll("main > div:last-child a.btn")].map(a => a.textContent.trim());
+    lines.push(WIDTHS[w] + "px " + ROUTES[r] +
+      " | overflow=" + (sw - cw) +
+      " | continueTop=" + contTop +
+      " | nextLink=" + (nextLink ? nextLink.getAttribute("href") : "none") +
+      " | <48px: " + (small.length ? small.length + " [" + small.slice(0, 5).join("; ") + "]" : "0") +
+      " | footBtns=" + JSON.stringify(footerBtns));
+    stable++;
+    if (stable >= 2) { r++; next(); }
+  } catch (e) {
+    lines.push(WIDTHS[w] + "px " + ROUTES[r] + " | ERR " + e.message);
+    r++; next();
+  }
+}, 200);
+next();
+</script>
+</body>
+</html>

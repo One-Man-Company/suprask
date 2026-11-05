@@ -263,6 +263,38 @@ async function viewModule(grade, strandId, moduleId) {
   const tasks = Array.isArray(mod.tasks) ? mod.tasks : [];
   progress.markVisited(mod.id, tasks.length);
 
+  /* Kur toliau — imama iš `path.json`, kad vaikas eitų tuo pačiu keliu,
+   * kurį rodo „Tęsk nuo čia" klasės puslapyje. Modulis, kurio nėra kelyje
+   * (naujas, dar neįtrauktas), veda pagal klasės indekso tvarką.
+   */
+  const pathDoc = await loadPath(grade);
+  const inGrade = g.strands.flatMap((s) => s.modules.map((m) => ({ ...m, strand: s })));
+  const byId = new Map(inGrade.map((m) => [m.id, m]));
+  let seq = pathDoc && Array.isArray(pathDoc.sequence)
+    ? pathDoc.sequence.filter((id) => byId.has(id))
+    : [];
+  if (!seq.includes(moduleId)) seq = inGrade.map((m) => m.id);
+  const pos = seq.indexOf(moduleId);
+  const next = pos >= 0 && pos + 1 < seq.length ? byId.get(seq[pos + 1]) : null;
+
+  const nextCard = next
+    ? `<a class="card continue-card" data-next-module href="#/modulis/${grade}/${next.strand.id}/${next.id}">
+         <div>
+           <span class="continue-label">Kitas žingsnis · ${pos + 2} iš ${seq.length}</span>
+           <strong>${esc(next.title)}</strong>
+           <span class="strand-meta">${esc(next.strand.title)} · ${next.minutes || 8} min.</span>
+         </div>
+         <span class="btn">Toliau →</span>
+       </a>`
+    : `<div class="card continue-card done">
+         <div>
+           <span class="continue-label">Kelio pabaiga</span>
+           <strong>Tai paskutinis žingsnis kelyje</strong>
+           <span class="strand-meta">Gali kartoti bet kurią temą — kartojimas padeda atsiminti.</span>
+         </div>
+         <a class="btn" href="#/klase/${grade}">Į temų sąrašą</a>
+       </div>`;
+
   const outcomes = (mod.outcomes || []).map((o) => `<li><span>${esc(o)}</span></li>`).join("");
   const steps = (mod.concept && mod.concept.steps ? mod.concept.steps : []).map((s) => `<li><div>${esc(s)}</div></li>`).join("");
 
@@ -304,8 +336,10 @@ async function viewModule(grade, strandId, moduleId) {
       <p class="strand-meta" style="margin:.6rem 0 0">Atsakyk garsiai savais žodžiais — taip žinios tampa tavo.</p>
     </section>` : ""}
 
+    ${nextCard}
+
     <details class="card" style="margin-top:1.5rem">
-      <summary style="cursor:pointer;font-weight:800;min-height:2.2rem;display:flex;align-items:center">Ką suprasi (mokymosi rezultatai)</summary>
+      <summary>Ką suprasi (mokymosi rezultatai)</summary>
       <ul class="outcomes" style="margin-top:.8rem">${outcomes}</ul>
     </details>
 
@@ -324,9 +358,8 @@ async function viewModule(grade, strandId, moduleId) {
       </div>
     </details>
 
-    <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:2rem">
-      <a class="btn secondary" href="#/klase/${grade}/${strand.id}">← Atgal į temą</a>
-      <a class="btn" href="#/klase/${grade}">Visos 1 klasės temos</a>
+    <div class="module-foot">
+      <a class="btn secondary" href="#/klase/${grade}/${strand.id}">← ${esc(strand.title)}</a>
     </div>
   `;
 

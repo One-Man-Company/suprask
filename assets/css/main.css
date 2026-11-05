@@ -279,8 +279,17 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .task-feedback.ok { color: var(--ok); }
 .task-feedback.try { color: var(--warn); }
 
+/* Navigacija ir lankstomi blokai */
+.crumbs a { display: inline-flex; align-items: center; min-height: var(--tap); vertical-align: middle; }
+.module-foot { margin-top: 2rem; }
+
 details.teacher { border-top: 1px dashed var(--line); margin-top: 1.5rem; padding-top: 1rem; }
-details.teacher summary { cursor: pointer; font-weight: 800; color: var(--ink-soft); min-height: 2.5rem; display: flex; align-items: center; }
+details.teacher summary { cursor: pointer; font-weight: 800; color: var(--ink-soft); min-height: var(--tap); display: flex; align-items: center; }
+/* Visi lankstomi taikiniai ≥ 48 px (gairės T5.5). Nuorodos sakinyje
+   (licencijos, šaltiniai) lieka teksto dalimi — joms taisyklė netaikoma. */
+.brand { min-height: var(--tap); }
+.foot-links a { display: inline-flex; align-items: center; min-height: var(--tap); padding-inline: .35rem; }
+details > summary { min-height: var(--tap); display: flex; align-items: center; gap: .4rem; }
 
 .progress-dots { display: flex; gap: .4rem; flex-wrap: wrap; }
 .dot { width: .7rem; height: .7rem; border-radius: 50%; background: var(--line); }

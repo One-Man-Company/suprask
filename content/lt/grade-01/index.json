@@ -26,7 +26,8 @@
         { "id": "05-desimtukas", "title": "Dešimtukas", "subtitle": "Kodėl dešimt yra patogus skaičius", "file": "grade-01/matematika/05-desimtukas.json", "minutes": 8, "sim": "desimtukas" },
         { "id": "06-figuros", "title": "Figūros aplink mus", "subtitle": "Trikampis, keturkampis, apskritimas", "file": "grade-01/matematika/06-figuros.json", "minutes": 9, "sim": "figuros" },
         { "id": "07-desningumai", "title": "Dėsningumai", "subtitle": "Seka, kurią gali numatyti", "file": "grade-01/matematika/07-desningumai.json", "minutes": 9, "sim": "desningumai" },
-        { "id": "15-laikas", "title": "Laikas: vienas ratas, vienas žingsnis", "subtitle": "Kodėl valandas rodo trumpoji rodyklė", "file": "grade-01/matematika/15-laikas.json", "minutes": 9, "sim": "laikrodis-sujungtos-rodykles" }
+        { "id": "15-laikas", "title": "Laikas: vienas ratas, vienas žingsnis", "subtitle": "Kodėl valandas rodo trumpoji rodyklė", "file": "grade-01/matematika/15-laikas.json", "minutes": 9, "sim": "laikrodis-sujungtos-rodykles" },
+        { "id": "16-lygybe-svarstykles", "title": "Lygybė: abi pusės sveria tiek pat", "subtitle": "Ženklas sako, kad abiejose pusėse tiek pat", "file": "grade-01/matematika/16-lygybe-svarstykles.json", "minutes": 9, "sim": "svarstykles-lygybe" }
       ]
     },
     {

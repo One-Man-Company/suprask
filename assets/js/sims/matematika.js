@@ -715,10 +715,275 @@ const laikrodisSujungtosRodykles = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 6. Lygybė su svarstyklėmis                                          */
+/*                                                                    */
+/* Modelis: „=“ žymi būseną „abi pusės lygios“, o ne veiksmą           */
+/* „suskaičiuok ir parašyk atsakymą“. Sija nustoja svyruoti tik        */
+/* vienoje vietoje, todėl nuostata „sudėk abu duotus skaičius“ tampa   */
+/* matoma, o ne paaiškinama žodžiais (McNeil ir Alibali, 2005).         */
+/* ------------------------------------------------------------------ */
+const svarstyklesLygybe = {
+  mount({ stage, controls, api, config }) {
+    const known = Math.max(1, Math.min(10, Number(config.known ?? 5)));
+    const whole = Math.max(1, Math.min(20, Number(config.whole ?? 8)));
+    const maxBox = Math.max(1, Math.min(20, Number(config.maxBox ?? 10)));
+    const say = config.sentences || {};
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const CX = 180;        // ašis
+    const BEAM_Y = 76;     // sijos aukštis
+    const HALF = 110;      // sijos rankos ilgis
+    const PLATE_Y = 166;   // lėkštės viršutinė linija
+
+    let box = 0;           // kiek kubelių įdėta (vienintelis kintamasis)
+    let locked = true;     // kol vaikas nepasakė spėjimo, dėti negalima
+    let flipped = false;   // ta pati būsena perskaityta kita kryptimi
+    let reported = false;
+    let lastSaid = "";
+
+    const diff = () => known + box - whole;
+    const angle = () => Math.max(-12, Math.min(12, 1.6 * diff()));
+
+    stage.innerHTML = `
+      <div id="sv-wrap" tabindex="0" role="group" aria-label="Svarstyklės"
+           style="width:100%;max-width:24rem;margin:0 auto;text-align:center;outline-offset:4px">
+        <svg id="sv-svg" viewBox="0 0 360 320" width="100%" role="img"
+             aria-label="Svarstyklės su dviem lėkštėmis"></svg>
+        <p id="sv-card" style="font-family:var(--font-head);font-weight:900;font-size:1.8rem;margin:.45rem 0 0;letter-spacing:.02em">${known} + ▢ = ${whole}</p>
+        <p class="sim-note" id="sv-msg"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div id="sv-guess" style="display:flex;justify-content:center">
+        <button class="btn" id="sv-start">Pradedu dėti</button>
+      </div>
+      <div id="sv-tools" style="display:none;gap:.6rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        <button class="btn" id="sv-plus">Įdėk 1</button>
+        <button class="btn secondary" id="sv-minus">Išimk 1</button>
+        <button class="btn secondary" id="sv-flip">Perskaityk kitaip</button>
+        <button class="btn ghost" id="sv-reset">Iš naujo</button>
+      </div>`;
+
+    const wrap = stage.querySelector("#sv-wrap");
+    const svg = stage.querySelector("#sv-svg");
+    const card = stage.querySelector("#sv-card");
+    const msg = stage.querySelector("#sv-msg");
+    const flipBtn = controls.querySelector("#sv-flip");
+
+    /* --- pastatymas --------------------------------------------------- */
+    const cube = (x, y) => svgEl("rect", {
+      x, y, width: 14, height: 14, rx: 3, fill: "var(--sky)",
+    });
+    const thread = (parent, x1, x2) => {
+      parent.appendChild(svgEl("line", {
+        x1, y1: BEAM_Y, x2, y2: PLATE_Y, stroke: "var(--ink-faint)", "stroke-width": 2,
+      }));
+    };
+    const plate = (parent, x) => {
+      parent.appendChild(svgEl("rect", {
+        x, y: PLATE_Y, width: 128, height: 8, rx: 4, fill: "var(--line)",
+      }));
+    };
+    const rows = (parent, n, x0) => {
+      for (let i = 0; i < n; i += 1) {
+        parent.appendChild(cube(x0 + (i % 5) * 16, PLATE_Y - 14 - Math.floor(i / 5) * 16));
+      }
+    };
+
+    // stovas
+    svg.appendChild(svgEl("rect", { x: 132, y: 300, width: 96, height: 8, rx: 4, fill: "var(--line)" }));
+    svg.appendChild(svgEl("line", { x1: CX, y1: BEAM_Y, x2: CX, y2: 300, stroke: "var(--line)", "stroke-width": 8 }));
+
+    // 10 taškų juosta: kiek kubelių įdėta
+    const strip = svgEl("g", {});
+    strip.appendChild(svgEl("rect", {
+      x: 146, y: 86, width: 24, height: 124, rx: 8,
+      fill: "var(--paper-2)", stroke: "var(--line)", "stroke-width": 2,
+    }));
+    const dots = [];
+    for (let i = 0; i < 10; i += 1) {
+      const c = svgEl("circle", { cx: 158, cy: 96 + i * 11, r: 4, fill: "var(--paper)", stroke: "var(--ink-faint)", "stroke-width": 1.5 });
+      dots.push(c);
+      strip.appendChild(c);
+    }
+    svg.appendChild(strip);
+
+    // kairė lėkštė: known kubeliai ir uždara dėžutė
+    const panL = svgEl("g", {});
+    thread(panL, 70, 10);
+    thread(panL, 70, 130);
+    plate(panL, 6);
+    rows(panL, known, 10);
+
+    const boxX = 10 + Math.min(known, 5) * 16;
+    const boxG = svgEl("g", { tabindex: "0", role: "button", "aria-label": "Dėžutė" });
+    // Nematomas 64 × 64 vienetų laukas: 360 px ekrane SVG susitraukia ~0,83×,
+    // todėl 48 px lietimo taikiniui reikia didesnio nei pati dėžutė ploto.
+    boxG.appendChild(svgEl("rect", {
+      x: boxX - 10, y: PLATE_Y - 56, width: 64, height: 64, fill: "rgba(0,0,0,0)",
+    }));
+    boxG.appendChild(svgEl("rect", {
+      x: boxX, y: PLATE_Y - 48, width: 44, height: 48, rx: 6,
+      fill: "var(--paper-2)", stroke: "var(--ink-soft)", "stroke-width": 2.5, "stroke-dasharray": "5 4",
+    }));
+    const boxGlyph = svgEl("text", {
+      x: boxX + 22, y: PLATE_Y - 15, "text-anchor": "middle",
+      fill: "var(--ink-soft)", "font-size": 19, "font-weight": 700, "font-family": "system-ui",
+    });
+    boxGlyph.textContent = "▢";
+    boxG.appendChild(boxGlyph);
+    svg.appendChild(panL);
+    panL.appendChild(boxG);
+
+    // dešinė lėkštė: whole kubeliai
+    const panR = svgEl("g", {});
+    thread(panR, 290, 230);
+    thread(panR, 290, 350);
+    plate(panR, 226);
+    rows(panR, whole, 230);
+    svg.appendChild(panR);
+
+    // sija ir ašis
+    const beam = svgEl("g", {});
+    beam.appendChild(svgEl("line", {
+      x1: CX - HALF, y1: BEAM_Y, x2: CX + HALF, y2: BEAM_Y,
+      stroke: "var(--ink)", "stroke-width": 8, "stroke-linecap": "round",
+    }));
+    svg.appendChild(beam);
+    svg.appendChild(svgEl("path", { d: `M${CX} 58 L194 86 L166 86 Z`, fill: "var(--ink-soft)" }));
+    svg.appendChild(svgEl("circle", { cx: CX, cy: BEAM_Y, r: 6, fill: "var(--ink)" }));
+
+    if (!reduce) {
+      // Pakrypimas pereinamas, bet atsiliepimas niekada nelaukia animacijos.
+      [panL, panR, beam].forEach((g) => g.setAttribute("style", "transition:transform .22s ease-out"));
+    }
+
+    /* --- būsena ------------------------------------------------------- */
+    function sayOnce(key) {
+      const t = say[key];
+      if (!t || lastSaid === key) return;
+      lastSaid = key;
+      api.speak(t);
+    }
+
+    function feedback() {
+      const d = diff();
+      if (locked) {
+        api.readout("Kiek kubelių reikia įdėti? Pasakyk, tada dėk.");
+        return;
+      }
+      if (d > 0) {
+        api.readout("Kairė sunkesnė");
+        msg.textContent = box === 0 ? "Dėžutė tuščia. Įdėk kubelį." : "Per daug. Išimk po vieną.";
+        sayOnce("kaire");
+      } else if (d < 0) {
+        api.readout("Dešinė sunkesnė");
+        msg.textContent = box === 0 ? "Dėžutė tuščia. Įdėk kubelį." : "Dar trūksta.";
+        sayOnce("desine");
+      } else {
+        api.readout(flipped ? "Ta pati lygybė" : "Abi pusės lygios");
+        msg.textContent = `${known} ir ${box} yra ${whole}. Abi pusės lygios.`;
+        sayOnce(flipped ? "ta-pati" : "lygios");
+        if (!reported) { reported = true; api.progress({ correct: true }); }
+      }
+    }
+
+    function paint() {
+      const a = angle();
+      const rad = (a * Math.PI) / 180;
+      const place = (g, d) => {
+        const dx = d * Math.cos(rad) - d;
+        const dy = d * Math.sin(rad);
+        g.setAttribute("transform", `translate(${dx.toFixed(2)} ${dy.toFixed(2)})`);
+      };
+      beam.setAttribute("transform", `rotate(${a} ${CX} ${BEAM_Y})`);
+      place(panL, -HALF);
+      place(panR, HALF);
+
+      dots.forEach((c, i) => {
+        const on = i < box;
+        c.setAttribute("fill", on ? "var(--accent)" : "var(--paper)");
+        c.setAttribute("stroke", on ? "var(--accent)" : "var(--ink-faint)");
+      });
+
+      const d = diff();
+      card.textContent = d === 0
+        ? (flipped ? `${whole} = ${known} + ${box}` : `${known} + ${box} = ${whole}`)
+        : `${known} + ▢ = ${whole}`;
+
+      const relation = d > 0 ? "Kairė sunkesnė" : d < 0 ? "Dešinė sunkesnė" : "Abi pusės lygios";
+      svg.setAttribute("aria-label", `Kairėje ${known} ir ${box}, dešinėje ${whole}. ${relation}.`);
+      boxG.setAttribute("aria-label", `Dėžutė. Kubelių viduje: ${box}.`);
+
+      flipBtn.disabled = d !== 0 || locked;
+    }
+
+    function setBox(n) {
+      if (locked) {
+        msg.textContent = "Pirma pasakyk, kiek kubelių reikia įdėti.";
+        return;
+      }
+      box = Math.max(0, Math.min(maxBox, n));
+      if (box === 0) { flipped = false; lastSaid = ""; }
+      if (known + box - whole !== 0) flipped = false;
+      paint();
+      feedback();
+    }
+
+    function reset() {
+      box = 0;
+      flipped = false;
+      lastSaid = "";
+      paint();
+      feedback();
+      msg.textContent = "Pradedam iš naujo. Dėžutė tuščia.";
+    }
+
+    /* --- įėjimai ------------------------------------------------------ */
+    boxG.addEventListener("click", () => setBox(box + 1));
+    boxG.addEventListener("keydown", (evt) => {
+      if (evt.key !== "Enter" && evt.key !== " ") return;
+      evt.preventDefault();
+      setBox(box + 1);
+    });
+
+    wrap.addEventListener("keydown", (evt) => {
+      if (evt.key === "ArrowRight" || evt.key === "ArrowUp") { evt.preventDefault(); setBox(box + 1); }
+      else if (evt.key === "ArrowLeft" || evt.key === "ArrowDown") { evt.preventDefault(); setBox(box - 1); }
+    });
+
+    controls.querySelector("#sv-plus").addEventListener("click", () => setBox(box + 1));
+    controls.querySelector("#sv-minus").addEventListener("click", () => setBox(box - 1));
+    controls.querySelector("#sv-reset").addEventListener("click", reset);
+    flipBtn.addEventListener("click", () => {
+      if (diff() !== 0) return;
+      flipped = !flipped;
+      paint();
+      feedback();
+    });
+
+    controls.querySelector("#sv-start").addEventListener("click", () => {
+      locked = false;
+      controls.querySelector("#sv-guess").style.display = "none";
+      controls.querySelector("#sv-tools").style.display = "flex";
+      paint();
+      feedback();
+      wrap.focus();
+    });
+
+    paint();
+    api.readout("Kiek kubelių reikia įdėti? Pasakyk, tada dėk.");
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
   figuros,
   desningumai,
   "laikrodis-sujungtos-rodykles": laikrodisSujungtosRodykles,
+  "svarstykles-lygybe": svarstyklesLygybe,
 };

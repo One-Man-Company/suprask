@@ -2,6 +2,15 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-05 (16:30) — Dienos darbas #16–#22: parašytas, bet nepaskelbtas
+
+- **`content/lt/grade-01/matematika/16-lygybe-svarstykles.json`** (naujas, 108 eil.) + `index.json`, `path.json`, `assets/js/sims/matematika.js` (+265), 8 garso failai, `manifest.json` — 15-as modulis „Lygybė: svarstyklių pusiausvyra“ (#18 kurejas), pagal metodą M-02.
+- **`assets/js/sims/pasaulis.js`** (+210/−41) — metų laikų modelis perrašytas iš iliustracijos į 12 mėnesių modelį (dienos trukmė, saulės aukštis, lapai, sniegas, paukščiai), augalo gyvenimas sustabdytas ties 10 diena (#19).
+- **`assets/js/app.js`** (+41), **`assets/css/main.css`** (+11) — modulio pabaigoje viena „Kitas žingsnis · N iš 15“ kortelė pagal `path.json`; navigacijos taikiniai ≥ 48 px (#20).
+- **`research/wiki/`** — `grades/01/metodai.md` M-02, `foundations/zenklas-kaip-busena.md`, `guidelines/pilotai.md` P-005 ir P-007, `guidelines/klausimai.md`, `curriculum/matematika-1-klase.md` (#17, #22).
+- **`agents/proposals/`** — 12 naujų pasiūlymų (kritikas #21, programos-derintojas #22, simuliacijų inžinierius #19, metodininkas #17, ideator #16).
+- **Poveikis platformai:** gyva svetainė šių pakeitimų **dar neturi** — `origin/main` stovi ties `ebfd952` (#14, 2026-11-05 04:46 UTC), t. y. 14 modulių; 15-as modulis gyvai duoda 404. Priežastis — ne turinio konfliktas (švari kopija ant `origin/main` persikelia be klaidų), o nešvarus darbinis medis: `agents/run.py` po publikavimo perrašo `agents/state.json` jo nekomituodamas, o `publish()` `git rebase origin/main` su neįtrauktu pakeitimu grąžina `error: cannot rebase: You have unstaged changes` → statusas `conflict` ir push neįvyksta. Užfiksuota ataskaitoje `agents/log/leidejas-2026-11-05T1633.md`.
+
 ## 2026-11-05 — Lygybės metodas M-02
 
 - **`grades/01/metodai.md`** — naujas metodas M-02 „Lygybė: abi pusės sveria tiek pat“: seka, simuliacijos `svarstykles-lygybe` būsenos, keturios užduotys su tipinėmis klaidomis, modelio ribos.

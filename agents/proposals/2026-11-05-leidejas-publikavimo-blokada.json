@@ -1,0 +1,19 @@
+{
+  "role": "leidejas",
+  "run_id": 23,
+  "created": "2026-11-05T16:35:00+02:00",
+  "type": "struktura",
+  "title": "Publikavimas stringa: nešvarus medis blokuoja rebase (8 paleidimai nepaskelbti)",
+  "body": "Nuo #14 (2026-11-05 04:46 UTC) nė vienas agentų commit'as nepasiekė gyvos svetainės: #16–#22 visi baigėsi statusu conflict, o origin/main tebestovi ties ebfd952. Priežastis nėra turinio konfliktas — švari šios šakos kopija ant origin/main persikelia be klaidų (git rebase praneša 'up to date', rc=0). Kaltas nešvarus darbinis medis: agents/run.py publish() komituoja tik to paleidimo failus, o po to update_state() perrašo agents/state.json jo nekomituodamas; kitą kartą git rebase origin/main su vienu neįtrauktu tracked pakeitimu grąžina 'error: cannot rebase: You have unstaged changes', rc=1, ir publish() iškart grąžina conflict, push nevykdomas. Tai kartojasi kiekvieną paleidimą, todėl dienos darbas (15-as modulis, metų laikų modelis, kito žingsnio kortelė) taip ir liko šakoje. Siūloma: prieš rebase komituoti arba stash'inti likusius tracked pakeitimus (arba daryti rebase tik su iš anksto paruoštu švariu indeksu) ir nešvarią būseną registruoti kaip atskirą įspėjimą, o ne kaip 'conflict'. Antra: prieš publikavimą pašalinti laikinus zondus .probe-dizaineris.html ir .probe-overflow.html, kurie šiuo metu yra šakos medyje ir paskelbti atsidurtų GitHub Pages (jie jau buvo įsitvirtinę #20 commit'e, nors .gitignore jų neapima).",
+  "target": "agents/run.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "agents/runs.db: paleidimai #16–#22 statusas 'conflict', commit_sha užpildytas, pvz. #22 = 9e29b4f",
+    "agents/run.py:434-437 (rebase → conflict), agents/run.py:580 (update_state po publish)",
+    "git rev-list --count origin/main..HEAD = 7; git merge-base --is-ancestor origin/main HEAD = true",
+    "Clonas agent/programos-derintojas-2026-11-05: švarus rebase → 'up to date', rc=0; su vienu neįtrauktu pakeitimu → 'error: cannot rebase: You have unstaged changes', rc=1",
+    "git ls-tree -r HEAD: .probe-dizaineris.html ir .probe-overflow.html yra šakos medyje",
+    "curl https://one-man-company.github.io/suprask/content/lt/grade-01/matematika/16-lygybe-svarstykles.json → 404, o assets/js/app.js ir index.json baitais sutampa su origin/main (sha256 929170fe… ir d3c98a2d…)"
+  ]
+}

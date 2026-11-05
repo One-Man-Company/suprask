@@ -201,10 +201,10 @@ async function viewGrade(grade) {
 function moduleRow(strand, m) {
   const done = progress.isDone(m.id);
   return `
-    <a class="card" style="display:flex;gap:.8rem;align-items:center;text-decoration:none;padding:.8rem 1rem;border-radius:var(--r-m)"
+    <a class="card mod-row" style="display:flex;gap:.8rem;align-items:center;text-decoration:none;padding:.8rem 1rem;border-radius:var(--r-m)"
        href="#/modulis/${strand.grade || 1}/${strand.id}/${m.id}">
       <span aria-hidden="true" style="font-size:1.4rem">${done ? "✅" : "▶️"}</span>
-      <span style="flex:1">
+      <span class="mod-row-body">
         <strong style="display:block">${esc(m.title)}</strong>
         <span class="strand-meta">${esc(m.subtitle || "")} · ${m.minutes || 8} min.</span>
       </span>

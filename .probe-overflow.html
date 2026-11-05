@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="lt">
+<body style="margin:0">
+<iframe id="f" style="width:360px;height:800px;border:0" src="about:blank"></iframe>
+<pre id="out">pending</pre>
+<script>
+const ROUTES = ["#/", "#/klase/1", "#/klase/1/matematika", "#/klase/1/pasaulio-pazinimas",
+  "#/modulis/1/matematika/15-laikas", "#/modulis/1/matematika/06-figuros",
+  "#/modulis/1/lietuviu-kalba/02-skiemenu-jungimas", "#/apie", "#/metodika", "#/mokytojui"];
+const f = document.getElementById('f');
+const out = document.getElementById('out');
+const lines = [];
+let i = 0;
+let stable = 0;
+
+function load() {
+  if (i >= ROUTES.length) { out.textContent = lines.join("\n"); return; }
+  stable = 0;
+  f.src = "index.html" + ROUTES[i];
+}
+
+setInterval(() => {
+  if (i >= ROUTES.length) return;
+  try {
+    const d = f.contentDocument;
+    if (!d || !d.documentElement || d.readyState !== "complete") { stable = 0; return; }
+    const de = d.documentElement;
+    const cw = de.clientWidth || 345;
+    const sw = de.scrollWidth;
+    const h1 = (d.querySelector("h1") || {}).textContent || "";
+    const off = [];
+    for (const el of d.querySelectorAll("body *")) {
+      const r = el.getBoundingClientRect();
+      if (r.width > 0 && r.right > cw + 0.5) off.push(el.tagName.toLowerCase() + "." + (el.className || "-") + "@" + Math.round(r.right));
+    }
+    // prepare stable for 2 ticks so the view finished rendering
+    stable++;
+    lines[i] = (ROUTES[i] || "-") + " | h1='" + h1.trim().slice(0, 28) + "' | scrollWidth=" + sw + " clientWidth=" + cw + " overflow=" + (sw - cw) + (off.length ? " | OFF: " + off.slice(0, 4).join(" , ") : "");
+    if (stable >= 2) { i++; load(); }
+  } catch (e) {
+    lines[i] = (ROUTES[i] || "-") + " | ERR " + e.message;
+    i++; load();
+  }
+}, 250);
+load();
+</script>
+</body>
+</html>

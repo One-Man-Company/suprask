@@ -164,6 +164,15 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .chip.sky { background: color-mix(in srgb, var(--sky) 18%, var(--paper-2)); color: #1d5e8c; }
 .chip.grape { background: color-mix(in srgb, var(--grape) 18%, var(--paper-2)); color: #5b46b3; }
 
+/* Modulių eilutė klasės sąraše. Be `min-width: 0` flex elementas negali
+   susitraukti žemiau savo turinio, todėl 360 px ekrane eilutė išstumdavo
+   puslapį į šoną (matuota: 34 px horizontalaus slinkimo). */
+.mod-row { min-width: 0; }
+.mod-row-body { flex: 1 1 auto; min-width: 0; }
+.mod-row-body strong,
+.mod-row-body .strand-meta { overflow-wrap: anywhere; }
+.mod-row > .chip { flex: none; }
+
 .eyebrow {
   text-transform: uppercase; letter-spacing: .12em; font-size: var(--fs-xs);
   font-weight: 900; color: var(--ink-faint); margin-bottom: .4rem;

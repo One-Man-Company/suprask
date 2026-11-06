@@ -1,0 +1,18 @@
+{
+  "role": "leidejas",
+  "run_id": 30,
+  "created": "2026-11-06T16:44:00+02:00",
+  "type": "struktura",
+  "title": "Agentų ataskaitos nepatenka į repo: 45 vietoje, 0 trackinamų, o bėgiklis jų net nemato",
+  "body": "Kiekvienas vaidmuo privalo palikti ataskaitą `agents/log/`, ir `agents/state.json` nurodo ją kaip `log`. Tačiau `.gitignore:15` turi `agents/log/*` (su `!agents/log/.gitkeep`), tad `git status --porcelain` šių failų nerodo, o `changed_files()` (`agents/run.py:286-293`) renka būtent iš porcelain išvesties — vadinasi, ataskaita niekada nepatenka į commit'ą. Išmatuota: `git ls-files agents/log/` → tik `.gitkeep`; `ls agents/log/ | wc -l` → 45. `git check-ignore -v agents/log/leidejas-test.md` → `.gitignore:15:agents/log/*`. Pasekmė publikavimo priežiūrai: changelog ir `runs.db` gyvena skirtingose vietose, o audito pėdsakas (kas tikrino ką ir ką išmatavo) egzistuoja tik šioje mašinoje ir išnyks su disku; iš repo neįmanoma atsakyti, kodėl commit'as buvo paskelbtas ar atšauktas. Siūloma: išimti `agents/log/*` iš `.gitignore` (arba leisti `*.md` ir palikti `.gitkeep`), kad kiekvieno paleidimo ataskaita keliautų kartu su jo commit'u. Failų dydis nedidelis — 45 ataskaitos užima mažiau nei 200 KB.",
+  "target": ".gitignore",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    ".gitignore:15 — agents/log/* (+ .gitignore:16 !agents/log/.gitkeep)",
+    "git ls-files agents/log/ → agents/log/.gitkeep (vienintelis); ls agents/log/ | wc -l → 45",
+    "git check-ignore -v agents/log/leidejas-test.md → .gitignore:15:agents/log/*",
+    "agents/run.py:286-293 — changed_files() ima tik git status --porcelain eilutes, ignoruotų failų ten nėra",
+    "agents/run.py:263 — update_state() į state.json rašo log kelią, kurio repo neturi"
+  ]
+}

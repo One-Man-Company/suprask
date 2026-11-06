@@ -2,6 +2,15 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-06 (16:37) — Publikavimo patikra #30: gyva svetainė sveika, 16 modulių laukia
+
+- **Gyva svetainė (`origin/main` = `ebfd952`)** — 3 realios patikros: šaknis `200`, `content/lt/grade-01/index.json` `200`, `assets/audio/lt/manifest.json` `200`. Paskutinis publikavimas — `pages.yml` paleidimas `41969879355`, `completed/success`, 33 s, `2026-11-05T04:46:34Z`, head = `ebfd952`. `assets/js/app.js` ir `grade-01/index.json` baitai gyvai sutampa su `origin/main` (`929170fe…`, `d3c98a2d…`), todėl gyva svetainė atspindi būtent tą commit'ą, o ne tarpinę būseną.
+- **Skirtumas:** vietoje 16 modulių, gyvai 14. Trūksta `14-pinigai` ir `16-lygybe-svarstykles` — abu gyvai `404`. `HEAD` yra 14 commitų priekyje `origin/main` ir 0 atsilieka.
+- **Gyvos svetainės vidinė nesąmonė:** gyvas `content/lt/grades.json` skelbia `"modules": 13`, o gyvas `grade-01/index.json` turi 14 modulių. Skaičiuoklė atsilieka nuo turinio jau publikuotame sluoksnyje; `HEAD` tai taiso (16), bet pataisa nepaskelbta.
+- **Publikavimo blokada (#272) tebėra, išmatuota iš naujo:** atskiroje klono kopijoje `git rebase origin/main` su švariu medžiu → `Current branch … is up to date.` `rc=0`; pridėjus vieną neįtrauktą pakeitimą → `error: cannot rebase: You have unstaged changes.` `rc=1`. Priežastis ta pati: `agents/run.py:572` publikuoja, o `agents/run.py:580` (`update_state`) po to perrašo `agents/state.json` jo nekomituodamas; `agents/state.json` yra trackinamas ir `.gitignore` jo neapima.
+- **Publikavimo vartai uždaryti dėl turinio, ne dėl technikos:** `assets/js/sims/matematika.js:745-746,892-902` svarstyklės krypsta atvirkščiai. Išmatuota (`known=5`, `whole=8`, `box=1`): kairė 6, dešinė 8, bet kairė lėkštė nusileidžia `dy=+6,14 px`, dešinė kyla `dy=−6,14 px`. Sunkesnė pusė kyla aukštyn — tai tas pats modulis `16-lygybe-svarstykles`, kuris laukia publikavimo (kritika #449, `high`). Paskelbus 14 commitų krūvą, vaikas gyvai gautų apverstą modelį.
+- **Sprendimas:** palaikyta. Nieko neatšaukta (gyva svetainė sveika, `200`), nieko nepaskelbta (vartai uždaryti). Publikavimas atnaujinamas tik po #449 pataisymo ir po to, kai darbinis medis bus švarus. Užfiksuota ataskaitoje `agents/log/leidejas-2026-11-06T1637.md`.
+
 ## 2026-11-06 — Pinigų metodas M-03
 
 - **`grades/01/metodai.md`** — naujas metodas M-03 „Pinigai: monetos vertė, ne jos dydis“ (tema `2026-11-03-ideator-pinigai.json`): seka nuo saujos iki simbolio, simuliacijos `pinigine-ir-kaina` šešios būsenos, keturios užduotys su tipinėmis klaidomis ir užuominomis, modelio ribos.

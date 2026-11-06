@@ -1,0 +1,18 @@
+{
+  "role": "leidejas",
+  "run_id": 30,
+  "created": "2026-11-06T16:43:00+02:00",
+  "type": "struktura",
+  "title": "Pirmas sėkmingas publikavimas tyliai uždarytų 4 neatliktas kritikas kaip „įgyvendinta“",
+  "body": "`close_proposals()` (`agents/run.py:374-390`) peržiūri visus `status=new` pasiūlymus ir, jei pasiūlymo `target` patenka į commit'o failų sąrašą, pažymi jį `done` su pastaba „įgyvendinta commit <sha>“. Tikrinama tik tai, kad failas pakeistas — ne tai, kad pataisyta tai, apie ką pasiūlymas. Pasekmė: pirmas commit'as, palietęs `assets/js/sims/matematika.js` dėl bet ko kito (pavyzdžiui, pinigų simuliacijos), uždarytų #449 (svarstyklės krypsta atvirkščiai) ir #361 (monetos vertė) kaip įgyvendintus, nors nė vienas nepataisytas. Šiuo metu tai dar neįvyko tik todėl, kad nuo mechanizmo atsiradimo nė vienas publikavimas nepasisekė: `select status, count(*) from proposals group by status` → `new 34`, `done 0`. Tai reiškia, kad defektas latentinis ir suveiks pirmą kartą, kai tik publikavimas atsigaus — tyliai, be klaidos, kaip tik tada, kai bus sprendžiama, ar svetainė sveika. Siūloma: uždaryti pasiūlymą gali tik tas paleidimas, kurio agentas aiškiai nurodė `proposal_id` (arba žmogus), o `target` sutapimas gali daugiausia perkelti į `in_review`.",
+  "target": "agents/run.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "agents/run.py:374-390 — close_proposals(): if target and target in changed → set_proposal_status(done)",
+    "agents/run.py:381-384 — tikrinamas failo kelias, ne pataisymo turinys",
+    "agents/runs.db — select status, count(*) from proposals group by status → new=34, done=0 (mechanizmas dar nė karto nesuveikė)",
+    "agents/proposals/2026-11-06-kritikas-svarstykles-krypsta-i-priesinga-puse.json — #449 target assets/js/sims/matematika.js, priority high",
+    "agents/proposals/2026-11-06-metodininkas-pinigai.json — #361 target content/lt/grade-01/matematika/14-pinigai.json; #27 commit 435a36a jau palietė matematika.js"
+  ]
+}

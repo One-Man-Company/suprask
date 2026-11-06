@@ -1,0 +1,19 @@
+{
+  "role": "leidejas",
+  "run_id": 30,
+  "created": "2026-11-06T16:42:00+02:00",
+  "type": "struktura",
+  "title": "Bėgiklis spausdina į main net tada, kai tą patį failą liečia atviras „high“ kritikos pasiūlymas",
+  "body": "`agents/run.py:572` kviečia `publish()` iškart po kiekvieno agento darbo ir, jei validacija praėjo, daro `git push origin HEAD:main`. Jokių kitų vartų nėra: `publish()` tikrina tik `validate_content.py` ir `PROTECTED` failus (`run.py:314, 393-412`), o `agents/proposals/` būsena nėra skaitoma. Todėl kritikos pasiūlymas, užfiksuotas 14:12, negali sustabdyti commit'o, kuris jau guli šakoje — o leidėjas (16:30) ateina tikrinti rezultato, t. y. po to, kai `main` jau pakeistas. `docs/ARCHITEKTURA.md:90` žada `agents/proposals/blocks/pr-<n>.json` blokavimo žymas, bet kode jų nėra: `grep -rniE \"block|stop|hold\" agents/run.py` randa tik `BlockingIOError` (eil. 479), o katalogo `agents/proposals/blocks/` nėra. Siūloma: prieš `git push`, jei bent vienas šio paleidimo failas sutampa su atviro (`status=new`) `kritika` arba `atitiktis` pasiūlymo `target` ir jo `priority=high`, sustabdyti publikavimą ir grąžinti statusą `held` su pasiūlymo ID — o ne spausti ir tikėtis, kad kas nors pastebės. Tai vienintelė vieta, kur dar įmanoma sustabdyti apverstą modelį prieš jį pamatant vaikui.",
+  "target": "agents/run.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "agents/run.py:572 — publish(...) kviečiamas iš karto po agento darbo, be žmogaus tarpininko",
+    "agents/run.py:393-412 — publish() tikrina tik validate_content.py ir PROTECTED; pasiūlymų būsena neskaitoma",
+    "agents/run.py:479 — vienintelis „block“ kode yra BlockingIOError; jokio stabdymo mechanizmo",
+    "agents/proposals/blocks/ — katalogas neegzistuoja (ls: cannot access)",
+    "docs/ARCHITEKTURA.md:90 — „Blokavimo žymos — agents/proposals/blocks/pr-<n>.json“ (dokumentuota, bet neįgyvendinta)",
+    "agents/proposals/2026-11-06-kritikas-svarstykles-krypsta-i-priesinga-puse.json — #449 high, created 14:12, target assets/js/sims/matematika.js; commit'ai su tuo failu jau yra šakoje"
+  ]
+}

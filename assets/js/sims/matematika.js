@@ -979,6 +979,336 @@ const svarstyklesLygybe = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 7. Piniginė ir kaina                                                */
+/*                                                                    */
+/* Modelis: monetos vertę pasako ant jos užrašytas skaičius, o ne      */
+/* dydis ar monetų kiekis. Juosta ilgėja pagal skaičių, todėl          */
+/* „didesnė moneta — daugiau pinigų“ tampa matoma klaida, o ne         */
+/* paaiškinimas žodžiais (Berti ir Bombi, 1981; Hasegawa, 2020).       */
+/* ------------------------------------------------------------------ */
+const pinigineIrKaina = {
+  mount({ stage, controls, api, config }) {
+    const price = Math.max(1, Math.min(100, Number(config.price ?? 60)));
+    const coinList = (Array.isArray(config.coins) && config.coins.length ? config.coins : [50, 20, 10, 5])
+      .map((c) => Number(c))
+      .filter((c) => c > 0);
+    const say = config.sentences || {};
+
+    const PER_CENT = 3.2;   // 100 c = 320 px, telpa į 360 vienetų sceną
+    const MAX_SUM = 100;
+    const TRACK_X = 20;
+    const TRACK_W = 320;
+    const TRACK_Y = 52;
+    const TRACK_H = 26;
+
+    // Tikri monetų skersmenys (1,85 px/mm): 5 c (21,25 mm) yra DIDESNĖ
+    // už 10 c (19,75 mm), nors verta perpus mažiau. Tai ir yra modelio taikinys.
+    const DIAMETER = { 50: 45, 20: 41, 10: 36.5, 5: 39 };
+    const diameter = (c) => DIAMETER[c] || 38;
+
+    let plate = [];         // monetos lėkštėje — vienintelis kintamasis
+    let locked = true;      // kol vaikas nepasakė spėjimo, dėti negalima
+    let reported = false;
+    let firstSet = "";
+    let toldOther = false;
+    let toldSize = false;
+    let lastSaid = "";
+
+    const sum = () => plate.reduce((a, b) => a + b, 0);
+    const setKey = () => plate.slice().sort((a, b) => b - a).join("+");
+
+    // Lietuvių kalba: 1 moneta, 2 monetos, 11 monetų, 21 moneta…
+    const coinWord = (n) => {
+      const d = n % 10;
+      const h = n % 100;
+      if (d === 1 && h !== 11) return "moneta";
+      if (d >= 2 && d <= 9 && !(h >= 11 && h <= 19)) return "monetos";
+      return "monetų";
+    };
+
+    function coinSvg(cents, size) {
+      const r = size / 2;
+      const fill = cents === 5 ? "#e2a06a" : "var(--sun)";   // varis / auksas — tik papildoma
+      return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" aria-hidden="true" focusable="false">
+        <circle cx="${r}" cy="${r}" r="${r - 1}" fill="${fill}" stroke="var(--ink-soft)" stroke-width="1.5"/>
+        <text x="${r}" y="${r + size * 0.16}" text-anchor="middle" fill="var(--ink)"
+              font-size="${(size * 0.38).toFixed(1)}" font-weight="900" font-family="system-ui">${cents}</text>
+      </svg>`;
+    }
+
+    stage.innerHTML = `
+      <div id="pg-wrap" tabindex="0" role="group" aria-label="Piniginė ir kaina"
+           style="width:100%;max-width:24rem;margin:0 auto;text-align:center;outline-offset:4px">
+        <svg id="pg-svg" viewBox="0 0 360 100" width="100%" role="img"
+             aria-label="Kainos juosta"></svg>
+        <p id="pg-card" style="font-family:var(--font-head);font-weight:900;font-size:1.6rem;margin:.3rem 0 0;min-height:2rem"></p>
+        <div id="pg-plate" role="group" aria-label="Lėkštė su monetomis"
+             style="display:flex;flex-wrap:wrap;justify-content:center;gap:.15rem;min-height:3.4rem;padding:.3rem;border:2px dashed var(--line);border-radius:var(--r-s);background:var(--paper-2)"></div>
+        <p id="pg-count" style="margin:.5rem 0 0;font-weight:800">Monetų: 0</p>
+        <p id="pg-sum" style="margin:.1rem 0 0;font-weight:800">Suma: 0 c</p>
+        <p class="sim-note" id="pg-msg" style="margin:.4rem 0 0"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div id="pg-guess" style="display:flex;justify-content:center">
+        <button class="btn" id="pg-say">Sakau</button>
+      </div>
+      <div id="pg-purse" style="display:none;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        ${coinList.map((c) => `
+          <button class="btn secondary pg-coin" data-cent="${c}" aria-label="${c} centų moneta"
+                  style="width:56px;height:56px;min-width:56px;padding:0;display:flex;align-items:center;justify-content:center">
+            ${coinSvg(c, diameter(c))}
+          </button>`).join("")}
+      </div>
+      <div id="pg-tools" style="display:none;gap:.6rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        <button class="btn ghost" id="pg-undo">Nuimk paskutinę</button>
+        <button class="btn ghost" id="pg-reset">Iš naujo</button>
+      </div>`;
+
+    const wrap = stage.querySelector("#pg-wrap");
+    const svg = stage.querySelector("#pg-svg");
+    const plateEl = stage.querySelector("#pg-plate");
+    const cardEl = stage.querySelector("#pg-card");
+    const countEl = stage.querySelector("#pg-count");
+    const sumEl = stage.querySelector("#pg-sum");
+    const msgEl = stage.querySelector("#pg-msg");
+    const purseEl = controls.querySelector("#pg-purse");
+
+    /* --- scena -------------------------------------------------------- */
+    const defs = svgEl("defs", {});
+    const hatch = svgEl("pattern", {
+      id: "pg-hatch", width: 8, height: 8, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)",
+    });
+    hatch.appendChild(svgEl("rect", { width: 8, height: 8, fill: "var(--paper-2)" }));
+    hatch.appendChild(svgEl("line", { x1: 0, y1: 0, x2: 0, y2: 8, stroke: "var(--warn)", "stroke-width": 4 }));
+    defs.appendChild(hatch);
+    svg.appendChild(defs);
+
+    svg.appendChild(svgEl("rect", {
+      x: TRACK_X, y: TRACK_Y, width: TRACK_W, height: TRACK_H, rx: 13,
+      fill: "var(--paper-2)", stroke: "var(--line)", "stroke-width": 2,
+    }));
+
+    const fillBar = svgEl("rect", {
+      x: TRACK_X, y: TRACK_Y, width: 0, height: TRACK_H, rx: 13, fill: "var(--accent)", opacity: 0,
+    });
+    svg.appendChild(fillBar);
+
+    const overflow = svgEl("rect", {
+      x: 0, y: TRACK_Y, width: 0, height: TRACK_H, rx: 0, fill: "url(#pg-hatch)", display: "none",
+    });
+    svg.appendChild(overflow);
+
+    const seps = svgEl("g", {});
+    svg.appendChild(seps);
+
+    const priceX = TRACK_X + price * PER_CENT;
+    const priceAnchor = priceX > 300 ? "end" : priceX < 60 ? "start" : "middle";
+    const priceLine = svgEl("line", {
+      x1: priceX, y1: 44, x2: priceX, y2: 86, stroke: "var(--ink)", "stroke-width": 3, "stroke-linecap": "round",
+    });
+    svg.appendChild(priceLine);
+    const priceLabel = svgEl("text", {
+      x: priceX, y: 38, "text-anchor": priceAnchor, fill: "var(--ink)",
+      "font-size": 17, "font-weight": 800, "font-family": "system-ui",
+    });
+    priceLabel.textContent = `Kaina ${price} c`;
+    svg.appendChild(priceLabel);
+
+    const zeroLabel = svgEl("text", {
+      x: TRACK_X, y: 98, "text-anchor": "start", fill: "var(--ink-faint)",
+      "font-size": 12, "font-weight": 700, "font-family": "system-ui",
+    });
+    zeroLabel.textContent = "0";
+    svg.appendChild(zeroLabel);
+    const fullLabel = svgEl("text", {
+      x: TRACK_X + TRACK_W, y: 98, "text-anchor": "end", fill: "var(--ink-faint)",
+      "font-size": 12, "font-weight": 700, "font-family": "system-ui",
+    });
+    fullLabel.textContent = "100 c";
+    svg.appendChild(fullLabel);
+
+    /* --- būsena ------------------------------------------------------- */
+    function sayOnce(key) {
+      const t = say[key];
+      if (!t || lastSaid === key) return;
+      lastSaid = key;
+      api.speak(t);
+    }
+
+    function renderPlate(focusIdx) {
+      plateEl.innerHTML = plate.map((c, i) => `
+        <button class="pg-take" data-i="${i}" aria-label="Nuimti ${c} centų monetą"
+                style="width:48px;height:48px;min-width:48px;padding:0;border:0;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          ${coinSvg(c, 30)}
+        </button>`).join("");
+      plateEl.querySelectorAll("button").forEach((b) => {
+        b.addEventListener("click", () => removeAt(Number(b.dataset.i)));
+      });
+      if (typeof focusIdx === "number") {
+        const bs = plateEl.querySelectorAll("button");
+        if (bs.length) bs[Math.max(0, Math.min(focusIdx, bs.length - 1))].focus();
+      }
+    }
+
+    function paint(focusIdx) {
+      renderPlate(focusIdx);
+
+      const s = sum();
+      const shown = Math.min(s, MAX_SUM);
+      const width = shown * PER_CENT;
+      fillBar.setAttribute("width", width);
+      fillBar.setAttribute("opacity", s === 0 ? "0" : "1");
+
+      if (s > price && TRACK_X + width > priceX) {
+        overflow.setAttribute("x", priceX);
+        overflow.setAttribute("width", TRACK_X + width - priceX);
+        overflow.setAttribute("display", "");
+      } else {
+        overflow.setAttribute("display", "none");
+      }
+
+      // monetų ribos: matosi, kiek juostos pridėjo kiekviena moneta
+      seps.innerHTML = "";
+      let acc = 0;
+      plate.forEach((c, i) => {
+        acc += c;
+        if (i === plate.length - 1 || acc > MAX_SUM) return;
+        const x = TRACK_X + acc * PER_CENT;
+        seps.appendChild(svgEl("line", {
+          x1: x, y1: TRACK_Y + 2, x2: x, y2: TRACK_Y + TRACK_H - 2,
+          stroke: "var(--paper-2)", "stroke-width": 2, opacity: 0.75,
+        }));
+      });
+
+      countEl.textContent = `Monetų: ${plate.length}`;
+      sumEl.textContent = `Suma: ${s} c`;
+      cardEl.textContent = s === price && s > 0
+        ? `${plate.map((c) => `${c} c`).join(" + ")} = ${price} c`
+        : "";
+
+      const relation = s === 0 ? "Lėkštė tuščia." : s < price ? "Dar ne visa kaina." : s > price ? "Per daug." : "Suma lygi kainai.";
+      svg.setAttribute("aria-label",
+        `Kaina ${price} centų. Lėkštėje ${plate.length} ${coinWord(plate.length)}, suma ${s} centų. ${relation}`);
+    }
+
+    function feedback() {
+      const s = sum();
+      if (locked) {
+        api.readout(`Kiek monetų prireiks ${price} centų? Pasakyk, tada dėk.`);
+        return;
+      }
+
+      if (s === 0) {
+        api.readout(`Kaina ${price} c. Įdėk monetą.`);
+        msgEl.textContent = "Dar nieko nesumokėta.";
+        lastSaid = "";
+      } else if (s < price) {
+        api.readout("Dar ne visa kaina.");
+        msgEl.textContent = "Juosta dar nesiekia kainos žymos.";
+        sayOnce("mazai");
+      } else if (s > price) {
+        api.readout("Per daug.");
+        msgEl.textContent = "Juosta peržengė kainos žymą. Nuimk monetą.";
+        sayOnce("perdaug");
+      } else if (!reported) {
+        reported = true;
+        firstSet = setKey();
+        api.readout(`Apmokėta. ${price} c.`);
+        msgEl.textContent = "Juosta lygiai ties kainos žyma. Suma ir kaina sutampa.";
+        sayOnce("apmoketa");
+        api.progress({ correct: true });
+      } else if (!toldOther && setKey() !== firstSet) {
+        toldOther = true;
+        api.readout("Ta pati suma, kitos monetos.");
+        msgEl.textContent = "Monetų skaičius kitas, suma ta pati.";
+        sayOnce("kitaip");
+      } else {
+        api.readout(`Apmokėta. ${price} c.`);
+        msgEl.textContent = "Juosta lygiai ties kainos žyma. Suma ir kaina sutampa.";
+        lastSaid = "";
+      }
+
+      // Vienkartinė pastaba: 5 c moneta didesnė už 10 c, bet verta perpus mažiau.
+      if (!toldSize && plate.includes(5) && plate.includes(10)) {
+        toldSize = true;
+        msgEl.textContent = "Penkių centų moneta didesnė, bet verta mažiau.";
+        if (say.dydis) api.speak(say.dydis);
+      }
+    }
+
+    function addCoin(c) {
+      if (locked) return;
+      plate.push(c);
+      paint();
+      feedback();
+    }
+
+    function removeAt(i) {
+      if (locked) return;
+      plate.splice(i, 1);
+      lastSaid = "";
+      paint(i);
+      feedback();
+    }
+
+    function undo() {
+      if (locked || !plate.length) return;
+      plate.pop();
+      lastSaid = "";
+      paint();
+      feedback();
+    }
+
+    function reset() {
+      plate = [];
+      lastSaid = "";
+      paint();
+      feedback();
+      msgEl.textContent = "Pradedam iš naujo. Lėkštė tuščia.";
+    }
+
+    /* --- įėjimai ------------------------------------------------------ */
+    purseEl.querySelectorAll("button").forEach((b) => {
+      b.addEventListener("click", () => addCoin(Number(b.dataset.cent)));
+    });
+
+    controls.querySelector("#pg-undo").addEventListener("click", undo);
+    controls.querySelector("#pg-reset").addEventListener("click", reset);
+
+    controls.querySelector("#pg-say").addEventListener("click", () => {
+      locked = false;
+      controls.querySelector("#pg-guess").style.display = "none";
+      purseEl.style.display = "flex";
+      controls.querySelector("#pg-tools").style.display = "flex";
+      paint();
+      feedback();
+      wrap.focus();
+    });
+
+    wrap.addEventListener("keydown", (evt) => {
+      if (evt.key === "Backspace") {
+        evt.preventDefault();
+        undo();
+        return;
+      }
+      if (evt.key !== "ArrowLeft" && evt.key !== "ArrowRight") return;
+      const list = [...plateEl.querySelectorAll("button"), ...purseEl.querySelectorAll("button")];
+      const at = list.indexOf(document.activeElement);
+      if (at === -1) return;
+      evt.preventDefault();
+      const next = (at + (evt.key === "ArrowRight" ? 1 : -1) + list.length) % list.length;
+      list[next].focus();
+    });
+
+    paint();
+    api.readout(`Kiek monetų prireiks ${price} centų? Pasakyk, tada dėk.`);
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
@@ -986,4 +1316,5 @@ export const SIMS = {
   desningumai,
   "laikrodis-sujungtos-rodykles": laikrodisSujungtosRodykles,
   "svarstykles-lygybe": svarstyklesLygybe,
+  "pinigine-ir-kaina": pinigineIrKaina,
 };

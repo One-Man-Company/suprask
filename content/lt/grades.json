@@ -2,7 +2,7 @@
   "updated": "2026-11-06",
   "language": "lt",
   "grades": [
-    { "grade": 1, "status": "live", "age": "6–7 metai", "modules": 15 },
+    { "grade": 1, "status": "live", "age": "6–7 metai", "modules": 16 },
     { "grade": 2, "status": "planned", "age": "7–8 metai" },
     { "grade": 3, "status": "planned", "age": "8–9 metai" },
     { "grade": 4, "status": "planned", "age": "9–10 metų" },

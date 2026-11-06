@@ -547,6 +547,10 @@
   "n": "n/335b43e664368642-a91fdbc2.mp3",
   "s": "s/335b43e664368642-e15bb75d.mp3"
  },
+ "Apmokėta.": {
+  "n": "n/24d5e93000980e92-ec3867b5.mp3",
+  "s": "s/24d5e93000980e92-4a828617.mp3"
+ },
  "Apskritimas": {
   "n": "n/ef515f3cf179f20e-4afec982.mp3",
   "s": "s/ef515f3cf179f20e-7c4dfba6.mp3"
@@ -578,6 +582,10 @@
  "Daigas": {
   "n": "n/e9ebf47dd9afa46f-0377d56d.mp3",
   "s": "s/e9ebf47dd9afa46f-aaffef6d.mp3"
+ },
+ "Dar ne visa kaina.": {
+  "n": "n/c890f23c44c2b32e-9abe2ec1.mp3",
+  "s": "s/c890f23c44c2b32e-e9ea8cc6.mp3"
  },
  "Dešimt. Puiku!": {
   "n": "n/84869c7b0017a54b-da490e30.mp3",
@@ -871,6 +879,14 @@
   "n": "n/9f5897c7a3b79e29-125b8a6f.mp3",
   "s": "s/9f5897c7a3b79e29-df222f4d.mp3"
  },
+ "Penkių centų moneta didesnė, bet verta mažiau.": {
+  "n": "n/59d9a6e94dad56c2-46ad1e6b.mp3",
+  "s": "s/59d9a6e94dad56c2-c8b44551.mp3"
+ },
+ "Per daug. Nuimk monetą.": {
+  "n": "n/3411685a32f5488c-16de49ed.mp3",
+  "s": "s/3411685a32f5488c-3b304f65.mp3"
+ },
  "Pilnas dešimtukas!": {
   "n": "n/bbbfb4885794d2cd-da6961e3.mp3",
   "s": "s/bbbfb4885794d2cd-0ea8cb4a.mp3"
@@ -942,6 +958,10 @@
  "Ta pati lygybė.": {
   "n": "n/a9dad1a5182e618f-eddbe215.mp3",
   "s": "s/a9dad1a5182e618f-ee034586.mp3"
+ },
+ "Ta pati suma, kitos monetos.": {
+  "n": "n/6d5d3fd7188894fe-3379e4c5.mp3",
+  "s": "s/6d5d3fd7188894fe-f2825ead.mp3"
  },
  "Teisingai!": {
   "n": "n/3d4e2b06ffc71b06-490fd930.mp3",

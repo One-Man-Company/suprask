@@ -1,0 +1,21 @@
+{
+  "role": "ideator",
+  "run_id": 25,
+  "created": "2026-11-06T07:15:00+02:00",
+  "type": "tema",
+  "title": "Erdvinės figūros: tas pats kūgis iš priekio — trikampis, iš viršaus — apskritimas",
+  "body": "1 klasės matematikos programa baigiasi reikalavimu atpažinti ir įvardyti kubą, rutulį, stačiakampį gretasienį, kūgį ir ritinį bei rasti panašių daiktų aplinkoje, o programos derintojas ką tik nustatė (#22), kad vienintelis figūrų modulis 06-figuros moko antros klasės turinio, tad erdvinių figūrų platformoje nėra nė vieno. Klaidinga nuostata, kurią modelis turi parodyti vieną: „kūgis yra trikampis, o ritinys — apskritimas“, nes 6–7 m. vaikas kūną atpažįsta iš vieno matomo silueto (tyrime 12 vaikų kūgį ir piramidę pavadino trikampiu). Siūlau modelį su vienu kūnu viduryje ir trimis žvilgsniais — „iš priekio“, „iš viršaus“, „nuo šono“: kūgis iš priekio atrodo kaip trikampis, iš viršaus — kaip apskritimas, o pats kūnas lieka vienas; plokščia figūra taip nepasikeistų. Vaikas po kiekvieno žvilgsnio įvardija kūną, o ekranas parodo, kad pasikeitė tik vaizdas, ne daiktas. Antras žingsnis — rūšiavimas: kubas, rutulys, ritinys ir kūgis priskiriami kasdieniams daiktams (kauliukas, kamuolys, konservų dėžutė, ledų ragelis). Briaunų, viršūnių ir sienų sąmoningai neskaičiuojame — programa 1 klasei to dar nereikalauja, o būtent elementų skaičiavimas 6–7 m. vaikui ir sukelia 2D/3D painiavą. Veikla be ekrano lieka ta pati: apžiūrėti daiktą iš trijų pusių ir pasakyti, kokios formos jis atrodo iš kiekvienos.",
+  "target": "content/lt/grade-01/matematika/21-erdvines-figuros.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:117 — „Kubas ir rutulys — atpažįstami; 1–2 klasėje papildomai „mokomasi įvardyti stačiakampį gretasienį, kūgį, ritinį, mokomasi šias figūras atpažinti paveikslėlyje, rasti į jas panašių daiktų aplinkoje, rūšiuoti“, bet „dar nenumatoma nagrinėti ir pavadinti šių figūrų elementų“",
+    "research/wiki/curriculum/matematika-1-klase.md:166 — metų gale: „Atpažįsta ir įvardija kubą, rutulį, stačiakampį gretasienį, kūgį, ritinį; randa panašių daiktų aplinkoje“",
+    "research/wiki/curriculum/matematika-1-klase.md:188 — programos derintojo patikra (#22): „06-figuros“ — verdiktas „neatitinka“ (kampai, kraštinės, daugiakampis yra 2 kl.), o 1 kl. branduolio platformoje nėra",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:47 — tema „Erdvinės figūros“, interaktyvumo galimybė „figūros atpažinimas realiose nuotraukose“",
+    "content/lt/grade-01/index.json — 6 matematikos moduliai, nė vienas neliečia erdvinių kūnų; content/lt/grade-01/matematika/06-figuros.json:6 — „Trikampis, keturkampis, apskritimas“ (tik plokščios figūros)",
+    "assets/js/sims/matematika.js:982–989 — simuliacijų registre 6 komponentai (`skaiciu-tiese`, `desimtukas`, `figuros`, `desningumai`, `laikrodis-sujungtos-rodykles`, `svarstykles-lygybe`), erdvinių kūnų modelio nėra",
+    "https://files.eric.ed.gov/fulltext/EJ1357339.pdf — Mohamed ir Kandeel (2023), IJEMST 11(1), 179–197: vaikai kūgį ir piramidę įvardijo trikampiu, o 2D/3D atpažinimas painiojamas, kai kūnai rodomi tik piešiniuose",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC4033191/ — apžvalga: iliustruotos knygelės, kuriose erdviniai kūnai vadinami plokščių figūrų vardais (apskritimas, kvadratas, trikampis), klaidingą nuostatą sustiprina, o ne griauna"
+  ]
+}

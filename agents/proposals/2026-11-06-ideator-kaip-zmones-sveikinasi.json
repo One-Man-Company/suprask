@@ -1,0 +1,21 @@
+{
+  "role": "ideator",
+  "run_id": 25,
+  "created": "2026-11-06T07:15:00+02:00",
+  "type": "tema",
+  "title": "Kaip žmonės sveikinasi: vienas pastebėjimas dar nėra išvada",
+  "body": "Lietuvių kalbos programos 1 klasei oficialus veiklos pavyzdys yra „Kaip žmonės sveikinasi?“ (D.5.2): problema → tyrimo planas → duomenų rinkimas → grupavimas → išvada, o platformoje tokio modulio nėra — visi trys lietuvių kalbos moduliai moko apie garsą, skiemenį ir sakinį, bet nė vienas nemoko, kaip sužinoti. Klaidinga nuostata, kurią modelis turi parodyti vieną: „pakanka vieno pastebėjimo“ — 7-mečiai, rinkdamiesi tarp vieno asmeninio atvejo ir suskaičiuotų duomenų, dažniau remiasi atveju, o 6–7 m. vaikui pirmas ryškus pavyzdys tampa taisykle. Siūlau modelį prie mokyklos durų: vaikas baksteli kiekvieną sutiktą žmogų ir pasirenka, kaip šis pasisveikino (žodžiu, mostelėjo, linktelėjo), o stulpelis paauga. Mygtukas „mano išvada“ leidžia išvadą pasakyti jau po pirmo žmogaus, ir ta išvada lieka ekrane šalia galutinės: po vieno pastebėjimo parašyta „visi sveikinasi žodžiu“, po aštuonių — „daugiausia žodžiu, du linktelėjo“; būtent šis pasikeitimas ir yra mokymosi objektas. Tai skiriasi nuo piktogramos idėjos, atmestos paleidime #5: ten ekrane likdavo balsavimas ir augantis stulpelis, o čia keičiamas kintamasis yra pastebėjimų skaičius, o matoma pasekmė — išvada, todėl modelis moko įrodymo, ne skaičiavimo. Skaičių nelyginame ir vaikų nevertiname: užtenka „daugiausia / mažiau“. Tai vienintelė šio paleidimo tarpdalykinė idėja (kalba + duomenys + visuomeninis ugdymas), pagrįsta oficialiu programos pavyzdžiu, o ne išvedimu.",
+  "target": "content/lt/grade-01/lietuviu-kalba/04-kaip-zmones-sveikinasi.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:82 — „„Kaip žmonės sveikinasi?“ (1 pavyzdys, 1 klasė, pasiekimas D.5.2 — „Pagal pavyzdį atlieka nesudėtingus kalbos vartojimo tyrimus“). Veiklos logika: problema → tyrimo planas → duomenų rinkimas (stebėjimas prie mokyklos įėjimo) → grupavimas → hipotezė → išvada“",
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:103 — metų gale: „Pagal pavyzdį atlieka nesudėtingą kalbos vartojimo tyrimą ir daro išvadas (D.5.2)“",
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:77 — „mąstykime kaip kalbą tiriantys mokslininkai“; :78 — reflektavimas yra privalomas veiklos elementas",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:29 — tema „Kalbos vartojimo tyrimas“ (D.5.2), modelis „rink duomenis, grupuok, daryk išvadą“",
+    "research/wiki/curriculum/matematika-1-klase.md:150 — duomenų sritis: „perskaityti piktogramoje, stulpelinėje diagramoje pateikiamą informaciją, ja remtis atsakant į pagrindinį tyrimo klausimą“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:23028 — „mokysis registruoti renkamus duomenis, kai yra 2–3 stebimo požymio reikšmės, pavaizduoti piktograma ar stulpeline diagrama“",
+    "content/lt/grade-01/index.json — lietuvių kalba turi 3 modulius (01 garsas ir raidė, 02 skiemenų jungimas, 03 sakinio tvarka), tyrimo metodo nė viename",
+    "https://www.frontiersin.org/journals/developmental-psychology/articles/10.3389/fdpys.2024.1324704/pdf — „Anecdata“ (2024): 7-mečiai sprendimą dažniau grindė vienu asmeniniu atveju nei suskaičiuotais duomenimis; su amžiumi atvejo svoris mažėja"
+  ]
+}

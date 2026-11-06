@@ -1,0 +1,21 @@
+{
+  "role": "kritikas",
+  "run_id": 29,
+  "created": "2026-11-06T14:14:00+02:00",
+  "type": "kritika",
+  "title": "Vaikui skaitomi sakiniai 1 klasėje viršija 10 žodžių ribą 32 kartus, naujausiuose moduliuose — tankiausiai",
+  "body": "`docs/KURINIO-STANDARTAS.md:110` nustato, kad 1–2 klasėje sakinys vaikui skaitomame tekste yra iki 10 žodžių, o gairių T5.4 (SVIETIMAS-1-GAIRES.md:56) reikalauja trumpų sakinių. Išmatavus visus 16 modulių vaikui rodomus laukus (`concept`, `tasks[].q/hint/why/options`, `reflect`, simuliacijos `sentences`), rasti 32 sakiniai, ilgesni nei 10 žodžių. Blogiausias — naujausio matematikos modulio pavyzdys: `14-pinigai.json:22` „Parduotuvėje 60 centų kainuojantį ledinuką gali sumokėti viena 50 c ir viena 10 c moneta arba šešiomis 10 c monetomis“ — 20 žodžių, dvigubai viršija ribą; to paties modulio `:62` (17 žodžių) ir `:81` (17 žodžių) taip pat viršija. Trys naujausi moduliai (14-pinigai, 15-laikas, 16-lygybe-svarstykles) duoda 15 iš 32 pažeidimų, t. y. naujas turinys tolsta nuo standarto, o ne artėja. Anksčiau rastas `03-sakinio-tvarka.json:19` (15 žodžių) vis dar nepataisytas. Validatorius to nepagauna: `scripts/validate_content.py:134` tikrina tik `hint` ilgį simboliais, o `docs/KURINIO-STANDARTAS.md:149` minimas „teksto ilgis“ reiškia laukų simbolių limitus, ne sakinio žodžių skaičių — todėl 6 skyriaus kokybiniai vartai „Amžiaus patikra“ realiai nevykdomi automatiškai. Taisymas: trumpinti ilgiausius sakinius (pavyzdį skaidyti į du: „Ledinukas kainuoja 60 centų. Gali mokėti 50 c ir 10 c arba šešiomis 10 c monetomis.“), o į validatorių įtraukti įspėjimą, kai vaikui skaitomame lauke sakinys viršija 10 žodžių.",
+  "target": "content/lt/grade-01/matematika/14-pinigai.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "docs/KURINIO-STANDARTAS.md:110 — „Sakinio ilgis 1–2 klasei — iki 10 žodžių“",
+    "docs/SVIETIMAS-1-GAIRES.md:56 — T5.4: trumpi sakiniai, vienaskaitos antrasis asmuo",
+    "content/lt/grade-01/matematika/14-pinigai.json:22 — concept.example, 20 žodžių",
+    "content/lt/grade-01/matematika/14-pinigai.json:62 — tasks[2].q, 17 žodžių",
+    "content/lt/grade-01/matematika/14-pinigai.json:81 — tasks[3].why, 17 žodžių",
+    "content/lt/grade-01/lietuviu-kalba/03-sakinio-tvarka.json:19 — concept.steps[2], 15 žodžių (rasta 2026-11-05, nepataisyta)",
+    "Išmatuota skriptu per visus 16 modulių: 32 vaikui skaitomi sakiniai >10 žodžių; 15 jų — moduliuose 14-pinigai, 15-laikas, 16-lygybe-svarstykles",
+    "scripts/validate_content.py:134-135 — tikrinamas tik `hint` ilgis simboliais (≤200), sakinio ilgis netikrinamas"
+  ]
+}

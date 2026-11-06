@@ -1,0 +1,20 @@
+{
+  "role": "kritikas",
+  "run_id": 29,
+  "created": "2026-11-06T14:12:00+02:00",
+  "type": "kritika",
+  "title": "Svarstyklės krypsta į priešingą pusę: sunkesnė lėkštė kyla aukštyn",
+  "body": "Modulyje „Lygybė: abi pusės sveria tiek pat“ simuliacijos sija pakrypsta priešinga kryptimi, nei rodo fizika: kai kairėje yra 5 kubeliai, o dešinėje 8, kairė lėkštė nusileidžia žemiau už dešinę. Taip yra todėl, kad `angle()` grąžina `1.6 * diff()`, o `diff()` yra `known + box - whole`, t. y. teigiamas, kai kairė sunkesnė; `beam` sukamas `rotate(a)`, o SVG teigiamas kampas suka pagal laikrodžio rodyklę, todėl kairysis sijos galas kyla, o `place()` su `d = -HALF` kairę lėkštę taip pat kelia aukštyn. Rezultatas ne kosmetinis: vaikas mato atvirkščią modelį nei tekstas, kuris tuo pačiu metu sako „Kairė sunkesnė“ / „Dešinė sunkesnė“ (matematika.js:877, :881). Modulio `teacher.misconceptions[0]` (16-lygybe-svarstykles.json:91) remiasi būtent priešinga mechanika — „įdėjus 13 kubelių kairė lėkštė nusileidžia daug žemiau“, o simuliacijoje įdėjus 13 kairė pakiltų. Klaidinga nuostata, kurią modelis turėjo griauti, taip sustiprinama, o gairių P2 (simuliacija yra pagrindinė mokymosi vieta, SVIETIMAS-1-GAIRES.md:20) pažeidžiama. Taisymas: apgręžti ženklą (`angle() { return Math.max(-12, Math.min(12, -1.6 * diff())); }`) arba sukeisti `place(panL, -HALF)` / `place(panR, HALF)` ženklus, ir po to patikrinti, kad su `known=5, whole=8` kairė būtų aukščiau, o įdėjus 4 kubelius — žemiau.",
+  "target": "assets/js/sims/matematika.js",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/matematika.js:745 — diff() = known + box - whole; teigiama, kai kairė sunkesnė",
+    "assets/js/sims/matematika.js:746 — angle() = Math.max(-12, Math.min(12, 1.6 * diff())) — ženklas neapgręžtas",
+    "assets/js/sims/matematika.js:900-902 — beam.setAttribute(\"transform\", rotate(a)) ir place(panL, -HALF), place(panR, HALF)",
+    "assets/js/sims/matematika.js:895-899 — place(): dy = d * sin(rad); su d = -110 ir a < 0 gaunamas teigiamas dy (žemyn)",
+    "Išmatuota headless Chrome, 360 px scena, known=5, whole=8, box=0: kairės lėkštės pirmas kubelis y=179,9 px, dešinės — 160,3 px (kairė žemiau 19,6 px), nors kairėje 5, dešinėje 8 kubeliai",
+    "content/lt/grade-01/matematika/16-lygybe-svarstykles.json:91 — „įdėjus 13 kubelių kairė lėkštė nusileidžia daug žemiau“ (simuliacijoje kairė pakiltų)",
+    "docs/SVIETIMAS-1-GAIRES.md:20 — P2: simuliacija yra pagrindinė mokymosi vieta, ne iliustracija"
+  ]
+}

@@ -199,58 +199,228 @@ const metuLaikai = {
 /* ------------------------------------------------------------------ */
 /* 2. Augalo gyvenimas                                                 */
 /* ------------------------------------------------------------------ */
+/* Modelis: trys sąlygos (vanduo, šviesa, šiluma) ir laikas.
+   Augimas per dieną lygus SILPNIAUSIOS sąlygos daliai × 0,22 — todėl
+   vienos trūkumas sustabdo viską, o vandens perteklius kenkia taip pat,
+   kaip jo trūkumas (šaknys „dūsta“): vandens optimalu yra 3 iš 5.
+   Dydis kaupiasi tik per dienas: pabloginus sąlygas augalas nesumenksta,
+   bet nustoja augti ir pradeda vysti. Tai ir yra modelio riba, kurią
+   pasakome žodžiu po simuliacija. */
+const AG_WATER = [0, 0.4, 0.85, 1, 0.5, 0.15];   // vanduo 0–5 → augimo dalis
+const AG_LIGHT = [0, 0.3, 0.7, 1, 1, 1];          // šviesa 0–5 → augimo dalis
+const AG_DAYS_MAX = 12;
+const AG_STEP = 0.22;                             // gera diena ≈ 22 % dydžio
+
+const agFactors = (water, light, warm) => {
+  const wf = AG_WATER[water];
+  const lf = AG_LIGHT[light];
+  const hf = warm ? 1 : 0.1;
+  return { wf, lf, hf, gf: Math.min(wf, lf, hf) };
+};
+const agWaterWord = (w) => ["nėra", "mažai", "beveik gerai", "gerai", "per daug", "per daug"][w];
+const agLightWord = (l) => (l === 0 ? "nėra" : l <= 2 ? "mažai" : "gerai");
+const agStage = (s, wilt = false, cold = false, pale = false) => {
+  if (s <= 0) return "Sėkla";
+  if (wilt) return "Augalas vysta";
+  if (cold) return "Augalas neauga";
+  if (pale) return "Augalas blyškus";
+  return s < 0.25 ? "Daigas" : s < 0.55 ? "Jaunas augalas" : s < 0.9 ? "Augalas su lapais" : "Žiedas";
+};
+const agDaysText = (n) => `${n} ${n === 1 ? "diena" : n < 10 ? "dienos" : "dienų"}`;
+
+/* Lapas: nuo stiebo link šono. droop = 1 — lapas nusvyra žemyn. */
+function agLeaf(x, y, s, dir, droop, col) {
+  const tipX = x + dir * s * 0.95;
+  const tipY = y - s * 0.55 + droop * s * 1.25;
+  const c1x = x + dir * s * 0.8;
+  const c1y = y - s * 0.95 + droop * s * 0.25;
+  const c2x = x + dir * s * 0.35;
+  const c2y = y + s * 0.35;
+  return `<path d="M${x} ${y} Q${c1x} ${c1y} ${tipX} ${tipY} Q${c2x} ${c2y} ${x} ${y} Z" fill="${col}"/>`;
+}
+
 const augaloGyvenimas = {
   mount({ stage, controls, api }) {
-    let water = 2;
-    let light = 2;
+    let water = 3;
+    let light = 3;
+    let warm = true;
     let day = 1;
+    let size = 0;          // 0 — sėkla, 1 — suaugęs augalas
+    let dayMsg = "";
+    let lastStage = "";
+    let bloomed = false;
 
-    stage.innerHTML = `<div style="width:100%;max-width:38rem"><svg id="ag-scene" viewBox="0 0 360 300" role="img" aria-label="Augalo augimo modelis"></svg></div>`;
-    controls.innerHTML = `
-      <div style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;align-items:center">
-        <button class="btn secondary" id="ag-wmin">💧 mažiau</button>
-        <button class="btn secondary" id="ag-wplus">💧 daugiau</button>
-        <button class="btn secondary" id="ag-lmin">☀️ mažiau</button>
-        <button class="btn secondary" id="ag-lplus">☀️ daugiau</button>
-        <button class="btn" id="ag-next">Diena →</button>
+    stage.innerHTML = `
+      <div style="width:100%;max-width:30rem">
+        <svg id="ag-scene" viewBox="0 0 360 300" role="img" aria-label="Augalo augimo modelis"></svg>
+        <p class="sim-note" style="font-size:.8rem">Tai supaprastintas modelis: dirvožemis čia yra visą laiką, o šaknų nematome.</p>
       </div>`;
-    const svg = stage.querySelector("#ag-scene");
 
-    function growth() {
-      if (water === 0 || light === 0) return 0;
-      const base = Math.min(water, light) / 5;      // 0.2 – 1
-      const time = Math.min(day / 10, 1);
-      return base * time;
+    const condRow = (id, label, icon) => `
+      <div style="display:flex;align-items:center;gap:.4rem;min-height:56px;border-bottom:2px solid var(--line)">
+        <span style="flex:0 0 auto;width:5.4rem;font-size:.9rem;font-weight:800"><span aria-hidden="true">${icon}</span> ${label}</span>
+        <div id="ag-${id}-dots" aria-hidden="true" style="display:flex;flex:1 1 auto;min-width:0;gap:3px"></div>
+        <button class="btn secondary" id="ag-${id}-minus" aria-label="Mažiau: ${label.toLowerCase()}" style="flex:0 0 auto;min-width:48px;min-height:48px;padding:0;font-size:1.35rem;line-height:1">−</button>
+        <button class="btn secondary" id="ag-${id}-plus" aria-label="Daugiau: ${label.toLowerCase()}" style="flex:0 0 auto;min-width:48px;min-height:48px;padding:0;font-size:1.35rem;line-height:1">+</button>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.5rem;width:100%;max-width:34rem;margin:0 auto">
+        <div style="border:2px solid var(--line);border-radius:var(--r-m);background:var(--paper-2);padding:.35rem .5rem">
+          ${condRow("w", "Vanduo", "💧")}
+          ${condRow("l", "Šviesa", "☀️")}
+          <div style="display:flex;align-items:center;gap:.4rem;min-height:56px">
+            <span style="flex:0 0 auto;width:5.4rem;font-size:.9rem;font-weight:800"><span aria-hidden="true">🌡️</span> Šiluma</span>
+            <button class="btn secondary" id="ag-cold" aria-pressed="false" style="flex:1 1 0;min-width:48px;min-height:48px;padding:.3rem .2rem;font-size:.95rem">Šalta</button>
+            <button class="btn secondary" id="ag-warm" aria-pressed="true" style="flex:1 1 0;min-width:48px;min-height:48px;padding:.3rem .2rem;font-size:.95rem">Šilta</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:.4rem;align-items:center;justify-content:center;flex-wrap:wrap">
+          <span id="ag-day" style="font-weight:800;font-size:.95rem">1 diena</span>
+          <button class="btn" id="ag-next" aria-label="Kita diena" style="flex:1 1 auto;min-height:48px;padding:.5rem .8rem;font-size:.95rem">Diena →</button>
+          <button class="btn ghost" id="ag-reset" aria-label="Pradėti iš naujo" style="flex:0 0 auto;min-width:48px;min-height:48px;padding:.5rem .7rem;font-size:.95rem">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const svg = stage.querySelector("#ag-scene");
+    const q = (sel) => controls.querySelector(sel);
+
+    function dots(el, value, max) {
+      el.innerHTML = "";
+      for (let k = 1; k <= max; k += 1) {
+        const s = document.createElement("span");
+        s.style.cssText = "flex:1 1 0;min-width:0;height:12px;border-radius:3px;"
+          + (k <= value ? "background:var(--ink)" : "border:2px solid var(--ink-faint)");
+        el.appendChild(s);
+      }
     }
 
     function render() {
-      const g = growth();
-      const h = 20 + g * 150;
-      const leafSize = 10 + g * 26;
-      const flower = g > 0.86;
+      const { gf } = agFactors(water, light, warm);
+      const wilt = water === 0 || water >= 4;
+      const pale = light <= 1;
+      const cold = !warm;
+      const bloom = size >= 0.9 && !wilt && !cold && !pale;
+
+      const h = size <= 0 ? 0 : 22 + size * 152;
+      const leafS = 12 + size * 22;
+      const droop = wilt ? 1 : 0;
+      const stemCol = cold ? "#6f93a8" : pale ? "#8fae78" : "#4c8b3a";
+      const leafCol = water === 0 ? "#b9a06c"
+        : water >= 4 ? "#bdb75c"
+          : cold ? "#7fa2b5" : pale ? "#a8c98a" : "#5fbf62";
+
+      const sunR = 13 + light * 1.8;
+      const rays = light >= 2
+        ? [0, 45, 90, 135, 180, 225, 270, 315].map((a) => {
+          const rad = (a * Math.PI) / 180;
+          const r1 = sunR + 6;
+          const r2 = sunR + 13;
+          return `<line x1="${312 + Math.cos(rad) * r1}" y1="${44 + Math.sin(rad) * r1}"`
+            + ` x2="${312 + Math.cos(rad) * r2}" y2="${44 + Math.sin(rad) * r2}"/>`;
+        }).join("")
+        : "";
+
+      const petals = bloom
+        ? Array.from({ length: 6 }, (_, k) => {
+          const a = (k * 60 * Math.PI) / 180;
+          return `<circle cx="${180 + Math.cos(a) * 9}" cy="${248 - h - 10 + Math.sin(a) * 9}" r="7" fill="#f2708a"/>`;
+        }).join("")
+        : "";
+
+      const flakes = cold
+        ? [58, 104, 268, 314].map((x) => `<path d="M${x} 270 h16 M${x + 8} 262 v16`
+          + ` M${x + 2} 264 l12 12 M${x + 14} 264 l-12 12" stroke="#5aa9e6" stroke-width="2.5" stroke-linecap="round"/>`).join("")
+        : "";
+
       svg.innerHTML = `
         <rect x="0" y="0" width="360" height="300" rx="18" fill="color-mix(in srgb, var(--sky) 10%, var(--paper-2))"/>
-        <rect x="0" y="248" width="360" height="52" fill="#8a6242" opacity=".35"/>
-        <line x1="180" y1="248" x2="180" y2="${248 - h}" stroke="#4c8b3a" stroke-width="${4 + g * 6}" stroke-linecap="round"/>
-        ${g > 0.15 ? `<ellipse cx="${180 - leafSize}" cy="${248 - h * .62}" rx="${leafSize}" ry="${leafSize * .55}" fill="#5fbf62" transform="rotate(-18 ${180 - leafSize} ${248 - h * .62})"/>
-        <ellipse cx="${180 + leafSize}" cy="${248 - h * .45}" rx="${leafSize}" ry="${leafSize * .55}" fill="#4da653" transform="rotate(18 ${180 + leafSize} ${248 - h * .45})"/>` : ""}
-        ${flower ? `<circle cx="180" cy="${248 - h - 6}" r="14" fill="#f2708a"/><circle cx="180" cy="${248 - h - 6}" r="5" fill="#ffc94d"/>` : ""}
-        <text x="18" y="30" font-family="system-ui" font-size="14" font-weight="700" fill="#5f574d">💧 ${water}/5   ☀️ ${light}/5   📅 ${day} d.</text>`;
-      const stageName = g === 0 ? "Sėkla dar nemirkusi" : g < 0.3 ? "Daigas" : g < 0.6 ? "Jaunas augalas" : g < 0.86 ? "Augalas su lapais" : "Žydi!";
-      api.readout(stageName);
-      if (water === 0) api.note("Augalui reikia vandens. Įpilk ir palauk.");
-      else if (light === 0) api.note("Be šviesos augalas neaugs. Įjunk saulę.");
-      else if (flower) api.note("Augalas pražydo. Kas jam labiausiai padėjo — vanduo, šviesa ar laikas?");
-      else api.note("Keisk vandenį, šviesą ir dienas. Stebėk, kas nutinka.");
-      if (flower) api.progress({ correct: true });
+        <circle cx="312" cy="44" r="${sunR}" fill="#f4b942" opacity="${light === 0 ? 0.35 : 1}"/>
+        <g stroke="#f4b942" stroke-width="3" stroke-linecap="round">${rays}</g>
+        <rect x="0" y="248" width="360" height="52" fill="#a4805a"/>
+        ${size <= 0 ? '<ellipse cx="180" cy="242" rx="9" ry="6" fill="#6b4a2f"/>' : ""}
+        ${h > 0 ? `<line x1="180" y1="248" x2="180" y2="${248 - h}" stroke="${stemCol}" stroke-width="${3 + size * 5}" stroke-linecap="round"/>` : ""}
+        ${h > 0 && size > 0.05 ? agLeaf(179, 248 - h * 0.55, leafS, -1, droop, leafCol)
+    + agLeaf(181, 248 - h * 0.4, leafS, 1, droop, leafCol) : ""}
+        ${petals}${petals ? `<circle cx="180" cy="${248 - h - 10}" r="8" fill="#ffc94d"/>` : ""}
+        <ellipse cx="180" cy="248" rx="${26 + size * 6}" ry="7" fill="#8a6242" opacity=".55"/>
+        ${flakes}`;
+
+      svg.setAttribute("aria-label",
+        `Augalo modelis: ${agStage(size, wilt, cold, pale).toLowerCase()}, vanduo ${agWaterWord(water)}, `
+        + `šviesa ${agLightWord(light)}, ${warm ? "šilta" : "šalta"}`);
+
+      dots(q("#ag-w-dots"), water, 5);
+      dots(q("#ag-l-dots"), light, 5);
+
+      /* Pasirinkimas rodomas ir spalva, ir aria-pressed — spalva ne vienintelė. */
+      q("#ag-cold").setAttribute("aria-pressed", String(!warm));
+      q("#ag-warm").setAttribute("aria-pressed", String(warm));
+      for (const [btn, on] of [[q("#ag-cold"), !warm], [q("#ag-warm"), warm]]) {
+        btn.style.background = on ? "var(--ink)" : "var(--paper-2)";
+        btn.style.color = on ? "var(--paper)" : "var(--ink)";
+        btn.style.borderColor = on ? "var(--ink)" : "var(--line)";
+      }
+      q("#ag-day").textContent = agDaysText(day);
+      q("#ag-next").disabled = day >= AG_DAYS_MAX;
+
+      const st = agStage(size, wilt, cold, pale);
+      api.readout(`${st} · vanduo ${agWaterWord(water)} · šviesa ${agLightWord(light)}`
+        + ` · ${warm ? "šilta" : "šalta"} · ${agDaysText(day)}`);
+
+      /* Kliūtis — ta sąlyga, kurios dalis mažiausia (silpniausia grandis). */
+      const why = () => {
+        const low = Math.min(AG_WATER[water], AG_LIGHT[light], warm ? 1 : 0.1);
+        if (low === (warm ? 1 : 0.1)) return "šalta, augalas beveik neauga";
+        if (low === AG_WATER[water]) {
+          if (water === 0) return "nėra vandens, lapai nusvyra";
+          if (water >= 4) return "per daug vandens, šaknys nekvėpuoja";
+          return "mažai vandens, auga lėtai";
+        }
+        return light === 0 ? "nėra šviesos, augalas blyškus" : "mažai šviesos, auga lėtai";
+      };
+
+      const cause = gf >= 0.8 ? "" : why();
+      let note;
+      if (cause) note = `Ko trūksta: ${cause}.`;
+      else if (size >= 1) note = "Augalas išaugo ir pražydo. Dabar pakeisk vieną sąlygą — kas nutiks?";
+      else note = "Sąlygos geros. Spausk „Kita diena“ — augalas paūgės.";
+      api.note(dayMsg ? `${dayMsg} ${note}` : note);
+
+      if (st !== lastStage) {
+        lastStage = st;
+        api.speak(st, { rate: 0.9 });
+      }
+
+      /* Rezultatas — pražydęs augalas, o ne kiekvienas paspaudimas. */
+      if (!bloomed && bloom) {
+        bloomed = true;
+        api.progress({ correct: true });
+      }
+      return gf;
     }
 
-    const bind = (id, fn) => controls.querySelector(id).addEventListener("click", () => { fn(); render(); });
-    bind("#ag-wplus", () => { water = Math.min(5, water + 1); });
-    bind("#ag-wmin", () => { water = Math.max(0, water - 1); });
-    bind("#ag-lplus", () => { light = Math.min(5, light + 1); });
-    bind("#ag-lmin", () => { light = Math.max(0, light - 1); });
-    bind("#ag-next", () => { day = Math.min(30, day + 1); api.speak(`Diena ${day}`, { rate: 1 }); });
+    const dayStep = () => {
+      if (day >= AG_DAYS_MAX) return;
+      const { gf } = agFactors(water, light, warm);
+      day += 1;
+      size = Math.min(1, size + gf * AG_STEP);
+      dayMsg = gf < 0.5 ? "Šią dieną augalas beveik nepajudėjo." : "";
+      render();
+    };
+    const setCond = (fn) => { fn(); dayMsg = ""; render(); };
+
+    q("#ag-w-plus").addEventListener("click", () => setCond(() => { water = Math.min(5, water + 1); }));
+    q("#ag-w-minus").addEventListener("click", () => setCond(() => { water = Math.max(0, water - 1); }));
+    q("#ag-l-plus").addEventListener("click", () => setCond(() => { light = Math.min(5, light + 1); }));
+    q("#ag-l-minus").addEventListener("click", () => setCond(() => { light = Math.max(0, light - 1); }));
+    q("#ag-cold").addEventListener("click", () => setCond(() => { warm = false; }));
+    q("#ag-warm").addEventListener("click", () => setCond(() => { warm = true; }));
+    q("#ag-next").addEventListener("click", dayStep);
+    q("#ag-reset").addEventListener("click", () => {
+      water = 3; light = 3; warm = true; day = 1; size = 0; dayMsg = ""; lastStage = "";
+      render();
+    });
 
     render();
     return null;

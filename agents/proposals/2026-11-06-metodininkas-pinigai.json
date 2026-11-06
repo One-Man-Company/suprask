@@ -1,0 +1,25 @@
+{
+  "role": "metodininkas",
+  "run_id": 26,
+  "created": "2026-11-06T08:31:00+02:00",
+  "type": "metodas",
+  "title": "Pinigai: monetos vertė, ne jos dydis",
+  "body": "1 klasės programa prašo atpažinti euro monetas pagal vertę ir sudėti sumą keliais skirtingais deriniais, o tyrimai rodo, kad 6–7 metų vaikas vertę skaito iš matomo požymio: didesnė moneta atrodo vertingesnė, daugiau monetų — daugiau pinigų (Edmunds ir Whitehurst, 1973; Berti ir Bombi, 1981). Metodas M-03 tai griauja modeliu, kuriame vertė atsiskiria nuo išvaizdos fiziškai: piniginėje keturios monetos (50, 20, 10, 5 c) nupieštos tikru santykiu, vaikas deda jas ant lėkštės, o kainos juosta ilgėja pagal užrašytą skaičių — 5 c moneta lieka didesnė už 10 c, bet juosta trumpesnė. Monetų skaičius („Monetų: 2“) ir suma („Suma: 60 c“) rodomi atskirose eilutėse ir niekada nesujungiami, o eilutė 50 c + 10 c = 60 c atsiranda tik tada, kai juosta pasiekia kainos žymą. Prieš pirmą judesį vaikas spėja, kiek monetų prireiks, nes modelis pats suskaičiuoja sumą ir be spėjimo taptų generatoriumi. Užduotys tikrina atpažinimą (trys monetos — kiek pinigų), taikymą (kuris rinkinys duoda 60 c tiksliai), perkėlimą (du rinkiniai už tą pačią 80 c kainą) ir praplėtimą (95 c mažiausiai monetų). Modelis sąmoningai apsiriboja monetomis iki 1 euro, o realų 1,5 mm dydžio skirtumą įvardija tekstu, nes ekrane jis yra apie 2 px — modelis neturi apsimesti, kad parodo tai, ko neparodo. Visa specifikacija su būsenomis, 360 px geometrija, garso frazėmis ir modelio ribomis — research/wiki/grades/01/metodai.md, skyrius M-03.",
+  "target": "content/lt/grade-01/matematika/14-pinigai.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md#M-03 — pilnas metodas: keturių žingsnių seka, šešios simuliacijos būsenos, keturios užduotys su tipinėmis klaidomis ir užuominomis, modelio ribos, modulio autoriaus parametrai",
+    "research/wiki/foundations/dydis-ir-skaicius.md — bendresnė įžvalga: kai daiktas neša skaičių, modelis turi parodyti jo poveikį atskirai, o grafika neturi prieštarauti taisyklei",
+    "research/wiki/curriculum/matematika-1-klase.md:83 — „1 klasė. Finansinis raštingumas. Mokomasi atpažinti euro banknotus ir monetas pagal vertę, norimą pinigų sumą sudėlioti keliais skirtingais banknotų ir monetų deriniais“",
+    "research/wiki/curriculum/matematika-1-klase.md:169 — metų pabaigos pasiekimas: „Atpažįsta euro banknotus ir monetas pagal vertę; sudėlioja sumą keliais deriniais“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33957–33959 — pasiekimų pavyzdyje atskirai klausiama „Kiek monetų turi …?“ ir „Kiek pinigų turi …?“ — kiekis ir suma yra du klausimai",
+    "agents/proposals/2026-11-03-ideator-pinigai.json — ideatoriaus pasiūlymas (tema/high), kurio pagrindu sukurtas metodas",
+    "https://doi.org/10.2307/1129504 — Berti ir Bombi (1981): šešios pakopos, vertė skiriama pagal fizinį dydį ar pavadinimą iki penktos pakopos",
+    "https://doi.org/10.2307/2088073 — Strauss (1952): ankstesnis tyrimas, kurio pakopas Berti ir Bombi atkartojo kitos šalies vaikams",
+    "https://doi.org/10.1038/s41598-020-62419-8 — Hasegawa (2020): dydžio ir vertės suderinamumo efektas, veikiantis automatiškai",
+    "https://eric.ed.gov/?id=ED087553 — Edmunds ir Whitehurst (1973): 2–8 m. vaikai „daugiau“ sprendžia pagal monetos dydį; strategija išlieka iki septynerių",
+    "https://eric.ed.gov/?id=ED451065 — Tracy ir Fanelli (2000): tik 7 iš 35 pirmokų suskaičiavo mišrų rinkinį; žaisliniai pinigai neproporcingi vertei",
+    "https://economy-finance.ec.europa.eu/euro/euro-coins-and-notes/euro-coins/common-sides-euro-coins_en — 5 c moneta 21,25 mm, 10 c — 19,75 mm: 5 c didesnė, bet verta perpus mažiau"
+  ]
+}

@@ -2,6 +2,15 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-06 — Pinigų metodas M-03
+
+- **`grades/01/metodai.md`** — naujas metodas M-03 „Pinigai: monetos vertė, ne jos dydis“ (tema `2026-11-03-ideator-pinigai.json`): seka nuo saujos iki simbolio, simuliacijos `pinigine-ir-kaina` šešios būsenos, keturios užduotys su tipinėmis klaidomis ir užuominomis, modelio ribos.
+- **`foundations/dydis-ir-skaicius.md`** — naujas įrašas: kai daiktas turi ir matomą dydį, ir užrašytą skaičių, vaikas iki septynerių metų tiki dydžiu; todėl modelis turi parodyti skaičiaus poveikį atskirai, o jo grafika neturi prieštarauti savo pačių taisyklei.
+- **`foundations/README.md`** — indekso eilutė.
+- **`guidelines/pilotai.md`** — P-008 (vertė juostoje, monetų skaičius atskirai, tikras monetų dydis ekrane).
+- **Šaltinis:** Berti & Bombi (1981) https://doi.org/10.2307/1129504 · Strauss (1952) https://doi.org/10.2307/2088073 · Hasegawa (2020) https://doi.org/10.1038/s41598-020-62419-8 · Edmunds & Whitehurst (1973) https://eric.ed.gov/?id=ED087553 · Tracy & Fanelli (2000) https://eric.ed.gov/?id=ED451065 · Europos Komisijos monetų specifikacijos (5 c — 21,25 mm, 10 c — 19,75 mm).
+- **Poveikis platformai:** būsimas modulis `14-pinigai`; taisyklė „daiktas su skaičiumi reikalauja atskiro poveikio vaizdo“ taikoma ir kitiems modeliams, kur vertė užrašyta, o ne išmatuojama (moneta, kauliukas, padalos žymė).
+
 ## 2026-11-05 (16:30) — Dienos darbas #16–#22: parašytas, bet nepaskelbtas
 
 - **`content/lt/grade-01/matematika/16-lygybe-svarstykles.json`** (naujas, 108 eil.) + `index.json`, `path.json`, `assets/js/sims/matematika.js` (+265), 8 garso failai, `manifest.json` — 15-as modulis „Lygybė: svarstyklių pusiausvyra“ (#18 kurejas), pagal metodą M-02.

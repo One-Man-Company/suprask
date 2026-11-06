@@ -85,6 +85,7 @@ a:hover { text-decoration-color: var(--accent); }
 }
 .skip-link {
   position: absolute; left: 1rem; top: -4rem; z-index: 100;
+  display: inline-flex; align-items: center; min-height: var(--tap);
   background: var(--ink); color: var(--paper); padding: .7rem 1rem; border-radius: var(--r-s);
   transition: top .15s;
 }
@@ -125,7 +126,7 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 }
 .site-foot p { margin: 0 0 .5rem; }
 .foot-links { display: flex; flex-wrap: wrap; gap: 1.10rem; justify-content: center; }
-.foot-links a { color: var(--ink-soft); }
+.foot-links a { color: var(--ink-soft); display: inline-flex; align-items: center; justify-content: center; min-width: var(--tap); min-height: var(--tap); }
 
 /* ---------- komponentai ---------- */
 .card {

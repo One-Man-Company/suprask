@@ -1,0 +1,99 @@
+{
+  "id": "16-vandens-busenos",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Kur dingsta vanduo",
+  "subtitle": "Vanduo neprapuola — jis keičia savo formą",
+  "minutes": 9,
+  "outcomes": [
+    "Pasakau, kad išgaravęs vanduo neprapuola, o būna ore kaip garas.",
+    "Paaiškinu, kodėl ant vėsaus dangčio susidaro lašai.",
+    "Įvardiju tris vandens būsenas: ledą, vandenį ir garą."
+  ],
+  "concept": {
+    "title": "Vanduo keičia formą",
+    "big_idea": "Vanduo gali būti ledas, vanduo arba garas. Šildomas jis kyla į orą, o vėsdamas vėl tampa lašais.",
+    "steps": [
+      "Įpilk vandens ir pakaitink. Virš puodo pakyla garas.",
+      "Garas yra tas pats vanduo, tik ore. Jo nematome.",
+      "Uždėk vėsų dangtį. Ant jo susirenka lašai.",
+      "Pakreipk dangtį. Lašai nubyra atgal į puodą."
+    ],
+    "example": "Ryte vonios veidrodis būna aprasojęs. Tai garas iš dušo atvėso ir virto lašais."
+  },
+  "sim": {
+    "component": "vandens-busenos",
+    "config": {
+      "words": ["Vanduo", "Ledas", "Garas", "Dangtis", "Lašai"]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Puode vandens sumažėjo, nors puodas sveikas. Kur jis dingo?",
+      "options": [
+        "Išgaravo į orą",
+        "Išbėgo pro dugną",
+        "Sugėrė puodo sienos"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, ką matei kylant virš puodo.",
+      "why": "Vanduo virto garu ir pakilo į orą. Jis ne dingo, tik pakeitė formą."
+    },
+    {
+      "q": "Ant vėsaus dangčio atsirado lašų. Iš kur jie?",
+      "options": [
+        "Iš dangčio medžiagos",
+        "Iš garo, kuris kilo iš puodo",
+        "Iš lietaus lauke"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kas buvo tarp vandens ir dangčio.",
+      "why": "Vėsus dangtis atvėsino garą, ir šis virto lašais."
+    },
+    {
+      "q": "Ryte vonios veidrodis aprasojo. Kas jame?",
+      "options": [
+        "Dulkės nuo sienos",
+        "Sienos dažai",
+        "Vanduo, kuris buvo ore"
+      ],
+      "answer": 2,
+      "hint": "Prisimink, kas nutinka šiltam garui ant vėsaus paviršiaus.",
+      "why": "Šiltas garas atvėso ant vėsaus veidrodžio ir virto lašais."
+    },
+    {
+      "q": "Ledukas stiklinėje ištirpo. Kas nutiko vandeniui?",
+      "options": [
+        "Jis virto garu",
+        "Jis tapo skysčiu",
+        "Jis dingo"
+      ],
+      "answer": 1,
+      "hint": "Ledukas mažėjo, o stiklinėje atsirado vandens.",
+      "why": "Ledas yra kietas vanduo. Šilumoje jis tirpsta ir vėl tampa skysčiu.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kur esi matęs garą arba lašus ant vėsaus paviršiaus? Papasakok savais žodžiais.",
+  "teacher": {
+    "goal": "Suprasti, kad vanduo nepranyksta, o keičia būseną: šildomas virsta garu, o ant vėsaus paviršiaus vėl tampa lašais. Modelis rodo abi puses — garavimą ir lašų susidarymą.",
+    "prompt": "Kodėl ant vėsaus dangčio atsiranda lašai, o be dangčio — ne?",
+    "offline": "Uždenkite puodelį su karštu vandeniu lėkšte ir ant jos padėkite leduką. Po kelių minučių pakelkite lėkštę ir apžiūrėkite lašus apačioje. Pakreipkite lėkštę — lašai nubėgs atgal. Paklauskite, ar vandens puodelyje pagausėjo.",
+    "misconceptions": [
+      "„Išgaravęs vanduo išnyksta.“ Modelis su dangčiu parodo, kad garas sugrįžta lašais ir vandens lygis puode vėl pakyla.",
+      "„Lašai ant dangčio atsirado iš paties dangčio.“ Lašų daugėja tik kaitinant, o šaltas dangtis be puodo lieka sausas.",
+      "„Garas yra dūmai.“ Garas — tas pats vanduo, tik dujinės būsenos. Dūmai lieka nuo degimo."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Pasaulio pažinimas“ 26.3.2: kietoji vandens būsena įvairiomis formomis; bandymais nustatoma, kad ore yra dujinės būsenos vandens.",
+    "Pasaulio pažinimo bendroji programa (2022): 1 klasės metų pasiekimas — atpažįsta vandens kietąją būseną ir kad vanduo keičia būsenas.",
+    "Bar, V., & Galili, I. (1994). Stages of children's views about evaporation. International Journal of Science Education, 16(2), 157–174. — 5–6 m. vaikai mano, kad vanduo išnyksta, 7–8 m. — kad jis susigeria į paviršių.",
+    "TERC Inquiry Project. „Condensation is harder than evaporation“ — mokymo medžiaga, kodėl lašų susidarymą reikia parodyti atskirai nuo garavimo."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (būsenos kaita) rodoma per bandymą, o ne išvardijamos trys būsenos",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (veidrodis, ledukas), o ne įsimintą formuluotę",
+    "3 žingsnis — pagalba laiku: modelis nebaudžia, užuominos nukreipia į stebėjimą, yra praplėtimo užduotis"
+  ]
+}

@@ -615,6 +615,10 @@
   "n": "n/e9ebf47dd9afa46f-0377d56d.mp3",
   "s": "s/e9ebf47dd9afa46f-aaffef6d.mp3"
  },
+ "Dangtis": {
+  "n": "n/66f6d14e6d06c745-319522ed.mp3",
+  "s": "s/66f6d14e6d06c745-c73fa8ab.mp3"
+ },
  "Dar ne visa kaina.": {
   "n": "n/c890f23c44c2b32e-9abe2ec1.mp3",
   "s": "s/c890f23c44c2b32e-e9ea8cc6.mp3"
@@ -783,6 +787,10 @@
   "n": "n/333e0a1e27815d0c-0c135f4c.mp3",
   "s": "s/333e0a1e27815d0c-41491a62.mp3"
  },
+ "Garas": {
+  "n": "n/a5c481c3f32ee5e4-7e4f2324.mp3",
+  "s": "s/a5c481c3f32ee5e4-1ca3e48b.mp3"
+ },
  "Garsas išjungtas": {
   "n": "n/baf0cd4ffdbd715c-3c48511b.mp3",
   "s": "s/baf0cd4ffdbd715c-8ac7ca8e.mp3"
@@ -930,6 +938,14 @@
  "Lapė": {
   "n": "n/554e0a133245fe50-2ceabdf8.mp3",
   "s": "s/554e0a133245fe50-57f62bf8.mp3"
+ },
+ "Lašai": {
+  "n": "n/4cff7a27a0875490-423f4672.mp3",
+  "s": "s/4cff7a27a0875490-6cc8ebc9.mp3"
+ },
+ "Ledas": {
+  "n": "n/fe352e35865e1d09-253da876.mp3",
+  "s": "s/fe352e35865e1d09-6278e347.mp3"
  },
  "Lygiosios": {
   "n": "n/e8f8397e285c5f87-8a122b20.mp3",
@@ -1210,6 +1226,10 @@
  "Vaikai eina į mokyklą": {
   "n": "n/8064f97af3a77698-8e04eda4.mp3",
   "s": "s/8064f97af3a77698-c3d0a4ae.mp3"
+ },
+ "Vanduo": {
+  "n": "n/74417ae0342a57f0-2b53b370.mp3",
+  "s": "s/74417ae0342a57f0-7deb8dc3.mp3"
  },
  "Varnas": {
   "n": "n/681b474220302821-fff742db.mp3",

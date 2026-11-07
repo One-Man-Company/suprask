@@ -675,8 +675,296 @@ const gyvunuGrupes = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 4. Vandens būsenos — kur dingsta vanduo                             */
+/* ------------------------------------------------------------------ */
+/* Klaidinga nuostata (Bar ir Galili, 1994): 5–6 m. vaikas mano, kad
+   išgaravęs vanduo išnyksta, o 7–8 m. — kad jis susigeria į paviršių.
+   Todėl modelis turi du kelius tam pačiam vandeniui:
+     be dangčio — vanduo išeina į orą ir jo nebesugrąžinsi;
+     su dangčiu — garas nusėda lašais, o „Grąžink lašus“ parodo, kad
+     vandens kiekis puode vėl toks pat.
+   Skaičių vaikas neskaičiuoja: lygį rodo vandens juosta puode ir lašai
+   ant dangčio. Šiluma keičia greitį (0 / 1 / 2 lygio per „pakaitinimą“),
+   o dangtis — tai, kur garas nusėda. Dangtis vėsus, nes ant jo guli
+   ledukas: tai paaiškina, kodėl garas virsta lašais.
+   Ribos: puodas rodomas perpjautas (kitaip vandens nesimatytų), o
+   vanduo ore lieka nepavaizduotas — tik žodžiu pasakome, kad jis ten.
+   Modelis neturi laikmačio: vienas paspaudimas = kelios minutės. */
+
+const VB_MAX = 5;
+const VB_HEAT = ["Vėsu", "Šilta", "Verdantis"];
+
+const vandensBusenos = {
+  mount({ stage, controls, api }) {
+    let level = VB_MAX;      // vandens lygis 0..5
+    let heat = 1;            // 0 vėsu, 1 šilta, 2 verdantis
+    let lid = false;         // ar dangtis uždėtas
+    let drops = 0;           // lašai ant dangčio (0..5)
+    let inAir = 0;           // vanduo, išėjęs į orą be dangčio
+    let returned = 0;        // kiek lašų grąžinta į puodą
+    let presses = 0;         // kiek kartų kaitinta — tik bangelių vietai
+    let reported = false;
+    let msg = "Pakaitink puodą ir pažiūrėk, kas kyla virš vandens.";
+    const spoke = { steam: false, drops: false, back: false };
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:28rem;margin:0 auto">
+        <svg id="vb-scene" viewBox="0 0 360 330" role="img"
+             aria-label="Vandens būsenų modelis: puodas ant laužo"></svg>
+        <p class="sim-note" style="font-size:.8rem;text-align:center">
+          Modelis supaprastintas: puodas rodomas perpjautas, kad matytum vandenį.
+        </p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.6rem;width:100%;max-width:32rem;margin:0 auto">
+        <div>
+          <label for="vb-heat" style="display:block;text-align:center;font-weight:800;font-size:.95rem">
+            Šiluma: <span id="vb-heat-word">Šilta</span>
+          </label>
+          <input id="vb-heat" type="range" min="0" max="2" step="1" value="1"
+                 aria-label="Šiluma po puodu: vėsu, šilta arba verdantis"
+                 style="width:100%;height:48px;accent-color:var(--ink)" />
+          <div aria-hidden="true" style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink-soft);padding:0 .3rem">
+            <span>Vėsu</span><span>Šilta</span><span>Verdantis</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center">
+          <button class="btn" id="vb-boil" aria-label="Pakaitink puodą kelias minutes"
+                  style="flex:1 1 8.5rem;min-height:48px">Pakaitink</button>
+          <button class="btn secondary" id="vb-lid" aria-pressed="false"
+                  style="flex:1 1 8.5rem;min-height:48px">Uždėti dangtį</button>
+          <button class="btn secondary" id="vb-back" aria-label="Pakreipk dangtį ir grąžink lašus į puodą"
+                  style="flex:1 1 8.5rem;min-height:48px">Grąžink lašus</button>
+          <button class="btn ghost" id="vb-reset" aria-label="Pradėti bandymą iš naujo"
+                  style="flex:0 0 auto;min-height:48px">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const svg = stage.querySelector("#vb-scene");
+    const q = (sel) => controls.querySelector(sel);
+
+    const heatWord = () => VB_HEAT[heat].toLowerCase();
+
+    /* Vanduo puode: kuo daugiau lygių, tuo aukščiau paviršius. */
+    const waterTop = () => 250 - level * 14.8;
+
+    function firePath(cx, baseY, h, col, op) {
+      return `<path d="M${cx} ${baseY} C${cx - 13} ${baseY - h * 0.45} ${cx - 5} ${baseY - h * 0.7} ${cx} ${baseY - h}`
+        + ` C${cx + 7} ${baseY - h * 0.6} ${cx + 13} ${baseY - h * 0.4} ${cx} ${baseY} Z"`
+        + ` fill="${col}" opacity="${op}"/>`;
+    }
+
+    /* Garo srovelė: kylanti vingiuota linija. Kiekis ir aukštis priklauso
+       nuo šilumos, o ne nuo atsitiktinumo — tą patį veiksmą vaikas gali
+       pakartoti ir pamatyti tą patį vaizdą. */
+    function steam(x, top, h, op) {
+      return `<path d="M${x} ${top} q -9 -${h * 0.3} 0 -${h * 0.55} q 9 -${h * 0.28} 0 -${h * 0.55}"`
+        + ` stroke="#ffffff" stroke-opacity="${op}" stroke-width="7" fill="none" stroke-linecap="round"/>`;
+    }
+
+    function render() {
+      const top = waterTop();
+      const strong = heat === 2;
+      const fireH = heat === 0 ? 0 : strong ? 44 : 24;
+      const flames = fireH
+        ? firePath(180, 302, fireH, "#f2892f", 0.95)
+          + firePath(164, 302, fireH * 0.68, "#f6a63c", 0.9)
+          + firePath(196, 302, fireH * 0.62, "#f6a63c", 0.9)
+          + firePath(180, 302, fireH * 0.52, "#ffd166", 0.95)
+        : "";
+
+      const bubbles = strong && level > 0
+        ? Array.from({ length: 4 }, (_, i) => {
+          const bx = 152 + i * 18;
+          const by = Math.min(246, top + 16 + ((i * 13 + presses * 7) % 18));
+          return `<circle cx="${bx}" cy="${by}" r="3" fill="#ffffff" opacity=".5"/>`;
+        }).join("")
+        : "";
+
+      const water = level > 0
+        ? `<path d="M126 ${top} Q180 ${top - 7} 234 ${top} L229 254 Q180 262 131 254 Z" fill="url(#vb-water)"/>
+           <ellipse cx="180" cy="${top}" rx="54" ry="8" fill="#a6d9f0" opacity=".9"/>
+           <path d="M140 ${top + 26} q14 -5 28 0 t28 0" stroke="#ffffff" stroke-opacity=".35"
+                 stroke-width="2.4" fill="none" stroke-linecap="round"/>
+           <path d="M150 ${top + 46} q12 -4 24 0 t24 0" stroke="#ffffff" stroke-opacity=".22"
+                 stroke-width="2.2" fill="none" stroke-linecap="round"/>
+           ${bubbles}`
+        : `<path d="M131 254 Q180 262 229 254 L232 246 Q180 253 128 246 Z" fill="#8b5e3c" opacity=".55"/>`;
+
+      const pot = `
+        <path d="M112 150 H248 L241 252 Q236 268 180 270 Q124 268 119 252 Z"
+              fill="#5c6772" stroke="#39424c" stroke-width="3"/>
+        ${water}
+        <path d="M121 168 q-17 5 -13 21 q3 11 16 8" fill="none" stroke="#39424c" stroke-width="6" stroke-linecap="round"/>
+        <path d="M239 168 q17 5 13 21 q-3 11 -16 8" fill="none" stroke="#39424c" stroke-width="6" stroke-linecap="round"/>
+        <ellipse cx="180" cy="150" rx="70" ry="13" fill="#6d7985" stroke="#39424c" stroke-width="3"/>
+        <ellipse cx="180" cy="150" rx="60" ry="9" fill="#333b43"/>
+        <path d="M124 158 q-4 46 3 84" stroke="#ffffff" stroke-opacity=".22" stroke-width="5"
+              fill="none" stroke-linecap="round"/>`;
+
+      const dropsUnderLid = drops > 0
+        ? art.drops(155, 164, drops, "#5fb3e0")
+        : "";
+
+      const lidOn = `
+        <ellipse cx="180" cy="150" rx="74" ry="14" fill="#c3ced8" stroke="#7e8b98" stroke-width="3"/>
+        <ellipse cx="180" cy="146" rx="62" ry="9" fill="#dbe5ee" opacity=".7"/>
+        ${art.block(166, 108, 28, "#e2f3fc", "", "#a7d3e6")}
+        <text x="200" y="126" font-family="system-ui, sans-serif" font-size="11" font-weight="700"
+              fill="#4a5560">ledas</text>
+        ${dropsUnderLid}`;
+
+      const lidOff = `
+        <g transform="translate(292 292) rotate(-12)">
+          <ellipse cx="0" cy="0" rx="34" ry="8" fill="#c3ced8" stroke="#7e8b98" stroke-width="2.5"/>
+          <ellipse cx="0" cy="-3" rx="24" ry="5" fill="#dbe5ee" opacity=".7"/>
+          ${drops > 0 ? art.drops(-16, 1, drops, "#5fb3e0") : ""}
+        </g>`;
+
+      /* Garas: be dangčio kyla aukštyn ir tolsta; su dangčiu lieka po juo. */
+      const steamWisps = heat > 0 && level > 0 && !lid
+        ? (heat === 2
+          ? steam(168, 140, 62, 0.62) + steam(184, 138, 74, 0.55) + steam(200, 142, 54, 0.42)
+          : steam(172, 142, 42, 0.42) + steam(192, 144, 34, 0.32))
+        : "";
+
+      /* Vanduo, kuris išėjo į orą: silpnos srovelės toliau nuo puodo.
+         Jos rodo, kad vanduo liko ore, o ne dingo. */
+      const airWisps = inAir > 0 && !lid
+        ? steam(286, 132, 46, 0.22) + steam(306, 122, 36, 0.18)
+        : "";
+
+      svg.innerHTML = `
+        ${art.defs("vb")}
+        <rect x="0" y="0" width="360" height="330" rx="16" fill="url(#vb-sky)"/>
+        ${art.sun(314, 46, 13, "vb", heat === 2 ? 1 : 0.85)}
+        ${art.cloud(52, 54, 1)}
+        ${art.cloud(148, 34, 0.62, 0.8)}
+        ${art.birds(30, 100)}
+        ${art.hills(360, 212)}
+        ${art.soil(0, 236, 360, 94, "vb")}
+        ${art.grass(24, 240, 1)}
+        ${art.grass(330, 242, 0.9)}
+        <g fill="#6f6257" stroke="#4f463d" stroke-width="2">
+          <circle cx="126" cy="300" r="9"/><circle cx="234" cy="300" r="9"/>
+          <circle cx="146" cy="311" r="7"/><circle cx="214" cy="311" r="7"/>
+        </g>
+        <g transform="translate(180 300) rotate(-8)">
+          <rect x="-30" y="-3" width="60" height="9" rx="4.5" fill="#8a5c33"/>
+        </g>
+        <g transform="translate(180 302) rotate(9)">
+          <rect x="-24" y="-2" width="48" height="8" rx="4" fill="#6f4630"/>
+        </g>
+        ${flames}
+        ${pot}
+        ${lid ? lidOn : lidOff}
+        ${steamWisps}
+        ${airWisps}`;
+
+      svg.setAttribute("aria-label",
+        `Puodas ant laužo. Vandens lygis ${level} iš ${VB_MAX}. `
+        + `${heat === 0 ? "Ugnis nedega" : strong ? "Ugnis stipri" : "Ugnis silpna"}. `
+        + `${lid ? "Dangtis uždėtas" : "Dangtis nuimtas"}. `
+        + `Ant dangčio ${drops} lašų.`);
+
+      q("#vb-heat").value = String(heat);
+      q("#vb-heat").setAttribute("aria-valuetext", `Šiluma: ${heatWord()}`);
+      q("#vb-heat-word").textContent = VB_HEAT[heat];
+
+      const lidBtn = q("#vb-lid");
+      lidBtn.textContent = lid ? "Nuimti dangtį" : "Uždėti dangtį";
+      lidBtn.setAttribute("aria-pressed", String(lid));
+      lidBtn.setAttribute("aria-label", lid ? "Nuimk dangtį nuo puodo" : "Uždėk vėsų dangtį ant puodo");
+
+      api.readout(`Vandens lygis ${level} iš ${VB_MAX} · ${lid ? "dangtis uždėtas" : "dangtis nuimtas"}`
+        + `${drops > 0 ? ` · ant dangčio ${drops} lašai` : ""}`);
+      api.note(msg);
+
+      if (!spoke.steam && heat > 0 && level < VB_MAX) { spoke.steam = true; api.speak("Garas"); }
+      if (!spoke.drops && drops > 0) { spoke.drops = true; api.speak("Lašai"); }
+      if (!spoke.back && returned > 0) { spoke.back = true; api.speak("Vanduo"); }
+    }
+
+    function boil() {
+      if (level === 0) {
+        msg = "Puodas tuščias. Paspausk „Iš naujo“ ir bandyk dar kartą.";
+        render();
+        return;
+      }
+      if (heat === 0) {
+        msg = "Vėsioje vanduo beveik negaruoja. Pastumk šilumą į dešinę.";
+        render();
+        return;
+      }
+      const amount = Math.min(level, heat);   // 1 arba 2 lygiai per kartą
+      level -= amount;
+      presses += 1;
+      if (lid) {
+        drops = Math.min(VB_MAX, drops + amount);
+        msg = drops === amount
+          ? "Vanduo virto garu ir nusėdo ant dangčio lašais."
+          : "Dar daugiau garo nusėdo ant dangčio.";
+      } else {
+        inAir += amount;
+        msg = "Vanduo virto garu ir išėjo į orą. Jis ne dingo — jis ore.";
+      }
+      render();
+    }
+
+    function toggleLid() {
+      lid = !lid;
+      msg = lid
+        ? "Dangtis uždėtas. Jis vėsus, todėl garas ant jo virs lašais."
+        : "Dangtis nuimtas. Garas kils tiesiai į orą.";
+      render();
+    }
+
+    function backToPot() {
+      if (drops === 0) {
+        msg = "Ant dangčio dar nėra lašų. Uždėk dangtį ir pakaitink.";
+        render();
+        return;
+      }
+      const amount = drops;
+      level = Math.min(VB_MAX, level + amount);
+      returned += amount;
+      drops = 0;
+      msg = "Lašai nubėgo atgal į puodą. Vanduo sugrįžo, nebuvo dingęs.";
+      render();
+      /* Rezultatas — visas ciklas: garas surinktas ant dangčio ir grąžintas.
+         Vienas išgarinimas ar vienas lašas dar nėra įrodymas (LL-29). */
+      if (!reported && returned >= 2) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    q("#vb-heat").addEventListener("input", (e) => {
+      heat = Number(e.target.value);
+      msg = heat === 0
+        ? "Vėsu: garų beveik nematyti."
+        : heat === 1 ? "Šilta: vanduo pradeda garuoti." : "Verdantis: garas kyla stipriai.";
+      render();
+    });
+    q("#vb-boil").addEventListener("click", boil);
+    q("#vb-lid").addEventListener("click", toggleLid);
+    q("#vb-back").addEventListener("click", backToPot);
+    q("#vb-reset").addEventListener("click", () => {
+      level = VB_MAX; heat = 1; lid = false; drops = 0; inAir = 0; returned = 0; presses = 0;
+      msg = "Naujas bandymas. Pakaitink puodą ir stebėk garą.";
+      render();
+    });
+
+    render();
+    return null;
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
   "gyvunu-grupes": gyvunuGrupes,
+  "vandens-busenos": vandensBusenos,
 };

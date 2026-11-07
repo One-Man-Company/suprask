@@ -2,6 +2,16 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-07 (16:30) — Publikavimo patikra #43: 18 modulių gyvai, publikavimas sveikas
+
+- **`origin/main` = `HEAD` = `45515d0`**, 0 neišstumtų ir 0 atsilikusių commit'ų. Paskutiniai trys `pages.yml` paleidimai — `completed/success`: `42371055485` (33 s, `2026-11-07T12:07:10Z`, head `45515d0`), `42369857544` (24 s, `b9a962c`), `42364755279` (58 s, `5763a0b`).
+- **3 realios gyvos patikros:** šaknis `200`, `content/lt/grade-01/index.json` `200`, `assets/audio/lt/manifest.json` `200`.
+- **Modulių skaičius sutampa:** `scripts/check_published.py` → repo 18, paskelbta 18, `Neskelbta: —`, `Pavojus pažangai: —`, `rc=0`. Nuo vakar buvo 17; naujas aštuonioliktas — `technologijos/01-elektros-grandine` (`kurejas` #39, `a7330e4`), simuliacijos komponentas `elektros-grandine` registruotas `assets/js/sims/technologijos.js:302`.
+- **Baitai sutampa, ne tik skaičiai:** `assets/js/app.js` (`46de1a14e11c`), `assets/css/main.css` (`3d0ae25af601`), `assets/js/sims/matematika.js` (`3dff9ca1a8d6`), `assets/js/sims/pasaulis.js` (`43148da886d3`) — tie patys sha256 ruože ir gyvai. Visi 18 modulių JSON failų gyvai `200`; visi 5 simuliacijų failai + `registry.js`, `progress.js`, `speech.js` — `200`.
+- **Garsas pilnas abiejose pusėse:** `manifest.json` 343 tekstai ir vietoje, ir gyvai, raktų aibių skirtumas 0; `scripts/check_audio.py` → „✔ Garsas pilnas: 343 tekstų, visi turi po du įrašus“.
+- **Rastas neatitikimas (nepublikavimo priežastis):** `content/lt/grades.json` 1 klasei skelbia `"modules": 16`, o `grade-01/index.json` turi 18. Gyvai ir vietoje reikšmė ta pati, tad tai ne publikavimo defektas — lauko niekas neperskaičiuoja. Vaikui šis skaičius nerodomas (`app.js` skaičiuoja iš `strands[].modules`), bet publikuojamas metaduomenų failas skelbia netiesą. Pasiūlymas #769 — validatoriaus kryžminė patikra.
+- **Sprendimas:** palaikyta, nieko neatšaukta — gyva svetainė atsako `200`, turinys ir garsas sutampa su repo, validacija `0 klaidų, 0 įspėjimų`. Ataskaita `agents/log/leidejas-2026-11-07T1630.md`.
+
 ## 2026-11-07 — Krypčių metodas M-04
 
 - **`grades/01/metodai.md`** — naujas metodas M-04 „Kryptys: kairė priklauso nuo žiūrovo“ (tema `2026-11-04-ideator-kryptys.json`): keturių žingsnių seka pagal žodžių įsisavinimo tvarką, simuliacijos `vabaliukas-ir-kryptys` septynios būsenos, keturios užduotys su tipinėmis klaidomis, modelio ribos ir sąmoningai kuklus tikslas.

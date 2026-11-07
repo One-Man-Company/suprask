@@ -61,27 +61,27 @@
       ],
       "answer": 0,
       "hint": "Vienas ratas — vienas žingsnis trumpąja. Skaičiuok nuo 9 vienu toliau.",
-      "why": "Per vieną ratą trumpoji pasislenka vienu skaičiumi, todėl 9 tampa 10."
+      "why": "Per vieną ratą trumpoji pasislenka vienu skaičiumi. Todėl 9 tampa 10."
     },
     {
       "q": "Rodyklės neturi žymenų. Viena rodyklė apsisuko visą ratą. Kita pasislinko vienu skaičiumi. Kuri rodo valandas?",
       "options": [
         "Rodyklė, kuri apsisuko visą ratą",
-        "Rodyklė, kuri pasislinko vienu skaičiumi",
-        "Abi rodo tą patį"
+        "Abi rodo tą patį",
+        "Rodyklė, kuri pasislinko vienu skaičiumi"
       ],
-      "answer": 1,
+      "answer": 2,
       "hint": "Daugiau judanti rodyklė ne visada rodo didesnį vienetą. Palygink, kiek pasislinko kiekviena rodyklė.",
-      "why": "Valandas rodo trumpoji: per vieną ilgosios ratą ji pasislenka tik vienu skaičiumi."
+      "why": "Valandas rodo trumpoji. Per vieną ilgosios ratą ji pasislenka vienu skaičiumi."
     },
     {
       "q": "Ilgoji nuėjo pusę rato ir sustojo. Ar laikrodis jau rodo kitą valandą?",
       "options": [
-        "Taip, jau kita valanda",
         "Ne, ratas dar nebaigtas",
+        "Taip, jau kita valanda",
         "Laikrodis sustojo"
       ],
-      "answer": 1,
+      "answer": 0,
       "hint": "Pažiūrėk, ar trumpoji jau stovi lygiai ties skaičiumi.",
       "why": "Valanda pasikeičia, kai ilgoji užbaigia visą ratą. Trumpoji tada stovi lygiai ties skaičiumi.",
       "optional": true

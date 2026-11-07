@@ -35,6 +35,23 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 
 const SITE_TITLE = "Suprask! — interaktyvus mokymasis";
 
+/* Kelio tvarka. `path.json` yra vienintelis tvarkos šaltinis — ir tam, kur
+ * vaikas eina paspaudęs „Toliau“, ir tam, kokia eile rodomi moduliai.
+ * Anksčiau sąrašai ėjo `index.json` tvarka, todėl tame pačiame puslapyje
+ * buvo dvi skirtingos sekos ir numeris „4 iš 18“ nieko nesutikdavo.
+ * Moduliai, kurių kelyje dar nėra (naujas), pridedami gale indekso tvarka:
+ * jie lieka pasiekiami ir turi savo numerį, o ne iškrenta iš sąrašo.
+ */
+function pathSequence(gradeIndex, pathDoc) {
+  const all = gradeIndex.strands.flatMap((s) => s.modules.map((m) => ({ ...m, strand: s })));
+  const byId = new Map(all.map((m) => [m.id, m]));
+  const seq = pathDoc && Array.isArray(pathDoc.sequence)
+    ? pathDoc.sequence.filter((id) => byId.has(id))
+    : [];
+  for (const m of all) if (!seq.includes(m.id)) seq.push(m.id);
+  return { all, byId, seq };
+}
+
 let cleanupSim = null;
 let currentRoute = null;
 
@@ -84,8 +101,10 @@ function teardown() {
 async function viewHome() {
   const grades = await loadGrades();
   const g1 = await loadGradeIndex(1);
-  const allIds = g1.strands.flatMap((s) => s.modules.map((m) => m.id));
-  const p = progress.count(allIds);
+  const { all, byId, seq } = pathSequence(g1, await loadPath(1));
+  const p = progress.count(all.map((m) => m.id));
+  const nextId = seq.find((id) => !progress.isDone(id));
+  const next = nextId ? byId.get(nextId) : null;
 
   const strip = grades.grades.map((g) => {
     if (g.status === "live") {
@@ -113,16 +132,15 @@ async function viewHome() {
       <div class="hero-art" aria-hidden="true">${heroArt()}</div>
     </section>
 
+    ${resumeCard(1, next, p)}
+
     <section aria-labelledby="klases-h">
       <h2 id="klases-h" class="sr-only">Klasės</h2>
       <div class="grade-strip">${strip}</div>
     </section>
 
     <section aria-labelledby="kryptys-h" style="margin-top:1.5rem">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap">
-        <h2 id="kryptys-h" style="margin:0">Kryptys</h2>
-        <p class="strand-meta" style="margin:0">Tavo kelias: <strong>${p.done} iš ${p.total}</strong> modulių</p>
-      </div>
+      <h2 id="kryptys-h" style="margin:0">Kryptys</h2>
       <div class="grid grid-2" style="margin-top:1rem">${strands}</div>
     </section>
 
@@ -138,6 +156,32 @@ async function viewHome() {
   `;
 }
 
+/* „Tęsk nuo čia“ — tas pats veiksmas pradžioje ir klasės puslapyje.
+ * Pradžioje jis sutrumpina kelią iki mokymosi vienu paspaudimu: anksčiau
+ * reikėjo pirmiau rasti ir atsidaryti klasę. Kai nieko neatlikta, užrašas
+ * sako „Pradėk nuo čia“ — pirmą kartą atėjusiam vaikui „tęsk“ būtų netiesa.
+ */
+function resumeCard(grade, next, { done = 0, total = 0 } = {}) {
+  if (!next) {
+    return `<div class="card continue-card done">
+      <div>
+        <span class="continue-label">Kelias įveiktas</span>
+        <strong>Visi ${total} moduliai atlikti 🎉</strong>
+        <span class="strand-meta">Gali kartoti bet kurią temą — kartojimas padeda atsiminti.</span>
+      </div>
+    </div>`;
+  }
+  const started = done > 0;
+  return `<a class="card continue-card" href="#/modulis/${grade}/${next.strand.id}/${next.id}">
+      <div>
+        <span class="continue-label">${started ? "Tęsk nuo čia" : "Pradėk nuo čia"}</span>
+        <strong>${esc(next.title)}</strong>
+        <span class="strand-meta"><span>${esc(next.strand.title)}</span> <span class="nowrap">· ${next.minutes || 8} min.</span> · ${done} iš ${total} atlikta</span>
+      </div>
+      <span class="btn">${started ? "Tęsti →" : "Pradėti →"}</span>
+    </a>`;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Klasė                                                              */
 /* ------------------------------------------------------------------ */
@@ -146,35 +190,20 @@ async function viewGrade(grade) {
   const meta = grades.grades.find((g) => g.grade === grade);
   if (!meta || meta.status !== "live") return comingSoon(meta);
   const g = await loadGradeIndex(grade);
-  const pathDoc = await loadPath(grade);
+  const { all, byId, seq } = pathSequence(g, await loadPath(grade));
 
-  const allModules = g.strands.flatMap((s) => s.modules.map((m) => ({ ...m, strand: s })));
-  const byId = new Map(allModules.map((m) => [m.id, m]));
-  const fallbackSeq = allModules.map((m) => m.id);
-  const seq = pathDoc && Array.isArray(pathDoc.sequence) && pathDoc.sequence.length ? pathDoc.sequence : fallbackSeq;
-  const next = seq.map((id) => byId.get(id)).find((m) => m && !progress.isDone(m.id)) || null;
-  const doneCount = allModules.filter((m) => progress.isDone(m.id)).length;
-
-  const continueCard = next
-    ? `<a class="card continue-card" href="#/modulis/${grade}/${next.strand.id}/${next.id}">
-         <div>
-           <span class="continue-label">Tęsk nuo čia</span>
-           <strong>${esc(next.title)}</strong>
-           <span class="strand-meta">${esc(next.strand.title)} · ${next.minutes || 8} min. · ${doneCount} iš ${allModules.length} atlikta</span>
-         </div>
-         <span class="btn">Tęsti →</span>
-       </a>`
-    : `<div class="card continue-card done">
-         <div>
-           <span class="continue-label">Kelias įveiktas</span>
-           <strong>Visi ${allModules.length} moduliai atlikti 🎉</strong>
-           <span class="strand-meta">Gali kartoti bet kurią temą — kartojimas padeda atsiminti.</span>
-         </div>
-       </div>`;
+  const nextId = seq.find((id) => !progress.isDone(id));
+  const next = nextId ? byId.get(nextId) : null;
+  const doneCount = all.filter((m) => progress.isDone(m.id)).length;
+  const continueCard = resumeCard(grade, next, { done: doneCount, total: all.length });
 
   const strands = g.strands.map((s) => {
     const done = progress.count(s.modules.map((m) => m.id));
-    const mods = s.modules.map((m) => moduleRow(s, m)).join("");
+    const mods = s.modules
+      .slice()
+      .sort((a, b) => seq.indexOf(a.id) - seq.indexOf(b.id))
+      .map((m) => moduleRow(s, m, seq.indexOf(m.id) + 1, seq.length))
+      .join("");
     return `
       <section class="card" style="margin-top:1.5rem">
         <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap">
@@ -198,12 +227,16 @@ async function viewGrade(grade) {
   `;
 }
 
-function moduleRow(strand, m) {
+/* Eilutėje — to paties kelio numeris kaip modulio puslapyje („Kitas žingsnis ·
+ * N iš 18“). Skaičius yra tas pats abiejuose puslapiuose, todėl vaikas gali
+ * atpažinti, kur yra, o ne spėlioti, kuri tvarka galioja.
+ */
+function moduleRow(strand, m, step = 0, stepTotal = 0) {
   const done = progress.isDone(m.id);
   return `
     <a class="card mod-row" style="display:flex;gap:.8rem;align-items:center;text-decoration:none;padding:.8rem 1rem;border-radius:var(--r-m)"
        href="#/modulis/${strand.grade || 1}/${strand.id}/${m.id}">
-      <span aria-hidden="true" style="font-size:1.4rem">${done ? "✅" : "▶️"}</span>
+      ${step ? `<span class="step-badge${done ? " done" : ""}"><span class="sr-only">Žingsnis </span>${step}<span class="sr-only"> iš ${stepTotal}</span></span>` : ""}
       <span class="mod-row-body">
         <strong style="display:block">${esc(m.title)}</strong>
         <span class="strand-meta"><span>${esc(m.subtitle || "")}</span> <span class="nowrap">· ${m.minutes || 8} min.</span></span>
@@ -231,8 +264,11 @@ async function viewStrand(grade, strandId) {
   const g = await loadGradeIndex(grade);
   const s = g.strands.find((x) => x.id === strandId);
   if (!s) return notFound();
+  const { seq } = pathSequence(g, await loadPath(grade));
 
-  const mods = s.modules.map((m) => `
+  // Krypties sąrašas laikosi tos pačios kelio eilės kaip klasės puslapis —
+  // kitaip ta pati kryptis atrodytų vis kitaip, priklausomai nuo įėjimo.
+  const mods = s.modules.slice().sort((a, b) => seq.indexOf(a.id) - seq.indexOf(b.id)).map((m) => `
     <a class="card" href="#/modulis/${grade}/${s.id}/${m.id}" style="text-decoration:none;display:grid;gap:.4rem">
       <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:start">
         <h3 style="margin:0;font-size:1.15rem">${esc(m.title)}</h3>
@@ -264,16 +300,11 @@ async function viewModule(grade, strandId, moduleId) {
   progress.markVisited(mod.id, tasks.length);
 
   /* Kur toliau — imama iš `path.json`, kad vaikas eitų tuo pačiu keliu,
-   * kurį rodo „Tęsk nuo čia" klasės puslapyje. Modulis, kurio nėra kelyje
-   * (naujas, dar neįtrauktas), veda pagal klasės indekso tvarką.
+   * kurį rodo „Tęsk nuo čia" ir numeriai klasės puslapyje. Sąrašo tvarka ir
+   * „Kitas žingsnis“ naudoja tą patį skaičiavimą (`pathSequence`), todėl
+   * „žingsnis 7“ reiškia tą patį modulį abiejuose puslapiuose.
    */
-  const pathDoc = await loadPath(grade);
-  const inGrade = g.strands.flatMap((s) => s.modules.map((m) => ({ ...m, strand: s })));
-  const byId = new Map(inGrade.map((m) => [m.id, m]));
-  let seq = pathDoc && Array.isArray(pathDoc.sequence)
-    ? pathDoc.sequence.filter((id) => byId.has(id))
-    : [];
-  if (!seq.includes(moduleId)) seq = inGrade.map((m) => m.id);
+  const { byId, seq } = pathSequence(g, await loadPath(grade));
   const pos = seq.indexOf(moduleId);
   const next = pos >= 0 && pos + 1 < seq.length ? byId.get(seq[pos + 1]) : null;
 

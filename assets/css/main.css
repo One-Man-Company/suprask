@@ -174,6 +174,19 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .mod-row-body .strand-meta { overflow-wrap: anywhere; }
 .mod-row > .chip { flex: none; }
 
+/* Kelio numeris modulių eilutėje. Tas pats skaičius kaip modulio puslapyje
+   („Kitas žingsnis · N iš 18“), todėl vaikas atpažįsta, kur yra, ir nelygina
+   dviejų skirtingų tvarkų. Spalva nieko viena nereiškia: užbaigtumą sako
+   žyma „atlikta“, o ne vien žalios spalvos apskritimas. */
+.step-badge {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 2rem; height: 2rem; border-radius: 50%;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--font-head); font-weight: 900; font-size: .95rem;
+  font-variant-numeric: tabular-nums;
+}
+.step-badge.done { background: color-mix(in srgb, var(--ok) 80%, var(--ink)); }
+
 .eyebrow {
   text-transform: uppercase; letter-spacing: .12em; font-size: var(--fs-xs);
   font-weight: 900; color: var(--ink-faint); margin-bottom: .4rem;

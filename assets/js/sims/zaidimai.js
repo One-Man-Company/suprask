@@ -105,7 +105,7 @@ const bendradarbiavimoTiltas = {
     controls.innerHTML = `
       <div style="display:flex;flex-direction:column;gap:.5rem;width:100%;max-width:26rem">
         <label for="bt-range" style="font-weight:800;text-align:center">Kiek savo blokų duosi draugui? <span id="bt-val">0</span></label>
-        <input id="bt-range" type="range" min="0" max="${MINE}" value="0" step="1" style="width:100%;height:2.6rem" />
+        <input id="bt-range" type="range" min="0" max="${MINE}" value="0" step="1" style="width:100%;height:3rem" aria-label="Kiek blokų duosi draugui" />
         <button class="btn secondary" id="bt-try">Statyti tiltą</button>
       </div>`;
     const svg = stage.querySelector("#bt-scene");

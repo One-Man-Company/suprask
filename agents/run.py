@@ -100,9 +100,15 @@ ROLES: dict[str, dict] = {
         "cadence": "kasdien", "on_calendar": "*-*-* 16:30:00",
         "description": "Sujungia patvirtintus PR, atnaujina changelog ir publikavimą",
     },
+    "kalbu-redaktorius": {
+        "file": "roles/kalbu-redaktorius.md", "profile": "deepseek41flash", "toolsets": "terminal,file",
+        "max_turns": 30, "budget": 1200, "timeout": 1800,
+        "cadence": "antradieniais, penktadieniais", "on_calendar": "Tue,Fri *-*-* 13:10:00",
+        "description": "Tikrina užduočių formuluotes: vienareikšmiškumas, žodžių ilgis, sakinio ilgis",
+    },
     "publikavimo-agentas": {
         "file": "roles/publikavimo-agentas.md", "profile": "deepseek41flash", "toolsets": "terminal,file",
-        "max_turns": 20, "budget": 700, "timeout": 900,
+        "max_turns": 26, "budget": 1000, "timeout": 1200,
         "cadence": "kas 4 h (06,10,14,18,22)", "on_calendar": "*-*-* 06,10,14,18,22:10:00",
         "description": "Užtikrina, kad sukurtas turinys būtų paskelbtas ir neprarastų ankstesnių modulių",
     },
@@ -704,6 +710,11 @@ def main() -> int:
         result = publish(args.role, run_id, files, out or args.role)
         if status in ("ok", "partial"):
             status = result["status"]
+        # Patikros vaidmenys (tikrintojas, publikavimo-agentas, kuratorius) iš
+        # esmės failų nekeičia — jų rezultatas yra ataskaita. „empty“ klaidingai
+        # atrodydavo kaip „nieko nepadarė“, todėl skiriame „checked“.
+        if status == "empty" and len((out or "").strip()) > 400:
+            status = "checked"
 
         db.finish_run(
             run_id, status, code, elapsed, str(log_path.relative_to(ROOT)), out, files,

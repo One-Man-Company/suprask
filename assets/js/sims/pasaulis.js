@@ -430,27 +430,40 @@ const augaloGyvenimas = {
 /* ------------------------------------------------------------------ */
 /* 3. Gyvūnų grupės                                                    */
 /* ------------------------------------------------------------------ */
+/* Grupė nustatoma pagal tuos pačius tris požymius (danga, kvėpavimas,
+   jauniklių auginimas). Gyvūnų tvarka fiksuota ir sąmoningai permaišyta
+   taip, kad gretimi gyvūnai priklausytų skirtingoms grupėms. Anksčiau
+   sąrašas buvo maišomas `sort(() => Math.random() - 0.5)`: tas pats
+   veiksmas duodavo skirtingą rezultatą (mokytojas negalėjo pakartoti),
+   maišymas nebuvo tolygus, o kartais visi vienos grupės gyvūnai
+   atsidurdavo greta — tada užduotis virsdavo „kopijuok kaimyną“. */
+const GYVUNU_GRUPES = [
+  { id: "zinduoliai", label: "Žinduoliai", dative: "žinduoliams", hint: "maitina jauniklius pienu" },
+  { id: "pauksciai", label: "Paukščiai", dative: "paukščiams", hint: "turi plunksnas ir deda kiaušinius" },
+  { id: "zuvis", label: "Žuvys", dative: "žuvims", hint: "gyvena vandenyje, kvėpuoja žiaunomis" },
+];
+
+const GYVUNAI = [
+  { emoji: "🐄", name: "Karvė", g: "zinduoliai", pozymis: "maitina veršiuką pienu" },
+  { emoji: "🐦", name: "Varnas", g: "pauksciai", pozymis: "turi plunksnas" },
+  { emoji: "🐟", name: "Ešerys", g: "zuvis", pozymis: "kvėpuoja žiaunomis" },
+  { emoji: "🦊", name: "Lapė", g: "zinduoliai", pozymis: "maitina jauniklius pienu" },
+  { emoji: "🦆", name: "Antis", g: "pauksciai", pozymis: "deda kiaušinius" },
+  { emoji: "🐠", name: "Karosas", g: "zuvis", pozymis: "turi žvynus" },
+  { emoji: "🐇", name: "Kiškis", g: "zinduoliai", pozymis: "maitina jauniklius pienu" },
+  { emoji: "🦉", name: "Pelėda", g: "pauksciai", pozymis: "turi plunksnas" },
+  { emoji: "🦈", name: "Ryklys", g: "zuvis", pozymis: "kvėpuoja žiaunomis" },
+];
+
 const gyvunuGrupes = {
   mount({ stage, controls, api }) {
-    const groups = [
-      { id: "zinduoliai", label: "Žinduoliai", hint: "maitina jauniklius pienu" },
-      { id: "pauksciai", label: "Paukščiai", hint: "turi plunksnas ir deda kiaušinius" },
-      { id: "zuvis", label: "Žuvys", hint: "gyvena vandenyje, kvėpuoja žiaunomis" },
-    ];
-    const animals = [
-      { emoji: "🐄", name: "Karvė", g: "zinduoliai" },
-      { emoji: "🦊", name: "Lapė", g: "zinduoliai" },
-      { emoji: "🐇", name: "Kiškis", g: "zinduoliai" },
-      { emoji: "🐦", name: "Varnas", g: "pauksciai" },
-      { emoji: "🦆", name: "Antis", g: "pauksciai" },
-      { emoji: "🦉", name: "Pelėda", g: "pauksciai" },
-      { emoji: "🐟", name: "Ešerys", g: "zuvis" },
-      { emoji: "🐠", name: "Karosas", g: "zuvis" },
-      { emoji: "🦈", name: "Ryklys", g: "zuvis" },
-    ].sort(() => Math.random() - 0.5);
+    const groups = GYVUNU_GRUPES;
+    const animals = GYVUNAI.map((a) => ({ ...a, done: false }));
 
     let selected = null;
     const placed = { zinduoliai: 0, pauksciai: 0, zuvis: 0 };
+    const timers = new Set();
+    const left = () => animals.filter((a) => !a.done).length;
 
     stage.innerHTML = `
       <div style="width:100%;max-width:46rem">
@@ -468,51 +481,81 @@ const gyvunuGrupes = {
       animals.forEach((a) => {
         if (a.done) return;
         const b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("aria-label", `${a.name}. Pasirink.`);
+        b.setAttribute("aria-pressed", String(selected === a.name));
         b.style.cssText = `border:3px solid ${selected === a.name ? "var(--ink)" : "transparent"};background:transparent;border-radius:14px;padding:4px 6px;cursor:pointer;font-size:2rem;min-width:64px;min-height:64px`;
         b.innerHTML = `<span aria-hidden="true">${a.emoji}</span><span class="sr-only">${a.name}</span>`;
-        b.addEventListener("click", () => { selected = a.name; drawTray(); api.speak(a.name, { rate: .9 }); });
+        b.addEventListener("click", () => {
+          selected = a.name;
+          drawTray();
+          api.readout(`Pasirinkai: ${a.name}. Į kurią grupę dėti?`);
+          api.speak(a.name, { rate: .9 });
+        });
         trayEl.appendChild(b);
+      });
+    }
+
+    // Ekrane gyvūnai rodomi paveikslėliais, todėl kiekvienos grupės mygtuko
+    // pavadinimas keičiamas tekstu: grupė, kiek įdėta ir pagal ką atpažinti.
+    function paintBins() {
+      binsEl.querySelectorAll("button[data-g]").forEach((bin) => {
+        const g = groups.find((x) => x.id === bin.dataset.g);
+        bin.setAttribute("aria-label", `${g.label}. Įdėta ${placed[g.id]}. ${g.hint}.`);
       });
     }
 
     groups.forEach((g) => {
       const bin = document.createElement("button");
+      bin.type = "button";
+      bin.dataset.g = g.id;
       bin.style.cssText = "display:grid;place-items:center;gap:.25rem;padding:.6rem .3rem;border:3px dashed var(--line);border-radius:var(--r-m);background:var(--paper-2);cursor:pointer;min-height:9rem";
-      bin.innerHTML = `<strong style="font-size:.95rem">${g.label}</strong><span style="font-size:.72rem;color:var(--ink-faint);text-align:center">${g.hint}</span><span class="items" style="display:flex;gap:2px;flex-wrap:wrap;justify-content:center;font-size:1.1rem"></span>`;
+      bin.innerHTML = `<strong style="font-size:.95rem">${g.label}</strong><span style="font-size:.72rem;color:var(--ink-faint);text-align:center">${g.hint}</span><span class="items" aria-hidden="true" style="display:flex;gap:2px;flex-wrap:wrap;justify-content:center;font-size:1.1rem"></span>`;
       const holder = bin.querySelector(".items");
       bin.addEventListener("click", () => {
-        if (!selected) { msg.textContent = "Pirma pasirink gyvūną."; return; }
+        if (!selected) { msg.textContent = "Pirma pasirink gyvūną."; api.readout("Pirma pasirink gyvūną."); return; }
         const a = animals.find((x) => x.name === selected && !x.done);
         if (!a) return;
         if (a.g === g.id) {
           a.done = true;
           placed[g.id] += 1;
-          holder.textContent += a.emoji;
+          const mark = document.createElement("span");
+          mark.textContent = a.emoji;
+          mark.setAttribute("aria-hidden", "true");
+          holder.appendChild(mark);
           selected = null;
           drawTray();
-          msg.textContent = `Teisingai — ${a.name} yra ${g.label.toLowerCase()}.`;
-          api.progress({ correct: true });
-          if (animals.every((x) => x.done)) {
+          paintBins();
+          if (left() === 0) {
             msg.textContent = "Visi gyvūnai savo grupėse! Pagalvok: kuo dar skiriasi šios trys grupės?";
-            api.readout(`Žinduoliai ${placed.zinduoliai}, paukščiai ${placed.pauksciai}, žuvys ${placed.zuvis}`);
+            api.readout(`Visos grupės pilnos: žinduoliai ${placed.zinduoliai}, paukščiai ${placed.pauksciai}, žuvys ${placed.zuvis}.`);
+            api.progress({ correct: true });
+          } else {
+            msg.textContent = `Teisingai — ${a.name} priklauso ${g.dative}. ${a.name} ${a.pozymis}.`;
+            api.readout(`Teisingai. ${a.name} priklauso ${g.dative}. Liko ${left()}.`);
           }
         } else {
           bin.classList.add("wiggle");
-          setTimeout(() => bin.classList.remove("wiggle"), 450);
+          const t = setTimeout(() => { bin.classList.remove("wiggle"); timers.delete(t); }, 450);
+          timers.add(t);
           msg.textContent = "Ne ši grupė. Pagalvok: kuo šis gyvūnas dengtas ir kuo kvėpuoja?";
+          api.readout(`Ne ši grupė. ${a.name} liko lentelėje. Liko ${left()}.`);
         }
       });
       binsEl.appendChild(bin);
     });
 
     controls.querySelector("#gg-reset").addEventListener("click", () => {
+      timers.forEach(clearTimeout);
+      timers.clear();
       stage.innerHTML = "";
       controls.innerHTML = "";
       gyvunuGrupes.mount({ stage, controls, api });
     });
     drawTray();
-    api.readout("Rūšiuok gyvūnus");
-    return null;
+    paintBins();
+    api.readout(`Rūšiuok gyvūnus. Liko ${left()}.`);
+    return () => { timers.forEach(clearTimeout); timers.clear(); };
   },
 };
 

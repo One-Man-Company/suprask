@@ -219,6 +219,14 @@ class Handler(BaseHTTPRequestHandler):
             row = rows[0]
             row["log"] = read_log_tail(row.get("log_path") or "")
             return self._json(row)
+        if path == "/api/journal":
+            journal = ROOT / "agents" / "system-journal.md"
+            try:
+                text = journal.read_text(encoding="utf-8")
+            except OSError:
+                text = "(dienoraščio dar nėra)"
+            entries = [e for e in text.split("\n## ") if e.strip()]
+            return self._json({"entries": ["## " + e for e in entries[-3:]]})
         if path == "/api/grades":
             return self._json(grade_scope.report())
         if path == "/api/proposals":
@@ -435,6 +443,12 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
   </section>
 
   <section class="card">
+    <h2>Sistemos dienoraštis</h2>
+    <p class="muted" style="margin:-4px 0 10px">Ką pastebėjo ir pakeitė <b>sistemos-architektas</b> (kasdien 20:20).</p>
+    <div id="journal" class="muted">Kraunama…</div>
+  </section>
+
+  <section class="card">
     <h2>Suplanuoti paleidimai</h2>
     <table><thead><tr><th>Vaidmuo</th><th>Dažnis</th><th>Kitas</th><th>Paskutinis</th><th></th></tr></thead>
     <tbody id="schedule"></tbody></table>
@@ -609,6 +623,18 @@ async function loadPublish(){
   } catch(e) { setText("#pubBig",  "—"); }
 }
 
+async function loadJournal(){
+  try {
+    const d = await j("/api/journal");
+    const box = $("#journal");
+    box.classList.remove("muted");
+    box.innerHTML = (d.entries || []).reverse().map(e =>
+      `<pre style="white-space:pre-wrap;font-size:12px;line-height:1.5;margin:0 0 10px;padding:10px;` +
+      `border:1px solid var(--line);border-radius:10px;background:#fffdf8">${esc(e)}</pre>`).join("")
+      || '<span class="muted">Dar nėra įrašų.</span>';
+  } catch(e) { $("#journal").textContent = "Klaida: " + e.message; }
+}
+
 const NL = String.fromCharCode(10);  // naujos eilutės simbolis be escape spąstų
 
 async function loadGrades(){
@@ -657,7 +683,7 @@ async function saveGrade(el){
 }
 
 async function loadAll(){
-  try { await loadOverview(); await Promise.all([loadRuns(), loadProposals(), loadGrades()]);
+  try { await loadOverview(); await Promise.all([loadRuns(), loadProposals(), loadGrades(), loadJournal()]);
     $("#updated").textContent = "atnaujinta " + new Date().toLocaleTimeString("lt-LT");
   } catch(e){ $("#updated").textContent = "klaida: " + e.message; }
 }

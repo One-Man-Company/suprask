@@ -56,7 +56,7 @@
       ],
       "answer": 0,
       "hint": "Sudėk abu skaičius ir palygink su kaina. Ar rinkinys didesnis už 60?",
-      "why": "50 ir 10 yra 60, o kiti rinkiniai duoda 70 arba 50 centų."
+      "why": "50 ir 10 yra 60. Kiti rinkiniai duoda 70 ir 50 centų."
     },
     {
       "q": "Už tą pačią 80 c prekę vienas vaikas davė 50 + 20 + 10, kitas — keturias 20 c monetas. Kuris sumokėjo daugiau?",

@@ -145,6 +145,13 @@ ROLES: dict[str, dict] = {
         "cadence": "antradieniais, penktadieniais", "on_calendar": "Tue,Fri *-*-* 13:10:00",
         "description": "Kalbos ir UX redaktorius: formuluočių vienareikšmiškumas + ką vaikas mato desktop/planšetėje/telefone su Brave skydais",
     },
+    "sistemos-architektas": {
+        "file": "roles/sistemos-architektas.md", "profile": "deepseekpro", "toolsets": "terminal,file,web",
+        "max_turns": 60, "budget": 2400, "timeout": 3600,
+        "cadence": "kasdien", "on_calendar": "*-*-* 20:20:00",
+        "description": "Sistemos architektas: matuoja visų agentų darbą, taiso sistemines problemas, "
+                       "keičia grafikus ir promptus, prireikus prideda agentų",
+    },
     "publikavimo-agentas": {
         "file": "roles/publikavimo-agentas.md", "profile": "deepseek41flash", "toolsets": "terminal,file",
         "max_turns": 26, "budget": 1000, "timeout": 1200,
@@ -460,6 +467,10 @@ def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool,
     if any(f.startswith(("content/", "assets/audio/")) for f in files) or not files:
         checks.append(("turinys", [sys.executable, "scripts/validate_content.py"]))
         checks.append(("garsas", [sys.executable, "scripts/check_audio.py"]))
+    if any(f.startswith(("agents/", "deploy/", "scripts/")) for f in files) or not files:
+        # Sistemos vientisumas: po architekto pakeitimų neturi likti vaidmens be
+        # timer'io, modelio ar baigties sąlygos.
+        checks.append(("agentai", [sys.executable, "scripts/check_agents.py"]))
     if any(f.startswith("assets/") for f in files) or not files:
         checks.append(("sąsaja", [sys.executable, "scripts/check_ui.py"]))
         # LL-13: iliustracijos scenos privalo naudoti art.js — be šito agentas

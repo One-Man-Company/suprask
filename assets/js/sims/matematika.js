@@ -1046,6 +1046,7 @@ const pinigineIrKaina = {
 
     let plate = [];         // monetos lėkštėje — vienintelis kintamasis
     let locked = true;      // kol vaikas nepasakė spėjimo, dėti negalima
+    let guessCount = null;  // įrašytas spėjimas; null — vaikas tik paspaudė mygtuką
     let reported = false;
     let firstSet = "";
     let toldOther = false;
@@ -1257,8 +1258,21 @@ const pinigineIrKaina = {
       } else if (!reported) {
         reported = true;
         firstSet = setKey();
-        api.readout(`Apmokėta. ${price} c.`);
-        msgEl.textContent = "Juosta lygiai ties kainos žyma. Suma ir kaina sutampa.";
+        // Spėjimas turi būti palygintas su tuo, kas įvyko — kitaip vaiko
+        // prognozė tyliai pametama ir modelis nepatikrina nuostatos.
+        const n = plate.length;
+        let extra;
+        if (guessCount === null) {
+          extra = ` Lėkštėje ${n} ${coinWord(n)}. Ar tą pačią sumą gali sumokėti mažiau monetų?`;
+        } else if (n === guessCount) {
+          extra = ` Spėjai ${guessCount} — tiek pat, kiek lėkštėje.`;
+        } else if (n < guessCount) {
+          extra = ` Spėjai ${guessCount}, o lėkštėje ${n}. Viena didesnė moneta pakeitė kelias mažesnes.`;
+        } else {
+          extra = ` Spėjai ${guessCount}, o lėkštėje ${n}. Ar gali sumokėti mažiau monetų?`;
+        }
+        api.readout(`Apmokėta. ${price} c.${extra}`);
+        msgEl.textContent = `Juosta lygiai ties kainos žyma. Suma ir kaina sutampa.${extra}`;
         sayOnce("apmoketa");
         api.progress({ correct: true });
       } else if (!toldOther && setKey() !== firstSet) {
@@ -1328,8 +1342,11 @@ const pinigineIrKaina = {
       purseEl.setAttribute("aria-disabled", "false");
       purseEl.querySelectorAll(".pg-coin").forEach((b) => { b.disabled = false; });
       controls.querySelector("#pg-tools").style.display = "flex";
-      if (Number.isFinite(guess) && guess > 0) {
-        api.note(`Tavo spėjimas: ${guess} ${guess === 1 ? "moneta" : "monetos"}. Dabar dėk ir patikrink.`);
+      guessCount = Number.isFinite(guess) && guess > 0 ? Math.round(guess) : null;
+      if (guessCount !== null) {
+        api.note(`Tavo spėjimas: ${guessCount} ${coinWord(guessCount)}. Dabar dėk ir patikrink.`);
+      } else {
+        api.note("Dabar dėk monetas ir žiūrėk į juostą.");
       }
       paint();
       feedback();

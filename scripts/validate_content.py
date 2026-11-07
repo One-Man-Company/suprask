@@ -68,6 +68,12 @@ def word_count(text: str) -> int:
     return len(re.findall(r"[\wąčęėįšųūžĄČĘĖĮŠŲŪŽ'-]+", text))
 
 
+def normalize_for_match(text: str) -> str:
+    """Sutvarko tekstą palyginimui: mažosios raidės, vientisi tarpai, vienodi brūkšniai."""
+    text = str(text).lower().replace("−", "-").replace("–", "-").replace("—", "-")
+    return re.sub(r"\s+", " ", text).strip()
+
+
 def check_module(path: Path, data: dict, rep: Report, sims: set[str], grades_meta: dict) -> None:
     rel = path.relative_to(ROOT)
     for field in REQUIRED_MODULE:
@@ -133,6 +139,14 @@ def check_module(path: Path, data: dict, rep: Report, sims: set[str], grades_met
             rep.err(f"{rel}: {i} užduotis neturi užuominos")
         if len(str(t.get("hint", ""))) > 200:
             rep.warn(f"{rel}: {i} užduoties užuomina ilga (>200)")
+        hint_norm = normalize_for_match(t.get("hint", ""))
+        if isinstance(ans, int) and 0 <= ans < len(opts):
+            correct = normalize_for_match(opts[ans])
+            if len(correct) >= 2 and re.search(rf"(?<!\w){re.escape(correct)}(?!\w)", hint_norm):
+                rep.err(
+                    f"{rel}: {i} užduoties užuomina pasako teisingą atsakymą („{opts[ans]}“) — "
+                    "nukreipk į klaidą, ne į atsakymą (gairės T3.1)"
+                )
         if t.get("optional"):
             transfer = True
         q = str(t.get("q", "")).lower()

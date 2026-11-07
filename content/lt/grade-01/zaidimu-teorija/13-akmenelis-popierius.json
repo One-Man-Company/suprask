@@ -66,7 +66,7 @@
         "Žirklės"
       ],
       "answer": 0,
-      "hint": "Akmenėlis atbukina žirkles.",
+      "hint": "Kiekvienas ėjimas nugali vieną ir pralaimi kitam. Ko žirklės negali perkirpti?",
       "why": "Akmenėlis nugali žirkles, žirklės — popierių, popierius — akmenėlį.",
       "optional": true
     }

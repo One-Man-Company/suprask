@@ -1,3 +1,4 @@
+import { art } from "./art.js";
 /**
  * Pasaulio pažinimo simuliacijos (1 klasė).
  * Principas: gamtos reiškinys tampa modeliu, kurį vaikas gali „pasukti“ ir pamatyti pasekmes.
@@ -135,22 +136,36 @@ const metuLaikai = {
              stroke-width="3" fill="none" stroke-linecap="round"/>`
         : "";
 
+      const seasonKey = d.s === "Žiema" ? "ziema"
+        : d.s === "Pavasaris" ? "pavasaris"
+          : d.s === "Vasara" ? "vasara" : "ruduo";
+      const skyRef = seasonKey === "ziema" ? "ml-winter"
+        : seasonKey === "ruduo" ? "ml-autumn" : "ml-sky";
+
+      /* Sezoninė paletė: žiemą žalios kalvos prieštaravo užrašui „žiema“.
+         Dabar kalvos, žemė ir saulė keičiasi kartu su mėnesiu. */
+      const PAL = {
+        ziema: { hill: "#dbe8f0", hill2: "#c2d6e2", ground: "#e8f1f6", band: "#dfe9ee", sun: 0.55 },
+        pavasaris: { hill: "#bde0a0", hill2: "#a3cf84", ground: "#cdb489", band: "#a9d98a", sun: 0.9 },
+        vasara: { hill: "#93cc83", hill2: "#74b366", ground: "#cbb287", band: "#6dbb62", sun: 1 },
+        ruduo: { hill: "#e0c98d", hill2: "#cbae68", ground: "#cbb287", band: "#c9b05e", sun: 0.8 },
+      }[seasonKey];
+
       svg.innerHTML = `
-        <rect x="0" y="0" width="360" height="205" rx="16" fill="#e4f1fb"/>
+        ${art.defs("ml")}
+        <rect x="0" y="0" width="360" height="300" rx="16" fill="url(#${skyRef})"/>
         <path d="M${215 - half} 205 Q215 ${cy} ${215 + half} 205" fill="none"
-              stroke="#b9cddd" stroke-width="3" stroke-dasharray="5 6"/>
-        <g stroke="#f4b942" stroke-width="3" stroke-linecap="round">
-          <line x1="${215 - 22}" y1="${top}" x2="${215 - 14}" y2="${top}"/>
-          <line x1="${215 + 14}" y1="${top}" x2="${215 + 22}" y2="${top}"/>
-          <line x1="215" y1="${top - 22}" x2="215" y2="${top - 14}"/>
-          <line x1="215" y1="${top + 14}" x2="215" y2="${top + 22}"/>
-        </g>
-        <circle cx="215" cy="${top}" r="13" fill="#f4b942"/>
+              stroke="#7f9ab2" stroke-width="3" stroke-dasharray="5 7" opacity=".9"/>
+        ${art.sun(215, top, 13, "ml", PAL.sun)}
         ${birds}
-        <rect x="0" y="205" width="360" height="95" fill="#cbb287"/>
-        <rect x="0" y="205" width="360" height="14" fill="${GROUND[d.s]}"/>
+        ${art.hills(360, 196, PAL.hill, PAL.hill2)}
+        <rect x="0" y="205" width="360" height="95" fill="${PAL.ground}"/>
+        <rect x="0" y="205" width="360" height="16" fill="${PAL.band}"/>
+        ${art.grass(16, 209, 1, seasonKey === "ziema" ? "#bcd4de" : "#5aa552")}
+        ${art.grass(296, 208, 0.95, seasonKey === "ziema" ? "#bcd4de" : "#5aa552")}
+        ${art.grass(330, 210, 0.8, seasonKey === "ziema" ? "#bcd4de" : "#5aa552")}
         ${snow}
-        ${tree(d)}
+        ${art.tree(58, 209, 1.4, seasonKey)}
         <text x="20" y="40" font-family="system-ui" font-size="22" font-weight="800" fill="#3a342b">${d.n}</text>
         <text x="20" y="62" font-family="system-ui" font-size="15" font-weight="600" fill="#5f574d">${d.s}</text>`;
 
@@ -310,41 +325,39 @@ const augaloGyvenimas = {
         : water >= 4 ? "#bdb75c"
           : cold ? "#7fa2b5" : pale ? "#a8c98a" : "#5fbf62";
 
-      const sunR = 13 + light * 1.8;
-      const rays = light >= 2
-        ? [0, 45, 90, 135, 180, 225, 270, 315].map((a) => {
-          const rad = (a * Math.PI) / 180;
-          const r1 = sunR + 6;
-          const r2 = sunR + 13;
-          return `<line x1="${312 + Math.cos(rad) * r1}" y1="${44 + Math.sin(rad) * r1}"`
-            + ` x2="${312 + Math.cos(rad) * r2}" y2="${44 + Math.sin(rad) * r2}"/>`;
-        }).join("")
-        : "";
+      const sunR = 13 + light * 1.6;
+      const topX = 180 + (droop ? 14 : 0);
 
-      const petals = bloom
-        ? Array.from({ length: 6 }, (_, k) => {
-          const a = (k * 60 * Math.PI) / 180;
-          return `<circle cx="${180 + Math.cos(a) * 9}" cy="${248 - h - 10 + Math.sin(a) * 9}" r="7" fill="#f2708a"/>`;
-        }).join("")
-        : "";
-
-      const flakes = cold
-        ? [58, 104, 268, 314].map((x) => `<path d="M${x} 270 h16 M${x + 8} 262 v16`
-          + ` M${x + 2} 264 l12 12 M${x + 14} 264 l-12 12" stroke="#5aa9e6" stroke-width="2.5" stroke-linecap="round"/>`).join("")
-        : "";
+      /* Vandens perteklius — bala; sausra — įtrūkusi žemė. Abu rodo pasekmę,
+         ne tik skaičių valdiklyje. */
+      const soilDecor = water >= 4
+        ? `<ellipse cx="180" cy="252" rx="${44 + size * 10}" ry="9" fill="#4d9fd1" opacity=".32"/>`
+        : water === 0
+          ? `<g stroke="#5d3720" stroke-opacity=".45" stroke-width="2.2" fill="none" stroke-linecap="round">
+               <path d="M116 270 l11 8 l-7 9"/><path d="M252 268 l-10 9 l8 8"/></g>`
+          : "";
 
       svg.innerHTML = `
-        <rect x="0" y="0" width="360" height="300" rx="18" fill="color-mix(in srgb, var(--sky) 10%, var(--paper-2))"/>
-        <circle cx="312" cy="44" r="${sunR}" fill="#f4b942" opacity="${light === 0 ? 0.35 : 1}"/>
-        <g stroke="#f4b942" stroke-width="3" stroke-linecap="round">${rays}</g>
-        <rect x="0" y="248" width="360" height="52" fill="#a4805a"/>
-        ${size <= 0 ? '<ellipse cx="180" cy="242" rx="9" ry="6" fill="#6b4a2f"/>' : ""}
-        ${h > 0 ? `<line x1="180" y1="248" x2="180" y2="${248 - h}" stroke="${stemCol}" stroke-width="${3 + size * 5}" stroke-linecap="round"/>` : ""}
-        ${h > 0 && size > 0.05 ? agLeaf(179, 248 - h * 0.55, leafS, -1, droop, leafCol)
-    + agLeaf(181, 248 - h * 0.4, leafS, 1, droop, leafCol) : ""}
-        ${petals}${petals ? `<circle cx="180" cy="${248 - h - 10}" r="8" fill="#ffc94d"/>` : ""}
-        <ellipse cx="180" cy="248" rx="${26 + size * 6}" ry="7" fill="#8a6242" opacity=".55"/>
-        ${flakes}`;
+        ${art.defs("ag")}
+        <rect x="0" y="0" width="360" height="300" rx="18" fill="url(#ag-sky)"/>
+        ${art.sun(312, 44, sunR, "ag", light / 5)}
+        ${light >= 2 ? art.cloud(64, 54, 1) + art.cloud(150, 32, 0.72, 0.85) : ""}
+        ${art.hills(360, 232)}
+        ${art.soil(0, 248, 360, 52, "ag")}
+        ${soilDecor}
+        ${water >= 4 ? art.drops(74, 74, 6) : ""}
+        ${size <= 0 ? `<ellipse cx="180" cy="252" rx="24" ry="12" fill="#5f3d27" opacity=".45"/>`
+          + art.seed(180, 251, 1.2) : ""}
+        ${h > 0 ? art.stem(180, 248, h, 3 + size * 5, stemCol, droop) : ""}
+        ${h > 0 && size > 0.05
+          ? art.leaf(178, 248 - h * 0.5, leafS, -1, droop, leafCol)
+            + art.leaf(182, 248 - h * 0.34, leafS, 1, droop, leafCol) : ""}
+        ${bloom ? art.flower(topX, 248 - h, 1) : ""}
+        ${art.grass(26, 250, 1.1, cold ? "#a9c6cf" : "#5aa552")}
+        ${art.grass(118, 251, 0.9, cold ? "#a9c6cf" : "#5aa552")}
+        ${art.grass(304, 250, 1, cold ? "#a9c6cf" : "#5aa552")}
+        ${cold ? art.snow(0, 246, 12) : ""}
+      `;
 
       svg.setAttribute("aria-label",
         `Augalo modelis: ${agStage(size, wilt, cold, pale).toLowerCase()}, vanduo ${agWaterWord(water)}, `

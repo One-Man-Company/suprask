@@ -368,6 +368,8 @@ svg { max-width: 100%; height: auto; }
   background: var(--paper, #fdf8ef);
   box-shadow: 0 10px 24px rgb(0 0 0 / .18);
   font-weight: 700;
+  /* Pranešimas niekada neturi uždengti valdiklių: jis negaudo paspaudimų. */
+  pointer-events: none;
   text-align: center;
   transition: opacity .5s ease, transform .5s ease;
 }

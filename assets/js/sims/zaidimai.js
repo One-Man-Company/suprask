@@ -1,3 +1,4 @@
+import { art } from "./art.js";
 /**
  * Žaidimų teorijos simuliacijos (1 klasė).
  * Principas: sąvoka „sąžininga“, „bendradarbiauti“, „tikimybė“ parodoma kaip žaidimas,
@@ -116,21 +117,33 @@ const bendradarbiavimoTiltas = {
     function draw(built) {
       const total = give + THEIRS;
       svg.innerHTML = `
-        <rect x="0" y="120" width="420" height="100" fill="#dff0fb"/>
-        <path d="M0 120 Q105 150 210 122 T420 120 L420 220 L0 220 Z" fill="#a8d4ef"/>
-        <rect x="0" y="96" width="420" height="26" fill="#c9a56a"/>
-        <text x="20" y="86" font-family="system-ui" font-size="13" fill="#5f574d">Tu</text>
-        <text x="380" y="86" font-family="system-ui" font-size="13" fill="#5f574d">Draugas</text>
-        ${Array.from({ length: MINE - give }).map((_, i) => `<rect x="${24 + i * 22}" y="${62}" width="18" height="18" rx="4" fill="#ff8a3d"/>`).join("")}
-        ${Array.from({ length: THEIRS }).map((_, i) => `<rect x="${300 + i * 22}" y="${62}" width="18" height="18" rx="4" fill="#4fc3a1"/>`).join("")}
+        ${art.defs("bt")}
+        <rect x="0" y="0" width="420" height="220" rx="14" fill="url(#bt-sky)"/>
+        ${art.hills(420, 82, "#b6d9a4", "#9cc78a")}
+        <rect x="0" y="88" width="92" height="132" fill="#c9a96e"/>
+        <rect x="328" y="88" width="92" height="132" fill="#c9a96e"/>
+        <rect x="0" y="88" width="92" height="12" fill="#a9d98a"/>
+        <rect x="328" y="88" width="92" height="12" fill="#a9d98a"/>
+        ${art.grass(18, 100, 1)}${art.grass(66, 101, 0.9)}
+        ${art.grass(352, 100, 1)}${art.grass(398, 101, 0.9)}
+        ${art.river(92, 96, 236, 124, "bt")}
+        ${Array.from({ length: MINE - give }).map((_, i) => art.block(14 + i * 19, 60, 17, "#ff8a3d", "", "#a04d17")).join("")}
+        ${Array.from({ length: THEIRS }).map((_, i) => art.block(336 + i * 19, 60, 17, "#4fc3a1", "", "#2f8a72")).join("")}
+        <text x="46" y="52" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="700" fill="#5f574d">Tu</text>
+        <text x="374" y="52" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="700" fill="#5f574d">Draugas</text>
         ${built ? `
-          <rect x="90" y="78" width="240" height="16" rx="4" fill="#8a6242"/>
-          <path d="M104 78 L124 96 M144 78 L164 96 M184 78 L204 96 M224 78 L244 96 M264 78 L284 96" stroke="#6d4c33" stroke-width="4"/>
-          <circle cx="150" cy="62" r="9" fill="#23201c"/><circle cx="270" cy="62" r="9" fill="#23201c"/>` : `
-          <text x="210" y="70" text-anchor="middle" font-family="system-ui" font-size="13" fill="#8b8175">tiltui reikia ${NEED} blokų</text>`}
-        <text x="210" y="206" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#1d5e8c">
-          ${built ? "Tiltas pastatytas — perėjo abu!" : `Surinkta ${total} iš ${NEED} blokų`}
-        </text>`;
+          ${art.bridge(78, 112, 264)}
+          ${art.kid(104, 112, 0.9, "#ff8a3d")}
+          ${art.kid(316, 112, 0.9, "#4fc3a1")}
+          <rect x="104" y="190" width="212" height="24" rx="12" fill="#fff" opacity=".85"/>
+          <text x="210" y="206" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="800" fill="#1d5e8c">Tiltas pastatytas — perėjo abu!</text>` : `
+          <text x="210" y="118" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#1d5e8c">
+            tiltui reikia ${NEED} blokų
+          </text>
+          <rect x="120" y="190" width="180" height="24" rx="12" fill="#fff" opacity=".85"/>
+          <text x="210" y="206" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#1d5e8c">
+            Surinkta ${total} iš ${NEED} blokų
+          </text>`}`;
       val.textContent = String(give);
       api.readout(`${give} + ${THEIRS} = ${total} blokų`);
       if (built) {

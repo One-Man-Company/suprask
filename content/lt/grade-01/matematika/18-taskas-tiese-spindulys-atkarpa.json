@@ -1,0 +1,119 @@
+{
+  "id": "18-taskas-tiese-spindulys-atkarpa",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Taškas, tiesė, spindulys, atkarpa",
+  "subtitle": "Skiriasi ne ilgiu, o galų skaičiumi",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu tiesę, spindulį ir atkarpą pagal galų skaičių.",
+    "Parodau, kada taškas yra ant tiesės, o kada šalia.",
+    "Paaiškinu, kodėl ilga atkarpa vis tiek turi du galus."
+  ],
+  "concept": {
+    "title": "Galai, ne ilgis",
+    "big_idea": "Tiesė neturi galo: ji eina už lapo krašto. Spindulys turi vieną galą, atkarpa — du. Kad juos atskirtum, skaičiuok galus, o ne matuok ilgį.",
+    "steps": [
+      "Bakstelėk tiesę ir pastatyk tašką. Jei baksteli šalia, taškas lieka šalia.",
+      "Vienas taškas padalija tiesę į du spindulius. Kiekvienas turi po vieną galą.",
+      "Du taškai atskiria atkarpą. Ji turi du galus, o už taškų likę spinduliai — po vieną.",
+      "Spausk „Pratęsk“ ir ilgink atkarpą. Galų skaičius nesikeis."
+    ],
+    "example": "Pieštuko linija baigiasi ten, kur pakeli pieštuką. Tai atkarpa. Tiesė neturi pabaigos: ją galima tęsti toliau."
+  },
+  "sim": {
+    "component": "taskas-tiese-spindulys-atkarpa",
+    "config": {
+      "sentences": {
+        "tiese": "Tai tiesė. Ji neturi galų: eina už lapo krašto.",
+        "vienas": "Taškas ant tiesės. Du spinduliai, du galai.",
+        "du": "Tarp taškų atkarpa su dviem galais. Tiesė neturi galo.",
+        "salia": "Taškas šalia tiesės. Jis ne ant tiesės.",
+        "ilgesne": "Atkarpa ilgesnė. Ji vis dar turi du galus.",
+        "per-lapa": "Atkarpa per visą lapą. Ji vis tiek turi du galus.",
+        "is-naujo": "Pradedam iš naujo. Padėk tašką ant tiesės."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Atkarpa eina per visą lapą. Kiek ji turi galų?",
+      "options": [
+        "Vieną",
+        "Du",
+        "Tris"
+      ],
+      "answer": 1,
+      "hint": "Suskaičiuok vietas, kur linija baigiasi.",
+      "why": "Atkarpa baigiasi abiejuose galuose, todėl turi du galus."
+    },
+    {
+      "q": "Taškas padalijo tiesę į du spindulius. Kiek galų turi vienas spindulys?",
+      "options": [
+        "Du",
+        "Vieną",
+        "Tris"
+      ],
+      "answer": 1,
+      "hint": "Spindulys baigiasi taške, o kita kryptimi eina toliau.",
+      "why": "Spindulys turi vieną galą — tašką, nuo kurio eina."
+    },
+    {
+      "q": "Kodėl nubrėžtos tiesės galo nematome?",
+      "options": [
+        "Ji neturi galo, eina toliau",
+        "Ji labai ilga, bet turi galą",
+        "Pieštukas nubrėžė tik dalį"
+      ],
+      "answer": 0,
+      "hint": "Kur baigiasi pieštuko linija, kai braižai per visą lapą?",
+      "why": "Tiesė neturi galo: lapo kraštas tik nutraukia brėžinį."
+    },
+    {
+      "q": "Taškas nupieštas virš tiesės. Ar jis dalija tiesę?",
+      "options": [
+        "Taip, į du spindulius",
+        "Taip, bet tik pusiau",
+        "Ne, jis ne ant tiesės"
+      ],
+      "answer": 2,
+      "hint": "Ar pieštuko taškas palietė liniją?",
+      "why": "Taškas šalia tiesės jai nepriklauso, todėl nedalija."
+    },
+    {
+      "q": "Dvi atkarpos: trumpa ir ilga. Kuo jos visada vienodos?",
+      "options": [
+        "Abi turi po du galus",
+        "Abi vienodo ilgio",
+        "Abi yra tiesės"
+      ],
+      "answer": 0,
+      "hint": "Ilgis keičiasi, o galai — ne.",
+      "why": "Atkarpos ilgis gali būti bet koks, bet galų visada du.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip paaiškintum draugui, kuo atkarpa skiriasi nuo tiesės?",
+  "teacher": {
+    "goal": "Suprasti, kad taškas, spindulys, atkarpa ir tiesė skiriasi galų skaičiumi, o ne ilgiu, ir kad taškas dalija tiesę tik tada, kai yra ant jos.",
+    "prompt": "Kur baigiasi atkarpa, o kur — tiesė?",
+    "offline": "Duokite vaikui lapą ir pieštuką. Vaikas brėžia liniją nuo vieno lapo krašto iki kito ir suskaičiuoja galus. Tada brėžia liniją, kuri išeina iš lapo — ji galo neturi. Galiausiai du vaikai padeda po tašką ant bendros linijos ir parodo, kuri dalis yra atkarpa, o kurios eina toliau už taškų.",
+    "misconceptions": [
+      "„Tiesė ir atkarpa skiriasi tik ilgiu“ — popieriuje taip atrodo, nes nubrėžtos tiesės galus slepia lapo kraštas. Modelis atkarpą ištempia per visą lapą ir parodo, kad du galai išlieka, o tiesė vis tiek eina toliau.",
+      "„Ilgesnė atkarpa jau yra tiesė“ — ilgis nieko nekeičia. Atkarpa gali būti per visą lapą ir vis tiek turi du galus.",
+      "„Taškas visada dalija tiesę“ — taškas, nupieštas šalia, linijai nepriklauso, todėl tiesė lieka vientisa. Modelis tokį tašką palieka šalia ir tiesės nekeičia.",
+      "„Jei galo nematyti, vadinasi, jo nėra“ — lapo kraštas tik nutraukia brėžinį, o ne tiesę. Padeda pieštuko pavyzdys: pakėlus pieštuką linija baigiasi, o tiesė — ne."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, geometrijos sritis: 1 klasė — taško, tiesės, spindulio ir atkarpos vaizdavimas brėžinyje, jų padėties vienas kito atžvilgiu apibūdinimas („taškas yra/nėra tiesėje“, „taškas dalija tiesę į du spindulius“).",
+    "Matematikos bendroji programa (2022), „Geometrija, matavimai ir statistika“: 1–2 klasė — plokščios figūros ir jų padėtis plokštumoje.",
+    "Gerez Cantimer, G. (2024). Ortaokul 5. ve 6. sınıf öğrencilerinin temel geometrik kavramlara yönelik kavram imajlarının incelenmesi. Manisa Celal Bayar University Journal of The Faculty of Education, 12(2). https://dergipark.org.tr/tr/download/article-file/3839137",
+    "Pradinio ugdymo matematikos turinio žemėlapis: research/wiki/curriculum/1-klases-temų-žemėlapis.md (tema „Taškas, tiesė, spindulys, atkarpa“, modelis „brėžinys su „taškas yra/ne tiesėje“ patikra“)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (galų skaičius); kampas, matavimo vienetai ir uždaros figūros sąmoningai neįtrauktos — jos priklauso kitiems moduliams ir 2 klasei",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę naujoje situacijoje (atkarpa per visą lapą, taškas virš tiesės), o ne įsimintą formuluotę",
+    "3 žingsnis — pagalba laiku: kiekviena užduotis turi užuominą, klaidingas bandymas simuliacijoje nieko nebausdina, praplėtimo užduotis greitesniems, jokių laikmačių"
+  ]
+}

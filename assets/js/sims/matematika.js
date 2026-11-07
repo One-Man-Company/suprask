@@ -1897,6 +1897,307 @@ const vabaliukasIrKryptys = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 9. Taškas, tiesė, spindulys, atkarpa                                 */
+/* Skirtumas rodomas GALŲ SKAIČIUMI, ne ilgiu: atkarpą galima ištempti  */
+/* per visą lapą, ir ji vis tiek turi du galus, o tiesė — nė vieno.     */
+/* ------------------------------------------------------------------ */
+const taskasTieseSpindulysAtkarpa = {
+  mount({ stage, controls, api, config }) {
+    const say = config.sentences || {};
+
+    const DEFAULT_SAY = {
+      "tiese": "Tai tiesė. Ji neturi galų: eina už lapo krašto.",
+      "vienas": "Taškas ant tiesės. Du spinduliai, du galai.",
+      "du": "Tarp taškų atkarpa su dviem galais. Tiesė neturi galo.",
+      "salia": "Taškas šalia tiesės. Jis ne ant tiesės.",
+      "ilgesne": "Atkarpa ilgesnė. Ji vis dar turi du galus.",
+      "per-lapa": "Atkarpa per visą lapą. Ji vis tiek turi du galus.",
+      "is-naujo": "Pradedam iš naujo. Padėk tašką ant tiesės.",
+    };
+    const line = (k) => say[k] || DEFAULT_SAY[k];
+
+    const NOTE = {
+      "tiese": "Bakstelėk tiesę ir pastatyk tašką.",
+      "vienas": "Kiekvienas spindulys baigiasi tame taške. Už lapo jis eina toliau.",
+      "du": "Už taškų liko du spinduliai. Ilgink atkarpą mygtuku.",
+      "salia": "Tiesė eina pro šalį. Taškas jos nedalija.",
+      "ilgesne": "Žiūrėk į galus: jie niekur nedingo.",
+      "per-lapa": "Tiesė eina už lapo. Todėl ji neturi galo.",
+      "is-naujo": "Bakstelėk tiesę ir pastatyk tašką.",
+    };
+
+    const W = 480;
+    const H = 280;
+    const LY = 150;          // tiesės aukštis
+    const OVER = 20;         // kiek linija išeina už lapo krašto
+    const MINX = 26;         // kiek atkarpa gali artėti prie krašto
+    const MAXX = W - 26;
+
+    let pts = [];            // taškai ANT tiesės (1 arba 2, surikiuoti)
+    let off = null;          // taškas ŠALIA tiesės {x, y}
+    let reported = false;
+    let lastSaid = "";
+
+    stage.innerHTML = `
+      <div id="tt-wrap" tabindex="0" role="group"
+           aria-label="Bakstelėk tiesę ir pastatyk tašką"
+           style="width:100%;max-width:30rem;margin:0 auto;outline-offset:6px">
+        <svg id="tt-svg" viewBox="0 0 ${W} ${H}" width="100%" role="img"
+             aria-label="Tiesė per visą lapą"></svg>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        <button class="btn" id="tt-next" aria-label="Padėti tašką ant tiesės">Padėk tašką</button>
+        <button class="btn secondary" id="tt-beside" aria-label="Padėti tašką šalia tiesės">Padėk tašką šalia</button>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:.6rem">
+        <button class="btn ghost" id="tt-reset" aria-label="Pradėti iš naujo">Iš naujo</button>
+      </div>`;
+
+    const wrap = stage.querySelector("#tt-wrap");
+    const svg = stage.querySelector("#tt-svg");
+
+    const gLine = svgEl("g", {});
+    const gSeg = svgEl("g", {});
+    const gPts = svgEl("g", {});
+    const gLab = svgEl("g", {});
+    svg.append(gLine, gSeg, gPts, gLab);
+
+    const bar = (x1, x2, color, width) => svgEl("line", {
+      x1, y1: LY, x2, y2: LY, stroke: color, "stroke-width": width, "stroke-linecap": "butt",
+    });
+
+    const label = (text, x, y, color) => {
+      const t = svgEl("text", {
+        x, y, "text-anchor": "middle", "font-size": 28, "font-weight": 800,
+        "font-family": "system-ui, sans-serif", fill: color || "var(--ink)",
+      });
+      t.textContent = text;
+      gLab.appendChild(t);
+      // Užrašas neturi liesti lapo krašto: ilgas žodis prie krašto buvo
+      // apkarpomas (raidės „s“ nebematėsi).
+      try {
+        const b = t.getBBox();
+        if (b.width) {
+          if (b.x < 6) t.setAttribute("x", Number(x) + (6 - b.x));
+          else if (b.x + b.width > W - 6) t.setAttribute("x", Number(x) + (W - 6 - b.x - b.width));
+        }
+      } catch { /* getBBox gali nepavykti, kol scena nematoma */ }
+    };
+
+    const dot = (x, y, fill) => {
+      gPts.appendChild(svgEl("circle", {
+        cx: x, cy: y, r: 12, fill: fill || "var(--ink)",
+        stroke: "var(--paper-2)", "stroke-width": 5,
+      }));
+    };
+
+    function isFull() {
+      return pts.length === 2 && pts[0] <= MINX && pts[1] >= MAXX;
+    }
+
+    /* --- piešimas ---------------------------------------------------- */
+    function paint() {
+      gLine.innerHTML = "";
+      gSeg.innerHTML = "";
+      gPts.innerHTML = "";
+      gLab.innerHTML = "";
+
+      const a = pts.length > 0 ? pts[0] : null;
+      const b = pts.length > 1 ? pts[1] : null;
+
+      if (a === null) {
+        gLine.appendChild(bar(-OVER, W + OVER, "var(--ink)", 11));
+        label("tiesė", 66, LY - 26, "var(--ink-soft)");
+      } else {
+        // kairysis spindulys: nuo lapo krašto iki taško
+        gLine.appendChild(bar(-OVER, a, "var(--sky)", 11));
+        // dešinysis spindulys: nuo dešiniojo taško iki lapo krašto
+        const rightFrom = b === null ? a : b;
+        gLine.appendChild(bar(rightFrom, W + OVER, "var(--sky)", 11));
+
+        if (a > 150) label("spindulys", (a - OVER) / 2, LY - 26, "var(--ink-soft)");
+        if (W - rightFrom > 150) label("spindulys", (rightFrom + W + OVER) / 2, LY - 26, "var(--ink-soft)");
+
+        if (b !== null) {
+          gSeg.appendChild(svgEl("line", {
+            x1: a, y1: LY, x2: b, y2: LY, stroke: "var(--accent)",
+            "stroke-width": 20, "stroke-linecap": "butt",
+          }));
+          label("atkarpa", (a + b) / 2, LY - 28);
+        }
+      }
+
+      pts.forEach((p) => dot(p, LY));
+      if (off) {
+        dot(off.x, off.y, "var(--ink-soft)");
+        label("šalia", off.x, off.y + 40);
+      }
+
+      const parts = [];
+      if (a === null) parts.push("Tiesė eina per visą lapą ir už jo krašto.");
+      else if (b === null) parts.push("Vienas taškas ant tiesės. Nuo jo eina du spinduliai.");
+      else parts.push("Du taškai ant tiesės. Tarp jų atkarpa.");
+      if (off) parts.push("Vienas taškas šalia tiesės.");
+      svg.setAttribute("aria-label", parts.join(" "));
+    }
+
+    function announce(key) {
+      api.readout(line(key));
+      api.note(NOTE[key] || "");
+      if (lastSaid !== key) {
+        lastSaid = key;
+        api.speak(line(key));
+      }
+    }
+
+    function sync() {
+      const btn = controls.querySelector("#tt-next");
+      if (pts.length === 0) {
+        btn.textContent = "Padėk tašką";
+        btn.setAttribute("aria-label", "Padėti tašką ant tiesės");
+        btn.disabled = false;
+      } else if (pts.length === 1) {
+        btn.textContent = "Padėk antrą tašką";
+        btn.setAttribute("aria-label", "Padėti antrą tašką ant tiesės");
+        btn.disabled = false;
+      } else if (isFull()) {
+        btn.textContent = "Ilgesnė negali būti";
+        btn.setAttribute("aria-label", "Atkarpa jau per visą lapą");
+        btn.disabled = true;
+      } else {
+        btn.textContent = "Pratęsk atkarpą";
+        btn.setAttribute("aria-label", "Pratęsti atkarpą į abi puses");
+        btn.disabled = false;
+      }
+    }
+
+    /* --- veiksmai ---------------------------------------------------- */
+    function placeOn(x) {
+      if (pts.length >= 2) {
+        api.readout("Atkarpa jau turi du taškus. Spausk „Pratęsk atkarpą“.");
+        api.note("Jei nori dėti kitaip, spausk „Iš naujo“.");
+        return;
+      }
+      const nx = Math.max(MINX, Math.min(MAXX, Math.round(x)));
+      pts = pts.concat(nx).sort((p, q) => p - q);
+      paint();
+      sync();
+      announce(pts.length === 1 ? "vienas" : "du");
+    }
+
+    function placeBeside() {
+      // Po du taškus atkarpa užbaigta — šalia esantis taškas nebeatlieka vaidmens.
+      off = { x: 350, y: LY + 80 };
+      paint();
+      sync();
+      announce("salia");
+    }
+
+    function extend() {
+      if (pts.length < 2) return;
+      const step = 70;
+      const a = Math.max(MINX, pts[0] - step);
+      const b = Math.min(MAXX, pts[1] + step);
+      pts = [a, b];
+      paint();
+      sync();
+      if (isFull()) {
+        announce("per-lapa");
+        // Tikslas pasiektas DABAR: atkarpa per visą lapą ir vis tiek su dviem galais.
+        if (!reported) {
+          reported = true;
+          api.progress({ correct: true });
+        }
+      } else {
+        announce("ilgesne");
+      }
+    }
+
+    function next() {
+      if (pts.length === 0) placeOn(170);
+      else if (pts.length === 1) {
+        const right = pts[0] + 190;
+        placeOn(right <= MAXX ? right : pts[0] - 190);
+      } else extend();
+    }
+
+    function reset() {
+      pts = [];
+      off = null;
+      reported = false;
+      lastSaid = "";
+      paint();
+      sync();
+      announce("is-naujo");
+    }
+
+    /* --- bakstelėjimas ----------------------------------------------- */
+    function onTap(evt) {
+      const r = svg.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      const x = ((evt.clientX - r.left) / r.width) * W;
+      const y = ((evt.clientY - r.top) / r.height) * H;
+
+      if (Math.abs(y - LY) <= 38) {
+        placeOn(x);
+        return;
+      }
+      // Taškas šalia: lieka ten, kur bakstelėta, bet ne per arti tiesės ir ne už lapo.
+      const minY = 34;
+      const maxY = H - 58;
+      let py = y < LY ? Math.min(LY - 64, y) : Math.max(LY + 64, y);
+      py = Math.max(minY, Math.min(maxY, py));
+      const px = Math.max(40, Math.min(W - 40, x));
+      off = { x: px, y: py };
+      paint();
+      sync();
+      announce("salia");
+    }
+
+    /* --- įėjimai ------------------------------------------------------ */
+    svg.addEventListener("click", onTap);
+    controls.querySelector("#tt-next").addEventListener("click", next);
+    controls.querySelector("#tt-beside").addEventListener("click", placeBeside);
+    controls.querySelector("#tt-reset").addEventListener("click", reset);
+
+    wrap.addEventListener("keydown", (evt) => {
+      const arrows = { ArrowLeft: -20, ArrowRight: 20 };
+      if (arrows[evt.key]) {
+        if (!pts.length) return;          // kol nėra taško, rodyklės neturi ką judinti
+        evt.preventDefault();
+        const d = arrows[evt.key];
+        let i = pts.length - 1;
+        let v = pts[i] + d;
+        if (pts.length === 2) {
+          v = i === 1 ? Math.min(MAXX, Math.max(pts[0] + 40, v))
+                      : Math.max(MINX, Math.min(pts[1] - 40, v));
+        } else {
+          v = Math.max(MINX, Math.min(MAXX, v));
+        }
+        pts[i] = v;
+        paint();
+        sync();
+        return;
+      }
+      if (evt.key === "Enter" || evt.key === " ") {
+        evt.preventDefault();
+        next();
+      }
+    });
+
+    paint();
+    sync();
+    api.readout(line("tiese"));
+    api.note(NOTE["tiese"]);
+    api.speak(line("tiese"));
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
@@ -1906,4 +2207,5 @@ export const SIMS = {
   "svarstykles-lygybe": svarstyklesLygybe,
   "pinigine-ir-kaina": pinigineIrKaina,
   "vabaliukas-ir-kryptys": vabaliukasIrKryptys,
+  "taskas-tiese-spindulys-atkarpa": taskasTieseSpindulysAtkarpa,
 };

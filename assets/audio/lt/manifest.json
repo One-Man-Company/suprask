@@ -559,6 +559,14 @@
   "n": "n/ef515f3cf179f20e-4afec982.mp3",
   "s": "s/ef515f3cf179f20e-7c4dfba6.mp3"
  },
+ "Atkarpa ilgesnė. Ji vis dar turi du galus.": {
+  "n": "n/96cea72c8e4c28bf-ea64f2e5.mp3",
+  "s": "s/96cea72c8e4c28bf-b8c26745.mp3"
+ },
+ "Atkarpa per visą lapą. Ji vis tiek turi du galus.": {
+  "n": "n/850358511b12a071-dbb36792.mp3",
+  "s": "s/850358511b12a071-5964052b.mp3"
+ },
  "Augalas su lapais": {
   "n": "n/0993a152cf6c1f0c-fff0ba6b.mp3",
   "s": "s/0993a152cf6c1f0c-5f9202cb.mp3"
@@ -923,6 +931,10 @@
   "n": "n/0c85494fd5f4f32d-96346576.mp3",
   "s": "s/0c85494fd5f4f32d-c02dfdc8.mp3"
  },
+ "Pradedam iš naujo. Padėk tašką ant tiesės.": {
+  "n": "n/6d7863e56d1ac8c6-7771c9df.mp3",
+  "s": "s/6d7863e56d1ac8c6-ca948b0b.mp3"
+ },
  "Pradedam iš naujo. Prijunk laidus.": {
   "n": "n/13f77b21b8fd4a6b-b404e361.mp3",
   "s": "s/13f77b21b8fd4a6b-be4a4fd6.mp3"
@@ -998,6 +1010,22 @@
  "Ta pati suma, kiti pinigai.": {
   "n": "n/5b9254efd8413104-894c217a.mp3",
   "s": "s/5b9254efd8413104-6264fb04.mp3"
+ },
+ "Tai tiesė. Ji neturi galų: eina už lapo krašto.": {
+  "n": "n/81629f8150ce5420-2d2c7908.mp3",
+  "s": "s/81629f8150ce5420-b10f7653.mp3"
+ },
+ "Tarp taškų atkarpa su dviem galais. Tiesė neturi galo.": {
+  "n": "n/c095a5efbdb25987-f3759fe9.mp3",
+  "s": "s/c095a5efbdb25987-432ddd29.mp3"
+ },
+ "Taškas ant tiesės. Du spinduliai, du galai.": {
+  "n": "n/b37bad773e763bbe-f8ff6c4a.mp3",
+  "s": "s/b37bad773e763bbe-a6241058.mp3"
+ },
+ "Taškas šalia tiesės. Jis ne ant tiesės.": {
+  "n": "n/e24f199750565e8a-18942016.mp3",
+  "s": "s/e24f199750565e8a-678c4e04.mp3"
  },
  "Teisingai!": {
   "n": "n/3d4e2b06ffc71b06-490fd930.mp3",

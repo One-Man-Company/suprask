@@ -44,8 +44,13 @@ ideatorius, metodininkas ir kūrėjas mato tą patį susitarimą.
 3. kiekvienam kviečia `agents/run.py kurejas --proposal <id>`, kuris **pats** validuoja, commituoja
    ir publikuoja;
 4. po kiekvieno paleidimo užraktas atleidžiamas, todėl kiti agentai nelaukia;
-5. pasiūlymas pažymimas `done` (arba `blocked`, jei nepavyko); numatytos ribos — 8 pasiūlymai /
-   180 minučių vienam paleidimui.
+5. pasiūlymas pažymimas `done` (arba `blocked`, jei nepavyko); numatytos ribos — 60 pasiūlymų /
+   720 minučių vienam paleidimui (12 h, `TimeoutStartSec` 13 h).
+
+**Laikas parinktas pagal kitus agentus:** ideatorius siūlo 07:10, metodininkas prideda metodus
+08:20, o kūrėjas pradeda 09:00 — eilė jau pripildyta ir su metodais. Kūrėjas dirba iki 12 h, bet
+turi **savo užraktą** (`.run.kurejas.lock`), todėl sim inžinierius (11:00), dizaineris (12:30) ir
+kritikas (14:00) nebelieka užblokuoti. Git operacijos serializuojamos atskiru `.git.lock`.
 
 Todėl per dieną apdorojama iki 8 pasiūlymų, o ne vienas, ir eilė gali išsekti. Kai eilė tuščia,
 paleidimas baigiasi — kitas tikrina vėl pagal grafiką (09:30).

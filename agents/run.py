@@ -24,6 +24,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import db
@@ -35,7 +37,39 @@ LOG_DIR = AGENTS / "log"
 WORK_DIR = AGENTS / "work"
 PROPOSALS = AGENTS / "proposals"
 STATE_FILE = AGENTS / "state.json"
-LOCK_FILE = AGENTS / ".run.lock"
+LOCK_FILE = AGENTS / ".run.lock"      # bendras (istorinis) – nebeimamas
+GIT_LOCK = AGENTS / ".git.lock"       # trumpas: git operacijos
+
+def role_lock_file(role: str) -> Path:
+    """Kiekvienas vaidmuo turi savo užraktą.
+
+    Anksčiau buvo vienas bendras užraktas: kol kūrėjas dirbdavo ilgą eilę,
+    visi kiti agentai tiesiog praleisdavo savo laiką. Dabar dubliuojasi tik
+    tas pats vaidmuo, o git operacijos serializuojamos atskiru GIT_LOCK.
+    """
+    return AGENTS / f".run.{role}.lock"
+
+
+@contextmanager
+def git_lock(timeout: int = 900):
+    """Leidžia vienu metu atlikti tik vieną git veiksmą (commitas + push)."""
+    handle = open(GIT_LOCK, "w")
+    deadline = time.time() + timeout
+    try:
+        while True:
+            try:
+                fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if time.time() > deadline:
+                    raise TimeoutError("git užraktas užimtas ilgiau nei laukta")
+                time.sleep(5)
+        yield
+    finally:
+        try:
+            fcntl.flock(handle, fcntl.LOCK_UN)
+        finally:
+            handle.close()
 
 HERMES = os.environ.get("SUPRASK_HERMES_BIN") or shutil.which("hermes") or "/home/zoltanas/.local/bin/hermes"
 
@@ -69,11 +103,11 @@ ROLES: dict[str, dict] = {
     "kurejas": {
         "file": "roles/kurejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
         "max_turns": 60, "budget": 2400, "timeout": 3600,
-        "cadence": "kasdien", "on_calendar": "*-*-* 09:30:00",
+        "cadence": "kasdien", "on_calendar": "*-*-* 09:00:00",
         "description": "Eilės darbuotojas: ima pasiūlymus po vieną ir įgyvendina, kol eilė tuščia",
         # Eilės režimas: vienas paleidimas apdoroja iki N pasiūlymų, po kiekvieno
         # publikuoja ir atleidžia užraktą. Žr. scripts/kurejas_queue.py.
-        "queue": {"command": "scripts/kurejas_queue.py", "max_items": 8, "max_minutes": 180},
+        "queue": {"command": "scripts/kurejas_queue.py", "max_items": 60, "max_minutes": 720},
     },
     "simuliaciju-inzinierius": {
         "file": "roles/simuliaciju-inzinierius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
@@ -610,6 +644,11 @@ def push_backlog() -> str:
 
 
 def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True) -> dict:
+    with git_lock():
+        return _publish(role, run_id, files, summary, allow_revert)
+
+
+def _publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True) -> dict:
     """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą."""
     if not files:
         return {"status": "empty", "detail": "Agentas failų nepakeitė — rezultato nėra.", "sha": "", "validation": ""}
@@ -723,13 +762,13 @@ def main() -> int:
     PROPOSALS.mkdir(parents=True, exist_ok=True)
 
     # Užraktas: vienu metu dirba vienas agentas (git ir turinio vientisumas)
-    lock_handle = open(LOCK_FILE, "w")
+    lock_handle = open(role_lock_file(args.role), "w")
     try:
         fcntl.flock(lock_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
-        print(f"{args.role}: kitas agentas jau dirba — praleista")
+        print(f"{args.role}: toks pats agentas jau dirba — praleista")
         run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", "skipped: lock")
-        db.finish_run(run_id, "skipped", None, 0, "", "Kitas agentas jau dirba.")
+        db.finish_run(run_id, "skipped", None, 0, "", "Tas pats agentas jau dirba.")
         return 0
 
     run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", args.note)

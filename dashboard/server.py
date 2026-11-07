@@ -117,9 +117,18 @@ def timer_state() -> list[dict]:
 
 
 def run_now(role: str) -> tuple[bool, str]:
+    """Paleidžia vaidmenį. Jei vaidmuo turi eilę (kurejas) — paleidžiama eilė,
+    kad vienas paspaudimas išvalytų visą pasiūlymų sąrašą, ne vieną įrašą."""
     try:
+        queue = (db_roles().get(role) or {}).get("queue")
+        if queue:
+            cmd = [sys.executable, str(ROOT / queue["command"]),
+                   "--max-items", str(queue["max_items"]),
+                   "--max-minutes", str(queue["max_minutes"])]
+        else:
+            cmd = [sys.executable, str(ROOT / "agents" / "run.py"), role, "--trigger", "dashboard"]
         subprocess.Popen(
-            [sys.executable, str(ROOT / "agents" / "run.py"), role, "--trigger", "dashboard"],
+            cmd,
             cwd=str(ROOT), start_new_session=True,
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
@@ -486,7 +495,17 @@ async function loadOverview(){
     <div class="card"><h2>Paskutinis paleidimas</h2><div class="big">${d.last_run ? esc(d.last_run.status) : "—"}</div><div class="kv"><span>vaidmuo</span><b>${d.last_run ? esc(d.last_run.role) : "—"}</b></div><div class="kv"><span>prieš</span><b>${d.last_run ? ago(d.last_run.finished || d.last_run.started) : "—"}</b></div></div>`;
 
   const timerMap = {};
-  (d.timers||[]).forEach(t => { const m = (t.activates||"").match(/suprask-agent@(.+?)\\.service/); if(m) timerMap[m[1]] = t; });
+  (d.timers||[]).forEach(t => {
+    // Unit'ai būna dviejų formų: suprask-agent@<role>.service ir
+    // suprask-<role>-queue.service (kūrėjo eilė). Be antros formos kūrėjas
+    // atrodydavo kaip „nesuplanuotas“.
+    const name = (t.activates || "").split("/").pop().replace(".service", "");
+    if (!name.startsWith("suprask-")) return;
+    let role = name.slice("suprask-".length);
+    if (role.startsWith("agent@")) role = role.slice(6);
+    else if (role.endsWith("-queue")) role = role.slice(0, -6);
+    timerMap[role] = t;
+  });
 
   $("#schedule").innerHTML = d.schedule.map(s => {
     const t = timerMap[s.role] || {};

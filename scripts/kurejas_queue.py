@@ -90,8 +90,8 @@ def run_one(proposal_id: int) -> tuple[str, str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--max-items", type=int, default=8)
-    ap.add_argument("--max-minutes", type=int, default=180)
+    ap.add_argument("--max-items", type=int, default=60)
+    ap.add_argument("--max-minutes", type=int, default=720)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-triage", action="store_true", help="nepažymėti pasenusių/dubliuojančių")
     args = ap.parse_args()
@@ -126,7 +126,7 @@ def main() -> int:
         status, line = "unknown", ""
         for _ in range(6):
             status, line = run_one(int(prop["id"]))
-            if "kitas agentas jau dirba" not in line:
+            if "jau dirba" not in line:
                 break
             time.sleep(60)
 

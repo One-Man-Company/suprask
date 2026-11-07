@@ -9,8 +9,8 @@ Type=oneshot
 WorkingDirectory=/home/zoltanas/workspace/suprask
 Environment="PATH=/home/zoltanas/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 Environment="SUPRASK_HERMES_BIN=/home/zoltanas/.local/bin/hermes"
-ExecStart=/usr/bin/python3 /home/zoltanas/workspace/suprask/scripts/kurejas_queue.py --max-items 8 --max-minutes 180
-TimeoutStartSec=16200
+ExecStart=/usr/bin/python3 /home/zoltanas/workspace/suprask/scripts/kurejas_queue.py --max-items 60 --max-minutes 720
+TimeoutStartSec=46800
 Nice=10
 StandardOutput=journal
 StandardError=journal

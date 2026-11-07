@@ -36,7 +36,7 @@ WorkingDirectory={root}
 Environment="PATH=/home/zoltanas/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 Environment="SUPRASK_HERMES_BIN=/home/zoltanas/.local/bin/hermes"
 ExecStart=/usr/bin/python3 {root}/{command} --max-items {max_items} --max-minutes {max_minutes}
-TimeoutStartSec=16200
+TimeoutStartSec={timeout}
 Nice=10
 StandardOutput=journal
 StandardError=journal
@@ -78,7 +78,8 @@ def main() -> int:
             (OUT / unit).write_text(
                 QUEUE_SERVICE.format(role=role, cadence=cfg["cadence"], root=ROOT,
                                      command=queue["command"], max_items=queue["max_items"],
-                                     max_minutes=queue["max_minutes"]),
+                                     max_minutes=queue["max_minutes"],
+                                     timeout=int(queue["max_minutes"]) * 60 + 3600),
                 encoding="utf-8",
             )
 

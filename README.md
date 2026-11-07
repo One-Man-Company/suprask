@@ -9,16 +9,17 @@ Ne įsiminti — suprasti. Simuliacijos, modeliai ir žaidimai, kurie paaiškina
 
 ## Kas yra viduje (šiandien)
 
-**1 klasė — 4 kryptys, 13 modulių, 13 interaktyvių simuliacijų:**
+**1 klasė — 5 kryptys, 19 modulių, 19 interaktyvių simuliacijų:**
 
 | Kryptis | Moduliai |
 |---|---|
 | 🔤 Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Sakinio tvarka |
-| 🔢 Matematika | Skaičių tiesė · Dešimtukas · Figūros · Dėsningumai |
+| 🔢 Matematika | Skaičių tiesė · Dešimtukas · Figūros · Dėsningumai · Pinigai · Laikas · Lygybė · Kryptys · Taškas, tiesė, spindulys, atkarpa |
 | 🌍 Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Gyvūnų grupės |
 | 🤝 Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius |
+| 🔌 Technologijos | Elektra: kelias turi būti vientisas |
 
-Kiekvienas modulis: viena didelė idėja → simuliacija → paaiškinimas → 3 užduotys → refleksija → blokas mokytojui ir tėvams (su veikla be ekrano ir dažnomis klaidomis).
+Kiekvienas modulis: viena didelė idėja → simuliacija → paaiškinimas → 4–5 užduotys → refleksija → blokas mokytojui ir tėvams (su veikla be ekrano ir dažnomis klaidomis).
 
 **2–12 klasės** — struktūra ir tyrimų bazė ruošiama; turinys kuriamas nuosekliai.
 
@@ -56,7 +57,10 @@ Patikra:
 
 ```bash
 python3 scripts/validate_content.py
+python3 scripts/check_docs_facts.py
 ```
+
+`check_docs_facts.py` lygina šio README ir `docs/ARCHITEKTURA.md` skaičius (kryptys, moduliai, simuliacijos, užduotys, garso įrašai, agentai) su failais — kad viešas pajėgumo teiginys neatsiliktų nuo turinio.
 
 ## Kaip prisidėti
 
@@ -67,7 +71,7 @@ python3 scripts/validate_content.py
 
 ## Agentų sistema
 
-Platformą nuolat vysto dvylika agentų (`agents/`), veikiančių ciklu **ieška → metodas → turinys → simuliacija → kritika → leidimas**:
+Platformą nuolat vysto penkiolika agentų (`agents/`), veikiančių ciklu **ieška → metodas → turinys → simuliacija → kritika → leidimas**:
 
 | Vaidmuo | Ką daro |
 |---|---|
@@ -83,8 +87,11 @@ Platformą nuolat vysto dvylika agentų (`agents/`), veikiančių ciklu **ieška
 | `tikrintojas` | validuoja turinį ir sąsają |
 | `sveikatos-inspektorius` | tikrina gyvą svetainę |
 | `kuratorius` | savaitės suvestinė ir prioritetai |
+| `kalbu-redaktorius` | tikrina užduočių formuluotes (vienareikšmiškumas, sakinio ilgis) |
+| `sistemos-architektas` | matuoja agentų darbą, taiso sistemines problemas ir grafikus |
+| `publikavimo-agentas` | užtikrina, kad sukurtas turinys būtų paskelbtas |
 
-Grafikas — `systemd --user` timeriai (10 paleidimų per dieną), kiekvienas paleidimas registruojamas `agents/runs.db`. Žr. [`agents/README.md`](agents/README.md).
+Grafikas — `systemd --user` timeriai (`ROLES` sąraše `agents/run.py`), kiekvienas paleidimas registruojamas `agents/runs.db`. Žr. [`agents/README.md`](agents/README.md).
 
 ## Vidinis dashboard (Tailscale)
 
@@ -98,18 +105,19 @@ HTTP prieiga ribojama Tailscale tinklu — jokio prisijungimo ekrano. Žr. [`das
 
 ## Garsas
 
-Lietuviškas garsas — iš anksto sugeneruoti neuroninio balso (`lt-LT-OnaNeural`) įrašai, ne naršyklės balsas. 344 įrašai, ~5 MB, generuojami `scripts/generate_audio.py`. Naršyklės balsas naudojamas tik kaip atsarginis variantas dinaminiams sakiniams.
+Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 354 tekstai po du variantus (sakinys ir skiemuo) — 708 įrašai, ~17 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
 
 ## Licencijos
 
 - **Kodas:** MIT (žr. [`LICENSE`](LICENSE))
 - **Turinys ir tekstai:** CC BY-SA 4.0
+- **Balsas ir garso įrašai:** `lt_LT-reginute1` — Robertas Tarasevičius, sugeneruotas iš LIEPA studijinio korpuso (2013–2015, Vilniaus universitetas su Lietuvių kalbos institutu, LEU ir Šiaulių universitetu), **CC BY 4.0**; kirčio žodynas — iš LIEPA anotacijų ir Arūno Smaliuko `g2p-lt-lexicon` (CC BY 4.0). Visi įrašai sugeneruoti mašininiu būdu — tai nurodyta ir „Apie“ puslapyje (ES AI aktas, 50 str.).
 
 ## Būsena
 
 | | |
 |---|---|
 | Versija | 0.1 (2026-11) |
-| Parengta | 1 klasė (13 modulių) |
+| Parengta | 1 klasė — 5 kryptys, 19 modulių, 19 simuliacijų, 80 užduočių |
 | Toliau | 2 klasė, tada 3–4 |
 | Kalbos | lietuvių (struktūra paruošta kitoms) |

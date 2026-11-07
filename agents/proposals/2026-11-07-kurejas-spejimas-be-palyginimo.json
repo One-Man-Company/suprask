@@ -1,0 +1,16 @@
+{
+  "role": "kurejas",
+  "run_id": 47,
+  "created": "2026-11-07T22:10:00+02:00",
+  "type": "simuliacija",
+  "title": "Svarstyklės: spėjimas nepalyginamas su rezultatu",
+  "body": "Pamokoje 16-lygybe-svarstykles simuliacija prašo vaiko spėjimo („Kiek kubelių dėžutėje?“), įrašo jį į api.note, bet pirmos lygybės metu jo su niekuo nesulygina — vaikas nebepamato, ar jo prognozė buvo teisinga. Tai ta pati klaida, kuri buvo rasta pinigų simuliacijoje ir šiame paleidime ištaisyta (LL-15): spėjimas buvo naudojamas kaip durų atraktinimas, o ne kaip duomuo. Siūlau simuliacijų inžinieriui perkelti tą patį sprendimą į svarstyklės: pirmos lygybės metu readout turi pasakyti „Spėjai N, o dėžutėje M“ ir, jei nesutampa, paaiškinti, kuo skyrėsi, neatskleidžiant atsakymo. Laikrodžio simuliacijoje tas pats trūkumas yra, bet ten spėjimas dvinaris ir rezultatas priklauso nuo pasukimo, todėl pirmiau reikia sutarti dėl teksto — todėl į pasiūlymą jo neįtraukiu.",
+  "target": "assets/js/sims/matematika.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/matematika.js:982-990 — startAdding(guess) rašo api.note(„Tavo spėjimas: …“), bet lygybės būsenoje spėjimas nebeperskaitomas",
+    "research/wiki/guidelines/pamokos.md — LL-15 „Spėjimas, kurį modelis pameta“ (nauja pamoka, šis paleidimas)",
+    "content/lt/grade-01/matematika/16-lygybe-svarstykles.json — modulio svietimas1 teigia „spėjimas prieš pirmą judesį“, bet modelis jo nepatikrina"
+  ]
+}

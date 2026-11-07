@@ -111,3 +111,9 @@ Naują pamoką **prideda** tas, kas rado defektą; senos netrinamos ir neperraš
 - **Taisyklė:** `api.readout()` ir fokusuoto elemento `aria-label` keičiami **tik pasikeitus reikšmei**, ne kiekviename kadre: laikyk `lastReadout` / `lastLabel` ir pranešk, kai tekstas kitas. Animacija gali būti kadrinė, tekstas — ne.
 - **Patikra:** MutationObserver ant `#sim-readout` per vieną pilną veiksmą (čia — vienas ratas) turi rodyti **tiek pat mutacijų, kiek skirtingų reikšmių**, ne 80+. `check_view.py` to nepagauna, nes matuoja išdėstymą, ne pranešimų skaičių.
 
+## LL-15 — Spėjimas, kurį modelis pameta
+
+- **Simptomas:** pinigų pamokoje vaikas įrašė spėjimą „3 monetos“, sumokėjo 50 c + 10 c, o modelis atsakė tik „Apmokėta. 60 c.“ — spėjimas niekur nepaminėtas. Vaikas neturi progos pamatyti, kad jo prognozė buvo neteisinga.
+- **Priežastis:** spėjimas buvo naudojamas kaip „durų“ mechanizmas (atrakinti monetoms), o ne kaip duomuo: reikšmė įrašyta, bet rezultato tekstas jos neperskaitė.
+- **Taisyklė:** jei modelis prašo spėjimo, jis privalo jį **palyginti su tuo, kas įvyko** pirmos baigties metu („Spėjai 3, o lėkštėje 2“). Jei spėjimas nesutampa — pasakyk, kuo skyrėsi, bet neatskleisk teisingo atsakymo. Spėjimas be palyginimo yra dekoracija, o ne mokymasis.
+- **Patikra:** zondas, kuris įrašo spėjimą (`api.ask` laukas), atlieka veiksmą ir tikrina, kad `#sim-readout` tekste būtų spėjimo skaičius. `check_view.py` to nepagauna — jis matuoja išdėstymą, ne pranešimų turinį. Tas pats trūkumas lieka `16-lygybe-svarstykles` simuliacijoje (`sv-*`), todėl jis įrašytas pasiūlymu simuliacijų inžinieriui.

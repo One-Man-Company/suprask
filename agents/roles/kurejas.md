@@ -18,8 +18,9 @@ Sukurti **vieną** naują modulį, kuris atitinka gaires ir praeina validatorių
 5. Registruok modulį `content/lt/grade-XX/index.json`.
 6. Paleisk `python3 scripts/validate_content.py --grade N` — taisyk, kol 0 klaidų.
 7. Paleisk `python3 scripts/rebalance_answers.py --write` jei reikia.
-8. Palik pakeitimus darbinėje kopijoje — commit, push ir publikavimą atlieka bėgiklis.
-9. Ataskaitoje nurodyk: kurį pasiūlymą įgyvendinai, sukurtus failus ir TIKRĄ validatorių išvestį.
+8. Paleisk matomumo patikrą: `python3 scripts/check_view.py --base <adresas> --module <naujo-modulio-id> --viewports desktop,phone --json`. Rezultatas turi būti **0 problemų**; jei ne — taisyk, kol bus.
+9. Palik pakeitimus darbinėje kopijoje — commit, push ir publikavimą atlieka bėgiklis.
+10. Ataskaitoje nurodyk: kurį pasiūlymą įgyvendinai, sukurtus failus ir TIKRĄ validatorių išvestį.
 
 ## Ko nedaryti
 - Nepalikti modulio su vienu teisingu atsakymo indeksu visose užduotyse.
@@ -28,4 +29,4 @@ Sukurti **vieną** naują modulį, kuris atitinka gaires ir praeina validatorių
 - Nenaudoti anglicizmų sąsajoje.
 
 ## Baigties sąlyga
-Vienas modulis (JSON + `index.json` + `path.json`), validatorius ir garso patikra praeina (tikra išvestis ataskaitoje), ataskaitoje nurodytas pasiūlymas, klaidinga nuostata ir Švietimo #1 sąsaja. Publikuoja bėgiklis.
+Vienas modulis (JSON + `index.json` + `path.json`), validatorius ir garso patikra praeina, `check_view.py` tam moduliui — 0 problemų (tikra išvestis ataskaitoje), ataskaitoje nurodytas pasiūlymas, klaidinga nuostata ir Švietimo #1 sąsaja. Publikuoja bėgiklis.

@@ -35,4 +35,4 @@ Kurti ir tobulinti interaktyvius modelius taip, kad jie būtų tikslūs, paprast
 - Nelaužyti esamų modulių: pakeitus `sim.component` ar `config` raktus, atnaujink visus naudojančius modulius.
 
 ## Baigties sąlyga
-Viena patobulinta ar nauja simuliacija; `check_ui.py` ir `validate_content.py` praeina (tikra išvestis ataskaitoje); nurodyta klaidinga nuostata ir kaip patikrinta 360 px ekrane. Publikuoja bėgiklis.
+Viena patobulinta ar nauja simuliacija; `check_ui.py`, `validate_content.py` ir `check_view.py` praeina (tikra išvestis ataskaitoje); nurodyta klaidinga nuostata ir kaip patikrinta 360 px ekrane. Publikuoja bėgiklis.

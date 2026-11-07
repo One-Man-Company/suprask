@@ -387,3 +387,9 @@ svg { max-width: 100%; height: auto; }
 }
 html.js .boot-fallback { display: none; }
 @keyframes bootReveal { to { opacity: 1; pointer-events: auto; transform: none; } }
+
+/* Antraštės metaduomenys: ilgas krypties pavadinimas neturi nustumti
+   „· 8 min.“ į antrą eilutę — vaikui tai atrodo kaip sulūžusi kortelė. */
+.eyebrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .35rem; }
+.eyebrow .dot { opacity: .55; }
+.nowrap { white-space: nowrap; }

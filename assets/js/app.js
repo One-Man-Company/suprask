@@ -206,7 +206,7 @@ function moduleRow(strand, m) {
       <span aria-hidden="true" style="font-size:1.4rem">${done ? "✅" : "▶️"}</span>
       <span class="mod-row-body">
         <strong style="display:block">${esc(m.title)}</strong>
-        <span class="strand-meta">${esc(m.subtitle || "")} · ${m.minutes || 8} min.</span>
+        <span class="strand-meta"><span>${esc(m.subtitle || "")}</span> <span class="nowrap">· ${m.minutes || 8} min.</span></span>
       </span>
       <span class="chip ${done ? "mint" : ""}">${done ? "atlikta" : "bandyk"}</span>
       <span aria-hidden="true" style="font-size:1.6rem;color:var(--ink-faint)">›</span>
@@ -282,7 +282,7 @@ async function viewModule(grade, strandId, moduleId) {
          <div>
            <span class="continue-label">Kitas žingsnis · ${pos + 2} iš ${seq.length}</span>
            <strong>${esc(next.title)}</strong>
-           <span class="strand-meta">${esc(next.strand.title)} · ${next.minutes || 8} min.</span>
+           <span class="strand-meta"><span>${esc(next.strand.title)}</span> <span class="nowrap">· ${next.minutes || 8} min.</span></span>
          </div>
          <span class="btn">Toliau →</span>
        </a>`
@@ -303,7 +303,7 @@ async function viewModule(grade, strandId, moduleId) {
       <a href="#/klase/${grade}/${strand.id}">${esc(strand.title)}</a></div>
 
     <header class="module-head">
-      <p class="eyebrow">${esc(strand.title)} · ${mod.minutes || 8} min.</p>
+      <p class="eyebrow"><span>${esc(strand.title)}</span><span class="dot" aria-hidden="true">·</span><span class="nowrap">${mod.minutes || 8} min.</span></p>
       <h1>${esc(mod.title)}</h1>
       <p class="lede" style="color:var(--ink-soft)">${esc(mod.subtitle || "")}</p>
       ${mod.concept && mod.concept.big_idea ? `<p class="big-idea">${esc(mod.concept.big_idea)}</p>` : ""}

@@ -19,6 +19,7 @@ import datetime as dt
 import fcntl
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -164,6 +165,15 @@ PALEIDIMO NR.: {run_id}
 --- VAIDMUO: {role} ---
 {role_text}
 
+--- PAMOKOS IŠ ANKSTESNIŲ DEFEKTŲ (privaloma) ---
+{lessons}
+
+Prieš kurdamas ar taisydamas prisimink: šios pamokos atsirado iš realių vaiko
+matytų klaidų. Jei tavo darbas galėtų pakartoti kurią nors — sustok ir daryk
+kitaip. Jei randi NAUJĄ defekto tipą, kurio sąraše nėra, darbo pabaigoje
+pridėk pamoką į research/wiki/guidelines/pamokos.md tokiu pačiu formatu
+(Simptomas / Priežastis / Taisyklė / Patikra) ir įrašyk tai ataskaitoje.
+
 --- PASKUTINĖ TAVO ATASKAITA (ištrauka) ---
 {last_log}
 
@@ -238,6 +248,20 @@ def open_proposals_text(limit: int = 10) -> str:
     return "\n".join(out)
 
 
+
+LESSONS_FILE = ROOT / "research" / "wiki" / "guidelines" / "pamokos.md"
+
+
+def lessons_brief(limit: int = 40) -> str:
+    """Trumpas pamokų sąrašas — agentas mato jas kiekvieną paleidimą."""
+    try:
+        text = LESSONS_FILE.read_text(encoding="utf-8")
+    except OSError:
+        return "(pamokų registro nėra)"
+    items = re.findall(r"^## (LL-\d+ — [^\n]+)", text, re.M)
+    return "\n".join(items[:limit]) or "(pamokų dar nėra)"
+
+
 def build_prompt(role: str, cfg: dict, run_id: int) -> str:
     role_text = read(AGENTS / cfg["file"])
     if not role_text:
@@ -257,6 +281,7 @@ def build_prompt(role: str, cfg: dict, run_id: int) -> str:
         role=role,
         role_text=role_text.strip(),
         last_log=last_log_excerpt(role),
+        lessons=lessons_brief(),
         definition_of_done=dod or "Įrašyk ataskaitą ir grąžink trumpą santrauką.",
     )
     if "PASIŪLYMŲ FORMATAS" in role_text or cfg.get("proposals", True):

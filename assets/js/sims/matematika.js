@@ -1055,12 +1055,13 @@ const pinigineIrKaina = {
       </div>`;
 
     controls.innerHTML = `
-      <div id="pg-guess" style="display:flex;justify-content:center">
-        <button class="btn" id="pg-say">Sakau</button>
+      <div id="pg-guess" style="display:flex;flex-direction:column;gap:.35rem;align-items:center">
+        <button class="btn" id="pg-say">Sakau spėjimą</button>
+        <p class="sim-note" id="pg-lock" style="margin:0">1) Pasakyk spėjimą. 2) Spausk mygtuką. Tada dėsi monetas.</p>
       </div>
-      <div id="pg-purse" style="display:none;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
+      <div id="pg-purse" aria-disabled="true" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center;opacity:.8">
         ${coinList.map((c) => `
-          <button class="btn secondary pg-coin" data-cent="${c}" aria-label="${c} centų moneta"
+          <button class="btn secondary pg-coin" data-cent="${c}" aria-label="${c} centų moneta" disabled
                   style="width:56px;height:56px;min-width:56px;padding:0;display:flex;align-items:center;justify-content:center">
             ${coinSvg(c, diameter(c))}
           </button>`).join("")}
@@ -1142,6 +1143,10 @@ const pinigineIrKaina = {
     }
 
     function renderPlate(focusIdx) {
+      if (!plate.length) {
+        plateEl.innerHTML = '<span class="sim-note" style="align-self:center;margin:0">Čia dėsi monetas</span>';
+        return;
+      }
       plateEl.innerHTML = plate.map((c, i) => `
         <button class="pg-take" data-i="${i}" aria-label="Nuimti ${c} centų monetą"
                 style="width:48px;height:48px;min-width:48px;padding:0;border:0;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -1200,7 +1205,7 @@ const pinigineIrKaina = {
     function feedback() {
       const s = sum();
       if (locked) {
-        api.readout(`Kiek monetų prireiks ${price} centų? Pasakyk, tada dėk.`);
+        api.readout(`Kiek mažiausiai monetų reikia ${price} centams? 1) Pasakyk spėjimą. 2) Spausk „Sakau spėjimą“. 3) Tada dėk monetas.`);
         return;
       }
 
@@ -1284,7 +1289,9 @@ const pinigineIrKaina = {
     controls.querySelector("#pg-say").addEventListener("click", () => {
       locked = false;
       controls.querySelector("#pg-guess").style.display = "none";
-      purseEl.style.display = "flex";
+      purseEl.style.opacity = "1";
+      purseEl.setAttribute("aria-disabled", "false");
+      purseEl.querySelectorAll(".pg-coin").forEach((b) => { b.disabled = false; });
       controls.querySelector("#pg-tools").style.display = "flex";
       paint();
       feedback();
@@ -1307,7 +1314,7 @@ const pinigineIrKaina = {
     });
 
     paint();
-    api.readout(`Kiek monetų prireiks ${price} centų? Pasakyk, tada dėk.`);
+    api.readout(`Kiek mažiausiai monetų reikia ${price} centams? 1) Pasakyk spėjimą. 2) Spausk „Sakau spėjimą“. 3) Tada dėk monetas.`);
 
     return null;
   },
@@ -1370,6 +1377,19 @@ const vabaliukasIrKryptys = {
            style="width:100%;max-width:22rem;margin:0 auto;text-align:center;outline-offset:4px">
         <svg id="vk-svg" viewBox="0 0 320 320" width="100%" role="img"
              aria-label="Tinklelis su lapu"></svg>
+      </div>`;
+
+    // Valdikliai buvo pamesti: kodas ieško #vk-left/#vk-right/#vk-step/#vk-reset,
+    // o jų niekas nesukurdavo — todėl simuliacija krisdavo su „Cannot read
+    // properties of null (reading 'addEventListener')" ir vaikas matydavo klaidą.
+    controls.innerHTML = `
+      <div id="vk-pad" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        <button class="btn secondary" id="vk-left" aria-label="Pasukti į kairę">↺ Kairėn</button>
+        <button class="btn" id="vk-step" aria-label="Žengti vieną langelį į priekį">Žengti ⤴</button>
+        <button class="btn secondary" id="vk-right" aria-label="Pasukti į dešinę">Dešinėn ↻</button>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:.5rem">
+        <button class="btn ghost" id="vk-reset">Iš naujo</button>
       </div>`;
 
     const wrap = stage.querySelector("#vk-wrap");

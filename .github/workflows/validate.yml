@@ -27,6 +27,9 @@ jobs:
       - name: ffmpeg
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
 
+      - name: Pamokų registras
+        run: python3 scripts/check_lessons.py
+
       - name: Užduočių formuluotės
         run: python3 scripts/check_language.py --grade 1 --strict
 

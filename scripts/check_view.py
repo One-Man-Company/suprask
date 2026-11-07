@@ -65,6 +65,32 @@ MEASURE = r"""
     .map(el => ({ tag: el.tagName, text: (el.textContent || '').trim().slice(0, 40), sw: el.scrollWidth, cw: el.clientWidth }));
 
   const taskFonts = tasks.map(t => parseFloat(getComputedStyle(t.querySelector('.task-q') || t).fontSize) || 0).filter(Boolean);
+
+  // Antraštės metaduomenys (kryptis · minutės) neturi lūžti į dvi eilutes.
+  const eyebrow = document.querySelector('.eyebrow');
+  let eyebrowLines = 1;
+  if (eyebrow) {
+    const lh = parseFloat(getComputedStyle(eyebrow).lineHeight) || parseFloat(getComputedStyle(eyebrow).fontSize) * 1.4;
+    eyebrowLines = Math.max(1, Math.round(eyebrow.getBoundingClientRect().height / lh));
+  }
+
+  // Simuliacijos valdikliai: ar yra bent vienas MATOMAS veiksmas, ir ar nėra
+  // 0×0 dydžio mygtukų (pvz. monetos, kurios „yra“, bet vaikas jų nemato).
+  const simZone = [...document.querySelectorAll('#sim-stage button, #sim-controls button, #sim-stage a, #sim-controls a')];
+  const visibleSim = simZone.filter(b => { const r = b.getBoundingClientRect(); return r.width > 0 && r.height > 0; });
+  // 0×0 mygtukas yra defektas TIK jei jo tėvai matomi. Jei tėvas turi
+  // display:none — tai sąmoningai užrakintas žingsnis (pvz. monetos iki spėjimo).
+  const insideHidden = (el) => {
+    let node = el;
+    while (node && node !== document.body) {
+      if (getComputedStyle(node).display === 'none' || node.hasAttribute('hidden')) return true;
+      node = node.parentElement;
+    }
+    return false;
+  };
+  const hiddenSim = simZone
+    .filter(b => { const r = b.getBoundingClientRect(); return (r.width === 0 || r.height === 0) && !insideHidden(b); })
+    .map(b => (b.getAttribute('aria-label') || b.innerText || b.id || b.className).toString().slice(0, 30));
   const stage = document.querySelector('#sim-stage');
   const stageBox = stage ? stage.getBoundingClientRect() : null;
 
@@ -79,6 +105,9 @@ MEASURE = r"""
     smallCount: small.length,
     clipped,
     simHeight: stageBox ? Math.round(stageBox.height) : 0,
+    eyebrowLines,
+    simVisibleControls: visibleSim.length,
+    simHiddenControls: hiddenSim.slice(0, 5),
     loading: !!document.querySelector('.loading'),
     fatal: !!document.querySelector('.boot-fallback') && getComputedStyle(document.querySelector('.boot-fallback')).opacity === '1',
     title: document.querySelector('h1') ? document.querySelector('h1').innerText : null,
@@ -128,6 +157,9 @@ def check_route(page, base: str, route: str, viewport: dict) -> dict:
         and not data["loading"]
         and not data["fatal"]
         and not data["errors"]
+        and data["eyebrowLines"] <= 1
+        and data["simVisibleControls"] >= 1
+        and not data["simHiddenControls"]
     )
     return data
 
@@ -186,6 +218,12 @@ def main() -> int:
                 bits.append(f"mažų taikinių {r['smallCount']}")
             if r.get("clipped"):
                 bits.append(f"apkirptas tekstas: {r['clipped'][0]['text'][:30]}")
+            if r.get("eyebrowLines", 1) > 1:
+                bits.append(f"antraštė lūžta į {r['eyebrowLines']} eilutes")
+            if r.get("simVisibleControls", 1) == 0:
+                bits.append("simuliacijoje nėra matomo valdiklio")
+            if r.get("simHiddenControls"):
+                bits.append(f"paslėpti valdikliai: {', '.join(r['simHiddenControls'][:2])}")
             if r.get("loading"):
                 bits.append("amžinas „Kraunama…“")
             if r.get("fatal"):

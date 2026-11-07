@@ -1,0 +1,130 @@
+{
+  "id": "21-erdvines-figuros",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Erdvinės figūros",
+  "subtitle": "Tas pats kūgis iš priekio — trikampis, iš viršaus — apskritimas",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu kūną nuo jo vaizdo: tas pats kūgis iš priekio atrodo kitaip nei iš viršaus.",
+    "Įvardiju kubą, rutulį, ritinį, kūgį ir stačiakampį gretasienį.",
+    "Randu aplinkoje daiktų, panašių į šiuos kūnus."
+  ],
+  "concept": {
+    "title": "Tas pats kūnas, kitas vaizdas",
+    "big_idea": "Iš skirtingų pusių tas pats kūnas atrodo skirtingai. Kūgis iš priekio atrodo kaip trikampis, o iš viršaus — kaip apskritimas. Tačiau kūgis visą laiką lieka vienas.",
+    "steps": [
+      "Pasirink kūną ir žvilgsnį: iš priekio, iš viršaus ar nuo šono.",
+      "Spėk, kokią formą matai, ir spausk jos mygtuką.",
+      "Pakeisk žvilgsnį. Forma keisis, o kūnas liks tas pats.",
+      "Apžiūrėk kūną iš visų trijų pusių."
+    ],
+    "example": "Ledų ragelis iš priekio atrodo kaip trikampis, o iš viršaus — kaip apskritimas. Tai vis dar vienas kūgis."
+  },
+  "sim": {
+    "component": "erdvines-figuros",
+    "config": {
+      "sentences": {
+        "kugis-priekis": "Kūgis iš priekio atrodo kaip trikampis.",
+        "kugis-virsus": "Kūgis iš viršaus atrodo kaip apskritimas.",
+        "kugis-sonas": "Kūgis nuo šono vėl atrodo kaip trikampis.",
+        "ritinys-priekis": "Ritinys iš priekio atrodo kaip stačiakampis.",
+        "ritinys-virsus": "Ritinys iš viršaus atrodo kaip apskritimas.",
+        "ritinys-sonas": "Ritinys nuo šono vėl atrodo kaip stačiakampis.",
+        "kubas-priekis": "Kubas iš priekio atrodo kaip kvadratas.",
+        "kubas-virsus": "Kubas iš viršaus irgi atrodo kaip kvadratas.",
+        "kubas-sonas": "Kubas nuo šono irgi atrodo kaip kvadratas.",
+        "gretasienis-priekis": "Gretasienis iš priekio atrodo kaip stačiakampis.",
+        "gretasienis-virsus": "Gretasienis iš viršaus irgi atrodo kaip stačiakampis.",
+        "gretasienis-sonas": "Gretasienis nuo šono irgi atrodo kaip stačiakampis.",
+        "rutulys-priekis": "Rutulys iš priekio atrodo kaip apskritimas.",
+        "rutulys-virsus": "Rutulys iš viršaus vėl atrodo kaip apskritimas.",
+        "rutulys-sonas": "Rutulys nuo šono vėl atrodo kaip apskritimas.",
+        "tikslas": "Apžiūrėjai kūną iš trijų pusių. Jis visą laiką buvo tas pats.",
+        "is-naujo": "Pradedam iš naujo. Pasirink kūną."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Kūgis stovi ant stalo. Kurį vaizdą matai iš viršaus?",
+      "options": [
+        "Trikampį",
+        "Apskritimą",
+        "Kvadratą"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, kokia forma kūgis remiasi į stalą.",
+      "why": "Kūgio pagrindas apvalus, todėl iš viršaus matai apskritimą."
+    },
+    {
+      "q": "Konservų dėžutė stovi. Iš priekio matai stačiakampį, iš viršaus — apskritimą. Kuris tai kūnas?",
+      "options": [
+        "Kubas",
+        "Rutulys",
+        "Ritinys"
+      ],
+      "answer": 2,
+      "hint": "Palygink dėžutę su kauliuku. Ar dėžutė turi kampus?",
+      "why": "Ritinio šonas tiesus, o abu galai apvalūs."
+    },
+    {
+      "q": "Kauliukas yra kubas. Kuri forma matoma iš viršaus?",
+      "options": [
+        "Kvadratas",
+        "Apskritimas",
+        "Trikampis"
+      ],
+      "answer": 0,
+      "hint": "Pažiūrėk į kauliuką simuliacijoje iš viršaus.",
+      "why": "Visos kubo sienos yra kvadratai, todėl vaizdas toks pat."
+    },
+    {
+      "q": "Kamuolys ir lėkštė abu apvalūs. Kuo kamuolys skiriasi nuo lėkštės?",
+      "options": [
+        "Kamuolys didesnis",
+        "Kamuolys apvalus iš visų pusių",
+        "Lėkštė neturi krašto"
+      ],
+      "answer": 1,
+      "hint": "Pasuk kamuolį rankoje. Ar kuri nors pusė plokščia?",
+      "why": "Rutulys apvalus iš visų pusių, o lėkštė plokščia."
+    },
+    {
+      "q": "Iš priekio matai trikampį, iš viršaus — apskritimą. Kuris kūnas taip atrodo?",
+      "options": [
+        "Kūgis",
+        "Ritinys",
+        "Kubas"
+      ],
+      "answer": 0,
+      "hint": "Palygink su ritiniu: ar jo viršus smailus?",
+      "why": "Kūgis siaurėja į viršų, o jo pagrindas apvalus.",
+      "optional": true
+    }
+  ],
+  "reflect": "Rask klasėje daiktą, kuris iš skirtingų pusių atrodo skirtingai. Kaip jis atrodo iš viršaus?",
+  "teacher": {
+    "goal": "Atpažinti ir įvardyti kubą, rutulį, ritinį, kūgį ir stačiakampį gretasienį bei suprasti, kad tas pats kūnas iš skirtingų pusių atrodo skirtingai, o pats kūnas nesikeičia. Briaunų, viršūnių ir sienų neskaičiuojame — tai ne 1 klasės programa.",
+    "prompt": "Kodėl tas pats kūgis iš vienos pusės atrodo kaip trikampis, o iš kitos — kaip apskritimas?",
+    "offline": "Padėkite ant stalo puodelį, kauliuką ir ledų ragelį. Vaikas apžiūri kiekvieną daiktą iš priekio, iš viršaus ir nuo šono, o po kiekvieno žvilgsnio pirštu nupiešia, ką matė. Tada įvardija kūną ir surūšiuoja daiktus į keturias krūvas: kubas, ritinys, kūgis, rutulys.",
+    "misconceptions": [
+      "„Kūgis yra trikampis, o ritinys — apskritimas“: vaikas kūną atpažįsta iš vieno matomo silueto. Modelis leidžia pažiūrėti į tą patį kūną iš trijų pusių ir parodyti, kad pasikeitė tik vaizdas, ne daiktas.",
+      "„Jei iš priekio matau stačiakampį, tai tikrai kubas“: kubo sienos yra kvadratai, o gretasienio — stačiakampiai. Modelis rodo abu kūnus iš to paties žvilgsnio, todėl skirtumą galima pastebėti, o ne įsiminti.",
+      "„Rutulys ir lėkštė abu apvalūs, todėl tai tas pats“: lėkštė plokščia, o rutulys apvalus iš visų pusių. Simuliacijoje rutulio vaizdas nesikeičia, kad ir iš kur žiūrėtum.",
+      "„Kūną reikia pasukti, kad pamatytum kitą formą“: sukasi ne daiktas, o žvilgsnis. Kūnas ant stalo visą laiką lieka toje pačioje vietoje."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, geometrijos sritis: 1–2 klasėje mokomasi įvardyti stačiakampį gretasienį, kūgį ir ritinį, atpažinti juos paveikslėlyje, rasti panašių daiktų aplinkoje ir rūšiuoti; šių figūrų elementai (briaunos, viršūnės, sienos) dar nenagrinėjami.",
+    "Matematikos bendroji programa (2022): 1 klasės metų pasiekimas — atpažįsta ir įvardija kubą, rutulį, stačiakampį gretasienį, kūgį, ritinį; randa panašių daiktų aplinkoje.",
+    "research/wiki/curriculum/matematika-1-klase.md §4.2 — erdvinių figūrų reikalavimas 1–2 klasei ir draudimas nagrinėti elementus; §7 — metų pasiekimų sąrašas.",
+    "„Playful Learning: Teaching the Properties of Geometric Shapes through Pop-up Mechanisms for Kindergarten“ (International Journal of Education in Mathematics, Science and Technology, 2023), https://files.eric.ed.gov/fulltext/EJ1357339.pdf — vaikai, kurie kūnus mato tik kaip plokščius piešinius, painioja plokščias figūras ir erdvinius kūnus.",
+    "„Learning mathematics in two dimensions: a review and look ahead at teaching and learning early childhood mathematics with children's literature“, Frontiers in Psychology 5:459 (2014), doi 10.3389/fpsyg.2014.00459 — vaikų literatūra formuoja matematinę kalbą, todėl kūnus būtina vadinti kūnų vardais, o ne plokščių figūrų vardais."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (tas pats kūnas, kitas vaizdas); briaunos, viršūnės ir sienos sąmoningai neįtrauktos — tai 2 klasės ir vėlesnis turinys",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią idėją naujoje situacijoje (konservų dėžutė, kamuolys ir lėkštė), o ne įsimintą formuluotę",
+    "3 žingsnis — pagalba laiku: kiekviena užduotis turi užuominą į klaidą, simuliacija nebaudžia už klaidingą spėjimą, yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

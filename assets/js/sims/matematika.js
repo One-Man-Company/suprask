@@ -743,7 +743,11 @@ const svarstyklesLygybe = {
     let lastSaid = "";
 
     const diff = () => known + box - whole;
-    const angle = () => Math.max(-12, Math.min(12, 1.6 * diff()));
+    // SVGs `rotate(+a)` sukasi pagal laikrodį: kairysis galas KYLA, dešinysis LEIDŽIASI.
+    // Todėl ženklas turi būti atvirkštinis skirtumui — kai dešinė sunkesnė (diff < 0),
+    // dešinė turi leistis. Anksčiau ženklas buvo teigiamas, todėl svarstyklės
+    // rodydavo atvirkščią pusę (rado publikavimo agentas, #35).
+    const angle = () => Math.max(-12, Math.min(12, -1.6 * diff()));
 
     stage.innerHTML = `
       <div id="sv-wrap" tabindex="0" role="group" aria-label="Svarstyklės"

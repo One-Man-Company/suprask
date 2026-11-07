@@ -166,8 +166,8 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def _json(self, data) -> None:
-        self._send(200, json.dumps(data, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
+    def _json(self, data, status: int = 200) -> None:
+        self._send(status, json.dumps(data, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
 
     def do_GET(self):  # noqa: N802
         if not self._auth_ok():
@@ -211,6 +211,29 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(row)
         if path == "/api/proposals":
             return self._json(db.proposals(100))
+        if path.startswith("/api/prompt/"):
+            role = urllib.parse.unquote(path[len("/api/prompt/"):])
+            import run as runner
+            cfg = runner.ROLES.get(role)
+            if not cfg:
+                return self._json({"error": "nėra tokio vaidmens"}, status=404)
+            try:
+                prompt = runner.build_prompt(role, cfg, 0)
+            except SystemExit as exc:
+                return self._json({"error": f"nėra vaidmens failo: {exc}"}, status=500)
+            role_path = runner.AGENTS / cfg["file"]
+            return self._json({
+                "role": role,
+                "description": cfg["description"],
+                "cadence": cfg["cadence"],
+                "profile": cfg["profile"],
+                "toolsets": cfg["toolsets"],
+                "max_turns": cfg["max_turns"],
+                "budget": cfg["budget"],
+                "role_file": cfg["file"],
+                "role_text": role_path.read_text(encoding="utf-8") if role_path.exists() else "",
+                "prompt": prompt,
+            })
         if path == "/api/publish-status":
             now = time.time()
             cached = getattr(self.server, "_publish_cache", None)
@@ -434,7 +457,8 @@ async function loadOverview(){
       <td data-label="Dažnis">${esc(s.cadence)}</td>
       <td data-label="Kitas" class="muted nowrap">${esc((t.next||"—").replace("n/a","—"))}</td>
       <td data-label="Paskutinis" class="muted nowrap">${esc(t.last||"—")}</td>
-      <td data-label="Veiksmas"><button data-run="${esc(s.role)}">Paleisti dabar</button></td></tr>`;
+      <td data-label="Veiksmas"><button data-run="${esc(s.role)}">Paleisti dabar</button>
+        <button data-prompt="${esc(s.role)}" title="Rodyti promptą ir vaidmens taisykles">Promptas</button></td></tr>`;
   }).join("");
 
   $("#roleFilter").innerHTML = '<option value="">visi vaidmenys</option>' + d.schedule.map(s=>`<option value="${esc(s.role)}">${esc(s.role)}</option>`).join("");
@@ -475,6 +499,33 @@ async function openRun(id){
   $("#detail").showModal();
 }
 
+async function openPrompt(role){
+  $("#dTitle").textContent = `Promptas · ${role}`;
+  $("#dBody").innerHTML = '<p class="muted">Kraunama…</p>';
+  $("#detail").showModal();
+  try {
+    const p = await j(`/api/prompt/${encodeURIComponent(role)}`);
+    if (p.error) { $("#dBody").innerHTML = `<p>${esc(p.error)}</p>`; return; }
+    $("#dBody").innerHTML = `
+      <div class="kv"><span>Vaidmuo</span><b>${esc(p.description)}</b></div>
+      <div class="kv"><span>Dažnis</span><b>${esc(p.cadence)}</b></div>
+      <div class="kv"><span>Modelis</span><b>${esc(p.profile)}</b></div>
+      <div class="kv"><span>Įrankiai</span><b>${esc(p.toolsets)}</b></div>
+      <div class="kv"><span>Ribos</span><b>${p.max_turns} ėjimų · ${p.budget} biudžetas</b></div>
+      <div class="kv"><span>Failas</span><b>${esc(p.role_file)}</b></div>
+      <h3 style="font-size:13px;color:var(--muted);margin:14px 0 6px">Ką agentas gauna (pilotas promptas)</h3>
+      <pre id="promptText">${esc(p.prompt)}</pre>
+      <button id="copyPrompt">Kopijuoti promptą</button>
+      <h3 style="font-size:13px;color:var(--muted);margin:14px 0 6px">Vaidmens taisyklės (${esc(p.role_file)})</h3>
+      <pre>${esc(p.role_text)}</pre>`;
+    const copyBtn = document.getElementById("copyPrompt");
+    if (copyBtn) copyBtn.onclick = async () => {
+      try { await navigator.clipboard.writeText(p.prompt); copyBtn.textContent = "Nukopijuota ✓"; }
+      catch { copyBtn.textContent = "Kopijavimas neleistas"; }
+    };
+  } catch(e) { $("#dBody").innerHTML = `<p>Klaida: ${esc(String(e))}</p>`; }
+}
+
 async function runNow(role, btn){
   btn.disabled = true; btn.textContent = "Paleidžiama…";
   try { const r = await j("/api/run-now",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({role})});
@@ -508,6 +559,10 @@ async function loadAll(){
 $("#refresh").onclick = loadAll;
 $("#roleFilter").onchange = loadRuns;
 $("#dClose").onclick = () => $("#detail").close();
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-prompt]");
+  if (b) { e.preventDefault(); openPrompt(b.dataset.prompt); }
+});
 loadAll();
 loadPublish();
 setInterval(loadAll, 15000);

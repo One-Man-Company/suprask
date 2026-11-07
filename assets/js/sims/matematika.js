@@ -135,23 +135,24 @@ const desimtukas = {
 };
 
 /* ------------------------------------------------------------------ */
-/* 3. Figūrų rūšiavimas pagal kampus                                   */
+/* 3. Figūrų rūšiavimas pagal formą, ne pagal padėtį                   */
 /*                                                                    */
-/* Modelis: figūrą apibrėžia kampų skaičius, o ne padėtis ekrane.      */
-/* Vaikas pasuka figūrą ir pamato, kad kampų skaičius nesikeičia —     */
-/* būtent tai griovė ankstesnę versiją, kurioje visos figūros stovėjo  */
-/* „kaip paveikslėlyje“ ir pasukta figūra likdavo neatpažinta.         */
+/* Modelis: figūrą apibrėžia jos forma, o ne tai, kaip ji guli.        */
+/* Vaikas pasuka figūrą ir pamato, kad dėžė nesikeičia — būtent tai    */
+/* griovė ankstesnę versiją, kurioje visos figūros stovėjo „kaip      */
+/* paveikslėlyje“ ir pasukta figūra likdavo neatpažinta.              */
+/*                                                                    */
+/* Sąmoningai NĖRA kampų ir kraštinių skaičiavimo: tai 2 klasės       */
+/* programa, o 1 klasėje lieka atpažinimas (žr. modulio `teacher`).    */
 /* ------------------------------------------------------------------ */
 const figuros = {
   mount({ stage, controls, api }) {
     /* Kiekviena figūra aprašyta viršūnėmis. Apskritimas viršūnių neturi —
-       tai ir yra jo apibrėžtis, o ne „apvali išvaizda“. */
+       tai ir yra jo forma, o ne „apvali išvaizda“. */
     const TYPES = {
-      trikampis: { corners: 3, points: [[50, 8], [92, 88], [8, 88]] },
-      keturkampis: { corners: 4, points: [[14, 26], [86, 26], [86, 74], [14, 74]] },
-      kvadratas: { corners: 4, points: [[18, 18], [82, 18], [82, 82], [18, 82]] },
-      trapecija: { corners: 4, points: [[24, 22], [76, 22], [94, 82], [6, 82]] },
-      apskritimas: { corners: 0, circle: { cx: 50, cy: 50, r: 40 } },
+      trikampis: { points: [[50, 8], [92, 88], [8, 88]] },
+      kvadratas: { points: [[18, 18], [82, 18], [82, 82], [18, 82]] },
+      apskritimas: { circle: { cx: 50, cy: 50, r: 40 } },
     };
 
     /* Fiksuota tvarka, ne atsitiktinė: mokytojas gali numatyti, ką vaikas
@@ -159,24 +160,26 @@ const figuros = {
        „negražūs“ — figūra turi būti atpažįstama ne pagal padėtį. */
     const LAYOUT = [
       { type: "trikampis", angle: 0 },
-      { type: "keturkampis", angle: 0 },
-      { type: "apskritimas", angle: 0, scale: 0.62 },
       { type: "kvadratas", angle: 45 },
+      { type: "apskritimas", angle: 0, scale: 0.62 },
+      { type: "kvadratas", angle: 0 },
       { type: "trikampis", angle: 155 },
-      { type: "trapecija", angle: 0 },
       { type: "apskritimas", angle: 0 },
       { type: "trikampis", angle: 265 },
+      { type: "kvadratas", angle: 20 },
+      { type: "apskritimas", angle: 0, scale: 0.8 },
     ];
 
-    /* Dėžės vadinamos savybe, ne figūros vardu: taip rūšiuojama pagal
-       kampus, o ne pagal perskaitytą žodį. */
+    /* Dėžės vadinamos formos vardu, o pavyzdys dėžėje visada pastatytas
+       tiesiai: įdėta pasukta figūra lieka šalia tiesaus pavyzdžio, ir tai
+       pats parodo, kad forma nepasikeitė. */
     const BINS = [
-      { corners: 3, sample: "trikampis", label: "3 kampai" },
-      { corners: 4, sample: "keturkampis", label: "4 kampai" },
-      { corners: 0, sample: "apskritimas", label: "0 kampų" },
+      { type: "apskritimas", label: "Apskritimas" },
+      { type: "trikampis", label: "Trikampis" },
+      { type: "kvadratas", label: "Kvadratas" },
     ];
 
-    const cornerWord = (c) => (c === 0 ? "0 kampų" : `${c} kampai`);
+    const shapeName = (type) => BINS.find((b) => b.type === type).label;
     const turned = (item) => item.angle % 90 !== 0;
 
     let alive = true;
@@ -191,20 +194,18 @@ const figuros = {
 
     stage.innerHTML = `
       <div id="fg-wrap" style="width:100%;max-width:100%;min-width:0;box-sizing:border-box">
-        <p class="sim-note" style="margin:0 0 .55rem;text-align:center">Pasirink figūrą, tada spausk dėžę su tuo pačiu kampų skaičiumi.</p>
+        <p class="sim-note" style="margin:0 0 .55rem;text-align:center">Pasirink figūrą ir pasuk ją. Tada spausk dėžę su tokia pačia forma.</p>
         <div id="fg-tray" role="group" aria-label="Figūros rūšiavimui"
              style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.45rem;box-sizing:border-box"></div>
-        <div id="fg-bins" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45rem;margin-top:.9rem;box-sizing:border-box"></div>
+        <div id="fg-bins" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(6.5rem,1fr));gap:.45rem;margin-top:.9rem;box-sizing:border-box"></div>
       </div>`;
     controls.innerHTML = `
-      <button class="btn secondary" id="fg-turn">Pasuk pasirinktą</button>
-      <button class="btn secondary" id="fg-corners" aria-pressed="false">Rodyk kampus</button>
+      <button class="btn secondary" id="fg-turn">Pasuk</button>
       <button class="btn ghost" id="fg-reset">Iš naujo</button>`;
 
     const trayEl = stage.querySelector("#fg-tray");
     const binsEl = stage.querySelector("#fg-bins");
     const turnBtn = controls.querySelector("#fg-turn");
-    const cornersBtn = controls.querySelector("#fg-corners");
 
     function freshState() {
       return {
@@ -213,12 +214,10 @@ const figuros = {
           n: i + 1,
           angle: cfg.angle,
           scale: cfg.scale || 1,
-          corners: TYPES[cfg.type].corners,
           type: cfg.type,
           done: false,
         })),
         selected: null,
-        showCorners: false,
       };
     }
 
@@ -266,7 +265,6 @@ const figuros = {
     }
 
     function shapeLabel(item) {
-      if (state.showCorners) return `Figūra ${item.n}: ${cornerWord(item.corners)}`;
       return turned(item) ? `Figūra ${item.n}, pasukta` : `Figūra ${item.n}`;
     }
 
@@ -295,7 +293,7 @@ const figuros = {
         // taisyklę `[hidden]{display:none}`, ir įdėta figūra liktų matoma.
         b.style.display = item.done ? "none" : "grid";
         b.innerHTML = "";
-        b.appendChild(shapeSvg(item, { dots: state.showCorners, angle: item.angle, scale: item.scale }));
+        b.appendChild(shapeSvg(item, { angle: item.angle, scale: item.scale }));
         const on = state.selected === item.key;
         b.style.borderColor = on ? "var(--ink)" : "transparent";
         b.style.background = on ? "color-mix(in srgb, var(--accent) 16%, transparent)" : "transparent";
@@ -309,14 +307,14 @@ const figuros = {
       BINS.forEach((bin) => {
         const b = document.createElement("button");
         b.type = "button";
-        b.dataset.bin = String(bin.corners);
+        b.dataset.bin = bin.type;
         b.style.cssText = "box-sizing:border-box;min-width:0;display:grid;justify-items:center;gap:.2rem;" +
           "padding:.5rem .3rem;border:3px dashed var(--line);border-radius:var(--r-m);" +
           "background:var(--paper-2);cursor:pointer;font:inherit;color:inherit;min-height:7rem";
         b.setAttribute("aria-label", `Dėžė: ${bin.label}`);
-        b.appendChild(shapeSvg({ type: bin.sample }, { size: 40, dots: true }));
+        b.appendChild(shapeSvg({ type: bin.type }, { size: 40 }));
         const strong = document.createElement("strong");
-        strong.style.cssText = "font-size:.9rem;font-family:var(--font-head);font-weight:900;line-height:1.1";
+        strong.style.cssText = "font-size:.78rem;font-family:var(--font-head);font-weight:900;line-height:1.15;text-align:center";
         strong.textContent = bin.label;
         b.appendChild(strong);
         const holder = document.createElement("span");
@@ -332,10 +330,8 @@ const figuros = {
       if (!alive || item.done) return;
       state.selected = item.key;
       paintTray();
-      api.readout(state.showCorners
-        ? `Figūra ${item.n}. Pažymėti kampai — suskaičiuok juos.`
-        : `Figūra ${item.n}. Kiek ji turi kampų?`);
-      api.note("Dabar spausk dėžę su tuo pačiu kampų skaičiumi.");
+      api.readout(`Figūra ${item.n}. Kokia tai forma?`);
+      api.note("Jei figūra pasukta, pasuk ją į šoną: forma ta pati.");
     }
 
     function place(bin, binEl, holder) {
@@ -347,7 +343,7 @@ const figuros = {
         return;
       }
 
-      if (item.corners === bin.corners) {
+      if (item.type === bin.type) {
         item.done = true;
         state.selected = null;
         holder.appendChild(shapeSvg(item, { size: 22, angle: item.angle, scale: item.scale }));
@@ -357,24 +353,27 @@ const figuros = {
         const left = state.items.filter((x) => !x.done).length;
         if (left === 0) {
           api.readout("Visos figūros savo dėžėse.");
-          api.note("Pasuk bet kurią figūrą: kampų skaičius nesikeis. Kiek kampų turi durys?");
+          api.note("Pasuk bet kurią figūrą: forma ta pati, keičiasi tik padėtis.");
           api.speak("Visos figūros savo vietose. Puiku!");
           api.progress({ correct: true });
         } else {
-          api.readout(`Teisingai: ${cornerWord(item.corners)}. Liko ${left}.`);
-          api.note("Pasirink kitą figūrą. Jei abejoji — įjunk „Rodyk kampus“ ir suskaičiuok.");
+          api.readout(`Teisingai: ${shapeName(item.type)}. Liko ${left}.`);
+          api.note("Pasirink kitą figūrą. Jei abejoji, pasuk ją ir pažiūrėk į dėžės pavyzdį.");
+          // Fokusas grįžta į sekančią figūrą: klaviatūra vedama ta pačia tvarka,
+          // kuria vaikas dirba, o ne per visas dėžes iš naujo.
+          const kids = [...trayEl.children];
+          const at = kids.findIndex((b) => b.dataset.key === item.key);
+          const visible = (b) => b.style.display !== "none";
+          const next = kids.slice(at + 1).find(visible) || kids.find(visible);
+          if (next) next.focus();
         }
         return;
       }
 
       binEl.classList.add("wiggle");
       later(() => binEl.classList.remove("wiggle"), 520);
-      api.readout(item.corners === 0
-        ? "Dar ne: ši figūra neturi kampų."
-        : `Dar ne: figūra turi ${item.corners} kampus, o dėžėje — ${bin.corners}.`);
-      api.note(item.corners === 0
-        ? "Apskritimas neturi kampų — ieškok dėžės, kurioje parašyta 0."
-        : "Suskaičiuok figūros kampus ir palygink su skaičiumi ant dėžės.");
+      api.readout("Dar ne: ši figūra turi kitą formą.");
+      api.note("Pasuk figūrą į šoną ir palygink su pavyzdžiu dėžėje.");
     }
 
     function rotateSelected() {
@@ -387,46 +386,21 @@ const figuros = {
       }
       item.angle = (item.angle + 30) % 360;
       paintTray();
-      if (state.showCorners) {
-        api.readout(`Figūra ${item.n}: ${cornerWord(item.corners)} — pasukus tiek pat.`);
-        api.note("Kampai pažymėti taškais. Pasuk dar kartą: ar skaičius keičiasi?");
-      } else {
-        api.readout(`Figūra ${item.n} pasukta. Ar kampų skaičius pasikeitė?`);
-        api.note("Įjunk „Rodyk kampus“ ir skaičiuok taškus prieš ir po pasukimo.");
-      }
-    }
-
-    function toggleCorners() {
-      if (!alive) return;
-      state.showCorners = !state.showCorners;
-      cornersBtn.setAttribute("aria-pressed", String(state.showCorners));
-      paintTray();
-      const item = state.items.find((x) => x.key === state.selected && !x.done);
-      if (!item) {
-        api.readout(state.showCorners ? "Kampai žymimi taškais." : "Kampai nebežymimi.");
-        api.note("Pasirink figūrą ir skaičiuok pažymėtus taškus.");
-        return;
-      }
-      api.readout(`Figūra ${item.n}: ${cornerWord(item.corners)}.`);
-      api.speak(String(item.corners));
-      api.note(item.corners === 0
-        ? "Apskritimas neturi kampų — nė vieno taško."
-        : "Pažymėti taškai ir yra kampai. Suskaičiuok juos.");
+      api.readout(`Figūra ${item.n} pasukta. Ar pasikeitė forma?`);
+      api.note("Pasuk dar kartą. Forma ta pati, keičiasi tik padėtis.");
     }
 
     function init() {
       stopTimers();
       state = freshState();
-      cornersBtn.setAttribute("aria-pressed", "false");
       buildTray();
       buildBins();
       paintTray();
-      api.readout("Pasirink figūrą. Kiek ji turi kampų?");
-      api.note("Spausk figūrą, tada dėžę su tuo pačiu kampų skaičiumi.");
+      api.readout("Pasirink figūrą. Kokia tai forma?");
+      api.note("Pasirink figūrą, pasuk ją, tada spausk dėžę su tokia pačia forma.");
     }
 
     turnBtn.addEventListener("click", rotateSelected);
-    cornersBtn.addEventListener("click", toggleCorners);
     controls.querySelector("#fg-reset").addEventListener("click", init);
 
     init();

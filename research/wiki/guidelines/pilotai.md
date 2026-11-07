@@ -39,6 +39,7 @@ Kiekvienas naujas dizaino sprendimas laikomas pilotu (Švietimas #1, 6 žingsnis
 - **Kaip matuojame:** klaidų, kai pasukta figūra įdedama į neteisingą dėžę, dalis pirmame bandyme ir tai, ar vaikas savo žodžiais pasako, kad pasukus kampų skaičius nekinta (refleksijos klausimas). Stebėjimas savanoriškas, duomenys nerenkami.
 - **Rezultatas:** dar nėra.
 - **Sprendimas:** laukiama duomenų.
+- **Korekcija (2026-11-07, paleidimas 95):** hipotezės premisa buvo klaidinga — 1 klasės programoje figūra **neapibrėžiama** kraštinėmis ir kampais; kampas, daugiakampis ir jo kraštinės yra 2 klasės turinys (`sources/pradinio-bp-rekomendacijos-2024.txt:1033–1037`), o 1 klasėje geometrija pradedama nuo taško, tiesės, spindulio ir atkarpos (`:1030–1033`). Todėl `figuros` simuliacija perdirbta: dėžės vadinamos formos vardu (apskritimas, trikampis, kvadratas), kampų skaičiavimas ir jungiklis „Rodyk kampus“ pašalinti, liko sukimas ir rūšiavimas pagal formą. Hipotezė performuluota: jei figūros rodomos pasuktos ir vaikas gali jas sukti, jis atpažįsta formą nepriklausomai nuo padėties. Rezultatas — dar nėra.
 
 ### P-004 — Sujungtos laikrodžio rodyklės
 - **Data:** 2026-11-04

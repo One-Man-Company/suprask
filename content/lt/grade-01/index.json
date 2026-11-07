@@ -24,7 +24,7 @@
       "modules": [
         { "id": "04-skaiciu-tiese", "title": "Skaičių tiesė", "subtitle": "Sudėti ir atimti reiškia judėti tiese", "file": "grade-01/matematika/04-skaiciu-tiese.json", "minutes": 9, "sim": "skaiciu-tiese" },
         { "id": "05-desimtukas", "title": "Dešimtukas", "subtitle": "Kodėl dešimt yra patogus skaičius", "file": "grade-01/matematika/05-desimtukas.json", "minutes": 8, "sim": "desimtukas" },
-        { "id": "06-figuros", "title": "Figūros aplink mus", "subtitle": "Trikampis, keturkampis, apskritimas", "file": "grade-01/matematika/06-figuros.json", "minutes": 9, "sim": "figuros" },
+        { "id": "06-figuros", "title": "Figūros aplink mus", "subtitle": "Forma lieka ta pati, kad ir kaip ją pasuktum", "file": "grade-01/matematika/06-figuros.json", "minutes": 9, "sim": "figuros" },
         { "id": "07-desningumai", "title": "Dėsningumai", "subtitle": "Seka, kurią gali numatyti", "file": "grade-01/matematika/07-desningumai.json", "minutes": 9, "sim": "desningumai" },
         { "id": "14-pinigai", "title": "Pinigai: vertė yra skaičius", "subtitle": "Sumą sudaro skaičiai, o ne pinigų kiekis", "file": "grade-01/matematika/14-pinigai.json", "minutes": 9, "sim": "pinigine-ir-kaina" },
         { "id": "15-laikas", "title": "Laikas: vienas ratas, vienas žingsnis", "subtitle": "Kodėl valandas rodo trumpoji rodyklė", "file": "grade-01/matematika/15-laikas.json", "minutes": 9, "sim": "laikrodis-sujungtos-rodykles" },

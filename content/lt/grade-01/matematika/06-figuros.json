@@ -3,22 +3,22 @@
   "grade": 1,
   "strand": "matematika",
   "title": "Figūros aplink mus",
-  "subtitle": "Trikampis, keturkampis, apskritimas",
+  "subtitle": "Forma lieka ta pati, kad ir kaip ją pasuktum",
   "minutes": 9,
   "outcomes": [
-    "Atpažįstu trikampį, keturkampį ir apskritimą.",
-    "Skiriu figūras pagal kraštines ir kampus.",
-    "Randu šias figūras realiuose daiktuose ir paaiškinu, kodėl ratas yra apskritimas, o durys — keturkampis."
+    "Atpažįstu apskritimą, trikampį ir kvadratą, kai jie pasukti.",
+    "Paaiškinu, kad pasukimas keičia padėtį, o ne formą.",
+    "Randu šias formas daiktuose aplinkui."
   ],
   "concept": {
-    "title": "Figūra — tai forma",
-    "big_idea": "Figūros skiriasi tuo, kiek turi kraštinių ir kokių kampų. Apskritimas neturi kampų, trikampis turi tris kampus, keturkampis — keturis.",
+    "title": "Forma, o ne padėtis",
+    "big_idea": "Figūra lieka ta pati, kad ir kaip ją pasuktum. Pasuktas kvadratas kampu į viršų — vis tiek kvadratas.",
     "steps": [
-      "Trikampis: trys kraštinės, trys kampai.",
-      "Keturkampis: keturios kraštinės, keturi kampai. Kvadratas — keturkampis, kurio visos kraštinės lygios.",
-      "Apskritimas: jokių kampų, tik viena lenkta linija aplinkui."
+      "Pasirink figūrą ir pasuk ją mygtuku „Pasuk“.",
+      "Pasukta figūra nepasikeitė. Kita tapo tik jos padėtis.",
+      "Surūšiuok figūras į dėžes: kiekviena dėžė turi savo formos pavyzdį."
     ],
-    "example": "Pažiūrėk pro langą: lango stiklas — keturkampis, saulė — apskritimas, stogo frontonas — trikampis."
+    "example": "Lėkštė — apskritimas, palapinė — trikampis, plytelė — kvadratas. Plytelę pasukus ji lieka tokia pati."
   },
   "sim": {
     "component": "figuros",
@@ -26,68 +26,82 @@
   },
   "tasks": [
     {
-      "q": "Kiek kampų turi trikampis?",
+      "q": "Kuri figūra rieda nuo kalno?",
       "options": [
-        "Tris",
-        "Keturis",
-        "Nė vieno"
-      ],
-      "answer": 0,
-      "hint": "Pavadinime yra užuomina.",
-      "why": "Trikampis turi tris kampus ir tris kraštines."
-    },
-    {
-      "q": "Kuri figūra neturi kampų?",
-      "options": [
-        "Kvadratas",
         "Apskritimas",
+        "Kvadratas",
         "Trikampis"
       ],
-      "answer": 1,
-      "hint": "Kuri figūra rieda?",
-      "why": "Apskritimas neturi kampų, todėl gali riedėti."
+      "answer": 0,
+      "hint": "Kuri figūra neturi tiesios dalies?",
+      "why": "Apskritimas apvalus, todėl jis rieda."
     },
     {
-      "q": "Kvadratas yra…",
+      "q": "Kas pasikeitė, kai figūrą pasukai?",
       "options": [
-        "trikampis",
-        "apskritimas",
-        "keturkampis"
+        "Forma",
+        "Padėtis",
+        "Dydis"
+      ],
+      "answer": 1,
+      "hint": "Palygink figūrą prieš pasukimą ir po jo.",
+      "why": "Sukimas keičia padėtį, o forma ir dydis lieka."
+    },
+    {
+      "q": "Kuris daiktas primena trikampį?",
+      "options": [
+        "Knyga",
+        "Lėkštė",
+        "Palapinė"
       ],
       "answer": 2,
-      "hint": "Suskaičiuok jo kraštines.",
-      "why": "Kvadratas turi keturias lygias kraštines — tai keturkampis."
+      "hint": "Kuris daiktas siaurėja į viršų?",
+      "why": "Palapinė iš priekio atrodo kaip trikampis."
     },
     {
-      "q": "Kuri figūra turi keturias lygias kraštines?",
+      "q": "Dėžėje pavyzdys — kvadratas. Ar pasuktas kvadratas tinka į šią dėžę?",
       "options": [
-        "Kvadratas",
-        "Trikampis",
-        "Apskritimas"
+        "Ne, jis pasuktas",
+        "Taip, forma ta pati",
+        "Ne, jis mažesnis"
+      ],
+      "answer": 1,
+      "hint": "Palygink figūros formą su pavyzdžiu dėžėje.",
+      "why": "Pasuktas kvadratas lieka kvadratas, tik jo padėtis kita."
+    },
+    {
+      "q": "Kodėl pasukta figūra lieka ta pati?",
+      "options": [
+        "Pasikeitė tik padėtis",
+        "Ji virto kita figūra",
+        "Ji tapo mažesnė"
       ],
       "answer": 0,
-      "hint": "Suskaičiuok kraštines ir palygink jų ilgį.",
-      "why": "Kvadrato visos keturios kraštinės lygios.",
+      "hint": "Ką keičia sukimas, o ko ne?",
+      "why": "Forma nepriklauso nuo to, kaip figūra guli.",
       "optional": true
     }
   ],
-  "reflect": "Apžiūrėk klasę ir rask po vieną trikampį, keturkampį ir apskritimą. Kurių daugiausia?",
+  "reflect": "Rask klasėje daiktą, kuris pasuktas atrodo kitaip. Ar jis tikrai pasikeitė?",
   "teacher": {
-    "goal": "Geometrinių figūrų atpažinimas pagal apibrėžiančias savybes (kraštinės, kampai), ne tik pagal išvaizdą.",
-    "prompt": "Kaip žinai, kad tai keturkampis, o ne trikampis?",
-    "offline": "Duokite vaikui 10 popieriaus formelių ir paprašykite surūšiuoti. Tada paprašykite rasti po 3 daiktus klasėje, turinčius tą pačią formą.",
+    "goal": "Atpažinti apskritimą, trikampį ir kvadratą, kai figūra pasukta. Kampų ir kraštinių 1 klasėje neskaičiuojame — tai 2 klasės programa, todėl modulis moko formos pastovumo, o ne savybių.",
+    "prompt": "Kaip žinai, kad pasukta figūra yra ta pati?",
+    "offline": "Iškirpkite po tris apskritimus, trikampius ir kvadratus. Vaikas juos pasuka ir surūšiuoja į tris krūvas. Tada apžiūrėkite kambarį ir ieškokite pasuktų formų.",
     "misconceptions": [
-      "Trikampis atpažįstamas tik „kaip paveikslėlyje“ — pasukta figūra gali būti neatpažinta.",
-      "Kvadratas laikomas atskira figūra, o ne keturkampio rūšimi.",
-      "Apskritimas painiojamas su rutuliu (2D ir 3D)."
+      "„Pasukta figūra — jau kita figūra“: kvadratas, pasuktas kampu į viršų, vadinamas rombu. Modelis leidžia pasukti pačiam ir parodyti, kad dėžė ta pati.",
+      "„Figūrą atpažįstu tik tada, kai ji guli kaip paveikslėlyje“: vadovėliuose figūros beveik visada pastatytos tiesiai.",
+      "„Apskritimas ir kamuolys — tas pats“: lėkštė plokščia, o kamuolys apvalus iš visų pusių."
     ]
   },
   "sources": [
-    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, geometrijos sritis.",
-    "Matematikos bendroji programa (2022): geometrinių figūrų pažinimas 1–2 klasėje."
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, geometrijos sritis: 1 klasėje pradedama nuo taško, tiesės, spindulio ir atkarpos, o kampas, daugiakampis ir jo kraštinės — 2 klasės turinys.",
+    "Matematikos bendroji programa (2022): plokščių geometrinių figūrų pažinimas 1–2 klasėje.",
+    "research/wiki/curriculum/matematika-1-klase.md §4.1 — 1 klasėje nėra kampo, daugiakampio ir trikampio savybių; geometrijos branduolys — modulyje 18-taskas-tiese-spindulys-atkarpa.",
+    "research/wiki/guidelines/pilotai.md P-003 — pasuktos figūros neatpažinimo stebėjimas."
   ],
   "svietimas1": [
-    "1 žingsnis — gylis: figūros mokomos per savybes, o ne per pavadinimų įsiminimą",
-    "5 žingsnis — pozityvi aplinka: klaida rūšiuojant yra bandymas, ne nesėkmė"
+    "1 žingsnis — gylis: viena idėja (forma nepriklauso nuo padėties); kampai ir kraštinės sąmoningai palikti 2 klasei",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią idėją naujoje situacijoje (daiktai aplinkui, pasuktas kvadratas dėžėje)",
+    "3 žingsnis — pagalba laiku: kiekviena užduotis turi užuominą, o simuliacija nebaudžia už klaidingą dėžę"
   ]
 }

@@ -350,10 +350,11 @@ def today() -> str:
 
 HTML = """<!DOCTYPE html>
 <html lang="lt"><head><meta charset="utf-8">
+<meta name="color-scheme" content="dark">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SUPRASK — agentų valdymas</title>
 <style>
-:root{--bg:#101317;--panel:#171b21;--panel2:#1e232b;--line:#2a313b;--fg:#e8edf4;--muted:#94a1b2;--accent:#ff8a3d;--ok:#3fbf8f;--bad:#f2708a;--warn:#f0b429}
+:root{color-scheme:dark;--bg:#101317;--panel:#171b21;--panel2:#1e232b;--line:#2a313b;--fg:#e8edf4;--muted:#94a1b2;--accent:#ff8a3d;--ok:#3fbf8f;--bad:#f2708a;--warn:#f0b429}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 a{color:var(--accent)}
@@ -380,16 +381,17 @@ button{background:var(--panel2);color:var(--fg);border:1px solid var(--line);bor
 button:hover{border-color:var(--accent)}
 button.primary{background:var(--accent);color:#111;border-color:var(--accent);font-weight:700}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.grade{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:9px;background:#fffdf8}
+.grade{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:9px;background:var(--panel2);color:var(--fg)}
 .grade textarea{width:100%;min-height:64px;margin:8px 0;padding:8px;border:1px solid var(--line);
-  border-radius:8px;font:inherit;font-size:13px;line-height:1.45;resize:vertical;background:#fff}
+  border-radius:8px;font:inherit;font-size:13px;line-height:1.45;resize:vertical;
+  background:var(--bg);color:var(--fg)}
 .grade .sw{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
-  padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer}
+  padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--fg);cursor:pointer}
 .grade .cov{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
-.grade .cov .chip{font-size:11px;padding:2px 8px;border-radius:999px;background:#efe9dd;color:#5f574d}
-.grade .cov .chip.mint{background:#d9f2e4;color:#1f6b45}
+.grade .cov .chip{font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.09);color:var(--fg)}
+.grade .cov .chip.mint{background:rgba(63,191,143,.18);color:var(--ok)}
 select{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:9px;padding:7px 10px;min-height:36px}
-pre{background:#0b0e12;border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:420px;font-size:12px;white-space:pre-wrap}
+pre{background:#0b0e12;color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:420px;font-size:12px;white-space:pre-wrap}
 dialog{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:14px;max-width:900px;width:92vw;padding:18px}
 dialog::backdrop{background:rgba(0,0,0,.6)}
 .muted{color:var(--muted)}
@@ -635,7 +637,7 @@ async function loadJournal(){
     box.classList.remove("muted");
     box.innerHTML = (d.entries || []).reverse().map(e =>
       `<pre style="white-space:pre-wrap;font-size:12px;line-height:1.5;margin:0 0 10px;padding:10px;` +
-      `border:1px solid var(--line);border-radius:10px;background:#fffdf8">${esc(e)}</pre>`).join("")
+      `border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--fg)">${esc(e)}</pre>`).join("")
       || '<span class="muted">Dar nėra įrašų.</span>';
   } catch(e) { $("#journal").textContent = "Klaida: " + e.message; }
 }

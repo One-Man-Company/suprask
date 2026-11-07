@@ -2172,6 +2172,241 @@ const taskasTieseSpindulysAtkarpa = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 10. Piktograma ir stulpelis (duomenys)                             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Modelis: padėkle sumaišytos 3 didelės trikampės ir 7 mažos apvalios
+ * figūros. Vaikas baksteli figūrą — ji įsiskaitoma į savo grupę, o tos
+ * grupės stulpelis paauga lygiai vienu žingsniu. Suskaičiavęs visas
+ * figūras jis pamato, kad aukštesnis stulpelis priklauso MAŽESNIEMS
+ * daiktams, nes jų yra daugiau.
+ *
+ * Sąmoningai: stulpelis NĖRA sudėtas iš ikonėlių. Kaminski ir Sloutsky
+ * (2013) parodė, kad 6–8 m. vaikai, kurių stulpelį sudaro skaičiuojami
+ * paveikslėliai, ima skaičiuoti paveikslėlius ir nebeskaito aukščio.
+ * Todėl stulpelis vientisas, o piktograma (vienas ženklas = viena
+ * figūra) rodoma atskiru režimu — abu vaizdai rodo tą patį skaičių.
+ */
+const piktogramaIrStulpelis = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+
+    /* Padėklas turi fiksuotą tvarką: tas pats modelis kiekvieną kartą
+       atrodo taip pat, todėl vaikas gali grįžti ir palyginti. */
+    const TRAY = [
+      { g: "t", big: true }, { g: "a", big: false }, { g: "a", big: false },
+      { g: "t", big: true }, { g: "a", big: false }, { g: "t", big: true },
+      { g: "a", big: false }, { g: "a", big: false }, { g: "a", big: false },
+      { g: "a", big: false },
+    ];
+    const GROUPS = [
+      { id: "t", name: "Trikampiai", one: "trikampis", color: "#f0b24a", dark: "#8a5b12" },
+      { id: "a", name: "Apskritimai", one: "apskritimas", color: "#6fb6e8", dark: "#1f5f85" },
+    ];
+    const UNIT = 15;   // vienas daiktas = 15 px stulpelio
+    const PLOT_H = 150;
+
+    const counted = TRAY.map(() => false);
+    const count = { t: 0, a: 0 };
+    let mode = "bar";       // bar | pict
+    let guess = "";         // "" | "t" | "a"
+    let done = false;
+
+    const figure = (g, big) => (g === "t"
+      ? `<svg viewBox="0 0 48 48" width="${big ? 40 : 30}" height="${big ? 40 : 30}" aria-hidden="true" focusable="false">
+           <polygon points="24,5 44,41 4,41" fill="#f0b24a" stroke="#8a5b12" stroke-width="3" stroke-linejoin="round"/>
+         </svg>`
+      : `<svg viewBox="0 0 48 48" width="${big ? 34 : 21}" height="${big ? 34 : 21}" aria-hidden="true" focusable="false">
+           <circle cx="24" cy="24" r="19" fill="#6fb6e8" stroke="#1f5f85" stroke-width="3"/>
+         </svg>`);
+
+    const icon = (g) => (g === "t"
+      ? `<svg viewBox="0 0 26 26" width="24" height="24" aria-hidden="true" focusable="false">
+           <polygon points="13,3 24,22 2,22" fill="#f0b24a" stroke="#8a5b12" stroke-width="2.4" stroke-linejoin="round"/>
+         </svg>`
+      : `<svg viewBox="0 0 26 26" width="16" height="16" aria-hidden="true" focusable="false">
+           <circle cx="13" cy="13" r="10" fill="#6fb6e8" stroke="#1f5f85" stroke-width="2.4"/>
+         </svg>`);
+
+    stage.innerHTML = `
+      <div id="pk-wrap" style="width:100%;max-width:34rem;margin:0 auto;box-sizing:border-box">
+        <p class="sim-note" id="pk-lead" style="margin:0 0 .35rem;text-align:center">
+          Bakstelėk figūrą. Ji įsiskaito į savo grupę.
+        </p>
+        <div id="pk-tray" role="group" aria-label="Padėklas su figūromis"
+             style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.3rem;padding:.4rem;box-sizing:border-box;border:2px dashed var(--line);border-radius:var(--r-m);background:var(--paper-2)"></div>
+
+        <div style="margin-top:.5rem">
+          <div id="pk-plot" role="img" aria-label="Stulpelinė diagrama"
+               style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;align-items:end;height:${PLOT_H}px;box-sizing:border-box;border-bottom:3px solid var(--ink-faint);padding:0 .6rem"></div>
+          <div id="pk-pict" role="img" aria-label="Piktograma" style="display:none"></div>
+          <div id="pk-caps" style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:.3rem .6rem 0;text-align:center;font-weight:800;font-size:.9rem;line-height:1.2"></div>
+        </div>
+
+        <p class="sim-note" id="pk-msg" style="margin:.45rem 0 0;text-align:center;min-height:1.4rem"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div role="group" aria-label="Spėk, kuris stulpelis bus aukštesnis"
+           style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        <span style="font-weight:800">Kaip manai?</span>
+        <button class="btn secondary pk-guess" data-g="t" aria-pressed="false" aria-label="Spėju: aukštesnis bus trikampių stulpelis" style="min-height:48px">Trikampių</button>
+        <button class="btn secondary pk-guess" data-g="a" aria-pressed="false" aria-label="Spėju: aukštesnis bus apskritimų stulpelis" style="min-height:48px">Apskritimų</button>
+      </div>
+      <div role="group" aria-label="Kaip rodyti skaičius"
+           style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        <button class="btn pk-mode" data-mode="bar" aria-pressed="true" style="min-height:48px">Stulpelis</button>
+        <button class="btn secondary pk-mode" data-mode="pict" aria-pressed="false" style="min-height:48px">Piktograma</button>
+        <button class="btn ghost" id="pk-reset" style="min-height:48px">Iš naujo</button>
+      </div>`;
+
+    const trayEl = stage.querySelector("#pk-tray");
+    const plotEl = stage.querySelector("#pk-plot");
+    const pictEl = stage.querySelector("#pk-pict");
+    const capsEl = stage.querySelector("#pk-caps");
+    const msgEl = stage.querySelector("#pk-msg");
+
+    /* --- diagrama ir piktograma --------------------------------------- */
+    plotEl.innerHTML = GROUPS.map((g) => `
+      <div style="display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0">
+        <span id="pk-n-${g.id}" style="font-family:var(--font-head);font-weight:900;font-size:1.1rem;line-height:1.15">0</span>
+        <div id="pk-b-${g.id}" aria-hidden="true"
+             style="width:68%;max-width:88px;height:3px;box-sizing:border-box;border-radius:8px 8px 0 0;background:${g.color};border:2px solid ${g.dark};border-bottom:none;transition:height .18s ease"></div>
+      </div>`).join("");
+
+    capsEl.innerHTML = GROUPS.map((g) => `<span>${g.name}</span>`).join("");
+
+    /* Piktogramos eilutės surenkamos kaip dvi kolonos tame pačiame tinkle
+       kaip ir stulpeliai — kad abu vaizdai stovėtų vienoje vietoje. */
+    pictEl.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:.5rem .6rem 0;box-sizing:border-box">
+        ${GROUPS.map((g) => `<div id="pk-pi-${g.id}" aria-hidden="true"
+             style="display:flex;flex-wrap:wrap;gap:.2rem;align-items:center;justify-content:flex-start;min-height:3rem;padding:.25rem;box-sizing:border-box;border:2px solid var(--line);border-radius:var(--r-s);background:var(--paper-2)"></div>`).join("")}
+      </div>`;
+
+    /* --- padėklas ------------------------------------------------------ */
+    trayEl.innerHTML = TRAY.map((it, i) => {
+      const dydis = it.big ? "Didelis" : "Mažas";
+      const vardas = it.g === "t" ? "trikampis" : "apskritimas";
+      return `<button type="button" class="btn ghost pk-item" data-i="${i}"
+        aria-pressed="false" aria-label="${dydis} ${vardas} ${i + 1}"
+        style="min-height:52px;min-width:0;padding:.1rem;display:flex;align-items:center;justify-content:center;box-sizing:border-box;background:var(--paper-2);border:2px solid var(--line);border-radius:var(--r-s)">
+        ${figure(it.g, it.big)}
+      </button>`;
+    }).join("");
+
+    const itemBtns = [...trayEl.querySelectorAll(".pk-item")];
+
+    /* --- būsena -------------------------------------------------------- */
+    function paint() {
+      GROUPS.forEach((g) => {
+        const n = count[g.id];
+        stage.querySelector(`#pk-n-${g.id}`).textContent = String(n);
+        stage.querySelector(`#pk-b-${g.id}`).style.height = `${Math.max(3, n * UNIT)}px`;
+        stage.querySelector(`#pk-pi-${g.id}`).innerHTML = Array.from({ length: n }, () => icon(g.id)).join("");
+      });
+      plotEl.style.display = mode === "bar" ? "grid" : "none";
+      pictEl.style.display = mode === "pict" ? "block" : "none";
+      plotEl.setAttribute("aria-label", `Stulpinė diagrama: trikampių ${count.t}, apskritimų ${count.a}`);
+      pictEl.setAttribute("aria-label", `Piktograma: trikampių ${count.t}, apskritimų ${count.a}`);
+      api.readout(`Trikampiai: ${count.t}. Apskritimai: ${count.a}.`);
+    }
+
+    function guessLine() {
+      if (!guess) return "";
+      const g = GROUPS.find((x) => x.id === guess);
+      return ` Tavo spėjimas: ${g.name.toLowerCase()}.`;
+    }
+
+    function finish() {
+      if (done) return;
+      done = true;
+      const tall = count.t === count.a ? null : (count.t > count.a ? "t" : "a");
+      const msg = S.baigta || "Suskaičiavai visas figūras.";
+      msgEl.textContent = msg;
+      if (tall === "a") {
+        api.note(`Apskritimų daugiau (${count.a}), nors jie maži.${guessLine()}`);
+      } else if (tall === "t") {
+        api.note(`Trikampių daugiau (${count.t}), nors jie dideli.${guessLine()}`);
+      } else {
+        api.note(`Abiejų grupių po lygiai — ${count.t}.${guessLine()}`);
+      }
+      api.speak(msg);
+      api.progress({ correct: true });
+    }
+
+    /* --- įėjimai ------------------------------------------------------- */
+    itemBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const i = Number(btn.dataset.i);
+        if (counted[i]) return;
+        counted[i] = true;
+        const g = TRAY[i].g;
+        count[g] += 1;
+        btn.setAttribute("aria-pressed", "true");
+        btn.style.opacity = ".4";
+        paint();
+        if (counted.every(Boolean)) finish();
+      });
+    });
+
+    controls.querySelectorAll(".pk-guess").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        guess = btn.dataset.g;
+        controls.querySelectorAll(".pk-guess").forEach((x) => {
+          const on = x.dataset.g === guess;
+          x.setAttribute("aria-pressed", String(on));
+          x.className = on ? "btn pk-guess" : "btn secondary pk-guess";
+          x.style.minHeight = "48px";
+        });
+      });
+    });
+
+    controls.querySelectorAll(".pk-mode").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        mode = btn.dataset.mode;
+        controls.querySelectorAll(".pk-mode").forEach((x) => {
+          const on = x.dataset.mode === mode;
+          x.setAttribute("aria-pressed", String(on));
+          x.className = on ? "btn pk-mode" : "btn secondary pk-mode";
+          x.style.minHeight = "48px";
+        });
+        paint();
+        api.note(mode === "bar"
+          ? (S.stulpelis || "Stulpelio aukštis rodo skaičių.")
+          : (S.piktograma || "Piktogramoje viena figūra atstoja vieną ženklą."));
+      });
+    });
+
+    controls.querySelector("#pk-reset").addEventListener("click", () => {
+      counted.fill(false);
+      count.t = 0;
+      count.a = 0;
+      guess = "";
+      done = false;
+      itemBtns.forEach((b) => {
+        b.setAttribute("aria-pressed", "false");
+        b.style.opacity = "1";
+      });
+      controls.querySelectorAll(".pk-guess").forEach((x) => {
+        x.setAttribute("aria-pressed", "false");
+        x.className = "btn secondary pk-guess";
+        x.style.minHeight = "48px";
+      });
+      msgEl.textContent = "";
+      api.note(S.pradek || "Bakstelėk figūrą. Ji įsiskaito į savo grupę.");
+      paint();
+    });
+
+    paint();
+    api.note(S.pradek || "Bakstelėk figūrą. Ji įsiskaito į savo grupę.");
+    api.speak(S.pradek || "Bakstelėk figūrą.");
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
@@ -2182,4 +2417,5 @@ export const SIMS = {
   "pinigine-ir-kaina": pinigineIrKaina,
   "vabaliukas-ir-kryptys": vabaliukasIrKryptys,
   "taskas-tiese-spindulys-atkarpa": taskasTieseSpindulysAtkarpa,
+  "piktograma-ir-stulpelis": piktogramaIrStulpelis,
 };

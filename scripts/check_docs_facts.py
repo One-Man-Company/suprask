@@ -112,7 +112,7 @@ def check_readme(check: Check, text: str, f: dict) -> None:
     where = "README.md"
 
     header = re.search(
-        r"1 klasė — (\d+) kryptys, (\d+) modulių, (\d+) interaktyvių simuliacijų", text
+        r"1 klasė — (\d+) krypt\w*, (\d+) modul\w*, (\d+) interaktyv\w* simuliacij\w*", text
     )
     if not header:
         check.fail(f"{where}: nerastas pajėgumo sakinys „1 klasė — N kryptys, N modulių…“")
@@ -171,8 +171,8 @@ def check_readme(check: Check, text: str, f: dict) -> None:
         else:
             print(f"✔ {where}: būsenos eilutė = {expected}")
 
-    audio_texts = re.search(r"(\d+) tekstai", text)
-    audio_files = re.search(r"(\d+) įrašai", text)
+    audio_texts = re.search(r"(\d+) tekst\w*", text)
+    audio_files = re.search(r"(\d+) įraš\w*", text)
     audio_mb = re.search(r"~(\d+) MB", text)
     audio_line = line_of(text, "Garsas")
     check.expect(f"{where}:{audio_line}", "garso tekstų", int(audio_texts.group(1)) if audio_texts else None, f["audio_texts"])
@@ -209,7 +209,7 @@ def check_readme(check: Check, text: str, f: dict) -> None:
 def check_architektura(check: Check, text: str, f: dict) -> None:
     where = "docs/ARCHITEKTURA.md"
     live = re.search(
-        r"\*\*Live:\*\* 1 klasė — (\d+) kryptys, (\d+) modulių, (\d+) simuliacijų(?:, (\d+) užduočių)?",
+        r"\*\*Live:\*\* 1 klasė — (\d+) krypt\w*, (\d+) modul\w*, (\d+) simuliacij\w*(?:, (\d+) užduo\w*)?",
         text,
     )
     if not live:
@@ -243,7 +243,7 @@ def check_wiki(check: Check, f: dict) -> None:
     """Wiki klasių puslapiai taip pat kartoja skaičių — 2026-11-07 jie tebėjo „13 modulių“."""
     grade_page = "research/wiki/grades/01/index.md"
     text = (ROOT / grade_page).read_text(encoding="utf-8")
-    live = re.search(r"\*\*Live\.\*\* (\d+) modulių, (\d+) krypt", text)
+    live = re.search(r"\*\*Live\.\*\* (\d+) modul\w*, (\d+) krypt", text)
     if not live:
         check.fail(f"{grade_page}: nerastas „Live.“ statuso sakinys")
     else:
@@ -256,7 +256,7 @@ def check_wiki(check: Check, f: dict) -> None:
     if row is None:
         check.fail(f"{list_page}: nėra 1 klasės eilutės lentelėje")
         return
-    found = re.search(r"Live — (\d+) modulių", row)
+    found = re.search(r"Live — (\d+) modul\w*", row)
     if not found:
         check.fail(f"{list_page}:{line_of(text, '[[01/index')}: 1 klasės eilutėje nėra „Live — N modulių“")
     else:

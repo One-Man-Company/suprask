@@ -1,0 +1,115 @@
+{
+  "id": "23-piktograma-ir-stulpelis",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Piktograma ir stulpelis",
+  "subtitle": "Aukštas stulpelis rodo daug daiktų, o ne didelius daiktus",
+  "minutes": 9,
+  "outcomes": [
+    "Skaitau piktogramą ir stulpelį: aukštis rodo kiekį, ne daikto dydį.",
+    "Lyginu dvi grupes pagal diagramą ir pasakau, kurios jų daugiau.",
+    "Nupiešiu piktogramą, kur vienas ženklas reiškia vieną daiktą."
+  ],
+  "concept": {
+    "title": "Aukštis rodo skaičių",
+    "big_idea": "Aukštas stulpelis reiškia daug daiktų, o ne didelius daiktus. Trys dideli trikampiai gali būti žemiau nei septyni maži apskritimai.",
+    "steps": [
+      "Bakstelėk figūrą padėkle. Ji įsiskaito į savo grupę, o stulpelis paauga.",
+      "Suskaičiuok visas figūras ir palygink abiejų stulpelių aukštį.",
+      "Perjunk į piktogramą. Ten kiekviena figūra turi savo ženklą.",
+      "Palygink abu vaizdus. Ar jie rodo tą patį skaičių?"
+    ],
+    "example": "Krepšyje trys dideli kamuoliai ir septyni maži kaštonai. Kamuolių stulpelis žemas, o kaštonų — aukštas."
+  },
+  "sim": {
+    "component": "piktograma-ir-stulpelis",
+    "config": {
+      "sentences": {
+        "pradek": "Bakstelėk figūrą. Ji įsiskaito į savo grupę.",
+        "baigta": "Suskaičiavai visas figūras. Apskritimų daugiau, nors jie mažesni.",
+        "piktograma": "Piktogramoje viena figūra atstoja vieną ženklą.",
+        "stulpelis": "Stulpelio aukštis rodo skaičių."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Simuliacijoje buvo 3 trikampiai ir 7 apskritimai. Kuris stulpelis aukštesnis?",
+      "options": [
+        "Trikampių",
+        "Abu vienodi",
+        "Apskritimų"
+      ],
+      "answer": 2,
+      "hint": "Prisimink, kurių figūrų padėkle buvo daugiau.",
+      "why": "Apskritimų buvo septyni, o trikampių trys. Aukštesnis stulpelis rodo didesnį skaičių."
+    },
+    {
+      "q": "Kodėl maži apskritimai turi aukštesnį stulpelį už didelius trikampius?",
+      "options": [
+        "Nes jie didesni",
+        "Nes jie sunkesni",
+        "Nes jų daugiau"
+      ],
+      "answer": 2,
+      "hint": "Prisimink, kiek apskritimų buvo padėkle.",
+      "why": "Aukštis rodo skaičių: septyni apskritimai yra daugiau nei trys trikampiai."
+    },
+    {
+      "q": "Piktogramoje viena širdelė reiškia vieną balsą. Už mėlyną spalvą gavo 6 balsus. Kiek širdelių nupieši?",
+      "options": [
+        "6",
+        "1",
+        "3"
+      ],
+      "answer": 0,
+      "hint": "Skaičiuok balsus: kiekvienam balsui — po vieną širdelę.",
+      "why": "Piktogramoje ženklų skaičius lygus balsų skaičiui."
+    },
+    {
+      "q": "Piktogramoje 5 obuoliai, 2 kriaušės ir 8 slyvos. Kuris vaisius dažniausias?",
+      "options": [
+        "Obuoliai",
+        "Slyvos",
+        "Kriaušės"
+      ],
+      "answer": 1,
+      "hint": "Ieškok eilutės, kurioje daugiausia ženklų.",
+      "why": "Aštuonios slyvos yra daugiausia, todėl slyvų eilutė ilgiausia."
+    },
+    {
+      "q": "Ant padėklo guli 5 dideli rutuliai ir 8 maži kauliukai. Kiek ženklų reikės piktogramai?",
+      "options": [
+        "8",
+        "13",
+        "5"
+      ],
+      "answer": 1,
+      "hint": "Suskaičiuok abi grupes kartu.",
+      "why": "Vienas ženklas vienam daiktui: 5 + 8 = 13.",
+      "optional": true
+    }
+  ],
+  "reflect": "Pagalvok apie savo žaislus. Kurių jų yra daugiausia, o kurie patys didžiausi? Ar didžiausių visada daugiausia?",
+  "teacher": {
+    "goal": "Suprasti, kad piktogramoje ir stulpelyje aukštis bei ženklų skaičius rodo kiekį, o ne daikto dydį; perskaityti paprastą diagramą ir palyginti dvi grupes. Dažnių lentelė ir skalė sąmoningai neįtrauktos — tai 2 klasės turinys.",
+    "prompt": "Kodėl apskritimų stulpelis aukštesnis, nors apskritimai mažesni už trikampius?",
+    "offline": "Sukarpykite popierių į tris didelius ir septynis mažus lapelius. Vaikas juos surūšiuoja į dvi krūvas, o paskui ant lapo nupiešia po vieną brūkšnį už kiekvieną lapelį — taip, kaip piktogramoje. Kartu palyginkite, kuri krūva aukštesnė ir kodėl.",
+    "misconceptions": [
+      "„Aukščiausias stulpelis reiškia didžiausią daiktą“: vaikas aukštį sieja su daikto dydžiu, o ne su skaičiumi. Modelyje maži apskritimai yra gausesni, todėl jų stulpelis aukštesnis — tai matoma tiesiogiai, be paaiškinimo.",
+      "„Piktogramoje reikia skaičiuoti visus ženklus, nes jie skirtingi“: viena figūra — vienas ženklas. Modelis leidžia perjungti stulpelį ir piktogramą ir įsitikinti, kad abu rodo tą patį skaičių.",
+      "„Stulpelį sudaro atskiros dalys, kurias reikia skaičiuoti“: stulpelis vientisas, jo aukštis yra vienas matmuo. Atskirai skaičiuojami tik piktogramos ženklai."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, duomenų sritis: 1 klasėje mokomasi registruoti 2–3 stebimo požymio reikšmes, pavaizduoti jas piktograma ar stulpine diagrama ir perskaityti jose pateiktą informaciją.",
+    "Matematikos bendroji programa (2022): 1 klasės metų pasiekimas — perskaito piktogramą ir stulpelinę diagramą, atsako į klausimą pagal jas.",
+    "research/wiki/curriculum/matematika-1-klase.md §6 — duomenų sritis 1 klasei: piktograma ir stulpelis; dažnių lentelė palikta 2 klasei.",
+    "Kaminski, J. A., & Sloutsky, V. M. (2013). Extraneous perceptual information interferes with children's acquisition of mathematical knowledge. Journal of Educational Psychology, 105(2), 351–363. doi 10.1037/a0031040 — 6–8 m. vaikai, kurių stulpeliai buvo sudaryti iš skaičiuojamų paveikslėlių, ėmė skaičiuoti paveikslėlius, o ne skaityti aukštį."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (aukštis = kiekis); piktograma ir stulpelis rodomi kaip du to paties skaičiaus vaizdai, o dažnių lentelė sąmoningai neįtraukta — ji 2 klasei",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (balsų piktograma, vaisių diagrama, dviejų grupių suma), o ne įsimintą formuluotę",
+    "3 žingsnis — pagalba laiku: užuominos nukreipia į palyginimą, modelis nebaudžia už klaidingą spėjimą, yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

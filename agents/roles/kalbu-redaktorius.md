@@ -42,7 +42,7 @@ Tu keiti formuluotę ir smulkią išdėstymo klaidą. Nekeiti pedagogikos ir tei
 5. Išdėstymo defektą taisyk `main.css` minimaliai. Simuliacijos ar architektūros problemos — **netaisyk**, rašyk `agents/proposals/` su failu ir eilute.
 
 ### 3. Patvirtink
-6. `python3 scripts/check_language.py --grade 1` ir `python3 scripts/validate_content.py --grade 1` — 0 klaidų.
+6. `python3 scripts/check_language.py --grade <NN>` ir `python3 scripts/validate_content.py --grade <NN>` — 0 klaidų.
 7. Pakartok `check_view.py` tam pačiam moduliui ir įrašyk skaičius prieš/po.
 
 ## Ko nedaryti

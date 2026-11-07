@@ -23,7 +23,7 @@ Paimti **idėją** ir paversti ją **mokymo metodu**: kokia seka, koks modelis, 
 7. Jei metode atrasta bendresnė įžvalga — papildyk `research/wiki/foundations/` (vienas įrašas, su šaltiniu).
 
 ## Kokybės reikalavimai
-- Tekstas ekrane 1 klasei — iki 60 žodžių viename žingsnyje.
+- Tekstas ekrane toi klasei, kuriai skirtas pasiūlymas — iki 60 žodžių viename žingsnyje.
 - Vienas kintamasis simuliacijoje; jokių laikmačių.
 - Grįžtamasis ryšys paaiškina **kodėl**, ne „teisingai“.
 - Modelis turi būti sąžiningas: jei supaprastina, tai pasakoma.

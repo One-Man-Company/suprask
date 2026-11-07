@@ -13,10 +13,10 @@ Tai vienintelis vaidmuo, kuris atsako į klausimą „kodėl dashboard rodo daug
 
 ## Ką daryti
 1. `python3 scripts/check_published.py` — gauk skaičius: repo moduliai, paskelbti, neišstumti commit'ai.
-2. Jei yra `missing_on_live` — patikrink, ar tie moduliai yra `content/lt/grade-01/index.json` ir ar failai egzistuoja. Jei failo nėra, o indekse yra — tai lūžęs indeksas: išimk įrašą ir įrašyk į `research/wiki/guidelines/klausimai.md`.
+2. Jei yra `missing_on_live` — patikrink, ar tie moduliai yra `content/lt/grade-<NN>/index.json (NN — klasė, kurią rodo patikra)` ir ar failai egzistuoja. Jei failo nėra, o indekse yra — tai lūžęs indeksas: išimk įrašą ir įrašyk į `research/wiki/guidelines/klausimai.md`.
 3. Jei yra `hidden_locally` (svetainėje yra, repo ne) — **sustok ir pranešk**: tai reiškia, kad kažkas ištrynė modulį, o vaikų pažanga dabar rodo į nieką.
-4. Jei yra `not_in_path` — papildyk `content/lt/grade-01/path.json` `sequence` sąrašą taip, kad visi ID būtų, bet **esama tvarka nesikeistų** (nauji pridedami gale).
-5. Patikrink 3 gyvus adresus: `curl -s -o /dev/null -w "%{http_code}" https://one-man-company.github.io/suprask/content/lt/grade-01/<kryptis>/<modulis>.json`.
+4. Jei yra `not_in_path` — papildyk `content/lt/grade-<NN>/path.json` `sequence` sąrašą taip, kad visi ID būtų, bet **esama tvarka nesikeistų** (nauji pridedami gale).
+5. Patikrink 3 gyvus adresus: `curl -s -o /dev/null -w "%{http_code}" https://one-man-company.github.io/suprask/content/lt/grade-<NN>/<kryptis>/<modulis>.json`.
 6. Jei viskas sutampa — įrašyk į `research/wiki/changelog.md` vieną eilutę su skaičiais (repo N / paskelbta N).
 
 ## Ko nedaryti

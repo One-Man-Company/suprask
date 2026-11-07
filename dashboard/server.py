@@ -36,6 +36,7 @@ sys.path.insert(0, str(ROOT / "agents"))
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import db  # noqa: E402
+import scope as grade_scope  # noqa: E402
 import garsas  # noqa: E402
 import check_published  # noqa: E402
 
@@ -209,6 +210,8 @@ class Handler(BaseHTTPRequestHandler):
             row = rows[0]
             row["log"] = read_log_tail(row.get("log_path") or "")
             return self._json(row)
+        if path == "/api/grades":
+            return self._json(grade_scope.report())
         if path == "/api/proposals":
             return self._json(db.proposals(100))
         if path.startswith("/api/prompt/"):
@@ -287,6 +290,23 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"ok": True})
             except Exception as exc:  # noqa: BLE001
                 return self._json({"ok": False, "error": str(exc)})
+        if self.path == "/api/grades":
+            try:
+                grade = int(payload["grade"])
+                enabled = payload.get("enabled")
+                topics = payload.get("min_topics")
+                if topics is not None:
+                    if isinstance(topics, str):
+                        topics = [ln for ln in topics.splitlines() if ln.strip()]
+                    topics = [str(x) for x in topics]
+                cell = grade_scope.set_grade(
+                    grade,
+                    enabled=None if enabled is None else bool(enabled),
+                    min_topics=topics,
+                )
+                return self._json({"ok": True, "grade": cell})
+            except (KeyError, TypeError, ValueError) as exc:
+                return self._json({"ok": False, "error": str(exc)})
         if self.path == "/api/proposal-status":
             try:
                 db.set_proposal_status(int(payload["id"]), str(payload["status"]))
@@ -340,6 +360,14 @@ button{background:var(--panel2);color:var(--fg);border:1px solid var(--line);bor
 button:hover{border-color:var(--accent)}
 button.primary{background:var(--accent);color:#111;border-color:var(--accent);font-weight:700}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grade{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:9px;background:#fffdf8}
+.grade textarea{width:100%;min-height:64px;margin:8px 0;padding:8px;border:1px solid var(--line);
+  border-radius:8px;font:inherit;font-size:13px;line-height:1.45;resize:vertical;background:#fff}
+.grade .sw{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+  padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer}
+.grade .cov{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.grade .cov .chip{font-size:11px;padding:2px 8px;border-radius:999px;background:#efe9dd;color:#5f574d}
+.grade .cov .chip.mint{background:#d9f2e4;color:#1f6b45}
 select{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:9px;padding:7px 10px;min-height:36px}
 pre{background:#0b0e12;border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:420px;font-size:12px;white-space:pre-wrap}
 dialog{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:14px;max-width:900px;width:92vw;padding:18px}
@@ -386,6 +414,16 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 </header>
 <main>
   <section class="grid" id="stats"></section>
+
+  <section class="card" id="gradesCard">
+    <h2>Klasės ir minimalios temos</h2>
+    <p class="muted" style="margin:-4px 0 10px;line-height:1.5">
+      Įjungta klasė — agentai jai kuria turinį. Minimalios temos yra <b>apatinė riba</b>:
+      agentai privalo jas padengti, bet kuria ir žymiai daugiau; vienai temai gali būti
+      keli moduliai, kiek reikia temai išnagrinėti. Viena tema — viena eilutė.
+    </p>
+    <div id="grades" class="muted">Kraunama…</div>
+  </section>
 
   <section class="card">
     <h2>Suplanuoti paleidimai</h2>
@@ -534,24 +572,73 @@ async function runNow(role, btn){
   setTimeout(()=>{ btn.disabled=false; btn.textContent="Paleisti dabar"; loadAll(); }, 4000);
 }
 
+const setText = (sel, v) => { const e = $(sel); if (e) e.textContent = v; };
+
 async function loadPublish(){
   try {
     const p = await j("/api/publish-status");
-    if (p.error) { $("#pubBig").textContent = "klaida"; $("#pubNote").textContent = String(p.error).slice(0,60); return; }
+    if (p.error) { setText("#pubBig",  "klaida"); setText("#pubNote",  String(p.error).slice(0,60)); return; }
     const drift = (p.missing_on_live||[]).length;
     const risky = (p.hidden_locally||[]).length;
-    $("#pubBig").textContent = (drift === 0 && !p.unpushed_commits) ? "sutampa" : `${drift} neskelbta`;
-    $("#pubLocal").textContent = p.local;
-    $("#pubLive").textContent = p.published;
-    $("#pubUnpushed").textContent = p.unpushed_commits;
-    $("#pubNote").textContent = risky ? `repo nebeturi: ${p.hidden_locally.join(", ").slice(0,40)}`
+    setText("#pubBig",  (drift === 0 && !p.unpushed_commits) ? "sutampa" : `${drift} neskelbta`);
+    setText("#pubLocal",  p.local);
+    setText("#pubLive",  p.published);
+    setText("#pubUnpushed",  p.unpushed_commits);
+    setText("#pubNote",  risky ? `repo nebeturi: ${p.hidden_locally.join(", ").slice(0,40)}`
       : drift ? p.missing_on_live.join(", ").slice(0,50)
-      : (p.last_commit||"").slice(0,46);
-  } catch(e) { $("#pubBig").textContent = "—"; }
+      : (p.last_commit||"").slice(0,46));
+  } catch(e) { setText("#pubBig",  "—"); }
+}
+
+const NL = String.fromCharCode(10);  // naujos eilutės simbolis be escape spąstų
+
+async function loadGrades(){
+  const box = $("#grades");
+  try {
+    const d = await j("/api/grades");
+    box.classList.remove("muted");
+    box.innerHTML = d.grades.map(g => `
+      <div class="grade" data-g="${g.grade}">
+        <div class="row">
+          <b style="min-width:70px">${g.grade} klasė</b>
+          <span class="muted" style="flex:1">${esc(g.age || "")} · modulių ${g.modules}${
+            g.min_topics.length ? ` · temos ${g.covered}/${g.min_topics.length}` : ""}</span>
+          <label class="sw"><input type="checkbox" data-en ${g.enabled ? "checked" : ""}>
+            <span>${g.enabled ? "įjungta" : "išjungta"}</span></label>
+        </div>
+        <details ${g.enabled ? "open" : ""}>
+          <summary class="muted" style="cursor:pointer;font-size:12px;margin-bottom:6px">Temos ir išsaugojimas</summary>
+          <textarea data-topics rows="2" placeholder="viena tema eilutėje, pvz. pinigai">${esc(g.min_topics.join(NL))}</textarea>
+          <div class="cov">${g.coverage.map(c =>
+            `<span class="chip ${c.covered ? "mint" : ""}">${c.covered ? "✓" : "○"} ${esc(c.topic)}</span>`).join("")}</div>
+          <div class="row"><button data-save>Išsaugoti</button><span class="muted" data-msg></span></div>
+        </details>
+      </div>`).join("");
+    box.querySelectorAll("[data-save]").forEach(b => b.onclick = () => saveGrade(b.closest(".grade")));
+    box.querySelectorAll("[data-en]").forEach(cb => cb.onchange = () => {
+      cb.closest(".sw").querySelector("span").textContent = cb.checked ? "įjungta" : "išjungta";
+    });
+  } catch (e) { box.textContent = "Klaida: " + e.message; }
+}
+
+async function saveGrade(el){
+  const grade = Number(el.dataset.g);
+  const enabled = el.querySelector("[data-en]").checked;
+  const min_topics = el.querySelector("[data-topics]").value.split(NL).map(s => s.trim()).filter(Boolean);
+  const msg = el.querySelector("[data-msg]");
+  msg.textContent = "Saugoma…";
+  try {
+    const r = await j("/api/grades", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({grade, enabled, min_topics}),
+    });
+    msg.textContent = r.ok ? "Išsaugota ✓" : ("Klaida: " + (r.error || ""));
+    if (r.ok) loadGrades();
+  } catch (e) { msg.textContent = "Klaida: " + e.message; }
 }
 
 async function loadAll(){
-  try { await loadOverview(); await Promise.all([loadRuns(), loadProposals()]);
+  try { await loadOverview(); await Promise.all([loadRuns(), loadProposals(), loadGrades()]);
     $("#updated").textContent = "atnaujinta " + new Date().toLocaleTimeString("lt-LT");
   } catch(e){ $("#updated").textContent = "klaida: " + e.message; }
 }
@@ -563,8 +650,7 @@ document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-prompt]");
   if (b) { e.preventDefault(); openPrompt(b.dataset.prompt); }
 });
-loadAll();
-loadPublish();
+loadAll().then(() => loadPublish());
 setInterval(loadAll, 15000);
 </script>
 </body></html>

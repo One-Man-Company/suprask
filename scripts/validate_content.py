@@ -203,6 +203,15 @@ def main() -> int:
     if len(meta_by_grade) != 12:
         rep.err(f"grades.json: turi būti 12 klasių (dabar {len(meta_by_grade)})")
 
+    # grades.json turi rodyti TIKRĄ modulių skaičių, kitaip dashboard ir
+    # svetainė rodo pasenusius skaičius (taip jau buvo: 16, kai buvo 18).
+    for g, m in meta_by_grade.items():
+        gdir = CONTENT / f"grade-{g:02d}"
+        real = len(list(gdir.glob("*/*.json"))) if gdir.exists() else 0
+        declared = m.get("modules")
+        if declared is not None and int(declared) != real:
+            rep.err(f"grades.json: {g} klasė skelbia {declared} modulių, o yra {real}")
+
     total_modules = 0
     live_grades = [g for g, m in meta_by_grade.items() if m.get("status") == "live"]
     for grade in (live_grades if args.grade is None else [args.grade]):

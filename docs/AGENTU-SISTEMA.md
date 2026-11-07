@@ -14,6 +14,26 @@ agentas (modelis)  →  pakeitimai darbinėje kopijoje
 
 Bėgiklis — `agents/run.py`. Jis paleidžiamas systemd timer'io (`suprask-agent@<vaidmuo>.service`), vienu metu dirba vienas agentas (`agents/.run.lock`).
 
+## Klasių apimtis ir minimalios temos
+
+Kurias klases agentai vysto, sprendžia **žmogus** dashboard'e
+(`/` → „Klasės ir minimalios temos"), ne agentai. Būsena saugoma
+`agents/scope.json`, valdoma `agents/scope.py`.
+
+- **Įjungta klasė** — agentai jai kuria turinį. Išjungta — neliečiama: jei
+  pasiūlymo failas nurodo išjungtą klasę, bėgiklis jį pažymi `blocked`
+  („N klasė išjungta") ir net nepradeda darbo.
+- **Minimalios temos** — laisvas sąrašas (viena tema — viena eilutė). Tai
+  **apatinė riba**, ne visas darbas: agentai privalo padengti šias temas, bet
+  kuria ir žymiai daugiau.
+- **Vienai temai gali būti keli moduliai**, skaičius neribojamas, jei temai
+  išnagrinėti reikia kelių dalių (skirtingi aspektai, skirtingi veiksmai).
+- Dashboard rodo apytikrę padengtį (✓ / ○) lygindamas temos žodžius su
+  modulių pavadinimais — tai užuomina, o ne sprendimas.
+
+Blokas „KLASIŲ APIMTIS" įterpiamas į **kiekvieno** agento promptą, todėl
+ideatorius, metodininkas ir kūrėjas mato tą patį susitarimą.
+
 ## Kūrėjo eilė (kodėl ne vienas modulis per dieną)
 
 `kurejas` yra **eilės darbuotojas**. Vienas jo darbo vienetas — vienas pasiūlymas, bet paleidimas

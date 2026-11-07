@@ -27,6 +27,7 @@ import tempfile
 from pathlib import Path
 
 import db
+import scope as grade_scope
 
 ROOT = Path(__file__).resolve().parent.parent
 AGENTS = ROOT / "agents"
@@ -265,6 +266,43 @@ def lessons_brief(limit: int = 40) -> str:
     return "\n".join(items[:limit]) or "(pamokų dar nėra)"
 
 
+def scope_brief() -> str:
+    """Kurias klases žmogus įjungė ir kokias minimalias temas reikia padengti."""
+    data = grade_scope.report()
+    enabled = [g for g in data["grades"] if g["enabled"]]
+    if not enabled:
+        return ("\n--- KLASIŲ APIMTIS (privaloma) ---\n"
+                "Šiuo metu **nė viena klasė neįjungta**. Nekurk turinio; rašyk ataskaitoje, "
+                "kad lauki žmogaus sprendimo dashboard'e.\n")
+
+    lines = ["\n--- KLASIŲ APIMTIS (privaloma) ---",
+             "Žmogus dashboard'e įjungė šias klases: " + ", ".join(f"{g['grade']} kl." for g in enabled),
+             "Kitų klasių NEliesti: jų turinys nekuriamas, net jei tema atrodo tinkama.",
+             ""]
+    for g in enabled:
+        lines.append(f"{g['grade']} klasė ({g['age']}): modulių dabar {g['modules']}.")
+        if g["min_topics"]:
+            lines.append("  Minimalios temos, kurios PRIVALO būti padengtos:")
+            for c in g["coverage"]:
+                mark = "jau yra" if c["covered"] else "DAR NĖRA"
+                lines.append(f"    - {c['topic']} — {mark}")
+        else:
+            lines.append("  Minimalių temų sąrašas tuščias — vadovaukis programos žemėlapiu.")
+    lines += [
+        "",
+        "TAISYKLĖS:",
+        "1. Minimalus sąrašas yra APATINĖ RIBA, ne visas darbas. Kurk žymiai daugiau turinio,",
+        "   apimančio ir kitas tos klasės programos temas.",
+        "2. Vienai temai gali būti KELI moduliai, o jų skaičius NERIBOJAMAS, jei temai",
+        "   išnagrinėti reikia kelių žingsnių (pvz., skirtingi to paties reiškinio aspektai).",
+        "3. Kiekviena tema turi būti išnagrinėta visapusiškai: kas tai, kodėl taip, kaip atpažinti,",
+        "   kur gyvenime sutinkama, ką daryti kitaip — tiek, kiek leidžia klasės amžius.",
+        "4. Kalba ir uždavinių sudėtingumas — tos klasės vaikui, ne vyresniam.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
 def build_prompt(role: str, cfg: dict, run_id: int, proposal: dict | None = None) -> str:
     role_text = read(AGENTS / cfg["file"])
     if not role_text:
@@ -287,6 +325,7 @@ def build_prompt(role: str, cfg: dict, run_id: int, proposal: dict | None = None
         lessons=lessons_brief(),
         definition_of_done=dod or "Įrašyk ataskaitą ir grąžink trumpą santrauką.",
     )
+    body += scope_brief()
     if "PASIŪLYMŲ FORMATAS" in role_text or cfg.get("proposals", True):
         body += PROPOSAL_RULES
     if proposal:
@@ -670,6 +709,14 @@ def main() -> int:
         proposal = rows[0]
         if proposal.get("status") in ("done", "blocked") and not args.publish_only:
             print(f"Pasiūlymas #{args.proposal} jau {proposal['status']} — praleista")
+            return 0
+
+        # Klasė, kurią žmogus išjungė dashboard'e, nekuriama — net jei pasiūlymas
+        # jai jau buvo eilėje.
+        pg = grade_scope.grade_of_target(proposal.get("target") or "")
+        if pg is not None and not grade_scope.is_enabled(pg):
+            db.set_proposal_status(int(proposal["id"]), "blocked", f"{pg} klasė išjungta")
+            print(f"{pg} klasė išjungta — pasiūlymas #{args.proposal} praleistas")
             return 0
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     WORK_DIR.mkdir(parents=True, exist_ok=True)

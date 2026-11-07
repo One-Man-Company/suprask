@@ -14,9 +14,9 @@ Nuo šiol commit, push ir publikavimą atlieka bėgiklis (`agents/run.py`) po ki
 1. `git log --oneline -10` ir `gh run list --workflow=pages.yml --limit 3` — ar paskutiniai agentų commit'ai paskelbti ir ar deploy žalias.
 2. Patikrink gyvą svetainę realiomis užklausomis (ne iš atminties):
    - `curl -s -o /dev/null -w "%{http_code}" https://one-man-company.github.io/suprask/`
-   - `curl -s https://one-man-company.github.io/suprask/content/lt/grade-01/index.json | head -c 300`
+   - `curl -s https://one-man-company.github.io/suprask/content/lt/grade-<NN>/index.json | head -c 300`
    - `curl -s https://one-man-company.github.io/suprask/assets/audio/lt/manifest.json | head -c 200`
-3. Palygink modulių skaičių: `content/lt/grade-01/index.json` vs gyva svetainė.
+3. Palygink modulių skaičių: `content/lt/grade-<NN>/index.json` vs gyva svetainė.
 4. Atnaujink `research/wiki/changelog.md` vienu įrašu: data + ką agentai pakeitė (`git log --since`).
 5. Jei paskutinis commit sulaužė gyvą svetainę — `git revert <sha>`, push, ir įrašyk į ataskaitą su įrodymu (HTTP kodas, klaidos tekstas).
 

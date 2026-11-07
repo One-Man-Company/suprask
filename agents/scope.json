@@ -1,0 +1,72 @@
+{
+  "grades": {
+    "1": {
+      "enabled": true,
+      "min_topics": [
+        "pinigai",
+        "laikas",
+        "garso savybės",
+        "vandens būsenos",
+        "emocijos",
+        "komandų seka",
+        "medžiagos"
+      ],
+      "updated": "2026-11-07T20:57:53"
+    },
+    "2": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": "2026-11-07T20:57:53"
+    },
+    "3": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    },
+    "4": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    },
+    "5": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    },
+    "6": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    },
+    "7": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    },
+    "8": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    },
+    "9": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    },
+    "10": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    },
+    "11": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    },
+    "12": {
+      "enabled": false,
+      "min_topics": [],
+      "updated": null
+    }
+  }
+}

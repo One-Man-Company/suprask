@@ -57,3 +57,9 @@ Visa tiesa — `agents/runs.db` (SQLite, WAL). Dashboard nieko nekeičia, išsky
 - Basic auth su `hmac.compare_digest`; be prisijungimo — 401.
 - `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, jokių išorinių resursų.
 - Nėra rašymo į turinį iš dashboard: paleidimas tik per agentų bėgiklį, kuris laikosi gairių.
+
+## Klasės
+
+`GET /api/grades` — klasių būsena, minimalios temos ir apytikrė padengtis.
+`POST /api/grades` — `{"grade": 1, "enabled": true, "min_topics": ["pinigai", "..."]}`.
+Valdo `agents/scope.py`; failas `agents/scope.json`.

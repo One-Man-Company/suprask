@@ -16,7 +16,7 @@ Nuolat tobulinti **mokymosi struktūrą ir sąsają**: kokia tvarka vaikas eina 
 4. **Vienas aiškus veiksmas ekrane.**
 
 ## Ką daryti
-1. Perskaityk `docs/ARCHITEKTURA.md`, `assets/css/main.css` ir `content/lt/grade-01/path.json`.
+1. Perskaityk `docs/ARCHITEKTURA.md`, `assets/css/main.css` ir `content/lt/grade-<NN>/path.json`.
 2. Peržiūrėk, kaip atrodo klasės puslapis: ar matosi „tęsk nuo čia“, ar kryptys suprantamos, ar trys lygiai (kryptis → modulis → simuliacija) neperkrauti.
 3. Jei siūlai kitą tvarką — pagrįsk **priklausomybėmis** (kuri sąvoka reikalinga prieš kurią), ne „atrodo logiškiau“. Pvz., „Garsas ir raidė“ prieš „Skiemenų jungimas“.
 4. Pakeisk `path.json` (visi moduliai turi likti; tvarka gali keistis). Jei reikia — atnaujink krypčių tvarką `index.json`.

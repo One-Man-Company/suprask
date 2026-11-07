@@ -1,6 +1,6 @@
 {
   "grade": 1,
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "note": "Rekomenduojamas kelias: kalbiniai ir matematiniai moduliai kaitaliojami, kad viena sritis neišnaudotų vaiko dėmesio. Tvarką gali keisti dizainerio agentas, jei tai pagrindžia priklausomybėmis.",
   "sequence": [
     "01-garsas-ir-raide",
@@ -11,6 +11,7 @@
     "05-desimtukas",
     "09-augalo-gyvenimas",
     "06-figuros",
+    "17-kryptys-ir-vieta",
     "10-gyvunu-grupes",
     "07-desningumai",
     "14-pinigai",

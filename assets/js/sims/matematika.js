@@ -1309,6 +1309,288 @@ const pinigineIrKaina = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 8. Vabaliukas ir kryptys                                            */
+/* ------------------------------------------------------------------ */
+// Modelio taikinys — nuostata „kairė visiems ta pati pusė“.
+// Kairė žymima kortele, pritvirtinta prie kūno: ji sukasi kartu su vabaliuku
+// ir atsiduria priešingoje ekrano pusėje, kai jis atsisuka į vaiką.
+const vabaliukasIrKryptys = {
+  mount({ stage, controls, api, config }) {
+    const size = Math.max(2, Math.min(4, Number(config.size ?? 3)));
+    const start = config.start || { col: 1, row: 1, facing: "up" };
+    const leaf = config.leaf || { col: 0, row: 0 };
+    const say = config.sentences || {};
+
+    const CELL = 88;
+    const GAP = 8;
+    const BOARD = size * CELL + (size - 1) * GAP;
+    const OFF = (320 - BOARD) / 2;
+    const cellX = (col) => OFF + col * (CELL + GAP);
+    const cellY = (row) => OFF + row * (CELL + GAP);
+    const centerX = (col) => cellX(col) + CELL / 2;
+    const centerY = (row) => cellY(row) + CELL / 2;
+
+    // lx/ly — kūno kairės kryptis ekrane, kai veikėjas žiūri ta kryptimi.
+    const DIRS = {
+      up: { dx: 0, dy: -1, angle: 0, lx: -1, ly: 0 },
+      right: { dx: 1, dy: 0, angle: 90, lx: 0, ly: -1 },
+      down: { dx: 0, dy: 1, angle: 180, lx: 1, ly: 0 },
+      left: { dx: -1, dy: 0, angle: 270, lx: 0, ly: 1 },
+    };
+    const ORDER = ["up", "right", "down", "left"];
+    const FACING_TEXT = { up: "į viršų, nuo tavęs", right: "į dešinę", down: "į tave", left: "į kairę" };
+
+    const DEFAULT_SAY = {
+      "nuo-taves": "Vabaliukas žiūri nuo tavęs. Jo kairė — kairėje.",
+      "i-desine": "Vabaliukas žiūri į dešinę. Jo kairė — viršuje.",
+      "i-tave": "Vabaliukas žiūri į tave. Jo kairė — tavo dešinėje.",
+      "i-kaire": "Vabaliukas žiūri į kairę. Jo kairė — apačioje.",
+      zingsnis: "Žengė vieną langelį į priekį.",
+      krastas: "Toliau tinklelio nėra.",
+      lapas: "Pasiekei lapą.",
+    };
+    const line = (key) => say[key] || DEFAULT_SAY[key];
+
+    let pos = { col: Number(start.col), row: Number(start.row) };
+    let facing = DIRS[start.facing] ? start.facing : "up";
+    let facedDown = false;
+    let reported = false;
+    let lastSaid = "";
+
+    const reduceMotion = !!(window.matchMedia
+      && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+    stage.innerHTML = `
+      <div id="vk-wrap" tabindex="0" role="group" aria-label="Vabaliukas ir kryptys"
+           style="width:100%;max-width:22rem;margin:0 auto;text-align:center;outline-offset:4px">
+        <svg id="vk-svg" viewBox="0 0 320 320" width="100%" role="img"
+             aria-label="Tinklelis su lapu"></svg>
+      </div>`;
+
+    const wrap = stage.querySelector("#vk-wrap");
+    const svg = stage.querySelector("#vk-svg");
+
+    /* --- tinklelis ir lapas ------------------------------------------- */
+    const cellsG = svgEl("g", { id: "vk-cells" });
+    for (let r = 0; r < size; r += 1) {
+      for (let c = 0; c < size; c += 1) {
+        cellsG.appendChild(svgEl("rect", {
+          x: cellX(c), y: cellY(r), width: CELL, height: CELL, rx: 14,
+          fill: "var(--paper-2)", stroke: "var(--line)", "stroke-width": 2,
+        }));
+      }
+    }
+    svg.appendChild(cellsG);
+
+    const leafG = svgEl("g", { id: "vk-leaf", transform: `translate(${centerX(leaf.col)}, ${centerY(leaf.row)})` });
+    leafG.appendChild(svgEl("path", {
+      d: "M0 26 C -28 12, -28 -22, 0 -28 C 28 -22, 28 12, 0 26 Z",
+      fill: "var(--mint)", stroke: "var(--ink)", "stroke-width": 2, opacity: 0.9,
+    }));
+    leafG.appendChild(svgEl("line", {
+      x1: 0, y1: 24, x2: 0, y2: -20, stroke: "var(--ink)", "stroke-width": 3, "stroke-linecap": "round",
+    }));
+    svg.appendChild(leafG);
+
+    /* --- vabaliukas ---------------------------------------------------- */
+    const bugMove = svgEl("g", { id: "vk-bug" });
+    const bugRot = svgEl("g", {});
+    bugMove.style.transform = `translate(${centerX(pos.col)}px, ${centerY(pos.row)}px)`;
+    bugRot.style.transform = `rotate(${DIRS[facing].angle}deg)`;
+    bugMove.style.transition = reduceMotion ? "none" : "transform 200ms ease";
+    bugRot.style.transition = reduceMotion ? "none" : "transform 200ms ease";
+
+    // Kojos: trys poros. Kairioji pusė — ta, kurioje apyrankė.
+    [-10, 1, 12].forEach((y) => {
+      bugRot.appendChild(svgEl("line", {
+        x1: -13, y1: y, x2: -28, y2: y - 6, stroke: "var(--ink)",
+        "stroke-width": 2.5, "stroke-linecap": "round",
+      }));
+      bugRot.appendChild(svgEl("line", {
+        x1: 13, y1: y, x2: 28, y2: y - 6, stroke: "var(--ink)",
+        "stroke-width": 2.5, "stroke-linecap": "round",
+      }));
+    });
+    bugRot.appendChild(svgEl("ellipse", {
+      cx: 0, cy: 2, rx: 17, ry: 20, fill: "var(--sun)", stroke: "var(--ink)", "stroke-width": 2.5,
+    }));
+    bugRot.appendChild(svgEl("circle", {
+      cx: 0, cy: -22, r: 10.5, fill: "var(--sun)", stroke: "var(--ink)", "stroke-width": 2.5,
+    }));
+    bugRot.appendChild(svgEl("path", {
+      d: "M0 -46 l 7 9 h -14 z", fill: "var(--accent)", stroke: "var(--ink)", "stroke-width": 1.5,
+    }));
+    // apyrankė ant kairės priekinės kojos — žiedas, ne spalvos laukas
+    bugRot.appendChild(svgEl("circle", {
+      cx: -22, cy: -14, r: 6, fill: "var(--accent)", stroke: "var(--ink)", "stroke-width": 2.5,
+    }));
+
+    bugMove.appendChild(bugRot);
+    svg.appendChild(bugMove);
+
+    /* --- kairės kortelė, pritvirtinta prie kūno ----------------------- */
+    const leftG = svgEl("g", { id: "vk-mark" });
+    const leftLine = svgEl("line", {
+      x1: 0, y1: 0, x2: 0, y2: 0, stroke: "var(--accent)", "stroke-width": 3, "stroke-linecap": "round",
+    });
+    leftG.appendChild(leftLine);
+    leftG.appendChild(svgEl("rect", {
+      x: -29, y: -13, width: 58, height: 26, rx: 9,
+      fill: "var(--accent)", stroke: "var(--ink)", "stroke-width": 2,
+    }));
+    const leftText = svgEl("text", {
+      x: 0, y: 5.5, "text-anchor": "middle", "font-size": 15, "font-weight": 900,
+      fill: "var(--ink)", "font-family": "system-ui",
+    });
+    leftText.textContent = "kairė";
+    leftG.appendChild(leftText);
+    svg.appendChild(leftG);
+
+    /* --- piešimas ------------------------------------------------------ */
+    function paint() {
+      const cx = centerX(pos.col);
+      const cy = centerY(pos.row);
+      const d = DIRS[facing];
+      bugMove.style.transform = `translate(${cx}px, ${cy}px)`;
+      bugRot.style.transform = `rotate(${d.angle}deg)`;
+
+      const tx = Math.max(36, Math.min(284, cx + d.lx * 58));
+      const ty = Math.max(20, Math.min(300, cy + d.ly * 58));
+      leftG.style.transform = `translate(${tx}px, ${ty}px)`;
+      leftLine.setAttribute("x1", cx + d.lx * 30);
+      leftLine.setAttribute("y1", cy + d.ly * 30);
+      leftLine.setAttribute("x2", tx - d.lx * 29);
+      leftLine.setAttribute("y2", ty - d.ly * 13);
+
+      const onLeaf = pos.col === leaf.col && pos.row === leaf.row;
+      svg.setAttribute("aria-label",
+        `Tinklelis su lapu viršutiniame kairiajame kampe. Vabaliukas ${onLeaf ? "ant lapo" : "tinklelyje"}, `
+        + `žiūri ${FACING_TEXT[facing]}. Apyrankė ant kairės priekinės kojos.`);
+    }
+
+    /* --- grįžtamasis ryšys --------------------------------------------- */
+    function speakState(key) {
+      const t = line(key);
+      if (!t || lastSaid === key) return;
+      lastSaid = key;
+      api.speak(t);
+    }
+
+    function feedback(kind) {
+      if (kind === "edge") {
+        api.readout(line("krastas"));
+        api.note("Pasuk ir bandyk kita kryptimi.");
+        speakState("krastas");
+        return;
+      }
+      if (kind === "leaf") {
+        api.readout(line("lapas"));
+        api.note("Dabar pasuk jį į save ir pasakyk, kur jo kairė.");
+        speakState("lapas");
+        return;
+      }
+      if (kind === "step") {
+        api.readout(line("zingsnis"));
+        api.note("Žingsnis eina į priekį, ne į šoną.");
+        speakState("zingsnis");
+        return;
+      }
+      const map = {
+        up: ["nuo-taves", "Pasukimas vyksta vietoje: jis lieka tame pačiame langelyje."],
+        right: ["i-desine", "Kairė pasisuko kartu su juo."],
+        down: ["i-tave", "Jis žiūri į tave, todėl jo kairė yra kitoje pusėje."],
+        left: ["i-kaire", "Ta pati kairė, tik kita kryptis."],
+      };
+      const [key, note] = map[facing];
+      api.readout(line(key));
+      api.note(note);
+      speakState(key);
+    }
+
+    function checkProgress() {
+      const onLeaf = pos.col === leaf.col && pos.row === leaf.row;
+      if (onLeaf && facedDown && !reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    /* --- veiksmai ------------------------------------------------------ */
+    const stepBtn = controls.querySelector("#vk-step");
+
+    function canStep() {
+      const d = DIRS[facing];
+      const nc = pos.col + d.dx;
+      const nr = pos.row + d.dy;
+      return nc >= 0 && nc < size && nr >= 0 && nr < size;
+    }
+
+    function syncStep() {
+      const ok = canStep();
+      stepBtn.disabled = !ok;
+      stepBtn.setAttribute("aria-disabled", String(!ok));
+    }
+
+    function rotate(dir) {
+      const i = ORDER.indexOf(facing);
+      facing = ORDER[(i + (dir === "right" ? 1 : 3)) % 4];
+      if (facing === "down") facedDown = true;
+      lastSaid = "";
+      paint();
+      syncStep();
+      feedback("turn");
+      checkProgress();
+    }
+
+    function step() {
+      if (!canStep()) {
+        feedback("edge");
+        return;
+      }
+      const d = DIRS[facing];
+      pos = { col: pos.col + d.dx, row: pos.row + d.dy };
+      lastSaid = "";
+      paint();
+      syncStep();
+      const onLeaf = pos.col === leaf.col && pos.row === leaf.row;
+      feedback(onLeaf ? "leaf" : "step");
+      checkProgress();
+    }
+
+    function reset() {
+      pos = { col: Number(start.col), row: Number(start.row) };
+      facing = DIRS[start.facing] ? start.facing : "up";
+      lastSaid = "";
+      paint();
+      syncStep();
+      api.readout("Pradedam iš naujo. Vabaliukas žiūri nuo tavęs.");
+      api.note("Pasukimas vyksta vietoje: jis lieka tame pačiame langelyje.");
+    }
+
+    /* --- įėjimai ------------------------------------------------------- */
+    controls.querySelector("#vk-left").addEventListener("click", () => rotate("left"));
+    controls.querySelector("#vk-right").addEventListener("click", () => rotate("right"));
+    stepBtn.addEventListener("click", step);
+    controls.querySelector("#vk-reset").addEventListener("click", reset);
+
+    wrap.addEventListener("keydown", (evt) => {
+      if (evt.target !== wrap) return;   // mygtukai savo klavišus apdoroja patys
+      if (evt.key === "ArrowLeft") { evt.preventDefault(); rotate("left"); }
+      else if (evt.key === "ArrowRight") { evt.preventDefault(); rotate("right"); }
+      else if (evt.key === "ArrowUp" || evt.key === " ") { evt.preventDefault(); step(); }
+      else if (evt.key === "r" || evt.key === "R") { evt.preventDefault(); reset(); }
+    });
+
+    paint();
+    syncStep();
+    api.readout("Vabaliukas žiūri nuo tavęs. Kur bus jo kairė, kai jis atsisuks į tave? Pasakyk, tada pasuk.");
+    api.note("Pasukimas vyksta vietoje: jis lieka tame pačiame langelyje.");
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
@@ -1317,4 +1599,5 @@ export const SIMS = {
   "laikrodis-sujungtos-rodykles": laikrodisSujungtosRodykles,
   "svarstykles-lygybe": svarstyklesLygybe,
   "pinigine-ir-kaina": pinigineIrKaina,
+  "vabaliukas-ir-kryptys": vabaliukasIrKryptys,
 };

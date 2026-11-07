@@ -863,6 +863,10 @@
   "n": "n/0b98502ddbc17807-2c0263a4.mp3",
   "s": "s/0b98502ddbc17807-f24b48a5.mp3"
  },
+ "Pasiekei lapą.": {
+  "n": "n/e4ff17609ce48006-064c37ee.mp3",
+  "s": "s/e4ff17609ce48006-c893f127.mp3"
+ },
  "Pasitikrink": {
   "n": "n/216bd6e5bd7d6af6-85fde14e.mp3",
   "s": "s/216bd6e5bd7d6af6-ea33c7a1.mp3"
@@ -971,6 +975,10 @@
   "n": "n/2e8cb9ac1abdb1f9-e3cafef7.mp3",
   "s": "s/2e8cb9ac1abdb1f9-df46d12c.mp3"
  },
+ "Toliau tinklelio nėra.": {
+  "n": "n/0253ab164bcb0b07-f01987e2.mp3",
+  "s": "s/0253ab164bcb0b07-16fe9a02.mp3"
+ },
  "Trikampis": {
   "n": "n/bc5649b646cf679f-40a5678f.mp3",
   "s": "s/bc5649b646cf679f-4b0d86d5.mp3"
@@ -982,6 +990,22 @@
  "V": {
   "n": "n/de5a6f78116eca62-7dfb4afb.mp3",
   "s": "s/de5a6f78116eca62-1c404367.mp3"
+ },
+ "Vabaliukas žiūri nuo tavęs. Jo kairė — kairėje.": {
+  "n": "n/dc9f44951ab7ec39-3b3d7c54.mp3",
+  "s": "s/dc9f44951ab7ec39-7ba6f7e0.mp3"
+ },
+ "Vabaliukas žiūri į dešinę. Jo kairė — viršuje.": {
+  "n": "n/e7eff3d3ef46da42-cecb3ba1.mp3",
+  "s": "s/e7eff3d3ef46da42-0370a363.mp3"
+ },
+ "Vabaliukas žiūri į kairę. Jo kairė — apačioje.": {
+  "n": "n/0cd82d34b028b32b-46c04790.mp3",
+  "s": "s/0cd82d34b028b32b-885e11a2.mp3"
+ },
+ "Vabaliukas žiūri į tave. Jo kairė — tavo dešinėje.": {
+  "n": "n/0ea6c9e2a57235ea-22e65b61.mp3",
+  "s": "s/0ea6c9e2a57235ea-86177549.mp3"
  },
  "Vaikai": {
   "n": "n/09a538658c8a3ee8-f6d17b33.mp3",
@@ -1286,6 +1310,10 @@
  "Ž": {
   "n": "n/44adc66853ea8fee-f460d664.mp3",
   "s": "s/44adc66853ea8fee-cefe4d11.mp3"
+ },
+ "Žengė vieną langelį į priekį.": {
+  "n": "n/5168057a6ebe5692-7169577a.mp3",
+  "s": "s/5168057a6ebe5692-14b9f7a4.mp3"
  },
  "Žiema": {
   "n": "n/8c0846000ca22d18-ba6f7baa.mp3",

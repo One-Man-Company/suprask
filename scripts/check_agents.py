@@ -15,6 +15,7 @@ Naudojimas:
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import pathlib
 import re
@@ -100,6 +101,21 @@ def main() -> int:
         role = f.stem.replace("suprask-", "")
         if role not in roles:
             warnings.append(f"{f.name}: timer'is be atitinkamo vaidmens ROLES")
+
+    # Dienoraštis: architektas privalo palikti įrašą po kiekvieno darbo.
+    journal = ROOT / "agents" / "system-journal.md"
+    try:
+        import db as _db
+        arch = [r for r in _db.recent_runs(80) if r.get("role") == "sistemos-architektas"]
+        if arch and journal.exists():
+            last = arch[0]
+            finished = last.get("finished") or ""
+            if last.get("status") in ("published", "partial", "ok", "checked") and finished:
+                stamp = dt.datetime.fromisoformat(finished).timestamp()
+                if journal.stat().st_mtime < stamp - 5:
+                    warnings.append("sistemos-architektas baigė darbą, bet agents/system-journal.md nepapildytas")
+    except Exception:  # noqa: BLE001
+        pass
 
     if args.json:
         print(json.dumps({"ok": not problems, "problems": problems, "warnings": warnings,

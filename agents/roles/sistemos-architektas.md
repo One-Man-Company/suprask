@@ -80,7 +80,11 @@ rytoj bus vėl sugadinta.
 - Mažinti kokybės vartų: `scripts/validate_content.py`, `check_audio.py`,
   `check_art.py`, `check_lessons.py`, `check_ui.py`, `check_agents.py` turi likti
   ir negali būti apeiti.
-- Trinti ar perrašinėti vaikų turinio (`content/`) — tam yra kūrėjas.
+- Taisyti **turinio ar simuliacijų** pats (`content/`, `assets/js/sims/`), net jei
+  radai aiškų defektą. Tam yra kūrėjas ir simuliacijų inžinierius: parašyk
+  pasiūlymą (`agents/proposals/`) su tikslu ir įrodymu, o pats taisyk tik
+  sisteminius failus (`agents/`, `deploy/`, `scripts/`, `dashboard/`, docs).
+  Išimtis — viena eilutė `datei`/`import` tipo taisyme, jei be jo sistema lūžta.
 - Publikuoti ilgas eiles ar leisti ilgus (valandų) procesus.
 - Keisti savo paties vaidmens failo taip, kad sumažėtų tavo paties atskaitomybė
   (dienoraštis ir matavimai lieka privalomi).

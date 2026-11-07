@@ -2407,6 +2407,222 @@ const piktogramaIrStulpelis = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 11. Sudėtis per dešimtį — papildyk dešimtuką, paskui pridėk likusį */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Modelis: dešimtukas (dvi eilės po penkis langelius) ir du dėmenys.
+ * Pirmas dėmuo jau guli dešimtuke, antras guli ant stalo. Vaikas spaudžia
+ * „Papildyk dešimtuką“ — į dešimtuką persikelia BŪTENT tiek dėmių, kiek
+ * trūksta iki dešimties, o likusios lieka ant stalo. Taip suma pati
+ * susiskaido į „10 + likutis“, ir skaičiuoti po vieną nebereikia.
+ *
+ * Sąmoningai: antro dėmens skaidymas NĖRA paslėptas. Jei penkios dėmės
+ * tiesiog dingtų nuo stalo, vaikas matytų 8 + 5 → 10 + 3 be jokio 5 —
+ * dėmuo būtų suvartotas tyliai. Todėl po veiksmo rodoma lygybė
+ * „5 = 2 + 3“, o likusios dėmės lieka matomos ant stalo.
+ *
+ * Sąmoningai: nėra laikmačio ir nėra „teisingo“ spėjimo baudimo. Spėjimas
+ * lieka matomas ir po veiksmo — jis lyginamas su tuo, kas įvyko.
+ */
+const sudetisPerDesimti = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const FIRST = Array.isArray(config.first) && config.first.length ? config.first : [7, 8, 9];
+    const SECOND = Array.isArray(config.second) && config.second.length ? config.second : [4, 5, 6];
+
+    let a = FIRST.includes(8) ? 8 : FIRST[0];
+    let b = SECOND.includes(5) ? 5 : SECOND[0];
+    let filledStep = false;   // ar dėmės jau persikėlė į dešimtuką
+    let guess = 0;            // 0 — vaikas dar nespėjo
+    let reported = false;
+
+    const need = () => 10 - a;
+    const moved = () => Math.min(need(), b);
+    const restCount = () => b - (filledStep ? moved() : 0);
+
+    const CELL = "aspect-ratio:1;min-width:0;border:2px solid var(--line);border-radius:12px;"
+      + "background:var(--paper-2);display:flex;align-items:center;justify-content:center;box-sizing:border-box";
+    const dot = (fill, edge) =>
+      `<span aria-hidden="true" style="display:block;width:58%;aspect-ratio:1;border-radius:50%;`
+      + `background:${fill};border:2px solid ${edge};box-sizing:border-box"></span>`;
+    /* Skaičius su daiktavardžiu: „1 tuščias“, „2 tušti“, „1 geltonas“, „2 geltoni“. */
+    const pl = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
+    stage.innerHTML = `
+      <div id="sp-wrap" style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <p class="sim-note" style="margin:0 0 .25rem;text-align:center">
+          Pirmas skaičius jau dešimtuke, antras — ant stalo.
+        </p>
+        <div id="sp-eq" style="font-family:var(--font-head);font-weight:900;font-size:1.75rem;line-height:1.15;text-align:center"></div>
+        <div id="sp-frame" role="img" aria-label="Dešimtukas"
+             style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.3rem;max-width:19rem;margin:.45rem auto 0"></div>
+        <p class="sim-note" id="sp-tray-label" style="margin:.55rem 0 .2rem;text-align:center"></p>
+        <div id="sp-rest" role="img" aria-label="Dėmės ant stalo"
+             style="display:flex;gap:.3rem;justify-content:center;align-items:center;flex-wrap:wrap;min-height:1.9rem"></div>
+        <p class="sim-note" id="sp-split" style="margin:.35rem 0 0;text-align:center;min-height:1.4rem"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div role="group" aria-label="Pirmas dėmuo"
+           style="display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;align-items:center">
+        <span style="width:100%;text-align:center;font-weight:800;font-size:.95rem">Pirmas skaičius</span>
+        ${FIRST.map((n) => `<button type="button" class="btn secondary sp-a" data-a="${n}"
+            aria-pressed="${n === a}" aria-label="Pirmas skaičius ${n}"
+            style="min-height:48px;min-width:3rem;padding:.4rem .6rem">${n}</button>`).join("")}
+      </div>
+      <div role="group" aria-label="Antras dėmuo"
+           style="display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;align-items:center">
+        <span style="width:100%;text-align:center;font-weight:800;font-size:.95rem">Antras skaičius</span>
+        ${SECOND.map((n) => `<button type="button" class="btn secondary sp-b" data-b="${n}"
+            aria-pressed="${n === b}" aria-label="Antras skaičius ${n}"
+            style="min-height:48px;min-width:3rem;padding:.4rem .6rem">${n}</button>`).join("")}
+      </div>
+      <div role="group" aria-label="Kiek dėmių trūksta iki dešimties"
+           style="display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;align-items:center">
+        <span style="width:100%;text-align:center;font-weight:800;font-size:.95rem">Kiek trūksta?</span>
+        ${[1, 2, 3].map((n) => `<button type="button" class="btn secondary sp-g" data-g="${n}"
+            aria-pressed="false" aria-label="Spėju, kad trūksta ${n}"
+            style="min-height:48px;min-width:3rem;padding:.4rem .6rem">${n}</button>`).join("")}
+      </div>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center">
+        <button type="button" class="btn" id="sp-fill" style="min-height:48px">Papildyk dešimtuką</button>
+        <button type="button" class="btn ghost" id="sp-reset" style="min-height:48px">Iš naujo</button>
+      </div>`;
+
+    const frameEl = stage.querySelector("#sp-frame");
+    const eqEl = stage.querySelector("#sp-eq");
+    const trayLabel = stage.querySelector("#sp-tray-label");
+    const restEl = stage.querySelector("#sp-rest");
+    const splitEl = stage.querySelector("#sp-split");
+    const fillBtn = controls.querySelector("#sp-fill");
+
+    const markPressed = (sel, key, value) => {
+      controls.querySelectorAll(sel).forEach((x) => {
+        const on = x.dataset[key] === String(value);
+        const base = sel.replace(".", "");
+        x.setAttribute("aria-pressed", String(on));
+        x.className = on ? `btn ${base}` : `btn secondary ${base}`;
+        x.style.minHeight = "48px";
+        x.style.minWidth = "3rem";
+      });
+    };
+
+    /* --- piešimas ------------------------------------------------------ */
+    function paint() {
+      const m = filledStep ? moved() : 0;
+      const left = restCount();
+
+      eqEl.textContent = filledStep ? `${a} + ${b} = ${a + b}` : `${a} + ${b} = ?`;
+
+      frameEl.innerHTML = Array.from({ length: 10 }, (_, i) => {
+        let inner = "";
+        if (i < a) inner = dot("#5aa9e6", "#1f5f85");
+        else if (i < a + m) inner = dot("#ffc94d", "#8a5b12");
+        return `<div style="${CELL}">${inner}</div>`;
+      }).join("");
+
+      frameEl.setAttribute("aria-label", m
+        ? `Dešimtukas: ${pl(a, "mėlynas langelis", "mėlyni langeliai")} ir `
+          + `${pl(m, "geltonas", "geltoni")}, viso dešimt`
+        : `Dešimtukas: ${pl(a, "langelis pilnas", "langeliai pilni")}, `
+          + `${pl(10 - a, "tuščias", "tušti")}`);
+
+      restEl.innerHTML = left > 0
+        ? Array.from({ length: left }, () =>
+          `<span aria-hidden="true" style="display:block;width:1.4rem;height:1.4rem;border-radius:50%;`
+          + `background:#5aa9e6;border:2px solid #1f5f85;box-sizing:border-box"></span>`).join("")
+        : "";
+
+      trayLabel.textContent = filledStep
+        ? `Ant stalo liko ${left}. ${b} = ${m} + ${left}.`
+        : `Ant stalo: ${b}.`;
+      restEl.setAttribute("aria-label", `Ant stalo ${left} dėmių`);
+
+      splitEl.textContent = filledStep
+        ? `${a} + ${m} = 10, paskui 10 + ${left} = ${a + b}.`
+        : "";
+
+      api.readout(filledStep
+        ? `Dešimt ir dar ${left}. Viso ${a + b}.`
+        : `Dešimtuke ${a}, ant stalo ${b}.`);
+    }
+
+    /* --- veiksmai ------------------------------------------------------ */
+    function fill() {
+      if (filledStep) {                      // pakartotinis paspaudimas nieko nekeičia
+        api.note(`Dešimtukas jau pilnas. Ant stalo liko ${restCount()}.`);
+        return;
+      }
+      filledStep = true;
+      paint();
+      const m = moved();
+      const left = restCount();
+      const spėjimas = guess
+        ? (guess === m ? ` Tavo spėjimas sutapo: ${guess}.` : ` Tavo spėjimas: ${guess}. Šįkart reikėjo ${m}.`)
+        : "";
+      api.note(`Į dešimtuką nuėjo ${m} ${m === 1 ? "dėmė" : "dėmės"}. Ant stalo liko ${left}.${spėjimas}`);
+      api.speak(S[`suma_${a}_${b}`] || "");
+      if (a + m === 10 && left > 0 && !reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    function reset({ keepAddends = false } = {}) {
+      filledStep = false;
+      guess = 0;
+      if (!keepAddends) {
+        a = FIRST.includes(8) ? 8 : FIRST[0];
+        b = SECOND.includes(5) ? 5 : SECOND[0];
+      }
+      markPressed(".sp-a", "a", a);
+      markPressed(".sp-b", "b", b);
+      markPressed(".sp-g", "g", 0);
+      paint();
+      api.note(S.klausk || "Kiek dėmių trūksta iki dešimties?");
+    }
+
+    controls.querySelectorAll(".sp-a").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        a = Number(btn.dataset.a);
+        reset({ keepAddends: true });
+        api.note("Pasikeitė pirmas skaičius. Kiek dėmių dabar trūksta iki dešimties?");
+        api.speak(S.klausk || "");
+      });
+    });
+
+    controls.querySelectorAll(".sp-b").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        b = Number(btn.dataset.b);
+        reset({ keepAddends: true });
+        api.note("Pasikeitė antras skaičius. Kiek dėmių dabar trūksta iki dešimties?");
+        api.speak(S.klausk || "");
+      });
+    });
+
+    controls.querySelectorAll(".sp-g").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        guess = Number(btn.dataset.g);
+        markPressed(".sp-g", "g", guess);
+        api.note(`Tavo spėjimas: ${guess}. Dabar spausk „Papildyk dešimtuką“.`);
+      });
+    });
+
+    fillBtn.addEventListener("click", fill);
+    controls.querySelector("#sp-reset").addEventListener("click", () => {
+      reset();
+      api.speak(S.naujas || "");
+    });
+
+    paint();
+    api.note(S.klausk || "Kiek dėmių trūksta iki dešimties?");
+    api.speak(S.pradek || "");
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
@@ -2418,4 +2634,5 @@ export const SIMS = {
   "vabaliukas-ir-kryptys": vabaliukasIrKryptys,
   "taskas-tiese-spindulys-atkarpa": taskasTieseSpindulysAtkarpa,
   "piktograma-ir-stulpelis": piktogramaIrStulpelis,
+  "sudetis-per-desimti": sudetisPerDesimti,
 };

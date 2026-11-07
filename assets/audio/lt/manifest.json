@@ -583,6 +583,18 @@
   "n": "n/920d19e4b1f3e034-a652e031.mp3",
   "s": "s/920d19e4b1f3e034-87e1aa4c.mp3"
  },
+ "Aštuoni ir keturi yra dvylika.": {
+  "n": "n/d72621a20deaef02-f2091c70.mp3",
+  "s": "s/d72621a20deaef02-e539c28e.mp3"
+ },
+ "Aštuoni ir penki yra trylika.": {
+  "n": "n/bb2d88f955f9f9dc-36c4d399.mp3",
+  "s": "s/bb2d88f955f9f9dc-18d97508.mp3"
+ },
+ "Aštuoni ir šeši yra keturiolika.": {
+  "n": "n/d7bf2b818c183b00-abb980b8.mp3",
+  "s": "s/d7bf2b818c183b00-49c85b40.mp3"
+ },
  "B": {
   "n": "n/df7e70e5021544f4-66c4ce24.mp3",
   "s": "s/df7e70e5021544f4-5289ae66.mp3"
@@ -606,6 +618,18 @@
  "Dar ne visa kaina.": {
   "n": "n/c890f23c44c2b32e-9abe2ec1.mp3",
   "s": "s/c890f23c44c2b32e-e9ea8cc6.mp3"
+ },
+ "Devyni ir keturi yra trylika.": {
+  "n": "n/ddd12316aae4f2c1-a590b724.mp3",
+  "s": "s/ddd12316aae4f2c1-8f590fd8.mp3"
+ },
+ "Devyni ir penki yra keturiolika.": {
+  "n": "n/a3aef94853458882-c377e895.mp3",
+  "s": "s/a3aef94853458882-e3bb7b79.mp3"
+ },
+ "Devyni ir šeši yra penkiolika.": {
+  "n": "n/ac529f0194e54324-86711536.mp3",
+  "s": "s/ac529f0194e54324-4aa52161.mp3"
  },
  "Dešimt. Puiku!": {
   "n": "n/84869c7b0017a54b-da490e30.mp3",
@@ -823,6 +847,10 @@
   "n": "n/1c68c529e0dee2d1-8c0ac07a.mp3",
   "s": "s/1c68c529e0dee2d1-dd4ecd72.mp3"
  },
+ "Kiek dėmių trūksta iki dešimties?": {
+  "n": "n/bf34b68515d8a369-20bfcf55.mp3",
+  "s": "s/bf34b68515d8a369-f0ddec9a.mp3"
+ },
  "Kiek monetų ir banknotų prireiks? Pasakyk spėjimą.": {
   "n": "n/b2cf869590b9446d-61101fba.mp3",
   "s": "s/b2cf869590b9446d-dee4c258.mp3"
@@ -943,6 +971,10 @@
   "n": "n/e4ff17609ce48006-064c37ee.mp3",
   "s": "s/e4ff17609ce48006-c893f127.mp3"
  },
+ "Pasirink kitus skaičius ir pabandyk vėl.": {
+  "n": "n/27b8c325e7898242-7b0be7c4.mp3",
+  "s": "s/27b8c325e7898242-fcef8d60.mp3"
+ },
  "Pasitikrink": {
   "n": "n/216bd6e5bd7d6af6-85fde14e.mp3",
   "s": "s/216bd6e5bd7d6af6-ea33c7a1.mp3"
@@ -974,6 +1006,10 @@
  "Pilnas dešimtukas!": {
   "n": "n/bbbfb4885794d2cd-da6961e3.mp3",
   "s": "s/bbbfb4885794d2cd-0ea8cb4a.mp3"
+ },
+ "Pirmas skaičius jau dešimtuke, o antras laukia ant stalo.": {
+  "n": "n/be1b948182521b61-abb7ba9c.mp3",
+  "s": "s/be1b948182521b61-4c74d3a7.mp3"
  },
  "Popierius": {
   "n": "n/0c85494fd5f4f32d-96346576.mp3",
@@ -1050,6 +1086,18 @@
  "Saulė šviečia ryte": {
   "n": "n/f45e5e9c1be148e8-2f6e804e.mp3",
   "s": "s/f45e5e9c1be148e8-e6386132.mp3"
+ },
+ "Septyni ir keturi yra vienuolika.": {
+  "n": "n/e11705ab6ea77b98-67191590.mp3",
+  "s": "s/e11705ab6ea77b98-0cfecf1b.mp3"
+ },
+ "Septyni ir penki yra dvylika.": {
+  "n": "n/c13161e32836a191-8933fb63.mp3",
+  "s": "s/c13161e32836a191-2fe09d40.mp3"
+ },
+ "Septyni ir šeši yra trylika.": {
+  "n": "n/a2cd3c8462e58aed-7e4d2ded.mp3",
+  "s": "s/a2cd3c8462e58aed-f06879d2.mp3"
  },
  "Skaityk kartu": {
   "n": "n/b6c14d77fa5c0a82-984de7a3.mp3",

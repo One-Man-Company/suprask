@@ -32,6 +32,7 @@
         { "id": "17-kryptys-ir-vieta", "title": "Kryptys: kairė priklauso nuo žiūrovo", "subtitle": "Ta pati pusė atsiduria kitoje vietoje, kai žiūri į tave", "file": "grade-01/matematika/17-kryptys-ir-vieta.json", "minutes": 9, "sim": "vabaliukas-ir-kryptys" },
         { "id": "18-taskas-tiese-spindulys-atkarpa", "title": "Taškas, tiesė, spindulys, atkarpa", "subtitle": "Skiriasi ne ilgiu, o galų skaičiumi", "file": "grade-01/matematika/18-taskas-tiese-spindulys-atkarpa.json", "minutes": 9, "sim": "taskas-tiese-spindulys-atkarpa" },
         { "id": "21-erdvines-figuros", "title": "Erdvinės figūros", "subtitle": "Tas pats kūgis iš priekio — trikampis, iš viršaus — apskritimas", "file": "grade-01/matematika/21-erdvines-figuros.json", "minutes": 9, "sim": "erdvines-figuros" },
+        { "id": "22-sudetis-per-desimti", "title": "Sudėtis per dešimtį", "subtitle": "Pirma papildyk dešimtuką, paskui pridėk, kas liko", "file": "grade-01/matematika/22-sudetis-per-desimti.json", "minutes": 9, "sim": "sudetis-per-desimti" },
         { "id": "23-piktograma-ir-stulpelis", "title": "Piktograma ir stulpelis", "subtitle": "Aukštas stulpelis rodo daug daiktų, o ne didelius daiktus", "file": "grade-01/matematika/23-piktograma-ir-stulpelis.json", "minutes": 9, "sim": "piktograma-ir-stulpelis" }
       ]
     },

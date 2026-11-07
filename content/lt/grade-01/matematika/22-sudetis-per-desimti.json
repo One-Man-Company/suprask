@@ -1,0 +1,123 @@
+{
+  "id": "22-sudetis-per-desimti",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Sudėtis per dešimtį",
+  "subtitle": "Pirma papildyk dešimtuką, paskui pridėk, kas liko",
+  "minutes": 9,
+  "outcomes": [
+    "Sudedu vienaženklius skaičius per dešimtį: pirma papildau dešimtuką, paskui pridedu likusį.",
+    "Paaiškinu, kodėl 8 + 5 patogiau skaičiuoti kaip 8 + 2 ir 10 + 3."
+  ],
+  "concept": {
+    "title": "Kelias per dešimtuką",
+    "big_idea": "Kai suma peržengia dešimtį, nereikia skaičiuoti po vieną. Pirma paimk tiek, kiek trūksta iki dešimties, paskui pridėk, kas liko.",
+    "steps": [
+      "Dešimtuke jau guli pirmas skaičius. Suskaičiuok, kiek langelių tušti.",
+      "Tiek pat dėmių paimk iš antro skaičiaus. Dešimtukas prisipildo — tai dešimt.",
+      "Pridėk ant stalo likusias dėmes prie dešimties.",
+      "Pabandyk su kitais skaičiais: 7 + 5, 9 + 6. Kiek trūksta — vis kitas skaičius."
+    ],
+    "example": "Krepšyje 8 obuoliai, draugas atneša 5. Du įdedi į pilną dešimtuką, trys lieka. Viso 13."
+  },
+  "sim": {
+    "component": "sudetis-per-desimti",
+    "config": {
+      "first": [7, 8, 9],
+      "second": [4, 5, 6],
+      "sentences": {
+        "pradek": "Pirmas skaičius jau dešimtuke, o antras laukia ant stalo.",
+        "klausk": "Kiek dėmių trūksta iki dešimties?",
+        "naujas": "Pasirink kitus skaičius ir pabandyk vėl.",
+        "suma_7_4": "Septyni ir keturi yra vienuolika.",
+        "suma_7_5": "Septyni ir penki yra dvylika.",
+        "suma_7_6": "Septyni ir šeši yra trylika.",
+        "suma_8_4": "Aštuoni ir keturi yra dvylika.",
+        "suma_8_5": "Aštuoni ir penki yra trylika.",
+        "suma_8_6": "Aštuoni ir šeši yra keturiolika.",
+        "suma_9_4": "Devyni ir keturi yra trylika.",
+        "suma_9_5": "Devyni ir penki yra keturiolika.",
+        "suma_9_6": "Devyni ir šeši yra penkiolika."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Simuliacijoje dešimtuke buvo 8 dėmės. Kiek dėmių reikia, kad jis prisipildytų?",
+      "options": [
+        "2",
+        "3",
+        "5"
+      ],
+      "answer": 0,
+      "hint": "Suskaičiuok tuščius langelius dešimtuke.",
+      "why": "8 + 2 = 10, todėl dešimtukui trūksta dviejų dėmių."
+    },
+    {
+      "q": "Kaip 8 + 5 suskirstyti per dešimtuką?",
+      "options": [
+        "8 + 5 = 10, paskui dar 3",
+        "8 + 2 = 10, paskui 10 + 3",
+        "10 + 5 = 15, paskui atimti 2"
+      ],
+      "answer": 1,
+      "hint": "Dešimtukui reikia tik dalies antro dėmens, ne viso.",
+      "why": "Iš penkių paimame du, gauname dešimt, o likusius tris pridedame: 13."
+    },
+    {
+      "q": "Ant stalo 9 raudoni ir 6 mėlyni rutuliai. Kiek viso?",
+      "options": [
+        "14",
+        "15",
+        "16"
+      ],
+      "answer": 1,
+      "hint": "Prisimink: pirma sudaryk dešimtuką iš raudonų, paskui pridėk likusius mėlynus.",
+      "why": "9 + 1 = 10, o mėlynų lieka 5. 10 + 5 = 15."
+    },
+    {
+      "q": "Vienas vaikas 7 + 5 skaičiuoja po vieną. Kaip būtų greičiau?",
+      "options": [
+        "Skaičiuoti po vieną nuo septynių",
+        "Pridėti penkis ir gauti dvylika",
+        "Paimti 3 iš penkių, gauti dešimt, paskui pridėti 2"
+      ],
+      "answer": 2,
+      "hint": "Kiek trūksta nuo septynių iki dešimties? Tiek paimk iš penketo.",
+      "why": "Iš penkių paimti trys, dešimtukas prisipildo, lieka du. 10 + 2 = 12."
+    },
+    {
+      "q": "Dėžėje telpa 20 kamuolių. Jau įdėta 16, dar įdėjo 7. Kiek kamuolių dabar?",
+      "options": [
+        "22",
+        "23",
+        "24"
+      ],
+      "answer": 1,
+      "hint": "Papildyk iki 20 taip, kaip pildėte dešimtuką.",
+      "why": "16 + 4 = 20, o likusius 3 pridedame: 23.",
+      "optional": true
+    }
+  ],
+  "reflect": "Pagalvok, kaip skaičiuoji 8 + 5. Kurį skaičių tau lengviausia papildyti iki dešimties?",
+  "teacher": {
+    "goal": "Suprasti, kad sudėtį per dešimtį galima atlikti dviem žingsniais: papildyti dešimtuką ir pridėti likusį skaičių; taikyti tai vienaženkliams (8 + 5) ir dviženkliui su vienaženkliu (16 + 7).",
+    "prompt": "Kodėl 8 + 5 patogiau skaičiuoti kaip 8 + 2 ir 10 + 3?",
+    "offline": "Paimkite kiaušinių dėtuvę (10 vietų) ir pupeles. Įdėkite 8 pupeles ir paklauskite, kiek trūksta. Tada vaikas iš penkių pupelių perkelia tiek, kiek trūksta, o likusias padeda šalia. Kartu pasakykite: 8 + 2 = 10, 10 + 3 = 13. Paskui tą patį pakartokite su 9 + 6.",
+    "misconceptions": [
+      "„Kai suma didesnė už dešimt, reikia skaičiuoti po vieną“: vaikas pradeda nuo pirmo dėmens ir skaičiuoja kiekvieną pirštą. Modelyje dešimtukas prisipildo vienu žingsniu, o likusios dėmės lieka matomos — skaičiuoti po vieną nebereikia.",
+      "„Po dešimtuko pridedamas visas antras dėmuo“: vaikas pamato 10 ir prideda visus penkis — gauna 15 vietoj 13. Modelyje ant stalo lieka tik trys dėmės, o lygybė 5 = 2 + 3 parodo, kad dvi dėmės jau panaudotos dešimtukui.",
+      "„Dešimtukas yra tik skaičius 10“: vaikas nemato, kad dešimt yra patogi tarpinė stotelė. Simuliacijoje pilnas dešimtukas ir ant stalo likusios dėmės rodomi kartu."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, „Skaičiai ir skaičiavimai“: 1 klasėje atliekami sudėties ir atimties veiksmai šimto ribose — vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį, dviženklių skaičių neperžengiant dešimties.",
+    "Matematikos bendroji programa (2022): 1 klasės pasiekimas — mintinis sudėjimas ir atėmimas 100 ribose, taikant skaičiaus sandarą ir dešimties papildymą.",
+    "research/wiki/curriculum/matematika-1-klase.md §2.2 — trys privalomi sudėties atvejai 1 klasėje; pirmas iš jų: vienaženklis + vienaženklis per 10 (8 + 5 = 13)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (papildyti dešimtuką ir pridėti likusį), o ne visa sudėties lentelių rinkinys; skaičių tiesė ir lygybė paliekamos savo moduliams",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina strategijos pritaikymą (9 + 6, 16 + 7), o ne įsimintą pavyzdį",
+    "3 žingsnis — pagalba laiku: užuominos nukreipia į klaidą (skaičiavimą po vieną, viso antro dėmens paėmimą), yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

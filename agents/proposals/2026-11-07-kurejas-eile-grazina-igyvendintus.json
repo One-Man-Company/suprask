@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 45,
+  "created": "2026-11-07T21:24:00+02:00",
+  "type": "struktura",
+  "title": "Kūrėjo eilė vėl paduoda jau įgyvendintą pasiūlymą (#19) — high eilė stovi",
+  "body": "Paleidimas #45 gavo pasiūlymą #19 (metodas „Laikas: vienas ratas, vienas žingsnis“), bet jo tikslas content/lt/grade-01/matematika/15-laikas.json jau sukurtas paleidime #10 (commit 55d3aa0), registruotas index.json ir path.json, o simuliacija veikia. Priežastis — agents/db.py:166–170: upsert_proposals per kiekvieną sinchronizaciją perrašo status iš JSON failo, kur vis dar parašyta „new“, todėl anksčiau uždėtas „done“ dingo, o note „įgyvendinta commit 07e6f17“ liko. Todėl DB šiandien rodo 12 pasiūlymų su note „įgyvendinta …“, bet statusu „new“ (#34, #42, #44, #186, #218, #222, #272, #451, #485, #486, #727). Antra spraga: scripts/kurejas_queue.py:37 triage žymi pasenusiu tik tipą „tema“, tad „metodas“ (#19, #153, #361, #606) neuždaromas net tada, kai tikslinis failas yra. Siūloma: (1) upsert‘e neperrašyti status, kai DB eilutė jau done/blocked/obsolete; (2) triage uždaryti ir „metodas“ su egzistuojančiu tikslu bei bet kurį įrašą, kurio note prasideda „įgyvendinta“; (3) eilė tokį įrašą praleisti, o ne blokuoti, kad mažiausias high id nebeatimtų viso paleidimo. Kol tai nepataisyta, kūrėjas kiekvieną kartą gauna #19 ir negali pradėti realių darbų (#137, #153, #249, #331, #565, #566, #606), o 5 privalomos 1 klasės temos (garso savybės, vandens būsenos, emocijos, komandų seka, medžiagos) lieka nepradėtos.",
+  "target": "agents/db.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "agents/db.py:166-170 — INSERT ... ON CONFLICT(file) DO UPDATE SET status=excluded.status (perrašo done → new)",
+    "agents/runs.db, proposals#19 — status 'new', note 'įgyvendinta commit 07e6f17' (įmanoma tik po perrašymo)",
+    "scripts/kurejas_queue.py:37,52 — OBSOLETE_TYPES = (\"tema\",); tik egzistuojantis tikslas su tipu 'tema' žymimas pasenusiu",
+    "commit 55d3aa0 (2026-11-04 19:13) — modulis 15-laikas.json sukurtas ir įtrauktas į index.json bei path.json",
+    "agents/log/kurejas-2026-11-04T0932.md:777 — „Sukurtas pagal metodininko metodą M-01 (pasiūlymas #19)“"
+  ]
+}

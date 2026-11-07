@@ -554,7 +554,7 @@ window.addEventListener("suprask:sound-blocked", () => {
   const hint = document.createElement("div");
   hint.className = "sound-hint";
   hint.setAttribute("role", "status");
-  hint.textContent = "Garsas užblokuotas. Paliesk ekraną dar kartą — tada įsijungs.";
+  hint.textContent = "Garsas neįsijungė. Paliesk ekraną dar kartą.";
   document.body.appendChild(hint);
   setTimeout(() => hint.classList.add("sound-hint--out"), 5000);
   setTimeout(() => hint.remove(), 5600);

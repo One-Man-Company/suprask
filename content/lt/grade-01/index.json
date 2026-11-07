@@ -55,6 +55,16 @@
         { "id": "12-bendradarbiavimo-tiltas", "title": "Bendradarbiavimo tiltas", "subtitle": "Kai vienas negali, o dviese — gali", "file": "grade-01/zaidimu-teorija/12-bendradarbiavimo-tiltas.json", "minutes": 10, "sim": "bendradarbiavimo-tiltas" },
         { "id": "13-akmenelis-popierius", "title": "Akmenėlis, žirklės, popierius", "subtitle": "Kodėl negalima tiksliai numatyti", "file": "grade-01/zaidimu-teorija/13-akmenelis-popierius.json", "minutes": 10, "sim": "akmenelis-popierius" }
       ]
+    },
+    {
+      "id": "technologijos",
+      "grade": 1,
+      "title": "Technologijos",
+      "emoji": "🔌",
+      "intro": "Kaip daiktai veikia: išbandyk rankomis ir suprask, kodėl.",
+      "modules": [
+        { "id": "01-elektros-grandine", "title": "Elektra: kelias turi būti vientisas", "subtitle": "Kodėl su vienu laidu lemputė nešviečia", "file": "grade-01/technologijos/01-elektros-grandine.json", "minutes": 9, "sim": "elektros-grandine" }
+      ]
     }
   ]
 }

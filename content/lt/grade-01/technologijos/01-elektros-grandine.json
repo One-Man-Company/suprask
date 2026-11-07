@@ -1,0 +1,108 @@
+{
+  "id": "01-elektros-grandine",
+  "grade": 1,
+  "strand": "technologijos",
+  "title": "Elektra: kelias turi būti vientisas",
+  "subtitle": "Kodėl su vienu laidu lemputė nešviečia",
+  "minutes": 9,
+  "outcomes": [
+    "Sujungiu bateriją, lemputę ir du laidus taip, kad lemputė šviestų.",
+    "Paaiškinu, kodėl su vienu laidu lemputė nešviečia.",
+    "Parodau, kad jungiklis pertraukia tą patį kelią."
+  ],
+  "concept": {
+    "title": "Kelias turi sugrįžti į bateriją",
+    "big_idea": "Elektra išeina iš baterijos ir turi sugrįžti atgal. Todėl reikia dviejų laidų. Nutrūkus keliui bet kur, lemputė nešviečia.",
+    "steps": [
+      "Prijunk abu laidus ir pažiūrėk, ar lemputė šviečia.",
+      "Nuimk vieną laidą. Lemputė užgęsta, nors baterija ta pati.",
+      "Uždaryk ir atidaryk jungiklį. Tai ta pati kelio pertrauka.",
+      "Pavadink kelią balsu: baterija, laidas, lemputė, laidas, baterija."
+    ],
+    "example": "Kišeninis žibintuvėlis šviečia tol, kol jungiklis nepertraukia kelio."
+  },
+  "sim": {
+    "component": "elektros-grandine",
+    "config": {
+      "sentences": {
+        "pradzia": "Pradedam. Prijunk laidus ir pažiūrėk, ar lemputė šviečia.",
+        "nera-laido": "Nė vieno laido. Kelias visai nutrūkęs.",
+        "vienas-virsutinis": "Vienas laidas. Nuo baterijos iki lemputės kelias yra, o atgal nėra.",
+        "vienas-apatinis": "Vienas laidas. Atgal į bateriją veda, bet iki lemputės neateina.",
+        "jungiklis": "Abu laidai prijungti. Jungiklis atidarytas, todėl kelias nutrūkęs.",
+        "sviecia": "Kelias vientisas. Lemputė šviečia.",
+        "is-naujo": "Pradedam iš naujo. Prijunk laidus."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Lemputė nešviečia. Vienas laidas prijungtas, kitas guli šalia. Kaip prijungti, kad užsidegtų?",
+      "options": [
+        "Nuimti ir likusį laidą",
+        "Prijungti antrą laidą",
+        "Pakeisti lemputę"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, kiek laidų ėjo nuo baterijos simuliacijoje.",
+      "why": "Kelias turi sugrįžti į bateriją, todėl reikia abiejų laidų."
+    },
+    {
+      "q": "Abu laidai prijungti. Jungiklis atidarytas. Kas nutiko keliui?",
+      "options": [
+        "Kelias nutrūko ties jungikliu",
+        "Baterija išsikrovė",
+        "Lemputė sugedo"
+      ],
+      "answer": 0,
+      "hint": "Jungiklis yra tame pačiame kelyje kaip ir laidai.",
+      "why": "Jungiklis ne šaltinis, o to paties kelio pertrauka."
+    },
+    {
+      "q": "Žibintuvėlis šviečia. Atidarai dangtelį ir lemputė užgęsta. Kodėl?",
+      "options": [
+        "Baterija išsikrovė per ilgai",
+        "Atsivėrė kelias ir jis nutrūko",
+        "Lemputė atšalo"
+      ],
+      "answer": 1,
+      "hint": "Dangtelis laiko bateriją vietoje. Pažiūrėk, ar kelias liko vientisas.",
+      "why": "Dangtelis uždaro kelią, todėl be jo kelias nutrūksta."
+    },
+    {
+      "q": "Draugas sako: „Pakaks vieno laido.“ Kaip jam paaiškintum?",
+      "options": [
+        "Kad kelias turi sugrįžti atgal",
+        "Kad reikia dviejų baterijų",
+        "Kad laidas turi būti ilgesnis"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kur baigiasi kelias su vienu laidu.",
+      "why": "Vienas laidas veda į lemputę, antras grąžina kelią į bateriją.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip paaiškintum, kodėl vieno laido nepakanka? Pasakyk savais žodžiais.",
+  "teacher": {
+    "goal": "Suprasti, kad elektros kelias turi būti vientisas: nuo vieno baterijos galo per lemputę atgal į kitą. Todėl vieno laido nepakanka, o jungiklis tik pertraukia tą patį kelią.",
+    "prompt": "Kur baigiasi kelias, kai prijungtas tik vienas laidas?",
+    "offline": "Duokite vaikams 1,5 V bateriją, kišeninio žibintuvėlio lemputę ir du laidus. Vaikas bando su vienu laidu — lemputė nešviečia, nors jis bando vis kitaip. Tada prideda antrą laidą ir lemputė užsidega. Po to mokytojas atsargiai atjungia vieną laidą ir paklausia, kur nutrūko kelias. Su popieriumi: vaikas piešia kelią nuo baterijos per lemputę ir atgal, o paskui piešia jungiklį toje pačioje linijoje ir rodo pirštu, kur kelias pertraukiamas. Saugumas: pradinėje klasėje naudojamos tik 1,5–4,5 V baterijos, jokios rozetės, laidai liečiami tik atjungus bateriją.",
+    "misconceptions": [
+      "„Vieno laido pakanka“ — Chiu ir Lin (2005) aprašytas „vienpolis“ modelis: elektra vienu laidu nueina iki lemputės. Padeda pats modelis: su vienu laidu lemputė nešviečia, su dviem — šviečia, o ekrane matosi, kurioje vietoje kelio trūksta.",
+      "„Jungiklis duoda elektros“ — vaikas jungiklį laiko šaltiniu, panašiu į bateriją. Modelis jungiklį rodo tame pačiame kelyje: jis ne prideda energijos, o pertraukia kelią, todėl lemputė užgęsta ir vėl užsidega.",
+      "„Elektra yra matoma medžiaga, kuri išteka iš baterijos“ — todėl simuliacijoje joks srautas nepiešiamas ir neanimuojamas. Grįžtamąjį ryšį duoda lemputė, o kelią rodo pati linija su pertrauka, kad klaidinga nuostata nebūtų sustiprinta.",
+      "„Lemputė dega, nes ji guli arti baterijos“ — modelis atstumo nekeičia, todėl šią nuostatą geriau tikrinti veikla be ekrano: lemputė šviečia ir su ilgais laidais, jei tik kelias vientisas."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Technologijos“, 23.4: elektros srovė, nuolatinės srovės šaltiniai (elementas, baterija), prietaisai aplinkoje, jungiklis/mygtukas, saugus elgesys.",
+    "Technologijų bendroji programa (2022), 23.4.1: elektronikos kryptis pradedama plėtoti jau nuo pirmosios klasės.",
+    "Chiu, M. H., & Lin, J. W. (2005). Promoting fourth graders' conceptual change of their understanding of electric current via multiple analogies. Journal of Research in Science Teaching, 42(4), 429–464.",
+    "Lin, J.-W. (2017). A cross-grade study validating the evolutionary pathway of student mental models in electric circuits. EURASIA Journal of Mathematics, Science and Technology Education, 13(7), 3099–3137. https://doi.org/10.12973/eurasia.2017.00707a"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (kelias turi būti vientisas). Baterijų tipai, laidininkai ir kiti prietaisai sąmoningai neįtraukti — tai antros sąvokos, paliktos mokytojo veiklai.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę naujoje situacijoje (žibintuvėlio dangtelis, draugo teiginys), o ne įsimintą formuluotę.",
+    "3 žingsnis — pagalba laiku: kiekviena užduotis turi užuominą į modelį, yra praplėtimo užduotis greitesniems, jokių laikmačių ar ėjimų limito."
+  ]
+}

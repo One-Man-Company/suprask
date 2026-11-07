@@ -35,9 +35,10 @@ export async function loadPath(grade) {
 import * as calba from "./sims/calba.js";
 import * as matematika from "./sims/matematika.js";
 import * as pasaulis from "./sims/pasaulis.js";
+import * as technologijos from "./sims/technologijos.js";
 import * as zaidimai from "./sims/zaidimai.js";
 
-const SIMS = Object.assign({}, calba.SIMS, matematika.SIMS, pasaulis.SIMS, zaidimai.SIMS);
+const SIMS = Object.assign({}, calba.SIMS, matematika.SIMS, pasaulis.SIMS, technologijos.SIMS, zaidimai.SIMS);
 
 export function getSim(id) {
   return SIMS[id] || null;

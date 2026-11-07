@@ -539,6 +539,10 @@
   "n": "n/de4fcca618546df9-e0d8c979.mp3",
   "s": "s/de4fcca618546df9-f584fb9d.mp3"
  },
+ "Abu laidai prijungti. Jungiklis atidarytas, todėl kelias nutrūkęs.": {
+  "n": "n/8b4bce0166a74e84-30d4895f.mp3",
+  "s": "s/8b4bce0166a74e84-73adfb5c.mp3"
+ },
  "Akmenėlis": {
   "n": "n/db209a986e7c2abf-1f57a2cc.mp3",
   "s": "s/db209a986e7c2abf-aaf3a101.mp3"
@@ -779,6 +783,10 @@
   "n": "n/84b87a10530b2560-6bfb479a.mp3",
   "s": "s/84b87a10530b2560-f5445df1.mp3"
  },
+ "Kelias vientisas. Lemputė šviečia.": {
+  "n": "n/27ecfa7c917cb682-2d586633.mp3",
+  "s": "s/27ecfa7c917cb682-7ecdb8eb.mp3"
+ },
  "Keturkampis": {
   "n": "n/1c68c529e0dee2d1-8c0ac07a.mp3",
   "s": "s/1c68c529e0dee2d1-dd4ecd72.mp3"
@@ -839,6 +847,10 @@
   "n": "n/8ce86a6ae65d3692-84095ad0.mp3",
   "s": "s/8ce86a6ae65d3692-081e4fe1.mp3"
  },
+ "Nė vieno laido. Kelias visai nutrūkęs.": {
+  "n": "n/59d8042b3c1fd28c-3f002c4f.mp3",
+  "s": "s/59d8042b3c1fd28c-f6b2179f.mp3"
+ },
  "O": {
   "n": "n/c4694f2e93d5c4e7-2a2461c3.mp3",
   "s": "s/c4694f2e93d5c4e7-9f069b13.mp3"
@@ -898,6 +910,14 @@
  "Popierius": {
   "n": "n/0c85494fd5f4f32d-96346576.mp3",
   "s": "s/0c85494fd5f4f32d-c02dfdc8.mp3"
+ },
+ "Pradedam iš naujo. Prijunk laidus.": {
+  "n": "n/13f77b21b8fd4a6b-b404e361.mp3",
+  "s": "s/13f77b21b8fd4a6b-be4a4fd6.mp3"
+ },
+ "Pradedam. Prijunk laidus ir pažiūrėk, ar lemputė šviečia.": {
+  "n": "n/cbe1d27c52bcf99c-cbd96c13.mp3",
+  "s": "s/cbe1d27c52bcf99c-38cd0008.mp3"
  },
  "Pralaimėjai": {
   "n": "n/1b4ed9470469a710-03f84c32.mp3",
@@ -1022,6 +1042,14 @@
  "Vasara": {
   "n": "n/bd912f6f1cb9f2ac-617674ef.mp3",
   "s": "s/bd912f6f1cb9f2ac-ee42fdd7.mp3"
+ },
+ "Vienas laidas. Atgal į bateriją veda, bet iki lemputės neateina.": {
+  "n": "n/9f7ecc7800d17921-c50a9021.mp3",
+  "s": "s/9f7ecc7800d17921-9c8b99c3.mp3"
+ },
+ "Vienas laidas. Nuo baterijos iki lemputės kelias yra, o atgal nėra.": {
+  "n": "n/7402659b79e86e1e-6d8130b1.mp3",
+  "s": "s/7402659b79e86e1e-83e00727.mp3"
  },
  "Visos figūros savo vietose. Puiku!": {
   "n": "n/936e4c7947cd9753-0a09e79f.mp3",

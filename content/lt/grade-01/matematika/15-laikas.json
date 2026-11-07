@@ -7,7 +7,7 @@
   "minutes": 9,
   "outcomes": [
     "Parodau, kuri rodyklė rodo valandas.",
-    "Paaiškinu, kodėl po vieno ilgosios rato trumpoji pasislenka vienu skaičiumi.",
+    "Paaiškinu, kodėl trumpoji per vieną ratą pasislenka vienu skaičiumi.",
     "Nuskaitau laiką pilnomis valandomis."
   ],
   "concept": {
@@ -15,10 +15,10 @@
     "big_idea": "Ilgoji rodyklė apeina visą ratą. Per tą ratą trumpoji pasislenka vienu skaičiumi. Todėl valandas rodo trumpoji.",
     "steps": [
       "Ilgoji apeina ratą ir vėl stoja ties 12.",
-      "Per tą ratą trumpoji pasislenka per vieną skaičių.",
+      "Per tą ratą trumpoji pasislenka vienu skaičiumi.",
       "Skaičius, ties kuriuo stovi trumpoji, yra valanda."
     ],
-    "example": "Laikrodis rodo 3 valandas. Ilgoji apeina visą ratą. Trumpoji pasislenka nuo 3 prie 4 — dabar 4 valandos."
+    "example": "Laikrodis rodo 3 valandas. Ilgoji apeina visą ratą. Trumpoji pasislenka nuo 3 iki 4 — dabar 4 valandos."
   },
   "sim": {
     "component": "laikrodis-sujungtos-rodykles",
@@ -64,14 +64,14 @@
       "why": "Per vieną ratą trumpoji pasislenka vienu skaičiumi, todėl 9 tampa 10."
     },
     {
-      "q": "Rodyklės be žymenų. Per vieną ratą viena rodyklė apėjo visą ratą, kita pasislinko tik per vieną skaičių. Kuri rodo valandas?",
+      "q": "Rodyklės neturi žymenų. Viena rodyklė apsisuko visą ratą. Kita pasislinko vienu skaičiumi. Kuri rodo valandas?",
       "options": [
-        "Ta, kuri apėjo visą ratą",
-        "Ta, kuri pasislinko per vieną skaičių",
+        "Rodyklė, kuri apsisuko visą ratą",
+        "Rodyklė, kuri pasislinko vienu skaičiumi",
         "Abi rodo tą patį"
       ],
       "answer": 1,
-      "hint": "Daugiau judanti rodyklė ne visada skaičiuoja didesnį vienetą. Palygink, kiek pasislinko kiekviena.",
+      "hint": "Daugiau judanti rodyklė ne visada rodo didesnį vienetą. Palygink, kiek pasislinko kiekviena rodyklė.",
       "why": "Valandas rodo trumpoji: per vieną ilgosios ratą ji pasislenka tik vienu skaičiumi."
     },
     {
@@ -83,7 +83,7 @@
       ],
       "answer": 1,
       "hint": "Pažiūrėk, ar trumpoji jau stovi lygiai ties skaičiumi.",
-      "why": "Valanda pasikeičia tik tada, kai ilgoji užbaigia visą ratą — trumpoji tada stovi lygiai ties skaičiumi.",
+      "why": "Valanda pasikeičia, kai ilgoji užbaigia visą ratą. Trumpoji tada stovi lygiai ties skaičiumi.",
       "optional": true
     }
   ],

@@ -1,0 +1,17 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 38,
+  "created": "2026-11-07T11:26:00",
+  "type": "struktura",
+  "title": "Kalbos tikrintuvas leidžia 2 žodžiais ilgesnius sakinius, nei numato standartas",
+  "body": "`docs/KURINIO-STANDARTAS.md:110` nustato: 1–2 klasei sakinys iki 10 žodžių, 3–4 — iki 14, 5–6 — iki 18. `scripts/check_language.py:33` naudoja 12, 14, 16, 20, 22 — visur dviem žodžiais daugiau, o 3 klasei net keturiais. Todėl tikrintuvas tyliai praleidžia sakinius, kurių standartas neleidžia: šiandien 1 klasėje tokių yra 12 žodžių ilgio `15-laikas` užduoties `why` sakinys, kuris skaitomas kaip tvarkingas. Dviejų ribų egzistavimas reiškia, kad agentas, pasitikėdamas žaliu tikrintuvo rezultatu, gali laikyti modulį atitinkančiu standartą, nors jis neatitinka, o CI to nepagaus. Siūloma suvienodinti: `MAX_WORDS` imti iš standarto lentelės (10/10/14/14/18/18) arba standartą pataisyti, jei 12 yra sąmoningas sprendimas — bet viena iš dviejų normų turi nustoti galioti. Be to, verta į `check_language.py` įtraukti `--strict` režimą su info lygio pastabomis įspėjimais, kad „įvardis sakinio pradžioje“ būtų matuojamas, o ne tik rodomas JSON'e.",
+  "target": "scripts/check_language.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "docs/KURINIO-STANDARTAS.md:110 — „Sakinio ilgis 1–2 klasei — iki 10 žodžių; 3–4 — iki 14; 5–6 — iki 18.“",
+    "scripts/check_language.py:33 — MAX_WORDS = {1: 12, 2: 14, 3: 16, 4: 18, 5: 20, 6: 22}",
+    "content/lt/grade-01/matematika/15-laikas.json:tasks[3].why — 12 žodžių sakinys, tikrintuvo nelaikomas klaida",
+    "agents/proposals/2026-11-06-kritikas-sakinio-ilgis-1-klaseje.json — tas pats neatitikimas matuotas turinio pusėje (32 sakiniai >10 ž.), bet ne įrankio riboje"
+  ]
+}

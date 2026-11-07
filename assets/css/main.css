@@ -262,6 +262,10 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .sim-note { text-align: center; color: var(--ink-soft); font-size: var(--fs-s); min-height: 1.4rem; }
 
 .task { border: 2px solid var(--line); border-radius: var(--r-m); padding: 1rem 1.2rem; background: var(--paper-2); }
+/* 1–2 klasei užduoties tekstas turi būti skaitomas be pastangų; telefone
+   bazinis dydis buvo ~16 px — per mažas 6–7 metų vaikui. */
+.task { font-size: clamp(1.06rem, 1rem + 0.4vw, 1.18rem); }
+.task-q { font-size: clamp(1.16rem, 1.05rem + 0.6vw, 1.34rem); line-height: 1.45; }
 .task + .task { margin-top: .8rem; }
 .task-q { font-weight: 800; margin-bottom: .7rem; display: flex; gap: .6rem; }
 .task-num { color: var(--ink-faint); }

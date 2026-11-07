@@ -6,7 +6,7 @@
   "subtitle": "Ko augalui reikia, kad jis augtų",
   "minutes": 9,
   "outcomes": [
-    "Įvardiju, ko augalui reikia: vandens, šviesos, šilumos, dirvožemio.",
+    "Įvardiju, ko augalui reikia: vandens, šviesos ir šilumos.",
     "Paaiškinu, kas nutinka, jei ko nors trūksta.",
     "Nusakau augalo augimo etapus: sėkla, daigas, augalas, žiedas."
   ],
@@ -14,10 +14,10 @@
     "title": "Augalas — gyvas ir jam reikia sąlygų",
     "big_idea": "Augalas pats nejuda, bet jis auga, kvėpuoja ir maitinasi. Kad augtų, jam reikia vandens, šviesos ir šilumos. Jei vieno trūksta, augimas sustoja.",
     "steps": [
-      "Sėkla pabunda, kai yra šilta ir drėgna.",
+      "Sėkla pabunda žemėje, kai yra šilta ir drėgna.",
       "Daigas leidžiasi šaknimis ir kelia stiebą į šviesą.",
       "Kai augalas pakankamai užauga, jis žydi ir vėl brandina sėklas.",
-      "Be vandens jis vysta; be šviesos — blyškus ir lėtai auga."
+      "Be vandens jis vysta, be šviesos blyksta, o šaltyje neauga."
     ],
     "example": "Padėk vieną pupelę ant palangės, kitą — į tamsų stalčių. Abi laistyk. Po savaitės palygink: kuri ilgesnė ir žalesnė?"
   },
@@ -27,29 +27,29 @@
   },
   "tasks": [
     {
-      "q": "Ko augalui reikia labiausiai, kad jis augtų?",
+      "q": "Kiek sąlygų reikia augalui, kad jis augtų?",
       "options": [
-        "Vandens ir šviesos",
-        "Tik vandens",
-        "Tik šviesos"
+        "Trijų: vandens, šviesos ir šilumos",
+        "Dviejų: vandens ir šviesos",
+        "Vienos: vandens"
       ],
       "answer": 0,
-      "hint": "Pamėgink simuliacijoje išjungti vieną iš jų.",
-      "why": "Reikia abiejų — be vieno augimas sustoja."
+      "hint": "Simuliacijoje keisk sąlygas po vieną ir stebėk, kas nutinka.",
+      "why": "Augalui reikia visų trijų sąlygų — be vienos jis neauga."
     },
     {
       "q": "Kas nutinka augalui, jei jį laistai, bet laikai tamsoje?",
       "options": [
         "Jis auga greičiau",
-        "Jis auga lėtai ir blyškiai",
+        "Jis blyksta ir neauga",
         "Jam nieko neatsitinka"
       ],
       "answer": 1,
-      "hint": "Šviesa reikalinga maistui gaminti.",
-      "why": "Be šviesos augalas negali gaminti maisto, todėl auga silpnai."
+      "hint": "Palauk kelias dienas tamsoje ir pažiūrėk į lapus.",
+      "why": "Be šviesos lapai blyksta ir augalas neauga."
     },
     {
-      "q": "Kokia tvarka augalas vystosi?",
+      "q": "Kaip augalas kinta nuo sėklos iki žiedo?",
       "options": [
         "Žiedas → sėkla → daigas",
         "Daigas → sėkla → žiedas",
@@ -78,7 +78,7 @@
     "prompt": "Kodėl augalas prie lango ir rūsyje atrodo skirtingai?",
     "offline": "Pasėkite pupelę permatomame stiklinuke su drėgnu vata. Stebėkite 10 dienų ir pieškite, kas keičiasi kasdien.",
     "misconceptions": [
-      "Manoma, kad augalas „maitinasi“ iš žemės vien — nepakanka, reikia šviesos.",
+      "Manoma, kad augalas „maitinasi“ iš žemės vien — nepakanka, reikia šviesos ir šilumos.",
       "„Daug vandens“ laikoma geriau — perlaistytas augalas gali žūti.",
       "Augimo etapai painiojami su metų laikais: augalas gali augti ir rudenį kambaryje."
     ]

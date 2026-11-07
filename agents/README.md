@@ -1,6 +1,6 @@
 # Agentai
 
-Dvylika agentų, kurie nuolat vysto SUPRASK. Kiekvienas paleidimas — vienas vaidmuo, vienas įrašas `agents/runs.db`, vienas žurnalas `agents/log/`.
+Penkiolika agentų, kurie nuolat vysto SUPRASK. Kiekvienas paleidimas — vienas vaidmuo, vienas įrašas `agents/runs.db`, vienas žurnalas `agents/log/`.
 
 ## Ciklas
 
@@ -29,6 +29,9 @@ programos derintojas I/IV 15:00 · inspektorius Thu 06:50 · kuratorius Sun 18:0
 | `kritikas` | deepseekv4flashlatest | nepriklausoma kritika | kritika, blokavimai |
 | `programos-derintojas` | deepseek41flash | atitiktis programai | atitikties pasiūlymai |
 | `leidejas` | deepseek41flash | PR sujungimas | sujungti PR |
+| `publikavimo-agentas` | deepseek41flash | sukurtas turinys pasiekia `main` ir svetainę | išstumti commit'ai |
+| `kalbu-redaktorius` | deepseek41flash | formuluočių vienareikšmiškumas, ką vaikas mato ekrane | pataisyti moduliai |
+| `sistemos-architektas` | deepseekpro | agentų sistemos matavimas ir taisymas | pakeisti vaidmenys, grafikai, skriptai |
 | `sveikatos-inspektorius` | deepseek41flash | gyvos svetainės patikra | ataskaita |
 | `kuratorius` | deepseek41flash | savaitės suvestinė | suvestinė |
 
@@ -49,7 +52,7 @@ Kiekvienas paleidimas:
 3. įrašo žurnalą, DB įrašą (statusas, trukmė, pakeisti failai), atnaujina `state.json`;
 4. suindexuoja `agents/proposals/*.json` į DB.
 
-Užraktas (`agents/.run.lock`) neleidžia dviem agentams dirbti vienu metu.
+Užraktai: kiekvienas vaidmuo turi savo `.run.<vaidmuo>.lock`, todėl kūrėjo eilė neblokuoja kitų agentų; git operacijos (commit + merge + push) serializuojamos atskiru `.git.lock`. Du skirtingi vaidmenys vis tiek dirba viename darbiniame kataloge, todėl prieš paleidimą bėgiklis sutvarko paliktus pakeitimus (`[sistema]` commit'as).
 
 ## Pasiūlymai
 
@@ -69,6 +72,12 @@ Vaidmenys, kurie neturi teisės keisti turinio (ideator, metodininkas, kritikas,
 }
 ```
 
+**Būsena gyvena DB, ne JSON faile.** Faile beveik visada parašyta `"status": "new"` — tai šablonas. `upsert_proposals()` `new` iš failo ignoruoja, kad triage (`obsolete`) ir publikavimas (`done`) nebūtų nunulinami kiekvieno paleidimo pabaigoje. Jei nori, kad būsena pasikeistų iš failo, įrašyk ją aiškiai (`done`, `blocked`, `obsolete`).
+
+**Įgyvendintas pasiūlymas uždaromas tik tada, kai jis buvo aiškiai duotas ir pasikeitė jo `target`.** Anksčiau užtekdavo, kad tas failas patektų į bet kokį commit'ą — ir vienas publikavimas tylomis uždarydavo visas atviras pastabas tam pačiam failui (#486).
+
+Eilę (`scripts/kurejas_queue.py`) prieš darbą tvarko triage: `tema`, kurios failas jau yra, ir `metodas`, kurio modulis sukurtas **po** pasiūlymo, žymimi `obsolete` — kitaip eilės galva amžinai rodo jau įgyvendintą darbą (#1071).
+
 Kritikas gali blokuoti PR: `agents/proposals/blocks/pr-<n>.json`. `leidejas` tokio PR nesujungs.
 
 ## Grafikas (systemd --user)
@@ -87,7 +96,7 @@ Vidinis dashboard: `http://zoltanas.tail4bbf34.ts.net:9410/` — paleidimų isto
 ## Taisyklės agentams
 
 - Visi agentai privalo laikytis `docs/SVIETIMAS-1-GAIRES.md`. Prieštaraujantis turinys atmetamas.
-- `kurejas` ir `simuliaciju-inzinierius` niekada necommitina į `main` — tik PR.
+- `kurejas` ir `simuliaciju-inzinierius` patys į `main` necommitina: jų pakeitimus validuoja ir publikuoja bėgiklis (`publish()`), o nepavykus patikrai — atmeta.
 - `kritikas` nieko netaiso — tik fiksuoja ir blokuoja.
 - `leidejas` neautorius: sujungia tik tai, kas praėjo validatorius ir neturi blokų.
 - Joks agentas nerenka asmens duomenų ir nenaudoja mokamų paslaugų.

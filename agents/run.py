@@ -185,7 +185,7 @@ ROLES: dict[str, dict] = {
 }
 
 HEADER = """Tu esi SUPRASK platformos agentas. SUPRASK — atvira, nemokama, interaktyvi vizualinio
-mokymosi platforma Lietuvos 1–12 klasei. Šiuo metu gyva 1 klasė (13 modulių, 13 simuliacijų).
+mokymosi platforma Lietuvos 1–12 klasei. {headline}
 
 PRIVALOMA TVARKA
 1. Perskaityk: docs/SVIETIMAS-1-GAIRES.md, docs/KURINIO-STANDARTAS.md, docs/ARCHITEKTURA.md.
@@ -260,11 +260,24 @@ def last_log_excerpt(role: str, limit: int = 3000) -> str:
     return read(logs[-1])[-limit:]
 
 
-def platform_stats() -> str:
+def platform_stats() -> dict:
     try:
-        return json.dumps(db.content_stats(), ensure_ascii=False)
+        return db.content_stats()
     except Exception:  # noqa: BLE001
-        return "{}"
+        return {}
+
+
+def headline(stats: dict) -> str:
+    """Viena eilutė apie platformos dydį — imama iš failų, ne iš kodo.
+
+    Buvo įrašyta ranka („13 modulių, 13 simuliacijų“) ir atsiliko nuo tikrovės:
+    kiekvienas agentas kiekvieną paleidimą skaitė melagingą skaičių ir galėjo
+    siūlyti tai, kas jau yra.
+    """
+    if not stats:
+        return "Šiuo metu gyva 1 klasė."
+    return (f"Šiuo metu gyva {stats.get('grades_live', 0)} klasė "
+            f"({stats.get('modules', 0)} modulių, {stats.get('sims', 0)} simuliacijų).")
 
 
 def recent_runs_text(limit: int = 12) -> str:
@@ -353,11 +366,13 @@ def build_prompt(role: str, cfg: dict, run_id: int, proposal: dict | None = None
         if line.lower().startswith("## baigties sąlyga"):
             dod = role_text.split(line, 1)[1].strip()
             break
+    st = platform_stats()
     body = HEADER.format(
         root=ROOT,
         today=dt.date.today().isoformat(),
         run_id=run_id,
-        stats=platform_stats(),
+        headline=headline(st),
+        stats=json.dumps(st, ensure_ascii=False),
         recent=recent_runs_text(),
         proposals=open_proposals_text(),
         role=role,
@@ -524,23 +539,35 @@ def revert(files: list[str]) -> None:
             pass
 
 
-def close_proposals(files: list[str], commit_sha: str) -> int:
-    """Pažymi įgyvendintus pasiūlymus, kurių tikslas pateko į commit'ą."""
-    closed = 0
+def mark_implemented(proposal_id: int | None, files: list[str], commit_sha: str) -> bool:
+    """Pažymi įgyvendintą TIK tą pasiūlymą, kurį paleidimas ėmėsi vykdyti.
+
+    Anksčiau (`close_proposals`) užtekdavo, kad pasiūlymo `target` failas patektų
+    į commit'ą: pirmas sėkmingas publikavimas tylomis uždarydavo visas atviras
+    kritikos pastabas tam pačiam failui, nors jų niekas netaisė (#486). Todėl dabar
+    reikia dviejų dalykų: aiškaus pasiūlymo numerio IR pakeisto jo tikslo.
+    """
+    if not proposal_id:
+        return False
     try:
-        rows = db.proposals(200, status="new")
+        row = next((r for r in db.proposals(500) if int(r["id"]) == int(proposal_id)), None)
     except Exception:  # noqa: BLE001
-        return 0
-    changed = set(files)
-    for row in rows:
-        target = (row.get("target") or "").strip()
-        if target and target in changed:
-            try:
-                db.set_proposal_status(row["id"], "done", f"įgyvendinta commit {commit_sha[:7]}")
-                closed += 1
-            except Exception:  # noqa: BLE001
-                pass
-    return closed
+        return False
+    if not row:
+        return False
+    target = (row.get("target") or "").strip()
+    if target and target not in set(files):
+        return False
+    try:
+        db.set_proposal_status(int(proposal_id), "done", f"įgyvendinta commit {commit_sha[:7]}")
+        return True
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def close_proposals(files: list[str], commit_sha: str, implemented_id: int | None = None) -> int:
+    """Suderinamumo apvalkalas: grąžina, kiek pasiūlymų uždaryta (0 arba 1)."""
+    return 1 if mark_implemented(implemented_id, files, commit_sha) else 0
 
 
 def _union_markdown(path: Path) -> None:
@@ -654,12 +681,39 @@ def push_backlog() -> str:
     return f"išstumta {len(pending)} commit'ų"
 
 
-def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True) -> dict:
+ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+BOX_RE = re.compile(r"^[\s│┃┆┊╎╏|┌┐└┘├┤┬┴┼─━═╭╮╰╯▏▕]+")
+# Eilutės, kurios yra įrankio išklotinė, o ne agento išvada.
+NOISE_RE = re.compile(r'(^\s*[{}]|": |^\+|^@@|^diff |^\+\+\+|^---)')
+
+
+def summary_line(text: str, limit: int = 90) -> str:
+    """Pirmoji prasminga atsakymo eilutė — commit'o žinutei.
+
+    Hermes TUI rašo į stdout ir rėmelį, ir įrankių išklotines, todėl anksčiau
+    commit'o žinutė būdavo „│ assets/js/app.js“, o git istorija — neįskaitoma:
+    pagal ją neįmanoma pasakyti, ką paleidimas pakeitė. Imame pirmą eilutę,
+    kuri turi bent tris žodžius ir nėra išklotinės fragmentas.
+    """
+    for line in (text or "").splitlines():
+        clean = BOX_RE.sub("", ANSI_RE.sub("", line)).strip()
+        clean = clean.lstrip("#>*-+ ").strip()
+        if len(clean) < 12 or len(clean.split()) < 3:
+            continue
+        if NOISE_RE.search(line) or NOISE_RE.search(clean):
+            continue
+        return clean[:limit]
+    return ""
+
+
+def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True,
+            implemented_id: int | None = None) -> dict:
     with git_lock():
-        return _publish(role, run_id, files, summary, allow_revert)
+        return _publish(role, run_id, files, summary, allow_revert, implemented_id)
 
 
-def _publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True) -> dict:
+def _publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True,
+             implemented_id: int | None = None) -> dict:
     """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą."""
     if not files:
         return {"status": "empty", "detail": "Agentas failų nepakeitė — rezultato nėra.", "sha": "", "validation": ""}
@@ -683,7 +737,7 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
     branch = f"agent/{role}-{dt.date.today().isoformat()}"
     git("checkout", "-B", branch)
 
-    first_line = (summary or role).strip().splitlines()[0][:90]
+    first_line = summary_line(summary) or role
     msg = f"[{role}] #{run_id}: {first_line}\n\nPaskelbta automatiškai po validacijos."
 
     # Komituojame TIK šio paleidimo failus: `git add -A` kartą įtraukė ir
@@ -728,7 +782,7 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
     # Lokalus `main` turi sekti paskutinį paskelbtą commit'ą. Be to `git push
     # origin main` (rankinis ar iš kito vaidmens) atsimušė kaip non-fast-forward.
     git("branch", "-f", "main", "HEAD")
-    closed = close_proposals(files, sha)
+    closed = close_proposals(files, sha, implemented_id)
 
     detail = f"Paskelbta {len(files)} failų" + (f", uždaryti {closed} pasiūlymai" if closed else "")
     return {"status": "published", "detail": detail, "sha": sha, "validation": validation}
@@ -789,7 +843,7 @@ def main() -> int:
         result = publish(args.role, run_id, files, f"atkurtas {args.role} darbas", allow_revert=False)
         db.upsert_proposals(sorted(PROPOSALS.glob("*.json")))
         db.finish_run(run_id, result["status"], 0, 0, "", result["detail"], files,
-                      commit_sha=result["sha"], validation=result["validation"])
+                      commit_sha=result["sha"], validation=result["validation"], detail=result["detail"])
         print(f"{args.role} #{run_id}: {result['status']} — {result['detail']}"
               + (f" (commit {result['sha'][:7]})" if result["sha"] else ""))
         return 0 if result["status"] == "published" else 1
@@ -876,7 +930,8 @@ def main() -> int:
         db.upsert_proposals(sorted(PROPOSALS.glob("*.json")))
 
         # Paskelbimas — bėgiklio, ne agento, darbas.
-        result = publish(args.role, run_id, files, out or args.role)
+        result = publish(args.role, run_id, files, out or args.role,
+                         implemented_id=int(proposal["id"]) if proposal else None)
         if status in ("ok", "partial"):
             status = result["status"]
         # Patikros vaidmenys (tikrintojas, publikavimo-agentas, kuratorius) iš
@@ -887,13 +942,13 @@ def main() -> int:
 
         if proposal:
             if status == "published":
-                db.set_proposal_status(int(proposal["id"]), "done", f"įgyvendinta commit {result['sha'][:7]}")
+                mark_implemented(int(proposal["id"]), files, result["sha"])
             elif status in ("rejected", "conflict", "unpushed", "failed", "timeout"):
                 db.set_proposal_status(int(proposal["id"]), "blocked", f"{status}: {result['detail'][:120]}")
 
         db.finish_run(
             run_id, status, code, elapsed, str(log_path.relative_to(ROOT)), out, files,
-            commit_sha=result["sha"], validation=result["validation"],
+            commit_sha=result["sha"], validation=result["validation"], detail=result["detail"],
         )
         update_state(args.role, cfg, status, log_path)
 
@@ -910,7 +965,8 @@ def main() -> int:
             f"# {args.role} — {stamp}\n\n- paleidimas: #{run_id}\n- Baigėsi laikas ({timeout}s).\n",
             encoding="utf-8",
         )
-        db.finish_run(run_id, "timeout", 124, elapsed, str(log_path.relative_to(ROOT)), f"Baigėsi laikas ({timeout}s).")
+        db.finish_run(run_id, "timeout", 124, elapsed, str(log_path.relative_to(ROOT)),
+                      f"Baigėsi laikas ({timeout}s).", detail=f"Baigėsi laikas ({timeout}s).")
         update_state(args.role, cfg, "timeout", log_path)
         print(f"{args.role} #{run_id}: timeout")
         return 124

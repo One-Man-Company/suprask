@@ -36,6 +36,39 @@ PRIORITY_ORDER = {"high": 0, "normal": 1, "low": 2}
 # sukurtas (pasiūlymas pasenęs) — jo kurti antrą kartą nereikia.
 OBSOLETE_TYPES = ("tema",)
 
+# „metodas“ su egzistuojančiu tikslu gali reikšti du skirtingus dalykus:
+#   - metodas, pagal kurį modulis jau sukurtas (panaudotas → nebe darbas),
+#   - metodo pastaba apie jau esamą modulį (dar darbas).
+# Skiriamės pagal git istoriją: jei failas atsirado PO pasiūlymo, metodas
+# buvo panaudotas jam kurti. Be šios taisyklės eilės galva amžinai rodo
+# jau įgyvendintą darbą ir kūrėjas eikvoja paleidimą „jau yra“ atsakymui (#1071).
+METHOD_TYPE = "metodas"
+
+
+def _module_added_at(rel: str) -> int | None:
+    """Kada failas atsirado repo istorijoje (Unix laikas) arba None."""
+    try:
+        out = subprocess.run(
+            ["git", "log", "--diff-filter=A", "--format=%ct", "--", rel],
+            cwd=ROOT, capture_output=True, text=True, timeout=20,
+        )
+    except Exception:  # noqa: BLE001
+        return None
+    stamps = sorted(int(s) for s in out.stdout.split() if s.strip().isdigit())
+    return stamps[0] if stamps else None
+
+
+def _method_already_used(created: str, added: int | None) -> bool:
+    """Ar modulis sukurtas jau po to, kai pasiūlymas parašytas."""
+    if added is None:
+        return False
+    try:
+        made = dt.datetime.fromisoformat(created).timestamp()
+    except (TypeError, ValueError):
+        return False
+    return added > made
+
+
 
 def triage() -> tuple[int, int]:
     """Pažymi pasenusius ir pasikartojančius pasiūlymus. Grąžina (pasenę, dubliai)."""
@@ -51,6 +84,14 @@ def triage() -> tuple[int, int]:
 
         if target and (ROOT / target).exists() and kind in OBSOLETE_TYPES:
             db.set_proposal_status(int(r["id"]), "obsolete", "modulis jau sukurtas")
+            obsolete += 1
+            continue
+
+        # Metodas, pagal kurį modulis jau sukurtas po pasiūlymo — panaudotas.
+        if (target and kind == METHOD_TYPE and (ROOT / target).exists()
+                and _method_already_used(r.get("created") or "", _module_added_at(target))):
+            db.set_proposal_status(int(r["id"]), "obsolete",
+                                   "metodas panaudotas — modulis sukurtas po pasiūlymo")
             obsolete += 1
             continue
 

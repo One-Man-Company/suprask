@@ -22,6 +22,10 @@ _EXTRA_COLUMNS = (
     ("runs", "commit_sha", "TEXT"),
     ("runs", "pr_url", "TEXT"),
     ("runs", "validation", "TEXT"),
+    # Bėgiklio sprendimas („Paskelbta 2 failų“, „Konfliktas su origin/main: …“).
+    # Be jo konflikto priežastis likdavo tik stdout'e ir dingdavo su terminalu:
+    # 18 paleidimų iš eilės krito, o kodėl — niekur nebuvo užrašyta.
+    ("runs", "detail", "TEXT"),
     ("proposals", "note", "TEXT"),
 )
 
@@ -116,14 +120,16 @@ def finish_run(
     commit_sha: str = "",
     pr_url: str = "",
     validation: str = "",
+    detail: str = "",
 ) -> None:
     with connect() as conn:
         conn.execute(
             """UPDATE runs SET status=?, finished=?, exit_code=?, duration_s=?, log_path=?, summary=?, artifacts=?,
-                               commit_sha=?, pr_url=?, validation=?
+                               commit_sha=?, pr_url=?, validation=?, detail=?
                WHERE id=?""",
             (status, now(), exit_code, duration_s, log_path, summary[:4000],
-             json.dumps(artifacts or [], ensure_ascii=False), commit_sha, pr_url, validation[:2000], run_id),
+             json.dumps(artifacts or [], ensure_ascii=False), commit_sha, pr_url, validation[:2000],
+             detail[:500], run_id),
         )
 
 

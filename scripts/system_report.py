@@ -50,7 +50,8 @@ def runs_summary(days: int) -> tuple[dict, list[dict]]:
         cell["duration_s"] += int(r.get("duration_s") or 0)
         started = r.get("started") or ""
         if cell["last"] is None or started > (cell["last"].get("started") or ""):
-            cell["last"] = {"started": started, "status": st, "summary": (r.get("summary") or "")[:160]}
+            cell["last"] = {"started": started, "status": st, "summary": (r.get("summary") or "")[:160],
+                            "detail": (r.get("detail") or "")[:200]}
     for cell in per_role.values():
         cell["avg_min"] = round(cell["duration_s"] / max(1, cell["runs"]) / 60, 1)
         cell["useless_ratio"] = round(
@@ -199,7 +200,17 @@ def main() -> int:
     for t in data["timers"]:
         print(f"  {t['activates']:<46} next {t['next']}")
 
-    print("\nĮjungtos klasės:", data["scope"]["enabled"])
+    # Diagnostika: paskutiniai nepavykę paleidimai kartu su bėgiklio priežastimi.
+    # Be šio bloko konfliktų priežastis matydavo tik tas, kuris tą akimirką žiūrėjo į terminalą.
+    broken = ("conflict", "rejected", "unpushed", "failed", "timeout")
+    problems = [r for r in rows if (r.get("status") or "") in broken]
+    if problems:
+        print("\nPaskutinės problemos (bėgiklio žodžiais):")
+        for r in problems[:5]:
+            print(f"  #{r['id']} {r['role']} · {r['status']}: {(r.get('detail') or '— priežastis neužrašyta')[:150]}")
+
+    enabled = data["scope"]["enabled"]
+    print("\nĮjungtos klasės:", enabled)
     return 0
 
 

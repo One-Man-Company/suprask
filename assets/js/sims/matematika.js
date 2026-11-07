@@ -499,6 +499,9 @@ const laikrodisSujungtosRodykles = {
 
     let turns = 0;          // kiek ratų pasukta nuo pradžios
     let locked = true;      // kol vaikas nespėjo, rodyklės nesisuka
+    let guess = null;       // vaiko spėjimas: 0 — vienas skaičius, 1 — visas ratas, 2 — vietoje
+    let compared = false;   // spėjimas lyginamas su rezultatu vieną kartą — po pirmo rato
+    let lastMsg = "";       // sim-note keičiamas tik pasikeitus (ta pati taisyklė kaip LL-14)
     let raf = 0;
     let dragAngle = null;
     let reported = false;
@@ -535,6 +538,17 @@ const laikrodisSujungtosRodykles = {
     const svg = stage.querySelector("#lk-svg");
     const digital = stage.querySelector("#lk-digital");
     const msg = stage.querySelector("#lk-msg");
+
+    const GUESS_TEXT = ["Pasislinks per vieną skaičių", "Apeis visą ratą", "Stovės vietoje"];
+    const guessText = () => (guess === null ? "" : GUESS_TEXT[guess] || "");
+
+    // Paaiškinimas po simuliacija nėra aria-live, bet ir jo neverta perrašinėti
+    // kiekviename animacijos kadre — keičiam tik pasikeitus tekstui.
+    function setMsg(text) {
+      if (text === lastMsg) return;
+      lastMsg = text;
+      msg.textContent = text;
+    }
 
     /* --- ciferblatas ------------------------------------------------- */
     svg.appendChild(svgEl("circle", { cx: 180, cy: 180, r: 156, fill: "var(--paper-2)", stroke: "var(--line)", "stroke-width": 6 }));
@@ -602,21 +616,39 @@ const laikrodisSujungtosRodykles = {
       if (locked) return;
       if (frac > 0.001) {
         sayReadout("Ratas nebaigtas");
-        msg.textContent = "Ilgoji dar neapėjo viso rato. Trumpoji dar tarp skaičių.";
+        setMsg(guess === null
+          ? "Ilgoji dar neapėjo viso rato. Trumpoji dar tarp skaičių."
+          : `Spėjai: „${guessText()}“. Ilgoji dar neapėjo viso rato.`);
       } else {
         sayReadout(wordOf(h));
-        msg.textContent = turns === 0
+        setMsg(turns === 0
           ? "Ilgoji ties 12. Suk ją per visą ratą."
-          : "Ratas baigtas: ilgoji ties 12, trumpoji stovi ties skaičiumi.";
+          : "Ratas baigtas: ilgoji ties 12, trumpoji stovi ties skaičiumi.");
       }
+    }
+
+    // Spėjimas yra duomuo, ne durys: po pirmo užbaigto rato jis palyginamas
+    // su tuo, kas įvyko (LL-15). Nekartojama kas ratą — tik pirmą kartą.
+    // Palyginama tik tada, kai ratas tikrai apėjo (paspaudimas be judesio — ne).
+    function guessResult(h) {
+      if (compared || guess === null || Math.floor(turns) < 1) return "";
+      compared = true;
+      const what = guess === 0
+        ? "Spėjai, kad trumpoji pasislinks per vieną skaičių. Taip ir įvyko."
+        : `Spėjai, kad ${guessText().toLowerCase()}. Pažiūrėk į trumpąją: ji pasislinko per vieną skaičių.`;
+      return `${what} Dabar ji ties ${h}.`;
     }
 
     function afterRound() {
       paint();
       const h = hourOf();
-      msg.textContent = "Vienas ratas — vienas žingsnis. Trumpoji pasislinko per vieną skaičių.";
+      const cmp = guessResult(h);
+      setMsg(cmp || (turns === 0
+        ? "Laikrodis vėl rodo 12. Suk ilgąją per visą ratą."
+        : "Ratas baigtas: ilgoji ties 12, trumpoji stovi ties skaičiumi."));
+      if (cmp) sayReadout(cmp);
       api.speak(wordOf(h), { rate: 0.9 });
-      if (!reported) { reported = true; api.progress({ correct: true }); }
+      if (!reported && Math.floor(turns) >= 1) { reported = true; api.progress({ correct: true }); }
     }
 
     // Sukama po truputį; arti sveiko rato reikšmė prisegama, kad 12 smūgių
@@ -637,7 +669,7 @@ const laikrodisSujungtosRodykles = {
 
     function onDown(evt) {
       if (locked) {
-        msg.textContent = "Pirma pasakyk, ką galvoji.";
+        setMsg("Pirma pasakyk, ką galvoji.");
         return;
       }
       dragAngle = angleAt(evt);
@@ -667,7 +699,7 @@ const laikrodisSujungtosRodykles = {
     function onKey(evt) {
       if (evt.key !== "ArrowRight" && evt.key !== "ArrowLeft") return;
       evt.preventDefault();
-      if (locked) { msg.textContent = "Pirma pasakyk, ką galvoji."; return; }
+      if (locked) { setMsg("Pirma pasakyk, ką galvoji."); return; }
       applyTurns((evt.key === "ArrowRight" ? 1 : -1) / 12);
       paint();
       if (fracOf() <= 0.001) afterRound();
@@ -696,16 +728,16 @@ const laikrodisSujungtosRodykles = {
     svg.addEventListener("keydown", onKey);
 
     /* --- spėjimas prieš pirmą judesį -------------------------------- */
+    // Spėjimas neužrakina ir neatskleidžia atsakymo: pasirinkęs vaikas sukasi
+    // pats, o palyginimas ateina po pirmo rato (guessResult).
     controls.querySelectorAll("[data-g]").forEach((b) => {
       b.addEventListener("click", () => {
-        const guess = Number(b.dataset.g);
+        guess = Number(b.dataset.g);
         controls.querySelector("#lk-guess").style.display = "none";
         controls.querySelector("#lk-turn").style.display = "flex";
         locked = false;
         paint();
-        msg.textContent = guess === 0
-          ? "Taip: per vieną ratą trumpoji pasislenka per vieną skaičių. Dabar suk ir pažiūrėk."
-          : "Pabandyk: suk ilgąją per visą ratą ir stebėk, ką daro trumpoji.";
+        setMsg(`Spėjai: „${guessText()}“. Dabar suk ilgąją per visą ratą.`);
         svg.focus();
       });
     });
@@ -715,7 +747,7 @@ const laikrodisSujungtosRodykles = {
       if (raf) { cancelAnimationFrame(raf); raf = 0; }
       turns = 0;
       paint();
-      msg.textContent = "Pradedam iš naujo. Suk ilgąją rodyklę.";
+      setMsg("Pradedam iš naujo. Suk ilgąją rodyklę.");
     });
 
     paint();

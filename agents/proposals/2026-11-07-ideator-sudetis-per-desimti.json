@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 32,
+  "created": "2026-11-07T07:16:12+02:00",
+  "type": "tema",
+  "title": "Sudėtis per dešimtį: pirma papildyk dešimtuką, paskui pridėk likusį",
+  "body": "Programa 1 klasei prašo trijų sudėties atvejų, ir pirmas jų — vienaženklių skaičių sudėtis peržengiant dešimtį (8 + 5 = 13), o antras — dviženklio ir vienaženklio (16 + 7 = 23). Programos derintojo patikra (#22) parodė, kad 04-skaiciu-tiese simuliacija apsiriboja 20, bet neturi nė vienos užduoties su perėjimu per dešimtį, o 16-lygybe-svarstykles visos lygybės telpa iki 10 — tad šio gebėjimo platformoje nėra nė viename modulyje. Klaidinga nuostata viena: „kai suma peržengia dešimtį, belieka skaičiuoti po vieną — pirštais arba nuo 1“. Modelis: dešimtukas (dvi eilės po penkis langelius) ir du dėmenys; vaikas spaudžia „papildyk dešimtuką“ ir mato, kad iš antro dėmens atimama būtent tiek, kiek trūksta (8 + 5 → 2 į dešimtuką, lieka 3 → 10 + 3 = 13). Keisdamas pirmą dėmenį (8, 7, 9) vaikas mato, kad „kiek trūksta“ kinta, o to joks vienas paveikslėlis neparodo. Praplėtimo užduotis — tas pats modelis su 16 + 7 (16 + 4 = 20, 20 + 3 = 23), nes programai reikia ir šio atvejo. Veikla be ekrano: dešimt kubelių dėžutėje ir keli kubeliai ant stalo — tą patį skaidymą vaikas atlieka rankomis.",
+  "target": "content/lt/grade-01/matematika/22-sudetis-per-desimti.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:45 — „1 klasė. Sudėtis ir atimtis. Atliekami sudėties ir atimties veiksmai šimto ribose: vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį, dviženklių skaičių neperžengiant dešimties“",
+    "research/wiki/curriculum/matematika-1-klase.md:52 — pirmas iš trijų privalomų tipų: „Vienaženklis + vienaženklis per 10 — 8 + 5 = 13“",
+    "research/wiki/curriculum/matematika-1-klase.md:186 — programos derintojo patikra: „04-skaiciu-tiese — iš dalies… sim max: 20, nė vienos užduoties su perėjimu per dešimtį (8 + 5; 16 + 7; 16 + 12)“",
+    "content/lt/grade-01/matematika/16-lygybe-svarstykles.json — visos 4 užduotys su sumomis iki 10 (8 = 5 + ▢; 4 + 3 = 5 + 2), nė vieno perėjimo per dešimtį",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:40 — tema „Sudėtis per 10“, interaktyvumo galimybė „Dešimties papildymas iki 10, tada likutis“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33520–33521 — citatos šaltinis (9 skyrius, A1.1 užduoties turinio aprašas)"
+  ]
+}

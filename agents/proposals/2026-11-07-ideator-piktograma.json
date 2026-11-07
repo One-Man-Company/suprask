@@ -1,0 +1,21 @@
+{
+  "role": "ideator",
+  "run_id": 32,
+  "created": "2026-11-07T07:16:12+02:00",
+  "type": "tema",
+  "title": "Piktograma ir stulpelis: aukštis rodo kiekį, ne daikto dydį",
+  "body": "Programos 9 skyrius 1 klasei prašo registruoti 2–3 stebimo požymio reikšmes, pavaizduoti jas piktograma ar stulpine diagrama, perskaityti pateiktą informaciją ir ja remtis atsakant į tyrimo klausimą. Iš 16 platformos modulių nė vienas neliečia duomenų — nei diagramos, nei apklausos, nei lentelės nėra nė viename. Kaminski ir Sloutsky (2013) eksperimente 6–8 m. vaikai mokėsi skaityti stulpinę diagramą, ir tie, kurių stulpeliai buvo sudėti iš skaičiuojamų paveikslėlių, ėmė skaičiuoti paveikslėlius, o ne skaityti aukštį — todėl modelio grafika negali būti puošta skaičiuojamomis ikonomis, nors būtent taip atrodo dauguma piktogramų vadovėliuose. Klaidinga nuostata: „aukščiausias stulpelis rodo didžiausią daiktą“. Modelis: padėkloje sumaišytos figūros — keli dideli trikampiai ir daug mažų apskritimų; vaikas bakstelėdamas rūšiuoja jas į grupes, o virš kiekvienos grupės auga stulpelis, kol suskaičiuota. Tada aukščiausias stulpelis priklauso mažiausiems daiktams, ir vaikas pats mato, kad aukštis reiškia skaičių, ne daikto dydį; paveikslėlis to neparodo, nes jame diagrama jau baigta. Antras žingsnis — ta pati informacija piktograma (vienas simbolis = viena figūra) ir stulpeliu, kad vaikas įsitikintų, jog abu rodo tą patį skaičių. Jokių vardų ir asmens duomenų: figūros išgalvotos, niekas nesaugoma ir nesiunčiama.",
+  "target": "content/lt/grade-01/matematika/23-piktograma-ir-stulpelis.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/matematika-1-klase.md:150 — „1 klasė. Duomenys ir jų interpretavimas. Mokomasi perskaityti piktogramoje, stulpelinėje diagramoje pateikiamą informaciją, ja remtis atsakant į pagrindinį tyrimo klausimą“",
+    "research/wiki/curriculum/matematika-1-klase.md:168 — metų gale: „Perskaito piktogramą ir stulpelinę diagramą, atsako į klausimą pagal jas“",
+    "research/wiki/curriculum/matematika-1-klase.md:153 — dažnių lentelė priskiriama 2 klasei, tad 1 klasei lieka piktograma + stulpelis",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:50 — tema „Piktograma, stulpelinė diagrama“, interaktyvumo galimybė „Klasės apklausa → automatinė diagrama“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:23025–23030 — „mokysis registruoti renkamus duomenis, kai yra 2–3 stebimo požymio reikšmės, pavaizduoti piktograma ar stulpeline diagrama, perskaityti piktogramoje, stulpelinėje diagramoje pateikiamą informaciją“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:23020–23021 — apimtis: „stulpelinese diagramas, kai duomenų skaičius nedidelis (iki 20)“",
+    "Kaminski, J. A., & Sloutsky, V. M. (2013). Extraneous perceptual information interferes with children's acquisition of mathematical knowledge. Journal of Educational Psychology, 105(2), 351–363. DOI 10.1037/a0031040 — 6–8 m. vaikai, kurių stulpeliai buvo sudėti iš skaičiuojamų paveikslėlių, ėmė skaičiuoti paveikslėlius ir neskaitė aukščio (https://eric.ed.gov/?id=EJ1007940)",
+    "content/lt/grade-01/index.json — 16 modulių, nė viename nėra diagramos, apklausos ar duomenų temos (grep „piktogram|stulpel|diagrama|apklausa“ content/lt/grade-01/ — 0 atitikimų)"
+  ]
+}

@@ -60,6 +60,17 @@
       "why": "Gandrai, gervės ir kiti migrantai rudenį išskrenda."
     },
     {
+      "q": "Rugsėjį dar šilta, bet vakarais temsta anksčiau. Kodėl?",
+      "options": [
+        "Nes rugsėjį oras vėsta",
+        "Nes rugsėjį dažniau lyja",
+        "Nes rugsėjį diena trumpėja"
+      ],
+      "answer": 2,
+      "hint": "Šilta dar yra, bet temsta anksčiau. Pažiūrėk, kas dar keičiasi rugsėjį.",
+      "why": "Rugsėjį diena trumpėja, todėl vakaras ateina anksčiau."
+    },
+    {
       "q": "Kodėl pavasarį paukščiai grįžta?",
       "options": [
         "Nes atšyla ir yra maisto",
@@ -89,6 +100,7 @@
   ],
   "svietimas1": [
     "1 žingsnis — gylis: vienas modelis (metų ratas) jungia orą, augalus ir gyvūnus",
+    "2 žingsnis — perkėlimas: šviesos trukmė tikrinama naujoje situacijoje (rugsėjis, mokslo metų pradžia), o ne atkartojamas simuliacijos sakinys",
     "5 žingsnis — saugi aplinka: klaidingas spėjimas aptariamas, o ne taisomas be paaiškinimo"
   ]
 }

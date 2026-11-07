@@ -131,3 +131,12 @@ Naują pamoką **prideda** tas, kas rado defektą; senos netrinamos ir neperraš
 - **Priežastis:** `facedDown` vėliavėlė buvo uždegama bet kada pasisukus į vaiką ir niekada negesinama, o `checkProgress()` skaitė vėliavėlę, ne `facing`. Kintamasis saugojo istoriją („kada nors žiūrėjo į vaiką“), o sąlyga reikalavo dabarties („dabar žiūri į vaiką“).
 - **Taisyklė:** sėkmės sąlyga skaitoma iš tos pačios būsenos, kuri nupiešta ekrane. Istorinė vėliavėlė leidžiama tik tada, kai semantika tikrai yra „kada nors įvyko“ (pvz., ar vaikas išbandė visus variantus), ir ji vadinama taip, kad supainioti su dabartimi neįmanoma (`everFacedViewer`), o „Iš naujo“ ją išvalo kartu su kita būsena.
 - **Patikra:** zondas, kuris (1) pasuka veikėją į vaiką, (2) atsisuka atgal, (3) nuveda į tikslą kita kryptimi ir tikrina, kad `simDone` liktų `false`; (4) pasuka į vaiką ties tikslu ir tikrina `true`. Šiame pataisyme: prieš — `true` žiūrint į kairę, po — `false`; žingsnis į priekį po posūkio taip pat rodo, kad ta pati komanda veda kita kryptimi.
+
+## LL-18 — Klaidingas variantas, kuris gyvenime teisingas
+
+- **Simptomas:** metų laikų modulyje pirma perkėlimo užduotis buvo „Kodėl birželį lauke galima žaisti iki vėlaus vakaro?“ su variantu „Nes birželį oras šiltas“. Vaikas, pasirinkęs šiltą orą, samprotavo teisingai — šiltą vakarą kieme tikrai galima žaisti, — bet buvo pažymėtas neteisingai. Klausimas buvo apie šviesą, o atsakymas buvo apie ką kitą, ir abu teisingi.
+- **Priežastis:** klaidingas variantas buvo tikrinamas pagal tai, ar jis yra **priežastis**, o ne pagal tai, ar jis apskritai **teisingas**. Užduoties kamienas („galima žaisti“) turi dvi sąlygas — šviesą ir šilumą, — todėl bet kuris iš dviejų variantų jį paaiškina.
+- **Taisyklė:** kiekvienam klaidingam variantui parašyk vieną sakinį: „jei taip būtų, ar klausiamas rezultatas iš tiesų įvyktų?“ Jei atsakymas „iš dalies taip“ — kaltas kamienas, ne variantas. Kamieną perrašyk taip, kad rezultatą lemtų **viena** priežastis, o klaidingas variantas jame jau būtų paneigtas. Šiuo atveju užduotis tapo „Rugsėjį dar šilta, bet vakarais temsta anksčiau. Kodėl?“ — kamienas pats pasako, kad šilta, todėl oro variantas nebeapginamas, o teisingas lieka tik dienos trukmė.
+- **Patikra:** zondo metu spausk kiekvieną variantą ir perskaityk kamieną su juo kaip vieną sakinį: „…nes oras šiltas“ turi skambėti kaip akivaizdi netiesa, o ne kaip dar vienas teisingas paaiškinimas. `check_language.py` šito nepagauna — jis tikrina formuluotės ilgį ir dviprasmiškus jungtukus, ne variantų teisingumą realiame gyvenime.
+
+

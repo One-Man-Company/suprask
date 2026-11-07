@@ -508,8 +508,10 @@ def ensure_clean(role: str) -> str:
     except Exception:  # noqa: BLE001
         return ""
     git("add", "-A")
-    if git("commit", "-m", f"[{role}] ankstesnio paleidimo likutis").returncode == 0:
-        return "sutvarkyti ankstesni pakeitimai"
+    # Neutralus prefiksas: tai NĖRA agento darbas, tik darbinės kopijos likutis.
+    # Anksčiau toks commit'as atrodė kaip agento indėlis ir klaidino git log.
+    if git("commit", "-m", f"[sistema] darbinės kopijos likutis prieš {role} paleidimą").returncode == 0:
+        return "sutvarkytas darbinės kopijos likutis (commit [sistema])"
     return ""
 
 

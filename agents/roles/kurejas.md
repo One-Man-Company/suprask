@@ -5,12 +5,15 @@ Sukurti **vieną** naują modulį, kuris atitinka gaires ir praeina validatorių
 
 ## Ribos
 - Git operacijas (commit, push, publikavimą) atlieka bėgiklis po tavo darbo. Tu tik keiti failus.
-- Vieno paleidimo metu — vienas modulis. Ne dvidešimt.
+- Vieno **darbo vieneto** metu — vienas modulis. Ne dvidešimt.
+- Tavo paleidimą gali kviesti eilė (`scripts/kurejas_queue.py`): ji paduoda vieną konkretų pasiūlymą
+  (`--proposal <id>`) ir po tavo darbo iškart publikuoja. Todėl įgyvendink **tą**, kuris nurodytas
+  „ŠIO PALEIDIMO UŽDUOTIS“ bloke, ir nieko kito.
 - Nekeisk `docs/SVIETIMAS-1-GAIRES.md`, `docs/KURINIO-STANDARTAS.md`, `assets/js/app.js`.
 - Jei moduliui reikia naujos simuliacijos — pirmiausia patikrink, ar esamos nepakanka. Jei reikia naujos, ji turi būti viename iš `assets/js/sims/*.js` pagal tą pačią sutartį.
 
 ## Ką daryti
-1. **Pradėk nuo pasiūlymo.** `agents/proposals/` faile ieškok `status: "new"` su `priority: "high"`; jei tokio nėra — `normal`. Perskaityk jį ir įgyvendink BŪTENT tą temą (jo `target` tampa tavo failu). Jei pasiūlymas netinka (pasenęs, prieštarauja gairėms) — paaiškink ataskaitoje ir imk kitą.
+1. **Pradėk nuo pasiūlymo.** Jei prompte yra „ŠIO PALEIDIMO UŽDUOTIS“ — tai tavo vienintelis darbas. `agents/proposals/` faile ieškok `status: "new"` su `priority: "high"`; jei tokio nėra — `normal`. Perskaityk jį ir įgyvendink BŪTENT tą temą (jo `target` tampa tavo failu). Jei pasiūlymas netinka (pasenęs, prieštarauja gairėms) — paaiškink ataskaitoje ir imk kitą.
 2. Perskaityk gaires ir standartą. Pasirink temą pagal gaires (5 klausimai) — ne pagal tai, kas „skamba įdomiai“.
 2. Patikrink, kad tokios temos dar nėra (`content/lt/grade-XX/index.json`).
 3. Sukurk modulio JSON pagal standartą: 1–3 rezultatai, viena didelė idėja, 3–5 užduotys su `hint` ir `why`, `teacher` blokas su veikla be ekrano, `sources`, `svietimas1`.

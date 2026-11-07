@@ -14,6 +14,22 @@ agentas (modelis)  →  pakeitimai darbinėje kopijoje
 
 Bėgiklis — `agents/run.py`. Jis paleidžiamas systemd timer'io (`suprask-agent@<vaidmuo>.service`), vienu metu dirba vienas agentas (`agents/.run.lock`).
 
+## Kūrėjo eilė (kodėl ne vienas modulis per dieną)
+
+`kurejas` yra **eilės darbuotojas**. Vienas jo darbo vienetas — vienas pasiūlymas, bet paleidimas
+(iš systemd) eina per `scripts/kurejas_queue.py`, kuris:
+
+1. pažymi pasenusius pasiūlymus (`tema`, kurio failas jau yra) ir dublius → `obsolete`;
+2. ima pasiūlymus prioriteto tvarka (high → normal → low, tada pagal ID);
+3. kiekvienam kviečia `agents/run.py kurejas --proposal <id>`, kuris **pats** validuoja, commituoja
+   ir publikuoja;
+4. po kiekvieno paleidimo užraktas atleidžiamas, todėl kiti agentai nelaukia;
+5. pasiūlymas pažymimas `done` (arba `blocked`, jei nepavyko); numatytos ribos — 8 pasiūlymai /
+   180 minučių vienam paleidimui.
+
+Todėl per dieną apdorojama iki 8 pasiūlymų, o ne vienas, ir eilė gali išsekti. Kai eilė tuščia,
+paleidimas baigiasi — kitas tikrina vėl pagal grafiką (09:30).
+
 ## Kas atsakingas už ką
 
 | Veiksmas | Kas atlieka | Kodėl taip |

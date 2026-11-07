@@ -101,7 +101,7 @@ EXTRA = [
     # augalas
     "Sėkla dar nemirkusi", "Daigas", "Jaunas augalas", "Augalas su lapais", "Žydi!",
     # gyvūnai
-    "Karvė", "Lapė", "Kiškis", "Varnas", "Antis", "Pelėda", "Ešerys", "Karosas", "Ryklys",
+    "Karvė", "Lapė", "Kiškis", "Varnas", "Antis", "Pelėda", "Ešerys", "Karosas", "Ryklys", "Delfinas",
     "Žinduoliai", "Paukščiai", "Žuvys",
     # žaidimų teorija
     "Akmenėlis", "Žirklės", "Popierius",

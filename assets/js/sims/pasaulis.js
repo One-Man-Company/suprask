@@ -486,15 +486,46 @@ const GYVUNAI = [
   { emoji: "🦈", name: "Ryklys", g: "zuvis", pozymis: "kvėpuoja žiaunomis" },
 ];
 
+/* Klaidinantis gyvūnas (pasiūlymas #727). Devyni akivaizdūs gyvūnai modelį
+   tik patvirtina, bet negriauna nė vienos modulio įvardytos klaidingos
+   nuostatos (10-gyvunu-grupes.json:79–83). Delfinas gyvena vandenyje ir
+   plaukia kaip žuvis — todėl jį norisi dėti į žuvų dėžę. Jis parodomas TIK
+   tada, kai devyni gyvūnai jau sudėti: tada tai perkėlimas (T2.2), o ne dar
+   vienas pavyzdys. Jis neįskaitomas į api.progress — praplėtimas neturi
+   tapti sąlyga užbaigti (T1.3).
+
+   Užuominos skirtingos pagal dėžę, į kurią vaikas įdėjo: jos kartoja
+   vaiko pastebėjimą („plaukia kaip žuvis“, „gyvena vandenyje“) ir klausia
+   apie požymį. Teisingas atsakymas neįvardijamas (LL-22, T3.1). */
+const KLAIDINANTIS_GYVUNAS = {
+  emoji: "🐬", name: "Delfinas", g: "zinduoliai", pozymis: "maitina jauniklius pienu",
+  extra: true,
+  reveal: "Visi devyni gyvūnai savo grupėse! Dar vienas: delfinas. Kur jis?",
+  right: "Delfinas gyvena vandenyje, bet maitina jauniklius pienu. Jis žinduolis!",
+  note: "Delfinas neturi žiaunų. Jis kvėpuoja plaučiais. Todėl jis žinduolis, o ne žuvis.",
+  hintZuvis: "Delfinas plaukia kaip žuvis, bet žiaunų neturi. Kuo jis kvėpuoja?",
+  hintPauksciai: "Delfinas neturi plunksnų. Bet jis gyvena vandenyje. Kuo jis kvėpuoja?",
+  step: "Prisimink: delfino jauniklis geria pieną. Ką tai pasako apie grupę?",
+};
+
 const gyvunuGrupes = {
   mount({ stage, controls, api }) {
     const groups = GYVUNU_GRUPES;
-    const animals = GYVUNAI.map((a) => ({ ...a, done: false }));
+    // Papildomas gyvūnas gyvena tame pačiame sąraše (kad priskyrimo logika
+    // būtų ta pati), bet `visible` jį paslepia iki devynių priskyrimų —
+    // kitaip jis taptų dešimtuoju „eiliniu“ gyvūnu ir prarastų perkėlimo
+    // prasmę.
+    const animals = [
+      ...GYVUNAI.map((a) => ({ ...a, done: false, visible: true })),
+      { ...KLAIDINANTIS_GYVUNAS, done: false, visible: false, tries: 0 },
+    ];
 
     let selected = null;
+    let challenge = false;   // ar papildomas gyvūnas jau parodytas
+    let reported = false;    // ar api.progress jau iškviestas (LL-17)
     const placed = { zinduoliai: 0, pauksciai: 0, zuvis: 0 };
     const timers = new Set();
-    const left = () => animals.filter((a) => !a.done).length;
+    const left = () => animals.filter((a) => !a.done && a.visible).length;
 
     stage.innerHTML = `
       <div style="width:100%;max-width:46rem">
@@ -503,6 +534,10 @@ const gyvunuGrupes = {
         <p class="sim-note" id="gg-msg" tabindex="-1"></p>
       </div>`;
     controls.innerHTML = `<button class="btn ghost" id="gg-reset">Iš naujo</button>`;
+    // Pastaba yra už scenos ribų, todėl „Iš naujo“ jos neišvalo — be šios
+    // eilutės po perkrovimo liktų sakinys apie delfiną, nors lentelėje vėl
+    // devyni gyvūnai (LL-16: būsena, kuri grįžta atgal per perkrovimą).
+    api.note("");
     const trayEl = stage.querySelector("#gg-tray");
     const binsEl = stage.querySelector("#gg-bins");
     const msg = stage.querySelector("#gg-msg");
@@ -510,13 +545,22 @@ const gyvunuGrupes = {
     function drawTray() {
       trayEl.innerHTML = "";
       animals.forEach((a) => {
-        if (a.done) return;
+        if (a.done || !a.visible) return;
+        const on = selected === a.name;
+        // Papildomas gyvūnas pažymėtas brūkšniu ir žodžiu — ne vien spalva
+        // (T5.5): vaikas turi matyti, kad tai ne dešimtas eilinis gyvūnas.
+        const border = on ? "3px solid var(--ink)"
+          : (a.extra ? "3px dashed var(--ink-faint)" : "3px solid transparent");
         const b = document.createElement("button");
         b.type = "button";
-        b.setAttribute("aria-label", `${a.name}. Pasirink.`);
-        b.setAttribute("aria-pressed", String(selected === a.name));
-        b.style.cssText = `border:3px solid ${selected === a.name ? "var(--ink)" : "transparent"};background:transparent;border-radius:14px;padding:4px 6px;cursor:pointer;font-size:2rem;min-width:64px;min-height:64px`;
-        b.innerHTML = `<span aria-hidden="true">${a.emoji}</span><span class="sr-only">${a.name}</span>`;
+        b.setAttribute("aria-label", a.extra
+          ? `${a.name}. Papildomas gyvūnas. Pasirink.`
+          : `${a.name}. Pasirink.`);
+        b.setAttribute("aria-pressed", String(on));
+        b.style.cssText = `border:${border};background:transparent;border-radius:14px;padding:4px 6px;cursor:pointer;font-size:2rem;min-width:64px;min-height:64px`;
+        b.innerHTML = `<span aria-hidden="true" style="display:block;line-height:1.1">${a.emoji}</span>`
+          + (a.extra ? `<span aria-hidden="true" style="display:block;font-size:.6rem;line-height:1.1;font-weight:700;color:var(--ink-soft)">papildomas</span>` : "")
+          + `<span class="sr-only">${a.name}</span>`;
         b.addEventListener("click", () => {
           selected = a.name;
           drawTray();
@@ -557,23 +601,59 @@ const gyvunuGrupes = {
           mark.setAttribute("aria-hidden", "true");
           holder.appendChild(mark);
           selected = null;
+
+          /* Papildomas gyvūnas: jokio skaičiaus, jokio api.progress — tik
+             požymis ir priežastis, kodėl vieta vandenyje neklaidina. */
+          if (a.extra) {
+            drawTray();
+            paintBins();
+            msg.textContent = a.right;
+            api.readout("Delfinas priklauso žinduoliams. Grupę rodo požymiai, o ne vieta.");
+            api.note(a.note);
+            msg.focus();
+            return;
+          }
+
+          const baseLeft = animals.filter((x) => !x.done && !x.extra).length;
+          if (baseLeft === 0 && !challenge) {
+            challenge = true;
+            const extra = animals.find((x) => x.extra);
+            extra.visible = true;
+            drawTray();
+            paintBins();
+            msg.textContent = extra.reveal;
+            api.readout(`Visos grupės pilnos: žinduoliai ${placed.zinduoliai}, paukščiai ${placed.pauksciai}, žuvys ${placed.zuvis}. Dar vienas gyvūnas: delfinas.`);
+            // Rezultatas — devyni gyvūnai grupėse. Papildomas gyvūnas jo
+            // nebeatšaukia ir negrąžina atgal (LL-17).
+            if (!reported) { reported = true; api.progress({ correct: true }); }
+            const next = trayEl.querySelector("button");
+            if (next) next.focus();
+            return;
+          }
+
           drawTray();
           paintBins();
-          if (left() === 0) {
-            msg.textContent = "Visi gyvūnai savo grupėse! Pagalvok: kuo dar skiriasi šios trys grupės?";
-            api.readout(`Visos grupės pilnos: žinduoliai ${placed.zinduoliai}, paukščiai ${placed.pauksciai}, žuvys ${placed.zuvis}.`);
-            api.progress({ correct: true });
-            msg.focus();
-          } else {
-            msg.textContent = `Teisingai — ${a.name} priklauso ${g.dative} ir ${a.pozymis}.`;
-            api.readout(`Teisingai. ${a.name} priklauso ${g.dative}. Liko ${left()}.`);
-            // Grįžtama prie gyvūnų: kitas priskyrimas prasideda nuo pasirinkimo.
-            trayEl.querySelector("button").focus();
-          }
+          msg.textContent = `Teisingai — ${a.name} priklauso ${g.dative} ir ${a.pozymis}.`;
+          api.readout(`Teisingai. ${a.name} priklauso ${g.dative}. Liko ${left()}.`);
+          // Grįžtama prie gyvūnų: kitas priskyrimas prasideda nuo pasirinkimo.
+          const next = trayEl.querySelector("button");
+          if (next) next.focus();
         } else {
           bin.classList.add("wiggle");
           const t = setTimeout(() => { bin.classList.remove("wiggle"); timers.delete(t); }, 450);
           timers.add(t);
+
+          if (a.extra) {
+            a.tries += 1;
+            // Pirma užuomina kartoja vaiko pastebėjimą ir klausia apie požymį,
+            // antra — modelio žingsnis (T3.2). Atsakymas neįvardijamas (LL-22).
+            msg.textContent = a.tries === 1
+              ? (g.id === "zuvis" ? a.hintZuvis : a.hintPauksciai)
+              : a.step;
+            api.readout(`Delfinas liko lentelėje. Liko ${left()}.`);
+            return;
+          }
+
           msg.textContent = "Ne ši grupė. Pagalvok: kuo šis gyvūnas dengtas ir kuo kvėpuoja?";
           api.readout(`Ne ši grupė. ${a.name} liko lentelėje. Liko ${left()}.`);
         }

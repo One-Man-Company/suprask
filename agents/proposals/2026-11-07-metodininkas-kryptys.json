@@ -1,0 +1,21 @@
+{
+  "role": "metodininkas",
+  "run_id": 33,
+  "created": "2026-11-07T08:30:00+02:00",
+  "type": "metodas",
+  "title": "Kryptys: kairė priklauso nuo žiūrovo",
+  "body": "Metodas M-04 temai „Kryptys: kairė priklauso nuo to, į ką žiūri“ (ideatoriaus pasiūlymas 2026-11-04). Viena idėja: kairė ir dešinė priklauso kūnui, o ne kambariui, todėl žmogui atsisukus į vaiką jo kairė atsiduria vaiko dešinėje. Seka eina tyrimų nustatyta tvarka — savo kūnas, veikėjas, žiūrintis ta pačia kryptimi, ir tik paskui veikėjas, žiūrintis į vaiką (Rigal, 1994). Simuliacija „vabaliukas-ir-kryptys“ turi vieną kintamąjį (kryptis, į kurią veikėjas žiūri), o kairę rodo žymė, pritvirtinta prie kūno ir besisukanti kartu su juo. Posūkis vyksta vietoje ir yra atskirtas nuo žingsnio, nes pirmokai tą patį žodį „pasuk“ supranta kaip žingsnį į šoną (Way ir Cartwright, 2024). Tikslas sąmoningai kuklus: 6–7 metais kito žmogaus kairės įvardijimas dar tik formuojasi, todėl modulis siekia, kad vaikas pastebėtų priklausomybę nuo žiūrovo, o ne įvaldytų be klaidų. Priedai: keturios užduotys su tipinėmis klaidomis ir užuominomis, modelio ribos, mokytojo veikla be ekrano su apyranke. Ideatoriaus santraukoje esantis skaičius „6 iš 36 pirmokų“ šaltinyje nepatvirtintas — metode naudojami tikrieji Way ir Cartwright skaičiai.",
+  "target": "content/lt/grade-01/matematika/17-kryptys-ir-vieta.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/foundations/kryptis-ir-ziurovo-pozicija.md",
+    "research/wiki/grades/01/metodai.md#M-04",
+    "research/wiki/curriculum/matematika-1-klase.md:121 — 1 klasės transformacijos: pasisukti kairėn/dešinėn, paeiti 3 žingsnius pirmyn/atgal, schema su rodyklėmis",
+    "research/wiki/curriculum/matematika-1-klase.md:165 — pasiekimas: apibūdina objekto padėtį kairėn/dešinėn; perskaito tinklelio adresą B1, C3",
+    "Rigal, R. (1994). Right-left orientation: Development of correct use of right and left terms. Perceptual and Motor Skills, 79(3), 1259–1278. https://doi.org/10.2466/pms.1994.79.3.1259",
+    "Rigal, R. (1996). Right-left orientation, mental rotation, and perspective-taking. Perceptual and Motor Skills, 83(3), 831–842. https://doi.org/10.2466/pms.1996.83.3.831",
+    "Borke, H. (1975). Piaget's mountains revisited. Developmental Psychology, 11(2), 240–243. https://doi.org/10.1037/h0076459",
+    "Way, J., & Cartwright, K. (2024). Turn left, turn right. MERGA 46 Quick Reads. http://merga.net.au/wp-content/uploads/2024/09/6-MERGA-46-2024-Quick-Reads_Way-and-Cartwright.pdf"
+  ]
+}

@@ -2,6 +2,15 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-07 — Krypčių metodas M-04
+
+- **`grades/01/metodai.md`** — naujas metodas M-04 „Kryptys: kairė priklauso nuo žiūrovo“ (tema `2026-11-04-ideator-kryptys.json`): keturių žingsnių seka pagal žodžių įsisavinimo tvarką, simuliacijos `vabaliukas-ir-kryptys` septynios būsenos, keturios užduotys su tipinėmis klaidomis, modelio ribos ir sąmoningai kuklus tikslas.
+- **`foundations/kryptis-ir-ziurovo-pozicija.md`** — naujas įrašas: kairė ir dešinė priklauso kūnui, o ne kambariui; žodžiai įsisavinami savo kūnu → žiūrint ta pačia kryptimi → žiūrint į vaiką; didžiąją dalį klaidų paaiškina užduoties sandara, o ne vaiko „egocentrizmas“.
+- **`foundations/README.md`** — indekso eilutė.
+- **`guidelines/pilotai.md`** — P-010 (žymė ant kūno, posūkis vietoje atskirtas nuo žingsnio).
+- **Šaltinis:** Rigal (1994) https://doi.org/10.2466/pms.1994.79.3.1259 · Rigal (1996) https://doi.org/10.2466/pms.1996.83.3.831 · Phinney & Nummedal (1979) https://doi.org/10.2466/pms.1979.48.1.223 · Borke (1975) https://doi.org/10.1037/h0076459 · Way & Cartwright (2024) http://merga.net.au/wp-content/uploads/2024/09/6-MERGA-46-2024-Quick-Reads_Way-and-Cartwright.pdf · Kocher ir kt. (2020) https://doi.org/10.1109/icdl-epirob48136.2020.9278108 · Abarbanell & Li (2021) https://doi.org/10.1080/13875868.2020.1825442
+- **Poveikis platformai:** būsimas modulis `17-kryptys-ir-vieta`; taisyklė „krypties žymė sukasi su kūnu, o ne su ekranu“ taikoma ir komandų sekos (Bee-Bot tipo) modeliams. Ideatoriaus pasiūlyme esantis skaičius „6 iš 36 pirmokų“ pakeistas šaltinio skaičiais (keturi visiškai teisingai, penki be nė vieno teisingo nurodymo).
+
 ## 2026-11-06 (16:37) — Publikavimo patikra #30: gyva svetainė sveika, 16 modulių laukia
 
 - **Gyva svetainė (`origin/main` = `ebfd952`)** — 3 realios patikros: šaknis `200`, `content/lt/grade-01/index.json` `200`, `assets/audio/lt/manifest.json` `200`. Paskutinis publikavimas — `pages.yml` paleidimas `41969879355`, `completed/success`, 33 s, `2026-11-05T04:46:34Z`, head = `ebfd952`. `assets/js/app.js` ir `grade-01/index.json` baitai gyvai sutampa su `origin/main` (`929170fe…`, `d3c98a2d…`), todėl gyva svetainė atspindi būtent tą commit'ą, o ne tarpinę būseną.

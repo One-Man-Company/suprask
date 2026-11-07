@@ -3,7 +3,7 @@ title: "1 klasės metodai"
 tipas: metodai
 klase: 1
 amzius: "6–7"
-atnaujinta: 2026-11-06
+atnaujinta: 2026-11-07
 ---
 
 # 1 klasės metodai
@@ -198,6 +198,73 @@ Minučių skaičius šiame metode nemokomas. Programa 1 klasei prašo „nusakyt
 **Ką tai reiškia modulio autoriui.** `title` — „Pinigai: monetos vertė, ne jos dydis“ (36 simboliai); `subtitle` — „Sumą sudaro užrašyti skaičiai, ne monetų skaičius“ (49); `minutes` — 9; trys `outcomes` (atpažįstu monetą pagal užrašytą vertę; sudedu sumą iš kelių monetų; paaiškinu, kodėl didesnė moneta ne visada verta daugiau); `concept.example` — „Parduotuvėje 60 centų kainuojantį ledinuką gali sumokėti viena 50 c ir viena 10 c moneta arba šešiomis 10 c monetomis.“; `teacher.offline` — du maišeliai su ta pačia suma (50 c prieš penkias 10 c), po to tikrų monetų rūšiavimas pagal užrašą, ne pagal dydį; `teacher.misconceptions` — trys nuostatos iš šio skyriaus; `sim` — `{ "component": "pinigine-ir-kaina", "config": { "price": 60, "coins": [50, 20, 10, 5] } }`. Modulį įrašius, jis turi būti įtrauktas į `content/lt/grade-01/index.json` ir `path.json` (dizainerio arba leidėjo darbas, ne metodo dalis); numeris `14-` laisvas (15 ir 16 jau užimti).
 
 **Šaltiniai.** Berti, A. E., & Bombi, A. S. (1981). The development of the concept of money and its value: A longitudinal study. *Child Development, 52*(4), 1179–1182. https://doi.org/10.2307/1129504 · Strauss, A. L. (1952). The development and transformation of monetary meanings in the child. *American Sociological Review, 17*(3), 275–286. https://doi.org/10.2307/2088073 · Hasegawa, K. (2020). The size-value compatibility effect. *Scientific Reports, 10*, 62419. https://doi.org/10.1038/s41598-020-62419-8 · Edmunds, G. J., & Whitehurst, K. (1973). *The emergence and development of monetary concepts in young children* (ERIC ED087553). https://eric.ed.gov/?id=ED087553 · Tracy, D. M., & Fanelli, B. H. (2000). *Teaching money concepts: Are we shortchanging our kids?* (ERIC ED451065). https://eric.ed.gov/?id=ED451065 · Europos Komisija. *Common sides of euro coins* (techninės specifikacijos). https://economy-finance.ec.europa.eu/euro/euro-coins-and-notes/euro-coins/common-sides-euro-coins_en · EUR-Lex. *Denominations and technical specifications of euro coins*. https://eur-lex.europa.eu/EN/legal-content/summary/denominations-and-technical-specifications-of-euro-coins.html
+
+### M-04 — Kryptys: kairė priklauso nuo žiūrovo
+
+**Data:** 2026-11-07 · **Tema:** `agents/proposals/2026-11-04-ideator-kryptys.json` · **Tikslas:** `content/lt/grade-01/matematika/17-kryptys-ir-vieta.json` · **Šaltinis:** `research/wiki/foundations/kryptis-ir-ziurovo-pozicija.md`
+
+**Viena didelė idėja.** Kairė ir dešinė priklauso ne kambariui, o kūnui. Kai žmogus atsisuka į tave, jo kairė atsiduria tavo dešinėje.
+
+**Kodėl modelis, o ne sakinys.** Sakinys „kito žmogaus kairė yra tavo dešinėje“ reikalauja žodžių, kurių pirmokas dar neturi. Rigal (1994), tyręs 406 vaikus, rado tokią tvarką: žodžius „kairė“ ir „dešinė“ vaikai pradeda teisingai taikyti savo kūnui apie septintus metus, paskui — žmogui, žiūrinčiam ta pačia kryptimi, ir tik 8–9 metais — žmogui, žiūrinčiam į juos. Net vienuolikos metų pusė tiriamųjų žodžių kitiems žmonėms dar netaikė tinkamai. Paveikslėlis čia nepadės: jame nematyti, kad pusė priklauso nuo to, kas žiūri. Tai parodo tik veikėjas, kurį vaikas pats pasuka.
+
+**Tikslas sąmoningai kuklus.** Modulis nesiekia, kad pirmokas be klaidų nustatytų kito žmogaus kairę. Rigal (1996), tyręs 406 vaikus nuo 5 iki 11 metų, parodė, kad net 11-mečiai, kai žmogus žiūri į juos, teisingai atsako tik pusėje atvejų, o mažiausi atsakinėja taip, tarsi kitas matytų iš jų pačių pozicijos. Modulio tikslas — kad vaikas **pastebėtų priklausomybę** ir turėtų būdą pasitikrinti (atsisukti, įsivaizduoti save kito vietoje).
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Kairė visiems ta pati pusė.“** Vaikas savo kairę perkelia veikėjui, kuris žiūri į jį. Rigal (1996) šį atsakymo būdą aprašo kaip būdingą mažiausiems ir nykstantį su amžiumi. Paneigiama pačiu modeliu: vabaliukui atsisukus į vaiką, žymė „kairė“ persoka į kitą ekrano pusę. Jei kairė būtų kambario savybė, posūkis jos nepajudintų.
+2. **„Pasukti į kairę visada reiškia į kairę ekrano pusę.“** Tai ta pati klaida, tik apie komandą. Kai vabaliukas žiūri į vaiką, „Pasuk kairėn“ veda į dešinę ekrano pusę. Paneigiama dviem būsenomis, kurias vaikas pasiekia pats.
+3. **„Pasukti reiškia žengti į šoną.“** Way ir Cartwright (2024) individualiai kalbino 36 pirmokus: tik keturi visiškai teisingai atliko abi užduotis, penki negalėjo įvykdyti nė vieno krypties nurodymo, o ne daugelis robotui apskritai davė komandas „kairėn“/„dešinėn“ — dažniau rodė gestais arba sakė „eik ten“. Tą patį žodį „pasuk“ vaikai suprato skirtingai: vieni pasisuko vietoje, kiti žengė į šoną. Todėl modelyje posūkis vyksta **vietoje** (vabaliukas lieka tame pačiame langelyje), o žingsnis yra atskiras mygtukas su atskiru sakiniu.
+4. **„Jei nemoka, vadinasi, dar per mažas.“** Borke (1975) parodė, kad supaprastinus perspektyvos užduotį net trejų metų vaikai atsako ne vien iš savo pozicijos. Nesėkmė labiau priklauso nuo užduoties sandaros negu nuo vaiko savybės, todėl modelis sąmoningai paprastas: vienas veikėjas, viena sąsaja, trys ant trijų langeliai.
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas).**
+
+1. **Kūnas.** Ant vaiko kairiojo riešo užmaunama popierinė apyrankė. Vaikas pasisuka vietoje 180 laipsnių kampu ir atsako: „Ar apyrankė liko toje pačioje kambario pusėje?“ Ne — ranka liko ta pati, pasikeitė tik kambario pusė. Tikslas: žodis priklauso kūnui, o kūnas turi priekį.
+2. **Ekranas, lengvas atvejis.** Vabaliukas 3 × 3 tinklelyje žiūri nuo vaiko (aukštyn). Ant kairės priekinės kojos — apyrankė, šalia — žymė „kairė“. Vaikas spaudžia „Pasuk kairėn“ / „Pasuk dešinėn“; žymė sukasi kartu su kūnu, o vabaliukas lieka tame pačiame langelyje. Tikslas: pamatyti, kad žymė pritvirtinta prie kūno, o ne prie ekrano, ir kad posūkis neperkelia.
+3. **Simbolis, sunkus atvejis.** Vaikas pasuka vabaliuką į save. Žymė atsiduria dešinėje ekrano pusėje, o `api.readout` pasako: „Vabaliukas žiūri į tave. Jo kairė — tavo dešinėje.“ Vaikas pakartoja sakinį balsu ir parodydamas. Tikslas: santykį įvardyti žodžiais, kai jis jau matytas.
+4. **Perkėlimas.** Mokytoja stovi priešais klasę ir prašo pakelti dešinę ranką; du vaikai, stovintys vienas priešais kitą, abu pasuka į savo kairę. Tikslas: taikyti taisyklę be modelio, kai žiūrovas yra tikras žmogus.
+
+**Privalomas spėjimo žingsnis prieš pirmą judesį.** `api.readout` pradžioje: „Vabaliukas žiūri nuo tavęs. Kur bus jo kairė, kai jis atsisuks į tave? Pasakyk, tada pasuk.“ Vaikas atsako balsu, tada sukasi. Be spėjimo vaikas gali sukti tol, kol žymė „atrodys teisingai“, ir sąryšio nesudaryti — tas pats pavojus kaip M-01–M-03 (`research/wiki/foundations/sujungti-dydziai.md`). Atsakymo variantų ekrane nėra: kintamasis turi likti vienas, o spėjimas tikrinamas žodžiu ir vėliau — užduotyse be modelio.
+
+**Simuliacijos specifikacija.** Komponentas `vabaliukas-ir-kryptys`, `assets/js/sims/matematika.js`, `config: { "size": 3, "start": { "col": 1, "row": 1, "facing": "up" }, "leaf": { "col": 0, "row": 0 }, "sentences": { ... } }`.
+
+| Būsena | Ką rodo | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia (`facing = up`) | vabaliukas viduriniame langelyje, atgręžtas nugara, apyrankė kairėje kojoje, žymė „kairė“ kairėje | „Vabaliukas žiūri nuo tavęs. Jo kairė — kairėje.“ | „Pasukimas vyksta vietoje: jis lieka tame pačiame langelyje.“ |
+| `facing = right` | žymė viršuje | „Vabaliukas žiūri į dešinę. Jo kairė — viršuje.“ | „Kairė pasisuko kartu su juo.“ |
+| `facing = down` (į vaiką) | žymė dešinėje ekrano pusėje | „Vabaliukas žiūri į tave. Jo kairė — tavo dešinėje.“ | „Jis žiūri į tave, todėl jo kairė yra kitoje pusėje.“ |
+| `facing = left` | žymė apačioje | „Vabaliukas žiūri į kairę. Jo kairė — apačioje.“ | „Ta pati kairė, tik kita kryptis.“ |
+| žingsnis atliktas | naujas langelis, kryptis ta pati, apyrankė toje pačioje kūno pusėje | „Žengė vieną langelį į priekį.“ | „Žingsnis eina į priekį, ne į šoną.“ |
+| kraštas | vabaliukas nejuda, „Žingsnis“ neaktyvus | „Toliau tinklelio nėra.“ | „Pasuk ir bandyk kita kryptimi.“ |
+| lapas pasiektas | lapas po vabaliuku | „Pasiekei lapą.“ | „Dabar pasuk jį į save ir pasakyk, kur jo kairė.“ |
+
+- **Vienas kintamasis:** `facing` ∈ {`up`, `right`, `down`, `left`}. Vaikas keičia tik tai, į ką vabaliukas žiūri. `Žingsnis` kintamojo nekeičia — jis parodo krypties pasekmę; pozicija atstatoma mygtuku „Iš naujo“.
+- **Tinklelis:** 3 × 3, langelis 88 px, tarpas 8 px → 280 px, telpa į 328 px turinio plotį. Vabaliukas 48 px, krypties rodyklė 12 px.
+- **Kairės žymė:** užpildytas žiedas ant kairės priekinės kojos (forma, ne vien spalva) ir kortelė „kairė“, pritvirtinta prie kūno. Kortelė sukasi kartu su vabaliuku; spalva niekada nėra vienintelis informacijos nešėjas.
+- **Įėjimai:** „Pasuk kairėn“ ir „Pasuk dešinėn“ po 104 × 56 px, „Žingsnis pirmyn“ 328 × 56 px, „Iš naujo“ ≥ 48 px. Klaviatūra: `←`/`→` sukasi, `↑`/`Space` žengia, `R` atstato. Visiems mygtukams `aria-label`.
+- **Posūkis:** 200 ms sukimasis vietoje; `prefers-reduced-motion` — būsena pasikeičia iš karto. Jokių laikmačių, ėjimų limito, „game over“; kraštas yra informacija, ne bauda.
+- **Grįžtamasis ryšys** — iškart po veiksmo (≤ 1 kadras). `readout` įvardija tik būseną, `api.note` — vieną sakinį apie veiksmą. `api.progress({ correct: true })` — vieną kartą, kai pasiektas lapas **ir** vabaliukas bent kartą žiūrėjo į vaiką (bet kokia tvarka).
+- **Garsas** — septynios nustatytos frazės, lygiai tokios kaip `readout` lentelėje. `api.note` garsiai neskaitomas (mažas `scripts/check_audio.py` manifestas). Generuojant reikia abiejų variantų (`n`, `s`).
+- **Prieinamumas:** scenos SVG `role="img"`, `aria-label` aprašo padėtį ir apyrankę, bet nekartoja `readout` sakinio: „Vabaliukas viduriniame langelyje, žiūri į tave. Apyrankė ant kairės priekinės kojos.“ `readout` turi `aria-live="polite"`.
+- **Modelio sąžiningumas ekrane:** vabaliukas turi aiškų priekį (galva ir krypties rodyklė), o jo kūnas simetriškas — todėl kairę parodo tik apyrankė ir žymė. Be jų modelis būtų dviprasmis, todėl žymė rodoma visada, taip pat ir tada, kai vabaliukas pasuktas į vaiką.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Vabaliukas žiūri į tave. Kurioje ekrano pusėje yra jo kairė?“ — Kairėje / Dešinėje / Virš jo galvos | Dešinėje (1) | „Kairėje“ — savo kairę perkelia veikėjui | „Prisimink, kur atsidūrė apyrankė, kai jis atsisuko į tave.“ |
+| 2 | taikymas | „Vabaliukas žiūri į dešinę. Jis pasisuka į kairę. Į kurią pusę jis dabar žiūri?“ — Į apačią / Į viršų / Į kairę | Į viršų (1) | „Į kairę“ — suka ekrano kryptimi, ne kūno atžvilgiu | „Pasisukimas vyksta vietoje. Įsivaizduok, kad stovi jo vietoje ir žiūri į dešinę.“ |
+| 3 | perkėlimas | „Mokytoja stovi priešais klasę ir sako: „Pakelkite dešinę ranką.“ Kurioje klasės pusėje yra jos dešinė?“ — Mano dešinėje / Abiejose pusėse / Mano kairėje | Mano kairėje (2) | „Mano dešinėje“ — priskiria mokytojai savo pusę | „Ji žiūri į tave. Prisimink vabaliuką, kuris atsisuko į tave.“ |
+| 4 | praplėtimas (`optional: true`) | „Du vaikai stovi vienas priešais kitą. Abu pasuka į savo kairę. Ar jie žiūri į tą pačią pasaulio pusę?“ — Ne, į priešingas puses / Taip, į tą pačią / Ne, vienas atsisuko atgal | Ne, į priešingas puses (0) | „Taip“ — kairę laiko pasaulio savybe | „Kiekvienas suka savo kūno atžvilgiu. Jie stovi priešingomis kryptimis.“ |
+
+**Refleksija.** „Kaip sužinai, kuri pusė yra kito žmogaus kairė? Pasakyk, ką darai su savo kūnu.“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — atsisukti, įsivaizduoti save kito vietoje arba sekti apyrankę.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).** Modelis rodo vieną veikėją 3 × 3 tinklelyje ir tik kairę/dešinę. Priekis/atgal ir tinklelio adresas (B1, C3) sąmoningai neįtraukti — tai antros sąvokos, o Phinney ir Nummedal (1979) rodo, kad su vienu objektu kairės/dešinės apsukimas ir taip yra sunkiausias atvejis. Modelis neįrodo įgūdžio: Rigal (1994, 1996) duomenys rodo, kad kito žmogaus kairę vaikai pradeda taikyti 8–9 metais, o 11-mečiai tebeklysta. Todėl teisingas atsakymas modulyje nėra „įvaldymo“ įrodymas, o klaida — ne vaiko savybė: Borke (1975) parodė, kad perspektyvos užduoties sunkumas labiau priklauso nuo užduoties negu nuo vaiko.
+
+**Ką tai reiškia modulio autoriui.** `title` — „Kryptys: kairė priklauso nuo žiūrovo“ (36 simboliai); `subtitle` — „Ta pati pusė atsiduria kitoje vietoje, kai žiūri į tave“ (55); `minutes` — 9; trys `outcomes`: „Parodau, kuri pusė yra mano kairė.“, „Pasuku veikėją ir pasakau, kur atsiduria jo kairė.“, „Paaiškinu, kodėl kito žmogaus kairė yra mano dešinėje.“; `concept.title` — „Kairė priklauso nuo žiūrovo“ (27); `concept.big_idea` — „Kairė ir dešinė priklauso ne kambariui, o kūnui. Kai žmogus atsisuka į tave, jo kairė atsiduria tavo dešinėje.“ (110); `concept.steps` — keturi žingsniai iš sekos 1–4; `concept.example` — „Mokytoja stovi priešais klasę. Jos dešinė ranka yra tavo kairėje pusėje.“; `teacher.offline` — apyrankė ant riešo, vaikai poromis atsisuka vienas į kitą ir rodo savo kairę, tada mokytoja priešais klasę kelia dešinę; `teacher.misconceptions` — keturios nuostatos iš šio skyriaus; `sim` — `{ "component": "vabaliukas-ir-kryptys", "config": { "size": 3, "start": { "col": 1, "row": 1, "facing": "up" }, "leaf": { "col": 0, "row": 0 } } }`. Numeris `17-` laisvas. Modulį įrašius, jis turi būti įtrauktas į `content/lt/grade-01/index.json` ir `path.json` (kūrėjo ar dizainerio darbas, ne metodo dalis); siūloma vieta kelyje — iškart po `06-figuros`, nes orientacija remiasi figūros padėtimi.
+
+**Skaičių tikslinimas.** Ideatoriaus pasiūlyme rašoma „36 pirmokų tyrime 27–28 žinojo, kuri jų kairė, bet tik 6 teisingai nurodė robotui posūkius kairėn ir dešinėn“. Way ir Cartwright (2024) tekste tokių skaičių nėra: ten sakoma, kad tik **keturi** vaikai visiškai teisingai atliko abi užduotis, **penki** negalėjo įvykdyti nė vieno krypties nurodymo, o dauguma komandų kairėn/dešinėn robotui iš viso nesakė. Metodas remiasi šaltinio skaičiais, o ne pasiūlymo santrauka.
+
+**Šaltiniai.** Rigal, R. (1994). Right-left orientation: Development of correct use of right and left terms. *Perceptual and Motor Skills, 79*(3), 1259–1278. https://doi.org/10.2466/pms.1994.79.3.1259 · Rigal, R. (1996). Right-left orientation, mental rotation, and perspective-taking. *Perceptual and Motor Skills, 83*(3), 831–842. https://doi.org/10.2466/pms.1996.83.3.831 · Phinney, J. S., & Nummedal, S. G. (1979). Effects of left-right orientation and position reversals on spatial perspective taking in young children. *Perceptual and Motor Skills, 48*(1), 223–227. https://doi.org/10.2466/pms.1979.48.1.223 · Borke, H. (1975). Piaget's mountains revisited. *Developmental Psychology, 11*(2), 240–243. https://doi.org/10.1037/h0076459 · Way, J., & Cartwright, K. (2024). Turn left, turn right. *MERGA 46 Quick Reads*. http://merga.net.au/wp-content/uploads/2024/09/6-MERGA-46-2024-Quick-Reads_Way-and-Cartwright.pdf · Kocher, D., Sarmiento, L., Heller, S., Yang, Y., Kushnir, T., & Green, K. E. (2020). No, your other left! *IEEE ICDL-EpiRob 2020*, 1–6. https://doi.org/10.1109/icdl-epirob48136.2020.9278108 · Abarbanell, L., & Li, P. (2021). Unraveling the contribution of left-right language on spatial perspective taking. *Spatial Cognition & Computation, 21*(1), 1–38. https://doi.org/10.1080/13875868.2020.1825442
 
 ## Atviros prielaidos
 

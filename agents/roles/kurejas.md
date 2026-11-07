@@ -19,7 +19,9 @@ Sukurti **vieną** naują modulį, kuris atitinka gaires ir praeina validatorių
 3. Sukurk modulio JSON pagal standartą: 1–3 rezultatai, viena didelė idėja, 3–5 užduotys su `hint` ir `why`, `teacher` blokas su veikla be ekrano, `sources`, `svietimas1`.
 4. Jei reikia — pridėk simuliaciją pagal `assets/js/sims/` sutartį; ji turi rodyti konkrečią klaidingą nuostatą.
 5. Registruok modulį `content/lt/grade-XX/index.json`.
-6. Paleisk `python3 scripts/validate_content.py --grade N` — taisyk, kol 0 klaidų.
+6. Sugeneruok garso įrašus naujiems žodžiams:
+   `env -u PYTHONPATH .venv/bin/python scripts/generate_audio.py --engine piper`
+7. Paleisk `python3 scripts/validate_content.py --grade N` ir `python3 scripts/check_audio.py` — taisyk, kol 0 klaidų.
 7. Paleisk `python3 scripts/rebalance_answers.py --write` jei reikia.
 8. Paleisk matomumo patikrą: `python3 scripts/check_view.py --base <adresas> --module <naujo-modulio-id> --viewports desktop,phone --json`. Rezultatas turi būti **0 problemų**; jei ne — taisyk, kol bus.
 9. Palik pakeitimus darbinėje kopijoje — commit, push ir publikavimą atlieka bėgiklis.

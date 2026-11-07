@@ -376,8 +376,13 @@ def changed_list() -> list[str]:
         return []
 
 
-def run_checks(files: list[str]) -> tuple[bool, str]:
-    """Paleidžia validatorius, susijusius su pakeistais failais."""
+def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool, str]:
+    """Paleidžia validatorius, susijusius su pakeistais failais.
+
+    Jei garso patikra krenta dėl NAUJŲ tekstų, bandom vieną kartą sugeneruoti
+    trūkstamus įrašus (`generate_audio.py`) ir tikrinam iš naujo. Be to naujo
+    modulio niekada nepavyktų paskelbti — jo žodžiai dar neturi garso.
+    """
     checks: list[tuple[str, list[str]]] = []
     if any(f.startswith(("content/", "assets/audio/")) for f in files) or not files:
         checks.append(("turinys", [sys.executable, "scripts/validate_content.py"]))
@@ -401,6 +406,17 @@ def run_checks(files: list[str]) -> tuple[bool, str]:
         report.append(f"{name}: {'OK' if proc.returncode == 0 else 'KLAIDA'} — {line[:300]}")
         if proc.returncode != 0:
             ok = False
+            if name == "garsas" and allow_audio_repair:
+                repair = subprocess.run(
+                    [sys.executable, "scripts/generate_audio.py", "--engine", "piper"],
+                    cwd=ROOT, capture_output=True, text=True, timeout=1800,
+                )
+                if repair.returncode == 0:
+                    again = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=900)
+                    tail2 = (again.stdout or again.stderr).strip().splitlines()
+                    report.append(f"garsas (po generavimo): {'OK' if again.returncode == 0 else 'KLAIDA'} — {' | '.join(tail2[-1:])[:200]}")
+                    if again.returncode == 0:
+                        ok = True
     return ok, "\n".join(report)
 
 

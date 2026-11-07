@@ -220,8 +220,15 @@ const metuLaikai = {
    kaip jo trūkumas (šaknys „dūsta“): vandens optimalu yra 3 iš 5.
    Dydis kaupiasi tik per dienas: pabloginus sąlygas augalas nesumenksta,
    bet nustoja augti ir pradeda vysti. Tai ir yra modelio riba, kurią
-   pasakome žodžiu po simuliacija. */
-const AG_WATER = [0, 0.4, 0.85, 1, 0.5, 0.15];   // vanduo 0–5 → augimo dalis
+   pasakome žodžiu po simuliacija.
+
+   Kodėl 4 ir 5 duoda 0,15 ir 0, o ne 0,5 ir 0,15: su 0,5 perlaistytas
+   augalas per 12 dienų pasiekdavo LYGIAI tokį patį aukštį kaip laistytas
+   teisingai (174 px) — vaikui vienintelis matomas dydis sakė „nieko
+   blogo“, nors etiketė — „vysta“. P-009 žada, kad dešimt perlaistymo
+   dienų duoda mažą augalą, todėl virš optimalaus kiekvienas papildomas
+   žingsnis augimą mažina, o 5/5 jį sustabdo visai. */
+const AG_WATER = [0, 0.4, 0.85, 1, 0.15, 0];     // vanduo 0–5 → augimo dalis
 const AG_LIGHT = [0, 0.3, 0.7, 1, 1, 1];          // šviesa 0–5 → augimo dalis
 const AG_DAYS_MAX = 12;
 const AG_STEP = 0.22;                             // gera diena ≈ 22 % dydžio
@@ -381,16 +388,26 @@ const augaloGyvenimas = {
       api.readout(`${st} · vanduo ${agWaterWord(water)} · šviesa ${agLightWord(light)}`
         + ` · ${warm ? "šilta" : "šalta"} · ${agDaysText(day)}`);
 
-      /* Kliūtis — ta sąlyga, kurios dalis mažiausia (silpniausia grandis). */
+      /* Kliūtis — ta sąlyga, kurios dalis mažiausia (silpniausia grandis).
+         Sąlygos lyginamos tiesiogiai, o ne per `Math.min` reikšmę: tvarka
+         fiksuota (šiluma → šviesa → vanduo), todėl `low === ...` neatspėja,
+         o pasako pirmą silpniausią grandį. Pataisius ją, žinutė pasikeičia. */
       const why = () => {
-        const low = Math.min(AG_WATER[water], AG_LIGHT[light], warm ? 1 : 0.1);
-        if (low === (warm ? 1 : 0.1)) return "šalta, augalas beveik neauga";
-        if (low === AG_WATER[water]) {
-          if (water === 0) return "nėra vandens, lapai nusvyra";
-          if (water >= 4) return "per daug vandens, šaknys nekvėpuoja";
-          return "mažai vandens, auga lėtai";
+        const wf = AG_WATER[water];
+        const lf = AG_LIGHT[light];
+        const hf = warm ? 1 : 0.1;
+        if (hf < Math.min(wf, lf)) return "šalta, augalas beveik neauga";
+        if (lf < wf) {
+          return light === 0 ? "nėra šviesos, augalas blyškus" : "mažai šviesos, auga lėtai";
         }
-        return light === 0 ? "nėra šviesos, augalas blyškus" : "mažai šviesos, auga lėtai";
+        // Sausros žodis priklauso nuo to, ką vaikas mato: sėklai lapai nenusvyra.
+        if (water === 0) {
+          return size <= 0.05 ? "nėra vandens, sėkla nepabunda" : "nėra vandens, lapai nusvyra";
+        }
+        if (water >= 4) {
+          return size <= 0.05 ? "per daug vandens, sėkla nepabunda" : "per daug vandens, šaknys nekvėpuoja";
+        }
+        return "mažai vandens, auga lėtai";
       };
 
       const cause = gf >= 0.8 ? "" : why();
@@ -418,7 +435,8 @@ const augaloGyvenimas = {
       const { gf } = agFactors(water, light, warm);
       day += 1;
       size = Math.min(1, size + gf * AG_STEP);
-      dayMsg = gf < 0.5 ? "Šią dieną augalas beveik nepajudėjo." : "";
+      if (gf === 0) dayMsg = "Šią dieną augalas visai nepajudėjo.";
+      else dayMsg = gf < 0.5 ? "Šią dieną augalas beveik nepajudėjo." : "";
       render();
     };
     const setCond = (fn) => { fn(); dayMsg = ""; render(); };

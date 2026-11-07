@@ -19,3 +19,8 @@ agents/audio-flags.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Agentų zondų failai ir kintama būsena (nuolat konfliktuoja, nėra turinys)
+.probe-*
+*.probe.html
+agents/state.json

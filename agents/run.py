@@ -390,6 +390,79 @@ def close_proposals(files: list[str], commit_sha: str) -> int:
     return closed
 
 
+def _union_markdown(path: Path) -> None:
+    """Sujungia `<<<<<<<` blokus palikdamas ABU variantus (žurnalų įrašai)."""
+    import re
+
+    text = path.read_text(encoding="utf-8")
+    pattern = re.compile(r"<<<<<<< [^\n]*\n(.*?)\n=======\n(.*?)\n>>>>>>> [^\n]*\n", re.S)
+    text = pattern.sub(lambda m: m.group(1).rstrip("\n") + "\n\n" + m.group(2).rstrip("\n") + "\n", text)
+    path.write_text(text, encoding="utf-8")
+
+
+def _merge_json_union(rel: str, path: Path) -> bool:
+    """Sujungia index.json / path.json taip, kad NĖ VIENAS modulio ID nedingtų.
+
+    Vartotojo pažanga saugoma `localStorage` pagal modulio ID. Jei ID dingtų ar
+    pasikeistų, vaiko atliktos užduotys liktų be pamokos, todėl sąjunga, o ne
+    „naujesnė versija laimi“.
+    """
+    try:
+        theirs = json.loads(git("show", f"origin/main:{rel}").stdout)
+    except (json.JSONDecodeError, Exception):  # noqa: BLE001
+        return False
+    try:
+        ours = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return False
+
+    if rel.endswith("index.json") and isinstance(theirs.get("strands"), list):
+        merged = dict(theirs)
+        by_id = {s.get("id"): s for s in theirs["strands"]}
+        for strand in ours.get("strands", []):
+            target = by_id.get(strand.get("id"))
+            if target is None:
+                target = {"id": strand.get("id"), "title": strand.get("title"),
+                          "emoji": strand.get("emoji"), "modules": []}
+                by_id[strand["id"]] = target
+            have = {m.get("id") for m in target.get("modules", [])}
+            target.setdefault("modules", [])
+            for mod in strand.get("modules", []):
+                if mod.get("id") not in have:
+                    target["modules"].append(mod)
+        merged["strands"] = list(by_id.values())
+    elif rel.endswith("path.json") and isinstance(theirs.get("sequence"), list):
+        merged = dict(theirs)
+        seq = list(theirs["sequence"])
+        for mid in ours.get("sequence", []):
+            if mid not in seq:
+                seq.append(mid)
+        merged["sequence"] = seq
+    else:
+        return False
+
+    path.write_text(json.dumps(merged, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    return True
+
+
+def ensure_clean(role: str) -> str:
+    """Prieš paleidimą darbinė kopija turi būti švari.
+
+    Būtent nešvarūs likučiai iš ankstesnių paleidimų blokuodavo `git merge`
+    („local changes would be overwritten“), todėl publikavimas krisdavo su
+    `conflict`, o commit'ai likdavo neišstumti — 18 commit'ų, 3 moduliai.
+    """
+    try:
+        if not git("status", "--porcelain").stdout.strip():
+            return ""
+    except Exception:  # noqa: BLE001
+        return ""
+    git("add", "-A")
+    if git("commit", "-m", f"[{role}] ankstesnio paleidimo likutis").returncode == 0:
+        return "sutvarkyti ankstesni pakeitimai"
+    return ""
+
+
 def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True) -> dict:
     """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą."""
     if not files:
@@ -429,18 +502,28 @@ def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert
 
     sha = git("rev-parse", "HEAD").stdout.strip()
 
-    # Integracija: perkeliame ant naujausio origin/main ir stumiame į main.
+    # Integracija: sujungiame su naujausiu origin/main ir stumiame į main.
     git("fetch", "origin")
-    rebase = git("rebase", "origin/main")
-    if rebase.returncode != 0:
-        git("rebase", "--abort")
-        return {"status": "conflict", "detail": "Rebase į origin/main nesėkmingas — reikia žmogaus.", "sha": sha, "validation": validation}
+    merge = git("merge", "--no-edit", "origin/main")
+    if merge.returncode != 0:
+        conflicts = [c for c in git("diff", "--name-only", "--diff-filter=U").stdout.split() if c]
+        resolved_all = bool(conflicts)
+        for rel in conflicts:
+            target = ROOT / rel
+            if rel.endswith(".md"):
+                _union_markdown(target)
+            elif rel.endswith(("index.json", "path.json")) and _merge_json_union(rel, target):
+                pass
+            else:
+                resolved_all = False
+                break
+            git("add", rel)
+        if not resolved_all:
+            git("merge", "--abort")
+            return {"status": "conflict", "detail": f"Konfliktas su origin/main: {', '.join(conflicts[:3])}", "sha": sha, "validation": validation}
+        git("commit", "--no-edit")
 
     push = git("push", "origin", "HEAD:refs/heads/main", timeout=300)
-    if push.returncode != 0:
-        git("fetch", "origin")
-        git("rebase", "origin/main")
-        push = git("push", "origin", "HEAD:refs/heads/main", timeout=300)
     if push.returncode != 0:
         return {"status": "unpushed", "detail": f"Push nepavyko: {push.stderr.strip()[:200]}", "sha": sha, "validation": validation}
 
@@ -493,6 +576,10 @@ def main() -> int:
         print(f"{args.role} #{run_id}: {result['status']} — {result['detail']}"
               + (f" (commit {result['sha'][:7]})" if result["sha"] else ""))
         return 0 if result["status"] == "published" else 1
+
+    cleaned = ensure_clean(args.role)
+    if cleaned:
+        print(f"{args.role}: {cleaned}")
 
     prompt = build_prompt(args.role, cfg, run_id)
 

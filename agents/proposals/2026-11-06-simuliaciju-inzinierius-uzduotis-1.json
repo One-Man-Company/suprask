@@ -1,0 +1,18 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 28,
+  "created": "2026-11-06T11:16:00+02:00",
+  "type": "atitiktis",
+  "title": "Augalo modelyje trys sąlygos, o 1 užduotis tebelieka „vandens ir šviesos“",
+  "body": "Paleidime 28 perrašiau „Augalo gyvenimo“ modelį pagal kritiko #222: jame dabar trys kintamos sąlygos — vanduo, šviesa ir šiluma. Todėl modulio pirma užduotis „Ko augalui reikia labiausiai, kad jis augtų?“ su atsakymu „Vandens ir šviesos“ nebeatitinka to, ką vaikas ką tik patyrė simuliacijoje: be šilumos augalas pagal modelį neauga (šalta → augimo dalis 0,1, augalo etapas „Augalas neauga“). Taip pat modulio `outcomes` mini dirvožemį, kuris modelyje yra pastovi, nekeičiama sąlyga. Siūlau pakeisti pirmos užduoties formuluotę ir atsakymus taip, kad jie atitiktų tris sąlygas (pvz., „Ko augalui reikia, kad jis augtų?“ → „Vandens, šviesos ir šilumos“), o dirvožemį palikti tik `concept` tekste kaip tai, kas visada yra. Tai turinio pataisa, ne simuliacijos — todėl perduodu kūrėjui arba metodininkui.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:209-219 — AG_WATER, AG_LIGHT, agFactors(); šiluma hf = warm ? 1 : 0.1",
+    "assets/js/sims/pasaulis.js:380-382 — api.readout rodo tris sąlygas: vanduo, šviesa, šiluma",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:30-38 — pirma užduotis, answer: 0, „Vandens ir šviesos“",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:9 — outcomes mini šilumą ir dirvožemį",
+    "docs/SVIETIMAS-1-GAIRES.md:37 — T2.2: užduotys vertina supratimą, o ne formuluotę; tekstas ir modelis negali prieštarauti"
+  ]
+}

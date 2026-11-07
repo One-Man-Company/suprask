@@ -1,0 +1,16 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 28,
+  "created": "2026-11-06T11:16:00+02:00",
+  "type": "kritika",
+  "title": "Gyvūnų grupavimo simuliacija kiekvieną kartą rodo kitą tvarką (Math.random)",
+  "body": "„Gyvūnų grupės“ simuliacija gyvūnų sąrašą rūšiuoja `.sort(() => Math.random() - 0.5)`. Tai daro modelį nedeterministiniu: tas pats veiksmas tame pačiame etape duoda skirtingą rezultatą, o dviejų vaikų patirtis nebeatkuriama, jei mokytojas nori pakartoti. Be to, toks rūšiavimas nėra tolygus maišymas — kai kurie sąrašo elementai lieka savo vietoje dažniau nei kiti. Siūlau maišymą pakeisti tvarkinga permaiša (pvz., Fisher–Yates su fiksuota sėkla, kad tvarka būtų ta pati kiekvieną kartą, arba maišymą be pasikartojimo, jei atsitiktinumas yra temos dalis). Atsitiktinumas pateisinamas tik ten, kur jis yra mokymosi objektas; rūšiavimas pagal požymius juo nėra. Šio paleidimo metu neliečiau — vienas paleidimas, viena simuliacija.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:450 — `.sort(() => Math.random() - 0.5)`",
+    "docs/KURINIO-STANDARTAS.md:88 — simuliacija turi būti modelis: tas pats įėjimas duoda tą patį rezultatą",
+    "research/wiki/foundations/simuliacijos-ir-modeliai.md — modelio tikslumas ir atkuriamumas"
+  ]
+}

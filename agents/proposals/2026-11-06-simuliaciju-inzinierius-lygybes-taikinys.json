@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 28,
+  "created": "2026-11-06T11:16:00+02:00",
+  "type": "ux",
+  "title": "16-lygybe: dėžutės lietimo laukas 320 px ekrane 46 px — 2 px iki 48",
+  "body": "Tikrintojas fiksavo (state.json, last_validation.technical_issues_open), kad „Svarstyklės ir lygybė“ simuliacijoje dėžutės taikinys ties 320 px pločio ekranu būna 46×46 px, t. y. 2 px mažiau už privalomą 48 px (T5.5, KURINIO-STANDARTAS §4.6). Priežastis aritmetinė: nematomas lietimo laukas brėžiamas 64 × 64 SVG vienetų (`matematika.js:823-825`), o ties 320 px viewport SVG susitraukia iki 258 px pločio, t. y. 0,717 × 64 ≈ 46 px. Kodo komentaras prie lauko teigia „360 px ekrane SVG susitraukia ~0,83×“ — tai tiesa tik 360 px ekranui, o 320 px atvejis nepaskaičiuotas. Siūlau lietimo lauką padidinti iki 68–70 vienetų (68 × 0,717 ≈ 49 px) arba, patikimiau, brėžti lauką ne mažiau kaip 48 / 0,717 ≈ 67 vienetų. Pataisa vieno atributo dydžio, neturi įtakos maketui, nes laukas permatomas. Šio paleidimo metu neliečiau — tai kita simuliacija, o paleidimas skirtas vienai.",
+  "target": "assets/js/sims/matematika.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/matematika.js:820-825 — boxG su permatomu rect 64 × 64 vienetų",
+    "assets/js/sims/matematika.js:821-822 — komentaras mini tik 360 px (~0,83×), ne 320 px",
+    "agents/state.json last_validation.open — „assets/js/sims/matematika.js:820 SVG taikinys 46x46 (16-lygybe)“",
+    "docs/SVIETIMAS-1-GAIRES.md:57 — T5.5: lietimo taikiniai ≥ 48 px"
+  ]
+}

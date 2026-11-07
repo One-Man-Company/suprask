@@ -1,0 +1,17 @@
+{
+  "role": "dizaineris",
+  "run_id": 20,
+  "created": "2026-11-05T12:38:00+02:00",
+  "type": "struktura",
+  "title": "Klasės puslapyje sąrašo tvarka nesutampa su mokymosi keliu",
+  "body": "Klasės puslapis rodo modulius pagal `index.json` tvarką, o „Tęsk nuo čia“ ir naujasis „Kitas žingsnis“ eina pagal `path.json`. Todėl vaikas, einantis sąrašu iš viršaus į apačią, gauna kitokią seką, nei siūlo kelias: lietuvių kalbos kortelėje „Sakinio tvarka“ stovi iškart po „Skiemenų jungimo“, nors kelias po jo veda į „Skaičių tiesę“ (4 žingsnis), o sakinys grįžta tik 5-uoju. Tai nėra kosmetika: T3.6 reikalauja, kad perėjimas tarp temų neprarastų konteksto, o dabar tame pačiame puslapyje yra dvi skirtingos tvarkos, ir vaikas neturi būdo suprasti, kuri galioja. Siūlau klasės puslapyje rikiuoti modulius pagal `path.json` poziciją (krypties kortelėje jie liktų sugrupuoti pagal kryptį, tik eilė būtų kelio eilė), o prie kiekvienos eilutės rodyti mažą žingsnio numerį (pvz. „4“), kad numeracija sutaptų su kortele „Kitas žingsnis · 4 iš 15“. Tai vienas pakeitimas, kuris pašalina dviejų tiesų problemą ir nereikalauja keisti turinio: tvarka jau aprašyta `path.json`, tik nedraudžiama jos rodyti.",
+  "target": "assets/js/app.js",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/app.js:151-155 (viewGrade: seq iš path.json, bet moduliai spausdinami per g.strands eilę)",
+    "content/lt/grade-01/path.json:7-8 (po 02-skiemenu-jungimas eina 04-skaiciu-tiese, o 03-sakinio-tvarka — 5-as)",
+    "content/lt/grade-01/index.json:13-15 (lietuvių kalbos kortelėje 03 stovi trečias iš eilės)",
+    "docs/SVIETIMAS-1-GAIRES.md T3.6 (perėjimas nepraranda konteksto: „iš kur atėjome“ ir „kur toliau“)"
+  ]
+}

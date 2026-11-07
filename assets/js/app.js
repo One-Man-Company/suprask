@@ -197,25 +197,35 @@ async function viewGrade(grade) {
   const doneCount = all.filter((m) => progress.isDone(m.id)).length;
   const continueCard = resumeCard(grade, next, { done: doneCount, total: all.length });
 
+  /* Vienas sąrašas — gryna kelio eilė.
+   * Anksčiau moduliai buvo skirstomi į krypčių korteles, o rikiuojami tik
+   * kortelės viduje. Tai eilės nepakeitė: krypties viduje kelias ir indeksas
+   * sutampa, todėl numeriai puslapyje bėgo 1, 2, 5, 3, 6, 8, 9, 10, 12… —
+   * trys skirtingos vietos viename sąraše. Dabar seka viena, o kryptis
+   * pažymima tik ten, kur ji pasikeičia, kad vaikas neprarastų konteksto.
+   */
+  let lastStrand = null;
+  const steps = seq.map((id, i) => {
+    const m = byId.get(id);
+    const s = m.strand;
+    const label = s.id === lastStrand
+      ? ""
+      : `<p class="path-strand"><span aria-hidden="true">${esc(s.emoji || "")}</span> ${esc(s.title)}</p>`;
+    lastStrand = s.id;
+    return label + moduleRow(s, m, i + 1, seq.length);
+  }).join("");
+
+  /* Kryptys lieka kaip atskiras įėjimas (pvz., mokytojui reikia tik
+   * matematikos), bet jos nebekartoja modulių eilių — tik pažangą. */
   const strands = g.strands.map((s) => {
     const done = progress.count(s.modules.map((m) => m.id));
-    const mods = s.modules
-      .slice()
-      .sort((a, b) => seq.indexOf(a.id) - seq.indexOf(b.id))
-      .map((m) => moduleRow(s, m, seq.indexOf(m.id) + 1, seq.length))
-      .join("");
     return `
-      <section class="card" style="margin-top:1.5rem">
-        <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap">
-          <span style="font-size:2rem" aria-hidden="true">${s.emoji}</span>
-          <div style="flex:1 1 14rem">
-            <h2 style="margin:0;font-size:1.4rem">${esc(s.title)}</h2>
-            <p class="strand-meta" style="margin:0">${esc(s.intro || "")}</p>
-          </div>
-          <span class="chip">${done.done} iš ${done.total}</span>
-        </div>
-        <div style="margin-top:1rem;display:grid;gap:.6rem">${mods}</div>
-      </section>`;
+      <a class="card strand-card" href="#/klase/${grade}/${s.id}">
+        <span class="strand-emoji" aria-hidden="true">${esc(s.emoji || "")}</span>
+        <h3>${esc(s.title)}</h3>
+        <p class="strand-meta">${esc(s.intro || "")}</p>
+        <p class="strand-meta"><strong>${done.done} iš ${done.total}</strong> modulių atlikta</p>
+      </a>`;
   }).join("");
 
   app.innerHTML = `
@@ -223,26 +233,36 @@ async function viewGrade(grade) {
     <h1>${grade} klasė</h1>
     <p class="lede" style="color:var(--ink-soft)">${esc(g.age || "")} · ${esc(g.note || "")}</p>
     ${continueCard}
-    ${strands}
+
+    <section aria-labelledby="kelias-h" style="margin-top:1.5rem">
+      <h2 id="kelias-h" style="font-size:1.3rem">Mokymosi kelias</h2>
+      <p class="strand-meta" style="margin:.2rem 0 .6rem">Eik iš viršaus į apačią. Skaičius rodo tą pačią vietą kaip „Kitas žingsnis“ modulio apačioje.</p>
+      <div class="path-list">${steps}</div>
+    </section>
+
+    <section aria-labelledby="kryptys-h" style="margin-top:2rem">
+      <h2 id="kryptys-h" style="font-size:1.3rem">Kryptys</h2>
+      <div class="grid grid-2" style="margin-top:1rem">${strands}</div>
+    </section>
   `;
 }
 
 /* Eilutėje — to paties kelio numeris kaip modulio puslapyje („Kitas žingsnis ·
- * N iš 18“). Skaičius yra tas pats abiejuose puslapiuose, todėl vaikas gali
+ * N iš 19“). Skaičius yra tas pats abiejuose puslapiuose, todėl vaikas gali
  * atpažinti, kur yra, o ne spėlioti, kuri tvarka galioja.
  */
 function moduleRow(strand, m, step = 0, stepTotal = 0) {
   const done = progress.isDone(m.id);
   return `
-    <a class="card mod-row" style="display:flex;gap:.8rem;align-items:center;text-decoration:none;padding:.8rem 1rem;border-radius:var(--r-m)"
+    <a class="card mod-row"
        href="#/modulis/${strand.grade || 1}/${strand.id}/${m.id}">
       ${step ? `<span class="step-badge${done ? " done" : ""}"><span class="sr-only">Žingsnis </span>${step}<span class="sr-only"> iš ${stepTotal}</span></span>` : ""}
       <span class="mod-row-body">
-        <strong style="display:block">${esc(m.title)}</strong>
+        <strong>${esc(m.title)}</strong>
         <span class="strand-meta"><span>${esc(m.subtitle || "")}</span> <span class="nowrap">· ${m.minutes || 8} min.</span></span>
       </span>
       <span class="chip ${done ? "mint" : ""}">${done ? "atlikta" : "bandyk"}</span>
-      <span aria-hidden="true" style="font-size:1.6rem;color:var(--ink-faint)">›</span>
+      <span class="mod-row-go" aria-hidden="true">›</span>
     </a>`;
 }
 

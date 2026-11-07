@@ -170,15 +170,33 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 
 /* Modulių eilutė klasės sąraše. Be `min-width: 0` flex elementas negali
    susitraukti žemiau savo turinio, todėl 360 px ekrane eilutė išstumdavo
-   puslapį į šoną (matuota: 34 px horizontalaus slinkimo). */
-.mod-row { min-width: 0; }
+   puslapį į šoną (matuota: 34 px horizontalaus slinkimo).
+   Išdėstymas yra CSS, o ne inline stilius: telefone eilutė persirikiuoja
+   dviem eilutėms, nes 320 px ekrane tekstui likdavo tik 94 px. */
+.mod-row {
+  display: flex; gap: .8rem; align-items: center; min-width: 0;
+  padding: .8rem 1rem; border-radius: var(--r-m); text-decoration: none;
+}
 .mod-row-body { flex: 1 1 auto; min-width: 0; }
+.mod-row-body strong { display: block; }
 .mod-row-body strong,
 .mod-row-body .strand-meta { overflow-wrap: anywhere; }
 .mod-row > .chip { flex: none; }
+.mod-row-go { font-size: 1.6rem; color: var(--ink-faint); }
+
+@media (max-width: 34rem) {
+  /* Numeris ir tekstas — pirmoje eilutėje, žyma „atlikta / bandyk“ — antroje,
+     kad pavadinimas ir paaiškinimas nelūžtų kas 8 simbolius. Rodyklė
+     dekoratyvi, todėl telefone nerodoma. */
+  .mod-row { display: grid; grid-template-columns: auto 1fr; gap: .45rem .7rem; }
+  .mod-row > .step-badge { grid-row: 1; grid-column: 1; }
+  .mod-row > .mod-row-body { grid-row: 1; grid-column: 2; }
+  .mod-row > .chip { grid-row: 2; grid-column: 2; justify-self: start; }
+  .mod-row-go { display: none; }
+}
 
 /* Kelio numeris modulių eilutėje. Tas pats skaičius kaip modulio puslapyje
-   („Kitas žingsnis · N iš 18“), todėl vaikas atpažįsta, kur yra, ir nelygina
+   („Kitas žingsnis · N iš 19“), todėl vaikas atpažįsta, kur yra, ir nelygina
    dviejų skirtingų tvarkų. Spalva nieko viena nereiškia: užbaigtumą sako
    žyma „atlikta“, o ne vien žalios spalvos apskritimas. */
 .step-badge {
@@ -189,6 +207,16 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
   font-variant-numeric: tabular-nums;
 }
 .step-badge.done { background: color-mix(in srgb, var(--ok) 80%, var(--ink)); }
+
+/* Klasės puslapio sąrašas eina kelio eile, o kryptis rodoma tik ten, kur ji
+   pasikeičia. Taip puslapyje lieka viena tvarka: numeriai 1…19 be šuolių. */
+.path-list { display: grid; gap: .6rem; }
+.path-strand {
+  margin: .9rem 0 0; color: var(--ink-soft);
+  font-family: var(--font-head); font-weight: 900;
+  font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .12em;
+}
+.path-strand:first-child { margin-top: 0; }
 
 .eyebrow {
   text-transform: uppercase; letter-spacing: .12em; font-size: var(--fs-xs);

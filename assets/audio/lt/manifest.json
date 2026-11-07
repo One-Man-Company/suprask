@@ -559,6 +559,10 @@
   "n": "n/ef515f3cf179f20e-4afec982.mp3",
   "s": "s/ef515f3cf179f20e-7c4dfba6.mp3"
  },
+ "Apžiūrėjai kūną iš trijų pusių. Jis visą laiką buvo tas pats.": {
+  "n": "n/d60877883231afcc-89b11dae.mp3",
+  "s": "s/d60877883231afcc-33128294.mp3"
+ },
  "Atkarpa ilgesnė. Ji vis dar turi du galus.": {
   "n": "n/96cea72c8e4c28bf-ea64f2e5.mp3",
   "s": "s/96cea72c8e4c28bf-b8c26745.mp3"
@@ -755,6 +759,18 @@
   "n": "n/061db2d7c4edc72f-8c518491.mp3",
   "s": "s/061db2d7c4edc72f-1be7692b.mp3"
  },
+ "Gretasienis iš priekio atrodo kaip stačiakampis.": {
+  "n": "n/9ec471ce9fcf62a4-360ba9f2.mp3",
+  "s": "s/9ec471ce9fcf62a4-bb05e252.mp3"
+ },
+ "Gretasienis iš viršaus irgi atrodo kaip stačiakampis.": {
+  "n": "n/ea1b6eb2124773ad-5904befc.mp3",
+  "s": "s/ea1b6eb2124773ad-e15ea4e2.mp3"
+ },
+ "Gretasienis nuo šono irgi atrodo kaip stačiakampis.": {
+  "n": "n/0774e9bd38ac9bdf-a1714d7c.mp3",
+  "s": "s/0774e9bd38ac9bdf-8131ec28.mp3"
+ },
  "H": {
   "n": "n/44bd7ae60f478fae-2a69b4b5.mp3",
   "s": "s/44bd7ae60f478fae-d14b26a3.mp3"
@@ -827,6 +843,18 @@
   "n": "n/1f143dc5ee938538-fde9cdac.mp3",
   "s": "s/1f143dc5ee938538-102c46f6.mp3"
  },
+ "Kubas iš priekio atrodo kaip kvadratas.": {
+  "n": "n/0a26471c3415e289-1355c62d.mp3",
+  "s": "s/0a26471c3415e289-c1f846f9.mp3"
+ },
+ "Kubas iš viršaus irgi atrodo kaip kvadratas.": {
+  "n": "n/95f850adffc71cfd-3e899d36.mp3",
+  "s": "s/95f850adffc71cfd-52debfbf.mp3"
+ },
+ "Kubas nuo šono irgi atrodo kaip kvadratas.": {
+  "n": "n/df6c482c627cdc4b-040d2eed.mp3",
+  "s": "s/df6c482c627cdc4b-93372428.mp3"
+ },
  "Kuris elementas eina toliau?": {
   "n": "n/dd82140a8fe00a5e-a7ae467a.mp3",
   "s": "s/dd82140a8fe00a5e-5f4d075c.mp3"
@@ -838,6 +866,18 @@
  "Ką suprasi": {
   "n": "n/6ed7616494dc4ee2-b0c27f98.mp3",
   "s": "s/6ed7616494dc4ee2-cfa088fa.mp3"
+ },
+ "Kūgis iš priekio atrodo kaip trikampis.": {
+  "n": "n/a50cafa172c33295-c29c8855.mp3",
+  "s": "s/a50cafa172c33295-a6be49ad.mp3"
+ },
+ "Kūgis iš viršaus atrodo kaip apskritimas.": {
+  "n": "n/23962de5c26c88e9-0ae020f7.mp3",
+  "s": "s/23962de5c26c88e9-13966889.mp3"
+ },
+ "Kūgis nuo šono vėl atrodo kaip trikampis.": {
+  "n": "n/8a0dd6ba9649bb9b-6a788fe5.mp3",
+  "s": "s/8a0dd6ba9649bb9b-74d18975.mp3"
  },
  "L": {
   "n": "n/72dfcfb0c470ac25-9ec1d812.mp3",
@@ -935,6 +975,10 @@
   "n": "n/6d7863e56d1ac8c6-7771c9df.mp3",
   "s": "s/6d7863e56d1ac8c6-ca948b0b.mp3"
  },
+ "Pradedam iš naujo. Pasirink kūną.": {
+  "n": "n/cffbad6bff83327d-f7678d34.mp3",
+  "s": "s/cffbad6bff83327d-071e544a.mp3"
+ },
  "Pradedam iš naujo. Prijunk laidus.": {
   "n": "n/13f77b21b8fd4a6b-b404e361.mp3",
   "s": "s/13f77b21b8fd4a6b-be4a4fd6.mp3"
@@ -955,9 +999,33 @@
   "n": "n/8c2574892063f995-ce5b96a4.mp3",
   "s": "s/8c2574892063f995-df1ac2d4.mp3"
  },
+ "Ritinys iš priekio atrodo kaip stačiakampis.": {
+  "n": "n/3cc41c23fdbd3079-7e46fd23.mp3",
+  "s": "s/3cc41c23fdbd3079-4d5337ef.mp3"
+ },
+ "Ritinys iš viršaus atrodo kaip apskritimas.": {
+  "n": "n/87d887cbeeef37c0-a11a4333.mp3",
+  "s": "s/87d887cbeeef37c0-dcf35528.mp3"
+ },
+ "Ritinys nuo šono vėl atrodo kaip stačiakampis.": {
+  "n": "n/03b6cedca03d8bc9-e55cb673.mp3",
+  "s": "s/03b6cedca03d8bc9-5ca3a562.mp3"
+ },
  "Ruduo": {
   "n": "n/6cef84a6159698ce-597a4673.mp3",
   "s": "s/6cef84a6159698ce-2cda6df1.mp3"
+ },
+ "Rutulys iš priekio atrodo kaip apskritimas.": {
+  "n": "n/5ae87117bcb6ca9e-fba13175.mp3",
+  "s": "s/5ae87117bcb6ca9e-980f8324.mp3"
+ },
+ "Rutulys iš viršaus vėl atrodo kaip apskritimas.": {
+  "n": "n/c2593f9d05e85717-7e7bd5f8.mp3",
+  "s": "s/c2593f9d05e85717-c9c85f9e.mp3"
+ },
+ "Rutulys nuo šono vėl atrodo kaip apskritimas.": {
+  "n": "n/6774b59e72fd5ea3-ca74350f.mp3",
+  "s": "s/6774b59e72fd5ea3-b1cf93bd.mp3"
  },
  "Ryklys": {
   "n": "n/b24014ac6331c4cc-aa9629f5.mp3",

@@ -12,6 +12,18 @@
  *  - spalvos iš kintamųjų ten, kur jos keičiasi pagal būseną.
  */
 
+/**
+ * Erdvinių kūnų spalvos. Visi kūnai piešiami ta pačia palete: vaikas kūną
+ * atpažįsta iš formos, o ne iš spalvos (LL-13, prieinamumo taisyklė).
+ */
+const SOLID = {
+  front: "#f6c86e",
+  side: "#dfa74a",
+  top: "#ffe2a8",
+  edge: "#6d4a1c",
+  under: "#5a3d16",
+};
+
 const P = {
   skyTop: "#bfe3f7",
   skyBottom: "#eaf6fd",
@@ -66,6 +78,11 @@ export const art = {
         <stop offset="0" stop-color="${P.potLight}"/><stop offset=".55" stop-color="${P.pot}"/>
         <stop offset="1" stop-color="${P.potDark}"/>
       </linearGradient>
+      <radialGradient id="${id}-ball" cx="34%" cy="28%" r="78%">
+        <stop offset="0" stop-color="${SOLID.top}"/>
+        <stop offset=".62" stop-color="${SOLID.front}"/>
+        <stop offset="1" stop-color="${SOLID.side}"/>
+      </radialGradient>
     </defs>`;
   },
 
@@ -308,5 +325,124 @@ export const art = {
       return `<path d="M${dx} ${dy} q 3 5 0 7 q -3 -2 0 -7 z" fill="${color}" opacity=".8"/>`;
     }).join("");
     return `<g>${d}</g>`;
+  },
+
+  /* ------------------------------------------------------------------ */
+  /* Erdviniai kūnai (1 klasės geometrija)                              */
+  /*                                                                    */
+  /* Visi piešiami tame pačiame 200×200 tinkle, ta pačia palete, su      */
+  /* šešėliu ant „stalo“. Todėl kūnas atpažįstamas iš formos, o ne iš    */
+  /* spalvos, ir to paties kūno piešinys visose scenose sutampa.         */
+  /* ------------------------------------------------------------------ */
+
+  /** Stačiakampis gretasienis; kubas — kai w = h ir gylis toks pat. */
+  solidBox(x, y, w, h, depth = 30) {
+    const dx = depth * 0.62;
+    const dy = depth * 0.8;
+    const top = `${x},${y} ${(x + dx).toFixed(1)},${(y - dy).toFixed(1)} `
+      + `${(x + w + dx).toFixed(1)},${(y - dy).toFixed(1)} ${x + w},${y}`;
+    const side = `${x + w},${y} ${(x + w + dx).toFixed(1)},${(y - dy).toFixed(1)} `
+      + `${(x + w + dx).toFixed(1)},${(y + h - dy).toFixed(1)} ${x + w},${y + h}`;
+    return `<g>
+      <ellipse cx="${(x + (w + dx) / 2).toFixed(1)}" cy="${y + h + 7}" rx="${((w + dx) / 2).toFixed(1)}" ry="8"
+               fill="${SOLID.under}" opacity=".16"/>
+      <polygon points="${top}" fill="${SOLID.top}" stroke="${SOLID.edge}" stroke-width="3" stroke-linejoin="round"/>
+      <polygon points="${side}" fill="${SOLID.side}" stroke="${SOLID.edge}" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${SOLID.front}"
+            stroke="${SOLID.edge}" stroke-width="3" stroke-linejoin="round"/>
+      <line x1="${x + 7}" y1="${y + 8}" x2="${x + 7}" y2="${y + h - 8}" stroke="#fff" stroke-opacity=".35"
+            stroke-width="5" stroke-linecap="round"/>
+    </g>`;
+  },
+
+  /** Ritinys, stovintis ant pagrindo. */
+  solidCylinder(cx, baseY, r, h) {
+    const cy = baseY - h;
+    const ry = r * 0.3;
+    return `<g>
+      <ellipse cx="${cx}" cy="${baseY + 7}" rx="${(r * 1.04).toFixed(1)}" ry="${(ry * 0.9).toFixed(1)}"
+               fill="${SOLID.under}" opacity=".16"/>
+      <ellipse cx="${cx}" cy="${baseY}" rx="${r}" ry="${ry.toFixed(1)}"
+               fill="${SOLID.side}" stroke="${SOLID.edge}" stroke-width="3"/>
+      <path d="M${cx - r} ${cy} L${cx - r} ${baseY}
+               A ${r} ${ry.toFixed(1)} 0 0 0 ${cx + r} ${baseY}
+               L${cx + r} ${cy} Z"
+            fill="${SOLID.front}" stroke="${SOLID.edge}" stroke-width="3" stroke-linejoin="round"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${ry.toFixed(1)}"
+               fill="${SOLID.top}" stroke="${SOLID.edge}" stroke-width="3"/>
+      <line x1="${(cx - r * 0.55).toFixed(1)}" y1="${cy + ry + 4}" x2="${(cx - r * 0.55).toFixed(1)}" y2="${baseY - 6}"
+            stroke="#fff" stroke-opacity=".35" stroke-width="6" stroke-linecap="round"/>
+    </g>`;
+  },
+
+  /** Kūgis, stovintis ant pagrindo. Viršūnė — smaili, pagrindas — apvalus. */
+  solidCone(cx, baseY, r, h) {
+    const apex = baseY - h;
+    const ry = r * 0.3;
+    return `<g>
+      <ellipse cx="${cx}" cy="${baseY + 7}" rx="${(r * 1.04).toFixed(1)}" ry="${(ry * 0.9).toFixed(1)}"
+               fill="${SOLID.under}" opacity=".16"/>
+      <path d="M${cx} ${apex} L${cx - r} ${baseY}
+               A ${r} ${ry.toFixed(1)} 0 0 0 ${cx + r} ${baseY} Z"
+            fill="${SOLID.front}" stroke="${SOLID.edge}" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M${cx} ${apex} L${cx + r * 0.34} ${baseY}
+               A ${r} ${ry.toFixed(1)} 0 0 0 ${cx + r} ${baseY} Z"
+            fill="${SOLID.side}" opacity=".85"/>
+      <line x1="${(cx - r * 0.36).toFixed(1)}" y1="${apex + h * 0.34}" x2="${(cx - r * 0.08).toFixed(1)}" y2="${apex + h * 0.72}"
+            stroke="#fff" stroke-opacity=".38" stroke-width="5" stroke-linecap="round"/>
+    </g>`;
+  },
+
+  /** Rutulys. `id` — tas pats, kuriuo iškviestas `art.defs(id)`; be jo — vientisa spalva. */
+  solidSphere(cx, cy, r, id) {
+    const fill = id ? `url(#${id}-ball)` : SOLID.front;
+    return `<g>
+      <ellipse cx="${cx}" cy="${(cy + r + 6).toFixed(1)}" rx="${(r * 0.82).toFixed(1)}" ry="8"
+               fill="${SOLID.under}" opacity=".16"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}"
+              stroke="${SOLID.edge}" stroke-width="3"/>
+      <ellipse cx="${(cx - r * 0.3).toFixed(1)}" cy="${(cy - r * 0.36).toFixed(1)}"
+               rx="${(r * 0.26).toFixed(1)}" ry="${(r * 0.16).toFixed(1)}"
+               fill="#fff" opacity=".6" transform="rotate(-24 ${cx - r * 0.3} ${cy - r * 0.36})"/>
+    </g>`;
+  },
+
+  /**
+   * Plokščias vaizdas — tai, ką matai žiūrėdamas iš vienos pusės.
+   * kind: trikampis | apskritimas | kvadratas | staciakampis.
+   */
+  flatShape(kind, cx, cy, s, strokeWidth = 3) {
+    const a = `fill="${SOLID.top}" stroke="${SOLID.edge}" stroke-width="${strokeWidth}" stroke-linejoin="round"`;
+    if (kind === "apskritimas") {
+      return `<circle cx="${cx}" cy="${cy}" r="${(s * 0.46).toFixed(1)}" ${a}/>`;
+    }
+    if (kind === "kvadratas") {
+      const q = s * 0.82;
+      return `<rect x="${(cx - q / 2).toFixed(1)}" y="${(cy - q / 2).toFixed(1)}" width="${q.toFixed(1)}"
+              height="${q.toFixed(1)}" rx="4" ${a}/>`;
+    }
+    if (kind === "staciakampis") {
+      const w = s * 0.96;
+      const h = s * 0.6;
+      return `<rect x="${(cx - w / 2).toFixed(1)}" y="${(cy - h / 2).toFixed(1)}" width="${w.toFixed(1)}"
+              height="${h.toFixed(1)}" rx="4" ${a}/>`;
+    }
+    return `<polygon points="${cx},${(cy - s * 0.5).toFixed(1)} ${(cx + s * 0.56).toFixed(1)},${(cy + s * 0.42).toFixed(1)} `
+      + `${(cx - s * 0.56).toFixed(1)},${(cy + s * 0.42).toFixed(1)}" ${a}/>`;
+  },
+
+  /** Rodyklė „žiūriu iš čia“ — kryptis rodo į kūną. */
+  viewArrow(x1, y1, x2, y2) {
+    const ang = Math.atan2(y2 - y1, x2 - x1);
+    const len = 14;
+    const spread = 0.42;
+    const p1 = `${(x2 - len * Math.cos(ang - spread)).toFixed(1)},${(y2 - len * Math.sin(ang - spread)).toFixed(1)}`;
+    const p2 = `${(x2 - len * Math.cos(ang + spread)).toFixed(1)},${(y2 - len * Math.sin(ang + spread)).toFixed(1)}`;
+    return `<g opacity=".65">
+      <line x1="${x1}" y1="${y1}" x2="${(x2 - len * 0.6 * Math.cos(ang)).toFixed(1)}"
+            y2="${(y2 - len * 0.6 * Math.sin(ang)).toFixed(1)}"
+            stroke="${SOLID.edge}" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="8 7"/>
+      <polygon points="${x2},${y2} ${p1} ${p2}" fill="${SOLID.edge}"/>
+    </g>`;
   },
 };

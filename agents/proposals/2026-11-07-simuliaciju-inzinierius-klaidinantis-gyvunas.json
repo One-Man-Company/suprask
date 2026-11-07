@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 36,
+  "created": "2026-11-07T11:14:15+02:00",
+  "type": "simuliacija",
+  "title": "Grupavimo simuliacija netikrina nė vienos modulio įvardytos klaidingos nuostatos",
+  "body": "Modulis „Gyvūnų grupės“ įvardija tris klaidingas nuostatas: šikšnosparnis priskiriamas paukščiams, nes skraido; delfinas laikomas žuvimi, nes gyvena vandenyje; pingvinas — „ne paukštis“, nes neskraido (10-gyvunu-grupes.json:79–83). Simuliacijos gyvūnai (karvė, lapė, kiškis, varnas, antis, pelėda, ešerys, karosas, ryklys) visi atpažįstami pagal akivaizdžius požymius, todėl modelis patvirtina tai, ką vaikas jau moka, ir nė vienos nuostatos negriauna. Siūlau į simuliaciją įtraukti vieną klaidinantį gyvūną (delfiną arba pingviną) kaip papildomą, ne privalomą priskyrimą: delfinas žuvų dėžėje duotų klaidą ir po jos — požymio klausimą („kuo delfinas kvėpuoja?“), o teisingas priskyrimas prie žinduolių parodytų, kad grupė nustatoma ne pagal gyvenamąją vietą. Tai atitinka gaires P3 (klaida yra duomenys) ir T2.2 (supratimas naujoje situacijoje), o ne įsimintą požymį. Įgyvendinimas: du nauji įrašai GYVUNAI masyve ir vienas `optional` priskyrimas, kuris neskaičiuojamas į api.progress — tačiau apie jį reikia atskiro sprendimo su metodininku, todėl pateikiu kaip pasiūlymą, o ne kaip šio paleidimo pakeitimą. Amžiaus tinkamumas: abu gyvūnai 6–7 metų vaikams pažįstami, sakinys lieka iki 10 žodžių.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:79-83 — trys teacher.misconceptions (šikšnosparnis, delfinas, pingvinas)",
+    "assets/js/sims/pasaulis.js:452-460 — GYVUNAI sąraše nėra nė vieno klaidinamo gyvūno",
+    "docs/SVIETIMAS-1-GAIRES.md:21 — P3: klaida yra duomenys, ne nuosprendis",
+    "docs/SVIETIMAS-1-GAIRES.md:37 — T2.2: savikontrolė tikrina supratimą naujoje situacijoje"
+  ]
+}

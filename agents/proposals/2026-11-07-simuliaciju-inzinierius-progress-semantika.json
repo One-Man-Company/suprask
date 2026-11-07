@@ -1,0 +1,18 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 36,
+  "created": "2026-11-07T11:14:15+02:00",
+  "type": "struktura",
+  "title": "api.progress žymi modulį atliktu po pirmo teisingo žingsnio, o ne pasiekus simuliacijos tikslą",
+  "body": "Šiandien sutvarkiau „gyvunu-grupes“: simuliacija kvietė api.progress() po kiekvieno teisingo priskyrimo, o app.js:388 tai reiškia progress.markSimDone() — vaikui priskyrus vieną gyvūną iš devynių, modulis jau skaitėsi „simuliacija atlikta“. Ta pati schema liko calba.js:58: pirmoji teisinga raidė įrašo simDone, nors to paties komponento finish() ateina tik išėjus visas raides (calba.js:71). Tai ne kosmetika: mokytojas, žiūrėdamas į pažangą, gauna klaidingą signalą, o vaikas — klaidingą „baigta“ būseną. Siūlau KURINIO-STANDARTE, §4 (Simuliacijos sutartis), vieną sakinį: api.progress() kviečiamas tik tada, kai pasiektas simuliacijos mokymosi tikslas, o ne po pirmo teisingo tarpinio žingsnio. Po to peržiūrėti visus sims/*.js kvietimus (15 vietų) ir palikti progress tik tose, kur tikslas pasiekiamas vienu veiksmu arba pabaigus visą ciklą. Validatoriaus taisyklė čia netinka (tai semantika, ne sintaksė), todėl tai turi būti rašytinė sutartis, kurią tikrina kritikas.",
+  "target": "docs/KURINIO-STANDARTAS.md",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:534 — gyvunu-grupes api.progress perkeltas į „visi gyvūnai surikiuoti“ šaką (šio paleidimo pataisa)",
+    "assets/js/sims/calba.js:58 — api.progress po pirmos teisingos raidės, nors calba.js:71 finish() tik pabaigus visas",
+    "assets/js/app.js:388 — onProgress: () => progress.markSimDone(mod.id)",
+    "assets/js/progress.js:66 — markSimDone įrašo simDone: true",
+    "agents/state.json last_sim_work — pažymėjimas po pirmo žingsnio jau buvo fiksuotas kaip defektas 28 paleidime"
+  ]
+}

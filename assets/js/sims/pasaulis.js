@@ -468,8 +468,8 @@ const gyvunuGrupes = {
     stage.innerHTML = `
       <div style="width:100%;max-width:46rem">
         <div id="gg-tray" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;padding:.6rem;border-radius:var(--r-m);background:color-mix(in srgb, var(--mint) 10%, var(--paper))"></div>
-        <div id="gg-bins" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:1rem"></div>
-        <p class="sim-note" id="gg-msg"></p>
+        <div id="gg-bins" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(5.5rem,1fr));gap:.5rem;margin-top:1rem"></div>
+        <p class="sim-note" id="gg-msg" tabindex="-1"></p>
       </div>`;
     controls.innerHTML = `<button class="btn ghost" id="gg-reset">Iš naujo</button>`;
     const trayEl = stage.querySelector("#gg-tray");
@@ -491,6 +491,8 @@ const gyvunuGrupes = {
           drawTray();
           api.readout(`Pasirinkai: ${a.name}. Į kurią grupę dėti?`);
           api.speak(a.name, { rate: .9 });
+          // Klaviatūra nesustoja ties perkurtu sąrašu: sekantis žingsnis — grupė.
+          binsEl.querySelector("button[data-g]").focus();
         });
         trayEl.appendChild(b);
       });
@@ -530,9 +532,12 @@ const gyvunuGrupes = {
             msg.textContent = "Visi gyvūnai savo grupėse! Pagalvok: kuo dar skiriasi šios trys grupės?";
             api.readout(`Visos grupės pilnos: žinduoliai ${placed.zinduoliai}, paukščiai ${placed.pauksciai}, žuvys ${placed.zuvis}.`);
             api.progress({ correct: true });
+            msg.focus();
           } else {
-            msg.textContent = `Teisingai — ${a.name} priklauso ${g.dative}. ${a.name} ${a.pozymis}.`;
+            msg.textContent = `Teisingai — ${a.name} priklauso ${g.dative} ir ${a.pozymis}.`;
             api.readout(`Teisingai. ${a.name} priklauso ${g.dative}. Liko ${left()}.`);
+            // Grįžtama prie gyvūnų: kitas priskyrimas prasideda nuo pasirinkimo.
+            trayEl.querySelector("button").focus();
           }
         } else {
           bin.classList.add("wiggle");

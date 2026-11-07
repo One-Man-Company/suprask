@@ -103,3 +103,11 @@ Naują pamoką **prideda** tas, kas rado defektą; senos netrinamos ir neperraš
 - **Taisyklė:** scenos nenaudoja savo stačiakampių. Jos renka kompoziciją iš `assets/js/sims/art.js` (`defs`, `sun`, `cloud`, `hills`, `soil`, `tree`, `leaf`, `stem`, `flower`, `river`, `bridge`, `block`, `kid`, `grass`, `snow`). Spalvos ir formos keičiasi pagal būseną: žiema — šaltos kalvos ir plikas medis, vasara — žalios, ruduo — geltonos ir krintantys lapai.
 - **Papildoma taisyklė:** ženklas ekrane ir iliustracija turi sutarti. Jei užrašas „žiema“, žalių kalvų būti negali — tai klaidinantis modelis.
 - **Patikra:** `python3 scripts/check_art.py` — scena, kuri piešia SVG savo formomis ir nenaudoja `art.js`, laikoma broku; `LEGACY` sąrašas gali tik mažėti. Be to `check_view.py` tikrina išdėstymą, bet ne meną; kiekvieną naują ar pakeistą sceną žmogus (ar vaizdo peržiūra) įvertina atskirai: ar matosi, kas pavaizduota, be paaiškinimo.
+
+## LL-14 — Gyvas tekstas, keičiamas kiekvieną kadrą
+
+- **Simptomas:** laikrodžio pamokoje ekrano skaitytuvas per vieną 1,4 s pasukimą paskelbė „Ratas nebaigtas“ apie 84 kartus. Vaikas su ekrano skaitytuvu negirdi nieko kito, o regintis vaikas nemato jokios problemos — todėl defektas lieka nepastebėtas.
+- **Priežastis:** `paint()` piešia kiekvieną `requestAnimationFrame` kadrą ir kiekviename kadre kvietė `api.readout(...)`, kuri rašo į `aria-live="polite"` sritį. Trys skirtingos reikšmės virto 86 pranešimais.
+- **Taisyklė:** `api.readout()` ir fokusuoto elemento `aria-label` keičiami **tik pasikeitus reikšmei**, ne kiekviename kadre: laikyk `lastReadout` / `lastLabel` ir pranešk, kai tekstas kitas. Animacija gali būti kadrinė, tekstas — ne.
+- **Patikra:** MutationObserver ant `#sim-readout` per vieną pilną veiksmą (čia — vienas ratas) turi rodyti **tiek pat mutacijų, kiek skirtingų reikšmių**, ne 80+. `check_view.py` to nepagauna, nes matuoja išdėstymą, ne pranešimų skaičių.
+

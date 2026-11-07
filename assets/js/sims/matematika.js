@@ -502,6 +502,11 @@ const laikrodisSujungtosRodykles = {
     let raf = 0;
     let dragAngle = null;
     let reported = false;
+    // Animacijos metu paint() būna iškviečiamas kiekvieną kadrą (~86 k./ratą).
+    // aria-live sritis neturi kartoti to paties 86 kartus — pranešam tik kai
+    // pasikeičia reikšmė. Ta pati taisyklė galioja ir fokusuoto paveikslo žymai.
+    let lastReadout = "";
+    let lastLabel = "";
 
     const hourOf = () => 1 + (((startHour - 1 + Math.floor(turns)) % 12) + 12) % 12;
     const fracOf = () => turns - Math.floor(turns);
@@ -579,20 +584,27 @@ const laikrodisSujungtosRodykles = {
     svg.appendChild(svgEl("circle", { cx: 180, cy: 180, r: 9, fill: "var(--ink)" }));
 
     /* --- būsena ------------------------------------------------------ */
+    function sayReadout(text) {
+      if (text === lastReadout) return;
+      lastReadout = text;
+      api.readout(text);
+    }
+
     function paint() {
       const h = hourOf();
       const frac = fracOf();
       longG.setAttribute("transform", `rotate(${frac * 360} 180 180)`);
       shortG.setAttribute("transform", `rotate(${(h % 12) * 30 + frac * 30} 180 180)`);
       digital.textContent = `${h} val.`;
-      svg.setAttribute("aria-label", `Laikrodis: ${wordOf(h)}. Ilgoji rodyklė ${frac < 0.001 ? "ties 12" : "dar sukasi"}.`);
+      const label = `Laikrodis: ${wordOf(h)}. Ilgoji rodyklė ${frac < 0.001 ? "ties 12" : "dar sukasi"}.`;
+      if (label !== lastLabel) { lastLabel = label; svg.setAttribute("aria-label", label); }
 
       if (locked) return;
       if (frac > 0.001) {
-        api.readout("Ratas nebaigtas");
+        sayReadout("Ratas nebaigtas");
         msg.textContent = "Ilgoji dar neapėjo viso rato. Trumpoji dar tarp skaičių.";
       } else {
-        api.readout(wordOf(h));
+        sayReadout(wordOf(h));
         msg.textContent = turns === 0
           ? "Ilgoji ties 12. Suk ją per visą ratą."
           : "Ratas baigtas: ilgoji ties 12, trumpoji stovi ties skaičiumi.";

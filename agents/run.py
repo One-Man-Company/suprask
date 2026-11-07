@@ -122,7 +122,7 @@ ROLES: dict[str, dict] = {
         "description": "Tobulina klasių struktūrą ir sąsają (desktop/tablet pirmiausia)",
     },
     "kritikas": {
-        "file": "roles/kritikas.md", "profile": "deepseekv4flashlatest", "toolsets": "terminal,file,web",
+        "file": "roles/kritikas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
         "max_turns": 40, "budget": 1800, "timeout": 2400,
         "cadence": "kasdien", "on_calendar": "*-*-* 14:00:00",
         "description": "Nepriklausoma kritika: pedagogika, UX, turinio teiginiai, gairių laikymasis",
@@ -146,7 +146,7 @@ ROLES: dict[str, dict] = {
         "description": "Kalbos ir UX redaktorius: formuluočių vienareikšmiškumas + ką vaikas mato desktop/planšetėje/telefone su Brave skydais",
     },
     "sistemos-architektas": {
-        "file": "roles/sistemos-architektas.md", "profile": "deepseekpro", "toolsets": "terminal,file,web",
+        "file": "roles/sistemos-architektas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
         "max_turns": 60, "budget": 2400, "timeout": 3600,
         "cadence": "kasdien", "on_calendar": "*-*-* 20:20:00",
         "description": "Sistemos architektas: matuoja visų agentų darbą, taiso sistemines problemas, "

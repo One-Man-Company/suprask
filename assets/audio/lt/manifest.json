@@ -719,6 +719,10 @@
   "n": "n/9857ee5f9d20326c-986364ea.mp3",
   "s": "s/9857ee5f9d20326c-11bba99c.mp3"
  },
+ "Dėlionė": {
+  "n": "n/02effa582a419044-fec7949a.mp3",
+  "s": "s/02effa582a419044-71714946.mp3"
+ },
  "E": {
   "n": "n/a9f51566bd6705f7-5d6f8aea.mp3",
   "s": "s/a9f51566bd6705f7-5c0b3da6.mp3"
@@ -791,6 +795,10 @@
   "n": "n/1c68c529e0dee2d1-8c0ac07a.mp3",
   "s": "s/1c68c529e0dee2d1-dd4ecd72.mp3"
  },
+ "Kiek monetų ir banknotų prireiks? Pasakyk spėjimą.": {
+  "n": "n/b2cf869590b9446d-61101fba.mp3",
+  "s": "s/b2cf869590b9446d-dee4c258.mp3"
+ },
  "Kiek savo blokų duosi draugui?": {
   "n": "n/968dc7212ae0e27f-06711a0e.mp3",
   "s": "s/968dc7212ae0e27f-18db5161.mp3"
@@ -806,6 +814,10 @@
  "Kiškis": {
   "n": "n/4e806f63471ec890-48d3820a.mp3",
   "s": "s/4e806f63471ec890-d90fe6f9.mp3"
+ },
+ "Knyga": {
+  "n": "n/1f143dc5ee938538-fde9cdac.mp3",
+  "s": "s/1f143dc5ee938538-102c46f6.mp3"
  },
  "Kuris elementas eina toliau?": {
   "n": "n/dd82140a8fe00a5e-a7ae467a.mp3",
@@ -895,13 +907,13 @@
   "n": "n/9f5897c7a3b79e29-125b8a6f.mp3",
   "s": "s/9f5897c7a3b79e29-df222f4d.mp3"
  },
- "Penkių centų moneta didesnė, bet verta mažiau.": {
-  "n": "n/59d9a6e94dad56c2-46ad1e6b.mp3",
-  "s": "s/59d9a6e94dad56c2-c8b44551.mp3"
+ "Per daug. Nuimk vieną pinigą.": {
+  "n": "n/432afa070cceea11-9cf15bfe.mp3",
+  "s": "s/432afa070cceea11-3e66e30b.mp3"
  },
- "Per daug. Nuimk monetą.": {
-  "n": "n/3411685a32f5488c-16de49ed.mp3",
-  "s": "s/3411685a32f5488c-3b304f65.mp3"
+ "Pieštukai": {
+  "n": "n/b8e0d102388d6cca-9cef34b6.mp3",
+  "s": "s/b8e0d102388d6cca-41832f93.mp3"
  },
  "Pilnas dešimtukas!": {
   "n": "n/bbbfb4885794d2cd-da6961e3.mp3",
@@ -983,9 +995,9 @@
   "n": "n/a9dad1a5182e618f-eddbe215.mp3",
   "s": "s/a9dad1a5182e618f-ee034586.mp3"
  },
- "Ta pati suma, kitos monetos.": {
-  "n": "n/6d5d3fd7188894fe-3379e4c5.mp3",
-  "s": "s/6d5d3fd7188894fe-f2825ead.mp3"
+ "Ta pati suma, kiti pinigai.": {
+  "n": "n/5b9254efd8413104-894c217a.mp3",
+  "s": "s/5b9254efd8413104-6264fb04.mp3"
  },
  "Teisingai!": {
   "n": "n/3d4e2b06ffc71b06-490fd930.mp3",
@@ -1042,6 +1054,10 @@
  "Vasara": {
   "n": "n/bd912f6f1cb9f2ac-617674ef.mp3",
   "s": "s/bd912f6f1cb9f2ac-ee42fdd7.mp3"
+ },
+ "Viena kupiūra atstojo kelias monetas.": {
+  "n": "n/cf35d955345c49b9-728b62a4.mp3",
+  "s": "s/cf35d955345c49b9-25c83fb4.mp3"
  },
  "Vienas laidas. Atgal į bateriją veda, bet iki lemputės neateina.": {
   "n": "n/9f7ecc7800d17921-c50a9021.mp3",

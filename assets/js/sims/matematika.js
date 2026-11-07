@@ -1253,6 +1253,7 @@ const pinigineIrKaina = {
     const setKey = () => plate.slice().sort((a, b) => b - a).join("+");
     const price = () => items[itemIdx].price;
     const priceText = () => (items[itemIdx].label ? `${items[itemIdx].label} ${fmt(price())}` : `Kaina ${fmt(price())}`);
+    const priceSentence = () => (items[itemIdx].label ? `${items[itemIdx].label} kainuoja ${fmt(price())}.` : `Kaina ${fmt(price())}.`);
 
     function syncPrice() {
       const x = TRACK_X + price() * perUnit;
@@ -1337,7 +1338,7 @@ const pinigineIrKaina = {
     function feedback() {
       const s = sum();
       if (locked) {
-        api.readout(`${priceText()}. Kiek monetų ir banknotų prireiks? Pasakyk spėjimą.`);
+        api.readout(`${priceSentence()} Kiek monetų ir banknotų prireiks? Pasakyk spėjimą.`);
         return;
       }
 
@@ -1389,6 +1390,12 @@ const pinigineIrKaina = {
             progressed = true;
             api.progress({ correct: true });
           }
+          // Vienkartinė pastaba: viena kupiūra atstojo kelias monetas.
+          if (!toldNote && plate.some(isNote)) {
+            toldNote = true;
+            msgEl.textContent = `${msgEl.textContent} Viena kupiūra atstojo kelias monetas.`;
+            if (say.kupiura) api.speak(say.kupiura);
+          }
         } else {
           api.readout(`Ta pati suma, kiti pinigai. ${fmt(price())}.`);
           msgEl.textContent = "Pinigų skaičius kitas, suma ta pati.";
@@ -1398,13 +1405,6 @@ const pinigineIrKaina = {
         api.readout(`Apmokėta. ${fmt(price())}.`);
         msgEl.textContent = "Juosta lygiai ties kainos žyma. Suma ir kaina sutampa.";
         lastSaid = "";
-      }
-
-      // Vienkartinė pastaba: viena kupiūra atstojo kelias monetas.
-      if (!toldNote && plate.some(isNote)) {
-        toldNote = true;
-        msgEl.textContent = "Viena kupiūra atstojo kelias monetas.";
-        if (say.kupiura) api.speak(say.kupiura);
       }
     }
 
@@ -1516,7 +1516,10 @@ const pinigineIrKaina = {
     const askRow = askBox.input ? askBox.input.closest(".sim-ask") : null;
     if (askRow) guessPanel.after(askRow);
 
-    wrap.addEventListener("keydown", (evt) => {
+    // Klaviatūra turi veikti ir tada, kai fokusas yra piniginėje (valdikliuose),
+    // ir tada, kai jis lėkštėje (scenoje) — todėl klausomės abiejų.
+
+    function onKey(evt) {
       if (evt.key === "Backspace") {
         evt.preventDefault();
         undo();
@@ -1529,11 +1532,14 @@ const pinigineIrKaina = {
       evt.preventDefault();
       const next = (at + (evt.key === "ArrowRight" ? 1 : -1) + list.length) % list.length;
       list[next].focus();
-    });
+    }
+
+    stage.addEventListener("keydown", onKey);
+    controls.addEventListener("keydown", onKey);
 
     syncPrice();
     paint();
-    api.readout(`${priceText()}. Kiek monetų ir banknotų prireiks? Pasakyk spėjimą.`);
+    api.readout(`${priceSentence()} Kiek monetų ir banknotų prireiks? Pasakyk spėjimą.`);
     if (say.pradzia) api.speak(say.pradzia);
 
     return null;

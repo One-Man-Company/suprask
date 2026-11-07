@@ -109,7 +109,7 @@ ROLES: dict[str, dict] = {
         # publikuoja ir atleidžia užraktą. Žr. scripts/kurejas_queue.py.
         # Kiekvienas eilės darbas paleidžiamas per `/goal` su baigties kontraktu,
         # kad agentas dirbtų, kol darbas tikrai baigtas, o ne kol baigsis ėjimai.
-        "goal": True,
+        "goal": True,  # du žingsniai: /goal sesijoje → --resume su užduotimi
         "queue": {"command": "scripts/kurejas_queue.py", "max_items": 60, "max_minutes": 720},
     },
     "simuliaciju-inzinierius": {
@@ -323,29 +323,26 @@ def lessons_brief(limit: int = 40) -> str:
     return "\n".join(items[:limit]) or "(pamokų dar nėra)"
 
 
-def goal_query(prompt: str, proposal: dict, cfg: dict) -> str:
-    """Apgaubia užduotį `/goal` komanda su baigties kontraktu.
+def goal_query(proposal: dict) -> str:
+    """Trumpas `/goal` tekstas su baigties kontraktu.
 
-    `/goal` paleidžia stovintį tikslą: po kiekvieno ėjimo teisėjas (judge) tikrina,
-    ar tikslas pasiektas, ir agentas dirba toliau, kol taip. Kontrakto laukai
-    (outcome / verification / constraints / boundaries / stop when) duoda teisėjui
-    aiškius kriterijus, o ne „atrodo padaryta“.
+    Svarbu: `/goal` one-shot režime TIK nustato tikslą ir baigia darbą per kelias
+    sekundes. Todėl tikslas nustatomas atskiru paleidimu, o pats darbas atliekamas
+    `--resume <sesija>` paleidime — tada tikslas jau įkeltas ir teisėjas tikrina
+    kiekvieną ėjimą.
     """
     target = (proposal.get("target") or "").strip()
     title = (proposal.get("title") or "").strip()
-    headline = f"Įgyvendink pasiūlymą #{proposal.get('id')}: „{title}“."
-    checks = "python3 scripts/validate_content.py; python3 scripts/check_art.py; python3 scripts/check_agents.py"
-    lines = [
-        f"/goal {headline}",
+    checks = ("python3 scripts/validate_content.py; python3 scripts/check_audio.py; "
+              "python3 scripts/check_art.py; python3 scripts/check_agents.py")
+    return "\n".join([
+        f"/goal Įgyvendink pasiūlymą #{proposal.get('id')}: „{title}“.",
         f"outcome: {target or title} įgyvendintas ir paskelbtas, visos patikros žalios",
         f"verification: {checks}",
         "constraints: neliesk kitų modulių, nekeisk agentų ar scope failų, nesilpnink kokybės vartų",
         f"boundaries: {target or 'tik šio pasiūlymo failai'}",
         "stop when: pasiūlymas netinka arba po dviejų bandymų patikros nepraeina — parašyk ataskaitą ir sustok",
-        "",
-        prompt,
-    ]
-    return "\n".join(lines)
+    ])
 
 
 def scope_brief() -> str:
@@ -896,26 +893,54 @@ def main() -> int:
     work.mkdir(parents=True, exist_ok=True)
 
     fd, query_path = tempfile.mkstemp(prefix=f"suprask-{args.role}-", suffix=".txt")
+    goal_path = query_path + ".goal"
     before = git_snapshot()
     started = dt.datetime.now()
     timeout = args.timeout or cfg["timeout"]
 
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as fh:
-            fh.write(goal_query(prompt, proposal, cfg) if (cfg.get("goal") and proposal) else prompt)
+            fh.write(prompt)
+
+        def run_cmd(cmd: list[str]):
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+            return proc.returncode, (proc.stdout or "").strip(), (proc.stderr or "").strip()
 
         def invoke(profile: str):
-            cmd = [
+            """Vienas paleidimas. Jei vaidmuo turi `goal` ir yra pasiūlymas —
+            pirmiausia nustatomas tikslas, po to tas pats darbas atliekamas
+            `--resume`, kad veiktų `/goal` teisėjo ciklas."""
+            base = [
                 HERMES, "-p", profile, "chat",
-                "--query-file", query_path,
                 "-Q",
                 "-t", cfg["toolsets"],
                 "--max-turns", str(cfg["max_turns"]),
                 "--run-budget", str(cfg["budget"]),
                 "--in", str(ROOT),
             ]
-            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
-            return proc.returncode, (proc.stdout or "").strip(), (proc.stderr or "").strip()
+
+            if not (cfg.get("goal") and proposal):
+                return run_cmd(base + ["--query-file", query_path])
+
+            # 1 žingsnis: tikslas (politika įrašoma sesijoje, todėl vėliau
+            # --max-turns / --run-budget nebegalima perduoti).
+            with open(goal_path, "w", encoding="utf-8") as fh:
+                fh.write(goal_query(proposal))
+            gcode, gout, gerr = run_cmd(base + ["--query-file", goal_path])
+            session = ""
+            for token in (gerr + " " + gout).split():
+                if token.startswith("local-"):
+                    session = token.strip()
+                    break
+            if "goal set" not in (gout + gerr).lower() or not session:
+                print(f"{args.role}: /goal nepavyko ({gout.splitlines()[:1]}) — dirbu be tikslo")
+                return run_cmd(base + ["--query-file", query_path])
+
+            # 2 žingsnis: darbas toje pačioje sesijoje su įkeltu tikslu.
+            work_cmd = [HERMES, "-p", profile, "--resume", session, "chat",
+                        "-Q", "--query-file", query_path, "--in", str(ROOT)]
+            code, out, err = run_cmd(work_cmd)
+            return code, (f"[goal {session[:20]}] " + out), err
 
         def classify(code: int, out: str, err: str) -> str:
             low = out.lower()
@@ -1000,6 +1025,7 @@ def main() -> int:
         return 124
     finally:
         Path(query_path).unlink(missing_ok=True)
+        Path(goal_path).unlink(missing_ok=True)
         fcntl.flock(lock_handle, fcntl.LOCK_UN)
         lock_handle.close()
 

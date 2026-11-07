@@ -16,6 +16,7 @@ const garsoRaides = {
     let wordEl = null;
     let hintEl = null;
     let lettersWrap = null;
+    let reported = false; // api.progress — tik įveikus visas raides (§4)
 
     function paintStage() {
       stage.innerHTML = `
@@ -31,6 +32,7 @@ const garsoRaides = {
       wordEl = stage.querySelector("#gr-word");
       hintEl = stage.querySelector("#gr-hint");
       lettersWrap = controls.querySelector("#gr-letters");
+      api.note("");
       stage.querySelector(".picture").addEventListener("click", () => {
         const item = items[i % items.length];
         api.speak(item.word, { rate: .8 });
@@ -55,7 +57,7 @@ const garsoRaides = {
             api.note("Teisingai! Pasakyk žodį garsiai ir parodyk raidę.");
             wordEl.textContent = item.word;
             api.speak(item.word);
-            api.progress({ correct: true });
+            /* Pažanga čia nežymima: tai dar viena raidė iš kelių (§4). */
             i += 1;
             setTimeout(() => { if (i < items.length) draw(); else finish(); }, 1400);
           } else {
@@ -74,6 +76,11 @@ const garsoRaides = {
         <p style="font-family:var(--font-head);font-weight:900;font-size:1.4rem">Įveikei visas raides!</p>
         <p class="sim-note">Dabar pasakyk: kurie du žodžiai prasideda ta pačia raide?</p></div>`;
       api.readout("Visos raidės įveiktos");
+      /* Tikslas pasiektas DABAR — visos raidės, o ne viena (§4). */
+      if (!reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
       controls.innerHTML = `<button class="btn" id="gr-again">Bandyti dar kartą</button>`;
       controls.querySelector("#gr-again").addEventListener("click", () => {
         i = 0;
@@ -159,6 +166,9 @@ const sakinioTvarka = {
     let s = 0;
     let chosen = [];
     let observer = null;
+    let reported = false;  // api.progress — tik sudėjus visus sakinius (§4)
+    let finished = false;
+    let locked = false;    // sakinys jau sudėtas — laukiama kito
 
     stage.innerHTML = `
       <div style="width:100%;max-width:40rem">
@@ -175,6 +185,8 @@ const sakinioTvarka = {
 
     function draw() {
       chosen = [];
+      finished = false;
+      locked = false;
       const words = shuffle(current());
       slotsEl.innerHTML = "";
       bankEl.innerHTML = words.map((w2, i) => `<button class="btn secondary" data-w="${i}" data-word="${w2}">${w2}</button>`).join("");
@@ -206,18 +218,36 @@ const sakinioTvarka = {
       });
     }
 
+    function finish() {
+      finished = true;
+      chosen = [];
+      slotsEl.innerHTML = "";
+      bankEl.innerHTML = "";
+      msgEl.textContent = "Sudėjai visus sakinius!";
+      api.readout("Visi sakiniai sudėti");
+      api.note("Sudėjai visus sakinius. Pasakyk vieną iš jų draugui — jis turi suprasti iš pirmo karto.");
+      api.speak("Sudėjai visus sakinius!");
+      /* Tikslas pasiektas DABAR — paskutinis sakinys, o ne pirmas (§4). */
+      if (!reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
     controls.querySelector("#st-clear").addEventListener("click", draw);
 
     /* automatinis patikrinimas, kai sudėti visi žodžiai */
     observer = new MutationObserver(() => {
+      if (finished || locked) return;
       if (chosen.length !== current().length) return;
       const okWords = chosen.join(" ") === current().join(" ");
       if (okWords) {
+        locked = true;
         msgEl.textContent = "Teisingai! Perskaityk sakinį garsiai.";
         api.readout("Sakinys sudėtas");
         api.speak(current().join(" "), { rate: .85 });
-        api.progress({ correct: true });
-        setTimeout(() => { s += 1; if (s < sentences.length) draw(); }, 2200);
+        /* Pažanga čia nežymima: tai dar vienas sakinys iš kelių (§4). */
+        setTimeout(() => { s += 1; if (s < sentences.length) draw(); else finish(); }, 2200);
       } else {
         msgEl.textContent = "Dar ne. Perskaityk, kas gavosi — ar sakinys turi prasmę?";
       }

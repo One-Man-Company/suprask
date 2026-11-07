@@ -19,6 +19,8 @@ const skaiciuTiese = {
     const targets = config.targets || [5, 8, 12, 15];
     let pos = 0;
     let t = 0;
+    const reached = new Set(); // kuriuos taikinius vaikas jau pasiekė
+    let reported = false;      // api.progress — tik pasiekus visus taikinius (§4)
 
     stage.innerHTML = `<div style="width:100%"><svg id="sl-svg" viewBox="0 0 720 170" role="img" aria-label="Skaičių tiesė nuo 0 iki ${max}"></svg></div>`;
     controls.innerHTML = `
@@ -70,8 +72,16 @@ const skaiciuTiese = {
       paint();
       api.speak(String(pos), { rate: .95 });
       if (pos === targets[t]) {
-        api.note(`Puiku! ${targets[t]}. Kiek žingsnių liko iki ${max}?`);
-        api.progress({ correct: true });
+        reached.add(targets[t]);
+        /* Tikslas pasiektas DABAR — visi taikiniai, o ne pirmas (§4). */
+        if (reached.size >= targets.length && !reported) {
+          reported = true;
+          api.progress({ correct: true });
+          api.note("Įveikei visus taikinius. Dabar grįžk iki nulio ir skaičiuok žingsnius.");
+          api.speak("Visi taikiniai pasiekti!");
+        } else {
+          api.note(`Puiku! ${targets[t]}. Kiek žingsnių liko iki ${max}?`);
+        }
         t = Math.min(t + 1, targets.length - 1);
         setTimeout(paint, 900);
       }
@@ -419,6 +429,8 @@ const desningumai = {
   mount({ stage, controls, api, config }) {
     const tasks = config.tasks || [];
     let i = 0;
+    let reported = false; // api.progress — tik įveikus visas sekas (§4)
+    let locked = false;   // atsakymas jau priimtas — laukiama kitos sekos
 
     stage.innerHTML = `<div id="ds-wrap" style="width:100%;max-width:40rem;text-align:center">
       <div id="ds-seq" style="display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;font-size:clamp(1.8rem,7vw,2.6rem);min-height:4rem;align-items:center"></div>
@@ -430,20 +442,28 @@ const desningumai = {
     const optsEl = controls.querySelector("#ds-opts");
 
     function draw() {
+      locked = false;
       const t = tasks[i % tasks.length];
       seqEl.innerHTML = t.seq.map((tok) => `<span style="display:inline-grid;place-items:center;min-width:2.4rem">${tok === "?" ? "❔" : tok}</span>`).join("");
       optsEl.innerHTML = t.options.map((o, k) => `<button class="btn secondary" data-k="${k}" style="font-size:1.8rem;min-width:4rem">${o}</button>`).join("");
       msg.textContent = t.prompt || "Kuris elementas eina toliau?";
       optsEl.querySelectorAll("[data-k]").forEach((b) => {
         b.addEventListener("click", () => {
+          if (locked) return;
           if (Number(b.dataset.k) === t.answer) {
+            locked = true;
             api.readout("Teisingai!");
             api.note("Seka kartojasi. Pasakyk, kokia tvarka ji eina.");
-            api.progress({ correct: true });
+            /* Pažanga čia nežymima: tai dar viena seka iš kelių (§4). */
             i += 1;
             setTimeout(() => { if (i < tasks.length) draw(); else {
               stage.innerHTML = `<div style="text-align:center;padding:1rem"><div style="font-size:4rem">🔁</div><p style="font-family:var(--font-head);font-weight:900;font-size:1.3rem">Sekos įveiktos!</p><p class="sim-note">Sugalvok savo seką iš dviejų spalvų ir pasakyk ją draugui.</p></div>`;
               optsEl.innerHTML = "";
+              /* Tikslas pasiektas DABAR — paskutinė seka, o ne pirmoji. */
+              if (!reported) {
+                reported = true;
+                api.progress({ correct: true });
+              }
             } }, 900);
           } else {
             msg.textContent = "Ne visai. Pakartok seka garsiai: pirmas, antras, pirmas, antras…";

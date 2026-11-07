@@ -79,7 +79,14 @@ export const SIMS = {
 - `api.speak(text)` — lietuviškas balsas (gerbia garso išjungimą);
 - `api.readout(text)` — didelis tekstas virš simuliacijos (`aria-live`);
 - `api.note(text)` — paaiškinimas po simuliacija;
-- `api.progress(payload)` — pažymima, kad mokinys pasiekė rezultatą.
+- `api.progress(payload)` — pažymima, kad mokinys pasiekė simuliacijos mokymosi tikslą.
+
+`api.progress()` kviečiamas tada, kai pasiektas simuliacijos mokymosi tikslas — pabaigus
+visą ciklą arba įvykdžius vieną išbaigtą veiksmą, o ne po pirmo teisingo tarpinio žingsnio.
+Jei modelis turi kelis žingsnius (raidės žodyje, gyvūnai grupėse, sekos iš eilės, keli
+skaičių tiesės taškai), pažanga žymima įveikus paskutinį; tarpiniai žingsniai gali turėti
+savo grįžtamąjį ryšį (`api.note`), bet ne pažangos įrašo. Kitaip mokytojas mato „atlikta“
+po pirmo bandymo, o vaikas — klaidingą „baigta“ būseną.
 
 Reikalavimai simuliacijai:
 

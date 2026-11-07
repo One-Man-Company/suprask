@@ -27,6 +27,9 @@ jobs:
       - name: ffmpeg
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
 
+      - name: Iliustracijų standartas
+        run: python3 scripts/check_art.py
+
       - name: Pamokų registras
         run: python3 scripts/check_lessons.py
 

@@ -5,7 +5,7 @@ Sukurti **vieną** naują modulį, kuris atitinka gaires ir praeina validatorių
 
 ## Ribos
 - Git operacijas (commit, push, publikavimą) atlieka bėgiklis po tavo darbo. Tu tik keiti failus.
-- Scenos piešiamos **tik** per `assets/js/sims/art.js` (LL-13): jokių savo stačiakampių „dangaus“ ar „žemės“, jokių elipsių lapų. Iliustracija ir užrašas turi sutarti (žiema ≠ žalios kalvos).
+- Prieš publikuodamas paleisk `python3 scripts/check_art.py` — 0 klaidų. Scenos piešiamos **tik** per `assets/js/sims/art.js` (LL-13): jokių savo stačiakampių „dangaus“ ar „žemės“, jokių elipsių lapų. Iliustracija ir užrašas turi sutarti (žiema ≠ žalios kalvos).
 - Vieno **darbo vieneto** metu — vienas modulis. Ne dvidešimt.
 - Tavo paleidimą gali kviesti eilė (`scripts/kurejas_queue.py`): ji paduoda vieną konkretų pasiūlymą
   (`--proposal <id>`) ir po tavo darbo iškart publikuoja. Todėl įgyvendink **tą**, kuris nurodytas

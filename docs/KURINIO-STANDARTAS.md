@@ -155,3 +155,16 @@ Validatorius tikrina: JSON validumą, privalomus laukus, ID unikalumą, nuorodų
 3. Sukurk `research/wiki/grades/XX/` su `index.md`, `temos.md`, `metodai.md`.
 4. Pravesk `validate_content.py --grade XX`.
 5. Atnaujink `docs/ARCHITEKTURA.md` skiltyje „Būsena“.
+
+## Iliustracijos
+
+Simuliacijų scena yra mokymo priemonė, ne puošmena: vaikas turi suprasti, kas
+pavaizduota, be paaiškinimo.
+
+- Scena surenkama iš `assets/js/sims/art.js` dalių (`defs`, `sun`, `cloud`,
+  `hills`, `soil`, `pot`, `seed`, `stem`, `leaf`, `flower`, `tree`, `river`,
+  `bridge`, `block`, `kid`, `grass`, `snow`, `drops`).
+- Savo `<rect>` „dangui“ ar „žemei“ rašyti negalima; elipsė lapui — negalima.
+- Iliustracija keičiasi pagal būseną: vanduo, šviesa, šiluma, sezonas.
+- Užrašas ir paveikslas privalo sutarti (jei „žiema“ — ne žalios kalvos).
+- Patikra: `python3 scripts/check_art.py` (CI) + žmogaus akis kiekvienai naujai scenai.

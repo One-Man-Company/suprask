@@ -389,6 +389,9 @@ def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool,
         checks.append(("garsas", [sys.executable, "scripts/check_audio.py"]))
     if any(f.startswith("assets/") for f in files) or not files:
         checks.append(("sąsaja", [sys.executable, "scripts/check_ui.py"]))
+        # LL-13: iliustracijos scenos privalo naudoti art.js — be šito agentas
+        # galėtų paskelbti plokščių stačiakampių pamoką.
+        checks.append(("iliustracijos", [sys.executable, "scripts/check_art.py"]))
     if not checks:
         return True, "validatoriai nereikalingi (pakeitimai tik docs/research/agents)"
 

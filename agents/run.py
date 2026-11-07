@@ -107,6 +107,9 @@ ROLES: dict[str, dict] = {
         "description": "Eilės darbuotojas: ima pasiūlymus po vieną ir įgyvendina, kol eilė tuščia",
         # Eilės režimas: vienas paleidimas apdoroja iki N pasiūlymų, po kiekvieno
         # publikuoja ir atleidžia užraktą. Žr. scripts/kurejas_queue.py.
+        # Kiekvienas eilės darbas paleidžiamas per `/goal` su baigties kontraktu,
+        # kad agentas dirbtų, kol darbas tikrai baigtas, o ne kol baigsis ėjimai.
+        "goal": True,
         "queue": {"command": "scripts/kurejas_queue.py", "max_items": 60, "max_minutes": 720},
     },
     "simuliaciju-inzinierius": {
@@ -318,6 +321,31 @@ def lessons_brief(limit: int = 40) -> str:
         return "(pamokų registro nėra)"
     items = re.findall(r"^## (LL-\d+ — [^\n]+)", text, re.M)
     return "\n".join(items[:limit]) or "(pamokų dar nėra)"
+
+
+def goal_query(prompt: str, proposal: dict, cfg: dict) -> str:
+    """Apgaubia užduotį `/goal` komanda su baigties kontraktu.
+
+    `/goal` paleidžia stovintį tikslą: po kiekvieno ėjimo teisėjas (judge) tikrina,
+    ar tikslas pasiektas, ir agentas dirba toliau, kol taip. Kontrakto laukai
+    (outcome / verification / constraints / boundaries / stop when) duoda teisėjui
+    aiškius kriterijus, o ne „atrodo padaryta“.
+    """
+    target = (proposal.get("target") or "").strip()
+    title = (proposal.get("title") or "").strip()
+    headline = f"Įgyvendink pasiūlymą #{proposal.get('id')}: „{title}“."
+    checks = "python3 scripts/validate_content.py; python3 scripts/check_art.py; python3 scripts/check_agents.py"
+    lines = [
+        f"/goal {headline}",
+        f"outcome: {target or title} įgyvendintas ir paskelbtas, visos patikros žalios",
+        f"verification: {checks}",
+        "constraints: neliesk kitų modulių, nekeisk agentų ar scope failų, nesilpnink kokybės vartų",
+        f"boundaries: {target or 'tik šio pasiūlymo failai'}",
+        "stop when: pasiūlymas netinka arba po dviejų bandymų patikros nepraeina — parašyk ataskaitą ir sustok",
+        "",
+        prompt,
+    ]
+    return "\n".join(lines)
 
 
 def scope_brief() -> str:
@@ -874,7 +902,7 @@ def main() -> int:
 
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as fh:
-            fh.write(prompt)
+            fh.write(goal_query(prompt, proposal, cfg) if (cfg.get("goal") and proposal) else prompt)
 
         def invoke(profile: str):
             cmd = [

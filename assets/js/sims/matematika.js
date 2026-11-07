@@ -1577,6 +1577,7 @@ const vabaliukasIrKryptys = {
     };
     const ORDER = ["up", "right", "down", "left"];
     const FACING_TEXT = { up: "į viršų, nuo tavęs", right: "į dešinę", down: "į tave", left: "į kairę" };
+    const STEP_TEXT = { up: "aukštyn", right: "į dešinę", down: "žemyn, link tavęs", left: "į kairę" };
 
     const DEFAULT_SAY = {
       "nuo-taves": "Vabaliukas žiūri nuo tavęs. Jo kairė — kairėje.",
@@ -1591,7 +1592,8 @@ const vabaliukasIrKryptys = {
 
     let pos = { col: Number(start.col), row: Number(start.row) };
     let facing = DIRS[start.facing] ? start.facing : "up";
-    let facedDown = false;
+    let guess = null;       // vaiko spėjimas: "left" | "right"
+    let compared = false;   // spėjimas lyginamas vieną kartą, kai vabaliukas atsisuka į vaiką
     let reported = false;
     let lastSaid = "";
 
@@ -1609,6 +1611,13 @@ const vabaliukasIrKryptys = {
     // o jų niekas nesukurdavo — todėl simuliacija krisdavo su „Cannot read
     // properties of null (reading 'addEventListener')" ir vaikas matydavo klaidą.
     controls.innerHTML = `
+      <div id="vk-guess" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center;margin-bottom:.5rem">
+        <p class="sim-note" id="vk-guess-prompt" style="width:100%;text-align:center;margin:0">Kur bus jo kairė, kai jis atsisuks į tave?</p>
+        <button class="btn secondary" id="vk-guess-left" aria-pressed="false"
+                aria-label="Spėju: jo kairė bus kairėje">Kairėje</button>
+        <button class="btn secondary" id="vk-guess-right" aria-pressed="false"
+                aria-label="Spėju: jo kairė bus dešinėje">Dešinėje</button>
+      </div>
       <div id="vk-pad" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;align-items:center">
         <button class="btn secondary" id="vk-left" aria-label="Pasukti į kairę">↺ Kairėn</button>
         <button class="btn" id="vk-step" aria-label="Žengti vieną langelį į priekį">Žengti ⤴</button>
@@ -1747,20 +1756,43 @@ const vabaliukasIrKryptys = {
         return;
       }
       const map = {
-        up: ["nuo-taves", "Pasukimas vyksta vietoje: jis lieka tame pačiame langelyje."],
-        right: ["i-desine", "Kairė pasisuko kartu su juo."],
-        down: ["i-tave", "Jis žiūri į tave, todėl jo kairė yra kitoje pusėje."],
-        left: ["i-kaire", "Ta pati kairė, tik kita kryptis."],
+        up: "nuo-taves",
+        right: "i-desine",
+        down: "i-tave",
+        left: "i-kaire",
       };
-      const [key, note] = map[facing];
+      const key = map[facing];
+
+      // Spėjimas lyginamas su tuo, kas įvyko, vieną kartą — kai vabaliukas
+      // pirmą kartą atsisuka į vaiką (LL-15). Jei spėjimas neteisingas,
+      // sakome, kad apyrankė kitoje pusėje, bet neatimame galimybės pastebėti.
+      if (facing === "down" && guess && !compared) {
+        compared = true;
+        const guessText = guess === "right" ? "dešinėje" : "kairėje";
+        if (guess === "right") {
+          api.readout(`Spėjai: ${guessText}. Taip ir yra.`);
+          api.note("Apyrankė atsidūrė ten, kur spėjai. Kairė sukasi kartu su kūnu.");
+        } else {
+          api.readout(`Spėjai: ${guessText}. Pažiūrėk į apyrankę — ji kitoje pusėje.`);
+          api.note("Spėjimas ir tai, ką matai, ne visada sutampa. Pasuk ir palygink.");
+        }
+        speakState(key);
+        return;
+      }
+
       api.readout(line(key));
-      api.note(note);
+      api.note(facing === "down"
+        ? "Jis žiūri į tave, todėl jo kairė yra kitoje pusėje."
+        : `Pasisuko vietoje. Dabar „Žengti“ ves ${STEP_TEXT[facing]}.`);
       speakState(key);
     }
 
     function checkProgress() {
       const onLeaf = pos.col === leaf.col && pos.row === leaf.row;
-      if (onLeaf && facedDown && !reported) {
+      // Tikslas — pasiekti lapą ir atsisukti į vaiką. Būsena tikrinama dabar,
+      // o ne „kada nors pasisuko į vaiką“: anksčiau vėliavėlė likdavo įjungta
+      // ir pažanga buvo žymima vabaliukui ant lapo žiūrint į šoną.
+      if (onLeaf && facing === "down" && !reported) {
         reported = true;
         api.progress({ correct: true });
       }
@@ -1785,7 +1817,6 @@ const vabaliukasIrKryptys = {
     function rotate(dir) {
       const i = ORDER.indexOf(facing);
       facing = ORDER[(i + (dir === "right" ? 1 : 3)) % 4];
-      if (facing === "down") facedDown = true;
       lastSaid = "";
       paint();
       syncStep();
@@ -1811,16 +1842,41 @@ const vabaliukasIrKryptys = {
     function reset() {
       pos = { col: Number(start.col), row: Number(start.row) };
       facing = DIRS[start.facing] ? start.facing : "up";
+      guess = null;
+      compared = false;
+      reported = false;
       lastSaid = "";
+      syncGuess(null);
       paint();
       syncStep();
-      api.readout("Pradedam iš naujo. Vabaliukas žiūri nuo tavęs.");
-      api.note("Pasukimas vyksta vietoje: jis lieka tame pačiame langelyje.");
+      api.readout("Pradedam iš naujo. Vabaliukas žiūri nuo tavęs. Kas bus jo kairė?");
+      api.note("Pirmiausia pasirink spėjimą, tada pasuk vabaliuką.");
+    }
+
+    function syncGuess(side) {
+      const leftBtn = controls.querySelector("#vk-guess-left");
+      const rightBtn = controls.querySelector("#vk-guess-right");
+      const prompt = controls.querySelector("#vk-guess-prompt");
+      leftBtn.setAttribute("aria-pressed", String(side === "left"));
+      rightBtn.setAttribute("aria-pressed", String(side === "right"));
+      prompt.textContent = side
+        ? `Tavo spėjimas: ${side === "right" ? "dešinėje" : "kairėje"}.`
+        : "Kur bus jo kairė, kai jis atsisuks į tave?";
+    }
+
+    function chooseGuess(side) {
+      guess = side;
+      compared = false;
+      syncGuess(side);
+      api.readout(`Spėjai: ${side === "right" ? "dešinėje" : "kairėje"}. Dabar pasuk jį į save.`);
+      api.note("Pasukimas vyksta vietoje. Tada palygink su apyranke.");
     }
 
     /* --- įėjimai ------------------------------------------------------- */
     controls.querySelector("#vk-left").addEventListener("click", () => rotate("left"));
     controls.querySelector("#vk-right").addEventListener("click", () => rotate("right"));
+    controls.querySelector("#vk-guess-left").addEventListener("click", () => chooseGuess("left"));
+    controls.querySelector("#vk-guess-right").addEventListener("click", () => chooseGuess("right"));
     stepBtn.addEventListener("click", step);
     controls.querySelector("#vk-reset").addEventListener("click", reset);
 
@@ -1834,7 +1890,7 @@ const vabaliukasIrKryptys = {
 
     paint();
     syncStep();
-    api.readout("Vabaliukas žiūri nuo tavęs. Kur bus jo kairė, kai jis atsisuks į tave? Pasakyk, tada pasuk.");
+    api.readout("Vabaliukas žiūri nuo tavęs. Kur bus jo kairė, kai jis atsisuks į tave? Pasirink spėjimą, tada pasuk.");
     api.note("Pasukimas vyksta vietoje: jis lieka tame pačiame langelyje.");
 
     return null;

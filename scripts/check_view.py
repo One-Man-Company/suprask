@@ -91,6 +91,15 @@ MEASURE = r"""
   const hiddenSim = simZone
     .filter(b => { const r = b.getBoundingClientRect(); return (r.width === 0 || r.height === 0) && !insideHidden(b); })
     .map(b => (b.getAttribute('aria-label') || b.innerText || b.id || b.className).toString().slice(0, 30));
+  // Žymos („9 min.“) neturi lūžti į dvi eilutes — aukštis išduoda.
+  const chipTall = [...document.querySelectorAll('.chip')]
+    .map(c => Math.round(c.getBoundingClientRect().height)).filter(h => h > 34).length;
+
+  // Ar simuliacija neprašo atsakymo TIK balsu (be teksto lauko ir be pasirinkimų)?
+  const readoutText = (document.querySelector('#sim-readout')?.innerText || '');
+  const hasTypedInput = !!document.querySelector('#sim-controls input, #sim-controls textarea, #sim-stage input, #sim-stage textarea');
+  const voiceOnly = /pasakyk/i.test(readoutText) && !hasTypedInput && visibleSim.length <= 1;
+
   const stage = document.querySelector('#sim-stage');
   const stageBox = stage ? stage.getBoundingClientRect() : null;
 
@@ -106,6 +115,8 @@ MEASURE = r"""
     clipped,
     simHeight: stageBox ? Math.round(stageBox.height) : 0,
     eyebrowLines,
+    chipTall,
+    voiceOnly,
     simVisibleControls: visibleSim.length,
     simHiddenControls: hiddenSim.slice(0, 5),
     loading: !!document.querySelector('.loading'),
@@ -159,6 +170,8 @@ def check_route(page, base: str, route: str, viewport: dict) -> dict:
         and not data["errors"]
         and data["eyebrowLines"] <= 1
         and data["simVisibleControls"] >= 1
+        and data["chipTall"] == 0
+        and not data["voiceOnly"]
         and not data["simHiddenControls"]
     )
     return data
@@ -220,6 +233,10 @@ def main() -> int:
                 bits.append(f"apkirptas tekstas: {r['clipped'][0]['text'][:30]}")
             if r.get("eyebrowLines", 1) > 1:
                 bits.append(f"antraštė lūžta į {r['eyebrowLines']} eilutes")
+            if r.get("chipTall"):
+                bits.append(f"žymų dviejų eilučių: {r['chipTall']}")
+            if r.get("voiceOnly"):
+                bits.append("atsakymas tik balsu (nėra teksto lauko)")
             if r.get("simVisibleControls", 1) == 0:
                 bits.append("simuliacijoje nėra matomo valdiklio")
             if r.get("simHiddenControls"):

@@ -156,6 +156,9 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 
 .chip {
   display: inline-flex; align-items: center; gap: .35rem;
+  /* Žymos tekstas („9 min.“, „atlikta“) niekada nelūžta į dvi eilutes ir
+     nesispaudžia: siaurame ekrane ji virsdavo apskritimu su „9“ virš „min.“. */
+  flex: 0 0 auto; white-space: nowrap;
   padding: .3rem .8rem; border-radius: var(--r-pill);
   background: color-mix(in srgb, var(--accent) 12%, var(--paper-2));
   color: color-mix(in srgb, var(--accent) 70%, var(--ink));
@@ -406,3 +409,11 @@ html.js .boot-fallback { display: none; }
 .eyebrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .35rem; }
 .eyebrow .dot { opacity: .55; }
 .nowrap { white-space: nowrap; }
+
+/* Tekstinio atsakymo laukas simuliacijoje (alternatyva balsui) */
+.sim-ask { display: flex; gap: .5rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: .5rem; }
+.sim-ask input {
+  min-height: 48px; width: 8.5rem; padding: .5rem .8rem; font: inherit; font-weight: 800;
+  border: 2px solid var(--line); border-radius: var(--r-s); background: var(--paper);
+}
+.sim-ask input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }

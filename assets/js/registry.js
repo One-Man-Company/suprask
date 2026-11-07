@@ -52,11 +52,35 @@ export function simIds() {
  * Simuliacijos API, kurį gauna kiekviena simuliacija.
  * Palengvina vienodą garsą, pranešimus ir būsenos išsaugojimą.
  */
-export function makeSimApi({ speak, readout, note, moduleId, onProgress }) {
+export function makeSimApi({ speak, readout, note, moduleId, onProgress, controls }) {
   return {
     speak,
     readout: (t) => { if (readout) readout.textContent = t; },
     note: (t) => { if (note) note.textContent = t; },
     progress: (payload) => { if (onProgress) onProgress(moduleId, payload); },
+
+    /**
+     * Tekstinis atsakymo laukas. Kiekviena užduotis, kuri prašo „pasakyk“,
+     * privalo turėti ir įrašymo galimybę: tylioje klasėje, be mikrofono ar
+     * nedrįstant garsiai kalbėti vaikas turi galėti atsakyti raštu.
+     * Grąžina { input, remove }.
+     */
+    ask({ label = "Atsakymas", type = "number", submitLabel = "Gerai", onValue } = {}) {
+      if (!controls) return { input: null, remove() {} };
+      const wrap = document.createElement("div");
+      wrap.className = "sim-ask";
+      wrap.innerHTML =
+        `<label class="sr-only" for="sim-ask-${moduleId}">${label}</label>` +
+        `<input id="sim-ask-${moduleId}" type="${type}" inputmode="${type === "number" ? "numeric" : "text"}" ` +
+        `placeholder="${label}" autocomplete="off">` +
+        `<button class="btn secondary" type="button">${submitLabel}</button>`;
+      controls.appendChild(wrap);
+      const input = wrap.querySelector("input");
+      const button = wrap.querySelector("button");
+      const send = () => { if (typeof onValue === "function") onValue(input.value.trim()); };
+      button.addEventListener("click", send);
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); send(); } });
+      return { input, remove: () => wrap.remove() };
+    },
   };
 }

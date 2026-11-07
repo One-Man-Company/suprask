@@ -967,13 +967,34 @@ const svarstyklesLygybe = {
       feedback();
     });
 
-    controls.querySelector("#sv-start").addEventListener("click", () => {
+    // Tas pats atrakinimas ir balsui, ir įrašytam spėjimui (pamoka LL-11).
+    function startAdding(guess) {
       locked = false;
+      guessAsk.remove();
       controls.querySelector("#sv-guess").style.display = "none";
       controls.querySelector("#sv-tools").style.display = "flex";
+      if (Number.isFinite(guess) && guess >= 0) {
+        api.note(`Tavo spėjimas: ${guess}. Dabar dėk kubelius ir pažiūrėk, ar svarstyklės lygios.`);
+      }
       paint();
       feedback();
       wrap.focus();
+    }
+
+    controls.querySelector("#sv-start").addEventListener("click", () => startAdding(NaN));
+
+    const guessAsk = api.ask({
+      label: "Kiek kubelių?",
+      type: "number",
+      submitLabel: "Atsakyti",
+      onValue: (value) => {
+        const n = Number(String(value).replace(/[^0-9]/g, ""));
+        if (!Number.isFinite(n)) {
+          api.note("Įrašyk skaičių, pavyzdžiui 3.");
+          return;
+        }
+        startAdding(n);
+      },
     });
 
     paint();
@@ -1286,16 +1307,39 @@ const pinigineIrKaina = {
     controls.querySelector("#pg-undo").addEventListener("click", undo);
     controls.querySelector("#pg-reset").addEventListener("click", reset);
 
-    controls.querySelector("#pg-say").addEventListener("click", () => {
+    // Atskleidimas: tinka ir balsinis spėjimas, ir įrašytas skaičius.
+    function unlock(guess) {
       locked = false;
+      guessAsk.remove();
       controls.querySelector("#pg-guess").style.display = "none";
       purseEl.style.opacity = "1";
       purseEl.setAttribute("aria-disabled", "false");
       purseEl.querySelectorAll(".pg-coin").forEach((b) => { b.disabled = false; });
       controls.querySelector("#pg-tools").style.display = "flex";
+      if (Number.isFinite(guess) && guess > 0) {
+        api.note(`Tavo spėjimas: ${guess} ${guess === 1 ? "moneta" : "monetos"}. Dabar dėk ir patikrink.`);
+      }
       paint();
       feedback();
       wrap.focus();
+    }
+
+    controls.querySelector("#pg-say").addEventListener("click", () => unlock(NaN));
+
+    // Alternatyva balsui: vaikas gali įrašyti spėjimą, jei kalba negarsiai,
+    // klasėje tylu arba mikrofonas nepasiekiamas. Žr. pamoka LL-11.
+    const guessAsk = api.ask({
+      label: "Kiek monetų?",
+      type: "number",
+      submitLabel: "Atsakyti",
+      onValue: (value) => {
+        const n = Number(String(value).replace(/[^0-9]/g, ""));
+        if (!Number.isFinite(n) || n <= 0) {
+          msgEl.textContent = "Įrašyk skaičių, pavyzdžiui 3.";
+          return;
+        }
+        unlock(n);
+      },
     });
 
     wrap.addEventListener("keydown", (evt) => {

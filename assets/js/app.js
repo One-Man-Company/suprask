@@ -271,7 +271,7 @@ async function viewStrand(grade, strandId) {
   const mods = s.modules.slice().sort((a, b) => seq.indexOf(a.id) - seq.indexOf(b.id)).map((m) => `
     <a class="card" href="#/modulis/${grade}/${s.id}/${m.id}" style="text-decoration:none;display:grid;gap:.4rem">
       <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:start">
-        <h3 style="margin:0;font-size:1.15rem">${esc(m.title)}</h3>
+        <h3 style="margin:0;font-size:1.15rem;min-width:0;overflow-wrap:anywhere">${esc(m.title)}</h3>
         <span class="chip ${progress.isDone(m.id) ? "mint" : ""}">${progress.isDone(m.id) ? "atlikta" : `${m.minutes || 8} min.`}</span>
       </div>
       <p class="strand-meta" style="margin:0">${esc(m.subtitle || "")}</p>
@@ -412,6 +412,7 @@ function mountSim(mod) {
   }
 
   const api = makeSimApi({
+    controls,
     speak,
     readout,
     note,

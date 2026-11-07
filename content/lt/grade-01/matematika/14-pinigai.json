@@ -2,109 +2,129 @@
   "id": "14-pinigai",
   "grade": 1,
   "strand": "matematika",
-  "title": "Pinigai: monetos vertė, ne jos dydis",
-  "subtitle": "Sumą sudaro užrašyti skaičiai, ne monetų skaičius",
+  "title": "Pinigai: vertė yra skaičius",
+  "subtitle": "Sumą sudaro skaičiai, o ne pinigų kiekis",
   "minutes": 9,
   "outcomes": [
-    "Atpažįstu euro monetą pagal užrašytą vertę.",
-    "Sudėlioju sumą iš kelių monetų.",
-    "Paaiškinu, kodėl didesnė moneta ne visada verta daugiau."
+    "Atpažįstu euro monetas ir banknotus pagal užrašytą vertę.",
+    "Sudėlioju tikslią sumą iš kelių monetų ir banknotų.",
+    "Paaiškinu, kodėl viena kupiūra gali atstoti kelias monetas."
   ],
   "concept": {
-    "title": "Skaičius ant monetos",
-    "big_idea": "Monetos vertę pasako ant jos parašytas skaičius. Suma yra tų skaičių suma — nei monetos dydis, nei jų skaičius sumos nepasako.",
+    "title": "Skaičius ant pinigo",
+    "big_idea": "Pinigo vertę pasako ant jo parašytas skaičius. Rinkinio vertė yra tų skaičių suma, o ne pinigų kiekis.",
     "steps": [
-      "Pasakyk, kiek monetų prireiks 60 centų.",
-      "Dėk monetas į lėkštę ir žiūrėk į juostą.",
-      "Juosta pasiekia kainos žymą tada, kai suma lygi kainai.",
-      "Tą pačią sumą surink kitaip."
+      "Pasirink prekę ir pažiūrėk į jos kainą.",
+      "Pasakyk spėjimą, kiek pinigų prireiks.",
+      "Dėk monetas ir banknotus. Juosta rodys sumą.",
+      "Pamėgink tą pačią sumą surinkti kitu būdu."
     ],
-    "example": "Parduotuvėje 60 centų kainuojantį ledinuką gali sumokėti viena 50 c ir viena 10 c moneta arba šešiomis 10 c monetomis."
+    "example": "Už 3 eurų pieštukus gali mokėti 2 eurai ir 1 euras. Trys 1 euro monetos — ta pati suma."
   },
   "sim": {
     "component": "pinigine-ir-kaina",
     "config": {
-      "price": 60,
-      "coins": [50, 20, 10, 5],
+      "unit": "€",
+      "items": [
+        { "label": "Pieštukai", "price": 3 },
+        { "label": "Knyga", "price": 6 },
+        { "label": "Dėlionė", "price": 8 }
+      ],
+      "coins": [2, 1],
+      "notes": [5, 10],
       "sentences": {
+        "pradzia": "Kiek monetų ir banknotų prireiks? Pasakyk spėjimą.",
         "mazai": "Dar ne visa kaina.",
         "apmoketa": "Apmokėta.",
-        "perdaug": "Per daug. Nuimk monetą.",
-        "dydis": "Penkių centų moneta didesnė, bet verta mažiau.",
-        "kitaip": "Ta pati suma, kitos monetos."
+        "perdaug": "Per daug. Nuimk vieną pinigą.",
+        "kitaip": "Ta pati suma, kiti pinigai.",
+        "kupiura": "Viena kupiūra atstojo kelias monetas."
       }
     }
   },
   "tasks": [
     {
-      "q": "Ant stalo trys monetos: 50 c, 10 c ir 10 c. Kiek tai pinigų?",
+      "q": "Ant stalo 2 € moneta ir 1 € moneta. Kiek tai pinigų?",
       "options": [
-        "3 c",
-        "30 c",
-        "70 c"
+        "2 €",
+        "3 €",
+        "12 €"
       ],
-      "answer": 2,
-      "hint": "Skaičiuok, kas parašyta ant kiekvienos monetos, o ne kiek monetų yra.",
-      "why": "50 ir 10 ir dar 10 yra 70 centų, nors monetos trys."
+      "answer": 1,
+      "hint": "Sudėk abu skaičius. Ne prirašyk juos vieną prie kito.",
+      "why": "2 ir 1 yra 3, tad rinkinys vertas 3 eurų."
     },
     {
-      "q": "Kaina 60 c. Kuris rinkinys sumokės tiksliai — nei per mažai, nei per daug?",
+      "q": "Kaina 6 €. Kuris rinkinys sumokės tiksliai?",
       "options": [
-        "50 c + 10 c",
-        "50 c + 20 c",
-        "20 c + 20 c + 10 c"
+        "5 € + 2 €",
+        "2 € + 2 € + 2 €",
+        "2 € + 2 € + 1 €"
       ],
-      "answer": 0,
-      "hint": "Sudėk abu skaičius ir palygink su kaina. Ar rinkinys didesnis už 60?",
-      "why": "50 ir 10 yra 60. Kiti rinkiniai duoda 70 ir 50 centų."
+      "answer": 1,
+      "hint": "Sudėk kiekvieną rinkinį. Palygink su kaina.",
+      "why": "Trys 2 eurų monetos duoda 6 eurus. Kiti rinkiniai duoda 7 ir 5."
     },
     {
-      "q": "Už tą pačią 80 c prekę vienas vaikas davė 50 + 20 + 10, kitas — keturias 20 c monetas. Kuris sumokėjo daugiau?",
+      "q": "Vienas vaikas davė 2 € ir 1 €. Kitas davė tris 1 € monetas. Kuris davė daugiau?",
       "options": [
         "Pirmas",
         "Antras",
-        "Abu sumokėjo tiek pat"
+        "Abu davė tiek pat"
       ],
       "answer": 2,
-      "hint": "Monetų skaičius ir monetų dydis čia nieko nesako. Sudėk abu rinkinius.",
-      "why": "50 + 20 + 10 ir 20 + 20 + 20 + 20 abiem atvejais yra 80 centų."
+      "hint": "Suskaičiuok abu rinkinius. Pinigų skaičius nieko nesako.",
+      "why": "2 ir 1 yra 3. Trys 1 euro monetos taip pat duoda 3."
     },
     {
-      "q": "Kaina 95 c. Kuris rinkinys sumokės šią kainą mažiausiai monetų?",
+      "q": "Kaina 8 €. Kuris rinkinys sumokės mažiausiai pinigų?",
       "options": [
-        "50 + 20 + 20 + 5",
-        "50 + 20 + 10 + 10 + 5",
-        "20 + 20 + 20 + 20 + 10 + 5"
+        "5 € + 1 € + 1 € + 1 €",
+        "5 € + 2 € + 1 €",
+        "2 € + 2 € + 2 € + 2 €"
+      ],
+      "answer": 1,
+      "hint": "Viena didesnė moneta atstoja kelias mažesnes. Skaičiuok pinigus kiekviename rinkinyje.",
+      "why": "5 ir 2 ir 1 yra 8. Tam reikia trijų pinigų, o kitiems — keturių.",
+      "optional": true
+    },
+    {
+      "q": "Kaina 6 €. Turi 5 € banknotą. Kiek dar reikia pridėti?",
+      "options": [
+        "1 €",
+        "2 €",
+        "5 €"
       ],
       "answer": 0,
-      "hint": "Viena didesnė moneta gali pakeisti kelias mažesnes. Skaičiuok, kiek monetų lieka kiekviename rinkinyje.",
-      "why": "50 + 20 + 20 + 5 yra 95 centai iš keturių monetų, o kitiems rinkiniams reikia penkių ar šešių.",
-      "optional": true
+      "hint": "Kiek trūksta nuo 5 iki 6?",
+      "why": "5 ir 1 yra 6, tad trūksta 1 euro."
     }
   ],
-  "reflect": "Kai dvi monetos skiriasi dydžiu, kaip sužinai, kuri verta daugiau? Papasakok, kur žiūri.",
+  "reflect": "Kaip sužinai, kiek pinigų yra saujoje? Papasakok, kur žiūri.",
   "teacher": {
-    "goal": "Suprasti, kad monetos vertę pasako užrašytas skaičius, o sumą — tų skaičių suma (programa: euro monetų atpažinimas pagal vertę ir sumos sudarymas keliais deriniais).",
-    "prompt": "Kuri moneta verta daugiau? Kiek monetų prireiks?",
-    "offline": "Padarykite du popierinius maišelius. Į vieną įdėkite vieną 50 c monetą, į kitą — penkias 10 c monetas. Leiskite vaikui pasverti abu maišelius rankoje ir pasakyti, kuriame, jo nuomone, daugiau pinigų. Tada išverskite monetas ir kartu suskaičiuokite: abiem atvejais 50 c. Po to rūšiuokite tikras monetas pagal užrašytą skaičių, ne pagal dydį — 5 c moneta didesnė už 10 c.",
+    "goal": "Suprasti, kad pinigo vertę pasako užrašytas skaičius, o sumą — tų skaičių suma (programa: euro banknotų ir monetų atpažinimas pagal vertę, sumos sudėliojimas keliais deriniais).",
+    "prompt": "Kiek pinigų reikia? Ar gali sumokėti mažiau pinigų?",
+    "offline": "Ant lapelių užrašykite kainas: 3, 6 ir 8 eurai. Iš popieriaus iškirpkite 1 ir 2 eurų monetas bei 5 eurų banknotą. Vaikas dėlioja tikslią sumą, tada tą pačią sumą surenka kitu deriniu. Pabaigoje palyginkite tikras 5 ir 10 centų monetas: 5 centų moneta didesnė, bet verta perpus mažiau.",
     "misconceptions": [
-      "„Didesnė moneta verta daugiau“ — 5 centų moneta yra 21,25 mm, o 10 centų — 19,75 mm, tad 5 c moneta didesnė, nors verta perpus mažiau. Padeda tikros monetos: apverskite ir perskaitykite skaičių.",
-      "„Daugiau monetų — daugiau pinigų“ — 6 × 10 c ir 50 c + 10 c duoda tą pačią 60 c sumą su skirtingu monetų skaičiumi. Modelis monetų skaičių ir sumą rodo atskirose eilutėse ir niekada nesujungia.",
-      "„Monetos vertė — tai, ką už ją galima nupirkti“ („verta ledinuko“) — modelis rodo kainą, o ne pasirinkimą parduotuvėje, todėl ši nuostata aptariama su mokytoju, o ne vaizduojama. Modelis apsiriboja monetomis iki 1 euro; banknotai ir 1–2 euro monetos lieka veiklai su tikrais pinigais, nes reikalautų euro ir centų sąryšio."
+      "„Daugiau pinigų — daugiau vertės“ — 2 € ir 1 € duoda 3 €, ir trys 1 € monetos duoda tą pačią sumą. Modelis pinigų skaičių ir sumą rodo atskirose eilutėse ir niekada nesujungia.",
+      "„Didesnė moneta verta daugiau“ — 5 centų moneta yra 21,25 mm, o 10 centų — 19,75 mm, tad 5 centų didesnė, nors verta perpus mažiau. Ekrane tas 1,5 mm būtų apie 2 px, todėl modelis to nevaizduoja: tai tikrinama su tikromis monetomis veikloje be ekrano.",
+      "„Už 3 € prekę galima duoti 5 € ir gauti grąžą“ — modelis moko rinkti tikslią sumą be grąžos. Parduotuvėje grąža yra, todėl su vaiku pasakykite, kad čia — tikslios sumos pratimas, o ne taisyklė, kaip mokama parduotuvėje.",
+      "„Banknotas yra vienas pinigas, tad jo vertė maža“ — 5 € banknotas atstoja penkias 1 € monetas. Modelis rodo abu rinkinius ir jų sumą, o spėjimas prieš dėliojimą parodo, kad vienetų skaičius sumos nepasako."
     ]
   },
   "sources": [
     "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, 1 klasė: mokomasi atpažinti euro banknotus ir monetas pagal vertę, norimą sumą sudėlioti keliais skirtingais banknotų ir monetų deriniais.",
     "Matematikos bendroji programa (2022), „Skaičiai ir skaičiavimai“, 1–2 klasė: pinigai, euro monetos ir banknotai, sumos sudarymas.",
     "Berti, A. E., & Bombi, A. S. (1981). The development of the concept of money and its value: A longitudinal study. Child Development, 52(4), 1179–1182. https://doi.org/10.2307/1129504",
-    "Hasegawa, K. (2020). The size-value compatibility effect. Scientific Reports, 10, 62419. https://doi.org/10.1038/s41598-020-62419-8",
     "Edmunds, G. J., & Whitehurst, K. (1973). The emergence and development of monetary concepts in young children (ERIC ED087553). https://eric.ed.gov/?id=ED087553",
     "Tracy, D. M., & Fanelli, B. H. (2000). Teaching money concepts: Are we shortchanging our kids? (ERIC ED451065). https://eric.ed.gov/?id=ED451065",
-    "Europos Komisija. Common sides of euro coins (techninės specifikacijos): 5 c — 21,25 mm, 10 c — 19,75 mm. https://economy-finance.ec.europa.eu/euro/euro-coins-and-notes/euro-coins/common-sides-euro-coins_en"
+    "Hasegawa, K. (2020). The size-value compatibility effect. Scientific Reports, 10, 62419. https://doi.org/10.1038/s41598-020-62419-8",
+    "Europos Komisija. Common sides of euro coins (5 c — 21,25 mm, 10 c — 19,75 mm). https://economy-finance.ec.europa.eu/euro/euro-coins-and-notes/euro-coins/common-sides-euro-coins_en",
+    "Europos centrinis bankas. Euro banknotes (5 € — 120 × 62 mm, 10 € — 127 × 67 mm). https://www.ecb.europa.eu/euro/banknotes/html/index.en.html"
   ],
   "svietimas1": [
-    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (vertė yra užrašytas skaičius, suma — tų skaičių suma), banknotai ir euro-centų sąryšis sąmoningai neįtraukti",
-    "2 žingsnis — vienodas vertinimas: užduotys tikrina supratimą naujoje situacijoje (du rinkiniai už tą pačią kainą), ne įsimintą formuluotę",
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (vertė yra užrašytas skaičius, suma — tų skaičių suma); euro ir centų sąryšis bei grąža sąmoningai neįtraukti",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina supratimą naujoje situacijoje (du rinkiniai už tą pačią sumą, banknotas ir moneta), ne įsimintą formuluotę",
     "3 žingsnis — pagalba laiku: spėjimas prieš pirmą judesį ir jo palyginimas su rezultatu, užuomina kiekvienoje užduotyje, praplėtimo užduotis greitesniems"
   ]
 }

@@ -210,6 +210,18 @@ def main() -> int:
             print(f"  #{r['id']} {r['role']} · {r['status']}: {(r.get('detail') or '— priežastis neužrašyta')[:150]}")
 
     enabled = data["scope"]["enabled"]
+    print("\nModeliai (kas paleidžia kiekvieną agentą):")
+    try:
+        import profiles as prof
+        import run as runner
+        rows = prof.for_roles(runner.ROLES)
+        w = max(len(x["role"]) for x in rows)
+        print(f"  {'agentas':<{w}}  {'profilis':<22}{'provider':<14}{'modelis'}")
+        for x in rows:
+            print(f"  {x['role']:<{w}}  {x['profile']:<22}{x['provider']:<14}{x['model']}")
+    except Exception as exc:  # noqa: BLE001
+        print("  (nepavyko:", exc, ")")
+
     print("\nĮjungtos klasės:", enabled)
     return 0
 

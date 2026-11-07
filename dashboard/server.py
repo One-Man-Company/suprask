@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import db  # noqa: E402
 import scope as grade_scope  # noqa: E402
+import profiles as prof  # noqa: E402
 import garsas  # noqa: E402
 import check_published  # noqa: E402
 
@@ -199,7 +200,9 @@ class Handler(BaseHTTPRequestHandler):
                 "roles": db.role_stats(),
                 "last_run": runs[0] if runs else None,
                 "timers": timer_state(),
-                "schedule": [{"role": r, "cadence": c["cadence"], "on_calendar": c["on_calendar"], "description": c["description"]}
+                "schedule": [{"role": r, "cadence": c["cadence"], "on_calendar": c["on_calendar"],
+                              "description": c["description"], "profile": c.get("profile", ""),
+                              **{k: v for k, v in prof.resolve(c.get("profile", "")).items() if k != "profile"}}
                              for r, c in sorted(db_roles().items())],
                 "runs_today": len([r for r in db.recent_runs(200) if (r.get("started") or "")[:10] == today()]),
             })
@@ -450,7 +453,7 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 
   <section class="card">
     <h2>Suplanuoti paleidimai</h2>
-    <table><thead><tr><th>Vaidmuo</th><th>Dažnis</th><th>Kitas</th><th>Paskutinis</th><th></th></tr></thead>
+    <table><thead><tr><th>Vaidmuo</th><th>Modelis</th><th>Dažnis</th><th>Kitas</th><th>Paskutinis</th><th></th></tr></thead>
     <tbody id="schedule"></tbody></table>
   </section>
 
@@ -525,6 +528,8 @@ async function loadOverview(){
     const t = timerMap[s.role] || {};
     return `<tr>
       <td data-label="Vaidmuo"><b>${esc(s.role)}</b><div class="muted" style="font-size:12px">${esc(s.description)}</div></td>
+      <td data-label="Modelis"><b style="font-size:12px">${esc(s.model || "—")}</b>
+        <div class="muted" style="font-size:11px">${esc(s.profile || "")} · ${esc(s.provider || "")}</div></td>
       <td data-label="Dažnis">${esc(s.cadence)}</td>
       <td data-label="Kitas" class="muted nowrap">${esc((t.next||"—").replace("n/a","—"))}</td>
       <td data-label="Paskutinis" class="muted nowrap">${esc(t.last||"—")}</td>

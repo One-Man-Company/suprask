@@ -15,7 +15,7 @@
   "big_idea": "Kairė ir dešinė priklauso ne kambariui, o kūnui. Kai žmogus atsisuka į tave, jo kairė atsiduria tavo dešinėje.",
   "steps": [
    "Užsimauk popierinę apyrankę ant kairiojo riešo. Pasisuk vietoje. Ar apyrankė liko toje pačioje kambario pusėje?",
-   "Ekrane vabaliukas žiūri nuo tavęs. Pasuk jį ir stebėk, kur keliauja jo kairė.",
+   "Ekrane vabaliukas žiūri nuo tavęs. Pasuk jį: ta pati komanda „Žengti“ nuves į kitą langelį.",
    "Kai jis žiūri į tave, jo kairė yra tavo dešinėje. Pasakyk tą sakinį balsu.",
    "Tikram žmogui kairę randi kitaip. Atsisuk į jį arba įsivaizduok save jo vietoje."
   ],
@@ -69,7 +69,7 @@
    "why": "Iš dešinės į savo kairę per ketvirtį rato — vabaliukas atsisuka į viršų."
   },
   {
-   "q": "Mokytoja stovi priešais klasę ir sako: „Pakelkite dešinę ranką.“ Kurioje klasės pusėje yra jos dešinė?",
+   "q": "Mokytoja priešais klasę sako: „Kelkite dešinę ranką.“ Kur jos dešinė?",
    "options": [
     "Mano dešinėje",
     "Abiejose pusėse",
@@ -80,13 +80,24 @@
    "why": "Ji žiūri į tave, todėl jos dešinė yra tavo kairėje."
   },
   {
-   "q": "Du vaikai stovi vienas priešais kitą. Abu pasuka į savo kairę. Ar jie žiūri į tą pačią pusę?",
+   "q": "Vabaliukas žengė aukštyn. Pasisuko į tave. Kur eis „Žengti“ dabar?",
    "options": [
-    "Ne, į priešingas puses",
-    "Taip, į tą pačią pusę",
-    "Ne, vienas atsisuko atgal"
+    "Žemyn, link manęs",
+    "Vėl aukštyn",
+    "Į dešinę"
    ],
    "answer": 0,
+   "hint": "Prisimink, kur dabar žiūri jo akys.",
+   "why": "„Žengti“ visada veda į priekį, o priekis pasisuko į tave."
+  },
+  {
+   "q": "Du vaikai stovi vienas priešais kitą. Abu pasuka į savo kairę. Ar jie žiūri į tą pačią pusę?",
+   "options": [
+    "Taip, į tą pačią pusę",
+    "Ne, į priešingas puses",
+    "Ne, vienas atsisuko atgal"
+   ],
+   "answer": 1,
    "hint": "Kiekvienas suka savo kūno atžvilgiu. Jie stovi priešingomis kryptimis.",
    "why": "Jie stovi priešingai, todėl jų kairės rodo į priešingas puses.",
    "optional": true

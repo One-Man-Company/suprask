@@ -69,7 +69,10 @@ ROLES: dict[str, dict] = {
         "file": "roles/kurejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
         "max_turns": 60, "budget": 2400, "timeout": 3600,
         "cadence": "kasdien", "on_calendar": "*-*-* 09:30:00",
-        "description": "Kuria po vieną modulį pagal patvirtintus metodus, atidaro PR",
+        "description": "Eilės darbuotojas: ima pasiūlymus po vieną ir įgyvendina, kol eilė tuščia",
+        # Eilės režimas: vienas paleidimas apdoroja iki N pasiūlymų, po kiekvieno
+        # publikuoja ir atleidžia užraktą. Žr. scripts/kurejas_queue.py.
+        "queue": {"command": "scripts/kurejas_queue.py", "max_items": 8, "max_minutes": 180},
     },
     "simuliaciju-inzinierius": {
         "file": "roles/simuliaciju-inzinierius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
@@ -262,7 +265,7 @@ def lessons_brief(limit: int = 40) -> str:
     return "\n".join(items[:limit]) or "(pamokų dar nėra)"
 
 
-def build_prompt(role: str, cfg: dict, run_id: int) -> str:
+def build_prompt(role: str, cfg: dict, run_id: int, proposal: dict | None = None) -> str:
     role_text = read(AGENTS / cfg["file"])
     if not role_text:
         raise SystemExit(f"Nerastas vaidmens failas: {cfg['file']}")
@@ -286,6 +289,16 @@ def build_prompt(role: str, cfg: dict, run_id: int) -> str:
     )
     if "PASIŪLYMŲ FORMATAS" in role_text or cfg.get("proposals", True):
         body += PROPOSAL_RULES
+    if proposal:
+        body += (
+            "\n--- ŠIO PALEIDIMO UŽDUOTIS (privaloma) ---\n"
+            f"Įgyvendink TIK pasiūlymą #{proposal['id']}: „{proposal.get('title', '')}“.\n"
+            f"Tikslas (failas): {proposal.get('target') or '(nepasakyta)'}\n"
+            f"Kodėl: {(proposal.get('body') or '')[:600]}\n"
+            f"Įrodymai: {(proposal.get('evidence') or '')[:400]}\n"
+            "Nepradėk kitų pasiūlymų. Jei šis pasiūlymas netinka (pasenęs, prieštarauja gairėms), "
+            "paaiškink ataskaitoje ir NIEKO nekurki — bėgiklis jį pažymės kaip blocked.\n"
+        )
     return body
 
 
@@ -615,15 +628,28 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("role", choices=sorted(ROLES))
     ap.add_argument("--dry-run", action="store_true", help="tik parodyti promptą")
-    ap.add_argument("--trigger", default="manual", choices=["manual", "schedule", "dashboard"])
+    ap.add_argument("--trigger", default="manual", choices=["manual", "schedule", "dashboard", "queue"])
     ap.add_argument("--note", default="")
     ap.add_argument("--timeout", type=int, default=0)
+    ap.add_argument("--proposal", type=int, default=0,
+                    help="įgyvendinti tik šį pasiūlymą (queue režimui)")
     ap.add_argument("--publish-only", action="store_true",
                     help="nepaleisti modelio — tik validuoti ir paskelbti jau esančius pakeitimus")
     args = ap.parse_args()
 
     cfg = ROLES[args.role]
     db.init()
+
+    proposal = None
+    if args.proposal:
+        rows = [r for r in db.proposals(500) if int(r["id"]) == args.proposal]
+        if not rows:
+            print(f"Nerastas pasiūlymas #{args.proposal}")
+            return 2
+        proposal = rows[0]
+        if proposal.get("status") in ("done", "blocked") and not args.publish_only:
+            print(f"Pasiūlymas #{args.proposal} jau {proposal['status']} — praleista")
+            return 0
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     WORK_DIR.mkdir(parents=True, exist_ok=True)
     PROPOSALS.mkdir(parents=True, exist_ok=True)
@@ -657,7 +683,7 @@ def main() -> int:
     if args.role == "publikavimo-agentas" and not args.dry_run:
         print(f"publikavimo-agentas: {push_backlog()}")
 
-    prompt = build_prompt(args.role, cfg, run_id)
+    prompt = build_prompt(args.role, cfg, run_id, proposal)
 
     if args.dry_run:
         print(prompt)
@@ -740,6 +766,12 @@ def main() -> int:
         # atrodydavo kaip „nieko nepadarė“, todėl skiriame „checked“.
         if status == "empty" and len((out or "").strip()) > 400:
             status = "checked"
+
+        if proposal:
+            if status == "published":
+                db.set_proposal_status(int(proposal["id"]), "done", f"įgyvendinta commit {result['sha'][:7]}")
+            elif status in ("rejected", "conflict", "unpushed", "failed", "timeout"):
+                db.set_proposal_status(int(proposal["id"]), "blocked", f"{status}: {result['detail'][:120]}")
 
         db.finish_run(
             run_id, status, code, elapsed, str(log_path.relative_to(ROOT)), out, files,

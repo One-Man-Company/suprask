@@ -100,6 +100,12 @@ ROLES: dict[str, dict] = {
         "cadence": "kasdien", "on_calendar": "*-*-* 16:30:00",
         "description": "Sujungia patvirtintus PR, atnaujina changelog ir publikavimą",
     },
+    "publikavimo-agentas": {
+        "file": "roles/publikavimo-agentas.md", "profile": "deepseek41flash", "toolsets": "terminal,file",
+        "max_turns": 20, "budget": 700, "timeout": 900,
+        "cadence": "kas 4 h (06,10,14,18,22)", "on_calendar": "*-*-* 06,10,14,18,22:10:00",
+        "description": "Užtikrina, kad sukurtas turinys būtų paskelbtas ir neprarastų ankstesnių modulių",
+    },
     "tikrintojas": {
         "file": "roles/tikrintojas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
         "max_turns": 30, "budget": 900, "timeout": 1200,
@@ -463,6 +469,42 @@ def ensure_clean(role: str) -> str:
     return ""
 
 
+
+def push_backlog() -> str:
+    """Išstumia tai, kas jau sucommituota, bet dar nepasiekė `main`.
+
+    Publikavimo agentui tai pagrindinis veiksmas: jo darbas prasideda nuo to,
+    kad repo ir svetainė sutaptų.
+    """
+    git("fetch", "origin")
+    pending = [c for c in git("rev-list", "origin/main..HEAD").stdout.split() if c]
+    if not pending:
+        return "backlog'o nėra"
+    merge = git("merge", "--no-edit", "origin/main")
+    if merge.returncode != 0:
+        conflicts = [c for c in git("diff", "--name-only", "--diff-filter=U").stdout.split() if c]
+        ok = bool(conflicts)
+        for rel in conflicts:
+            target = ROOT / rel
+            if rel.endswith(".md"):
+                _union_markdown(target)
+            elif rel.endswith(("index.json", "path.json")) and _merge_json_union(rel, target):
+                pass
+            else:
+                ok = False
+                break
+            git("add", rel)
+        if not ok:
+            git("merge", "--abort")
+            return f"konfliktas: {', '.join(conflicts[:3])}"
+        git("commit", "--no-edit")
+    push = git("push", "origin", "HEAD:refs/heads/main", timeout=300)
+    if push.returncode != 0:
+        return f"push nepavyko: {push.stderr.strip()[:120]}"
+    git("branch", "-f", "main", "HEAD")
+    return f"išstumta {len(pending)} commit'ų"
+
+
 def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True) -> dict:
     """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą."""
     if not files:
@@ -580,6 +622,9 @@ def main() -> int:
     cleaned = ensure_clean(args.role)
     if cleaned:
         print(f"{args.role}: {cleaned}")
+
+    if args.role == "publikavimo-agentas" and not args.dry_run:
+        print(f"publikavimo-agentas: {push_backlog()}")
 
     prompt = build_prompt(args.role, cfg, run_id)
 

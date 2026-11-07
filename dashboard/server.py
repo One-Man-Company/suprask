@@ -27,14 +27,17 @@ import secrets
 import string
 import subprocess
 import sys
+import time
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "agents"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import db  # noqa: E402
 import garsas  # noqa: E402
+import check_published  # noqa: E402
 
 HOST = os.environ.get("SUPRASK_DASH_HOST", "100.118.226.11")
 PORT = int(os.environ.get("SUPRASK_DASH_PORT", "9410"))
@@ -208,6 +211,17 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(row)
         if path == "/api/proposals":
             return self._json(db.proposals(100))
+        if path == "/api/publish-status":
+            now = time.time()
+            cached = getattr(self.server, "_publish_cache", None)
+            if cached and now - cached[0] < 60:
+                return self._json(cached[1])
+            try:
+                data = check_published.report()
+            except Exception as exc:  # noqa: BLE001
+                data = {"error": str(exc)}
+            self.server._publish_cache = (now, data)
+            return self._json(data)
         if path == "/garsas":
             return self._send(200, garsas.HTML.encode("utf-8"))
         if path == "/api/audio":
@@ -261,6 +275,7 @@ class Handler(BaseHTTPRequestHandler):
 
 def db_roles() -> dict:
     sys.path.insert(0, str(ROOT / "agents"))
+    sys.path.insert(0, str(ROOT / "scripts"))
     import run as runner  # lokalus importas, kad būtų vienas sąrašas
     return runner.ROLES
 
@@ -402,6 +417,11 @@ async function loadOverview(){
     <div class="card"><h2>Moduliai</h2><div class="big">${st.modules}</div><div class="kv"><span>užduotys</span><b>${st.tasks}</b></div><div class="kv"><span>simuliacijos</span><b>${st.sims}</b></div></div>
     <div class="card"><h2>Garsas</h2><div class="big">${st.audio_files}</div><div class="kv"><span>įrašai</span><b>${st.audio_mb} MB</b></div><div class="kv"><span>kalba</span><b>lt-LT</b></div></div>
     <div class="card"><h2>Šiandien</h2><div class="big">${d.runs_today}</div><div class="kv"><span>paleidimai</span><b>${d.runs_today}</b></div><div class="kv"><span>atviri pasiūlymai</span><b id="openProp">—</b></div></div>
+    <div class="card" id="pubCard"><h2>Publikavimas</h2><div class="big" id="pubBig">—</div>
+      <div class="kv"><span>repo</span><b id="pubLocal">—</b></div>
+      <div class="kv"><span>svetainėje</span><b id="pubLive">—</b></div>
+      <div class="kv"><span>neišstumta</span><b id="pubUnpushed">—</b></div>
+      <div class="kv"><span>detalės</span><b id="pubNote">—</b></div></div>
     <div class="card"><h2>Paskutinis paleidimas</h2><div class="big">${d.last_run ? esc(d.last_run.status) : "—"}</div><div class="kv"><span>vaidmuo</span><b>${d.last_run ? esc(d.last_run.role) : "—"}</b></div><div class="kv"><span>prieš</span><b>${d.last_run ? ago(d.last_run.finished || d.last_run.started) : "—"}</b></div></div>`;
 
   const timerMap = {};
@@ -463,6 +483,22 @@ async function runNow(role, btn){
   setTimeout(()=>{ btn.disabled=false; btn.textContent="Paleisti dabar"; loadAll(); }, 4000);
 }
 
+async function loadPublish(){
+  try {
+    const p = await j("/api/publish-status");
+    if (p.error) { $("#pubBig").textContent = "klaida"; $("#pubNote").textContent = String(p.error).slice(0,60); return; }
+    const drift = (p.missing_on_live||[]).length;
+    const risky = (p.hidden_locally||[]).length;
+    $("#pubBig").textContent = (drift === 0 && !p.unpushed_commits) ? "sutampa" : `${drift} neskelbta`;
+    $("#pubLocal").textContent = p.local;
+    $("#pubLive").textContent = p.published;
+    $("#pubUnpushed").textContent = p.unpushed_commits;
+    $("#pubNote").textContent = risky ? `repo nebeturi: ${p.hidden_locally.join(", ").slice(0,40)}`
+      : drift ? p.missing_on_live.join(", ").slice(0,50)
+      : (p.last_commit||"").slice(0,46);
+  } catch(e) { $("#pubBig").textContent = "—"; }
+}
+
 async function loadAll(){
   try { await loadOverview(); await Promise.all([loadRuns(), loadProposals()]);
     $("#updated").textContent = "atnaujinta " + new Date().toLocaleTimeString("lt-LT");
@@ -473,6 +509,7 @@ $("#refresh").onclick = loadAll;
 $("#roleFilter").onchange = loadRuns;
 $("#dClose").onclick = () => $("#detail").close();
 loadAll();
+loadPublish();
 setInterval(loadAll, 15000);
 </script>
 </body></html>

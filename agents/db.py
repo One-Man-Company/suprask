@@ -167,7 +167,10 @@ def upsert_proposals(files: list[pathlib.Path]) -> int:
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                    ON CONFLICT(file) DO UPDATE SET
                      title=excluded.title, body=excluded.body, target=excluded.target,
-                     priority=excluded.priority, status=excluded.status, evidence=excluded.evidence""",
+                     priority=excluded.priority, evidence=excluded.evidence
+                   -- „status“ SAMONINGAI neperrašomas: pasiūlymo failas visada sako
+                   -- „new“, o tikroji būsena (done / blocked / obsolete) gyvena DB.
+                   -- Anksčiau ši eilutė grąžindavo įgyvendintus pasiūlymus į eilę.""",
                 (
                     rel,
                     data.get("role"),

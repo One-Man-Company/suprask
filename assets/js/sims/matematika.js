@@ -1384,7 +1384,7 @@ const pinigineIrKaina = {
             extra = ` Spėjai ${guessCount}, o lėkštėje ${n}. Ar gali sumokėti mažiau pinigų?`;
           }
           api.readout(`Apmokėta. ${fmt(price())}.${extra}`);
-          msgEl.textContent = `Juosta lygiai ties kainos žyma. Suma ir kaina sutampa.${extra}`;
+          msgEl.textContent = "Suma ir kaina sutampa.";
           sayOnce("apmoketa");
           if (!progressed) {
             progressed = true;

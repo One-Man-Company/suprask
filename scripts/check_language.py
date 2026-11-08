@@ -5,7 +5,8 @@ Kalbos ir užduoties aiškumo tikrinimas (1–12 klasei).
 Tikslas: užduotį perskaitęs vaikas turi suprasti ją VIENAREIKŠMIŠKAI. Skriptas
 pagauna tai, ką galima patikrinti mechaniškai:
 
-  - per ilgus sakinius konkrečiai klasei,
+  - per ilgus sakinius konkrečiai klasei (visuose vaikui skaitomuose laukuose:
+    `title`, `subtitle`, `concept.*`, `reflect`, `tasks[].q/hint/why/options`),
   - dviprasmiškus jungtukus („arba“ be „vienas iš“), dvigubą neigimą,
   - sakinius, prasidedančius „Tai/Šis/Jis“ be prieš tai buvusio daikto,
   - ilgus sudurtinius žodžius, kurių pirmokas neperskaito,
@@ -13,10 +14,21 @@ pagauna tai, ką galima patikrinti mechaniškai:
   - atsakymų variantų defektus (dublikatai, „visi“, „nei vienas“),
   - `answer` indekso klaidas.
 
+Sakinio ilgio ribos (`MAX_WORDS`) yra ne šio failo išradimas, o
+`docs/KURINIO-STANDARTAS.md` 6 skyriaus taisyklė („Sakinio ilgis 1–2 klasei —
+iki 10 žodžių; 3–4 — iki 14; 5–6 — iki 18“). Todėl paleidimo pradžioje
+tikrinama, ar lentelė vis dar sutampa su dokumentu: jei kas nors pakeičia
+standartą ar lentelę atskirai, gaunama klaida, o ne tyliai švelnesnė riba.
+
 Naudojimas:
     python3 scripts/check_language.py                 # 1 klasė
     python3 scripts/check_language.py --grade 1 --json
     python3 scripts/check_language.py --strict        # grąžina 1, jei yra klaidų
+
+Pastaba dėl lygių: sakinio ilgis yra `warn`, o ne `error`, nes standarto
+pažeidimas turinyje taisomas atskiru turinio darbu; `--strict` failina tik
+`error` (neteisingas `answer`, variantų defektai). `info` — klausimas
+peržiūrai (įvardis sakinio pradžioje), ne pažeidimas.
 """
 
 from __future__ import annotations
@@ -28,12 +40,60 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+STANDARD_DOC = ROOT / "docs" / "KURINIO-STANDARTAS.md"
 
-# Kiek žodžių sakinyje dar įskaitoma atitinkamos klasės vaikui
-MAX_WORDS = {1: 12, 2: 14, 3: 16, 4: 18, 5: 20, 6: 22}
+# Kiek žodžių sakinyje dar įskaitoma atitinkamos klasės vaikui.
+# Šaltinis: docs/KURINIO-STANDARTAS.md, 6 skyrius (Kalbos taisyklės).
+# 7–12 klasei standartas sakinio ilgio ribos nenustato — lieka DEFAULT_MAX_WORDS.
+MAX_WORDS = {1: 10, 2: 10, 3: 14, 4: 14, 5: 18, 6: 18}
 DEFAULT_MAX_WORDS = 24
 MAX_WORD_LEN = {1: 13, 2: 14, 3: 16, 4: 18}
 DEFAULT_MAX_WORD_LEN = 20
+
+# Ta pati taisyklė dokumente, iš kurios imamos ribos. Leidžiami brūkšniai – — -.
+_DASH = r"(?:–|—|-)"
+STANDARD_RULE_RE = re.compile(
+    rf"Sakinio ilgis\s+1{_DASH}2\s+klasei\s+{_DASH}\s+iki\s+(\d+)\s+žodžių;"
+    rf"\s*3{_DASH}4\s+{_DASH}\s+iki\s+(\d+);"
+    rf"\s*5{_DASH}6\s+{_DASH}\s+iki\s+(\d+)"
+)
+
+
+def standard_limits(text: str) -> dict[int, int] | None:
+    """Iš standarto dokumento išskaito klasių grupių ribas (None — nepavyko)."""
+    m = STANDARD_RULE_RE.search(text or "")
+    if not m:
+        return None
+    one_two, three_four, five_six = (int(g) for g in m.groups())
+    return {1: one_two, 2: one_two, 3: three_four, 4: three_four, 5: five_six, 6: five_six}
+
+
+def check_limits_against_standard(out: list[dict]) -> None:
+    """Saugiklis nuo dviejų normų: lentelė turi sutapti su standartu.
+
+    Be šio saugiklio ribos gali išsiskirti tyliai (taip ir atsirado 12/14/16/18/20/22
+    vietoj 10/10/14/14/18/18) — tikrintuvas žalias, o sakinys per ilgas vaikui.
+    """
+    try:
+        text = STANDARD_DOC.read_text(encoding="utf-8")
+    except OSError as exc:
+        out.append({"severity": "error", "where": str(STANDARD_DOC.relative_to(ROOT)),
+                    "issue": "neperskaitomas standartas",
+                    "detail": f"sakinio ilgio ribų patikrinti negalima: {exc}", "text": ""})
+        return
+    limits = standard_limits(text)
+    if limits is None:
+        out.append({"severity": "error", "where": str(STANDARD_DOC.relative_to(ROOT)),
+                    "issue": "nerasta sakinio ilgio taisyklės",
+                    "detail": "dokumente nebeliko formuluotės „Sakinio ilgis 1–2 klasei — iki N žodžių“",
+                    "text": ""})
+        return
+    if limits != MAX_WORDS:
+        diff = ", ".join(f"{g}: {MAX_WORDS.get(g)}≠{limits.get(g)}" for g in sorted(limits)
+                         if MAX_WORDS.get(g) != limits.get(g))
+        out.append({"severity": "error", "where": "scripts/check_language.py:MAX_WORDS",
+                    "issue": "ribos nesutampa su standartu",
+                    "detail": f"lentelėje {MAX_WORDS}, standarte {limits} ({diff})", "text": ""})
 
 AMBIGUOUS = (
     (r"\barba\b", "„arba“ — ar vaikas turi pasirinkti vieną, ar bet kuris tinka?"),
@@ -59,7 +119,12 @@ def level(value: int, table: dict[int, int], default: int) -> int:
     return table.get(value, default)
 
 
-def check_text(text: str, grade: int, where: str, out: list[dict]) -> None:
+def check_readability(text: str, grade: int, where: str, out: list[dict]) -> None:
+    """Sakinio ilgis ir žodžio ilgis — tai, ką vaikas turi perskaityti pats.
+
+    Taikoma ir paaiškinimui (`concept`, `reflect`): standartas riboja vaikui
+    skaitomą sakinį, ne tik užduoties klausimą.
+    """
     if not text:
         return
     max_words = level(grade, MAX_WORDS, DEFAULT_MAX_WORDS)
@@ -72,17 +137,27 @@ def check_text(text: str, grade: int, where: str, out: list[dict]) -> None:
                 "severity": "warn", "where": where, "issue": "per ilgas sakinys",
                 "detail": f"{len(words)} žodžių (riba {max_words})", "text": sentence,
             })
-        for m in re.finditer(r"\b(\w{4,})\b(\W+\1\b)+", sentence, re.I):
-            out.append({
-                "severity": "warn", "where": where, "issue": "kartojasi žodis",
-                "detail": m.group(1), "text": sentence,
-            })
         for word in words:
             if len(word) > max_len:
                 out.append({
                     "severity": "warn", "where": where, "issue": "ilgas žodis",
                     "detail": f"{word} ({len(word)} raidžių, riba {max_len})", "text": sentence,
                 })
+
+
+def check_text(text: str, grade: int, where: str, out: list[dict]) -> None:
+    """Užduoties formuluotė: perskaitomumas + aiškumas (pasirinkimas, nuoroda)."""
+    if not text:
+        return
+    check_readability(text, grade, where, out)
+
+    for sentence in sentences(text):
+        words = WORD_RE.findall(sentence)
+        for m in re.finditer(r"\b(\w{4,})\b(\W+\1\b)+", sentence, re.I):
+            out.append({
+                "severity": "warn", "where": where, "issue": "kartojasi žodis",
+                "detail": m.group(1), "text": sentence,
+            })
         for pattern, why in AMBIGUOUS:
             if re.search(pattern, sentence, re.I):
                 out.append({
@@ -97,6 +172,52 @@ def check_text(text: str, grade: int, where: str, out: list[dict]) -> None:
             })
 
 
+def check_concept(data: dict, grade: int, rel: str, out: list[dict]) -> None:
+    """Vaikui skaitomi `concept` ir `reflect` laukai — perskaitomumo taisyklė galioja ir jiems.
+
+    Anksčiau tikrinti tik `tasks`, todėl ilgas `concept.big_idea` sakinys likdavo
+    nematomas: tikrintuvas žalias, o vaikas skaito 13 žodžių sakinį.
+    `teacher.*` sąmoningai netikrinamas — tai suaugusiojo tekstas.
+    """
+    concept = data.get("concept") or {}
+    for key in ("title", "big_idea", "example"):
+        value = concept.get(key)
+        if isinstance(value, str):
+            check_readability(value, grade, f"{rel}:concept.{key}", out)
+    steps = concept.get("steps") or []
+    if isinstance(steps, list):
+        for i, step in enumerate(steps, 1):
+            if isinstance(step, str):
+                check_readability(step, grade, f"{rel}:concept.steps[{i}]", out)
+    reflect = data.get("reflect")
+    if isinstance(reflect, str):
+        check_readability(reflect, grade, f"{rel}:reflect", out)
+
+
+def check_sim_config(data: dict, grade: int, rel: str, out: list[dict]) -> None:
+    """`sim.config` tekstai — tai, ką simuliacija sako garsiai ir rodo ekrane.
+
+    `scripts/generate_audio.py` renka būtent šiuos tekstus, tad vaikas juos
+    išgirsta; standarto sakinio riba galioja ir jiems.
+    """
+    def walk(node, path: str):
+        if isinstance(node, str):
+            yield path, node
+        elif isinstance(node, dict):
+            for key, value in node.items():
+                yield from walk(value, f"{path}.{key}")
+        elif isinstance(node, list):
+            for i, value in enumerate(node, 1):
+                yield from walk(value, f"{path}[{i}]")
+
+    sim = data.get("sim") or {}
+    config = sim.get("config") if isinstance(sim, dict) else None
+    if not isinstance(config, dict):
+        return
+    for path, text in walk(config, "config"):
+        check_readability(text, grade, f"{rel}:sim.{path}", out)
+
+
 def check_module(path: pathlib.Path, out: list[dict]) -> None:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -109,6 +230,8 @@ def check_module(path: pathlib.Path, out: list[dict]) -> None:
     rel = str(path.relative_to(ROOT))
     check_text(data.get("title", ""), grade, f"{rel}:title", out)
     check_text(data.get("subtitle", ""), grade, f"{rel}:subtitle", out)
+    check_concept(data, grade, rel, out)
+    check_sim_config(data, grade, rel, out)
 
     for i, task in enumerate(data.get("tasks") or [], 1):
         q = task.get("q") or ""
@@ -159,20 +282,31 @@ def main() -> int:
     files = [f for f in files if f.name not in ("index.json", "path.json")]
 
     issues: list[dict] = []
+    check_limits_against_standard(issues)
     for f in files:
         check_module(f, issues)
 
     errors = [i for i in issues if i["severity"] == "error"]
     warns = [i for i in issues if i["severity"] == "warn"]
+    infos = [i for i in issues if i["severity"] == "info"]
 
     if args.json:
-        print(json.dumps({"grade": args.grade, "modules": len(files), "issues": issues}, ensure_ascii=False))
+        print(json.dumps({"grade": args.grade, "modules": len(files), "max_words":
+                          level(args.grade, MAX_WORDS, DEFAULT_MAX_WORDS), "issues": issues},
+                         ensure_ascii=False))
     else:
-        print(f"Moduliai: {len(files)} · klaidos: {len(errors)} · įspėjimai: {len(warns)}")
-        for issue in (errors + warns)[:40]:
+        print(f"Moduliai: {len(files)} · klaidos: {len(errors)} · įspėjimai: {len(warns)}"
+              f" · pastabos: {len(infos)} · sakinio riba: "
+              f"{level(args.grade, MAX_WORDS, DEFAULT_MAX_WORDS)} ž.")
+        shown = (errors + warns)[:40]
+        for issue in shown:
             print(f"  [{issue['severity']}] {issue['where']}: {issue['issue']} — {issue['detail']}")
             if issue["text"]:
                 print(f"        „{issue['text'][:110]}“")
+        hidden = len(errors) + len(warns) - len(shown)
+        if hidden > 0:
+            print(f"  … rodoma {len(shown)} iš {len(errors) + len(warns)}, "
+                  f"{hidden} nerodyta — žr. --json")
         if not errors and not warns:
             print("✔ Užduočių formuluotės švarios.")
 

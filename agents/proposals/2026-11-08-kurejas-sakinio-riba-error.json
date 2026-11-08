@@ -1,0 +1,19 @@
+{
+  "role": "kurejas",
+  "run_id": 119,
+  "created": "2026-11-08T05:46:00+02:00",
+  "type": "struktura",
+  "title": "Sakinio ilgio pažeidimas lieka įspėjimu: 16 sakinių, o `--strict` vis dar žalias",
+  "body": "Įgyvendinus #768 tikrintuvo lentelė sutampa su standartu (10/10/14/14/18/18) ir matuoja visus vaikui skaitomus laukus, bet pažeidimas vis dar `warn`, o `--strict` failina tik `error` — todėl CI ir toliau praeina su 16 per ilgų sakinių 11 modulių. Tai ta pati situacija, kurią #768 aprašė, tik vienu sluoksniu žemiau: įrankis dabar mato, bet niekas neverčia taisyti. Siūlau: kai eilė sutvarkys šiuos 16 sakinių (jie jau padalinti po modulius atskirais pasiūlymais), pakeisti `per ilgas sakinys` į `error`, kad CI taptų tikrais amžiaus vartais. Antras, atskiras žingsnis: `agents/run.py` patikrų sąraše (`run.py:505-518`) `check_language.py` nėra visai, tad naujas modulis publikuojamas net nepaleidus kalbos tikrintuvo — kol jo nėra, agentas, pasitikėdamas `validate_content.py`, gali paskelbti 12 žodžių sakinį. Siūlau įtraukti tikrintuvą į bėgiklio vartus su ta pačia semantika kaip CI (`--strict`, klaidos blokuoja, įspėjimai rodomi).",
+  "target": "scripts/check_language.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_language.py — `per ilgas sakinys` severity `warn`, `main()` grąžina 1 tik esant `error`",
+    "python3 scripts/check_language.py --grade 1 --strict → exit 0, nors įspėjimai: 16 „per ilgas sakinys“ 11 modulių (21-erdvines-figuros 3, 03-sakinio-tvarka 2, 05-desimtukas 2, 12-bendradarbiavimo-tiltas 2)",
+    "docs/KURINIO-STANDARTAS.md §6 „Kalbos taisyklės“ — 1–2 klasei iki 10 žodžių",
+    "docs/SVIETIMAS-1-GAIRES.md §6.3 — „Amžiaus patikra“ yra vienas iš vartų, be kurių modulis neskelbiamas",
+    "agents/run.py:505-518 — bėgiklio patikros (validate_content, audio, agents, ui, art), check_language nėra",
+    "agents/log/kurejas-2026-11-08T0546.md — šio paleidimo matavimai prieš / po"
+  ]
+}

@@ -313,23 +313,38 @@ const augaloGyvenimas = {
         <p class="sim-note" style="font-size:.8rem">Tai supaprastintas modelis: dirvožemis čia yra visą laiką, o šaknų nematome.</p>
       </div>`;
 
+    /* Sąlygos eilutė. Etiketė, taškai ir du mygtukai yra viena `flex`
+       eilutė, kuriai leidžiama lūžti. Taškai ir mygtukai sudėti į vieną
+       grupę, kad lūžimas būtų prasmingas: kai vietos nebelieka, grupė
+       persikelia į antrą eilutę, o etiketė lieka savo eilutėje. Etiketė
+       turi `flex:0 1 5.4rem` be fiksuoto `width` (pasiūlymas #4739):
+       fiksuotas `width:5.4rem` prie 200 % teksto (32 px šaknis) davė
+       173 px etiketę, o trys tokios eilutės viršijo 241 px valdiklių
+       juostą ir puslapis slinko 133 px į šoną. Vien `min-width:0` be
+       grupės nepakako: etiketė susitraukdavo iki 63 px ir žodis
+       „Vanduo“ lūždavo viduryje. 16 px šaknyje etiketė vis dar 86 px,
+       tad įprastas išdėstymas nepasikeitęs. */
     const condRow = (id, label, icon) => `
-      <div style="display:flex;align-items:center;gap:.4rem;min-height:56px;border-bottom:2px solid var(--line)">
-        <span style="flex:0 0 auto;width:5.4rem;font-size:.9rem;font-weight:800"><span aria-hidden="true">${icon}</span> ${label}</span>
-        <div id="ag-${id}-dots" aria-hidden="true" style="display:flex;flex:1 1 auto;min-width:0;gap:3px"></div>
-        <button class="btn secondary" id="ag-${id}-minus" aria-label="Mažiau: ${label.toLowerCase()}" style="flex:0 0 auto;min-width:48px;min-height:48px;padding:0;font-size:1.35rem;line-height:1">−</button>
-        <button class="btn secondary" id="ag-${id}-plus" aria-label="Daugiau: ${label.toLowerCase()}" style="flex:0 0 auto;min-width:48px;min-height:48px;padding:0;font-size:1.35rem;line-height:1">+</button>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;min-height:56px;border-bottom:2px solid var(--line)">
+        <span style="flex:0 1 5.4rem;max-width:100%;font-size:.9rem;font-weight:800"><span aria-hidden="true">${icon}</span> ${label}</span>
+        <div style="display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:.4rem">
+          <div id="ag-${id}-dots" aria-hidden="true" style="display:flex;flex:1 1 auto;min-width:0;gap:3px"></div>
+          <button class="btn secondary" id="ag-${id}-minus" aria-label="Mažiau: ${label.toLowerCase()}" style="flex:0 0 auto;min-width:48px;min-height:48px;padding:0;font-size:1.35rem;line-height:1">−</button>
+          <button class="btn secondary" id="ag-${id}-plus" aria-label="Daugiau: ${label.toLowerCase()}" style="flex:0 0 auto;min-width:48px;min-height:48px;padding:0;font-size:1.35rem;line-height:1">+</button>
+        </div>
       </div>`;
 
     controls.innerHTML = `
-      <div style="display:grid;gap:.5rem;width:100%;max-width:34rem;margin:0 auto">
-        <div style="border:2px solid var(--line);border-radius:var(--r-m);background:var(--paper-2);padding:.35rem .5rem">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:.5rem;width:100%;max-width:34rem;margin:0 auto">
+        <div style="min-width:0;border:2px solid var(--line);border-radius:var(--r-m);background:var(--paper-2);padding:.35rem .5rem">
           ${condRow("w", "Vanduo", "💧")}
           ${condRow("l", "Šviesa", "☀️")}
-          <div style="display:flex;align-items:center;gap:.4rem;min-height:56px">
-            <span style="flex:0 0 auto;width:5.4rem;font-size:.9rem;font-weight:800"><span aria-hidden="true">🌡️</span> Šiluma</span>
-            <button class="btn secondary" id="ag-cold" aria-pressed="false" style="flex:1 1 0;min-width:48px;min-height:48px;padding:.3rem .2rem;font-size:.95rem">Šalta</button>
-            <button class="btn secondary" id="ag-warm" aria-pressed="true" style="flex:1 1 0;min-width:48px;min-height:48px;padding:.3rem .2rem;font-size:.95rem">Šilta</button>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;min-height:56px">
+            <span style="flex:0 1 5.4rem;max-width:100%;font-size:.9rem;font-weight:800"><span aria-hidden="true">🌡️</span> Šiluma</span>
+            <div style="display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:.4rem">
+              <button class="btn secondary" id="ag-cold" aria-pressed="false" style="flex:1 1 0;min-width:48px;min-height:48px;padding:.3rem .2rem;font-size:.95rem">Šalta</button>
+              <button class="btn secondary" id="ag-warm" aria-pressed="true" style="flex:1 1 0;min-width:48px;min-height:48px;padding:.3rem .2rem;font-size:.95rem">Šilta</button>
+            </div>
           </div>
         </div>
         <div style="display:flex;gap:.4rem;align-items:center;justify-content:center;flex-wrap:wrap">
@@ -338,7 +353,7 @@ const augaloGyvenimas = {
           <button class="btn ghost" id="ag-reset" aria-label="Pradėti iš naujo" style="flex:0 0 auto;min-width:48px;min-height:48px;padding:.5rem .7rem;font-size:.95rem">Iš naujo</button>
         </div>
         <p id="ag-end" role="status" aria-live="polite"
-           style="margin:0;font-size:.9rem;line-height:1.35;font-weight:700;text-align:center"></p>
+           style="min-width:0;margin:0;font-size:.9rem;line-height:1.35;font-weight:700;text-align:center"></p>
       </div>`;
 
     const svg = stage.querySelector("#ag-scene");

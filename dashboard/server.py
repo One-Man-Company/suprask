@@ -715,7 +715,11 @@ async function loadPublish(){
     setText("#pubNote",  risky ? `repo nebeturi: ${p.hidden_locally.join(", ").slice(0,40)}`
       : drift ? p.missing_on_live.join(", ").slice(0,50)
       : (p.last_commit||"").slice(0,46));
-  } catch(e) { setText("#pubBig",  "—"); }
+  } catch(e) {
+    // Nepavykus užklausti, NEIŠTRINAM paskutinių žinomų reikšmių — kitaip
+    // trumpas tinklo trukdys pavers kortelę tuščia iki kito atsinaujinimo.
+    setText("#pubNote", "nepavyko atnaujinti: " + String(e).slice(0, 40));
+  }
 }
 
 async function loadPause(){
@@ -823,7 +827,13 @@ async function saveGrade(el){
 }
 
 async function loadAll(){
-  try { await loadOverview(); await Promise.all([loadRuns(), loadProposals(), loadGrades(), loadJournal(), loadPause()]);
+  try {
+    await loadOverview();
+    // loadOverview() perpiešia #stats ir publikavimo kortelė vėl tuščia,
+    // todėl reikšmės turi būti įrašomos PO jo — ir kiekvieną kartą, ne tik
+    // įkėlus puslapį (anksčiau po 15 s kortelė ištuštėdavo).
+    await loadPublish();
+    await Promise.all([loadRuns(), loadProposals(), loadGrades(), loadJournal(), loadPause()]);
     $("#updated").textContent = "atnaujinta " + new Date().toLocaleTimeString("lt-LT");
   } catch(e){ $("#updated").textContent = "klaida: " + e.message; }
 }

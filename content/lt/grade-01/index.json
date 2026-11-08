@@ -86,6 +86,16 @@
         { "id": "01-elektros-grandine", "title": "Elektra: kelias turi būti vientisas", "subtitle": "Kodėl su vienu laidu lemputė nešviečia", "file": "grade-01/technologijos/01-elektros-grandine.json", "minutes": 9, "sim": "elektros-grandine" },
         { "id": "02-medziagu-bandymas", "title": "Medžiagos: tinkamumą parodo bandymas", "subtitle": "Lengva kaladėlė skęsta, o sunki plaukia", "file": "grade-01/technologijos/02-medziagu-bandymas.json", "minutes": 9, "sim": "medziagu-bandymas" }
       ]
+    },
+    {
+      "id": "gyvenimo-igudziai",
+      "grade": 1,
+      "title": "Gyvenimo įgūdžiai",
+      "emoji": "💛",
+      "intro": "Jausmai ir santykiai: nuo savęs prie kito.",
+      "modules": [
+        { "id": "01-dovana-ir-noras", "title": "Dovana: kodėl vienas džiaugiasi, kitas ne", "subtitle": "Tas pats daiktas gali nuliūdinti, jei jo nenorėjai", "file": "grade-01/gyvenimo-igudziai/01-dovana-ir-noras.json", "minutes": 9, "sim": "dovana-ir-noras" }
+      ]
     }
   ]
 }

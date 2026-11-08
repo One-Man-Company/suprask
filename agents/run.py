@@ -383,7 +383,7 @@ def scope_brief() -> str:
     return "\n".join(lines)
 
 
-def build_prompt(role: str, cfg: dict, run_id: int, proposal: dict | None = None) -> str:
+def build_prompt(role: str, cfg: dict, run_id: int, proposal: dict | None = None, focus: str = "") -> str:
     role_text = read(AGENTS / cfg["file"])
     if not role_text:
         raise SystemExit(f"Nerastas vaidmens failas: {cfg['file']}")
@@ -410,6 +410,10 @@ def build_prompt(role: str, cfg: dict, run_id: int, proposal: dict | None = None
     body += scope_brief()
     if "PASIŪLYMŲ FORMATAS" in role_text or cfg.get("proposals", True):
         body += PROPOSAL_RULES
+    if focus:
+        body += ("\n--- ŠIO PALEIDIMO UŽDUOTIS (privaloma) ---\n"
+                 f"{focus.strip()}\n"
+                 "Šis blokas viršesnis už bendrą vaidmens aprašą: jei jie nesutaria, laikykis šio bloko.\n")
     if proposal:
         body += (
             "\n--- ŠIO PALEIDIMO UŽDUOTIS (privaloma) ---\n"
@@ -1237,7 +1241,7 @@ def main() -> int:
     if args.role == "publikavimo-agentas" and not args.dry_run:
         print(f"publikavimo-agentas: {push_backlog()}")
 
-    prompt = build_prompt(args.role, cfg, run_id, proposal)
+    prompt = build_prompt(args.role, cfg, run_id, proposal, args.note)
 
     if args.dry_run:
         print(prompt)

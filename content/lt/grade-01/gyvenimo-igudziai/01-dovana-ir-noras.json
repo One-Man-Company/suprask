@@ -1,0 +1,101 @@
+{
+  "id": "01-dovana-ir-noras",
+  "grade": 1,
+  "strand": "gyvenimo-igudziai",
+  "title": "Dovana: kodėl vienas džiaugiasi, kitas ne",
+  "subtitle": "Tas pats daiktas gali nuliūdinti, jei jo nenorėjai",
+  "minutes": 9,
+  "outcomes": [
+    "Pasakau, ko norėjo veikėjas.",
+    "Nusakau, kaip jausis žmogus, gavęs ne tai, ko norėjo.",
+    "Paaiškinu, kodėl ta pati dovana vienam džiugu, kitam ne."
+  ],
+  "concept": {
+    "title": "Jausmas priklauso nuo noro",
+    "big_idea": "Jausmas priklauso ne vien nuo to, kas nutiko. Jis priklauso ir nuo to, ko žmogus norėjo.",
+    "steps": [
+      "Močiutė atnešė kamuolį. Rėjus jo norėjo, todėl džiaugiasi.",
+      "Ieva norėjo knygos. Todėl ji nusimena, nors dovana gera.",
+      "Pakeisk Rėjaus norą. Dovana liks ta pati, o veidas keisis.",
+      "Tas pats daiktas gali nuliūdinti. Todėl prieš dovaną paklausk, ko žmogus nori."
+    ],
+    "example": "Močiutė atnešė šaliką. Vienas anūkas apsidžiaugia, kitas tyliai padeda jį į šalį."
+  },
+  "sim": {
+    "component": "dovana-ir-noras",
+    "config": {
+      "gift": "kamuolys",
+      "fixed": { "name": "Ieva", "wants": "knyga" },
+      "varying": { "name": "Rėjus", "wants": "kamuolys" },
+      "sentences": {
+        "predict": "Rėjus nori kamuolio. Pakeisi jo norą. Kas pasikeis? Pasakyk, tada keisk.",
+        "start": "Dėžutė uždaryta. Ko nori Rėjus?",
+        "one": "Rėjus džiaugiasi. Ieva nusimena.",
+        "both": "Dabar abu nusimena.",
+        "same": "Viena dovana, du jausmai."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Dėžutėje kamuolys. Rėjus norėjo knygos. Kaip jausis Rėjus?",
+      "options": ["Džiaugsis", "Nusimins", "Nieko nejaus"],
+      "answer": 1,
+      "hint": "Palygink, ko jis norėjo, su tuo, ką rado.",
+      "why": "Jis gavo ne tai, ko norėjo, todėl nusimins."
+    },
+    {
+      "q": "Ieva nori knygos, o Jonas nori kamuolio. Močiutė atnešė knygą. Kas džiaugsis?",
+      "options": ["Ieva", "Abu vaikai", "Jonas"],
+      "answer": 0,
+      "hint": "Žiūrėk, ko norėjo kiekvienas vaikas.",
+      "why": "Ieva gavo tai, ko norėjo. Jonas gavo ne tai."
+    },
+    {
+      "q": "Klasėje rodomas filmas apie šunis. Viena mergaitė turi šunį, kita jo bijo. Ar filmas abiem bus smagus?",
+      "options": [
+        "Taip, visiems bus smagus",
+        "Ne, filmas nepatiks nė vienai",
+        "Ne: vienai smagus, kitai baisus"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kaip kiekviena mergaitė žiūri į šunį.",
+      "why": "Vienai šuo mielas, kitai baisus. Jausmas skiriasi."
+    },
+    {
+      "q": "Dėžutėje pieštukai. Vienas vaikas juokiasi, kitas nuliūsta. Kodėl jie jaučiasi skirtingai?",
+      "options": [
+        "Vienas vaikas blogesnis",
+        "Jie norėjo skirtingų dovanų",
+        "Pieštukai buvo sulaužyti"
+      ],
+      "answer": 1,
+      "hint": "Tas pats daiktas, o jausmai skirtingi. Kodėl?",
+      "why": "Tas pats daiktas kelia skirtingą jausmą, nes norai skiriasi.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip sužinotum, ar draugui patiks dovana?",
+  "teacher": {
+    "goal": "Emocijos priežastis yra noras, o ne daikto vertė. Viena sąvoka: tas pats įvykis gali kelti skirtingą jausmą.",
+    "prompt": "Kodėl ta pati dovana vienam džiugu, kitam ne?",
+    "offline": "Įvyniokite du vienodus pieštukus į du vienodus lapus. Du savanoriai prieš tai pasako, ko norėtų: pieštuko ar trintuko. Abu gauna pieštuką. Aptarkite, kodėl vienas džiaugėsi, o kitas nusivylė. Niekas neklausia, kaip jaučiasi visas vaikas, ir niekas nieko neįrašo.",
+    "misconceptions": [
+      "„Kas gavo dovaną, tas džiaugiasi.“ Įvykis matomas, noras — ne, todėl vaikas sprendžia iš dovanos.",
+      "„Nusivylęs vaikas nedėkingas.“ Atviras nusivylimas 6–7 metais yra amžiaus norma, ne auklėjimo trūkumas.",
+      "„Vienas įvykis turi vieną teisingą jausmą.“ Du vaikai prie tos pačios dovanos gali jaustis priešingai ir abu teisūs."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Gyvenimo įgūdžiai“: atpažįsta, įvardija ir valdo emocijas bei elgesį.",
+    "Pons, F., Harris, P. L., & de Rosnay, M. (2004). Emotion comprehension between 3 and 11 years. European Journal of Developmental Psychology, 1(2), 127–152. https://doi.org/10.1080/17405620344000022",
+    "Rieffe, C., Terwogt, M. M., & Cowan, R. (2005). Children's understanding of mental states as causes of emotions. Infant and Child Development, 14(3), 259–272. https://doi.org/10.1002/icd.391",
+    "Saarni, C. (1979). Children's understanding of display rules for expressive behavior. Developmental Psychology, 15(4), 424–429. https://doi.org/10.1037/0012-1649.15.4.424",
+    "Harris, P. L., Donnelly, K., Guz, G. R., & Pitt-Watson, R. (1986). Children's understanding of the distinction between real and apparent emotion. Child Development, 57(4), 895–909. https://doi.org/10.2307/1130366"
+  ],
+  "svietimas1": [
+    "1 žingsnis — gylis: viena sąvoka (jausmas priklauso nuo noro) ir vienas kintamasis",
+    "2 žingsnis — vienodas vertinimas: tos pačios trijų žingsnių grįžtamojo ryšio taisyklės kaip kituose moduliuose",
+    "5 žingsnis — pozityvi aplinka: nusivylimas modeliuojamas kaip informacija, ne kaip vaiko savybė"
+  ]
+}

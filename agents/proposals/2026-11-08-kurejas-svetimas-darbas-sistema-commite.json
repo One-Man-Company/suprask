@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 127,
+  "created": "2026-11-08T07:15:00+02:00",
+  "type": "struktura",
+  "title": "`ensure_clean()` pasisavina kito vaidmens vykstantį darbą į `[sistema]` commit'ą",
+  "body": "Taisant #4454 paaiškėjo ta pati šeima vienu lygmeniu aukščiau. Mano pakeitimai (`agents/run.py` +69/−13, `research/wiki/guidelines/pamokos.md`) dar buvo darbinėje kopijoje, kai prasidėjo `ideator` paleidimas; jo `ensure_clean()` (`agents/run.py:653`) pamatė nešvarų medį ir 2026-11-08 07:12:05 sukūrė commit'ą e4a924b „[sistema] darbinės kopijos likutis prieš ideator paleidimą“, į kurį pateko MANO darbas kartu su `agents/.run.ideator.lock`. Pasekmės: (1) pakeitimo žinutė nepasako, kas ir kodėl pakeista; (2) mano paleidimo `changed_files()` po to teparodo 1 ataskaitos failą, todėl `publish()` praneštų „Paskelbta 1 failų“; (3) `mark_implemented()` (`agents/run.py:584`) nematytų `agents/run.py` sąraše, tad #4454 liktų „new“, nors darbas padarytas. Siūloma: prieš komituodamas likutį, `ensure_clean()` patikrintų, ar bent vienas `agents/.run.*.lock` yra laikomas (`flock LOCK_EX|LOCK_NB`); jei taip — neliesti medžio, o palaukti (su riba) arba pranešti „kitas vaidmuo dirba“. `[sistema]` commit'as turi reikšti tik tikrą likutį po nutrūkusio paleidimo, ne gyvą kitos eilės darbą.",
+  "target": "agents/run.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "git show --stat e4a924b — agents/run.py | 69 +++++, research/wiki/guidelines/pamokos.md | 7 +, agents/.run.ideator.lock | 0; žinutė „[sistema] darbinės kopijos likutis prieš ideator paleidimą“ (2026-11-08 07:12:05)",
+    "agents/run.py:653-670 — ensure_clean() daro `git add -A` ir commit'ina viską, kas nešvaru, neskaitęs jokių `agents/.run.*.lock`",
+    "agents/run.py:584 — mark_implemented() reikalauja, kad pasiūlymo `target` būtų šio paleidimo `files` sąraše; po e4a924b jo nebėra",
+    "agents/run.py:55-72 — git_lock()/role_lock_file(): užraktai egzistuoja ir yra laikomi visą paleidimą, bet ensure_clean() jų neskaito"
+  ]
+}

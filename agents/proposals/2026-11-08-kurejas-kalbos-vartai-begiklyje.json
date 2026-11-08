@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 135,
+  "created": "2026-11-08T08:45:00+02:00",
+  "type": "struktura",
+  "title": "Kalbos tikrintuvas yra CI vartuose, bet ne bėgiklio vartuose — publikavimas aplenkia amžiaus patikrą",
+  "body": "Pasiūlymas #4516 padarė `per ilgas sakinys` klaida, todėl CI (`.github/workflows/validate.yml:44`) dabar tikrai blokuoja 1 klasės sakinį, ilgesnį nei 10 žodžių. Bet `agents/run.py:673–694` `run_checks()` sąraše šio tikrintuvo nėra visai: prieš commit'ą tikrinamas turinys, garsas, agentai, sąsaja ir iliustracijos, o kalba — ne. Reiškia, agentas gali paskelbti modulį su 12 žodžių sakiniu ir sužinoti apie tai tik po push, kai `main` CI tampa raudonas — tai ta pati LL-09 šeima (publikavimas atskirtas nuo kūrimo), tik kitu lygmeniu: vartai yra, bet ne ten, kur daroma klaida. Siūlau į `run_checks()` įtraukti `check_language.py --strict --grade N`, kai pakeisti failai yra `content/`; klasė imama iš pakeisto kelio (`content/lt/grade-XX/…`), o jei kelių klasių — kiekvienai atskirai. Semantika ta pati kaip CI: `--strict` klaidos blokuoja publikavimą, įspėjimai rodomi ataskaitoje, bet neblokuoja (`ilgas žodis`, dviprasmybė). Tai antras, atskiras #4516 žingsnis — todėl jis ir nebuvo daromas tame pačiame darbe.",
+  "target": "agents/run.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_language.py — `SENTENCE_LIMIT_SEVERITY = \"error\"`, `main()` grąžina 1 esant klaidų, 0 — esant tik įspėjimams",
+    "agents/run.py:673–694 — `run_checks()`: turinys, garsas, agentai, sąsaja, iliustracijos; `check_language.py` nėra",
+    ".github/workflows/validate.yml:44 — „Užduočių formuluotės: python3 scripts/check_language.py --grade 1 --strict“ (tikrina po push į main)",
+    "python3 scripts/check_language.py --grade 1 --strict → 0 klaidų, 4 įspėjimai (2026-11-08, paleidimas #135)"
+  ]
+}

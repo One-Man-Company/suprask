@@ -1,0 +1,17 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 147,
+  "created": "2026-11-08T10:00:00+02:00",
+  "type": "simulacija",
+  "title": "Simuliacijos kieta pastaba vartoja abstraktu žodį žvilgsnis, kai mygtukai sako konkrečiai",
+  "body": "geometrija.js:112 kietai įrašyta sim pastaba liepia pasirinkti kūną ir žvilgsnį, o žvilgsnis 6–7 m. vaikui abstraktus žodis. Mygtukai šalia sako konkrečiai: Iš priekio, Iš viršaus, Nuo šono (geometrija.js VIEWS). Šio paleidimo metu modulinės concept.steps formuluotės tapo konkrečios (Pasirink kūną. Žiūrėk iš priekio, iš viršaus ar nuo šono.), todėl dabar sim pastaba ir modulio žingsniai tuo pačiu metu vartoja skirtingą kalbą (LL-34 šeima: tekstas ir simuliacija nesutaria). Siūloma pastabą sutapatinti su žingsniais arba pernešti į sim.config raktą (tada reikės pergeneruoti garsą, Piper). Kitos kietos sim tekstinės dalys (promptas apie tai, ką matai iš priekio) konkrečios — neliestos. Simuliacijos kodas ir modulinio JSON sim laukas šiame paleidime neliesti: abu yra už kalbu-redaktoriaus ribų.",
+  "target": "assets/js/sims/geometrija.js:112 (sim pastaba); alternatyva — sim.config raktas pastabai",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/geometrija.js:112 — kieta pastaba apie kūno ir žvilgsnio pasirinkimą (ne iš config)",
+    "assets/js/sims/geometrija.js:20-24 — VIEWS mygtukų etiketės Iš priekio, Iš viršaus, Nuo šono (konkrečios)",
+    "content/lt/grade-01/matematika/21-erdvines-figuros.json concept.steps[0] (po paleidimo #147): Pasirink kūną. Žiūrėk iš priekio, iš viršaus ar nuo šono.",
+    "research/wiki/guidelines/kalbos-auditas.md modelis 4 — abstraktus žodis ten, kur yra kasdienė sinonimija"
+  ]
+}

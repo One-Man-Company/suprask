@@ -99,6 +99,17 @@ Sunkumas: **rimta** = vaikas supranta klaidingai ar nebegali skaityti; **vidutin
 - **Naujas radinys (#143), pataisyta:** tasks[0].hint „kokia forma kūgis remiasi į stalą" — „remtis į" vaizduoja atremtą kūną, o kūgis stovi ant pagrindo → „Pažiūrėk, ką kūnis turi apačioje." (pamoka LL-56).
 - **Likę atviri:** `outcomes` laukas įrankiui vis dar nepatikrintas (LL-52); „Gretasienis" (sim mygtukas + sim.config 3 sakiniai) vs „stačiakampis gretasienis" (outcomes[1], teacher, programa) — pasiūlymas agents/proposals/2026-11-08-kalbu-redaktorius-gretasienis-pavadinimas.json.
 
+## Taisymo būsena (paleidimas #147, 2026-11-08T10:00)
+
+- **Nauji radiniai (ne buvusioje 41 radinių lentelėje), visi `21-erdvines-figuros`, pataisyta:**
+  1. `concept.steps[0]` — „Pasirink kūną ir žvilgsnį." → „Pasirink kūną." (abstraktus „žvilgsnis"; sim mygtukai sako konkrečiai: „Iš priekio / Iš viršaus / Nuo šono").
+  2. `concept.steps[2]` — „Pakeisk žvilgsnį." → „Žiūrėk iš kitos pusės." (ta pati priežastis; sim promptas jau vartoja „žiūri").
+  3. `tasks[1].hint` — „su kauliuku" → „su kubu" (priekinė nuoroda: „kauliukas" pirmą kartą pasirodo tik `tasks[2].q`).
+  4. `tasks[2].hint` — „į kauliuką simuliacijoje" → „į kubą simuliacijoje" (simuliacijoje kauliuko nėra — `geometrija.js BODIES`; pamoka LL-57).
+  5. `tasks[3].options[0]` — „Kamuolys didesnis" → „Kamuolys plokščias" (nesusietas kiekis: dydis be atskaitos, gyvenime gali būti teisingas — LL-18; naujas variantas visada klaidingas ir tikrina módulio branduolio painiavą plokščiu/apvaliu).
+- **Įrankio akluumė:** visi 5 radiniai liko nematomi `check_language.py` (hint'o kryptis, varianto prasmė, žingsnių abstraktumas — LL-52/LL-53 šeima); modulis įrankyje 0 įrašų ir prieš, ir po.
+- **Likę atviri:** `geometrija.js:112` kieta sim pastaba „Pasirink kūną ir žvilgsnį" nesutampa su konkrečiais žingsniais — pasiūlymas `agents/proposals/2026-11-08-kalbu-redaktorius-sim-uzrasas-zvilgsnis.json`; „Gretasienis" (#143 pasiūlymas) vis dar atviras.
+
 ## Taisymo būsena (paleidimas #144, 2026-11-08T09:45)
 
 - **#1 (10-gyvunu-grupes)** — pataisyta: tasks[2].hint „Pagalvok apie pagalvę, bet ne apie jos turinį." → „Pagalvok, kuo dengtas paukštis — ne kailis, ne žvynai." (LL-53; senasis hint'as nukreipė nuo atsakymo „Plunksnos", nes pagalvės turinys būtent plunksnos). Patikrinta: DOM zondas (klaidžiant „Žvynai", `.task-feedback` rodo naują tekstą), `check_view.py` 4 plotai (0 problemų, minTaskFont nepakito), `validate_content.py` 0/0. `check_language.py` modulio įrašas nepakito (0/0/1) — įrankis nemato hint'o krypties; tai LL-53 riba, ne atsitraukimas. Redakcija pateko bėgiklio commit'e d0e319d (likučio commit'as; autorystės pastatas — #4998/#5190 atviri).

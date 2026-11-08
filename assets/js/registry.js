@@ -38,8 +38,9 @@ import * as geometrija from "./sims/geometrija.js";
 import * as pasaulis from "./sims/pasaulis.js";
 import * as technologijos from "./sims/technologijos.js";
 import * as zaidimai from "./sims/zaidimai.js";
+import * as muzika from "./sims/muzika.js";
 
-const SIMS = Object.assign({}, calba.SIMS, matematika.SIMS, geometrija.SIMS, pasaulis.SIMS, technologijos.SIMS, zaidimai.SIMS);
+const SIMS = Object.assign({}, calba.SIMS, matematika.SIMS, geometrija.SIMS, pasaulis.SIMS, technologijos.SIMS, zaidimai.SIMS, muzika.SIMS);
 
 export function getSim(id) {
   return SIMS[id] || null;

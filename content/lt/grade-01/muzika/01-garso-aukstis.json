@@ -1,0 +1,114 @@
+{
+  "id": "01-garso-aukstis",
+  "grade": 1,
+  "strand": "muzika",
+  "title": "Aukštas garsas ne visada garsus",
+  "subtitle": "Aukštis ir garsumas — dvi skirtingos savybės",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu aukštą garsą nuo garsaus ir paaiškinu skirtumą.",
+    "Keisdamas vieną savybę pasakau, kad kita liko tokia pati.",
+    "Palyginu du garsus ir nusakau, kuris skamba aukščiau."
+  ],
+  "concept": {
+    "title": "Dvi atskiros savybės",
+    "big_idea": "Garsas gali būti žemas arba aukštas. Garsas gali būti tylus arba garsus. Tai dvi atskiros savybės: pakeitus vieną, kita nepasikeičia.",
+    "steps": [
+      "Paklausyk žemo garso, paskui aukšto. Garsumas tebūna toks pat.",
+      "Dabar keisk tik garsumą. Aukštis nepasikeis.",
+      "Aukštas garsas nebūtinai garsus. Tylus garsas gali būti labai aukštas.",
+      "Mažas varpelis skamba aukščiau, didelis — žemiau."
+    ],
+    "example": "Paukštis cypsi aukštai ir tyliai. Didelis varpas dūzgia žemai ir garsiai."
+  },
+  "sim": {
+    "component": "garso-aukstis",
+    "config": {
+      "pitch": [
+        { "label": "Žemas garsas", "short": "žemas", "hz": 262 },
+        { "label": "Vidutinis garsas", "short": "vidutinis", "hz": 392 },
+        { "label": "Aukštas garsas", "short": "aukštas", "hz": 587 }
+      ],
+      "volume": [
+        { "label": "Tylus garsas", "short": "tyliai", "gain": 0.05 },
+        { "label": "Vidutinis garsumas", "short": "vidutiniškai", "gain": 0.09 },
+        { "label": "Garsus garsas", "short": "garsiai", "gain": 0.16 }
+      ],
+      "controls": [
+        { "action": "pitch-up", "label": "Aukštyn", "aria": "Garso aukštis aukštyn", "glyph": "▲" },
+        { "action": "pitch-down", "label": "Žemyn", "aria": "Garso aukštis žemyn", "glyph": "▼" },
+        { "action": "vol-up", "label": "Garsiau", "aria": "Garsumas didesnis", "glyph": "🔊" },
+        { "action": "vol-down", "label": "Tyliau", "aria": "Garsumas mažesnis", "glyph": "🔉" },
+        { "action": "play", "label": "Paklausyk", "aria": "Paklausyk garso", "glyph": "♪" }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Pakėlei aukštį, o garsumo ratuko nelietei. Kas pasikeitė?",
+      "options": [
+        "Garsas tapo garsesnis",
+        "Garsas tapo aukštesnis",
+        "Garsas visai nutilo"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, kurį valdiklį judinai.",
+      "why": "Aukštis kilo, o garsumas liko toks pat."
+    },
+    {
+      "q": "Vaikas dainuoja tą pačią natą. Pirma garsiai, paskui tyliai. Kas pasikeitė?",
+      "options": [
+        "Aukštis",
+        "Niekas",
+        "Garsumas"
+      ],
+      "answer": 2,
+      "hint": "Paklausyk, kas kinta, kai nata lieka ta pati.",
+      "why": "Toje pačioje natoje kinta tik garsumas."
+    },
+    {
+      "q": "Vienas šuniukas loja aukštai ir tyliai. Kitas — žemai ir garsiai. Kuris loja žemiau?",
+      "options": [
+        "Pirmas",
+        "Antras",
+        "Abu vienodai"
+      ],
+      "answer": 1,
+      "hint": "Aukštis ir garsumas — ne tas pats dalykas.",
+      "why": "Antras loja žemai, nors ir garsiai."
+    },
+    {
+      "q": "Mažas varpelis ir didelis varpas skamba vienodai garsiai. Kuris skambės aukščiau?",
+      "options": [
+        "Mažas varpelis",
+        "Didelis varpas",
+        "Abu vienodai"
+      ],
+      "answer": 0,
+      "hint": "Palygink, kaip skamba mažas ir didelis daiktas.",
+      "why": "Mažesnis varpelis skamba aukščiau, nors garsumas toks pat.",
+      "optional": true
+    }
+  ],
+  "reflect": "Pagalvok apie du garsus, kuriuos šiandien girdėjai. Kuris buvo aukštesnis? Kuris garsesnis? Papasakok.",
+  "teacher": {
+    "goal": "Atskirti garso aukštį nuo garsumo ir pajusti, kad tai dvi nepriklausomos savybės: pakeitus vieną, kita nesikeičia.",
+    "prompt": "Ar garsus garsas visada būna aukštas? Kaip tai patikrintum?",
+    "offline": "Duokite vaikui du stiklius: viename daugiau vandens. Bakstelėkite stiklą šaukštu — skirtingas vandens kiekis duoda skirtingą aukštį. Tada bakstelėkite tą patį stiklą stipriau ir silpniau. Aukštis tas pats, garsumas kitas.",
+    "misconceptions": [
+      "„Aukštas garsas yra garsus garsas.“ Modelyje vienas valdiklis keičia aukštį, kitas — garsumą; pakeitus vieną, kitas lieka vietoje.",
+      "„Garsiau reiškia aukščiau.“ Garsumo valdiklis keičia tik stiprumą, ne aukštį.",
+      "„Tylus garsas visada žemas.“ Paukščio cypsėjimas yra aukštas ir tylus."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), muzika: „Eksperimentavimas garsais leidžia pažinti pagrindines keturias garso savybes: trukmę, stiprį (garsūs ir tylūs garsai), aukštį (aukšti ir žemi garsai) ir tembrą“.",
+    "Muzikos bendroji programa (2022), muzikavimo sritis: 1–2 klasėje mokiniai eksperimentuoja garsais ir skiria aukštus bei žemus garsus.",
+    "Victorian Department of Education. „Investigating Sound and Hearing“: daugelis mokinių mano, kad padidinus garsumą pakyla ir aukštis; aukštis su garsumu nesusijęs (Leite ir Afonso, 2001; Hapkiewicz, 1992; Eshach ir Schwartz, 2006)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena nauja sąvoka (aukštis), garsumas lieka žinomas dydis, su kuriuo lyginama",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo atskirti dvi savybes naujoje situacijoje, o ne kartoti apibrėžimą",
+    "3 žingsnis — pagalba laiku: kiekviena klaida turi užuominą, modelis nieko nebaudžia ir leidžia bandyti dar kartą"
+  ]
+}

@@ -54,6 +54,16 @@
       ]
     },
     {
+      "id": "muzika",
+      "grade": 1,
+      "title": "Muzika",
+      "emoji": "🎵",
+      "intro": "Garsas turi savybes: klausykis, keisk ir palygink.",
+      "modules": [
+        { "id": "01-garso-aukstis", "title": "Aukštas garsas ne visada garsus", "subtitle": "Aukštis ir garsumas — dvi skirtingos savybės", "file": "grade-01/muzika/01-garso-aukstis.json", "minutes": 9, "sim": "garso-aukstis" }
+      ]
+    },
+    {
       "id": "zaidimu-teorija",
       "grade": 1,
       "title": "Sąžiningumas ir žaidimai",

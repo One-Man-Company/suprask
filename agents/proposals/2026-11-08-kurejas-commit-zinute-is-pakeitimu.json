@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 129,
+  "created": "2026-11-08T07:36:00+02:00",
+  "type": "struktura",
+  "title": "Commit'o žinutė renkama iš modelio teksto, ne iš pakeitimų: cdc5d6b įvardija scratch failą",
+  "body": "Paskelbus #4998 taisymą, commit'o cdc5d6b žinutė yra „[kurejas] #129: [goal local-47c24163660c5c] │ profiles/deepseek41flash/cache/scratch/probe_4998.py“, nors commite 6 repo failai (agents/run.py | 103 +-, .gitignore, pamokos.md, dvi ataskaitos, pasiūlymas). Žinutė įvardija failą, kurio repo neturi ir kurio niekas nepaskelbė, todėl pagal git log neįmanoma pasakyti, kas ir kodėl pakeista — tai ta pati „kas ir kodėl“ problema, kurią #4998 sprendė [sistema] commit'ui, tik dabar agento commit'ui. Priežastis: summary_line() (agents/run.py:743–759) ima pirmą modelio atsakymo eilutę su trimis žodžiais ir netikrina jokio ryšio su `files` sąrašu, kurį bėgiklis pats sudaro. Siūloma: žinutės pagrindą imti iš to, ką bėgiklis žino (pakeisti failai, pasiūlymo numeris ir pavadinimas, tikslo failas), o modelio tekstą naudoti tik kaip papildomą eilutę; eilutė, įvardijanti kelią, kurio nėra `files` sąraše arba kurio nėra repo (scratch, ~/.hermes, /home/), žinutei netinka. Patikra: tas pats atsakymo tekstas per summary_line() neturi grąžinti scratch kelio, o žinutėje turi būti bent vienas kelias iš `files`.",
+  "target": "agents/run.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "git log -1 --format=%s cdc5d6b → „[kurejas] #129: [goal local-47c24163660c5c] │ profiles/deepseek41flash/cache/scratch/probe_4998.py“",
+    "git show --name-only --format= cdc5d6b → .gitignore, agents/log/kurejas-2026-11-08T0717.md, agents/log/kurejas-2026-11-08T0724-4998.md, agents/proposals/2026-11-08-kurejas-svetimi-failai-publikavime.json, agents/run.py, research/wiki/guidelines/pamokos.md",
+    "agents/run.py:743-759 — summary_line() ima pirmą modelio eilutę su >=3 žodžiais, be ryšio su files",
+    "research/wiki/guidelines/pamokos.md LL-47 (nauja pamoka, ta pati šeima kaip LL-45/LL-37)"
+  ]
+}

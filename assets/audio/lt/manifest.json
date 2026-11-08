@@ -579,6 +579,14 @@
   "n": "n/0993a152cf6c1f0c-fff0ba6b.mp3",
   "s": "s/0993a152cf6c1f0c-5f9202cb.mp3"
  },
+ "Aukštas garsas": {
+  "n": "n/8418d5512290620e-59ee1030.mp3",
+  "s": "s/8418d5512290620e-aca02e56.mp3"
+ },
+ "Aukštyn": {
+  "n": "n/a8cde679c07458f8-fb79f724.mp3",
+  "s": "s/a8cde679c07458f8-fa037179.mp3"
+ },
  "Aukštyn skaičius mažėja dešimčia.": {
   "n": "n/8771ad44a23fe671-01bc7581.mp3",
   "s": "s/8771ad44a23fe671-dc120609.mp3"
@@ -827,6 +835,14 @@
   "n": "n/061db2d7c4edc72f-8c518491.mp3",
   "s": "s/061db2d7c4edc72f-1be7692b.mp3"
  },
+ "Garsiau": {
+  "n": "n/bc8a2ce01bbf62ec-042997ed.mp3",
+  "s": "s/bc8a2ce01bbf62ec-06cae6ac.mp3"
+ },
+ "Garsus garsas": {
+  "n": "n/2158679009f55bad-86b3544d.mp3",
+  "s": "s/2158679009f55bad-98b6ed19.mp3"
+ },
  "Greičiau": {
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
   "s": "s/60d89cb04b7054d4-58e113db.mp3"
@@ -1066,6 +1082,10 @@
  "Pagalvok ir pasakyk": {
   "n": "n/7d0a64f2091b33af-346fa946.mp3",
   "s": "s/7d0a64f2091b33af-7f4b6ce9.mp3"
+ },
+ "Paklausyk": {
+  "n": "n/1d2879731afda59e-1da7dc51.mp3",
+  "s": "s/1d2879731afda59e-63030624.mp3"
  },
  "Paklausyk dar kartą.": {
   "n": "n/0b98502ddbc17807-2c0263a4.mp3",
@@ -1339,6 +1359,14 @@
   "n": "n/da3c514821c976da-86f549a5.mp3",
   "s": "s/da3c514821c976da-278d796c.mp3"
  },
+ "Tyliau": {
+  "n": "n/50a192a31d5d4db0-5afd4ca2.mp3",
+  "s": "s/50a192a31d5d4db0-c7a378d6.mp3"
+ },
+ "Tylus garsas": {
+  "n": "n/645a08502b5efb30-3b2f8ba9.mp3",
+  "s": "s/645a08502b5efb30-87985f90.mp3"
+ },
  "U": {
   "n": "n/a25513c7e0f6eaa8-b4e039e2.mp3",
   "s": "s/a25513c7e0f6eaa8-cefa011a.mp3"
@@ -1386,6 +1414,14 @@
  "Vidurnaktis yra tarp 23 ir 1 valandos. Apie jį kalbėsime kitą kartą.": {
   "n": "n/da789db797cb676d-9499359a.mp3",
   "s": "s/da789db797cb676d-9b5a9b59.mp3"
+ },
+ "Vidutinis garsas": {
+  "n": "n/187cedb49b4090da-47b404b0.mp3",
+  "s": "s/187cedb49b4090da-751825bd.mp3"
+ },
+ "Vidutinis garsumas": {
+  "n": "n/f28ce8911779cd2a-ca989d7c.mp3",
+  "s": "s/f28ce8911779cd2a-684c8959.mp3"
  },
  "Viena kupiūra atstojo kelias monetas.": {
   "n": "n/cf35d955345c49b9-728b62a4.mp3",
@@ -1690,6 +1726,14 @@
  "Ž": {
   "n": "n/44adc66853ea8fee-f460d664.mp3",
   "s": "s/44adc66853ea8fee-cefe4d11.mp3"
+ },
+ "Žemas garsas": {
+  "n": "n/443a22cde44caf4a-8249b2fa.mp3",
+  "s": "s/443a22cde44caf4a-0f6efe1f.mp3"
+ },
+ "Žemyn": {
+  "n": "n/00f19fdf58ede624-6e4fa41c.mp3",
+  "s": "s/00f19fdf58ede624-f7eaadc6.mp3"
  },
  "Žemyn skaičius didėja dešimčia.": {
   "n": "n/03db13c5b770d9f8-0e29420d.mp3",

@@ -174,6 +174,10 @@ def main() -> int:
         print(f"   {status}: {line[:120]}")
         if status == "done":
             done += 1
+            # Po kiekvieno darbo paliekam ~25 s langą kitiems rašantiems
+            # agentams (kalbų redaktoriui, architektui): užraktas globalus,
+            # todėl be šio lango ilga eilė niekada neužleidžia vietos.
+            time.sleep(25)
         else:
             blocked += 1
             if status == "new":

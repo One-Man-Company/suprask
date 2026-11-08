@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
 import re
 import subprocess
@@ -113,10 +114,11 @@ def main() -> int:
             break
         print(f"→ {m['id']}")
         before_id = max([int(r["id"]) for r in db.recent_runs(5)] or [0])
+        env = dict(os.environ, SUPRASK_LOCK_WAIT=os.environ.get("SUPRASK_LOCK_WAIT", "3600"))
         proc = subprocess.run(
             [sys.executable, str(ROOT / "agents" / "run.py"), "kalbu-redaktorius",
              "--trigger", "queue", "--note", focus_for(m)],
-            cwd=ROOT, capture_output=True, text=True,
+            cwd=ROOT, capture_output=True, text=True, env=env,
         )
         line = ((proc.stdout or "").strip().splitlines() or [""])[-1]
         print("  ", line[:140])

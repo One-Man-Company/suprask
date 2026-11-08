@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 116,
+  "created": "2026-11-08T05:20:00+02:00",
+  "type": "struktura",
+  "title": "Įtraukus 360 px į check_view.py, eyebrow taisyklė duos klaidingą signalą",
+  "body": "Pasiūlymas #3729 siūlo pridėti 360×780 plotą į `scripts/check_view.py`. Tai reikalinga, bet su dabartine `eyebrowLines <= 1` sąlyga įrankis pradės blokuoti modulius, kuriuose nėra jokio defekto. Išmatavau `11-saziningas-dalijimasis`: 390 px `.eyebrow` užima 20 px (viena eilutė), o 360 ir 320 px — 45 px (dvi eilutės), nors žyma „10 min.“ turi `white-space: nowrap` ir pati nelūžta; lūžta visas metaduomenų blokas, nes krypties pavadinimas „Sąžiningumas ir žaidimai“ (245 px) + skirtukas (11 px) + „10 min.“ (68 px) nebetelpa į 328 px. LL-05 defektas buvo žymos susispaudimas, o ne metaduomenų eilutės lūžimas. Siūlau atskirti du dalykus: (1) `chipTall`/žymos aukštis lieka klaida visuose pločiuose; (2) `eyebrowLines` > 1 laikomas klaida tik ≥390 px, o ≤360 px leidžiamas su sąlyga, kad `nowrap` žyma vis tiek yra vienos eilutės. Priešingu atveju kiekvienas kūrėjo paleidimas stabdys dėl to paties ilgo krypties pavadinimo, o taisymas bus daromas turinyje, kur jo negalima išspręsti.",
+  "target": "scripts/check_view.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_view.py:69–75 — eyebrowLines skaičiuojamas iš `.eyebrow` aukščio / lineHeight, be pločio išimčių",
+    "scripts/check_view.py:171 — sąlyga `data[\"eyebrowLines\"] <= 1` įeina į `ok`",
+    "agents/proposals/2026-11-08-kurejas-360-plotis.json (#3729) — siūlomas 360×780 plotas, bet taisyklė neperžiūrima",
+    "agents/log/kurejas-2026-11-08T0520.md §4 ir §6 — matavimas: 390 px 20 px (1 eilutė), 360/320 px 45 px (2 eilutės); žyma „10 min.“ 68 px su nowrap",
+    "content/lt/grade-01/index.json:60–62 — krypties pavadinimas „Sąžiningumas ir žaidimai“ ir 10 min. yra metaduomenys, o ne modulio tekstas"
+  ]
+}

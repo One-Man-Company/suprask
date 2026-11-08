@@ -12,13 +12,13 @@
  ],
  "concept": {
   "title": "Sąžininga — kai niekas neapgautas",
-  "big_idea": "Kai dalijamės, svarbu ne tik kiek gaunu aš, bet ir kiek gauna kitas. Jei vienas gauna daug daugiau, žaidimas nebėra smagus abiem.",
+  "big_idea": "Dalijantis svarbu ir tai, kiek gauna kitas. Jei vienas gauna daug daugiau, žaidimas nebėra smagus abiem.",
   "steps": [
    "Padalink tortą pusiau: 4 gabaliukai tau, 4 draugui. Tai po lygiai.",
    "Ar visada po lygiai yra sąžininga? Jei draugas nevalgė visą dieną, gal jam reikia daugiau?",
-   "Sąžiningumo taisyklė: prieš dalijantis pasakyk, kaip dalinsi, ir leisk kitam pasirinkti."
+   "Sąžiningumo taisyklė: pasakyk, kaip dalinsi. Tada leisk kitam rinktis pirmam."
   ],
-  "example": "Du vaikai dalijasi 8 gabaliukų picą. Vienas dalija, kitas renkasi pirmas. Taip dalijantysis stengsis padalinti lygiai — nes kitaip jam liks mažesnė dalis."
+  "example": "Du vaikai dalijasi 8 gabaliukų picą. Vienas dalija, kitas renkasi pirmas. Taip dalijantysis stengsis padalinti lygiai. Kitaip jam liks mažesnė dalis."
  },
  "sim": {
   "component": "saziningas-dalijimasis",
@@ -56,7 +56,7 @@
    ],
    "answer": 2,
    "hint": "Pagalvok, kokią dalį dalijantysis norėtų pasilikti sau.",
-   "why": "Jei dalijantysis žino, kad kitas rinksis pirmas, jam apsimoka dalinti sąžiningai."
+   "why": "Jei kitas rinksis pirmas, dalijantysis norės padalinti lygiai."
   },
   {
    "q": "Du vaikai dalijasi 6 sausainius. Vienas nori visus. Kaip sąžininga?",

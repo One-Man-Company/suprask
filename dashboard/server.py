@@ -695,6 +695,13 @@ async function loadPause(){
       state.style.background = "rgba(63,191,143,.18)"; state.style.color = "var(--ok)";
       note.textContent = "";
     }
+    // Mygtukai pagal būseną: kol sistema veikia, „Paleisti dabar“ nereikia ir
+    // jis klaidina (atrodo, kad sistema stovi). Kai pristabdyta — atvirkščiai.
+    // „Paleisti dabar“ rodomas TIK kai sistema pristabdyta. Datą galima keisti
+    // abiem atvejais, o mygtuko užrašas pasako, ką jis darys.
+    $("#resumeBtn").style.display = p.paused ? "" : "none";
+    $("#pauseBtn").textContent = p.paused ? "Pratęsti iki datos" : "Pristabdyti";
+    date.disabled = false;
   } catch (e) { $("#pauseState").textContent = "klaida: " + e.message; }
 }
 

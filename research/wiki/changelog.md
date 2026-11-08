@@ -2,6 +2,15 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-08 (06:13) — Publikavimo patikra #122: repo 28 / paskelbta 28, svetainė baitais lygi HEAD
+
+- **`scripts/check_published.py`** → repo 28, paskelbta 28, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `rc=0`. `origin/main` = `HEAD` = `8b29d9b`.
+- **3 gyvi adresai:** šaknis `200`, `content/lt/grade-01/matematika/23-piktograma-ir-stulpelis.json` `200`, `content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json` `200`; papildomai `technologijos/02-medziagu-bandymas.json`, `index.json`, `path.json`, `grades.json`, `assets/audio/lt/manifest.json` — visi `200`.
+- **Baitai, ne skaičiai:** visi 28 modulių JSON failai gyvai baitais lygūs `git show HEAD:` (0 skirtumų); `index.json` `a9cc86b3…`, `path.json` ir `manifest.json` (`2a68b9c6…`, 433 tekstai) — lygūs. `grades.json` abiejose pusėse skelbia `"modules": 28`.
+- **7 iš 13 `assets/` failų skiriasi nuo HEAD tik `?v=8b29d9bc` žyma**, kurią prirašo `.github/workflows/pages.yml:33–42`; žyma lygi `HEAD` pirmiems 8 simboliams, tad gyva svetainė pastatyta iš `8b29d9b`. `main.css` gyvai baitais lygus HEAD.
+- **Simuliacijų registras per `node` importą:** 28 raktai, 28 unikūs, visi su `mount()`, 28 modulių su `sim`, neregistruotų 0, nenaudojamų 0.
+- **`validate_content.py --grade 1 --strict`:** 0 klaidų, 0 įspėjimų. **Sprendimas:** sutampa; nieko nešalinta, ID nepernumeruoti, `path.json` neliestas. Ataskaita `agents/log/publikavimo-agentas-2026-11-08T0613.md`. Nauja pamoka LL-41 (gyva svetainė nėra HEAD baitais — `?v=` žyma).
+
 ## 2026-11-07 (16:30) — Publikavimo patikra #43: 18 modulių gyvai, publikavimas sveikas
 
 - **`origin/main` = `HEAD` = `45515d0`**, 0 neišstumtų ir 0 atsilikusių commit'ų. Paskutiniai trys `pages.yml` paleidimai — `completed/success`: `42371055485` (33 s, `2026-11-07T12:07:10Z`, head `45515d0`), `42369857544` (24 s, `b9a962c`), `42364755279` (58 s, `5763a0b`).

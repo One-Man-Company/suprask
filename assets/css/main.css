@@ -463,10 +463,10 @@ html.js .boot-fallback { display: none; }
    45 px. Trūksta mažiau nei 8 px, tad teksto nemažiname (LL-06 — telefone jis
    ir taip mažiausias serijos dydis), o suspaudžiame raidžių tarpą: .12em → .06em
    sutaupo ~25 px ir žyma lieka pirmoje eilutėje. Plotis 368 px, o ne 360 px:
-   eilutė lūžta visame 360–367 px ruože (puslapio paraštės ten dar 16 px), tad
-   taisome ruožą, o ne vieną zondo plotį (+1 px atsarga apvalinimo skirtumams).
-   Ties 368 px sena taisyklė dar telpa (336 px ≥ 335 px), todėl riba ne platesnė;
-   didesniuose ekranuose .12em lieka nepakitęs. */
+   eilutė lūžta visame pločių ruože žemiau 368 px (matuota 358–367 px — 45 px
+   aukščio antraštė; 368 px jau 20 px), tad taisome ruožą, o ne vieną zondo
+   plotį. Ties 368 px sena taisyklė dar telpa (336 px ≥ 335 px), todėl riba
+   ne platesnė; didesniuose ekranuose .12em lieka nepakitęs. */
 @media (max-width: 368px) {
   .eyebrow { letter-spacing: .06em; }
 }

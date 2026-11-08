@@ -1,0 +1,21 @@
+{
+  "role": "ideator",
+  "run_id": 128,
+  "created": "2026-11-08T07:17:56+02:00",
+  "type": "metodas",
+  "title": "Garso savybės: vienas modulis apie aukštumą, ne keturios savybės viename",
+  "body": "Šis pasiūlymas atsako į klausimai.md:15 („vienas modulis ar keturi?“) ir todėl siūlo trečią variantą: nei keturis beveik identiškus modulius, nei vieną su keturiomis sąvokomis, o vieną modulį apie vieną ašį — garso aukštumą. Pagrindas yra tyrimų išvada, kad garsumas 6–7 metų vaikui jau pažįstamas (garsumo skyrimas išsivysto pirmas), o aukštumas — sunkiausia savybė, kurios terminus vaikai dar vartoja netiksliai; todėl vienintelė nauja sąvoka modulyje yra aukštumas, o garsumas lieka žinomas dydis, su kuriuo jis painiojamas. Klaidinga nuostata, kurią modelis turi parodyti: „aukštas garsas yra garsus garsas“ (ir atvirkščiai) — vaikas kelia aukštumą ir tikisi, kad bus garsiau. Modelis: du nepriklausomi valdikliai — aukštis ir garsumas — varo vieną Web Audio oscillator; vaikas pirma nustato aukštį, tada keičia garsumą ir mato, kad aukštis nepakito, o po to keičia aukštumą prie to paties garsumo. Antra užduotis — palyginti du vienodo garsumo garsus, kurie skiriasi tik aukštumu (spalva ir smūgis nieko nesako, klausomasi ausimi). Modulis priklausytų naujai „muzika“ krypčiai: `assets/js/app.js:46` ir `:116` kryptis ima iš `content/lt/grade-01/index.json`, todėl naujos krypties pridėjimas kodo nekeičia. Trukmė ir tembras sąmoningai paliekami kitiems paleidimams — jie neturi tokios pat dokumentuotos painiavos, o viename modulyje reikštų antrą ir trečią naują sąvoką (T1.2).",
+  "target": "content/lt/grade-01/muzika/01-garso-aukstis.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:37 — „Eksperimentavimas garsais … leidžia pažinti pagrindines keturias garso savybes: trukmę (ilgi ir trumpi)…“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:146 — prioritetų lentelė: „Garso savybių laboratorija … labai aukšta — unikali, ne „klausyk““",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:72 — Muzika, garso savybės, modelis „ilgas/trumpas, aukštas/žemas, garsus/tylus, tembras“",
+    "research/wiki/guidelines/klausimai.md:15 — atviras klausimas, į kurį šis pasiūlymas atsako siaurindamas aprėptį",
+    "https://www.education.vic.gov.au/school/teachers/teachingresources/discipline/science/continuum/Pages/soundlearn.aspx — „Many students believe … the pitch of a sound will increase as the volume of the sound increases“ (Leite & Afonso 2001; Hapkiewicz 1992; Eshach & Schwartz 2006)",
+    "Musical Characteristics of Children (Digital Commons @ UConn, vrme) — „Most often confused were the three terms high, loud, and fast“; garsumo skyrimas išsivysto anksčiau už aukštumą",
+    "Sound qualities in Early Childhood Education (Research Studies in Music Education, 2021) — aukštumas mokomas paskutinis, „the terms high and low are not very familiar to young children“",
+    "assets/js/app.js:46, :116 — kryptys imamos iš index.json, todėl nauja „muzika“ kryptis kodo nekeičia"
+  ]
+}

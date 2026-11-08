@@ -1,0 +1,20 @@
+{
+  "role": "ideator",
+  "run_id": 128,
+  "created": "2026-11-08T07:17:56+02:00",
+  "type": "struktura",
+  "title": "Minimali tema tikrinama žodžio forma: „vandens būsenos“ pranešama kaip nepadengta, nors modulis yra",
+  "body": "Kiekviename agento prompte blokas KLASIŲ APIMTIS teigia, kad 1 klasėje tema „vandens būsenos“ yra DAR NĖRA. Tai netiesa: `content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json` egzistuoja, registruotas `index.json:52`, o jo trečias rezultatas skamba „Įvardiju tris vandens būsenas: ledą, vandenį ir garą“. Priežastis — `agents/scope.py:132–136` lygina normalizuotas žodžių formas kaip požymius: temą sudaro du žodžiai, tad reikia abiejų, o modulio tekste yra „būsenas“, ne „būsenos“ — sutampa 1 iš 2, ir riba (60 %) nepraeinama. Pasekmė ta, kad kiekvienas paleidimas gauna klaidingą privalomą signalą: ideatorius jį tikrina iš naujo (šis paleidimas tam sugaišo žingsnį), o kūrėjas, vykdydamas sąrašą, gali sukurti antrą vandens modulį ir pažeisti nedubliavimo taisyklę. Siūloma: lyginti kamienus (bent 5 simbolių priešdėlis arba galūnių nuėmimas), o ne žodžio formą; kai tema laikoma padengta, išvesti ir tai, kuris modulis bei kuris žodis sutapo, kad žmogus matytų pagrindą, o ne tik išvadą. Heuristika dokumentuota kaip apytikrė (`agents/scope.py:122–126`), bet promptas spausdina ją kaip „PRIVALO būti padengtos … DAR NĖRA“ (`agents/run.py:366`) — todėl klaidingas neigiamas atsakymas skaitomas kaip faktas. Pataisa turi išlaikyti abi puses: esama tema tampa „jau yra“, o tikrai nesančios temos (pvz., „komandų seka“) lieka „DAR NĖRA“.",
+  "target": "agents/scope.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "agents/scope.py:132 — words = [w for w in _norm(topic).split() if len(w) >= 4]",
+    "agents/scope.py:135–136 — matched = sum(1 for w in words if w in blob); if matched >= max(1, -(-len(words) * 6 // 10))",
+    "agents/scope.py:115 — blob sudaromas tik iš title, subtitle, strand ir outcomes",
+    "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json:outcomes[2] — „Įvardiju tris vandens būsenas: ledą, vandenį ir garą.“",
+    "content/lt/grade-01/index.json:52 — 16-vandens-busenos registruotas pasaulio pažinimo kryptyje",
+    "agents/run.py:366 — mark = „jau yra“ if c[„covered“] else „DAR NĖRA“",
+    "zondas (agents.scope.report()): „vandens būsenos“ → covered=False, modules=[]; ieškomi žodžiai ['vandens','busenos']; 16-vandens-busenos matched=1/2 („vandens“ yra, „busenos“ nėra — faile „būsenas“); 28 moduliai, likusios temos: garso savybės False, emocijos False, komandų seka False"
+  ]
+}

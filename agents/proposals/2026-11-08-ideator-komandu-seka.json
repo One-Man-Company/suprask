@@ -1,0 +1,22 @@
+{
+  "role": "ideator",
+  "run_id": 128,
+  "created": "2026-11-08T07:17:56+02:00",
+  "type": "tema",
+  "title": "Komandų seka tinklelyje: viena klaida sekoje pakreipia visą kelią",
+  "body": "1 klasės programa komandų seką laiko savarankišku pasiekimu: B1.3 (veiksmus nurodyti žingsniais ar komandomis), B3.3 (sudaryti ir vykdyti komandų sekas), B4.3 (rasti nurodytas klaidas sekose ir jas taisyti). Platformoje šios temos nėra: vienintelis modulis, kuriame minimos komandos, yra 17-kryptys-ir-vieta, bet jis moko krypties priklausomybės nuo žiūrovo, o ne sekos. Ankstesni paleidimai sąmoningai atidėjo šią temą iki 17-kryptys-ir-vieta (ideator-2026-11-04T1917.md:108) — tas modulis dabar yra (index.json:33), tad sąlyga įvykdyta. Klaidinga nuostata: „seka yra tikslų sąrašas, o jei robotukas nueina ne ten, reikia sugalvoti visą kelią iš naujo“. Modelis: tinklelyje stovi robotukas su savo kryptimi, vaikas sudeda 4–6 komandas („pirmyn“, „kairėn“, „dešinėn“), spaudžia „Vykdyti“ ir mato, kad posūkis sukamas roboto atžvilgiu, o viena neteisinga komanda viduryje pakreipia visas tolesnes. Antroje dalyje seka jau duota su viena klaida — vaikas keičia vieną komandą ir iš karto mato, ar klaida buvo ten (B4.3). Statiškas paveikslėlis to neparodo: klaidos vieta paaiškėja tik įvykdžius seką, o taisymo poveikis — tik pakeitus vieną komandą neperrašant visos eilės.",
+  "target": "content/lt/grade-01/matematika/24-komandu-seka.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:114 — B1.3 „Aptaria, kaip atliekami kasdieniai veiksmai, nurodo juos žingsniais ar komandomis“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:116 — B3.3 „Sudaro ir vykdo komandų sekas, naudojasi žaidybinėmis programavimo priemonėmis“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:117 — B4.3 „Randa nurodytas klaidas komandų sekose ir jas taiso“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:123 — matematikos pamokose „daugiausia dėmesio turėtų būti skiriama algoritmo ir komandos sąvokoms pažinti ir taikyti“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:151 — prioritetų lentelė: „Komandų seka tinklelyje (Bee-Bot logika) … labai aukšta“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:46 — „Tinklelis B1/C3 + komandų seka (lobio paieška)“",
+    "content/lt/grade-01/index.json:33 — 17-kryptys-ir-vieta jau registruotas (atidėjimo sąlyga įvykdyta)",
+    "agents/log/ideator-2026-11-04T1917.md:108 — tema atidėta iki 17-kryptys-ir-vieta, ne atmesta",
+    "patikra: grep -rln „komand“ content/lt/grade-01/ → tik matematika/17-kryptys-ir-vieta.json; matematikos kryptyje numeriai 04–07, 14–23, todėl 24 yra pirmas laisvas"
+  ]
+}

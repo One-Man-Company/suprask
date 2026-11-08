@@ -3,23 +3,23 @@
   "grade": 1,
   "strand": "pasaulio-pazinimas",
   "title": "Kur dingsta vanduo",
-  "subtitle": "Vanduo neprapuola — jis keičia savo formą",
+  "subtitle": "Vanduo neišnyksta — jis keičia savo formą",
   "minutes": 9,
   "outcomes": [
-    "Pasakau, kad išgaravęs vanduo neprapuola, o būna ore kaip garas.",
+    "Pasakau, kad išgaravęs vanduo neišnyksta, o būna ore kaip garas.",
     "Paaiškinu, kodėl ant vėsaus dangčio susidaro lašai.",
     "Įvardiju tris vandens būsenas: ledą, vandenį ir garą."
   ],
   "concept": {
     "title": "Vanduo keičia formą",
-    "big_idea": "Vanduo gali būti ledas, vanduo arba garas. Šildomas jis kyla į orą, o vėsdamas vėl tampa lašais.",
+    "big_idea": "Vanduo gali būti ledas, vanduo arba garas. Kai pakaiti, kyla į orą, o kai atvėsta, tampa lašais.",
     "steps": [
       "Įpilk vandens ir pakaitink. Virš puodo pakyla garas.",
       "Garas yra tas pats vanduo, tik ore. Jo nematome.",
       "Uždėk vėsų dangtį. Ant jo susirenka lašai.",
-      "Pakreipk dangtį. Lašai nubyra atgal į puodą."
+      "Pakreipk dangtį. Lašai nubėga atgal į puodą."
     ],
-    "example": "Ryte vonios veidrodis būna aprasojęs. Tai garas iš dušo atvėso ir virto lašais."
+    "example": "Ryte vonios veidrodis būna užparęs. Tai garas iš dušo atvėso ir virto lašais."
   },
   "sim": {
     "component": "vandens-busenos",
@@ -51,7 +51,7 @@
       "why": "Vėsus dangtis atvėsino garą, ir šis virto lašais."
     },
     {
-      "q": "Ryte vonios veidrodis aprasojo. Kas jame?",
+      "q": "Ryte vonios veidrodis užparojo. Kas jame?",
       "options": [
         "Dulkės nuo sienos",
         "Sienos dažai",

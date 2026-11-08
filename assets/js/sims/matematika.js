@@ -112,7 +112,7 @@ const desimtukas = {
        penkis, ir būtent eilė, o ne pusė, yra 1 klasės sąvoka. */
     stage.innerHTML = `
       <div style="text-align:center">
-        <div id="dt-grid" style="display:grid;grid-template-columns:repeat(5,minmax(0,3.4rem));grid-template-rows:repeat(2,auto);gap:.5rem;justify-content:center;width:100%;max-width:calc(5 * 3.4rem + 4 * .5rem);margin:0 auto;box-sizing:border-box"></div>
+        <div id="dt-grid" style="display:grid;grid-template-columns:repeat(5,minmax(0,3.4rem));grid-template-rows:repeat(2,auto);gap:.5rem;justify-content:center;width:100%;max-width:calc(5 * 3.4rem + 4 * .5rem);margin:0 auto;box-sizing:border-box;container-type:inline-size"></div>
         <p class="sim-note" id="dt-msg">Spausk langelius ir skaičiuok. Kiek trūksta iki 10?</p>
       </div>`;
     controls.innerHTML = `<button class="btn secondary" id="dt-clear">Išvalyti</button>`;
@@ -126,7 +126,11 @@ const desimtukas = {
     for (let i = 0; i < cells; i += 1) {
       const b = document.createElement("button");
       b.className = "cell";
-      b.style.cssText = "width:100%;aspect-ratio:1;border-radius:14px;border:3px solid var(--line);background:var(--paper);font-size:1.6rem;cursor:pointer;transition:transform .1s";
+      /* Taško dydis rišamas prie langelio, o ne prie šaknies šrifto: prie
+         200 % teksto 1.6rem yra 51 px, o langelis — 35 px, todėl taškai
+         užlietų vienas kitą (LL-24). 12cqw palieka taškui vietos langelio
+         viduje, o 16 px šaknyje riba neveikia (25,6 px < 35,8 px). */
+      b.style.cssText = "width:100%;aspect-ratio:1;border-radius:14px;border:3px solid var(--line);background:var(--paper);font-size:min(1.6rem,12cqw);cursor:pointer;transition:transform .1s";
       b.setAttribute("aria-label", `Langelis ${i + 1}`);
       b.addEventListener("click", () => {
         if (filled.has(i)) { filled.delete(i); b.textContent = ""; b.style.background = "var(--paper)"; b.style.borderColor = "var(--line)"; }

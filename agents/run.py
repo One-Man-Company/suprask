@@ -24,6 +24,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
@@ -469,6 +470,133 @@ def is_runtime_artifact(rel: str) -> bool:
     return bool(RUNTIME_RE.match(rel))
 
 
+def foreign_role_of_file(rel: str) -> str | None:
+    """Kuriam vaidmeniui failas PRIKLAUSO pagal patį kelią (arba `None`).
+
+    Tai ne spėjimas „pagal laiką“: tikrinamos tik tos vietos, kuriose vaidmuo
+    įrašytas į patį failo vardą — `agents/log/<role>-<laikas>.md` ir
+    `agents/work/<role>/…`. Toks failas fiziškai negali būti šio paleidimo
+    darbas, kad ir kada jis atsirado (LL-49).
+
+    Netyčia priskyrus svetimą ataskaitą, ji patektų į ne to vaidmens commit'ą,
+    o tikrasis savininkas savo `changed_files()` sąraše jos neberastų — todėl
+    šis atskyrimas yra saugus tik viena kryptimi: jis gali atmesti tik tai, ką
+    galima įrodyti esant svetima, ir niekada neatmeta to, kas galėtų būti sava.
+    """
+    for other in ROLES:
+        if rel.startswith(f"agents/log/{other}-") or rel.startswith(f"agents/work/{other}/"):
+            return other
+    return None
+
+
+def proposal_author(rel: str) -> str | None:
+    """`agents/proposals/*.json` autorystė pagal failo lauką `role`.
+
+    Pasiūlymo formate `role` yra privalomas, todėl pusiau parašytas failas
+    dažniausiai jau turi autorių. Jei failo perskaityti nepavyksta (agentas dar
+    rašo), grąžinamas `None` — abejotino failo NEatmetame: geriau įspėjimas
+    negu tyliai pamestas darbas.
+    """
+    if not (rel.startswith("agents/proposals/") and rel.endswith(".json")):
+        return None
+    try:
+        data = json.loads((ROOT / rel).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+        return None
+    role = data.get("role") if isinstance(data, dict) else None
+    return role if isinstance(role, str) and role in ROLES else None
+
+
+def file_owner(rel: str) -> str | None:
+    """Vienas įrodytas savininkas, jei jį galima nustatyti iš failo."""
+    return foreign_role_of_file(rel) or proposal_author(rel)
+
+
+def publication_plan(files: list[str], role: str, foreign: list[str]) -> tuple[list[str], dict[str, list[str]], list[str]]:
+    """Ką šis paleidimas tikrai gali publikuoti, o ką — ne.
+
+    `changed_files(before)` lygina tik laiko tarpą, todėl tame pačiame sąraše
+    atsiduria ir kito vaidmens darbas, jei jis ėjo tuo pačiu metu (LL-49).
+    Autorystės iš turinio atkurti negalima, todėl čia daromi du dalykai:
+
+    1. **Įrodyta svetimybė** — failai, kurių savininkas matomas iš kelio arba iš
+       pasiūlymo `role` lauko, pašalinami iš publikavimo sąrašo ir paliekami jų
+       vaidmens paleidimui. Tai vienintelė kryptis, kurioje klaida saugi.
+    2. **Neįrodyta autorystė** — jei per paleidimą dirbo kitas vaidmuo, apie tai
+       pasakoma žodžiu (grąžinami įspėjimai), o ne tyliai priskiriama sau.
+
+    Grąžina `(publikuotini, svetimi_pagal_vaidmenį, įspėjimai)`.
+    """
+    own: list[str] = []
+    foreign_files: dict[str, list[str]] = {}
+    for f in files:
+        owner = file_owner(f)
+        if owner and owner != role:
+            foreign_files.setdefault(owner, []).append(f)
+        else:
+            own.append(f)
+
+    warnings: list[str] = []
+    if foreign_files:
+        count = sum(len(v) for v in foreign_files.values())
+        parts = ", ".join(f"{r}: {len(v)}" for r, v in sorted(foreign_files.items()))
+        warnings.append(
+            f"{count} failų priklauso kitiems vaidmenims ({parts}) — jų neimame, "
+            f"paliekame tų vaidmenų paleidimams"
+        )
+    if foreign:
+        warnings.append(
+            f"per šį paleidimą dirbo ir {', '.join(foreign)}: {len(own)} failų autorystė "
+            f"neįrodyta (bendras darbinis katalogas), tad gali būti ir jų pakeitimų"
+        )
+    return own, foreign_files, warnings
+
+
+class RoleWatch:
+    """Stebi, kurie kiti vaidmenys ėjo per šio paleidimo laiką.
+
+    Vieno patikrinimo paleidimo pradžioje neužtenka: kitas vaidmuo gali pradėti
+    ir baigti visiškai mūsų viduje, ir tada pabaigoje jo užraktas jau būtų
+    atlaisvintas. Todėl imame ėminius kas kelias sekundes per visą paleidimą;
+    `agents/.run.<role>.lock` laikomas nuo `main()` pradžios iki `finally`,
+    todėl ėminio pakanka, kad užfiksuotume faktą „dirbo“.
+    """
+
+    def __init__(self, role: str, interval: float = 5.0):
+        self.role = role
+        self.interval = interval
+        self._seen: dict[str, str] = {}
+        self._stop = threading.Event()
+        self._thread: threading.Thread | None = None
+
+    def _sample(self) -> None:
+        try:
+            for other in active_role_locks(exclude=self.role):
+                self._seen.setdefault(other, dt.datetime.now().isoformat(timespec="seconds"))
+        except Exception:  # noqa: BLE001 — stebėjimas neturi griauti paleidimo
+            pass
+
+    def _loop(self) -> None:
+        while not self._stop.wait(self.interval):
+            self._sample()
+
+    def start(self) -> "RoleWatch":
+        self._sample()
+        self._thread = threading.Thread(target=self._loop, name=f"role-watch-{self.role}", daemon=True)
+        self._thread.start()
+        return self
+
+    def stop(self) -> None:
+        self._stop.set()
+        if self._thread is not None:
+            self._thread.join(timeout=5)
+            self._thread = None
+
+    def roles(self) -> list[str]:
+        """Kiti vaidmenys, kurių užraktas buvo laikomas bent per vieną ėminį."""
+        return sorted(self._seen)
+
+
 def changed_files(before: str) -> list[str]:
     """Failai, kuriuos pakeitė ŠIS paleidimas (ne buvę prieš jį).
 
@@ -696,6 +824,68 @@ def _merge_json_union(rel: str, path: Path) -> bool:
     return True
 
 
+def _locked_inodes() -> dict[int, int] | None:
+    """`inode → pid` iš `/proc/locks`, arba `None`, jei sąrašo nėra.
+
+    Skaitome, o NE bandome užrakinti: `flock(LOCK_EX|LOCK_NB)` zondas
+    užrakina svetimą failą kelioms mikrosekundėms, ir jei būtent tą akimirką
+    tas vaidmuo bando pradėti darbą, jo `main()` pamato `BlockingIOError` ir
+    paleidimas praleidžiamas („toks pats agentas jau dirba“). Vienam
+    patikrinimui tai buvo teorinis atvejis, bet stebėjimas kas 5 s per valandos
+    paleidimą daro jį realų. `/proc/locks` atsako į tą patį klausimą nieko
+    neliesdamas.
+    """
+    try:
+        text = Path("/proc/locks").read_text(encoding="utf-8")
+    except OSError:
+        return None
+    holders: dict[int, int] = {}
+    for line in text.splitlines():
+        parts = line.split()
+        if len(parts) < 6 or parts[1] == "->":  # „->“ eilutė = laukiantis, ne laikantis
+            continue
+        try:
+            pid = int(parts[4])
+            inode = int(parts[5].rsplit(":", 1)[1])
+        except (ValueError, IndexError):
+            continue
+        holders[inode] = pid
+    return holders
+
+
+_PROC_LOCKS_OK: bool | None = None
+
+
+def _proc_locks_usable() -> bool:
+    """Ar `/proc/locks` tikrai rodo `flock` užraktus (patikrinama vieną kartą).
+
+    Tuščias ar nepilnas `/proc/locks` (kita OS, kita izoliuota aplinka) atrodytų
+    kaip „nė vienas vaidmuo nedirba“ — ir `ensure_clean()` vėl imtų svetimą
+    darbą. Todėl pirmą kartą užrakiname savo laikiną failą ir patikriname, ar jis
+    tame sąraše atsirado; jei ne, naudojamas senasis `flock` zondas.
+    """
+    global _PROC_LOCKS_OK
+    if _PROC_LOCKS_OK is not None:
+        return _PROC_LOCKS_OK
+    ok = False
+    path: Path | None = None
+    try:
+        fd, name = tempfile.mkstemp(prefix="suprask-lockprobe-")
+        path = Path(name)
+        with os.fdopen(fd, "a", encoding="utf-8") as fh:
+            fcntl.flock(fh, fcntl.LOCK_EX)
+            holders = _locked_inodes() or {}
+            ok = holders.get(path.stat().st_ino) == os.getpid()
+            fcntl.flock(fh, fcntl.LOCK_UN)
+    except OSError:
+        ok = False
+    finally:
+        if path is not None:
+            path.unlink(missing_ok=True)
+    _PROC_LOCKS_OK = ok
+    return ok
+
+
 def active_role_locks(exclude: str = "") -> list[str]:
     """Vaidmenys, kurių paleidimas šiuo metu vyksta (jų užraktas laikomas).
 
@@ -706,13 +896,25 @@ def active_role_locks(exclude: str = "") -> list[str]:
     Savas vaidmuo praleidžiamas (`exclude`): `flock` užraktas priklauso failo
     aprašui, ne procesui, todėl bandymas užrakinti savo paties failą per antrą
     deskriptorių atrodytų kaip svetimas užraktas.
+
+    Pirmiausia skaitomas `/proc/locks` (nieko neužrakina). Jei jis netinka,
+    naudojamas senasis `flock` zondas su jo varžybų kaina.
     """
+    holders = _locked_inodes() if _proc_locks_usable() else None
     active: list[str] = []
     for other in sorted(ROLES):
         if other == exclude:
             continue
         path = role_lock_file(other)
         if not path.exists():  # neužrakintas paleidimas dar nesukūrė failo
+            continue
+        if holders is not None:
+            try:
+                inode = path.stat().st_ino
+            except OSError:
+                continue
+            if holders.get(inode, os.getpid()) != os.getpid():
+                active.append(other)
             continue
         try:
             with open(path, "a", encoding="utf-8") as fh:
@@ -843,16 +1045,31 @@ def summary_line(text: str, limit: int = 90) -> str:
 
 
 def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True,
-            implemented_id: int | None = None) -> dict:
+            implemented_id: int | None = None, foreign_roles: list[str] | None = None,
+            notes: list[str] | None = None) -> dict:
     with git_lock():
-        return _publish(role, run_id, files, summary, allow_revert, implemented_id)
+        return _publish(role, run_id, files, summary, allow_revert, implemented_id,
+                        foreign_roles or [], notes or [])
 
 
 def _publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True,
-             implemented_id: int | None = None) -> dict:
-    """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą."""
+             implemented_id: int | None = None, foreign_roles: list[str] | None = None,
+             notes: list[str] | None = None) -> dict:
+    """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą.
+
+    `foreign_roles` — kiti vaidmenys, kurie ėjo per tą patį laiką (LL-49).
+    Jų buvimas keičia dvi vietas: commit'o žinutė pasako, kad failų autorystė
+    neįrodyta, o nepavykusi validacija NIEKO neatmeta — atsukimas `git status`
+    sąraše esančius failus grąžintų į HEAD ir taip ištrintų dar nebaigtą kito
+    vaidmens darbą.
+    """
+    foreign = [r for r in (foreign_roles or []) if r != role]
+    notes = list(notes or [])
     if not files:
-        return {"status": "empty", "detail": "Agentas failų nepakeitė — rezultato nėra.", "sha": "", "validation": ""}
+        detail = "Agentas failų nepakeitė — rezultato nėra."
+        if notes:
+            detail += " " + "; ".join(notes)
+        return {"status": "empty", "detail": detail, "sha": "", "validation": ""}
 
     protected = [f for f in files if f in PROTECTED]
     if protected:
@@ -863,11 +1080,19 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
     if not ok:
         # `--publish-only` neturi ko atsukti: ten pakeitimai galėjo būti padaryti
         # žmogaus, ne agento. Todėl rankiniu atveju tik pranešame, o neatmetame.
-        if allow_revert:
+        if allow_revert and not foreign:
             revert(files)
             detail = "Validacija nepraėjo — pakeitimai atmesti."
+        elif allow_revert:
+            detail = (
+                "Validacija nepraėjo — pakeitimai PALIKTI darbinėje kopijoje, nes per "
+                f"paleidimą dirbo {', '.join(foreign)}: atmetimas ištrintų ir jų nebaigtą "
+                "darbą (LL-49)."
+            )
         else:
             detail = "Validacija nepraėjo — pakeitimai PALIKTI darbinėje kopijoje (rankinis režimas)."
+        if notes:
+            detail += " " + "; ".join(notes)
         return {"status": "rejected", "detail": detail, "sha": "", "validation": validation}
 
     branch = f"agent/{role}-{dt.date.today().isoformat()}"
@@ -875,6 +1100,10 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
 
     first_line = summary_line(summary) or role
     msg = f"[{role}] #{run_id}: {first_line}\n\nPaskelbta automatiškai po validacijos."
+    if notes:
+        # Autorystės pastaba – commit'o žinutėje, nes `git log` yra vienintelis
+        # audito pėdsakas, kuris išlieka po to, kai `detail` pasensta (LL-49).
+        msg += "\n\n" + "\n".join(f"- {n}" for n in notes)
 
     # Komituojame TIK šio paleidimo failus: `git add -A` kartą įtraukė ir
     # žmogaus nebaigtus pakeitimus į agento commit'ą. Ištrinti failai irgi yra
@@ -936,6 +1165,8 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
         detail += f", {len(left)} liko nešvarūs ({', '.join(left[:2])})"
     if closed:
         detail += f", uždaryti {closed} pasiūlymai"
+    if notes:
+        detail += "; " + "; ".join(notes)
     return {"status": "published", "detail": detail, "sha": sha, "validation": validation}
 
 
@@ -1021,6 +1252,9 @@ def main() -> int:
     fd, query_path = tempfile.mkstemp(prefix=f"suprask-{args.role}-", suffix=".txt")
     goal_path = query_path + ".goal"
     before = git_snapshot()
+    # Stebėjimas prasideda TĄ PAČIĄ akimirką kaip ir `before` nuotrauka: tik
+    # tada laiko tarpas ir „kas dar dirbo“ matuojami tais pačiais rėmais (LL-49).
+    watch = RoleWatch(args.role).start()
     started = dt.datetime.now()
     timeout = args.timeout or cfg["timeout"]
 
@@ -1106,11 +1340,17 @@ def main() -> int:
         )
 
         files = changed_files(before)
+        watch.stop()
+        foreign = watch.roles()
+        files, foreign_files, notes = publication_plan(files, args.role, foreign)
+        if foreign_files or foreign:
+            print(f"{args.role}: " + "; ".join(notes))
         db.upsert_proposals(sorted(PROPOSALS.glob("*.json")))
 
         # Paskelbimas — bėgiklio, ne agento, darbas.
         result = publish(args.role, run_id, files, out or args.role,
-                         implemented_id=int(proposal["id"]) if proposal else None)
+                         implemented_id=int(proposal["id"]) if proposal else None,
+                         foreign_roles=foreign, notes=notes)
         if status in ("ok", "partial"):
             status = result["status"]
         # Patikros vaidmenys (tikrintojas, publikavimo-agentas, kuratorius) iš
@@ -1150,6 +1390,7 @@ def main() -> int:
         print(f"{args.role} #{run_id}: timeout")
         return 124
     finally:
+        watch.stop()
         Path(query_path).unlink(missing_ok=True)
         Path(goal_path).unlink(missing_ok=True)
         fcntl.flock(lock_handle, fcntl.LOCK_UN)

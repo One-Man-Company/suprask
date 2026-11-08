@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 132,
+  "created": "2026-11-08T08:29:00+02:00",
+  "type": "struktura",
+  "title": "Vaidmenų darbas izoliuotame git worktree — panaikintų likusią autorystės riziką",
+  "body": "#5133 sutvarkė tai, ką galima įrodyti be izoliacijos: svetimos ataskaitos, `agents/work/` failai ir kito vaidmens pasiūlymai nepatenka į publikavimą, o bendro turinio failo autorystė bent jau pasakoma žodžiu. Likusi rizika ta pati: jei du vaidmenys rašo `content/` ar `assets/`, laiko tarpas vis dar negali atskirti, kieno failas. Vienintelė vieta, kur autorystė sutampa su matavimo vienetu, yra atskira darbinė kopija: `git worktree add agents/worktrees/<role>` ir `hermes … --in agents/worktrees/<role>`, o publikavimas iš tos kopijos. To negalima padaryti vienu žingsniu: kūrėjo privaloma komanda `env -u PYTHONPATH .venv/bin/python scripts/generate_audio.py` remiasi `.venv` ir `assets/audio` repo kataloge, kurių worktree neturi (`.venv` yra `.gitignore`), o agentui reikia pakeisti ir `before` nuotraukos vietą, ir prompto „PROJEKTO KATALOGAS“ eilutę. Siūlomas etapas: (1) `agents/worktrees/<role>` kūrimas ir `.venv` simbolinė nuoroda; (2) `changed_files()` skaitomas toje kopijoje, o publikavimas perkelia failus į pagrindinę kopiją po `git_lock()`; (3) tik tada `RoleWatch` įspėjimas tampa nebereikalingas. Kol to nėra, dabartinis įspėjimas yra sąžininga būsena, o ne sprendimas.",
+  "target": "agents/run.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "agents/run.py — `publication_plan()` atmeta tik įrodytą svetimybę (kelio vardų erdvė, pasiūlymo `role` laukas); bendro turinio failo autorystė lieka neįrodyta",
+    "git show --name-only cd4f175 — [ideator] #128 commite yra agents/log/kurejas-2026-11-08T0710-4454.md: svetimas darbas jau pateko į commit'ą",
+    ".gitignore — `.venv/` ir `agents/work/` nėra repo, tad worktree jų neturėtų, o kūrėjo instrukcija (agents/roles/kurejas.md:41) reikalauja `.venv/bin/python scripts/generate_audio.py`",
+    "agents/run.py:1183 — `before = git_snapshot()` imamas pagrindinėje kopijoje; worktree atveju jis turi būti imamas toje pačioje kopijoje, kur dirba modelis"
+  ]
+}

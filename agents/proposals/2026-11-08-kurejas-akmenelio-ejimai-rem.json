@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 139,
+  "created": "2026-11-08T09:36:00+02:00",
+  "type": "simuliacija",
+  "title": "„Akmenėlio“ ėjimų eilutė išstumia puslapį 24 px: clamp minimumas užrašytas rem",
+  "body": "Pasiūlymo #4741 tikslas buvo `assets/js/sims/matematika.js`, todėl likę tos pačios šeimos taškai kitame faile liko nepakeisti. Išmatavau po šio darbo: modulyje „Akmenėlis, žirklės, popierius“ `#ap-play` (`display:flex; gap:1.2rem; font-size:clamp(2.6rem,10vw,4rem)`) užima 379 px, kai `#sim-stage` skirta 295 px — puslapis @414 px su 32 px šaknies šriftu slenka 24 px, o @360 px — 78 px. Priežastis ta pati kaip LL-41/LL-55: `clamp()` minimumas užrašytas `rem`, o `rem` seka šaknies šriftu, tad prie 200 % teksto pats mažiausias leistinas dydis (2.6rem = 83,2 px) yra didesnis už visą eilutei skirtą plotį. Siūlau `font-size:clamp(min(2.6rem, 14cqw), 10vw, 4rem)` su `container-type:inline-size` ant `#ap-play` ir 16 px šaknyje palyginti ėjimų aukštį bei eilutės plotį su buvusiais — kitaip bus pakeistas įprastas vaizdas. Antras, mažesnis taškas tame pačiame komponente: `#ap-bars` eilutė naudoja fiksuotus `7rem 1fr 3rem`, kurie prie 32 px šaknies taip pat auga; juos verta keisti į `minmax(0,7rem) minmax(0,1fr) minmax(0,3rem)` su `min-width:0` vaikams. Trečias dalykas neturi būti daromas aklai: #4741 evidence mini ir `geometrija.js:115,116,131` (`auto-fit,minmax(6.1rem/7rem/6.4rem,1fr)`), bet šiandien @360 px su 32 px šaknimi modulyje „Erdvinės figūros“ simuliacija netelpa į 0 — ten slanktį 38 px kelia užduočių blokas (#4748), ne simuliacija, todėl geometrija keisti nereikia tol, kol zondas neparodo simuliavimo konteinerio pertekliaus.",
+  "target": "assets/js/sims/zaidimai.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "matavimas Chromium 155 (Playwright), 2026-11-08: #/modulis/1/zaidimu-teorija/13-akmenelis-popierius @414 px su 32 px šaknies šriftu — #ap-play 379 px (left 60, right 438), #sim-stage 295 px, documentElement.scrollWidth 438 vs clientWidth 414 (24 px)",
+    "tas pats @360 px su 32 px šaknies šriftu — #ap-play 379 px, documentElement.scrollWidth 438 vs clientWidth 360 (78 px)",
+    "assets/js/sims/zaidimai.js:181 — `#ap-play` `font-size:clamp(2.6rem,10vw,4rem)`; :185 — `#ap-bars`",
+    "assets/js/sims/zaidimai.js:205 — `grid-template-columns:7rem 1fr 3rem` be `minmax(0,…)`",
+    "po #4741 pataisos tas pats zondas matematika.js moduliams: @414/32 #dt-grid 295/295 ir #pk-wrap 295/295, 0 px"
+  ]
+}

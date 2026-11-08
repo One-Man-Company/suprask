@@ -23,9 +23,16 @@ const saziningasDalijimasis = {
     const CX = 110;
     const CY = 110;
 
+    /* Torto piešinys buvo `width="min(78vw,300px)"` — plotis nuo ekrano, o ne
+       nuo kortelės. Prie 200 % teksto kortelė susitraukia (šaknies `rem`
+       padidina paraštes), 78vw lieka 323 px, todėl SVG išstūmė kortelę 26 px
+       (#4741). Dabar plotis 100 % kortelės, o 300 px ir 78vw lieka tik
+       viršutine riba: įprastu šriftu matoma lygiai tiek pat (300 px @414,
+       280,8 px @360). */
     stage.innerHTML = `
-      <div style="text-align:center">
-        <svg id="sd-cake" viewBox="0 0 220 220" width="min(78vw,300px)" role="img" aria-label="Tortas, padalintas į 8 dalis"></svg>
+      <div style="text-align:center;min-width:0;max-width:100%;box-sizing:border-box">
+        <svg id="sd-cake" viewBox="0 0 220 220" role="img" aria-label="Tortas, padalintas į 8 dalis"
+             style="width:100%;max-width:min(78vw,300px);height:auto"></svg>
         <p id="sd-count" style="font-family:var(--font-head);font-weight:900;font-size:1.15rem;margin:.4rem 0"></p>
       </div>`;
     controls.innerHTML = `<button class="btn secondary" id="sd-reset">Iš naujo</button>`;
@@ -176,10 +183,15 @@ const akmenelisPopierius = {
     const score = { win: 0, lose: 0, draw: 0 };
     let last = "Paklausk draugo arba spausk savo ėjimą.";
 
+    /* Kortelė yra `#sim-stage` tinklelio vaikas: be `min-width:0` jos
+       mažiausias plotis lygus turinio min-content, todėl prie 200 % teksto
+       (32 px šaknis) žaidimo eilutė išstūmė puslapį 24 px, o 360 px ekrane —
+       78 px (#4741). Dydžiai rišami prie TIKRO kortelės pločio (`cqw`), nes
+       `rem` seka šaknies šriftu ir auga kartu su juo. */
     stage.innerHTML = `
-      <div style="text-align:center;width:100%;max-width:40rem">
-        <div id="ap-play" style="display:flex;justify-content:center;align-items:center;gap:1.2rem;font-size:clamp(2.6rem,10vw,4rem);min-height:6rem">
-          <span id="ap-you">❔</span><span style="font-size:1.2rem;color:var(--ink-faint)">prieš</span><span id="ap-pc">❔</span>
+      <div style="text-align:center;width:100%;max-width:40rem;min-width:0;box-sizing:border-box;container-type:inline-size">
+        <div id="ap-play" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:min(1.2rem,6cqw);font-size:min(clamp(2.6rem,10vw,4rem),22cqw);min-height:6rem">
+          <span id="ap-you">❔</span><span style="font-size:min(1.2rem,9cqw);color:var(--ink-faint)">prieš</span><span id="ap-pc">❔</span>
         </div>
         <p id="ap-msg" style="font-family:var(--font-head);font-weight:800;min-height:1.6rem"></p>
         <div id="ap-bars" style="display:grid;gap:.4rem;max-width:24rem;margin:0 auto"></div>
@@ -201,13 +213,17 @@ const akmenelisPopierius = {
         { k: "Pralaimėjai", v: score.lose, c: "#f2708a" },
         { k: "Lygiosios", v: score.draw, c: "#ffc94d" },
       ];
+      /* Fiksuotos `7rem`/`3rem` kolonos prie 200 % teksto (32 px šaknis) užėmė
+         336 px ir stulpelis nebetilpo į 294,8 px kortelę (#4741). Dabar tai
+         lanksti eilutė: įprastu šriftu pločiai tie patys (112 + likęs + 48),
+         o padidinus tekstą eilutė persirikiuoja, o ne išstumia puslapį. */
       barsEl.innerHTML = rows.map((r) => `
-        <div style="display:grid;grid-template-columns:7rem 1fr 3rem;gap:.5rem;align-items:center;font-size:.9rem;font-weight:700">
-          <span style="text-align:right">${r.k}</span>
-          <span style="height:1.2rem;background:var(--line);border-radius:999px;overflow:hidden">
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;font-size:.9rem;font-weight:700">
+          <span style="flex:0 0 auto;width:7rem;max-width:100%;text-align:right">${r.k}</span>
+          <span style="flex:1 1 5rem;min-width:2.5rem;height:1.2rem;background:var(--line);border-radius:999px;overflow:hidden">
             <span style="display:block;height:100%;width:${(r.v / total) * 100}%;background:${r.c}"></span>
           </span>
-          <span>${r.v}</span>
+          <span style="flex:0 0 auto;width:3rem">${r.v}</span>
         </div>`).join("");
     }
 

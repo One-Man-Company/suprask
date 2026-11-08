@@ -15,12 +15,14 @@ Kiekvienas agentas privalo laikytis docs/SVIETIMAS-1-GAIRES.md.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import datetime as dt
 import fcntl
 import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -1288,8 +1290,20 @@ def main() -> int:
             fh.write(prompt)
 
         def run_cmd(cmd: list[str]):
-            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
-            return proc.returncode, (proc.stdout or "").strip(), (proc.stderr or "").strip()
+            """Paleidžia hermes atskiroje procesų grupėje ir timeout metu žudo
+            VISĄ grupę. Anksčiau `subprocess.run(timeout=…)` nužudydavo tik
+            tiesioginį vaiką, o `hermes` anūkai likdavo gyvi ir toliau rašė į
+            darbinę kopiją — taip kitas agentas gaudavo svetimą darbą."""
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    text=True, start_new_session=True)
+            try:
+                out, err = proc.communicate(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                with contextlib.suppress(ProcessLookupError):
+                    os.killpg(proc.pid, signal.SIGKILL)
+                out, err = proc.communicate()
+                raise
+            return proc.returncode, (out or "").strip(), (err or "").strip()
 
         def invoke(profile: str):
             """Vienas paleidimas. Jei vaidmuo turi `goal` ir yra pasiūlymas —

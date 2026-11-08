@@ -127,10 +127,10 @@ const desimtukas = {
       const b = document.createElement("button");
       b.className = "cell";
       /* Taško dydis rišamas prie langelio, o ne prie šaknies šrifto: prie
-         200 % teksto 1.6rem yra 51 px, o langelis — 35 px, todėl taškai
-         užlietų vienas kitą (LL-24). 12cqw palieka taškui vietos langelio
-         viduje, o 16 px šaknyje riba neveikia (25,6 px < 35,8 px). */
-      b.style.cssText = "width:100%;aspect-ratio:1;border-radius:14px;border:3px solid var(--line);background:var(--paper);font-size:min(1.6rem,12cqw);cursor:pointer;transition:transform .1s";
+         200 % teksto 1.6rem būtų 51 px, o langelis — 35 px, todėl taškai
+         užlietų vienas kitą (LL-24). 9.5cqw palieka taškui vietos langelio
+         viduje, o 16 px šaknyje riba neveikia (25,6 px < 28,3 px). */
+      b.style.cssText = "width:100%;aspect-ratio:1;border-radius:14px;border:3px solid var(--line);background:var(--paper);font-size:min(1.6rem,9.5cqw);cursor:pointer;transition:transform .1s";
       b.setAttribute("aria-label", `Langelis ${i + 1}`);
       b.addEventListener("click", () => {
         if (filled.has(i)) { filled.delete(i); b.textContent = ""; b.style.background = "var(--paper)"; b.style.borderColor = "var(--line)"; }

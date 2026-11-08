@@ -1,0 +1,17 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 140,
+  "created": "2026-11-08T09:36:00+02:00",
+  "type": "struktura",
+  "title": "check_language.py nemato outcomes lauko — rimti kalbos radiniai lieka tyliai (LL-52)",
+  "body": "Šiame paleidime audito radinys #6 (21-erdvines-figuros outcomes[0] — 15 žodžių viename sakinyje, rimtas) buvo pilnai nematomas check_language.py: įrankis rodė tik 1 info (subtitle), o per ilgas outcome sakinys liko tyliai iki žmogaus akių. Siūloma check_module() pridėti outcomes sąrašo skaitymą per check_readability (where: rel + ':outcomes[i]') — tik sakinio ilgio ir žodžio ilgio matavimą, be dviprasmiškumo ir įvardžio taisyklių (outcomes pradeda veiksmažodžiu, jose nėra „arba“ sąrašų). Po to LL-52 turi vartą, o ne wiki pastabą. Atitinka atviro #4516 teminę sritį (kalbos vartai), bet yra atskiras deficitas: #4516 sprendė sunkumą (warn→error), ne lauko aprėptį. Turinys šiame modulyje jau taisytas rankiniu būdu (paleidimas #140), bet kituose moduliuose lieka 7 per ilgi outcome sakiniai be vartų.",
+  "target": "scripts/check_language.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/guidelines/kalbos-auditas.md — „Įrankio akumos“ 1: check_language.py visai netikrina outcomes; 8 sakiniai >10 ž. ir 3 žodžiai >13 raidžių liko nematomi; radinys #6 (21-erdvines-figuros outcomes[0], 15 ž., rimta)",
+    "scripts/check_language.py:230-246 — check_module() skaito title, subtitle, concept, sim.config, tasks; outcomes sąrašo neperėjo",
+    "Paleidimas #140 matavimas: check_language.py --json prieš → 21-erdvines-figuros 1 info (subtitle), 0 warn; outcomes[0] 15 žodžių įrodyta tik rankiniu skaičavimu",
+    "research/wiki/guidelines/pamokos.md LL-52"
+  ]
+}

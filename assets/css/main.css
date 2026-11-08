@@ -273,7 +273,11 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
   background: color-mix(in srgb, var(--accent) 8%, var(--paper-2));
 }
 .continue-card:hover { box-shadow: var(--shadow-2); }
-.continue-card > div { display: grid; gap: .2rem; }
+/* Tinklelis be `minmax(0,1fr)` negali susitraukti žemiau ilgiausio žodžio:
+   prie 200 % teksto (32 px šaknis) „Tęsk nuo čia“ blokas išstūmė puslapį
+   70 px modulyje su ilgu pavadinimu (#4741, matuota @414 px: 484 vs 414).
+   Įprastu šriftu abi deklaracijos neturi jokio poveikio — turinys telpa. */
+.continue-card > div { display: grid; gap: .2rem; min-width: 0; grid-template-columns: minmax(0, 1fr); }
 .continue-card strong { font-family: var(--font-head); font-size: 1.25rem; }
 .continue-card .btn { flex: 0 0 auto; }
 .continue-card.done { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 8%, var(--paper-2)); }

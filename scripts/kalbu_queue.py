@@ -112,6 +112,7 @@ def main() -> int:
         if done >= args.max_items or (time.time() - started) / 60 > args.max_minutes:
             break
         print(f"→ {m['id']}")
+        before_id = max([int(r["id"]) for r in db.recent_runs(5)] or [0])
         proc = subprocess.run(
             [sys.executable, str(ROOT / "agents" / "run.py"), "kalbu-redaktorius",
              "--trigger", "queue", "--note", focus_for(m)],
@@ -119,10 +120,12 @@ def main() -> int:
         )
         line = ((proc.stdout or "").strip().splitlines() or [""])[-1]
         print("  ", line[:140])
-        # būsena iš DB, ne iš teksto
-        rows = [r for r in db.recent_runs(40, "kalbu-redaktorius")]
-        status = (rows[0]["status"] if rows else "unknown")
-        if status in ("published", "ok", "partial", "checked"):
+        # Būsena — BŪTENT šio paleidimo, ne „paskutinio kalbos redaktoriaus“:
+        # kol laukiama užrakto, paskutinis įrašas gali būti kito proceso.
+        rows = [r for r in db.recent_runs(60, "kalbu-redaktorius") if int(r["id"]) > before_id]
+        status = (rows[0]["status"] if rows else "unrun")
+        # „empty“ = agentas dirbo, bet keisti nereikėjo — tai sėkmė, ne klaida.
+        if status in ("published", "ok", "partial", "checked", "empty"):
             done += 1
             state["done"].append(m["id"])
             save_state(state)

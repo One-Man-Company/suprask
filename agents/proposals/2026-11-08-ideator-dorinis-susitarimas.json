@@ -1,0 +1,20 @@
+{
+  "role": "ideator",
+  "run_id": 167,
+  "created": "2026-11-08T12:35:00+02:00",
+  "type": "tema",
+  "title": "Dorinis ugdymas: susitarimas galioja tiek, kiek jo laikosi visi",
+  "body": "Dorinis ugdymas yra privalomas 1 klasės dalykas ir platformoje neturi nė vieno modulio. Pradinėje mokykloje etikos programa integruota, o jos turinys įvardytas tiesiogiai: „Bendrai aptariami visuotini susitarimai“ — formuluotė trumpa, todėl modulis sąmoningai apsiriboja vienu aspektu: ką reiškia, kai susitarimo laikosi ne visi. Modelyje trys nupiešti vaikai stato vieną bokštą paeiliui; vaikas pirma pasako, kas nutiks, tada išjungia vieno iš jų ėjimą pagal eilę ir pamato, kad bokštas subyra visiems, o ne tik tam, kuris nustojo laikytis eilės. Klaidinga nuostata: „jei aš nesilaikau taisyklės, tai liečia tik mane“ — bendrame darbe vieno žmogaus ėjimas keičia visų rezultatą. Paveikslėlis parodytų jau sugriuvusį bokštą, bet ne priežastį; modelis leidžia grąžinti taisyklę ir pamatyti skirtumą tame pačiame kadre, o pasekmė ateina iš veiksmo, ne iš paaiškinimo. Sąlyga, be kurios modelis mokytų netiesos (LL-18): veiksmas privalo būti bendras — jei darbą gali atlikti vienas, teiginys „mano elgesys liečia tik mane“ yra teisingas, todėl vieno vaiko variantas netinka. Nuo 11-sąžiningo dalijimosi modulio skiriasi supratimo problema: ten klausiama, kaip padalinti, kad abu sutiktų, čia — kas nutinka, kai susitarimo laikosi ne visi. Modulio strand id turi būti „dorinis-ugdymas“; scope.py STRAND_SUBJECT šio rakto neturi, todėl padengtis skaičiuosis tik pagal index.json srities pavadinimą (jame turi likti žodžiai „Dorinis ugdymas“).",
+  "target": "content/lt/grade-01/dorinis-ugdymas/01-susitarimas-ir-zaidimas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:108 (Etikos ugdymo turinys: „Bendrai aptariami visuotini susitarimai“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:99–100 („Etikos programa pradiniame ugdyme yra integruota… per kitus dalykus ir įvairias veiklas“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:106–107 (naujos 2022 m. kryptys: virtualumas ir ekologinė etika — ne šio modulio apimtis)",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:127 (Etikos modelis: programa integruota)",
+    "research/wiki/foundations/bendradarbiavimo-zaidimai.md:38 („Tai nėra ‚būk geras‘ moralas. Tai pasekmė, kurią vaikas pamato pats“)",
+    "content/lt/grade-01/index.json (31 modulis, 0 dorinio ugdymo srities — patikrinta prieš siūlant)",
+    "Piaget, J. (1932). The Moral Judgment of the Child — 6–7 m. vaikas taisykles linkęs laikyti suaugusiojo nustatytomis ir nekeičiamomis, o ne susitarimu"
+  ]
+}

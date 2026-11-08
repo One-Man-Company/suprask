@@ -1,0 +1,20 @@
+{
+  "role": "ideator",
+  "run_id": 167,
+  "created": "2026-11-08T12:33:00+02:00",
+  "type": "tema",
+  "title": "Dailė: ta pati kompozicija, kita spalva — nuotaika keičiasi, formos ne",
+  "body": "Dailė yra privalomas 1 klasės dalykas, bet platformoje neturi nė vieno modulio, nors programa 1 klasei duoda du paruoštus pavyzdžius. Antrasis jų — „Kaip susikūrė pasaulis“ — prašo tirti „skirtingas spalvų ir dėmių sukuriamas nuotaikas“ ir remiasi Čiurlionio ciklu. Siūlau modulį, kuriame kompozicija lieka ta pati (tos pačios dėmės, tos pačios formos, tas pats išdėstymas), keičiasi tik spalvos: vaikas pirma pasako, ką ketina daryti ir kas, jo manymu, pasikeis, tada perstato spalvas ir pamato, kad nuotaika pasikeitė, nors forma nepajudėjo. Klaidinga nuostata: „nuotaiką kuria tai, kas nupiešta“ — 6–7 m. vaikas spalvą dažniausiai skaito kaip daikto pavadinimą (geltona = saulė), o ne kaip išraiškos priemonę, todėl forma jam atrodo vienintelė prasmės nešėja. Paveikslėlis parodytų dvi versijas, bet neįrodytų, kad formos liko tos pačios; modelis laiko formą nekintančia ir keičia vieną kintamąjį, todėl priežastis matoma, o ne pasakojama. Užduotys klausia, kas pasikeitė (forma ar spalva), o ne „kuri nuotaika teisinga“, todėl abi nuotaikos lieka vaiko reikalas ir dailė nevirsta piešimo konkursu (T5.1; programos pastaba, kad 1–2 kl. mokiniai „labai nori būti giriami“). Modulio strand id turi būti „daile“ — tik tada scope.py jį priskirs dalykui ir dashboard nebeprarodys „Dailė — DAR NĖRA“.",
+  "target": "content/lt/grade-01/daile/01-spalva-ir-nuotaika.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2714 (2 pavyzdys: „2 pamokų ciklas 1 klasei. Tema: Kaip susikūrė pasaulis“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2717–2718 („Meninės išraiškos bruožai. Dėmės ir formos… Tyrinėja ir apibūdina skirtingas spalvų ir dėmių sukuriamas nuotaikas, ritmą“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2623 („Pirmokus žavi pasakų ir fantazijos pasaulis, jų pasakojimuose dažnai susilieja svajonių ir realaus gyvenimo vaizdai“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2676–2680 (1 kl. pavyzdžio veikla: „jas palygina, kuo skiriasi… kūrybos plokštumoje ir erdvėje skirtumus“)",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:13 (trys dailės pasiekimų sritys — raiška, supratimas ir vertinimas)",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:22 (oficialus 1 kl. pamokų ciklas, kuriuo remiasi dailės kryptis)",
+    "content/lt/grade-01/index.json (31 modulis, 0 dailės srities — patikrinta prieš siūlant)"
+  ]
+}

@@ -30,6 +30,7 @@ import time
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "agents"))
 import db  # noqa: E402
+import pause as system_pause  # noqa: E402
 
 AUDIT = ROOT / "research" / "wiki" / "guidelines" / "kalbos-auditas.md"
 STATE = ROOT / "agents" / "kalbos-queue.json"
@@ -111,6 +112,11 @@ def focus_for(module: dict) -> str:
 
 
 def main() -> int:
+    paused, until = system_pause.is_paused()
+    if paused:
+        print(f"Sistema pristabdyta iki {until} — eilė nestartuojama.")
+        return 0
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-items", type=int, default=8)
     ap.add_argument("--max-minutes", type=int, default=180)

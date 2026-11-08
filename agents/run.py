@@ -33,6 +33,7 @@ from pathlib import Path
 
 import db
 import scope as grade_scope
+import pause as system_pause
 
 ROOT = Path(__file__).resolve().parent.parent
 AGENTS = ROOT / "agents"
@@ -1212,6 +1213,8 @@ def main() -> int:
     ap.add_argument("--trigger", default="manual", choices=["manual", "schedule", "dashboard", "queue"])
     ap.add_argument("--note", default="")
     ap.add_argument("--timeout", type=int, default=0)
+    ap.add_argument("--ignore-pause", action="store_true",
+                    help="paleisti nepaisant pauzės (sąmoningas rankinis paleidimas)")
     ap.add_argument("--proposal", type=int, default=0,
                     help="įgyvendinti tik šį pasiūlymą (queue režimui)")
     ap.add_argument("--publish-only", action="store_true",
@@ -1239,6 +1242,16 @@ def main() -> int:
             db.set_proposal_status(int(proposal["id"]), "blocked", f"{pg} klasė išjungta")
             print(f"{pg} klasė išjungta — pasiūlymas #{args.proposal} praleistas")
             return 0
+    # PAUZĖ — vienas taškas VISIEMS vaidmenims: kiekvienas agentas eina per
+    # main(), todėl pakanka šios vienos patikros. Ji atliekama prieš užraktą ir
+    # prieš bet kokį modelio kvietimą, kad pauzė nieko nekainuotų.
+    paused, until = system_pause.is_paused()
+    if paused and not args.ignore_pause:
+        run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", "paused")
+        db.finish_run(run_id, "paused", 0, 0, "", f"Sistema pristabdyta iki {until}.")
+        print(f"{args.role}: sistema pristabdyta iki {until} — praleista")
+        return 0
+
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     WORK_DIR.mkdir(parents=True, exist_ok=True)
     PROPOSALS.mkdir(parents=True, exist_ok=True)

@@ -456,6 +456,21 @@ html.js .boot-fallback { display: none; }
 .eyebrow .dot { opacity: .55; }
 .nowrap { white-space: nowrap; }
 
+/* Siauriausiuose ekranuose krypties pavadinimas su žyma netelpa į vieną eilutę.
+   Matuota @360 px: eilutė 328 px, o „Sąžiningumas ir žaidimai“ (245 px) +
+   skirtukas (11 px) + „10 min.“ (68 px) + tarpai (11 px) = 335 px, t. y. 7 px
+   per daug; todėl žyma krisdavo į antrą eilutę ir antraštė iš 20 px tapdavo
+   45 px. Trūksta mažiau nei 8 px, tad teksto nemažiname (LL-06 — telefone jis
+   ir taip mažiausias serijos dydis), o suspaudžiame raidžių tarpą: .12em → .06em
+   sutaupo ~25 px ir žyma lieka pirmoje eilutėje. Plotis 368 px, o ne 360 px:
+   eilutė lūžta visame 360–367 px ruože (puslapio paraštės ten dar 16 px), tad
+   taisome ruožą, o ne vieną zondo plotį (+1 px atsarga apvalinimo skirtumams).
+   Ties 368 px sena taisyklė dar telpa (336 px ≥ 335 px), todėl riba ne platesnė;
+   didesniuose ekranuose .12em lieka nepakitęs. */
+@media (max-width: 368px) {
+  .eyebrow { letter-spacing: .06em; }
+}
+
 /* Tekstinio atsakymo laukas simuliacijoje (alternatyva balsui) */
 .sim-ask { display: flex; gap: .5rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: .5rem; }
 .sim-ask input {

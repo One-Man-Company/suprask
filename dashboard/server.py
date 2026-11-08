@@ -148,6 +148,28 @@ def run_now(role: str) -> tuple[bool, str]:
         return False, str(exc)
 
 
+def running_now() -> list[dict]:
+    """Paleidimai, kurie DB žymimi „running“, su kiek laiko jau dirba.
+
+    Tai gali būti ir pasenę įrašai (procesas žuvo), todėl amžius rodomas
+    atvirai — žmogus mato, ar tai tikrai vyksta, ar tik neuždaryta eilutė.
+    """
+    import datetime as dt
+    out = []
+    for r in db.recent_runs(60):
+        if (r.get("status") or "") != "running":
+            continue
+        started = (r.get("started") or "").replace(" ", "T")[:19]
+        mins = None
+        try:
+            mins = int((dt.datetime.now() - dt.datetime.fromisoformat(started)).total_seconds() // 60)
+        except ValueError:
+            pass
+        out.append({"id": r.get("id"), "role": r.get("role"), "started": r.get("started"),
+                    "minutes": mins, "trigger": r.get("trigger")})
+    return out
+
+
 def read_log_tail(path: str, limit: int = 12000) -> str:
     p = ROOT / path
     if not path or not p.exists():
@@ -215,6 +237,7 @@ class Handler(BaseHTTPRequestHandler):
                               **{k: v for k, v in prof.resolve(c.get("profile", "")).items() if k != "profile"}}
                              for r, c in sorted(db_roles().items())],
                 "runs_today": len([r for r in db.recent_runs(200) if (r.get("started") or "")[:10] == today()]),
+                "running": running_now(),
             })
         if path == "/api/runs":
             qs = urllib.parse.parse_qs(parsed.query)
@@ -429,6 +452,7 @@ dialog{background:var(--panel);color:var(--fg);border:1px solid var(--line);bord
 dialog::backdrop{background:rgba(0,0,0,.6)}
 .muted{color:var(--muted)}
 .nowrap{white-space:nowrap}
+#pubNote{overflow-wrap:anywhere}
 .pill{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
 
 /* Telefonas: lentelės virsta kortelėmis, be horizontalaus slinkimo */
@@ -554,6 +578,8 @@ async function loadOverview(){
   roles = d.schedule.map(x=>x.role);
   const st = d.stats;
   $("#stats").innerHTML = `
+    <div class="card"><h2>Šiuo metu dirba</h2><div class="big" id="runCount">—</div>
+      <div id="runList" class="kv" style="display:block"></div></div>
     <div class="card"><h2>Moduliai</h2><div class="big">${st.modules}</div><div class="kv"><span>užduotys</span><b>${st.tasks}</b></div><div class="kv"><span>simuliacijos</span><b>${st.sims}</b></div></div>
     <div class="card"><h2>Garsas</h2><div class="big">${st.audio_files}</div><div class="kv"><span>įrašai</span><b>${st.audio_mb} MB</b></div><div class="kv"><span>kalba</span><b>lt-LT</b></div></div>
     <div class="card"><h2>Šiandien</h2><div class="big">${d.runs_today}</div><div class="kv"><span>paleidimai</span><b>${d.runs_today}</b></div><div class="kv"><span>atviri pasiūlymai</span><b id="openProp">—</b></div></div>
@@ -563,6 +589,17 @@ async function loadOverview(){
       <div class="kv"><span>neišstumta</span><b id="pubUnpushed">—</b></div>
       <div class="kv"><span>detalės</span><b id="pubNote">—</b></div></div>
     <div class="card"><h2>Paskutinis paleidimas</h2><div class="big">${d.last_run ? esc(d.last_run.status) : "—"}</div><div class="kv"><span>vaidmuo</span><b>${d.last_run ? esc(d.last_run.role) : "—"}</b></div><div class="kv"><span>prieš</span><b>${d.last_run ? ago(d.last_run.finished || d.last_run.started) : "—"}</b></div></div>`;
+
+  const running = d.running || [];
+  const runCount = document.getElementById("runCount");
+  const runList = document.getElementById("runList");
+  if (runCount) {
+    runCount.textContent = running.length === 0 ? "0" : String(running.length);
+    runCount.style.color = running.length ? "var(--ok)" : "";
+    runList.innerHTML = running.length
+      ? running.map(r => `<div class="kv"><span>${esc(r.role)}</span><b>${r.minutes == null ? "—" : r.minutes + " min."}</b></div>`).join("")
+      : `<div class="muted" style="font-size:12px">niekas nedirba</div>`;
+  }
 
   const timerMap = {};
   (d.timers||[]).forEach(t => {

@@ -3151,6 +3151,411 @@ const simtoLentele = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 14. Komandų seka tinklelyje                                         */
+/*                                                                     */
+/* Kodėl būtent taip: seka vykdoma PO VIENĄ, o posūkis sukamas roboto   */
+/* kūno atžvilgiu. Todėl viena klaidinga komanda viduryje pakreipia     */
+/* visas tolesnes — to nepamato nei paveikslėlis, nei sakinys. Modelis  */
+/* palieka pėdsakus, kad vaikas matytų, NUO KURIOS vietos kelias        */
+/* pasisuko, ir galėtų pakeisti vieną komandą, o ne perrašyti visą eilę. */
+/*                                                                     */
+/* Piešiama to paties failo priemonėmis kaip `vabaliukas-ir-kryptys`:   */
+/* čia tinklelis ir robotas, o ne gamtos scena, todėl art.js dalys      */
+/* (dangus, kalvos, augalai) netinka (žr. check_art.py LEGACY sąrašą).  */
+/* ------------------------------------------------------------------ */
+const komanduSeka = {
+  mount({ stage, controls, api, config }) {
+    const say = config.sentences || {};
+    // LL-42: sakinys gyvena TIK config.sentences. Kode nėra nei kopijos,
+    // nei atsarginio literalo — jei rakto nėra, tekstas neparodomas.
+    const line = (key) => (typeof say[key] === "string" ? say[key] : "");
+    const tell = (key) => { const t = line(key); if (t) api.speak(t); };
+
+    const CMDS = {
+      pirmyn: { label: "Pirmyn", glyph: "↑" },
+      kairen: { label: "Kairėn", glyph: "↰" },
+      desinen: { label: "Dešinėn", glyph: "↱" },
+    };
+    const CMDS_ORDER = ["pirmyn", "kairen", "desinen"];
+    const DIRS = {
+      up: { dx: 0, dy: -1, angle: 0 },
+      right: { dx: 1, dy: 0, angle: 90 },
+      down: { dx: 0, dy: 1, angle: 180 },
+      left: { dx: -1, dy: 0, angle: 270 },
+    };
+    const DIR_ORDER = ["up", "right", "down", "left"];
+    const FACING_TEXT = { up: "į viršų", right: "į dešinę", down: "į apačią", left: "į kairę" };
+    const ORDINAL = ["Pirmoji", "Antroji", "Trečioji", "Ketvirtoji", "Penktoji",
+      "Šeštoji", "Septintoji", "Aštuntoji", "Devintoji", "Dešimtoji",
+      "Vienuoliktoji", "Dvyliktoji"];
+
+    const clampInt = (value, lo, hi, dflt) => {
+      const n = Number(value);
+      if (!Number.isFinite(n)) return dflt;
+      return Math.max(lo, Math.min(hi, Math.round(n)));
+    };
+
+    const cols = clampInt(config.cols, 3, 5, 4);
+    const rows = clampInt(config.rows, 3, 5, 4);
+    const maxLen = clampInt(config.max, 3, 12, 10);
+    const cfgStart = config.start || {};
+    const cfgFlag = config.flag || {};
+    const start = {
+      col: clampInt(cfgStart.col, 0, cols - 1, 0),
+      row: clampInt(cfgStart.row, 0, rows - 1, rows - 1),
+    };
+    const startFacing = DIRS[cfgStart.facing] ? cfgStart.facing : "up";
+    const flag = {
+      col: clampInt(cfgFlag.col, 0, cols - 1, cols - 1),
+      row: clampInt(cfgFlag.row, 0, rows - 1, 0),
+    };
+    const PRESET = (Array.isArray(config.preset) ? config.preset : [])
+      .filter((key) => CMDS[key]).slice(0, maxLen);
+
+    let seq = PRESET.slice();
+    let pos = { col: start.col, row: start.row };
+    let facing = startFacing;
+    let trail = [{ col: pos.col, row: pos.row }];
+    let active = -1;
+    let running = false;
+    let reported = false;
+    let timers = [];
+
+    const reduceMotion = !!(window.matchMedia
+      && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+    /* --- tinklelis ---------------------------------------------------- */
+    const CELL = 66;
+    const GAP = 6;
+    const boardW = cols * CELL + (cols - 1) * GAP;
+    const boardH = rows * CELL + (rows - 1) * GAP;
+    const offX = (320 - boardW) / 2;
+    const offY = (320 - boardH) / 2;
+    const cellX = (col) => offX + col * (CELL + GAP);
+    const cellY = (row) => offY + row * (CELL + GAP);
+    const centerX = (col) => cellX(col) + CELL / 2;
+    const centerY = (row) => cellY(row) + CELL / 2;
+
+    stage.innerHTML = `
+      <div id="ks-wrap" style="width:100%;max-width:100%;min-width:0;display:grid;justify-items:center;gap:.7rem">
+        <svg id="ks-svg" viewBox="0 0 320 320" width="100%" role="img"
+             style="display:block;width:100%;max-width:22rem;height:auto"
+             aria-label="Tinklelis su robotu ir vėliava"></svg>
+        <p id="ks-empty" class="sim-note" style="margin:0"></p>
+        <ol id="ks-list" aria-label="Komandų seka"
+            style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;align-items:center;list-style:none;margin:0;padding:0;width:100%;min-width:0"></ol>
+      </div>`;
+
+    const svg = stage.querySelector("#ks-svg");
+    const list = stage.querySelector("#ks-list");
+    const emptyEl = stage.querySelector("#ks-empty");
+
+    const cellsG = svgEl("g", {});
+    for (let r = 0; r < rows; r += 1) {
+      for (let c = 0; c < cols; c += 1) {
+        const isFlag = c === flag.col && r === flag.row;
+        cellsG.appendChild(svgEl("rect", {
+          x: cellX(c), y: cellY(r), width: CELL, height: CELL, rx: 14,
+          fill: isFlag ? "var(--mint)" : "var(--paper-2)",
+          "fill-opacity": isFlag ? 0.22 : 1,
+          stroke: isFlag ? "var(--mint)" : "var(--line)", "stroke-width": 2,
+        }));
+      }
+    }
+    svg.appendChild(cellsG);
+
+    const trailG = svgEl("g", { id: "ks-trail" });
+    svg.appendChild(trailG);
+
+    /* --- vėliava ------------------------------------------------------ */
+    const flagG = svgEl("g", {
+      transform: `translate(${centerX(flag.col)}, ${centerY(flag.row)})`,
+    });
+    flagG.appendChild(svgEl("line", {
+      x1: -7, y1: 24, x2: -7, y2: -24, stroke: "var(--ink)", "stroke-width": 3.5,
+      "stroke-linecap": "round",
+    }));
+    flagG.appendChild(svgEl("path", {
+      d: "M-7 -24 L22 -15 L-7 -6 Z", fill: "var(--mint)", stroke: "var(--ink)", "stroke-width": 2.5,
+      "stroke-linejoin": "round",
+    }));
+    svg.appendChild(flagG);
+
+    /* --- robotas ------------------------------------------------------ */
+    const robot = svgEl("g", { id: "ks-robot" });
+    const robotRot = svgEl("g", {});
+    robot.appendChild(robotRot);
+
+    // Korpusas, akys ir nosis rodo į priekį; visas kūnas sukamas su kryptimi.
+    robotRot.appendChild(svgEl("rect", {
+      x: -17, y: -14, width: 34, height: 30, rx: 11,
+      fill: "var(--accent)", stroke: "var(--ink)", "stroke-width": 2.5,
+    }));
+    robotRot.appendChild(svgEl("circle", { cx: -6.5, cy: -5, r: 3, fill: "var(--ink)" }));
+    robotRot.appendChild(svgEl("circle", { cx: 6.5, cy: -5, r: 3, fill: "var(--ink)" }));
+    robotRot.appendChild(svgEl("path", {
+      d: "M0 -24 L7 -15 L-7 -15 Z", fill: "var(--ink)",
+    }));
+    robotRot.appendChild(svgEl("line", {
+      x1: -21, y1: 8, x2: -17, y2: 8, stroke: "var(--ink)", "stroke-width": 2.5,
+      "stroke-linecap": "round",
+    }));
+    robotRot.appendChild(svgEl("line", {
+      x1: 17, y1: 8, x2: 21, y2: 8, stroke: "var(--ink)", "stroke-width": 2.5,
+      "stroke-linecap": "round",
+    }));
+    robot.style.transition = reduceMotion ? "none" : "transform 220ms ease";
+    robotRot.style.transition = reduceMotion ? "none" : "transform 220ms ease";
+    svg.appendChild(robot);
+
+    /* --- piešimas ------------------------------------------------------ */
+    function paintTrail() {
+      trailG.innerHTML = "";
+      trail.forEach((cell, i) => {
+        // Paskutinė langelis — po robotu, todėl pėdsako ten nepaliekame:
+        // nulinio spindulio apskritimas tik klaidintų DOM skaitytojus.
+        if (i === trail.length - 1) return;
+        trailG.appendChild(svgEl("circle", {
+          cx: centerX(cell.col), cy: centerY(cell.row), r: 5,
+          fill: "var(--ink)", "fill-opacity": 0.22,
+        }));
+      });
+    }
+
+    function paint() {
+      robot.style.transform = `translate(${centerX(pos.col)}px, ${centerY(pos.row)}px)`;
+      robotRot.style.transform = `rotate(${DIRS[facing].angle}deg)`;
+      paintTrail();
+      const onFlag = pos.col === flag.col && pos.row === flag.row;
+      svg.setAttribute("aria-label",
+        `Tinklelis ${rows} eilučių ir ${cols} stulpelių. `
+        + `Robotas ${pos.row + 1} eilutėje iš viršaus, ${pos.col + 1} stulpelyje iš kairės, `
+        + `žiūri ${FACING_TEXT[facing]}. Vėliava ${flag.row + 1} eilutėje, ${flag.col + 1} stulpelyje.`
+        + (onFlag ? " Robotas stovi prie vėliavos." : ""));
+    }
+
+    /* --- komandų juosta ------------------------------------------------ */
+    function chipButton(index) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      // flex-wrap + mažas horizontalus padding: 200 % tekste žodis lieka
+      // savo dėžutėje, o ne išstumia visą puslapį (LL-41 šeima).
+      btn.style.cssText = "display:inline-flex;flex-wrap:wrap;justify-content:center;"
+        + "align-items:center;gap:.2rem .35rem;"
+        + "min-height:48px;min-width:48px;padding:.3rem .5rem;border-radius:999px;"
+        + "border:2px solid var(--line);background:var(--paper-2);color:var(--ink);"
+        + "font-family:var(--font-head);font-weight:900;font-size:.95rem;line-height:1.15;cursor:pointer";
+      btn.addEventListener("click", () => cycleCmd(Number(btn.dataset.i)));
+      return btn;
+    }
+
+    function syncChips() {
+      while (list.children.length > seq.length) list.removeChild(list.lastElementChild);
+      while (list.children.length < seq.length) {
+        const li = document.createElement("li");
+        li.appendChild(chipButton(list.children.length));
+        list.appendChild(li);
+      }
+      [...list.children].forEach((li, i) => {
+        const btn = li.firstElementChild;
+        const key = seq[i];
+        btn.dataset.i = String(i);
+        btn.dataset.key = key;
+        btn.setAttribute("aria-label",
+          `${ORDINAL[i] || `${i + 1}.`} komanda: ${CMDS[key].label}. Paliesk ir pakeisk.`);
+        btn.setAttribute("aria-current", i === active ? "true" : "false");
+        btn.innerHTML = `<span aria-hidden="true" style="opacity:.7">${i + 1}.</span>`
+          + `<span aria-hidden="true">${CMDS[key].glyph}</span><span>${CMDS[key].label}</span>`;
+        btn.style.background = i === active ? "var(--sun)" : "var(--paper-2)";
+        btn.style.borderColor = i === active ? "var(--ink)" : "var(--line)";
+      });
+      emptyEl.textContent = seq.length ? "" : line("tuscia");
+    }
+
+    /* --- valdikliai ---------------------------------------------------- */
+    // `padding-inline: clamp(…)` ir `flex-wrap: wrap` — kad 200 % tekste
+    // mygtukas liktų savo pločio, o ne išstumtų simuliacijos rėmelį.
+    const BTN_STYLE = "padding:.65rem clamp(.55rem,2.5vw,1.4rem);flex-wrap:wrap";
+    const addButtons = CMDS_ORDER.map((key) => (
+      `<button class="btn secondary" type="button" data-add="${key}" style="${BTN_STYLE}" `
+      + `aria-label="Pridėti komandą ${CMDS[key].label}">`
+      + `<span aria-hidden="true">${CMDS[key].glyph}</span> ${CMDS[key].label}</button>`
+    )).join("");
+
+    controls.innerHTML = `
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;width:100%;min-width:0">
+        ${addButtons}
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;width:100%;min-width:0">
+        <button class="btn secondary" type="button" id="ks-run" style="${BTN_STYLE};border-color:var(--accent);box-shadow:0 3px 0 var(--accent-press);font-weight:900">
+          Vykdyti <span aria-hidden="true">▶</span>
+        </button>
+        <button class="btn ghost" type="button" id="ks-undo" style="${BTN_STYLE}">Išbraukti</button>
+        <button class="btn ghost" type="button" id="ks-reset" style="${BTN_STYLE}">Iš naujo</button>
+      </div>`;
+
+    /* --- būsena -------------------------------------------------------- */
+    function clearTimers() {
+      timers.forEach((id) => clearTimeout(id));
+      timers = [];
+    }
+
+    function resetRobot() {
+      clearTimers();
+      running = false;
+      active = -1;
+      pos = { col: start.col, row: start.row };
+      facing = startFacing;
+      trail = [{ col: pos.col, row: pos.row }];
+      paint();
+      syncChips();
+    }
+
+    /* --- veiksmai ------------------------------------------------------ */
+    function cycleCmd(index) {
+      if (!Number.isInteger(index) || index < 0 || index >= seq.length) return;
+      resetRobot();
+      const next = CMDS_ORDER[(CMDS_ORDER.indexOf(seq[index]) + 1) % CMDS_ORDER.length];
+      seq[index] = next;
+      syncChips();
+      api.readout(line("pakeista"));
+      api.note(line("paliesk"));
+      tell("pakeista");
+    }
+
+    function addCmd(key) {
+      if (!CMDS[key]) return;
+      if (running) clearTimers();
+      if (seq.length >= maxLen) {
+        running = false;
+        api.readout(line("pilna"));
+        tell("pilna");
+        return;
+      }
+      resetRobot();
+      seq.push(key);
+      syncChips();
+      api.readout(line("pridek"));
+      api.note(line("paliesk"));
+      tell("pridek");
+    }
+
+    function undo() {
+      if (running) clearTimers();
+      running = false;
+      resetRobot();
+      if (!seq.length) {
+        api.readout(line("tuscia"));
+        tell("tuscia");
+        return;
+      }
+      seq.pop();
+      syncChips();
+      api.readout(line("isbraukta"));
+      api.note(line("paliesk"));
+      tell("isbraukta");
+    }
+
+    function resetAll() {
+      resetRobot();
+      seq = PRESET.slice();
+      syncChips();
+      const intro = PRESET.length ? "taisyk" : "pradzia";
+      api.readout(line(intro));
+      api.note(line("paliesk"));
+      tell(intro);
+    }
+
+    function finish(visitedFlag, blocked) {
+      running = false;
+      active = -1;
+      syncChips();
+      if (!blocked && pos.col === flag.col && pos.row === flag.row) {
+        api.readout(line("veliava"));
+        api.note(line("paliesk"));
+        tell("veliava");
+        if (!reported) {
+          reported = true;
+          api.progress({ correct: true });
+        }
+        return;
+      }
+      const key = visitedFlag ? "praejo" : (blocked ? "krastas" : "kita");
+      api.readout(line(key));
+      api.note(line("kelias"));
+      tell(key);
+    }
+
+    function execute() {
+      if (running || !seq.length) {
+        if (!seq.length) {
+          api.readout(line("tuscia"));
+          tell("tuscia");
+        }
+        return;
+      }
+      resetRobot();
+      running = true;
+      let visitedFlag = false;
+      let blocked = false;
+      let i = 0;
+      api.note("");
+      api.readout(line("vykdo"));
+      tell("vykdo");
+
+      const delay = reduceMotion ? 240 : 520;
+      const stepOnce = () => {
+        const key = seq[i];
+        active = i;
+        syncChips();
+        const dir = DIRS[facing];
+        if (key === "pirmyn") {
+          const nc = pos.col + dir.dx;
+          const nr = pos.row + dir.dy;
+          if (nc < 0 || nc >= cols || nr < 0 || nr >= rows) {
+            blocked = true;
+            finish(visitedFlag, true);
+            return;
+          }
+          pos = { col: nc, row: nr };
+          trail.push({ col: nc, row: nr });
+          if (pos.col === flag.col && pos.row === flag.row) visitedFlag = true;
+        } else {
+          const j = DIR_ORDER.indexOf(facing);
+          facing = DIR_ORDER[(j + (key === "desinen" ? 1 : 3)) % 4];
+        }
+        paint();
+        i += 1;
+        if (i < seq.length) {
+          timers.push(setTimeout(stepOnce, delay));
+        } else {
+          finish(visitedFlag, false);
+        }
+      };
+      timers.push(setTimeout(stepOnce, delay));
+    }
+
+    // LL-32: mygtukai niekada neužrakinami — jei seka tuščia arba vykdoma,
+    // pasakoma žodžiu, o ne tyliai išjungiamas valdiklis.
+    controls.querySelectorAll("[data-add]").forEach((btn) => {
+      btn.addEventListener("click", () => addCmd(btn.dataset.add));
+    });
+    controls.querySelector("#ks-run").addEventListener("click", execute);
+    controls.querySelector("#ks-undo").addEventListener("click", undo);
+    controls.querySelector("#ks-reset").addEventListener("click", resetAll);
+
+    resetRobot();
+    syncChips();
+    const intro = PRESET.length ? "taisyk" : "pradzia";
+    api.readout(line(intro));
+    api.note(line("paliesk"));
+    tell(intro);
+
+    return () => { clearTimers(); };
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
@@ -3165,4 +3570,5 @@ export const SIMS = {
   "piktograma-ir-stulpelis": piktogramaIrStulpelis,
   "sudetis-per-desimti": sudetisPerDesimti,
   "simto-lentele": simtoLentele,
+  "komandu-seka": komanduSeka,
 };

@@ -36,7 +36,8 @@
         { "id": "20-laikas-12-ir-24-val", "title": "Laikas: 2 val. ir 14:00 — tas pats laikas", "subtitle": "Ta pati rodyklė turi du vardus: 2:00 ir 14:00", "file": "grade-01/matematika/20-laikas-12-ir-24-val.json", "minutes": 9, "sim": "laikrodis-du-vardai" },
         { "id": "21-erdvines-figuros", "title": "Erdvinės figūros", "subtitle": "Tas pats kūgis iš priekio — trikampis, iš viršaus — apskritimas", "file": "grade-01/matematika/21-erdvines-figuros.json", "minutes": 9, "sim": "erdvines-figuros" },
         { "id": "22-sudetis-per-desimti", "title": "Sudėtis per dešimtį", "subtitle": "Pirma papildyk dešimtuką, paskui pridėk, kas liko", "file": "grade-01/matematika/22-sudetis-per-desimti.json", "minutes": 9, "sim": "sudetis-per-desimti" },
-        { "id": "23-piktograma-ir-stulpelis", "title": "Piktograma ir stulpelis", "subtitle": "Aukštas stulpelis rodo daug daiktų, o ne didelius daiktus", "file": "grade-01/matematika/23-piktograma-ir-stulpelis.json", "minutes": 9, "sim": "piktograma-ir-stulpelis" }
+        { "id": "23-piktograma-ir-stulpelis", "title": "Piktograma ir stulpelis", "subtitle": "Aukštas stulpelis rodo daug daiktų, o ne didelius daiktus", "file": "grade-01/matematika/23-piktograma-ir-stulpelis.json", "minutes": 9, "sim": "piktograma-ir-stulpelis" },
+        { "id": "24-komandu-seka", "title": "Komandų seka: viena klaida pakreipia kelią", "subtitle": "Kiekviena komanda pradeda ten, kur baigėsi ankstesnė", "file": "grade-01/matematika/24-komandu-seka.json", "minutes": 9, "sim": "komandu-seka" }
       ]
     },
     {

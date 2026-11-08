@@ -951,6 +951,14 @@
   "n": "n/1f143dc5ee938538-fde9cdac.mp3",
   "s": "s/1f143dc5ee938538-102c46f6.mp3"
  },
+ "Komanda išbraukta. Likusios lieka savo vietose.": {
+  "n": "n/819d393f28d0e197-0682aca2.mp3",
+  "s": "s/819d393f28d0e197-c9ec711a.mp3"
+ },
+ "Komanda pakeista. Vykdyk ir palygink kelią.": {
+  "n": "n/5e878dd691657d7c-bf059f7a.mp3",
+  "s": "s/5e878dd691657d7c-d8172ebe.mp3"
+ },
  "Kubas iš priekio atrodo kaip kvadratas.": {
   "n": "n/0a26471c3415e289-1355c62d.mp3",
   "s": "s/0a26471c3415e289-c1f846f9.mp3"
@@ -1091,6 +1099,10 @@
   "n": "n/0b98502ddbc17807-2c0263a4.mp3",
   "s": "s/0b98502ddbc17807-f24b48a5.mp3"
  },
+ "Paliesk komandą, ir ji pasikeis į kitą.": {
+  "n": "n/e2c3c41a3f0bb8ee-c7db9c56.mp3",
+  "s": "s/e2c3c41a3f0bb8ee-58662b22.mp3"
+ },
  "Pasiekei lapą.": {
   "n": "n/e4ff17609ce48006-064c37ee.mp3",
   "s": "s/e4ff17609ce48006-c893f127.mp3"
@@ -1175,6 +1187,10 @@
   "n": "n/1b4ed9470469a710-03f84c32.mp3",
   "s": "s/1b4ed9470469a710-113fad5f.mp3"
  },
+ "Pridėjai komandą. Ji bus vykdoma paskutinė.": {
+  "n": "n/4cc9444d441a9ee7-1545d22c.mp3",
+  "s": "s/4cc9444d441a9ee7-b0dea2dd.mp3"
+ },
  "Prieš pietus abu vardai tokie patys.": {
   "n": "n/b493f224483334f9-2792defd.mp3",
   "s": "s/b493f224483334f9-d72a250a.mp3"
@@ -1182,6 +1198,10 @@
  "Puiku!": {
   "n": "n/2d4f8241c3336b71-33c16e05.mp3",
   "s": "s/2d4f8241c3336b71-1cada9f0.mp3"
+ },
+ "Pėdsakai rodo visą kelią. Kur jis pasisuko?": {
+  "n": "n/87353ff8635b1855-41115b15.mp3",
+  "s": "s/87353ff8635b1855-655047f3.mp3"
  },
  "R": {
   "n": "n/8c2574892063f995-ce5b96a4.mp3",
@@ -1198,6 +1218,22 @@
  "Ritinys nuo šono vėl atrodo kaip stačiakampis.": {
   "n": "n/03b6cedca03d8bc9-e55cb673.mp3",
   "s": "s/03b6cedca03d8bc9-5ca3a562.mp3"
+ },
+ "Robotas pasiekė vėliavą. Seka tinka.": {
+  "n": "n/31c8282a711422b2-fe126ee0.mp3",
+  "s": "s/31c8282a711422b2-717f8941.mp3"
+ },
+ "Robotas praėjo pro vėliavą ir nuėjo toliau.": {
+  "n": "n/10000d86b8050a8a-5cd0df67.mp3",
+  "s": "s/10000d86b8050a8a-6595c8b0.mp3"
+ },
+ "Robotas sustojo prie tinklelio krašto.": {
+  "n": "n/3fc7bd270cd62fb5-233f8ae1.mp3",
+  "s": "s/3fc7bd270cd62fb5-248789d4.mp3"
+ },
+ "Robotas vykdo komandas po vieną.": {
+  "n": "n/991a65cf5a067def-323a8348.mp3",
+  "s": "s/991a65cf5a067def-4cff0032.mp3"
  },
  "Rodyklės liko vietoje. Tas pats laikas turi antrą vardą.": {
   "n": "n/b350666d958dae16-e0d68324.mp3",
@@ -1234,6 +1270,18 @@
  "Saulė šviečia ryte": {
   "n": "n/f45e5e9c1be148e8-2f6e804e.mp3",
   "s": "s/f45e5e9c1be148e8-e6386132.mp3"
+ },
+ "Seka baigėsi ne prie vėliavos.": {
+  "n": "n/6c592c218e675828-3cbab252.mp3",
+  "s": "s/6c592c218e675828-90c59335.mp3"
+ },
+ "Seka jau ilga. Išbrauk vieną komandą.": {
+  "n": "n/c32589c79e75870f-7edadaa8.mp3",
+  "s": "s/c32589c79e75870f-081d2552.mp3"
+ },
+ "Seka tuščia. Pridėk komandą.": {
+  "n": "n/a2d46cc0b121b4bf-dba84405.mp3",
+  "s": "s/a2d46cc0b121b4bf-12a554a2.mp3"
  },
  "Septyni ir keturi yra vienuolika.": {
   "n": "n/e11705ab6ea77b98-67191590.mp3",
@@ -1282,6 +1330,10 @@
  "Stulpelio aukštis rodo skaičių.": {
   "n": "n/9a2915bce2544c16-cea31696.mp3",
   "s": "s/9a2915bce2544c16-a0349067.mp3"
+ },
+ "Sudėk komandas ir spausk Vykdyti. Vėliava yra viršuje.": {
+  "n": "n/0fa754c7be689c79-c9b98710.mp3",
+  "s": "s/0fa754c7be689c79-df42c392.mp3"
  },
  "Sunkesnis medis plaukia. Lengvesnis metalas dugne.": {
   "n": "n/b5bcf1521dbe8fda-37f6b285.mp3",
@@ -1698,6 +1750,10 @@
  "Šalta, sniegas, medžiai be lapų, vanduo užšąla.": {
   "n": "n/2cb3683e3c35df4c-a7a95b8d.mp3",
   "s": "s/2cb3683e3c35df4c-4ec89bf3.mp3"
+ },
+ "Ši seka veda ne prie vėliavos. Viena komanda klaidinga.": {
+  "n": "n/6d6f88831dc26d38-c2d34fc3.mp3",
+  "s": "s/6d6f88831dc26d38-4fe26aa1.mp3"
  },
  "Šilta, daug lapų, obuoliai noksta, bitės dūzgia.": {
   "n": "n/d37d19f4b16ea501-556a5c3f.mp3",

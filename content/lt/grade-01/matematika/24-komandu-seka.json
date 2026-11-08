@@ -1,0 +1,133 @@
+{
+  "id": "24-komandu-seka",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Komandų seka: viena klaida pakreipia kelią",
+  "subtitle": "Kiekviena komanda pradeda ten, kur baigėsi ankstesnė",
+  "minutes": 9,
+  "outcomes": [
+    "Sudarau komandų seką ir ja nuvedu robotą prie vėliavos.",
+    "Paaiškinu, kodėl viena klaidinga komanda pakreipia visas tolesnes.",
+    "Randu klaidingą komandą sekoje ir keičiu tik ją vieną."
+  ],
+  "concept": {
+    "title": "Komandos vykdomos iš eilės",
+    "big_idea": "Robotas vykdo komandas po vieną. Kiekviena komanda pradeda ten, kur baigėsi ankstesnė. Viena klaidinga komanda pakreipia visą tolesnį kelią.",
+    "steps": [
+      "Sudėk komandas ir spausk „Vykdyti“. Kryptis keičiasi po kiekvieno posūkio.",
+      "Robotui pasukus kairėn, visos tolesnės komandos eina jau kita kryptimi.",
+      "Radęs klaidą, pakeisk tą vieną komandą ir vykdyk iš naujo.",
+      "Žiūrėk, nuo kurios komandos pėdsakai pasisuko."
+    ],
+    "example": "Seka „pirmyn, kairėn, pirmyn“ veda ne tiesiai. Po posūkio žingsnis eina į šoną."
+  },
+  "sim": {
+    "component": "komandu-seka",
+    "config": {
+      "cols": 4,
+      "rows": 4,
+      "start": {
+        "col": 1,
+        "row": 3,
+        "facing": "up"
+      },
+      "flag": {
+        "col": 2,
+        "row": 0
+      },
+      "max": 10,
+      "preset": [
+        "pirmyn",
+        "pirmyn",
+        "kairen",
+        "desinen",
+        "pirmyn"
+      ],
+      "sentences": {
+        "pradzia": "Sudėk komandas ir spausk Vykdyti. Vėliava yra viršuje.",
+        "taisyk": "Ši seka veda ne prie vėliavos. Viena komanda klaidinga.",
+        "tuscia": "Seka tuščia. Pridėk komandą.",
+        "pilna": "Seka jau ilga. Išbrauk vieną komandą.",
+        "vykdo": "Robotas vykdo komandas po vieną.",
+        "veliava": "Robotas pasiekė vėliavą. Seka tinka.",
+        "praejo": "Robotas praėjo pro vėliavą ir nuėjo toliau.",
+        "krastas": "Robotas sustojo prie tinklelio krašto.",
+        "kita": "Seka baigėsi ne prie vėliavos.",
+        "kelias": "Pėdsakai rodo visą kelią. Kur jis pasisuko?",
+        "pakeista": "Komanda pakeista. Vykdyk ir palygink kelią.",
+        "isbraukta": "Komanda išbraukta. Likusios lieka savo vietose.",
+        "pridek": "Pridėjai komandą. Ji bus vykdoma paskutinė.",
+        "paliesk": "Paliesk komandą, ir ji pasikeis į kitą."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Seka: pirmyn, kairėn, pirmyn. Roboto priekis rodo į viršų. Kur jis pajudės trečia komanda?",
+      "options": [
+        "Į viršų",
+        "Į kairę",
+        "Žemyn"
+      ],
+      "answer": 1,
+      "hint": "Prieš trečią komandą robotas jau pasisuko.",
+      "why": "Trečia komanda eina ten, kur robotas žiūri po posūkio."
+    },
+    {
+      "q": "Robotas nuėjo šalin nuo vėliavos. Kaip taisyti komandų seką?",
+      "options": [
+        "Sugalvoti visą kelią iš naujo",
+        "Ištrinti visas komandas",
+        "Pakeisti vieną klaidingą komandą"
+      ],
+      "answer": 2,
+      "hint": "Pažiūrėk, nuo kurios komandos kelias pasisuko.",
+      "why": "Kelią pakreipė viena komanda, todėl taisoma tik ji."
+    },
+    {
+      "q": "Robotas turi eiti tiesiai per tris langelius. Sekoje: pirmyn, kairėn, pirmyn. Kuri komanda pakreipė kelią?",
+      "options": [
+        "Pirma",
+        "Antra",
+        "Trečia"
+      ],
+      "answer": 1,
+      "hint": "Kuri komanda keičia kryptį, o ne vietą?",
+      "why": "Kairėn pasuko robotą, tad trečia komanda nuėjo į šoną."
+    },
+    {
+      "q": "Kuri seka padeda ryte apsiauti batus?",
+      "options": [
+        "Pirma kojinės, paskui batai",
+        "Pirma batai, paskui kojinės",
+        "Abi sekos tinka"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, ką reikia padaryti pirmiau.",
+      "why": "Kojinės eina pirmiau, kitaip batų neužsisegsi.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip randi komandą, kuri pakreipė kelią? Papasakok, ką darai.",
+  "teacher": {
+    "goal": "Suprasti, kad komandų seka vykdoma iš eilės, o posūkis keičia visų tolesnių komandų kryptį — todėl klaidingą seką taisome viena komanda, o ne perrašome visą eilę.",
+    "prompt": "Nuo kurios komandos kelias pasisuko ne ten?",
+    "offline": "Du vaikai stoja vienas priešais kitą. Vienas sako tris komandas: „Žingsnis pirmyn, pasuk kairėn, žingsnis pirmyn“, o kitas jas vykdo savo kūnu. Trečias vaikas sako, kuri komanda pakreipė kelią. Tada seka kartojama pakeitus tik tą vieną komandą ir lyginama, ar kelias pasikeitė. Poroje tą patį galima daryti ant popieriaus: 4×4 tinklelis, monetėlė vietoje roboto, pieštukas krypties rodyklei.",
+    "misconceptions": [
+      "„Jei robotas nuėjo ne ten, reikia kurti visą seką iš naujo“ — modelis rodo, kad pakeitus vieną komandą kelias vėl veda prie vėliavos, o likusios komandos lieka savo vietose (B4.3: rasti klaidą ir ją taisyti).",
+      "„Posūkis irgi žengia žingsnį“ — pirmokai žodį „pasuk“ dažnai supranta kaip judesį į šoną (Way ir Cartwright, 2024). Todėl modelyje posūkis vyksta vietoje, o žingsnis yra atskira komanda.",
+      "„Kairėn reiškia į kairę ekrano pusę“ — kryptis jau nagrinėta modulyje 17-kryptys-ir-vieta; čia posūkis visada sukamas roboto kūno atžvilgiu, o po jo pasikeičia visos tolesnės komandos."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Informatikos ugdymas“: B1.3 — mokinys nurodo kasdienius veiksmus žingsniais ar komandomis; B2.3 ir B3.3 — vykdo ir sudaro komandų sekas; B4.3 — randa nurodytas klaidas sekose ir jas taiso.",
+    "Matematikos bendroji programa (2022), „Modeliai ir sąryšiai“, 1–2 klasė: schema ar piešiniu pavaizduoti nuosekliai atliekamų komandų seką; matematikos pamokose daugiausia dėmesio skiriama algoritmo ir komandos sąvokoms.",
+    "Way, J., & Cartwright, K. (2024). Turn left, turn right. MERGA 46 Quick Reads. http://merga.net.au/wp-content/uploads/2024/09/6-MERGA-46-2024-Quick-Reads_Way-and-Cartwright.pdf",
+    "Bers, M. U. (2018). Coding as a Playground: Programming and Computational Thinking in the Early Childhood Classroom (2nd ed.). Routledge."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (seka vykdoma iš eilės, o klaida viduryje pakreipia tolesnes), o ne visa programavimo kalba ar prietaiso valdymas",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo rasti klaidos vietą ir paaiškinti posūkio poveikį naujoje situacijoje, o ne atkartoti apibrėžimą",
+    "3 žingsnis — pagalba laiku: kiekviena užduotis turi užuominą, simuliacija nerodo teisingos sekos, klaida nieko nebaudžia ir seką galima taisyti be perkrovimo"
+  ]
+}

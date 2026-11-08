@@ -78,8 +78,14 @@ def load_state() -> dict:
     if STATE.exists():
         try:
             data = json.loads(STATE.read_text(encoding="utf-8"))
-            if "modules" not in data:  # sena forma {"done": [...]}
-                data = {"modules": {m: {"hash": ""} for m in data.get("done", [])}}
+            if "modules" not in data:
+                # Sena forma {"done": [...]}: laikom, kad peržiūrėta BŪTENT tokia
+                # failo versija, kokia yra dabar — kitaip po atnaujinimo visi
+                # jau sutvarkyti moduliai vėl patektų į eilę.
+                old = data.get("done", [])
+                data = {"modules": {m: {"hash": module_hash({"id": m, "path": str(
+                    pathlib.Path("content/lt/grade-01").glob(f"*/{m}.json").__next__())}), "at": ""}
+                    for m in old if list(pathlib.Path("content/lt/grade-01").glob(f"*/{m}.json"))}}
             return data
         except json.JSONDecodeError:
             pass

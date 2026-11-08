@@ -1,6 +1,16 @@
 {
-  "done": [
-    "21-erdvines-figuros",
-    "10-gyvunu-grupes"
-  ]
+  "modules": {
+    "21-erdvines-figuros": {
+      "hash": "1243395f6f7592e9",
+      "at": ""
+    },
+    "10-gyvunu-grupes": {
+      "hash": "0f644bb280d47382",
+      "at": ""
+    },
+    "16-vandens-busenos": {
+      "hash": "81941ef05e5993b6",
+      "at": ""
+    }
+  }
 }

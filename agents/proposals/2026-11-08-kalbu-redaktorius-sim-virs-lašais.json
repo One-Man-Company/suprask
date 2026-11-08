@@ -1,0 +1,16 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 149,
+  "created": "2026-11-08T10:36:34+02:00",
+  "type": "simulacija",
+  "title": "Simuliacijos pastaboje „virs lašais“ — nestandartinė būsimoji forma",
+  "body": "16-vandens-busenos simuliacijos pastaboje po dangčio uždėjimo (assets/js/sims/pasaulis.js:1082) yra „Jis vėsus, todėl garas ant jo virs lašais.“ — „virs“ yra suspausta būsimoji forma, kuri nestandartinė ir 1 klasės tekstuose nevartojama; pačiame modulyje visur vartojama praeitis („virto garu“, „virto lašais“, „…ir virto lašais“). Vaikas, skaitantis pastabą, gali sustoti prie nežinomos veiksmažodžio formos. Siūloma „…garas ant jo virsta lašais“ (dabartinė, derinasi su „Jis vėsus“) arba „…garas ant jo virto lašais“ (praeitis, derinasi su modulio terminija). Simuliacijos kodo čia nekeičiau — tai simuliacijų inžinieriaus arba kūrėjo sprendimas; pastabą pakeitus reikia atnaujinti ir garso įrašą, jei ji patenka į tariamų tekstų sąrašą (šiandien api.note tekstas garso vartų neapima — tikrinama check_audio.py).",
+  "target": "assets/js/sims/pasaulis.js:1082 (vandensBusenos toggleLid msg)",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:1082 — msg = „Dangtis uždėtas. Jis vėsus, todėl garas ant jo virs lašais.“",
+    "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json:40,51,62 — modulyje visur „virto“ (praeitis)",
+    "DOM zondas probe149_dom.py: sim readout ir pastabų kanalas gyvai veikia (readout „Vandens lygis 5 iš 5 · dangtis nuimtas“)"
+  ]
+}

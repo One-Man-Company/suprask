@@ -454,18 +454,30 @@ def parse_porcelain(text: str) -> list[str]:
 
 
 def changed_files(before: str) -> list[str]:
-    """Failai, kuriuos pakeitė ŠIS paleidimas (ne buvę prieš jį)."""
+    """Failai, kuriuos pakeitė ŠIS paleidimas (ne buvę prieš jį).
+
+    Sąrašas NĖRA kerpamas. Anksčiau čia buvo `[:40]`, ir tai tyliai atmesdavo
+    likusius: kai ataskaitos nustojo būti `.gitignore` (#484), vienas paleidimas
+    turėjo paskelbti 141 failą, o paskelbė 40 — 101 ataskaita liko darbinėje
+    kopijoje ir nukeliavo į kito vaidmens `[sistema]` commit'ą (#4454, LL-37).
+    Tikrų failų skaičių riboja pats commit'as, todėl ribos nereikia; `stage()`
+    deda failus dalimis, kad ilgas sąrašas neužkimštų argumentų eilutės.
+
+    `-uall` būtinas: be jo `git status` nesutrackintą katalogą rodo viena
+    eilute („agents/log/“), ir sąraše atsiranda katalogas vietoj failų — tada
+    nei komituojamų failų skaičius, nei ataskaita nemato tikrovės.
+    """
     try:
-        after = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True, timeout=20).stdout
+        after = subprocess.run(["git", "status", "--porcelain", "-uall"], cwd=ROOT, capture_output=True, text=True, timeout=20).stdout
     except Exception:  # noqa: BLE001
         return []
     before_paths = set(parse_porcelain(before))
-    return [f for f in parse_porcelain(after) if f not in before_paths][:40]
+    return [f for f in parse_porcelain(after) if f not in before_paths]
 
 
 def git_snapshot() -> str:
     try:
-        return subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True, timeout=20).stdout
+        return subprocess.run(["git", "status", "--porcelain", "-uall"], cwd=ROOT, capture_output=True, text=True, timeout=20).stdout
     except Exception:  # noqa: BLE001
         return ""
 
@@ -488,10 +500,26 @@ def git(*args: str, timeout: int = 180) -> subprocess.CompletedProcess:
     return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, timeout=timeout)
 
 
+def _tracked(rel: str) -> bool:
+    """Ar failas jau yra repo istorijoje (ištrintas failas lieka trackinamas)."""
+    return git("ls-files", "--error-unmatch", rel).returncode == 0
+
+
+def stage(paths: list[str], chunk: int = 400) -> None:
+    """`git add -A` konkrečiais keliais, dalimis.
+
+    `-A` būtinas, kad ištrintas failas būtų komituotas kaip trynimas, o ne
+    tyliai praleistas. Dalimis — kad sąrašas be `[:40]` ribos (#4454) netilptų
+    į argumentų eilutės limitą, kai pakeitimų šimtai ar tūkstančiai.
+    """
+    for i in range(0, len(paths), chunk):
+        git("add", "-A", "--", *paths[i:i + chunk])
+
+
 def changed_list() -> list[str]:
-    """Visi pakeisti ir nauji failai (be ignoruojamų)."""
+    """Visi pakeisti ir nauji failai (be ignoruojamų), po vieną failą eilutėje."""
     try:
-        return parse_porcelain(git("status", "--porcelain").stdout)
+        return parse_porcelain(git("status", "--porcelain", "-uall").stdout)
     except Exception:  # noqa: BLE001
         return []
 
@@ -550,8 +578,8 @@ def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool,
 def revert(files: list[str]) -> None:
     """Atmeta agento pakeitimus (kad blogas turinys nepatektų į repo)."""
     tracked = [f for f in files if git("ls-files", "--error-unmatch", f).returncode == 0]
-    if tracked:
-        git("checkout", "--", *tracked)
+    for i in range(0, len(tracked), 400):
+        git("checkout", "--", *tracked[i:i + 400])
     untracked = [f for f in files if f not in tracked]
     for f in untracked:
         if f.startswith(("agents/log/", "agents/work/")):
@@ -766,11 +794,15 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
     msg = f"[{role}] #{run_id}: {first_line}\n\nPaskelbta automatiškai po validacijos."
 
     # Komituojame TIK šio paleidimo failus: `git add -A` kartą įtraukė ir
-    # žmogaus nebaigtus pakeitimus į agento commit'ą.
-    paths = [f for f in files if (ROOT / f).exists()]
+    # žmogaus nebaigtus pakeitimus į agento commit'ą. Ištrinti failai irgi yra
+    # šio paleidimo pakeitimas — anksčiau `(ROOT / f).exists()` juos numesdavo
+    # tyliai, o trynimas likdavo darbinėje kopijoje (ta pati LL-37 šeima).
+    paths = [f for f in files if (ROOT / f).exists() or _tracked(f)]
+    missing = [f for f in files if f not in paths]
     if not paths:
-        return {"status": "empty", "detail": "Nėra ką commituoti.", "sha": "", "validation": validation}
-    git("add", "--", *paths)
+        detail = f"Nėra ką commituoti: pakeista {len(files)}, nė vieno failo nėra vietoje."
+        return {"status": "empty", "detail": detail, "sha": "", "validation": validation}
+    stage(paths)
     commit = git("commit", "-m", msg)
     if commit.returncode != 0 and "nothing to commit" not in (commit.stdout + commit.stderr):
         return {"status": "rejected", "detail": f"Commit nepavyko: {commit.stderr.strip()[:200]}", "sha": "", "validation": validation}
@@ -809,7 +841,18 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
     git("branch", "-f", "main", "HEAD")
     closed = close_proposals(files, sha, implemented_id)
 
-    detail = f"Paskelbta {len(files)} failų" + (f", uždaryti {closed} pasiūlymai" if closed else "")
+    # Skaičiuojame tai, kas TIKRAI pateko, o ne tai, ką prašėme. Anksčiau
+    # `detail` rodė `len(files)`, nors komituota būdavo mažiau (LL-37, LL-21).
+    # Jei kas nors vis dar nešvaru po publikavimo — pasakome tai garsiai.
+    dirty = set(parse_porcelain(git("status", "--porcelain", "-uall").stdout))
+    left = [f for f in paths if f in dirty]
+    detail = f"Paskelbta {len(paths)} failų"
+    if missing:
+        detail += f", {len(missing)} nebuvo vietoje ({', '.join(missing[:2])})"
+    if left:
+        detail += f", {len(left)} liko nešvarūs ({', '.join(left[:2])})"
+    if closed:
+        detail += f", uždaryti {closed} pasiūlymai"
     return {"status": "published", "detail": detail, "sha": sha, "validation": validation}
 
 

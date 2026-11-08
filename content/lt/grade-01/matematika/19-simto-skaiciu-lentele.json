@@ -1,0 +1,120 @@
+{
+  "id": "19-simto-skaiciu-lentele",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Šimto lentelė: žemyn reiškia dešimt",
+  "subtitle": "Į dešinę skaičius padidėja vienu, žemyn — dešimčia",
+  "minutes": 9,
+  "outcomes": [
+    "Skaitau šimto lentelę: į dešinę skaičius padidėja vienu, žemyn — dešimčia.",
+    "Paaiškinu, kodėl lentelėje po 19 žemiau stovi 29, o ne 20."
+  ],
+  "concept": {
+    "title": "Lentelė, o ne sąrašas",
+    "big_idea": "Šimto lentelėje skaičiai sustatyti dešimtukais. Todėl kaimynas žemiau yra dešimčia didesnis, o ne vienu.",
+    "steps": [
+      "Rask 19. Jis stovi antros eilutės gale.",
+      "Nueik vienu langeliu žemyn ir atsidursi ties 29.",
+      "Palygink: pabaiga ta pati (9), o dešimtis kita (1 ir 2).",
+      "Į dešinę nuo 19 yra 20, nes ten keičiasi pabaiga."
+    ],
+    "example": "Ant sienos pakabintas šimto langelių plakatas. Pirštu nuo 19 žemyn — 29, o į dešinę — 20."
+  },
+  "sim": {
+    "component": "simto-lentele",
+    "config": {
+      "start": 19,
+      "sentences": {
+        "spek": "Kas bus vienu langeliu žemyn?",
+        "spejimas": "Spėjimas įrašytas. Dabar spausk Žemyn.",
+        "desinen": "Dešinėn skaičius didėja vienu.",
+        "kairen": "Kairėn skaičius mažėja vienu.",
+        "zemyn": "Žemyn skaičius didėja dešimčia.",
+        "aukstyn": "Aukštyn skaičius mažėja dešimčia.",
+        "blokas": "Toliau lentelėje nieko nėra.",
+        "baigta": "Dešinėn keičiasi pabaiga, žemyn keičiasi dešimtis.",
+        "is-naujo": "Pradedam iš naujo. Pirma spėk."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Simuliacijoje nuo 19 nuėjai žemyn. Kuris skaičius dabar pažymėtas?",
+      "options": [
+        "20",
+        "29",
+        "9"
+      ],
+      "answer": 1,
+      "hint": "Žemyn reiškia kitą eilutę, o ne kitą skaičių iš eilės.",
+      "why": "19 + 10 = 29, todėl žemiau stovi 29."
+    },
+    {
+      "q": "Kuris skaičius lentelėje stovi tiesiai po 46?",
+      "options": [
+        "47",
+        "45",
+        "56"
+      ],
+      "answer": 2,
+      "hint": "Skaičiuok dešimtukais, o ne po vieną.",
+      "why": "46 + 10 = 56, todėl po 46 stovi 56."
+    },
+    {
+      "q": "Kuris skaičius stovi vienu langeliu į dešinę nuo 72?",
+      "options": [
+        "73",
+        "71",
+        "82"
+      ],
+      "answer": 0,
+      "hint": "Dešinėn skaičius didėja vienu, o dešimtis lieka ta pati.",
+      "why": "72 + 1 = 73: pasikeičia tik pabaiga."
+    },
+    {
+      "q": "Kurį skaičių pasieksi nuo 63 trimis žingsniais žemyn?",
+      "options": [
+        "66",
+        "73",
+        "93"
+      ],
+      "answer": 2,
+      "hint": "Vienas žingsnis žemyn — dešimt. Suskaičiuok tris dešimtis.",
+      "why": "63 + 30 = 93, nes trys žingsniai žemyn yra trys dešimtys."
+    },
+    {
+      "q": "Kur pateksi nuo 87 dviem žingsniais į kairę ir vienu žemyn?",
+      "options": [
+        "95",
+        "85",
+        "76"
+      ],
+      "answer": 0,
+      "hint": "Kairėn keičia pabaigą, žemyn keičia dešimtį.",
+      "why": "87 → 85, paskui 85 + 10 = 95.",
+      "optional": true
+    }
+  ],
+  "reflect": "Pagalvok, kodėl lentelėje po 19 žemiau yra 29. Papasakok savais žodžiais.",
+  "teacher": {
+    "goal": "Suprasti, kad šimto lentelėje judėjimas į dešinę keičia vienetus, o žemyn — dešimtis; kad po 19 žemiau stovi 29, o ne 20.",
+    "prompt": "Kodėl lentelėje po 19 žemiau stovi 29?",
+    "offline": "Ant lapo nupieškite 10 eilučių po 10 langelių ir įrašykite skaičius nuo 1 iki 100. Vieną langelį apibraukite. Paprašykite vaiko pirštu nueiti žemyn ir garsiai pasakyti skaičių. Tada nueikite dešinėn ir palyginkite: kuris skaitmuo pasikeitė? Pakartokite nuo 19, 46 ir 72.",
+    "misconceptions": [
+      "„Lentelė skaitoma kaip knyga — eilutė po eilutės“: vaikas po 19 laukia 20 po apačia. Modelyje žemyn visada rodoma kita dešimtukų juosta, o 20 atsiranda tik į dešinę.",
+      "„Didesnis skaičius yra aukščiau“: vaikas 29 ieško aukščiau už 19. Modelyje aukštis reiškia tik eilutės vietą, o dešimties žingsnis paaiškinamas skaitmenimis (1 → 2), ne atstumu.",
+      "„Į dešinę visada pridedamas vienetas“: ties 20 dešinėje nieko nėra, nes eilutė baigiasi. Modelis tai pasako, o ne peršoka į 21."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“: 1 klasėje mokomasi skaičių nuo 0 iki 100, tyrinėjama, kaip sudaryta 100-o skaičių lentelė ir skaičių tiesė.",
+    "Matematikos bendroji programa (2022): 1 klasės pasiekimas — skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus, naudotis 100-o skaičių lentele.",
+    "research/wiki/curriculum/matematika-1-klase.md §2.1 ir §2.3 — 100-o lentelės sandara ir reikalavimas nuolat naudoti tuos pačius vaizdinius modelius.",
+    "Bay-Williams, C. (2017). Teaching Children Mathematics 24(3): pridedant dešimtį, judama žemyn, todėl kyla krypties konfliktas tarp „daugiau“ ir „aukščiau“."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (skirtinga kryptis keičia skirtingą skaitmenį), o ne visas 100-o lentelės pratimų rinkinys; skaičių tiesė ir sudėtis paliekamos savo moduliams",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (po 46, trys žingsniai nuo 63, du į kairę ir vienas žemyn), o ne įsimintą pavyzdį",
+    "3 žingsnis — pagalba laiku: spėjimas lyginamas su tuo, kas įvyko, užuominos nukreipia į „skaitymo kaip knygos“ klaidą, yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

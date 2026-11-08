@@ -579,6 +579,10 @@
   "n": "n/0993a152cf6c1f0c-fff0ba6b.mp3",
   "s": "s/0993a152cf6c1f0c-5f9202cb.mp3"
  },
+ "Aukštyn skaičius mažėja dešimčia.": {
+  "n": "n/8771ad44a23fe671-01bc7581.mp3",
+  "s": "s/8771ad44a23fe671-dc120609.mp3"
+ },
  "Aš": {
   "n": "n/6997ca107bbce6fd-b5c8ab81.mp3",
   "s": "s/6997ca107bbce6fd-5032ffe0.mp3"
@@ -650,6 +654,14 @@
  "Dešinė sunkesnė.": {
   "n": "n/eddc1aa0b9dd380e-aadbab58.mp3",
   "s": "s/eddc1aa0b9dd380e-97141549.mp3"
+ },
+ "Dešinėn keičiasi pabaiga, žemyn keičiasi dešimtis.": {
+  "n": "n/8da6fefe12b625fe-d12827ac.mp3",
+  "s": "s/8da6fefe12b625fe-fe219813.mp3"
+ },
+ "Dešinėn skaičius didėja vienu.": {
+  "n": "n/f3f4c9d283d2076f-c546ab79.mp3",
+  "s": "s/f3f4c9d283d2076f-f288e801.mp3"
  },
  "Didelis medis plaukia.": {
   "n": "n/7b582814f525a25f-a9d0c4d2.mp3",
@@ -855,6 +867,10 @@
   "n": "n/d668000feecfe009-475c2f25.mp3",
   "s": "s/d668000feecfe009-fa0d8f0b.mp3"
  },
+ "Kairėn skaičius mažėja vienu.": {
+  "n": "n/0dd8eb7a2556331e-2ae58fcd.mp3",
+  "s": "s/0dd8eb7a2556331e-f737fefa.mp3"
+ },
  "Karosas": {
   "n": "n/f7523c580e0248c6-81d5ea90.mp3",
   "s": "s/f7523c580e0248c6-2ee7ff89.mp3"
@@ -866,6 +882,10 @@
  "Karvė": {
   "n": "n/abd086294f9e82f3-fecb1c32.mp3",
   "s": "s/abd086294f9e82f3-ef17559d.mp3"
+ },
+ "Kas bus vienu langeliu žemyn?": {
+  "n": "n/a173a8cebb84e1b1-80d9eea6.mp3",
+  "s": "s/a173a8cebb84e1b1-a6d20f06.mp3"
  },
  "Katė": {
   "n": "n/7b398e085664430c-5170bfc4.mp3",
@@ -1099,6 +1119,10 @@
   "n": "n/cffbad6bff83327d-f7678d34.mp3",
   "s": "s/cffbad6bff83327d-071e544a.mp3"
  },
+ "Pradedam iš naujo. Pirma spėk.": {
+  "n": "n/a2ea7868bcdb59ff-b2fa1090.mp3",
+  "s": "s/a2ea7868bcdb59ff-04ddeb15.mp3"
+ },
  "Pradedam iš naujo. Prijunk laidus.": {
   "n": "n/13f77b21b8fd4a6b-b404e361.mp3",
   "s": "s/13f77b21b8fd4a6b-be4a4fd6.mp3"
@@ -1211,6 +1235,10 @@
   "n": "n/c58ee21a4e528a1f-615ea451.mp3",
   "s": "s/c58ee21a4e528a1f-797c81e7.mp3"
  },
+ "Spėjimas įrašytas. Dabar spausk Žemyn.": {
+  "n": "n/1aa2b230049497d2-167a73e5.mp3",
+  "s": "s/1aa2b230049497d2-a7964439.mp3"
+ },
  "Spėjimas įrašytas. Spausk „Nuleisk į vandenį“.": {
   "n": "n/237272ffa0e70314-8dc07c48.mp3",
   "s": "s/237272ffa0e70314-23d00f9c.mp3"
@@ -1274,6 +1302,10 @@
  "Tiltas pastatytas — perėjo abu!": {
   "n": "n/2e8cb9ac1abdb1f9-e3cafef7.mp3",
   "s": "s/2e8cb9ac1abdb1f9-df46d12c.mp3"
+ },
+ "Toliau lentelėje nieko nėra.": {
+  "n": "n/77dcbc55541f3e17-f58f517e.mp3",
+  "s": "s/77dcbc55541f3e17-fc536551.mp3"
  },
  "Toliau tinklelio nėra.": {
   "n": "n/0253ab164bcb0b07-f01987e2.mp3",
@@ -1638,6 +1670,10 @@
  "Ž": {
   "n": "n/44adc66853ea8fee-f460d664.mp3",
   "s": "s/44adc66853ea8fee-cefe4d11.mp3"
+ },
+ "Žemyn skaičius didėja dešimčia.": {
+  "n": "n/03db13c5b770d9f8-0e29420d.mp3",
+  "s": "s/03db13c5b770d9f8-ffb6e6ed.mp3"
  },
  "Žengė vieną langelį į priekį.": {
   "n": "n/5168057a6ebe5692-7169577a.mp3",

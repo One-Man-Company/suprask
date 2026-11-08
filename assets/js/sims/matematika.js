@@ -2874,6 +2874,269 @@ const laikrodisDuVardai = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 13. Šimto lentelė — dešinėn vienetai, žemyn dešimtys                */
+/*                                                                    */
+/* Modelis: 100 langelių lentelė, 10 eilučių po 10. Klaidinga          */
+/* nuostata: lentelė skaitoma kaip knyga, eilutė po eilutės, todėl po   */
+/* 19 vaikas laukia 20 — o žemiau stovi 29. Todėl žemyn judama į kitą  */
+/* dešimtukų juostą ir keičiasi tik dešimtis, o dešinėn — tik pabaiga. */
+/* Aukštis niekada nereiškia vertės: eilutė rodoma kaip juosta, o      */
+/* pokytis paaiškinamas skaitmenimis (1 → 2), ne atstumu.              */
+/* ------------------------------------------------------------------ */
+
+const SHL_START = 19;
+const SHL_GUESS = ["20", "29", "18"];
+const SHL_DIR_KEY = { right: "desinen", left: "kairen", down: "zemyn", up: "aukstyn" };
+
+const SHL_SAY = {
+  spek: "Kas bus vienu langeliu žemyn?",
+  spejimas: "Spėjimas įrašytas. Dabar spausk Žemyn.",
+  desinen: "Dešinėn skaičius didėja vienu.",
+  kairen: "Kairėn skaičius mažėja vienu.",
+  zemyn: "Žemyn skaičius didėja dešimčia.",
+  aukstyn: "Aukštyn skaičius mažėja dešimčia.",
+  blokas: "Toliau lentelėje nieko nėra.",
+  baigta: "Dešinėn keičiasi pabaiga, žemyn keičiasi dešimtis.",
+  "is-naujo": "Pradedam iš naujo. Pirma spėk.",
+};
+
+const simtoLentele = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const line = (key) => S[key] || SHL_SAY[key] || "";
+    const start = Math.min(100, Math.max(1, Number(config.start) || SHL_START));
+
+    let n = start;          // pažymėtas langelis
+    let prev = null;        // iš kur atėjome — punktyrinis žymeklis
+    let guess = null;       // vaiko spėjimas: 0 — 20, 1 — 29, 2 — 18
+    let compared = false;   // spėjimas lyginamas su įvykiu vieną kartą (LL-15)
+    let reported = false;
+    const used = new Set(); // kryptys, kuriomis vaikas jau ėjo
+
+    const CELL = "min-width:0;min-height:44px;display:flex;align-items:center;justify-content:center;"
+      + "font-family:var(--font-head);font-weight:800;line-height:1;font-variant-numeric:tabular-nums;"
+      + "border-radius:6px;color:var(--ink-soft);background:var(--paper-2);"
+      + "box-shadow:inset 0 0 0 2px transparent;box-sizing:border-box;overflow:hidden";
+
+    stage.innerHTML = `
+      <div id="shl-wrap" style="width:100%;max-width:34rem;margin:0 auto;box-sizing:border-box">
+        <p class="sim-note" id="shl-lead" style="margin:0 0 .45rem;text-align:center">
+          Vienas langelis pažymėtas. Judėk rodyklėmis.
+        </p>
+        <div id="shl-grid" role="img" aria-label="Šimto lentelė"
+             style="display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:2px;width:100%;max-width:100%;padding:.3rem;box-sizing:border-box;border:2px solid var(--line);border-radius:var(--r-m);background:var(--paper)"></div>
+        <p class="sim-note" id="shl-info" style="margin:.45rem 0 0;text-align:center"></p>
+        <p class="sim-note" id="shl-guess-line" style="margin:.2rem 0 0;text-align:center;font-weight:800;min-height:1.2rem"></p>
+      </div>`;
+
+    const grid = stage.querySelector("#shl-grid");
+    const infoEl = stage.querySelector("#shl-info");
+    const guessEl = stage.querySelector("#shl-guess-line");
+
+    grid.innerHTML = Array.from({ length: 100 }, (_, i) => {
+      /* 100 yra vienintelis triženklis skaičius: 320 px ekrane jis netelpa
+         tokiu pačiu dydžiu kaip dviženkliai, todėl jo šriftas mažesnis. */
+      const fs = i === 99 ? "clamp(.6rem,2.7vw,.84rem)" : "clamp(.74rem,3.35vw,.98rem)";
+      return `<div class="shl-cell" data-n="${i + 1}" style="${CELL};font-size:${fs}">${i + 1}</div>`;
+    }).join("");
+
+    const cells = [...grid.querySelectorAll(".shl-cell")];
+    const cellOf = (v) => cells[v - 1];
+    const rowOf = (v) => Math.floor((v - 1) / 10) + 1;
+    const colOf = (v) => ((v - 1) % 10) + 1;
+
+    controls.innerHTML = `
+      <div id="shl-guess" role="group" aria-label="Spėk, koks skaičius bus žemyn"
+           style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;align-items:center;width:100%">
+        <span style="width:100%;text-align:center;font-weight:800">Kas bus vienu langeliu žemyn?</span>
+        ${SHL_GUESS.map((v, i) => `<button type="button" class="btn secondary" data-g="${i}"
+            aria-label="Spėju, kad žemyn bus ${v}"
+            style="min-height:48px;min-width:4.2rem">${v}</button>`).join("")}
+      </div>
+      <div id="shl-tools" style="display:none;width:100%">
+        <div role="group" aria-label="Judėjimas lentelėje"
+             style="display:grid;grid-template-columns:repeat(3,minmax(min(100%,4.6rem),1fr));gap:.4rem;max-width:16rem;margin:0 auto">
+          <span aria-hidden="true"></span>
+          <button type="button" class="btn secondary" data-dir="up" aria-label="Žingsnis aukštyn"
+                  style="min-height:56px;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
+            <span aria-hidden="true" style="font-size:1.35rem;font-weight:900">↑</span>
+            <span aria-hidden="true" style="font-size:.72rem;font-weight:800">Aukštyn</span>
+          </button>
+          <span aria-hidden="true"></span>
+          <button type="button" class="btn secondary" data-dir="left" aria-label="Žingsnis į kairę"
+                  style="min-height:56px;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
+            <span aria-hidden="true" style="font-size:1.35rem;font-weight:900">←</span>
+            <span aria-hidden="true" style="font-size:.72rem;font-weight:800">Kairėn</span>
+          </button>
+          <span aria-hidden="true"></span>
+          <button type="button" class="btn secondary" data-dir="right" aria-label="Žingsnis į dešinę"
+                  style="min-height:56px;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
+            <span aria-hidden="true" style="font-size:1.35rem;font-weight:900">→</span>
+            <span aria-hidden="true" style="font-size:.72rem;font-weight:800">Dešinėn</span>
+          </button>
+          <span aria-hidden="true"></span>
+          <button type="button" class="btn secondary" data-dir="down" aria-label="Žingsnis žemyn"
+                  style="min-height:56px;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
+            <span aria-hidden="true" style="font-size:1.35rem;font-weight:900">↓</span>
+            <span aria-hidden="true" style="font-size:.72rem;font-weight:800">Žemyn</span>
+          </button>
+          <span aria-hidden="true"></span>
+        </div>
+        <div style="display:flex;justify-content:center;margin-top:.5rem">
+          <button type="button" class="btn ghost" id="shl-reset" style="min-height:48px">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const guessBox = controls.querySelector("#shl-guess");
+    const tools = controls.querySelector("#shl-tools");
+
+    /* --- piešimas ------------------------------------------------------ */
+    function paint() {
+      const row = rowOf(n);
+      const first = (row - 1) * 10 + 1;
+      const last = row * 10;
+
+      cells.forEach((c) => {
+        const v = Number(c.dataset.n);
+        const sameRow = rowOf(v) === row;
+        c.style.background = sameRow
+          ? "color-mix(in srgb, var(--sun) 20%, var(--paper-2))"
+          : "var(--paper-2)";
+        c.style.boxShadow = "inset 0 0 0 2px transparent";
+        c.style.outline = "none";
+        c.style.color = sameRow ? "var(--ink)" : "var(--ink-soft)";
+        c.style.fontWeight = "800";
+        if (v === n) {
+          c.style.background = "var(--accent)";
+          c.style.boxShadow = "inset 0 0 0 3px var(--accent-press)";
+          c.style.color = "var(--ink)";
+          c.style.fontWeight = "900";
+        }
+      });
+
+      /* Iš kur atėjome — tik punktyras rėmelis, kad neužstotų skaičiaus (LL-24). */
+      if (prev !== null && prev !== n) {
+        const p = cellOf(prev);
+        p.style.outline = "2px dashed var(--ink-faint)";
+        p.style.outlineOffset = "-3px";
+      }
+
+      infoEl.textContent = `Eilutė ${row}: ${first}–${last}.`;
+      grid.setAttribute("aria-label",
+        `Šimto lentelė. Pažymėtas skaičius ${n}. Eilutė ${row}: ${first}–${last}.`);
+      api.readout(`Dabar tavo langelis ${n}.`);
+    }
+
+    /* --- skaitmenų paaiškinimas --------------------------------------- */
+    function digitLine(a, b, dir) {
+      const t1 = Math.floor(a / 10);
+      const t2 = Math.floor(b / 10);
+      const o1 = a % 10;
+      const o2 = b % 10;
+      if (dir === "down" || dir === "up") {
+        return o1 === o2
+          ? `Pabaiga ta pati (${o2}), dešimtis kita (${t1} → ${t2}).`
+          : `Pabaiga kita (${o1} → ${o2}), dešimtis kita (${t1} → ${t2}).`;
+      }
+      return t1 === t2
+        ? `Dešimtis ta pati (${t2}), pabaiga kita (${o1} → ${o2}).`
+        : `Pabaiga apsivertė (${o1} → ${o2}), dešimtis kita (${t1} → ${t2}).`;
+    }
+
+    function stopText(dir) {
+      if (dir === "right" && colOf(n) === 10) return `Dešinėje nieko nėra. ${n} yra eilutės gale.`;
+      if (dir === "left" && colOf(n) === 1) return `Kairėje nieko nėra. ${n} yra eilutės pradžioje.`;
+      if (dir === "down" && n > 90) return `Žemiau nieko nėra. Lentelė baigiasi ties 100.`;
+      if (dir === "up" && n <= 10) return `Aukščiau nieko nėra. Tai pirma eilutė.`;
+      return "";
+    }
+
+    /* --- veiksmai ------------------------------------------------------ */
+    function move(dir) {
+      const stop = stopText(dir);
+      if (stop) {
+        api.note(stop);
+        api.speak(line("blokas"));
+        return;
+      }
+
+      const delta = { right: 1, left: -1, down: 10, up: -10 }[dir];
+      const from = n;
+      const to = n + delta;
+      const firstTime = !used.has(dir);
+
+      prev = from;
+      n = to;
+      used.add(dir);
+      paint();
+
+      let text = `${from} → ${to}. ${digitLine(from, to, dir)}`;
+
+      /* Spėjimas lyginamas su tuo, kas iš tikrųjų įvyko (LL-15). */
+      if (dir === "down" && !compared && guess !== null) {
+        compared = true;
+        const g = SHL_GUESS[guess];
+        guessEl.textContent = guess === 1
+          ? `Tavo spėjimas: ${g}. Sutapo.`
+          : `Tavo spėjimas: ${g}. Žemyn yra ${start + 10}.`;
+        text += guess === 1
+          ? ` Spėjai ${g}. Tai sutapo.`
+          : ` Spėjai ${g}. Žemyn nuo ${start} yra ${start + 10}.`;
+      }
+
+      /* Pažanga — tik po keturių krypčių, ne po pirmo žingsnio (LL-29). */
+      if (used.size === 4 && !reported) {
+        reported = true;
+        api.progress({ correct: true });
+        text += ` ${line("baigta")}`;
+      }
+
+      api.note(text);
+      api.speak(firstTime ? line(SHL_DIR_KEY[dir]) : String(to));
+    }
+
+    function reset() {
+      n = start;
+      prev = null;
+      guess = null;
+      compared = false;
+      used.clear();
+      guessEl.textContent = "";
+      tools.style.display = "none";
+      guessBox.style.display = "flex";
+      paint();
+      api.note(line("is-naujo"));
+      api.speak(line("spek"));
+      guessBox.querySelector("button").focus();
+    }
+
+    /* --- įėjimai ------------------------------------------------------- */
+    guessBox.querySelectorAll("[data-g]").forEach((b) => {
+      b.addEventListener("click", () => {
+        guess = Number(b.dataset.g);
+        guessEl.textContent = `Tavo spėjimas: ${SHL_GUESS[guess]}. Dabar spausk Žemyn.`;
+        guessBox.style.display = "none";
+        tools.style.display = "block";
+        api.note(line("spejimas"));
+        api.speak(line("spejimas"));
+        tools.querySelector('[data-dir="down"]').focus();
+      });
+    });
+
+    tools.querySelectorAll("[data-dir]").forEach((b) => {
+      b.addEventListener("click", () => move(b.dataset.dir));
+    });
+
+    controls.querySelector("#shl-reset").addEventListener("click", reset);
+
+    paint();
+    api.note(line("spek"));
+    api.speak(line("spek"));
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
@@ -2887,4 +3150,5 @@ export const SIMS = {
   "taskas-tiese-spindulys-atkarpa": taskasTieseSpindulysAtkarpa,
   "piktograma-ir-stulpelis": piktogramaIrStulpelis,
   "sudetis-per-desimti": sudetisPerDesimti,
+  "simto-lentele": simtoLentele,
 };

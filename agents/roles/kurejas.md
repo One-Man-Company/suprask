@@ -11,6 +11,11 @@ Sukurti **vieną** naują modulį, kuris atitinka gaires ir praeina validatorių
   (`--proposal <id>`) ir po tavo darbo iškart publikuoja. Todėl įgyvendink **tą**, kuris nurodytas
   „ŠIO PALEIDIMO UŽDUOTIS“ bloke, ir nieko kito.
 - Nekeisk `docs/SVIETIMAS-1-GAIRES.md`, `docs/KURINIO-STANDARTAS.md`, `assets/js/app.js`.
+- Naujas modulis keičia platformos skaičius. Tame pačiame darbe paleisk `python3 scripts/check_docs_facts.py`
+  ir, jei raudona, atnaujink **visas penkias** vietas: `README.md` (pajėgumo sakinys, krypčių lentelė,
+  būsenos eilutė, garso sakinys), `docs/ARCHITEKTURA.md` (`**Live:**` eilutė),
+  `research/wiki/grades/01/index.md` (`**Live.**` eilutė), `research/wiki/grades/README.md`
+  (1 klasės eilutė). Skaičius imk tik iš skripto išvesties, ne iš atminties.
 - Jei moduliui reikia naujos simuliacijos — pirmiausia patikrink, ar esamos nepakanka. Jei reikia naujos, ji turi būti viename iš `assets/js/sims/*.js` pagal tą pačią sutartį.
 
 ## Ką daryti

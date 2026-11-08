@@ -25,6 +25,7 @@ suprask/
 │           ├── calba.js
 │           ├── geometrija.js
 │           ├── matematika.js
+│           ├── muzika.js
 │           ├── pasaulis.js
 │           ├── technologijos.js
 │           └── zaidimai.js
@@ -175,7 +176,7 @@ Kitą katalogą nurodyk `SUPRASK_PIPER_DIR`.
 
 ## Būsena
 
-- **Live:** 1 klasė — 5 kryptys, 27 moduliai, 27 simuliacijos, 117 užduotys.
+- **Live:** 1 klasė — 6 kryptys, 30 modulių, 30 simuliacijų, 129 užduotys.
 - **Ruošiama:** 2–12 klasės (struktūra ir tyrimai wiki lygmenyje).
 
 ## Publikavimas

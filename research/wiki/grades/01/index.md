@@ -4,7 +4,7 @@ tipas: klase
 klase: 1
 amzius: "6–7"
 koncentras: "1–2 klasių koncentras"
-atnaujinta: 2026-11-03
+atnaujinta: 2026-11-08
 ---
 
 # 1 klasė (6–7 metai)
@@ -31,11 +31,16 @@ atnaujinta: 2026-11-03
 
 | Kryptis | Moduliai | Būsena |
 |---|---|---|
-| _(pildoma pagal `content/lt/grade-01/index.json`)_ | | |
+| Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Sakinio tvarka · Kaip žmonės sveikinasi | 4 — gyva |
+| Matematika | Skaičių tiesė · Dešimtukas · Figūros aplink mus · Dėsningumai · Pinigai: vertė yra skaičius · Laikas: vienas ratas, vienas žingsnis · Lygybė: abi pusės sveria tiek pat · Kryptys: kairė priklauso nuo žiūrovo · Taškas, tiesė, spindulys, atkarpa · Šimto lentelė: žemyn reiškia dešimt · Laikas: 2 val. ir 14:00 — tas pats laikas · Erdvinės figūros · Sudėtis per dešimtį · Piktograma ir stulpelis · Komandų seka: viena klaida pakreipia kelią | 15 — gyva |
+| Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Gyvūnų grupės · Kur dingsta vanduo · Nuožulnioji plokštuma: kas lemia greitį | 5 — gyva |
+| Muzika | Aukštas garsas ne visada garsus | 1 — gyva |
+| Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius | 3 — gyva |
+| Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas | 2 — gyva |
 
 ## Statusas
 
-**Live.** 27 moduliai, 5 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
+**Live.** 30 modulių, 6 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
 
 ## Susieti
 

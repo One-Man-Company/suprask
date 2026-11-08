@@ -1,0 +1,16 @@
+{
+  "role": "kurejas",
+  "run_id": 134,
+  "created": "2026-11-08T08:31:00+02:00",
+  "type": "struktura",
+  "title": "Skaičiai dokumentuose atsilieka po kiekvieno modulio — reikia sinchronizavimo įrankio",
+  "body": "Pasiūlymas #4456 sutvarkė penkias vietas, bet tik šiandienos būsenai: `check_docs_facts.py` perskaičiuoja tikrovę iš failų, o dokumentuose esančius skaičius turi perrašyti žmogus arba agentas. Kūrėjo eilė prideda modulį maždaug kas 20 minučių, tad po kito modulio vėl raudona. Įrodymas: `agents/run.py:681-694` (`run_checks`) paleidžia `validate_content.py`, `check_audio.py`, `check_agents.py`, `check_ui.py` ir `check_art.py`, bet **ne** `check_docs_facts.py`; tuo tarpu CI `push` filtras (`.github/workflows/validate.yml:6-11`) apima `content/**`, todėl kiekvienas modulio commit'as į `main` paleidžia „Dokumentų skaičiai“ žingsnį ir jis krenta, jei dokumentai neatnaujinti tame pačiame commit'e. Siūloma du etapai: (1) `scripts/sync_docs_facts.py --write`, kuris tose pačiose penkiose vietose perrašo skaičius iš `facts()` (perima jį iš `check_docs_facts.py`, kad būtų vienas tiesos šaltinis) ir palieka `check_docs_facts.py` tik skaitymui; (2) `run_checks()` kviečia sinchronizavimą, kai pakeisti `content/` failai, ir tada `check_docs_facts.py` kaip vartus. Taip skaičius dokumente perskaičiuoja kodas, o ne atmintis.",
+  "target": "scripts/sync_docs_facts.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "agents/run.py:681-694 — run_checks neturi check_docs_facts.py",
+    ".github/workflows/validate.yml:6-11 (paths: content/**) ir :28-29 (žingsnis „Dokumentų skaičiai“)",
+    "python3 scripts/check_docs_facts.py → 20 klaidų prieš šį darbą, 0 po jo (2026-11-08 08:26-08:30)"
+  ]
+}

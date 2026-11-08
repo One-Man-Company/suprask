@@ -102,9 +102,17 @@ const skaiciuTiese = {
 const desimtukas = {
   mount({ stage, controls, api, config }) {
     const cells = Number(config.cells) || 10;
+    /* Takelio minimumas buvo 2.6rem, o rem seka šaknies šriftu: prie 200 %
+       teksto (32 px šaknis) penki langeliai reikalavo 480 px, kai tėvui buvo
+       skirta 295 px — puslapis slinko 126 px (#4741). Dabar takelis gali
+       susitraukti (`minmax(0, 3.4rem)`), o tinklelio didžiausias plotis
+       skaičiuojamas iš to paties 3.4rem. 16 px šaknyje langeliai lieka
+       54,4 px (360 px ekrane — 53,3 px), kaip ir prieš taisymą.
+       Penki stulpeliai sąmoningai nekeičiami: dešimtukas yra dvi eilės po
+       penkis, ir būtent eilė, o ne pusė, yra 1 klasės sąvoka. */
     stage.innerHTML = `
       <div style="text-align:center">
-        <div id="dt-grid" style="display:grid;grid-template-columns:repeat(5,minmax(2.6rem,3.4rem));grid-template-rows:repeat(2,minmax(2.6rem,3.4rem));gap:.5rem;justify-content:center"></div>
+        <div id="dt-grid" style="display:grid;grid-template-columns:repeat(5,minmax(0,3.4rem));grid-template-rows:repeat(2,auto);gap:.5rem;justify-content:center;width:100%;max-width:calc(5 * 3.4rem + 4 * .5rem);margin:0 auto;box-sizing:border-box"></div>
         <p class="sim-note" id="dt-msg">Spausk langelius ir skaičiuok. Kiek trūksta iki 10?</p>
       </div>`;
     controls.innerHTML = `<button class="btn secondary" id="dt-clear">Išvalyti</button>`;
@@ -216,7 +224,7 @@ const figuros = {
         <p class="sim-note" style="margin:0 0 .55rem;text-align:center">Pasirink figūrą ir pasuk ją. Tada spausk dėžę su tokia pačia forma.</p>
         <div id="fg-tray" role="group" aria-label="Figūros rūšiavimui"
              style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.45rem;box-sizing:border-box"></div>
-        <div id="fg-bins" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(6.5rem,1fr));gap:.45rem;margin-top:.9rem;box-sizing:border-box"></div>
+        <div id="fg-bins" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.5rem),1fr));gap:.45rem;margin-top:.9rem;box-sizing:border-box"></div>
       </div>`;
     controls.innerHTML = `
       <button class="btn secondary" id="fg-turn">Pasuk</button>
@@ -2264,8 +2272,14 @@ const piktogramaIrStulpelis = {
            <circle cx="13" cy="13" r="10" fill="#6fb6e8" stroke="#1f5f85" stroke-width="2.4"/>
          </svg>`);
 
+    /* `min-width:0` ir `container-type:inline-size` — ne dekoracija. Ši kortelė
+       yra tinklelio (`#sim-stage`) vaikas, o be jų jos min-content plotis
+       išaugdavo iki 417,5 px: dvi požymio etiketės („Trikampiai“,
+       „Apskritimai“) prie 28,8 px šrifto netilpo į 295 px ir puslapis slinko
+       63 px (#4741). Konteineris leidžia etikečių šriftą sieti su TIKRU
+       kortelės pločiu (`cqw`), o ne su ekranu. */
     stage.innerHTML = `
-      <div id="pk-wrap" style="width:100%;max-width:34rem;margin:0 auto;box-sizing:border-box">
+      <div id="pk-wrap" style="width:100%;max-width:34rem;margin:0 auto;box-sizing:border-box;min-width:0;container-type:inline-size">
         <p class="sim-note" id="pk-lead" style="margin:0 0 .35rem;text-align:center">
           Bakstelėk figūrą. Ji įsiskaito į savo grupę.
         </p>
@@ -2274,9 +2288,9 @@ const piktogramaIrStulpelis = {
 
         <div style="margin-top:.5rem">
           <div id="pk-plot" role="img" aria-label="Stulpelinė diagrama"
-               style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;align-items:end;height:${PLOT_H}px;box-sizing:border-box;border-bottom:3px solid var(--ink-faint);padding:0 .6rem"></div>
+               style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.75rem;align-items:end;height:${PLOT_H}px;box-sizing:border-box;border-bottom:3px solid var(--ink-faint);padding:0 .6rem"></div>
           <div id="pk-pict" role="img" aria-label="Piktograma" style="display:none"></div>
-          <div id="pk-caps" style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:.3rem .6rem 0;text-align:center;font-weight:800;font-size:.9rem;line-height:1.2"></div>
+          <div id="pk-caps" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.75rem;padding:.3rem .6rem 0;text-align:center;font-weight:800;font-size:.9rem;line-height:1.2"></div>
         </div>
 
         <p class="sim-note" id="pk-msg" style="margin:.45rem 0 0;text-align:center;min-height:1.4rem"></p>
@@ -2310,12 +2324,16 @@ const piktogramaIrStulpelis = {
              style="width:68%;max-width:88px;height:3px;box-sizing:border-box;border-radius:8px 8px 0 0;background:${g.color};border:2px solid ${g.dark};border-bottom:none;transition:height .18s ease"></div>
       </div>`).join("");
 
-    capsEl.innerHTML = GROUPS.map((g) => `<span>${g.name}</span>`).join("");
+    /* Požymio etiketė yra vienas žodis, tad jos negalima laužyti per vidurį
+       (LL-51). Vietoj to šriftas ribojamas TIKRU kortelės pločiu: 5.5cqw
+       palieka vietos ilgiausiam žodžiui, o 16 px šaknyje riba neveikia
+       (14,4 px < 16,4 px), todėl įprastas vaizdas nepakinta. */
+    capsEl.innerHTML = GROUPS.map((g) => `<span style="min-width:0;overflow-wrap:normal;font-size:min(.9rem,5.5cqw)">${g.name}</span>`).join("");
 
     /* Piktogramos eilutės surenkamos kaip dvi kolonos tame pačiame tinkle
        kaip ir stulpeliai — kad abu vaizdai stovėtų vienoje vietoje. */
     pictEl.innerHTML = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:.5rem .6rem 0;box-sizing:border-box">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.75rem;padding:.5rem .6rem 0;box-sizing:border-box">
         ${GROUPS.map((g) => `<div id="pk-pi-${g.id}" aria-hidden="true"
              style="display:flex;flex-wrap:wrap;gap:.2rem;align-items:center;justify-content:flex-start;min-height:3rem;padding:.25rem;box-sizing:border-box;border:2px solid var(--line);border-radius:var(--r-s);background:var(--paper-2)"></div>`).join("")}
       </div>`;

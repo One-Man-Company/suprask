@@ -3,10 +3,10 @@
   "grade": 1,
   "strand": "matematika",
   "title": "Erdvinės figūros",
-  "subtitle": "Tas pats kūgis iš priekio — trikampis, iš viršaus — apskritimas",
+  "subtitle": "Kūgis tas pats — iš priekio trikampis, iš viršaus apskritimas",
   "minutes": 9,
   "outcomes": [
-    "Skiriu kūną nuo jo vaizdo: tas pats kūgis iš priekio atrodo kitaip nei iš viršaus.",
+    "Skiriu kūną nuo jo vaizdo. Kūgis iš priekio atrodo kitaip nei iš viršaus.",
     "Įvardiju kubą, rutulį, ritinį, kūgį ir stačiakampį gretasienį.",
     "Randu aplinkoje daiktų, panašių į šiuos kūnus."
   ],
@@ -87,8 +87,8 @@
         "Lėkštė neturi krašto"
       ],
       "answer": 1,
-      "hint": "Pasuk kamuolį rankoje. Ar kuri nors pusė plokščia?",
-      "why": "Rutulys apvalus iš visų pusių, o lėkštė plokščia."
+      "hint": "Pasuk kamuolį rankoje. Ar nors viena pusė plokščia?",
+      "why": "Rutulys (kamuolys) apvalus iš visų pusių, o lėkštė plokščia."
     },
     {
       "q": "Iš priekio matai trikampį, iš viršaus — apskritimą. Kuris kūnas taip atrodo?",

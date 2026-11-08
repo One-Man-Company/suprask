@@ -649,7 +649,7 @@ const gyvunuGrupes = {
     stage.innerHTML = `
       <div style="width:100%;max-width:46rem">
         <div id="gg-tray" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;padding:.6rem;border-radius:var(--r-m);background:color-mix(in srgb, var(--mint) 10%, var(--paper))"></div>
-        <div id="gg-bins" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(5.5rem,1fr));gap:.5rem;margin-top:1rem"></div>
+        <div id="gg-bins" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,5.5rem),1fr));gap:.5rem;margin-top:1rem"></div>
         <p class="sim-note" id="gg-msg" tabindex="-1"></p>
       </div>`;
     controls.innerHTML = `<button class="btn ghost" id="gg-reset">Iš naujo</button>`;
@@ -1194,7 +1194,7 @@ const nuozulniojiPlokstuma = {
       <div style="display:grid;gap:.6rem;width:100%;max-width:34rem;margin:0 auto">
         <div role="group" aria-label="Tavo spėjimas">
           <p id="np-guess-label" style="margin:0 0 .3rem;font-weight:800;font-size:.9rem;text-align:center">Tavo spėjimas: kuris atriedės pirmas?</p>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:.4rem">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:.4rem">
             ${guessBtn("np-guess-light", "Lengvesnis pirmas")}
             ${guessBtn("np-guess-heavy", "Sunkesnis pirmas")}
             ${guessBtn("np-guess-both", "Abu kartu")}
@@ -1202,7 +1202,7 @@ const nuozulniojiPlokstuma = {
         </div>
         <div role="group" aria-label="Plokštumos aukštis">
           <p style="margin:0 0 .3rem;font-weight:800;font-size:.9rem;text-align:center">Plokštumos aukštis</p>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,5rem),1fr));gap:.4rem">
             ${guessBtn("np-h0", NP_NAME_NOM[0])}
             ${guessBtn("np-h1", NP_NAME_NOM[1])}
             ${guessBtn("np-h2", NP_NAME_NOM[2])}
@@ -1211,7 +1211,7 @@ const nuozulniojiPlokstuma = {
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center">
           <button class="btn" id="np-release" style="flex:1 1 9rem;min-height:48px">Leisk abu</button>
           <button class="btn ghost" id="np-reset" aria-label="Pradėti bandymą iš naujo"
-                  style="flex:0 0 auto;min-height:48px">Iš naujo</button>
+                  style="flex:0 1 auto;min-width:48px;min-height:48px">Iš naujo</button>
         </div>
         <p id="np-history" style="margin:0;text-align:center;font-size:.85rem;color:var(--ink-soft)">Bandymai: dar nė vieno.</p>
       </div>`;

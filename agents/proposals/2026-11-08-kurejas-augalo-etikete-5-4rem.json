@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 123,
+  "created": "2026-11-08T06:34:00+02:00",
+  "type": "simuliacija",
+  "title": "Augalo valdikliuose fiksuota 5.4rem etiketė išstumia puslapį 79 px esant 200 % tekstui",
+  "body": "Modulyje „Augalo gyvenimas“ (09-augalo-gyvenimas) simuliacijos valdiklių plotis 414 px ekrane su 32 px šaknies šriftu išmatuotas 434 px, kai juos talpinančiam blokui skirta 295 px, todėl puslapis slenka 79 px; 360 px ekrane — 133 px. Tai ne tas pats defektas, kurį uždarė #3776 (tinklelių minmax minimumai): čia kaltas fiksuotas etiketės plotis. Kiekviena sąlygos eilutė yra `display:flex`, o joje esanti etiketė turi `width:5.4rem` (173 px prie 32 px šrift), tad trys eilutės minimumas viršija turimą plotį ir per `min-width:auto` pakyla į tinklelio takelį. Išmatavau du variantus: vien `min-width:0` tinklelio vaikams duoda 0 px puslapio slinkties @414, bet 32 px lieka valdiklių viduje, o @360 — 27 px; pridėjus etiketei `flex:0 1 5.4rem; min-width:0` lieka 0 px ir @414, ir @360, o 16 px išdėstymas nepakinta (etiketė 86 px, eilučių plotis 331 px kaip dabar). Siūlau antrąjį variantą, nes jis vienintelis išlaiko 0 px abiejuose pločiuose. Patikrinta, kad etiketės tekstas prie 32 px šrifto telpa į susitraukusį bloką be iškirpimo (63–173 px), bet tai reikia dar kartą pamatuoti prieš publikuojant.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "matavimas Chromium 155 (Playwright), 2026-11-08: #/modulis/1/pasaulio-pazinimas/09-augalo-gyvenimas @414 px su 32 px šaknies šriftu — documentElement.scrollWidth 493, clientWidth 414; #sim-controls clientWidth 295, scrollWidth 434; kortelė su sąlygomis 434, eilutės po 398",
+    "tas pats maršrutas @360 px su 32 px šriftu — slinktis 133 px; @414 px su 28 px šriftu — 19 px",
+    "assets/js/sims/pasaulis.js:318 ir :330 — etiketė su `width:5.4rem` (paddingas ir tarpai prideda iki 398 px eilutėje)",
+    "assets/js/sims/pasaulis.js:325 — tėvas `display:grid` be `min-width:0` vaikams",
+    "palyginimas: #3776 pataisa (minmax(min(100%,…))) šiame modulyje neveikia, nes jo valdikliuose tinklelio su `rem` minimumu nėra"
+  ]
+}

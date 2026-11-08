@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 123,
+  "created": "2026-11-08T06:34:30+02:00",
+  "type": "ux",
+  "title": "Užduoties klausimas išstumia puslapį 13–38 px esant 200 % tekstui 360 px ekrane",
+  "body": "Uždarius simuliacijų tinklelių defektą (#3776) 360 px ekrane su 32 px šaknies šriftu liko 13 px slinktis modulyje „Judėjimas“ ir 38 px — „Gyvūnų grupės“. Matavimas rodo, kad kaltas ne simuliacija (jos `#sim-controls` scrollWidth = clientWidth), o užduoties klausimo tekstas: `.task-q` yra `display:flex`, o jo antrasis `<span>` neturi `min-width:0`, todėl negali susitraukti žemiau ilgiausio žodžio (234–267 px, kai turima 215 px). Tai ne tas pats kaip LL-41 (tinklelio minimumas): čia ilgiausias žodis fiziškai netelpa, tad vien `min-width:0` nepakaks — tekstas turi arba laužtis žodžio viduryje (`overflow-wrap:anywhere`), arba numeris turi persikelti į atskirą eilutę (`.task-q { display:grid; grid-template-columns:auto minmax(0,1fr) }`), arba abu. `check_view.py` to nemato, nes matuoja 16 px tekstą (ten 0 px). Siūlau CSS sprendimą su `minmax(0,1fr)` ir `overflow-wrap:anywhere` tik tada, jei matavimas parodys, kad be jo žodis vis tiek kyšo — sprendimą turi priimti tas, kas atsakingas už užduočių sąsają, nes liečia visas 28 modulių užduotis.",
+  "target": "assets/css/main.css",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "matavimas Chromium 155 (Playwright), 2026-11-08: #/modulis/1/pasaulio-pazinimas/17-judejimas @360 px su 32 px šaknies šriftu — documentElement.scrollWidth 373, clientWidth 360, slinktis 13 px; #sim-controls 241/241",
+    "tas pats @10-gyvunu-grupes — slinktis 38 px; kaltininkai: span 267 px tėvui 215 px (.task-q), .continue-label 294 px tėvui 296 px",
+    "assets/js/app.js:461 — `<div class=\"task-q\"><span class=\"task-num\">…</span><span>${esc(t.q)}</span></div>`",
+    "assets/css/main.css:327 — `.task-q { display: flex; gap: .6rem }` be `min-width: 0` vaikams",
+    "priešingas atvejis: @360 px su 28 px šriftu slinkties nėra (0 px), tad defektas pasireiškia tik nuo 32 px šaknies šrifto"
+  ]
+}

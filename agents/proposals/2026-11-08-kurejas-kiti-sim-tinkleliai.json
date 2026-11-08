@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 123,
+  "created": "2026-11-08T06:35:00+02:00",
+  "type": "simuliacija",
+  "title": "Kituose simuliacijų failuose tie patys rem minimumai: 126 px slinktis „Dešimtuke“",
+  "body": "Pasiūlymas #3776 išvardijo šešis tinklelių taškus trijuose simuliacijų failuose, bet jo target buvo tik `assets/js/sims/pasaulis.js`, tad likę failai nepakeisti. Išmatavau po #3776 pataisos: modulyje „Dešimtukas“ `#dt-grid` (`repeat(5, minmax(2.6rem, 3.4rem))`) užima 480 px, kai tėvui skirta 295 px — puslapis slenka 126 px @414 px su 32 px šriftu; 360 px ekrane — 180 px. Modulyje „Piktograma ir stulpelis“ `#pk-wrap` turinys 418 px tėvui 295 px — 63 px slinktis. Moduliuose „Sąžiningas dalijimasis“ ir „Akmenėlis, popierius“ (zaidimai.js) — 70 ir 24 px. Tai ta pati taisyklė kaip LL-41: takelio minimumas užrašytas `rem`, o `rem` seka šaknies šriftu. Siūlau kiekvieną `repeat(N, minmax(Xrem, Yrem))` keisti į `repeat(auto-fit, minmax(min(100%, Xrem), 1fr))` su `justify-content:center`, kad numatytuoju šriftu išdėstymas liktų toks pats, ir pridėti `min-width:0` ten, kur tinklelio vaikas pats yra tinklelis. Būtina sąlyga: prieš keičiant užsirašyti takelių pločius prie 16 px ir po pakeitimo juos palyginti — kitaip bus pakeistas vaiko matomas išdėstymas.",
+  "target": "assets/js/sims/matematika.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "matavimas Chromium 155 (Playwright), 2026-11-08: #/modulis/1/matematika/05-desimtukas @414 px su 32 px šaknies šriftu — #dt-grid 480 px, tėvas 295 px, documentElement.scrollWidth 540, clientWidth 414 (126 px); @360 px — 180 px",
+    "tas pats #/modulis/1/matematika/23-piktograma-ir-stulpelis @414 px su 32 px šriftu — #pk-wrap 418 px tėvui 295 px (63 px slinktis)",
+    "assets/js/sims/matematika.js:107 — `grid-template-columns:repeat(5,minmax(2.6rem,3.4rem))`; :219 — `repeat(auto-fit,minmax(6.5rem,1fr))`",
+    "assets/js/sims/geometrija.js:115,116,131 — `repeat(auto-fit,minmax(6.1rem/7rem/6.4rem,1fr))` be `min(100%, …)`",
+    "assets/css/main.css:145-146 — `.grid-2/.grid-3` jau naudoja `minmax(min(100%, 17rem), 1fr)`, tad taisymas atkartoja dizaino sistemos taisyklę"
+  ]
+}

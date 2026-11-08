@@ -467,24 +467,39 @@ const augaloGyvenimas = {
    sąrašas buvo maišomas `sort(() => Math.random() - 0.5)`: tas pats
    veiksmas duodavo skirtingą rezultatą (mokytojas negalėjo pakartoti),
    maišymas nebuvo tolygus, o kartais visi vienos grupės gyvūnai
-   atsidurdavo greta — tada užduotis virsdavo „kopijuok kaimyną“. */
+   atsidurdavo greta — tada užduotis virsdavo „kopijuok kaimyną“.
+
+   Kodėl `cover` ir `coverAcc`: pasiūlymas #42. Dėžėje buvo tik žodis
+   „Žinduoliai“ ir 12 px paaiškinimas — vaikas, dar nesklandžiai skaitantis,
+   turėjo perskaityti tris tokius užrašus per bandymą, o gairių T5.5 reikalauja,
+   kad tekstas nebūtų vienintelis informacijos nešėjas. Dabar dėžėje yra
+   dangos piktograma (plaukai / plunksnos / žvynai) ir dangos žodis didesniu
+   šriftu; `coverAcc` vartomas grįžtamajame ryšyje („Karvė turi plaukus“),
+   nes „turi“ tinka visoms giminėms, o „dengtas/dengta“ — ne. */
 const GYVUNU_GRUPES = [
-  { id: "zinduoliai", label: "Žinduoliai", dative: "žinduoliams", hint: "maitina jauniklius pienu" },
-  { id: "pauksciai", label: "Paukščiai", dative: "paukščiams", hint: "turi plunksnas ir deda kiaušinius" },
-  { id: "zuvis", label: "Žuvys", dative: "žuvims", hint: "gyvena vandenyje, kvėpuoja žiaunomis" },
+  { id: "zinduoliai", label: "Žinduoliai", cover: "plaukai", coverAcc: "plaukus", icon: "plaukai",
+    say: "Turi plaukus. Maitina jauniklius pienu." },
+  { id: "pauksciai", label: "Paukščiai", cover: "plunksnos", coverAcc: "plunksnas", icon: "plunksnos",
+    say: "Turi plunksnas. Deda kiaušinius." },
+  { id: "zuvis", label: "Žuvys", cover: "žvynai", coverAcc: "žvynus", icon: "zvynai",
+    say: "Turi žvynus. Kvėpuoja žiaunomis." },
 ];
 
+/* `pozymis` — antrasis požymis (kvėpavimas arba jaunikliai), o ne danga:
+   dangą simuliacija įvardija iš grupės, todėl „Varnas turi plunksnas ir
+   turi plunksnas“ nebegalimas. */
 const GYVUNAI = [
   { emoji: "🐄", name: "Karvė", g: "zinduoliai", pozymis: "maitina veršiuką pienu" },
-  { emoji: "🐦", name: "Varnas", g: "pauksciai", pozymis: "turi plunksnas" },
+  { emoji: "🐦", name: "Varnas", g: "pauksciai", pozymis: "deda kiaušinius" },
   { emoji: "🐟", name: "Ešerys", g: "zuvis", pozymis: "kvėpuoja žiaunomis" },
   { emoji: "🦊", name: "Lapė", g: "zinduoliai", pozymis: "maitina jauniklius pienu" },
   { emoji: "🦆", name: "Antis", g: "pauksciai", pozymis: "deda kiaušinius" },
-  { emoji: "🐠", name: "Karosas", g: "zuvis", pozymis: "turi žvynus" },
+  { emoji: "🐠", name: "Karosas", g: "zuvis", pozymis: "kvėpuoja žiaunomis" },
   { emoji: "🐇", name: "Kiškis", g: "zinduoliai", pozymis: "maitina jauniklius pienu" },
-  { emoji: "🦉", name: "Pelėda", g: "pauksciai", pozymis: "turi plunksnas" },
+  { emoji: "🦉", name: "Pelėda", g: "pauksciai", pozymis: "deda kiaušinius" },
   { emoji: "🦈", name: "Ryklys", g: "zuvis", pozymis: "kvėpuoja žiaunomis" },
 ];
+
 
 /* Klaidinantis gyvūnas (pasiūlymas #727). Devyni akivaizdūs gyvūnai modelį
    tik patvirtina, bet negriauna nė vienos modulio įvardytos klaidingos
@@ -501,7 +516,11 @@ const KLAIDINANTIS_GYVUNAS = {
   emoji: "🐬", name: "Delfinas", g: "zinduoliai", pozymis: "maitina jauniklius pienu",
   extra: true,
   reveal: "Visi devyni gyvūnai savo grupėse! Dar vienas: delfinas. Kur jis?",
-  right: "Delfinas gyvena vandenyje, bet maitina jauniklius pienu. Jis žinduolis!",
+  /* „beveik be plaukų“ — sąmoningai: dėžėje dabar yra plaukų piktograma, o
+     delfinas yra vienintelis gyvūnas, kuriam ji netinka. Jei apie tai
+     nutylėtume, vaikas liktų su nauja klaidinga nuostata „visi žinduoliai
+     plaukuoti“ (LL-28: modelyje turi būti prieštaraujantis pavyzdys). */
+  right: "Delfinas turi lygią odą, beveik be plaukų. Bet jis maitina jauniklius pienu. Todėl jis žinduolis.",
   note: "Delfinas neturi žiaunų. Jis kvėpuoja plaučiais. Todėl jis žinduolis, o ne žuvis.",
   hintZuvis: "Delfinas plaukia kaip žuvis, bet žiaunų neturi. Kuo jis kvėpuoja?",
   hintPauksciai: "Delfinas neturi plunksnų. Bet jis gyvena vandenyje. Kuo jis kvėpuoja?",
@@ -557,10 +576,15 @@ const gyvunuGrupes = {
           ? `${a.name}. Papildomas gyvūnas. Pasirink.`
           : `${a.name}. Pasirink.`);
         b.setAttribute("aria-pressed", String(on));
-        b.style.cssText = `border:${border};background:transparent;border-radius:14px;padding:4px 6px;cursor:pointer;font-size:2rem;min-width:64px;min-height:64px`;
-        b.innerHTML = `<span aria-hidden="true" style="display:block;line-height:1.1">${a.emoji}</span>`
-          + (a.extra ? `<span aria-hidden="true" style="display:block;font-size:.6rem;line-height:1.1;font-weight:700;color:var(--ink-soft)">papildomas</span>` : "")
-          + `<span class="sr-only">${a.name}</span>`;
+        // Vardas matomas, ne tik `.sr-only` (pasiūlymas #42): 6–7 m. vaikas
+        // emoji atpažįsta, bet jam reikia ir žodžio, kad pats galėtų jį
+        // pasakyti bei surasti tą patį gyvūną kitame puslapyje.
+        b.style.cssText = `display:grid;place-items:center;gap:1px;border:${border};`
+          + "background:transparent;border-radius:14px;padding:4px 6px;cursor:pointer;"
+          + "font:inherit;color:inherit;min-width:72px;min-height:72px";
+        b.innerHTML = `<span aria-hidden="true" style="font-size:1.9rem;line-height:1.05">${a.emoji}</span>`
+          + (a.extra ? `<span aria-hidden="true" style="font-size:.7rem;line-height:1.1;font-weight:700;color:var(--ink-soft)">papildomas</span>` : "")
+          + `<span aria-hidden="true" style="font-size:.9rem;line-height:1.1;font-weight:700;text-align:center">${a.name}</span>`;
         b.addEventListener("click", () => {
           selected = a.name;
           drawTray();
@@ -578,7 +602,8 @@ const gyvunuGrupes = {
     function paintBins() {
       binsEl.querySelectorAll("button[data-g]").forEach((bin) => {
         const g = groups.find((x) => x.id === bin.dataset.g);
-        bin.setAttribute("aria-label", `${g.label}. Įdėta ${placed[g.id]}. ${g.hint}.`);
+        bin.setAttribute("aria-label",
+          `${g.label}. Įdėta ${placed[g.id]}. ${g.say}`);
       });
     }
 
@@ -586,8 +611,25 @@ const gyvunuGrupes = {
       const bin = document.createElement("button");
       bin.type = "button";
       bin.dataset.g = g.id;
-      bin.style.cssText = "display:grid;place-items:center;gap:.25rem;padding:.6rem .3rem;border:3px dashed var(--line);border-radius:var(--r-m);background:var(--paper-2);cursor:pointer;min-height:9rem";
-      bin.innerHTML = `<strong style="font-size:.95rem">${g.label}</strong><span style="font-size:.72rem;color:var(--ink-faint);text-align:center">${g.hint}</span><span class="items" aria-hidden="true" style="display:flex;gap:2px;flex-wrap:wrap;justify-content:center;font-size:1.1rem"></span>`;
+      bin.style.cssText = "display:grid;justify-items:center;gap:.15rem;min-width:0;" +
+        "padding:.5rem .15rem;border:3px dashed var(--line);border-radius:var(--r-m);" +
+        "background:var(--paper-2);cursor:pointer;font:inherit;color:inherit;min-height:9rem";
+      // Piktograma + dangos žodis (pasiūlymas #42). Anksčiau vienintelis
+      // informacijos nešėjas buvo 12 px `.72rem` paaiškinimas, kurį vaikas
+      // turėjo perskaityti tris kartus per bandymą (T5.5, interaktyvumo
+      // principas 6). Dabar požymis matomas kaip paveikslėlis ir kaip žodis,
+      // o tekstas liko tik `aria-label` (ekrano skaitytuvui).
+      // 0,9 rem — didžiausias dydis, kuris @360 px telpa į 3 stulpelių dėžę
+      // (išmatuota: „Žinduoliai“ 80,5 px, turima 81,6 px). Mažesnis už 12 px
+      // nebegrįžtama: tai buvo pasiūlymo priežastis.
+      bin.innerHTML =
+        `<svg viewBox="0 0 40 40" aria-hidden="true" focusable="false" `
+        + `style="width:38px;height:38px;display:block">${art.cover(g.icon, 20, 20, 1)}</svg>`
+        + `<strong style="font-size:.9rem;line-height:1.1;text-align:center;font-family:var(--font-head)">${g.label}</strong>`
+        + `<span style="font-size:.85rem;line-height:1.1;font-weight:700;text-align:center;color:var(--ink-soft)">${g.cover}</span>`
+        + `<span class="items" aria-hidden="true" style="display:flex;gap:2px;flex-wrap:wrap;justify-content:center;min-height:1.2rem;font-size:1.05rem"></span>`;
+
+
       const holder = bin.querySelector(".items");
       bin.addEventListener("click", () => {
         if (!selected) { msg.textContent = "Pirma pasirink gyvūną."; api.readout("Pirma pasirink gyvūną."); return; }
@@ -633,8 +675,11 @@ const gyvunuGrupes = {
 
           drawTray();
           paintBins();
-          msg.textContent = `Teisingai — ${a.name} priklauso ${g.dative} ir ${a.pozymis}.`;
-          api.readout(`Teisingai. ${a.name} priklauso ${g.dative}. Liko ${left()}.`);
+          // Grįžtamasis ryšys pradedamas požymiu, o ne grupės vardu
+          // (pasiūlymas #42): vaikas, kuris dar neskaito „žinduoliams“,
+          // išgirsta ir pamato tą patį pastebėjimą, kuriuo rėmėsi.
+          msg.textContent = `Teisingai. ${a.name} turi ${g.coverAcc} ir ${a.pozymis}.`;
+          api.readout(`Teisingai. ${a.name} turi ${g.coverAcc}. Liko ${left()}.`);
           // Grįžtama prie gyvūnų: kitas priskyrimas prasideda nuo pasirinkimo.
           const next = trayEl.querySelector("button");
           if (next) next.focus();
@@ -654,7 +699,10 @@ const gyvunuGrupes = {
             return;
           }
 
-          msg.textContent = "Ne ši grupė. Pagalvok: kuo šis gyvūnas dengtas ir kuo kvėpuoja?";
+          // Užuomina nurodo į matomą požymį, ne į perskaitytą grupės vardą:
+          // dėžių piktogramos yra tai, ką vaikas gali palyginti iš karto.
+          msg.textContent = "Ne ši grupė. Kuo šis gyvūnas dengtas? Palygink su dėžių paveikslėliais.";
+
           api.readout(`Ne ši grupė. ${a.name} liko lentelėje. Liko ${left()}.`);
         }
       });

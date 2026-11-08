@@ -485,4 +485,66 @@ export const art = {
       <polygon points="${x2},${y2} ${p1} ${p2}" fill="${SOLID.edge}"/>
     </g>`;
   },
+
+  /* ------------------------------------------------------------------ */
+  /* Danga (1 klasės gyvūnų grupės)                                      */
+  /*                                                                    */
+  /* Kodėl atskira piktograma: grupės pavadinimas „Žinduoliai“ yra šešių */
+  /* skiemenų žodis, kurio nesklandžiai skaitantis 6–7 m. vaikas per      */
+  /* kelias sekundes neperskaito. Danga (plaukai / plunksnos / žvynai)   */
+  /* matoma iš karto ir tuo pačiu yra tas požymis, pagal kurį grupė       */
+  /* nustatoma — ženklas ir sąvoka sutampa, o ne dubliuoja tekstą.        */
+  /* Visos trys piktogramos pieštos tame pačiame 40×40 lauke, todėl      */
+  /* jų svoris ir vieta dėžėje vienodi.                                  */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Dangos piktograma. kind: plaukai | plunksnos | zvynai.
+   * Grąžina dekoratyvų fragmentą — prasmę neša greta esantis užrašas.
+   */
+  cover(kind, x, y, s = 1) {
+    const g = (inner) => `<g transform="translate(${x} ${y}) scale(${s})">${inner}</g>`;
+
+    if (kind === "plaukai") {
+      /* Plaukų kuokštas: keturios bangos, skirtingo ilgio. Bandyta piešti
+         kupolą su spinduliais — 38 px dydyje jis atrodė kaip saulė, o ne
+         kaip danga (tą pačią klaidą žymėjo LL-13). Bangos skiriasi ilgiu ir
+         pradžia, kad nepanašėtų į šukas. */
+      const waves = [
+        [-10.5, -6, 3], [-5.25, -10, 3.2], [0, -9, 3.4], [5.25, -10, 3.2], [10.5, -6, 3],
+      ].map(([x, top, w]) =>
+        `<path d="M${x} ${top} q 4 5 0 10 q -4 5 0 9"
+               stroke="#8a6242" stroke-width="${w}" fill="none" stroke-linecap="round"/>`).join("");
+      // Kuokštas 32×19 px buvo per smulkus 38 px dėžėje — padidinamas 1,15×.
+      return g(`<g transform="scale(1.15)">${waves}</g>`);
+    }
+
+    if (kind === "plunksnos") {
+      /* Plunksna: smailus viršus, kotas ir šoninės šakelės, nukreiptos į
+         viršūnę. Be šakelių siluetas atrodytų kaip lapas (LL-13). */
+      const barbs = [-8, -5, -2, 1, 4, 7].map((sy) => {
+        const len = 4 + (8 - Math.abs(sy - 1)) * 0.55;
+        return `<path d="M0 ${sy} l ${(-len).toFixed(1)} ${(-len * 0.5).toFixed(1)}"
+                    stroke="#7c8894" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M0 ${sy} l ${len.toFixed(1)} ${(-len * 0.5).toFixed(1)}"
+                    stroke="#7c8894" stroke-width="1.4" stroke-linecap="round"/>`;
+      }).join("");
+      return g(`
+        <path d="M0 -15 C 7 -10 9 -2 6 6 C 4 11 1 14 0 14 C -1 14 -4 11 -6 6
+                 C -9 -2 -7 -10 0 -15 Z"
+              fill="#eef2f5" stroke="#6f7b86" stroke-width="2.2" stroke-linejoin="round"/>
+        ${barbs}
+        <path d="M0 -13 C 1.6 -5 1.6 4 0 13" stroke="#6f7b86" stroke-width="2.2"
+              fill="none" stroke-linecap="round"/>`);
+    }
+
+    /* Žvynai: trys eilės persidengiančių lusnelių. */
+    const scale = (cx, cy, w, h) =>
+      `<path d="M${cx - w} ${cy} q ${w} ${h} ${2 * w} 0" fill="#dbe9f2"
+             stroke="#5b7f96" stroke-width="2" stroke-linejoin="round"/>`;
+    return g(`
+      ${scale(0, -8, 11, 12)}
+      ${scale(-6, 0, 10, 12)}${scale(6, 0, 10, 12)}
+      ${scale(0, 8, 11, 12)}`);
+  },
 };

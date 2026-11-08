@@ -614,8 +614,16 @@ async function loadOverview(){
     timerMap[role] = t;
   });
 
-  $("#schedule").innerHTML = d.schedule.map(s => {
-    const t = timerMap[s.role] || {};
+  // Eilė pagal TIKRĄ kito paleidimo laiką (ne pagal pavadinimą): artimiausias
+  // viršuje, po jo sekantis ir t. t. Be laiko (nesuplanuotas) — gale.
+  const ordered = d.schedule.map(s => ({s, t: timerMap[s.role] || {}}))
+    .sort((a, b) => {
+      const an = a.t.next && a.t.next !== "n/a" ? a.t.next : "9999-99-99 99:99";
+      const bn = b.t.next && b.t.next !== "n/a" ? b.t.next : "9999-99-99 99:99";
+      return an < bn ? -1 : an > bn ? 1 : a.s.role.localeCompare(b.s.role);
+    });
+
+  $("#schedule").innerHTML = ordered.map(({s, t}) => {
     return `<tr>
       <td data-label="Vaidmuo"><b>${esc(s.role)}</b><div class="muted" style="font-size:12px">${esc(s.description)}</div></td>
       <td data-label="Modelis"><b style="font-size:12px">${esc(s.model || "—")}</b>

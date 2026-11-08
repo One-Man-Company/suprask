@@ -440,8 +440,13 @@ const augaloGyvenimas = {
       q("#ag-day").textContent = agDaysText(day);
 
       /* Užrakintas mygtukas be paaiškinimo yra defektas (LL-04): todėl
-         priežastis rašoma matomame tekste, o ne tik `disabled`. */
+         priežastis rašoma matomame tekste, o ne tik `disabled`. Be to,
+         išjungus mygtuką, ant kurio stovėjo fokusas, naršyklė jį numeta į
+         `body` — klaviatūros naudotojas nebeturi kur eiti. Todėl tokiu
+         atveju fokusas perkeliamas į „Iš naujo“ (vienintelį likusį veiksmą),
+         o pabaigos tekstas paskelbiamas per `aria-live`. */
       const nextBtn = q("#ag-next");
+      const hadFocus = document.activeElement === nextBtn;
       nextBtn.disabled = ended || dead;
       nextBtn.setAttribute("aria-label", dead
         ? "Diena nebegalima: augalas nuvytęs. Paspausk „Iš naujo“."
@@ -456,6 +461,10 @@ const augaloGyvenimas = {
               ? "Modelis baigiasi 12 dieną. Sėkla taip ir nepabudo, nes trūko sąlygų."
               : "Modelis baigiasi 12 dieną. Vaisius dar neprinoko, nes augalui kažko trūko.")
           : "";
+
+      /* Fokusas perkeliamas TIK jei jis jau buvo ant „Diena →“: kitaip
+         išsijungimas atimtų vienintelį tolesnį veiksmą. */
+      if (hadFocus && nextBtn.disabled) q("#ag-reset").focus();
 
       api.readout(`${st} · vanduo ${agWaterWord(water)} · šviesa ${agLightWord(light)}`
         + ` · ${warm ? "šilta" : "šalta"} · ${agDaysText(day)}`);

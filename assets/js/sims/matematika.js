@@ -466,7 +466,8 @@ const desningumai = {
               }
             } }, 900);
           } else {
-            msg.textContent = "Ne visai. Pakartok seka garsiai: pirmas, antras, pirmas, antras…";
+            msg.textContent = "Ne visai. Perskaityk seką nuo pradžios ir pasakyk, kas kartojasi.";
+            api.readout("Dar ne visai. Rask, kas kartojasi.");
             b.classList.add("wiggle");
             setTimeout(() => b.classList.remove("wiggle"), 450);
           }

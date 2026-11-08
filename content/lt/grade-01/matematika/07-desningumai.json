@@ -6,7 +6,7 @@
   "subtitle": "Seka, kurią gali numatyti",
   "minutes": 9,
   "outcomes": [
-    "Pastebiu pasikartojančią seką ir ją tęsiu.",
+    "Pastebiu pasikartojančią seką, ją tęsiu ir randu trūkstamą narį.",
     "Paaiškinu sekos taisyklę savais žodžiais.",
     "Sugalvoju savo seką ir ją užrašau."
   ],
@@ -16,7 +16,8 @@
     "steps": [
       "Pažiūrėk į seką: raudonas, mėlynas, raudonas, mėlynas…",
       "Taisyklė: du skirtingi elementai kartojasi iš eilės.",
-      "Todėl toliau bus raudonas. Tai jau prognozė, o ne spėjimas."
+      "Todėl toliau bus raudonas. Tai jau prognozė, o ne spėjimas.",
+      "Kartais vieno elemento trūksta viduryje. Tada žiūrėk į visą grupę."
     ],
     "example": "Seka: 🟡🟡🟢 🟡🟡🟢 … Taisyklė „du geltoni, vienas žalias“. Kas bus po antro geltono? Žalias."
   },
@@ -77,12 +78,10 @@
         {
           "seq": [
             "🟣",
-            "🟣",
-            "🟣",
+            "🟠",
             "🟠",
             "🟣",
-            "🟣",
-            "🟣",
+            "🟠",
             "?"
           ],
           "options": [
@@ -91,7 +90,24 @@
             "🔵"
           ],
           "answer": 0,
-          "prompt": "Kiek kartų kartojasi pirmoji spalva?"
+          "prompt": "Vienas violetinis, du oranžiniai. Kas toliau?"
+        },
+        {
+          "seq": [
+            "🟡",
+            "🟢",
+            "🟡",
+            "🟢",
+            "?",
+            "🟢"
+          ],
+          "options": [
+            "🟢",
+            "🟡",
+            "🔵"
+          ],
+          "answer": 1,
+          "prompt": "Viduryje trūksta vieno elemento. Kas jis?"
         }
       ]
     }
@@ -105,7 +121,7 @@
         "3"
       ],
       "answer": 0,
-      "hint": "Suskaičiuok, kiek skaičių sudaro pasikartojančią dalį.",
+      "hint": "Suskaičiuok, kiek skaičių kartojasi vienoje grupėje.",
       "why": "Kartojasi pora 1, 2 — todėl po 1 eina 2."
     },
     {
@@ -131,15 +147,15 @@
       "why": "Radęs taisyklę, gali numatyti tolesnius elementus."
     },
     {
-      "q": "Seka: 2, 4, 6, 8, … Kas toliau?",
+      "q": "Seka: 🔵🔵▢ 🔵🔵⭐ … Kas turi stovėti tuščiame langelyje?",
       "options": [
-        "10",
-        "9",
-        "12"
+        "🔵",
+        "⭐",
+        "⬛"
       ],
-      "answer": 0,
-      "hint": "Kiek pridedama kiekvieną kartą?",
-      "why": "Kiekvieną kartą pridedama po 2, todėl toliau 10.",
+      "answer": 1,
+      "hint": "Pažiūrėk, kiek elementų kartojasi. Gal grupė ilgesnė nei du?",
+      "why": "Grupė kartojasi po tris: du apskritimai, viena žvaigždė.",
       "optional": true
     }
   ],
@@ -147,9 +163,10 @@
   "teacher": {
     "goal": "Algoritminio mąstymo pradmenys: pasikartojančios struktūros atpažinimas ir tęsimas.",
     "prompt": "Kokia taisyklė šioje sekoje? Kaip sužinojai?",
-    "offline": "Duokite vaikui du rinkinius spalvotų kaladėlių ar sagų ir paprašykite sudėti savo seką, kurią draugas turės tęsti.",
+    "offline": "Duokite vaikui du rinkinius spalvotų kaladėlių ar sagų ir paprašykite sudėti savo seką, kurią draugas turės tęsti. Tada vieną kaladėlę paslėpkite ir paklauskite, ko trūksta.",
     "misconceptions": [
       "Vaikai tęsia pagal paskutinį elementą, o ne pagal visą taisyklę.",
+      "Trūkstamą narį vaikas dažnai užpildo pagal kaimyninį elementą, o ne pagal visą grupę.",
       "Seka painiojama su simetrija — padeda aiškus „kartojasi“ pavyzdys.",
       "Kai seka ilga, prarandama vieta — padeda žymėjimas pirštu ar plojimu."
     ]

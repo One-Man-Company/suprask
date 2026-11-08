@@ -95,11 +95,19 @@ a:hover { text-decoration-color: var(--accent); }
 .site-head {
   position: sticky; top: 0; z-index: 40;
   display: flex; align-items: center; justify-content: space-between;
+  /* Antraštė gali pereiti į antrą eilutę. Be to, 360 px ekrane su padidintu
+     tekstu (naršyklės teksto dydis 22–28 px) ženklas ir du mygtukai netilpdavo
+     į vieną eilutę ir išstumdavo VISĄ puslapį į šoną — matuota: 14 px prie
+     22 px šrifto, 45 px prie 24 px, 75 px prie 26 px (klasės sąrašas, #34).
+     Numatytojo 16 px šrifto atveju antra eilutė nesusidaro. */
+  flex-wrap: wrap; row-gap: .35rem;
   gap: 1rem; padding: .7rem clamp(1rem, 4vw, 2rem);
   background: color-mix(in srgb, var(--paper) 88%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
+/* Nusileidus į antrą eilutę įrankiai lieka dešinėje, o ne prie kairio krašto. */
+.head-tools { display: flex; gap: .5rem; margin-inline-start: auto; }
 .brand { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; }
 .brand-mark {
   display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px;
@@ -108,7 +116,6 @@ a:hover { text-decoration-color: var(--accent); }
 }
 .brand-name { font-family: var(--font-head); font-weight: 900; font-size: 1.25rem; letter-spacing: -0.02em; }
 .brand-bang { color: var(--accent); }
-.head-tools { display: flex; gap: .5rem; }
 .icon-btn {
   display: inline-grid; place-items: center; min-width: 52px; min-height: 52px;
   padding: 0 .7rem; font-size: 1.25rem; border: 1px solid var(--line); border-radius: var(--r-pill);
@@ -259,6 +266,9 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 /* Tęsk nuo čia */
 .continue-card {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  /* Padidinto teksto atveju (32 px) mygtukas netilpdavo į eilutę ir išstūmė
+     puslapį 82 px (matuota 600 px pločio ekrane); eilutė gali persirikiuoti. */
+  flex-wrap: wrap;
   margin-top: 1rem; border: 2px solid var(--accent); text-decoration: none;
   background: color-mix(in srgb, var(--accent) 8%, var(--paper-2));
 }
@@ -286,7 +296,10 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .outcomes li::before { content: "✓"; color: var(--ok); font-weight: 900; }
 
 .steps { counter-reset: step; list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
-.steps li { display: grid; grid-template-columns: 2.2rem 1fr; gap: .8rem; align-items: start; }
+/* `1fr` takelio minimumas yra `auto` (min-content), todėl padidinto teksto
+   atveju (28–32 px) teksto stulpelis negalėjo susitraukti ir stūmė puslapį į
+   šoną: matuota 10 px @320/28 px, 57 px @320/32 px, 17 px @360/32 px. */
+.steps li { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); gap: .8rem; align-items: start; }
 .steps li::before {
   counter-increment: step; content: counter(step);
   display: grid; place-items: center; width: 2.2rem; height: 2.2rem;

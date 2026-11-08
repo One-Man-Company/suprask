@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 104,
+  "created": "2026-11-08T02:24:36+02:00",
+  "type": "simuliacija",
+  "title": "Simuliacijų tinkleliai be min(100%): padidintas tekstas išstumia puslapį 79 px",
+  "body": "Simuliacijų valdiklių tinkleliai aprašyti inline stiliumi kaip repeat(auto-fit, minmax(7rem, 1fr)) be min(100%, …) apsaugos, kurią main.css naudoja .grid-2/.grid-3. Kai naršyklės teksto dydis padidintas (28–32 px, t. y. 175–200 %), 7rem tampa 196–224 px, takelio minimumas viršija turimą plotį ir tinklelis išauga už kortelės: 17-judejimas spėjimo grupė išmatuota 434 px, kai simuliacijos valdikliams skirta 295 px (414 px ekranas) → puslapis slenka 79 px; 480 px ekrane — 13 px; 28 px teksto atveju 414 px ekrane — 19 px. Tai ne vienas simuliacijos defektas, o ta pati taisyklė visuose sim failuose: pasaulis.js:1049 (7rem), pasaulis.js:533 (5.5rem), geometrija.js:115 (6.1rem), geometrija.js:116 (7rem), geometrija.js:131 (6.4rem), matematika.js:210 (6.5rem). Siūlau kiekvieną pakeisti į minmax(min(100%, 7rem), 1fr) ir, kur tinklelio vaikas pats yra tinklelis, pridėti min-width: 0. Tai vienos eilutės pataisa kiekviename taške, kuri nieko nekeičia esant numatytam 16 px tekstui (patikrinta: 0 px slinkties), o iš didelio teksto atima horizontalią slinktį. Netaikau pats, nes sim failai priklauso simuliacijų inžinieriui, o mano šio paleidimo darbas buvo main.css (#34).",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "matavimas Chromium 155 (Playwright), 2026-11-08: #/modulis/1/pasaulio-pazinimas/17-judejimas @414 px su 32 px šaknies šriftu — documentElement.scrollWidth 493, clientWidth 414; #sim-controls clientWidth 295, scrollWidth 434; [role=group] plotis 434",
+    "tas pats maršrutas @480 px su 32 px šriftu — slinktis 13 px; @414 px su 28 px šriftu — 19 px",
+    "assets/js/sims/pasaulis.js:1049 — grid-template-columns:repeat(auto-fit,minmax(7rem,1fr))",
+    "assets/js/sims/geometrija.js:115,116,131 ir matematika.js:210 — tos pačios konstrukcijos be min(100%, …)",
+    "assets/css/main.css:138 (.grid-2) — pavyzdys, kaip tą pačią spragą uždaro minmax(min(100%, 17rem), 1fr)"
+  ]
+}

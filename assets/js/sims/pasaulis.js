@@ -227,11 +227,30 @@ const metuLaikai = {
    teisingai (174 px) — vaikui vienintelis matomas dydis sakė „nieko
    blogo“, nors etiketė — „vysta“. P-009 žada, kad dešimt perlaistymo
    dienų duoda mažą augalą, todėl virš optimalaus kiekvienas papildomas
-   žingsnis augimą mažina, o 5/5 jį sustabdo visai. */
+   žingsnis augimą mažina, o 5/5 jį sustabdo visai.
+
+   Antra fazė (pasiūlymas #186). Anksčiau augalas užaugdavo iki žiedo, o
+   toliau „Diena →“ keitė tik dienos skaitliuką iki 12 dienos: dydis jau
+   buvo pasiekęs lubas, todėl pačiame piešinyje nejudėjo niekas. Vaikas,
+   įpratęs, kad kiekvienas jo veiksmas turi pasekmę, tokį mygtuką
+   perskaitė kaip sugedusį (LL-04, interaktyvumo principas 1). Dabar po
+   žiedo seka vaisiaus branda: kiekviena diena vaisių padidina ir
+   nuspalvina, o esant geroms sąlygoms branda baigiasi lygiai paskutinę
+   modelio dieną (`agRipeStep`). Blogos sąlygos brandą sustabdo ir
+   augalą kasdien silpnina, todėl ir blogu keliu kiekviena diena ką nors
+   pakeičia.
+
+   Nė vienas valdiklis nelieka tylus: pasibaigus modeliui (12 diena arba
+   augalas, kelias dienas neturėjęs sąlygų, nuvysta) „Diena →“ užrakinamas,
+   bet priežastis parašoma matomame tekste (`#ag-end`), o ne paliekama
+   vaikui spėlioti. Sėkla yra vienintelė sąmoninga išimtis: kol nėra
+   vandens ir šilumos, ji nepabunda — tai pasakoma žodžiu, o ne
+   imituojama animacija. */
 const AG_WATER = [0, 0.4, 0.85, 1, 0.15, 0];     // vanduo 0–5 → augimo dalis
 const AG_LIGHT = [0, 0.3, 0.7, 1, 1, 1];          // šviesa 0–5 → augimo dalis
 const AG_DAYS_MAX = 12;
 const AG_STEP = 0.22;                             // gera diena ≈ 22 % dydžio
+const AG_WEAK_MAX = 3;                            // tiek dienų be augimo iki nuvytimo
 
 const agFactors = (water, light, warm) => {
   const wf = AG_WATER[water];
@@ -241,25 +260,38 @@ const agFactors = (water, light, warm) => {
 };
 const agWaterWord = (w) => ["nėra", "mažai", "beveik gerai", "gerai", "per daug", "per daug"][w];
 const agLightWord = (l) => (l === 0 ? "nėra" : l <= 2 ? "mažai" : "gerai");
-const agStage = (s, wilt = false, cold = false, pale = false) => {
-  if (s <= 0) return "Sėkla";
+
+/* Vaisiaus branda vyksta kas dieną, o baigiasi lygiai paskutinę modelio
+   dieną: todėl žalias vaisius negali „sustoti“ likus kelioms dienoms.
+   Vardiklis niekada nėra 0 — jei žiedas pasirodo paskutinę dieną, brandai
+   dienų nebelieka, ir tai pasakoma tekste, o ne tylima. */
+const agRipeStep = (bloomDay) => 1 / Math.max(1, AG_DAYS_MAX - bloomDay);
+
+/* Spalvų maišymas: vystantis augalui lapai ir stiebas tolygiai gelsta,
+   todėl kiekviena diena be augimo matoma, o ne tik žodis pastaboje. */
+const agHexMix = (a, b, t) => {
+  const k = Math.max(0, Math.min(1, t));
+  const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16));
+  const pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16));
+  return "#" + pa.map((v, i) => Math.round(v + (pb[i] - v) * k).toString(16).padStart(2, "0")).join("");
+};
+
+const agStage = ({ size, wilt, cold, pale, bloomDay, ripe, dead }) => {
+  if (size <= 0) return "Sėkla";
+  if (dead) return "Augalas nuvytęs";
   if (wilt) return "Augalas vysta";
   if (cold) return "Augalas neauga";
   if (pale) return "Augalas blyškus";
-  return s < 0.25 ? "Daigas" : s < 0.55 ? "Jaunas augalas" : s < 0.9 ? "Augalas su lapais" : "Žiedas";
+  if (ripe > 0) return ripe < 0.75 ? "Vaisius" : "Prinokęs vaisius";
+  if (bloomDay > 0) return "Žiedas";
+  return size < 0.25 ? "Daigas" : size < 0.55 ? "Jaunas augalas" : "Augalas su lapais";
 };
 const agDaysText = (n) => `${n} ${n === 1 ? "diena" : n < 10 ? "dienos" : "dienų"}`;
 
-/* Lapas: nuo stiebo link šono. droop = 1 — lapas nusvyra žemyn. */
-function agLeaf(x, y, s, dir, droop, col) {
-  const tipX = x + dir * s * 0.95;
-  const tipY = y - s * 0.55 + droop * s * 1.25;
-  const c1x = x + dir * s * 0.8;
-  const c1y = y - s * 0.95 + droop * s * 0.25;
-  const c2x = x + dir * s * 0.35;
-  const c2y = y + s * 0.35;
-  return `<path d="M${x} ${y} Q${c1x} ${c1y} ${tipX} ${tipY} Q${c2x} ${c2y} ${x} ${y} Z" fill="${col}"/>`;
-}
+
+/* Sėkla pabunda tik su vandeniu ir šiluma — tai pasakoma žodžiu, o ne
+   animuojama. Todėl nuimta sena `agLeaf` kopija: lapus piešia art.leaf
+   (LL-13), o nenaudojama funkcija tik klaidino. */
 
 const augaloGyvenimas = {
   mount({ stage, controls, api }) {
@@ -268,9 +300,12 @@ const augaloGyvenimas = {
     let warm = true;
     let day = 1;
     let size = 0;          // 0 — sėkla, 1 — suaugęs augalas
+    let bloomDay = 0;      // diena, kai pasirodė žiedas; 0 — dar nebuvo
+    let ripe = 0;          // vaisiaus branda 0..1 (po žydėjimo)
+    let weak = 0;          // dienos be augimo iš eilės (0..AG_WEAK_MAX)
     let dayMsg = "";
     let lastStage = "";
-    let bloomed = false;
+    let reported = false;  // api.progress iškviestas vieną kartą (LL-17)
 
     stage.innerHTML = `
       <div style="width:100%;max-width:30rem">
@@ -302,6 +337,8 @@ const augaloGyvenimas = {
           <button class="btn" id="ag-next" aria-label="Kita diena" style="flex:1 1 auto;min-height:48px;padding:.5rem .8rem;font-size:.95rem">Diena →</button>
           <button class="btn ghost" id="ag-reset" aria-label="Pradėti iš naujo" style="flex:0 0 auto;min-width:48px;min-height:48px;padding:.5rem .7rem;font-size:.95rem">Iš naujo</button>
         </div>
+        <p id="ag-end" role="status" aria-live="polite"
+           style="margin:0;font-size:.9rem;line-height:1.35;font-weight:700;text-align:center"></p>
       </div>`;
 
     const svg = stage.querySelector("#ag-scene");
@@ -322,18 +359,34 @@ const augaloGyvenimas = {
       const wilt = water === 0 || water >= 4;
       const pale = light <= 1;
       const cold = !warm;
-      const bloom = size >= 0.9 && !wilt && !cold && !pale;
+
+      /* Žiedas pasirodo pirmą kartą, kai augalas užaugęs ir sąlygos geros,
+         ir nuo tos dienos niekur nedingsta (LL-15: būsena, kurią modelis
+         pameta). Anksčiau žiedas buvo piešiamas TIK kol sąlygos geros,
+         todėl pablogėjus orui jis „išnykdavo“ — ir vėl atsirasdavo. */
+      const dead = size > 0 && weak >= AG_WEAK_MAX;
+      if (!dead && !bloomDay && size >= 0.9 && !wilt && !cold && !pale) bloomDay = day;
+
+      const ended = day >= AG_DAYS_MAX;
+      const ripeDone = ripe >= 0.999;   // 1/6 × 6 nesudeda tiksliai į 1
+      const showFlower = bloomDay > 0 && ripe === 0;
+      const showFruit = bloomDay > 0 && ripe > 0;
+      const fruitS = 1.1 + 0.4 * ripe;
 
       const h = size <= 0 ? 0 : 22 + size * 152;
       const leafS = 12 + size * 22;
-      const droop = wilt ? 1 : 0;
-      const stemCol = cold ? "#6f93a8" : pale ? "#8fae78" : "#4c8b3a";
-      const leafCol = water === 0 ? "#b9a06c"
+      /* Svyravimas įjungiamas iš karto, kai sąlyga bloga (wilt), o ilgiau
+         trūkstant augimo — palaipsniui: kiekviena diena be augimo lapus
+         labiau gelsta, todėl ir blogu keliu `Diena →` ką nors pakeičia. */
+      const dry = Math.min(1, weak / AG_WEAK_MAX);
+      const droop = wilt || weak >= 1 ? 1 : 0;
+      const stemCol = agHexMix(cold ? "#6f93a8" : pale ? "#8fae78" : "#4c8b3a", "#8d7a55", dry * 0.7);
+      const leafCol = agHexMix(water === 0 || dead ? "#b9a06c"
         : water >= 4 ? "#bdb75c"
-          : cold ? "#7fa2b5" : pale ? "#a8c98a" : "#5fbf62";
+          : cold ? "#7fa2b5" : pale ? "#a8c98a" : "#5fbf62", "#a98f55", dry * 0.6);
 
       const sunR = 13 + light * 1.6;
-      const topX = 180 + (droop ? 14 : 0);
+      const topX = 180 + (droop ? 13 : 0);
 
       /* Vandens perteklius — bala; sausra — įtrūkusi žemė. Abu rodo pasekmę,
          ne tik skaičių valdiklyje. */
@@ -359,15 +412,18 @@ const augaloGyvenimas = {
         ${h > 0 && size > 0.05
           ? art.leaf(178, 248 - h * 0.5, leafS, -1, droop, leafCol)
             + art.leaf(182, 248 - h * 0.34, leafS, 1, droop, leafCol) : ""}
-        ${bloom ? art.flower(topX, 248 - h, 1) : ""}
+        ${showFlower ? art.flower(topX, 248 - h, 1) : ""}
+        ${showFruit ? art.fruit(topX, 248 - h, fruitS, ripe) : ""}
         ${art.grass(26, 250, 1.1, cold ? "#a9c6cf" : "#5aa552")}
         ${art.grass(118, 251, 0.9, cold ? "#a9c6cf" : "#5aa552")}
         ${art.grass(304, 250, 1, cold ? "#a9c6cf" : "#5aa552")}
         ${cold ? art.snow(0, 246, 12) : ""}
       `;
 
+      const st = agStage({ size, wilt, cold, pale, bloomDay, ripe, dead });
+
       svg.setAttribute("aria-label",
-        `Augalo modelis: ${agStage(size, wilt, cold, pale).toLowerCase()}, vanduo ${agWaterWord(water)}, `
+        `Augalo modelis: ${st.toLowerCase()}, vanduo ${agWaterWord(water)}, `
         + `šviesa ${agLightWord(light)}, ${warm ? "šilta" : "šalta"}`);
 
       dots(q("#ag-w-dots"), water, 5);
@@ -382,9 +438,25 @@ const augaloGyvenimas = {
         btn.style.borderColor = on ? "var(--ink)" : "var(--line)";
       }
       q("#ag-day").textContent = agDaysText(day);
-      q("#ag-next").disabled = day >= AG_DAYS_MAX;
 
-      const st = agStage(size, wilt, cold, pale);
+      /* Užrakintas mygtukas be paaiškinimo yra defektas (LL-04): todėl
+         priežastis rašoma matomame tekste, o ne tik `disabled`. */
+      const nextBtn = q("#ag-next");
+      nextBtn.disabled = ended || dead;
+      nextBtn.setAttribute("aria-label", dead
+        ? "Diena nebegalima: augalas nuvytęs. Paspausk „Iš naujo“."
+        : ended ? "Diena nebegalima: modelis baigėsi 12 dieną. Paspausk „Iš naujo“."
+          : "Kita diena");
+      q("#ag-end").textContent = dead
+        ? "Augalas nuvytęs: jam per ilgai trūko sąlygų. Paspausk „Iš naujo“ ir pabandyk kitaip."
+        : ended
+          ? (ripeDone
+            ? "Modelis baigiasi 12 dieną. Vaisius prinoko — jame yra sėklų."
+            : size <= 0
+              ? "Modelis baigiasi 12 dieną. Sėkla taip ir nepabudo, nes trūko sąlygų."
+              : "Modelis baigiasi 12 dieną. Vaisius dar neprinoko, nes augalui kažko trūko.")
+          : "";
+
       api.readout(`${st} · vanduo ${agWaterWord(water)} · šviesa ${agLightWord(light)}`
         + ` · ${warm ? "šilta" : "šalta"} · ${agDaysText(day)}`);
 
@@ -412,9 +484,12 @@ const augaloGyvenimas = {
 
       const cause = gf >= 0.8 ? "" : why();
       let note;
-      if (cause) note = `Ko trūksta: ${cause}.`;
+      if (dead) note = "Šios sąlygos augalui netiko — jis nuvytęs.";
+      else if (cause) note = `Ko trūksta: ${cause}.`;
+      else if (ripeDone) note = "Vaisius prinoko. Jame yra sėklų — iš jų galėtų išaugti naujas augalas.";
+      else if (showFruit) note = "Žiedas virto vaisiumi. Spausk „Diena →“ ir stebėk, kaip jis keičiasi.";
       else if (size >= 1) note = "Augalas išaugo ir pražydo. Dabar pakeisk vieną sąlygą — kas nutiks?";
-      else note = "Sąlygos geros. Spausk „Kita diena“ — augalas paūgės.";
+      else note = "Sąlygos geros. Spausk „Diena →“ — augalas paūgės.";
       api.note(dayMsg ? `${dayMsg} ${note}` : note);
 
       if (st !== lastStage) {
@@ -422,9 +497,10 @@ const augaloGyvenimas = {
         api.speak(st, { rate: 0.9 });
       }
 
-      /* Rezultatas — pražydęs augalas, o ne kiekvienas paspaudimas. */
-      if (!bloomed && bloom) {
-        bloomed = true;
+      /* Rezultatas — pražydęs augalas, o ne kiekvienas paspaudimas.
+         Vėlesnė vaisiaus branda jo neatšaukia ir nebeskaito iš naujo. */
+      if (!reported && bloomDay > 0) {
+        reported = true;
         api.progress({ correct: true });
       }
       return gf;
@@ -432,11 +508,24 @@ const augaloGyvenimas = {
 
     const dayStep = () => {
       if (day >= AG_DAYS_MAX) return;
+      if (size > 0 && weak >= AG_WEAK_MAX) return;
       const { gf } = agFactors(water, light, warm);
       day += 1;
-      size = Math.min(1, size + gf * AG_STEP);
-      if (gf === 0) dayMsg = "Šią dieną augalas visai nepajudėjo.";
-      else dayMsg = gf < 0.5 ? "Šią dieną augalas beveik nepajudėjo." : "";
+      if (gf > 0) {
+        size = Math.min(1, size + gf * AG_STEP);
+        weak = Math.max(0, weak - 1);       // geros dienos atgaivina palaipsniui
+        if (bloomDay > 0 && ripe < 1) {
+          ripe = Math.min(1, ripe + agRipeStep(bloomDay));
+        }
+        dayMsg = gf < 0.5 ? "Šią dieną augalas beveik nepajudėjo." : "";
+      } else if (size > 0) {
+        weak = Math.min(AG_WEAK_MAX, weak + 1);
+        dayMsg = weak >= AG_WEAK_MAX
+          ? "Augalas nuvyto — jam per ilgai trūko sąlygų."
+          : "Šią dieną augalas nepajudėjo. Jam vis sunkiau.";
+      } else {
+        dayMsg = "Šią dieną sėkla liko tokia pati.";
+      }
       render();
     };
     const setCond = (fn) => { fn(); dayMsg = ""; render(); };
@@ -449,9 +538,11 @@ const augaloGyvenimas = {
     q("#ag-warm").addEventListener("click", () => setCond(() => { warm = true; }));
     q("#ag-next").addEventListener("click", dayStep);
     q("#ag-reset").addEventListener("click", () => {
-      water = 3; light = 3; warm = true; day = 1; size = 0; dayMsg = ""; lastStage = "";
+      water = 3; light = 3; warm = true; day = 1; size = 0;
+      bloomDay = 0; ripe = 0; weak = 0; dayMsg = ""; lastStage = "";
       render();
     });
+
 
     render();
     return null;

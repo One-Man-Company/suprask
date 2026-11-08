@@ -190,6 +190,39 @@ export const art = {
   },
 
   /**
+   * Vaisius su taurelės lapeliais. `ripe` 0..1 — nuo žalio iki prinokusio:
+   * spalva ir dydis kinta tolygiai, todėl kiekviena diena matoma (LL-20:
+   * pasekmė neturi išnykti iki galutinio dydžio). `x, y` — vaisiaus centras.
+   */
+  fruit(x, y, s = 1, ripe = 0) {
+    const t = Math.max(0, Math.min(1, ripe));
+    const mix = (a, b, k) => {
+      const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16));
+      const pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16));
+      return "#" + pa.map((v, i) => Math.round(v + (pb[i] - v) * k).toString(16).padStart(2, "0")).join("");
+    };
+    /* Branda eina per tris spalvas (žalia → geltona → raudona), o ne tiesiai
+       žalia → raudona: tiesi linija RGB erdvėje viduryje duoda purviną rudą,
+       kuri 6–7 m. vaikui nesisieja nei su žaliu, nei su prinokusiu vaisiumi. */
+    const ramp = (a, b, c) => (t < 0.5 ? mix(a, b, t * 2) : mix(b, c, (t - 0.5) * 2));
+    const body = ramp("#9dcf5c", "#e8b23c", "#d9534f");
+    const edge = ramp("#6d9340", "#a9762a", "#a53a2c");
+    const r = (8 + 4 * t) * s;
+    const f = (v) => v.toFixed(1);
+    const calyx = `<path d="M0 ${f(-r)} q ${f(-7 * s)} ${f(-1 * s)} ${f(-8 * s)} ${f(-5 * s)} q ${f(5 * s)} ${f(0.5 * s)} ${f(8 * s)} ${f(4 * s)} z"
+        fill="${edge}" opacity=".85"/>
+      <path d="M0 ${f(-r)} q ${f(7 * s)} ${f(-1 * s)} ${f(8 * s)} ${f(-5 * s)} q ${f(-5 * s)} ${f(0.5 * s)} ${f(-8 * s)} ${f(4 * s)} z"
+        fill="${edge}" opacity=".85"/>`;
+    return `<g transform="translate(${x} ${y})">
+      <circle r="${f(r)}" fill="${body}" stroke="${edge}" stroke-width="${f(2 * s)}"/>
+      <ellipse cx="${f(-r * 0.3)}" cy="${f(-r * 0.34)}" rx="${f(r * 0.3)}" ry="${f(r * 0.2)}"
+               fill="#ffffff" opacity=".45"
+               transform="rotate(-24 ${f(-r * 0.3)} ${f(-r * 0.34)})"/>
+      ${calyx}
+    </g>`;
+  },
+
+  /**
    * Medis. season: ziema | pavasaris | vasara | ruduo | ruduo-krenta
    */
   tree(x, baseY, s, season) {

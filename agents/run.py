@@ -144,7 +144,7 @@ ROLES: dict[str, dict] = {
         "description": "Sujungia patvirtintus PR, atnaujina changelog ir publikavimą",
     },
     "kalbu-redaktorius": {
-        "file": "roles/kalbu-redaktorius.md", "profile": "deepseek41flash", "toolsets": "terminal,file",
+        "file": "roles/kalbu-redaktorius.md", "profile": "ling31flash", "toolsets": "terminal,file",
         "max_turns": 30, "budget": 1200, "timeout": 1800,
         "cadence": "antradieniais, penktadieniais", "on_calendar": "Tue,Fri *-*-* 13:10:00",
         "description": "Kalbos ir UX redaktorius: formuluočių vienareikšmiškumas + ką vaikas mato desktop/planšetėje/telefone su Brave skydais",

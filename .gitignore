@@ -12,7 +12,15 @@ agents/runs.db-wal
 agents/runs.db-shm
 agents/.run.lock
 agents/work/
+# Agentų ataskaitos — audito pėdsakas, todėl JOS ĮTRAUKIAMOS į repo (#484).
+# Iki 2026-11-08 čia buvo `agents/log/*`, tad `git ls-files agents/log/` rodė
+# vieną `.gitkeep`, o 139 ataskaitų (2,9 MB) egzistavo tik šioje mašinoje.
+# `changed_files()` (agents/run.py) renka failus iš `git status --porcelain`,
+# kur ignoruotų failų nėra — todėl ataskaita niekada nepatekdavo į commit'ą ir
+# iš repo nebuvo įmanoma atsakyti, kodėl pakeitimas paskelbtas ar atmestas.
+# Ignoruojami lieka tik tame kataloge atsirandantys darbo artefaktai, ne ataskaitos.
 agents/log/*
+!agents/log/*.md
 !agents/log/.gitkeep
 agents/audio-flags.json
 

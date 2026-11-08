@@ -49,7 +49,7 @@ Visa tiesa — `agents/runs.db` (SQLite, WAL). Dashboard nieko nekeičia, išsky
 - `POST /api/run-now` — paleidžia `agents/run.py <vaidmuo> --trigger dashboard`;
 - `POST /api/proposal-status` — keičia pasiūlymo būseną (`new`, `accepted`, `rejected`).
 
-Žurnalai — `agents/log/<vaidmuo>-<data>.md`. Failai su `agents/log/` ir `agents/work/` į git nepatenka.
+Žurnalai — `agents/log/<vaidmuo>-<data>.md`. Ataskaitos (`.md`) į git **patenka**: tai audito pėdsakas, be kurio iš repo neįmanoma pasakyti, kas ką tikrino ir ką išmatavo. `agents/work/` ir kiti tame kataloge atsirandantys darbo artefaktai lieka už repo ribų.
 
 ## Saugumas
 

@@ -1213,14 +1213,35 @@ def main() -> int:
     PROPOSALS.mkdir(parents=True, exist_ok=True)
 
     # Užraktas: vienu metu dirba vienas agentas (git ir turinio vientisumas)
-    lock_handle = open(role_lock_file(args.role), "w")
-    try:
-        fcntl.flock(lock_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except BlockingIOError:
-        print(f"{args.role}: toks pats agentas jau dirba — praleista")
-        run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", "skipped: lock")
-        db.finish_run(run_id, "skipped", None, 0, "", "Tas pats agentas jau dirba.")
-        return 0
+    # RAŠYMO UŽRAKTAS — VIENAS VISIEMS VAIDMENIMS.
+    #
+    # Buvo po užraktą kiekvienam vaidmeniui, kad ilgas kūrėjo darbas neblokuotų
+    # kitų. Bet visi agentai dirba TAME PAČIAME darbiniame kataloge, todėl du
+    # rašantys agentai vienu metu reiškia, kad pirmasis publikuoja antrojo
+    # nebaigtus pakeitimus (taip `pasaulis.js` pateko į kalbos redaktoriaus
+    # commit'ą 5b58476). Serializuojam rašymą, o laukiame, o ne praleidžiame —
+    # kitaip agentas tyliai praranda savo dienos paleidimą.
+    lock_handle = open(LOCK_FILE, "w")
+    wait_s = int(os.environ.get("SUPRASK_LOCK_WAIT", "900"))
+    started_wait = time.time()
+    notified = False
+    while True:
+        try:
+            fcntl.flock(lock_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except BlockingIOError:
+            others = active_role_locks(args.role)
+            if not notified:
+                print(f"{args.role}: laukia, kol baigs {', '.join(others) or 'kitas agentas'}"
+                      f" (iki {wait_s} s)")
+                notified = True
+            if time.time() - started_wait > wait_s:
+                run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", "skipped: lock")
+                db.finish_run(run_id, "skipped", None, int(time.time() - started_wait), "",
+                              f"Užraktas užimtas ilgiau nei {wait_s} s.")
+                print(f"{args.role}: užraktas užimtas ilgiau nei {wait_s} s — praleista")
+                return 0
+            time.sleep(10)
 
     run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", args.note)
 

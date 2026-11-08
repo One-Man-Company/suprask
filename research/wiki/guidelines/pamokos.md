@@ -389,3 +389,10 @@ Naują pamoką **prideda** tas, kas rado defektą; senos netrinamos ir neperraš
 - **Priežastis:** užuomina rašyta kaip žaidžiškas žodžių žaidimas (pagalvok/pagalvė), bet jos antra pusė („ne apie jos turinį") nukreipia nuo asocijacijos, kuri vedė prie atsakymo. LL-22 ir validatorius tikrina vieną kryptį — ar hint'as ATSKLEIDŽIA atsakymą (`options[answer]` vs `hint`); atvirkščio caso (hint'as prieštarauja atsakymui) niekas netikrina.
 - **Taisyklė:** prieš įrašant užuominą, perskaityk ją kartu su teisingu variantu kaip vieną sakinį. Jei užuominos nurodomas kelias atrodo vedantis nuo atsakymo — hint'as perrašomas, net jei jis nieko neatskleidžia. Užuomina turi rodyti į klaidą, į kurią vaikas tikriai nužengia, o ne į priešingą nuo atsakymo pusę.
 - **Patikra:** žmogaus peržiūra: kiekviename modulyje prie kiekvieno hint'o paklausimas — „ar šis kelias kerta teisingo varianto sąvoką?" Rasta per #137 auditą; fiksuota `research/wiki/guidelines/kalbos-auditas.md` lentelės eilutėje #1 (rimta).
+
+## LL-54 — Du rašantys agentai viename darbiniame kataloge
+
+- **Simptomas:** kalbos redaktoriaus commit'e `5b58476` atsirado `assets/js/sims/pasaulis.js` pakeitimai, kurių jis nedarė. Bėgiklis pats rašė „5 failų autorystė neįrodyta“, bet vis tiek juos publikavo.
+- **Priežastis:** užraktas buvo **po vieną vaidmeniui**, o visi agentai dirba tame pačiame kataloge. Du rašantys agentai vienu metu reiškia, kad pirmasis baigęs publikuoja antrojo nebaigtus pakeitimus: `changed_files(before)` lygina momentines nuotraukas, o failas, kurį kitas agentas pakeitė po mano starto, atrodo kaip mano.
+- **Taisyklė:** **rašymas serializuojamas vienu užraktu visiems vaidmenims**, o antrasis agentas **laukia**, o ne tyliai praleidžia savo paleidimą (kitaip jis praranda dieną). Užraktas imamas visam paleidimui ir atleidžiamas `finally`. Jei failas buvo nešvarus prieš paleidimą — jis niekada nepatenka į šio paleidimo commit'ą.
+- **Patikra:** zondas, kuris laiko `.run.lock` ir kviečia antrą vaidmenį: turi pasirodyti „laukia, kol baigs …“, o po `SUPRASK_LOCK_WAIT` — aiškus praleidimas. Antras zondas: dviejų vaidmenų paleidimai iš eilės — kiekvieno commit'e tik jo paties failai.

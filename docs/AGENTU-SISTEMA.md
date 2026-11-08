@@ -14,6 +14,19 @@ agentas (modelis)  →  pakeitimai darbinėje kopijoje
 
 Bėgiklis — `agents/run.py`. Jis paleidžiamas systemd timer'io (`suprask-agent@<vaidmuo>.service`), vienu metu dirba vienas agentas (`agents/.run.lock`).
 
+## Rašymo užraktas (vienas visiems)
+
+Visi agentai dirba **tame pačiame** darbiniame kataloge, todėl du rašantys
+agentai vienu metu negali dirbti: pirmasis publikuotų antrojo nebaigtus
+pakeitimus (taip atsitiko commit'e `5b58476`). Todėl:
+
+- `agents/.run.lock` imamas **visiems vaidmenims** viso paleidimo metu;
+- antrasis agentas **laukia** (`SUPRASK_LOCK_WAIT`, numatyta 900 s), o ne
+  praleidžia — kitaip jis tyliai praranda savo dienos paleidimą;
+- git operacijos papildomai saugomos trumpu `.git.lock`;
+- failas, kuris buvo nešvarus **prieš** paleidimą, niekada nepatenka į to
+  paleidimo commit'ą.
+
 ## Klasių apimtis ir minimalios temos
 
 Kurias klases agentai vysto, sprendžia **žmogus** dashboard'e

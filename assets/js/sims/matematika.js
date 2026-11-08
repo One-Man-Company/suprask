@@ -1070,6 +1070,9 @@ const pinigineIrKaina = {
   mount({ stage, controls, api, config }) {
     const unit = config.unit === "c" ? "c" : "€";
     const say = config.sentences || {};
+    // Pastaba apie banknotą — imama tik iš config, kad ekranas ir balsas
+    // nesiskirtų. Jei modulis sakinio nenurodo, pastabos nėra (LL-42).
+    const noteText = String(say.kupiura || "").trim();
 
     const coins = (Array.isArray(config.coins) && config.coins.length
       ? config.coins : [50, 20, 10, 5]).map(Number).filter((v) => v > 0);
@@ -1394,11 +1397,12 @@ const pinigineIrKaina = {
             progressed = true;
             api.progress({ correct: true });
           }
-          // Vienkartinė pastaba: viena kupiūra atstojo kelias monetas.
-          if (!toldNote && plate.some(isNote)) {
+          // Vienkartinė pastaba apie banknotą. Tekstas — tik iš config, kad
+          // ekrane ir garse būtų tas pats sakinys (vienas šaltinis, LL-42).
+          if (!toldNote && plate.some(isNote) && noteText) {
             toldNote = true;
-            msgEl.textContent = `${msgEl.textContent} Viena kupiūra atstojo kelias monetas.`;
-            if (say.kupiura) api.speak(say.kupiura);
+            msgEl.textContent = `${msgEl.textContent} ${noteText}`;
+            api.speak(noteText);
           }
         } else {
           api.readout(`Ta pati suma, kiti pinigai. ${fmt(price())}.`);

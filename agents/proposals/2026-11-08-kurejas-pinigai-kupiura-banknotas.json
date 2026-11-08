@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 124,
+  "created": "2026-11-08T06:52:00+02:00",
+  "type": "atitiktis",
+  "title": "Tas pats pinigas modulyje vadinamas ir „kupiūra“, ir „banknotu“",
+  "body": "Modulyje „Pinigai: vertė yra skaičius“ (`14-pinigai`) vienas ir tas pats popierinis pinigas vadinamas dviem žodžiais: rezultatai sako „Atpažįstu euro monetas ir banknotus“ ir „paaiškinu, kodėl viena kupiūra…“, 5-a užduotis — „5 € banknotą“, simuliacijos valdikliai — „banknotas“ ir „Monetų ir banknotų“, o pastabos sakinys (`sim.config.sentences.kupiura`) — „Viena kupiūra atstojo kelias monetas.“ Po #4199 pataisymo tas pastabos sakinys nebėra dubliuojamas kode, tad jis dabar yra vienintelis „kupiūros“ šaltinis ekrane ir garse. 6–7 metų vaikui „kupiūra“ yra nereguliarus, mokykloje nevartojamas žodis, o modulio šaltiniai ir kitos jo vietos jau vartoja „banknotą“. Siūlau: `sentences.kupiura` → „Vienas banknotas atstojo kelias monetas.“, outcomes[2] → „…kodėl vienas banknotas gali atstoti kelias monetas.“, tada pergeneruoti garsą (`generate_audio.py --engine piper`). Termino keitimas modulyje yra turinio autorius darbas, o ne simuliacijos kodo — todėl atskiru pasiūlymu, o ne šio paleidimo metu.",
+  "target": "content/lt/grade-01/matematika/14-pinigai.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/14-pinigai.json:9–11 — outcomes vartoja ir „banknotus“, ir „kupiūrą“",
+    "content/lt/grade-01/matematika/14-pinigai.json:41 — `sentences.kupiura`: „Viena kupiūra atstojo kelias monetas.“",
+    "content/lt/grade-01/matematika/14-pinigai.json:92 — 5-a užduotis: „Turi 5 € banknotą“",
+    "assets/js/sims/matematika.js:1117, 1120, 1156, 1331 — simuliacijos etiketės: „banknotas“, „Monetų ir banknotų“",
+    "docs/KURINIO-STANDARTAS.md:106, 116 — oficiali ir vienoda terminija visame modulyje"
+  ]
+}

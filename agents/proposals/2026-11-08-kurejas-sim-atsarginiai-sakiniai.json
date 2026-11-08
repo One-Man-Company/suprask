@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 124,
+  "created": "2026-11-08T06:53:00+02:00",
+  "type": "struktura",
+  "title": "Simuliacijų atsarginiai sakiniai tariami, bet garso patikra jų nemato",
+  "body": "Šešiose vietose simuliacijų kodas turi savo atsarginius sakinius (`DEFAULT_SAY`, `DV_SAY`, `SHL_SAY`, `MB_SAY`), kurie tariami tada, kai modulis atitinkamo rakto `sim.config.sentences` nenurodo: `matematika.js:1590`, `:1917`, `:2673`, `:2906` ir `technologijos.js:148`, `:375` (visur naudojama `line = key => say[key] || …_SAY[key]`). `scripts/generate_audio.py:157–175` garso tekstus renka tik iš `config`, o `scripts/check_audio.py:35–45` tikrina tik tai, ką surinko `collect()`. Todėl modulis, kuris tų raktų nenurodo (config laukai neprivalomi), vaikui kalba kodą įrašytu sakiniu be garso įrašo: `assets/js/speech.js:135–137` tada naudoja naršyklės balsą, o jei lietuviško balso nėra (`:104–111`) — tyli. CI lieka žalias, nes tokio teksto sąraše nėra. Tai ta pati šeima kaip #4199, tik priešinga kryptimi: ten du egzemplioriai skyrėsi, čia antrasis egzempliorius išvis nematomas garso vartams. Siūlau du kelius: (a) `generate_audio.collect()` papildyti simuliacijų failų skenavimu ir `check_audio.py` trūkstamus įrašus pranešti kaip klaidą, arba (b) uždrausti tekstą kode ir reikalauti, kad kiekvienas tariamas sakinys būtų `config`.",
+  "target": "scripts/generate_audio.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/matematika.js:1590, 1917, 2673, 2906 — `DEFAULT_SAY` / `DV_SAY` / `SHL_SAY` blokai; naudojimas :1599, :1926, :2687, :2921",
+    "assets/js/sims/technologijos.js:148, 375 — `DEFAULT_SAY` / `MB_SAY`; naudojimas :179, :403",
+    "scripts/generate_audio.py:157–175 — `collect()` skaito tik `sim.config`",
+    "scripts/check_audio.py:35–45 — tikrinama tik tai, ką grąžino `collect()`",
+    "assets/js/speech.js:104–111, 135–137 — be manifasto įrašo balsas imamas iš naršyklės (`tts`), o be lietuviško balso tylima"
+  ]
+}

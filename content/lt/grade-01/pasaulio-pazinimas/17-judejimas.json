@@ -39,26 +39,26 @@
       "why": "Plokštuma abiem ta pati, todėl jie atrieda beveik kartu."
     },
     {
-      "q": "Tas pats rutulys rieda ta pačia plokštuma. Kaip jį priversti riedėti greičiau?",
+      "q": "Rideni tą patį rutulį ta pačia plokštuma. Kaip padaryti, kad jis riedėtų greičiau?",
       "options": [
         "Pakelti plokštumą",
         "Pakeisti rutulį sunkesniu",
         "Pakeisti rutulį lengvesniu"
       ],
       "answer": 0,
-      "hint": "Simuliacijoje rutulys buvo tas pats. Kas keitėsi?",
-      "why": "Aukštesnė plokštuma duoda didesnį nuolydį, todėl rutulys greičiau įsibėgėja."
+      "hint": "Bandyme rutulys liko tas pats. Ką pakeitei?",
+      "why": "Aukštesnė plokštuma statesnė, todėl rutulys greičiau įsibėgėja."
     },
     {
-      "q": "Du vaikai leidžiasi vienodomis rogėmis. Kuris įsibėgės greičiau?",
+      "q": "Du vaikai leidžiasi vienodomis rogėmis. Nuo kurio kalno vaikas įsibėgės greičiau?",
       "options": [
         "Nuo lėkštesnio kalno",
         "Nuo statesnio kalno",
-        "Abu vienodai"
+        "Nuo abiejų kalnų vienodai"
       ],
       "answer": 1,
-      "hint": "Prisimink, kas pasikeitė pakėlus plokštumą.",
-      "why": "Statesnis kalnas veikia kaip aukštesnė plokštuma: greitis didesnis."
+      "hint": "Prisimink, kas atsitiko, kai plokštuma buvo aukšta.",
+      "why": "Statesnis kalnas veikia kaip aukštesnė plokštuma, todėl greitis didesnis."
     },
     {
       "q": "Rutulys nuo aukštos plokštumos atrieda greičiau. Kodėl taip yra?",
@@ -69,11 +69,11 @@
       ],
       "answer": 1,
       "hint": "Palygink abi plokštumas, o ne rutulius.",
-      "why": "Keičiasi plokštuma, o ne rutulys, todėl greitis didesnis abiem.",
+      "why": "Keičiasi plokštuma, o ne rutulys, todėl greitis didesnis.",
       "optional": true
     }
   ],
-  "reflect": "Kodėl sunkus rutulys neatsilieka nuo lengvo? Pasakyk savais žodžiais.",
+  "reflect": "Kodėl sunkus rutulys neatsilieka nuo lengvo rutulio? Pasakyk savais žodžiais.",
   "teacher": {
     "goal": "Suprasti, kad riedėjimo greitį lemia plokštumos aukštis (nuolydis), o ne daikto svoris. Modelis rodo abu rutulius vienu metu ir leidžia keisti tik vieną sąlygą.",
     "prompt": "Kodėl sunkesnis rutulys neatriedėjo pirmas?",

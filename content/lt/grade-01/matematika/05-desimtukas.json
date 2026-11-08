@@ -7,7 +7,7 @@
   "minutes": 8,
   "outcomes": [
     "Suskaičiuoju, kiek daiktų yra dešimtuke, ir kiek trūksta iki dešimt.",
-    "Suskirstau skaičių į „penkis ir dar tiek“.",
+    "Suskirstau dešimtuką į dvi eiles po penkis.",
     "Paaiškinu, kodėl dešimtukas padeda greičiau skaičiuoti."
   ],
   "concept": {
@@ -16,7 +16,7 @@
     "steps": [
       "Pilnas dešimtukas — 10. Tuščias — 0.",
       "Jei pilni 7 langeliai, trūksta 3 iki dešimties. 7 + 3 = 10.",
-      "Pusė dešimtuko — 5. Tai padeda atpažinti skaičių akimis, neskaičiuojant."
+      "Dešimtukas turi dvi eiles po penkis. Penki ir dar penki — visada dešimt."
     ],
     "example": "Įsivaizduok 8 obuolius dėžėje, kur telpa 10. Kiek vietų liko? Dvi. Taigi 8 + 2 = 10."
   },
@@ -39,15 +39,15 @@
       "why": "6 + 4 = 10."
     },
     {
-      "q": "Kiek yra pusė dešimtuko?",
+      "q": "8 kubeliai sukrauti į dvi eiles po penkis. Pirma eilė pilna. Kiek kubelių yra antroje eilėje?",
       "options": [
-        "10",
         "5",
-        "2"
+        "3",
+        "8"
       ],
       "answer": 1,
-      "hint": "Padalink dešimtuką į dvi lygias dalis.",
-      "why": "10 padalintas pusiau yra 5."
+      "hint": "Pirma eilė pilna — tai penki kubeliai. Kiek liko kitai eilei?",
+      "why": "Pirma eilė pilna, joje 5 kubeliai. Likę 3 eina į antrą eilę."
     },
     {
       "q": "Kodėl dešimtukas patogus?",
@@ -80,7 +80,7 @@
     "offline": "Paimkite kiaušinių dėtuvę (10 vietų) ir pupeles. Uždarykite kelias vietas — vaikas sako, kiek liko ir kiek trūksta.",
     "misconceptions": [
       "Vaikai skaičiuoja po vieną net tada, kai kiekį galima atpažinti akimis — verta skatinti „pažiūrėk ir pasakyk“.",
-      "„Pusė“ painiojama su „bet kokia dalis“.",
+      "Vaikas pildo antrą eilę, kol pirma dar nepilna. Tada nebeaišku, kiek jau yra.",
       "Dešimtukas painiojamas su skaičiumi 10 kaip simboliu — modelis padeda susieti."
     ]
   },

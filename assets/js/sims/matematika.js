@@ -111,6 +111,9 @@ const desimtukas = {
     const grid = stage.querySelector("#dt-grid");
     const msg = stage.querySelector("#dt-msg");
     const filled = new Set();
+    /* Eilės ilgis — dešimtukas visada dvi eilės po penkis. Būtent eilė, o ne
+       „pusė“, yra 1 klasės sąvoka: penki ir dar penki yra dešimt. */
+    const rowLen = Math.min(5, cells);
 
     for (let i = 0; i < cells; i += 1) {
       const b = document.createElement("button");
@@ -127,10 +130,16 @@ const desimtukas = {
 
     function update() {
       const n = filled.size;
+      const inFirstRow = [...filled].filter((i) => i < rowLen).length;
       api.readout(`${n} iš ${cells}. Trūksta ${cells - n}.`);
       if (n === cells) { msg.textContent = "Pilnas dešimtukas! Dabar atimk 3 — kas lieka?"; api.progress({ correct: true }); api.speak("Dešimt. Puiku!"); }
-      else if (n === Math.ceil(cells / 2)) { msg.textContent = "Pusė dešimtuko — penki. Kaip dar gali pasakyti penkis?"; }
-      else { msg.textContent = "Spausk langelius ir skaičiuok. Kiek trūksta iki 10?"; }
+      else if (inFirstRow === rowLen) {
+        msg.textContent = n === rowLen
+          ? "Pirma eilė pilna — penki. Kiek telpa į antrą?"
+          : "Pirma eilė pilna. Kiek yra antroje eilėje?";
+      }
+      else if (n === rowLen) { msg.textContent = "Penki langeliai pilni, penki tušti. Penki ir penki — visada dešimt."; }
+      else { msg.textContent = "Pildyk pirmą eilę, tada antrą. Kiek trūksta iki 10?"; }
     }
 
     controls.querySelector("#dt-clear").addEventListener("click", () => {

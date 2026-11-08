@@ -7,17 +7,17 @@
   "minutes": 9,
   "outcomes": [
     "Skiriu aukštą garsą nuo garsaus ir paaiškinu skirtumą.",
-    "Keisdamas vieną savybę pasakau, kad kita liko tokia pati.",
-    "Palyginu du garsus ir nusakau, kuris skamba aukščiau."
+    "Pakeičiu vieną savybę ir pasakau, kad kita liko tokia pati.",
+    "Palyginu du garsus ir pasakau, kuris skamba aukščiau."
   ],
   "concept": {
     "title": "Dvi atskiros savybės",
-    "big_idea": "Garsas gali būti žemas arba aukštas. Garsas gali būti tylus arba garsus. Tai dvi atskiros savybės: pakeitus vieną, kita nepasikeičia.",
+    "big_idea": "Garsas gali būti žemas arba aukštas. Garsas gali būti tylus arba garsus. Tai dvi atskiros savybės: kai pakeiti vieną, kita nepasikeičia.",
     "steps": [
-      "Paklausyk žemo garso, paskui aukšto. Garsumas tebūna toks pat.",
+      "Paklausyk žemo garso, paskui aukšto. Garsumą palik tokį pat.",
       "Dabar keisk tik garsumą. Aukštis nepasikeis.",
-      "Aukštas garsas nebūtinai garsus. Tylus garsas gali būti labai aukštas.",
-      "Mažas varpelis skamba aukščiau, didelis — žemiau."
+      "Aukštas garsas gali būti tylus. Tylus garsas gali būti labai aukštas.",
+      "Mažas varpas skamba aukščiau nei didelis."
     ],
     "example": "Paukštis cypsi aukštai ir tyliai. Didelis varpas dūzgia žemai ir garsiai."
   },
@@ -45,14 +45,14 @@
   },
   "tasks": [
     {
-      "q": "Pakėlei aukštį, o garsumo ratuko nelietei. Kas pasikeitė?",
+      "q": "Aukštį pakėlei, o garsumo nekeitei. Kas pasikeitė?",
       "options": [
         "Garsas tapo garsesnis",
         "Garsas tapo aukštesnis",
         "Garsas visai nutilo"
       ],
       "answer": 1,
-      "hint": "Prisimink, kurį valdiklį judinai.",
+      "hint": "Prisimink, kurį mygtuką spaudei.",
       "why": "Aukštis kilo, o garsumas liko toks pat."
     },
     {
@@ -63,11 +63,11 @@
         "Garsumas"
       ],
       "answer": 2,
-      "hint": "Paklausyk, kas kinta, kai nata lieka ta pati.",
-      "why": "Toje pačioje natoje kinta tik garsumas."
+      "hint": "Paklausyk, kas keičiasi, kai nata lieka ta pati.",
+      "why": "Toje pačioje natoje keičiasi tik garsumas."
     },
     {
-      "q": "Vienas šuniukas loja aukštai ir tyliai. Kitas — žemai ir garsiai. Kuris loja žemiau?",
+      "q": "Vienas šuniukas loja aukštai ir tyliai. Kitas loja žemai ir garsiai. Kuris loja žemiau?",
       "options": [
         "Pirmas",
         "Antras",
@@ -78,19 +78,19 @@
       "why": "Antras loja žemai, nors ir garsiai."
     },
     {
-      "q": "Mažas varpelis ir didelis varpas skamba vienodai garsiai. Kuris skambės aukščiau?",
+      "q": "Du varpai skamba vienodai garsiai. Vienas mažas, kitas didelis. Kuris skambės aukščiau?",
       "options": [
-        "Mažas varpelis",
+        "Mažas varpas",
         "Didelis varpas",
         "Abu vienodai"
       ],
       "answer": 0,
       "hint": "Palygink, kaip skamba mažas ir didelis daiktas.",
-      "why": "Mažesnis varpelis skamba aukščiau, nors garsumas toks pat.",
+      "why": "Mažesnis varpas skamba aukščiau, nors garsumas toks pat.",
       "optional": true
     }
   ],
-  "reflect": "Pagalvok apie du garsus, kuriuos šiandien girdėjai. Kuris buvo aukštesnis? Kuris garsesnis? Papasakok.",
+  "reflect": "Prisimink du garsus, kuriuos šiandien girdėjai. Kuris buvo aukštesnis, o kuris garsesnis? Papasakok.",
   "teacher": {
     "goal": "Atskirti garso aukštį nuo garsumo ir pajusti, kad tai dvi nepriklausomos savybės: pakeitus vieną, kita nesikeičia.",
     "prompt": "Ar garsus garsas visada būna aukštas? Kaip tai patikrintum?",

@@ -3,22 +3,22 @@
   "grade": 1,
   "strand": "pasaulio-pazinimas",
   "title": "Nuožulnioji plokštuma: kas lemia greitį",
-  "subtitle": "Greitį keičia plokštumos aukštis, o ne daikto svoris",
+  "subtitle": "Greitį keičia plokštumos aukštis, o ne rutulio svoris",
   "minutes": 9,
   "outcomes": [
     "Nurodau, kad nuo aukštesnės plokštumos rutulys rieda greičiau.",
-    "Paaiškinu, kad vienodo dydžio rutuliai atrieda beveik kartu, nors sveria skirtingai."
+    "Paaiškinu, kodėl rutuliai atrieda beveik kartu, nors sveria skirtingai."
   ],
   "concept": {
     "title": "Kas keičia greitį",
     "big_idea": "Rutulys nuo aukštesnės plokštumos rieda greičiau. Du vienodo dydžio rutuliai atrieda beveik kartu, nors vienas sunkesnis.",
     "steps": [
-      "Pasirink, kuris rutulys, tavo manymu, atriedės pirmas.",
+      "Pirma spėk, kuris rutulys atriedės pirmas.",
       "Spausk „Leisk abu“ ir stebėk. Abu rutuliai atrieda beveik kartu.",
-      "Pasirink „Aukšta“ ir vėl leisk abu. Dabar jie atrieda greičiau.",
-      "Pasirink „Žema“ ir palygink. Abu rutuliai atrieda lėčiau."
+      "Pasirink „Aukšta“ ir vėl leisk abu. Dabar rutuliai atrieda greičiau negu prieš tai.",
+      "Pasirink „Žema“ ir palygink. Dabar rutuliai atrieda lėčiau negu prieš tai."
     ],
-    "example": "Rogės nuo statesnio kalno įsibėgėja greičiau nei nuo lėkšto."
+    "example": "Rogės nuo statesnio kalno įsibėgėja greičiau nei nuo lėkšto kalno."
   },
   "sim": {
     "component": "nuozulnioji-plokstuma",

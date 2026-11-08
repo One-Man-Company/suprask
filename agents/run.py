@@ -743,16 +743,25 @@ def revert(files: list[str]) -> None:
     tracked = [f for f in files if git("ls-files", "--error-unmatch", f).returncode == 0]
     for i in range(0, len(tracked), 400):
         git("checkout", "--", *tracked[i:i + 400])
+    # NEĮTRACKINTŲ failų NETRINAMĖ: anksčiau revert() ištrindavo bet ką, kas
+    # nebuvo git'e — taip dingo `agents/pause.py` (žmogaus kurtas failas) po
+    # atmesto paleidimo. Dabar jie perkeliami į agents/work/<run>/reverted/.
     untracked = [f for f in files if f not in tracked]
-    for f in untracked:
-        if f.startswith(("agents/log/", "agents/work/")):
-            continue
-        target = ROOT / f
-        try:
-            if target.is_file():
-                target.unlink()
-        except OSError:
-            pass
+    if untracked:
+        # run_id išvedamas iš katalogo, kurį kvietėjas jau turi; čia naudojam
+        # laiko žymą, kad niekas nebūtų prarasta net be konteksto.
+        rescue = ROOT / "agents" / "work" / "_reverted" / dt.datetime.now().strftime("%Y%m%dT%H%M%S")
+        for f in untracked:
+            if f.startswith(("agents/log/", "agents/work/")):
+                continue
+            target = ROOT / f
+            try:
+                if target.is_file():
+                    dest = rescue / f
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    target.replace(dest)
+            except OSError:
+                pass
 
 
 def mark_implemented(proposal_id: int | None, files: list[str], commit_sha: str) -> bool:

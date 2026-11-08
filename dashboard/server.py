@@ -38,7 +38,16 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import db  # noqa: E402
 import scope as grade_scope  # noqa: E402
 import profiles as prof  # noqa: E402
-import pause as system_pause  # noqa: E402
+try:
+    import pause as system_pause  # noqa: E402
+except ImportError:  # dashboard neturi kristi dėl trūkstamo pagalbinio modulio
+    import types
+    system_pause = types.SimpleNamespace(
+        status=lambda: {"paused": False, "until": None, "days_left": 0, "set_at": None,
+                        "note": "modulis agents/pause.py nerastas", "default_date": None},
+        set_until=lambda *a, **k: (_ for _ in ()).throw(RuntimeError("trūksta agents/pause.py")),
+        clear=lambda: None,
+    )
 import garsas  # noqa: E402
 import check_published  # noqa: E402
 

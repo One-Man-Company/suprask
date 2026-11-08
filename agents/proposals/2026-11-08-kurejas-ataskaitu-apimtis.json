@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 118,
+  "created": "2026-11-08T05:37:00+02:00",
+  "type": "struktura",
+  "title": "Ataskaitos dydis neribotas: 139 failai jau 2,78 MB, didžiausias — 84 KB",
+  "body": "Nuo #484 ataskaitos patenka į git, todėl jų dydis tampa repo dydžiu. Išmatavau: 139 `.md` failai `agents/log/` užima 2 915 205 baitus (2,78 MB), didžiausias — 84 KB, vidutinis — apie 21 KB; `.git` klone po visų ataskaitų commit'o išaugo 48 MB → 49 MB. `agents/run.py:971-980` rašo visą modelio `stdout` be jokios ribos, o didžiąją dalį sudaro įrankių išklotinės, ne išvados. Pagal dabartinį tempą (10–15 paleidimų per parą po ~20 KB) per metus susidarytų ~90–110 MB repo, kurį GitHub Pages publikuoja kartu su svetaine. Siūloma: į ataskaitą rašyti pradžią (~6 KB) ir pabaigą (~12 KB), o visą tekstą palikti `agents/work/` (ignoruojama) arba `runs.db` lauke `out`, bei pridėti `check_agents.py` įspėjimą, jei ataskaita didesnė nei 32 KB. Tai nekeičia audito pėdsako — ką vaidmuo padarė ir ką išmatavo, lieka ataskaitos pradžioje ir išvadose.",
+  "target": "agents/run.py",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "matavimas 2026-11-08: du -sb agents/log/ → 2 915 205 baitų; 139 .md failai; didžiausias agents/log/kurejas-2026-11-08T0201.md — 84 KB",
+    "agents/run.py:971-980 — log_path.write_text rašo visą `out` be ribos",
+    "git clone + git add agents/log && commit: .git 48M → 49M",
+    ".gitignore:22-23 — ataskaitos dabar įtraukiamos į repo (#484), todėl augimas realus"
+  ]
+}

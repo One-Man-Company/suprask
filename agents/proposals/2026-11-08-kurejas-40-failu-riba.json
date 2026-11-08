@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 118,
+  "created": "2026-11-08T05:36:00+02:00",
+  "type": "struktura",
+  "title": "`changed_files()[:40]` tyliai nukerta migraciją: 101 ataskaita lieka už commito",
+  "body": "Kai `.gitignore` nustojo slėpti `agents/log/*.md` (#484), paaiškėjo antra to paties kelio kliūtis. `changed_files()` (`agents/run.py:456-463`) grąžina ne daugiau kaip 40 kelių, o `publish()` komituoja būtent juos — todėl migracijos metu į commit'ą pateko 38 ataskaitos, o 101 liko neužkomituota. Išmatavau klone su tikru turiniu: `git status --porcelain` — 141 eilutė, po `[:40]` — 40, `.gitignore` į 40-uką patenka (pirmoji eilutė), tad publikavimas ir pasiūlymo uždarymas suveikia, bet likusios ataskaitos nukeliauja į kito vaidmens `ensure_clean()` `[sistema]` commit'ą — kitaip, nei nori #484 (ataskaita keliauja su savo paleidimo commit'u). Siūloma: neriboti sąrašo ilgio (jis jau ribojamas `git add -- <paths>` tikrumo filtru) arba bent į `detail` įrašyti „N failų liko už ribos“, kad tyli dingimo vieta būtų matoma. Kol kas vienkartinis užbaigimas: `python3 agents/run.py leidejas --publish-only` — tas kelias naudoja `changed_list()` be ribos (`agents/run.py:867`).",
+  "target": "agents/run.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "agents/run.py:456-463 — changed_files() grąžina parse_porcelain(after)[:40]",
+    "agents/run.py:770 — publish() komituoja tik perduotus files; kiti lieka darbinėje kopijoje",
+    "matavimas klone (2026-11-08 05:33): porcelain 141 eilutė → [:40] 40 (38 ataskaitos + .gitignore + dashboard/README.md), liko 101",
+    "agents/run.py:867 — --publish-only naudoja changed_list() be [:40] ribos",
+    ".gitignore:22-23 — ataskaitos dabar trackinamos, todėl migracija reali, ne hipotetinė"
+  ]
+}

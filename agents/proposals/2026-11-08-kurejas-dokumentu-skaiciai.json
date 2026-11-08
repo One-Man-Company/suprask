@@ -1,0 +1,16 @@
+{
+  "role": "kurejas",
+  "run_id": 118,
+  "created": "2026-11-08T05:38:00+02:00",
+  "type": "atitiktis",
+  "title": "CI vartai raudoni: 12 dokumentų skaičių neatitikimų (27 moduliai dokumente, 28 failuose)",
+  "body": "`python3 scripts/check_docs_facts.py` grąžina 12 klaidų ir išeigos kodą 1, o CI (`.github/workflows/validate.yml`, žingsnis „Dokumentų skaičiai“) šį skriptą paleidžia kiekviename PR — vadinasi, vartai raudoni ne dėl turinio, o dėl pasenusių skaičių. Neatitinka: `README.md:12` (27 moduliai / 27 simuliacijos, failuose 28), `README.md:121` ([5,27,27,117] vs [5,28,28,121]), `README.md:16` (lietuvių kalbos 3 vs 4 moduliai, trūksta „Kaip žmonės sveikinasi“, garso 427/854 vs 433/866), `docs/ARCHITEKTURA.md:178`, `research/wiki/grades/01/index.md:38`, `research/wiki/grades/README.md:7`. Siūloma: skaičius imti iš `content/lt/grade-01/index.json`, SIMS registrų ir `assets/audio/lt/manifest.json` (skriptas jau moka tai patikrinti) ir įrašyti juos vienu pataisymu per visas 5 vietas, o ne po vieną. Kol kas tai latentinė bėda: bėgiklis stumia tiesiai į `main`, o `push` CI paleidžiamas tik `content/`, `assets/`, `scripts/`, `docs/`, `README.md` keliui, todėl agentų commit'ai šio varto nemato; bet pirmas žmogaus PR bus raudonas be priežasties.",
+  "target": "README.md",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "python3 scripts/check_docs_facts.py → exit 1, 12 klaidų (2026-11-08 05:34 išvestis ataskaitoje)",
+    ".github/workflows/validate.yml — žingsnis „Dokumentų skaičiai“ (pull_request: visi)",
+    "README.md:12,16,121; docs/ARCHITEKTURA.md:178; research/wiki/grades/01/index.md:38; research/wiki/grades/README.md:7"
+  ]
+}

@@ -38,6 +38,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import db  # noqa: E402
 import scope as grade_scope  # noqa: E402
 import profiles as prof  # noqa: E402
+import pause as system_pause  # noqa: E402
 import garsas  # noqa: E402
 import check_published  # noqa: E402
 
@@ -230,6 +231,8 @@ class Handler(BaseHTTPRequestHandler):
                 text = "(dienoraščio dar nėra)"
             entries = [e for e in text.split("\n## ") if e.strip()]
             return self._json({"entries": ["## " + e for e in entries[-3:]]})
+        if path == "/api/pause":
+            return self._json(system_pause.status())
         if path == "/api/grades":
             return self._json(grade_scope.report())
         if path == "/api/proposals":
@@ -308,6 +311,19 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 garsas.set_flag(text, status)
                 return self._json({"ok": True})
+            except Exception as exc:  # noqa: BLE001
+                return self._json({"ok": False, "error": str(exc)})
+        if self.path == "/api/pause":
+            try:
+                action = str(payload.get("action") or "").strip().lower()
+                if action in ("resume", "start", "run"):
+                    system_pause.clear()
+                    return self._json({"ok": True, "status": system_pause.status()})
+                until = str(payload.get("until") or "").strip()
+                system_pause.set_until(until, str(payload.get("note") or ""))
+                return self._json({"ok": True, "status": system_pause.status()})
+            except ValueError as exc:
+                return self._json({"ok": False, "error": f"bloga data: {exc}"})
             except Exception as exc:  # noqa: BLE001
                 return self._json({"ok": False, "error": str(exc)})
         if self.path == "/api/grades":
@@ -444,6 +460,24 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 </header>
 <main>
   <section class="grid" id="stats"></section>
+
+  <section class="card" id="pauseCard">
+    <h2>Agentų sistema</h2>
+    <div class="row" style="margin-bottom:10px">
+      <span id="pauseState" class="badge">—</span>
+      <span class="muted" id="pauseNote" style="flex:1"></span>
+    </div>
+    <div class="row">
+      <label class="muted" for="pauseUntil" style="font-size:12px">Pristabdyti iki</label>
+      <input type="date" id="pauseUntil" />
+      <button id="pauseBtn">Pristabdyti</button>
+      <button id="resumeBtn" class="primary">Paleisti dabar</button>
+    </div>
+    <p class="muted" style="margin:10px 0 0;font-size:12px;line-height:1.5">
+      Pauzė galioja <b>iki nurodytos dienos pradžios</b> — tą dieną sistema jau dirba.
+      „Paleisti dabar“ panaikina pauzę iš karto, net jei data dar neatėjo.
+    </p>
+  </section>
 
   <section class="card" id="gradesCard">
     <h2>Klasės ir minimalios temos</h2>
@@ -638,6 +672,37 @@ async function loadPublish(){
   } catch(e) { setText("#pubBig",  "—"); }
 }
 
+async function loadPause(){
+  try {
+    const p = await j("/api/pause");
+    const state = $("#pauseState"), note = $("#pauseNote"), date = $("#pauseUntil");
+    if (!date.value) date.value = p.default_date || p.until || "";
+    if (p.paused) {
+      state.textContent = `pristabdyta iki ${p.until} · liko ${p.days_left} d.`;
+      state.style.background = "rgba(240,180,41,.18)"; state.style.color = "var(--warn)";
+      note.textContent = p.set_at ? `nustatyta ${p.set_at.replace("T", " ")}` : "";
+    } else {
+      state.textContent = p.until ? `veikia (pauzė baigėsi ${p.until})` : "veikia";
+      state.style.background = "rgba(63,191,143,.18)"; state.style.color = "var(--ok)";
+      note.textContent = "";
+    }
+  } catch (e) { $("#pauseState").textContent = "klaida: " + e.message; }
+}
+
+async function setPause(){
+  const until = $("#pauseUntil").value;
+  if (!until) { $("#pauseNote").textContent = "Pasirink datą"; return; }
+  const r = await j("/api/pause", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({until})});
+  $("#pauseNote").textContent = r.ok ? "pristabdyta ✓" : ("Klaida: " + (r.error || ""));
+  loadPause();
+}
+
+async function resumeSystem(){
+  const r = await j("/api/pause", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({action:"resume"})});
+  $("#pauseNote").textContent = r.ok ? "paleista ✓" : ("Klaida: " + (r.error || ""));
+  loadPause();
+}
+
 async function loadJournal(){
   try {
     const d = await j("/api/journal");
@@ -705,11 +770,13 @@ async function saveGrade(el){
 }
 
 async function loadAll(){
-  try { await loadOverview(); await Promise.all([loadRuns(), loadProposals(), loadGrades(), loadJournal()]);
+  try { await loadOverview(); await Promise.all([loadRuns(), loadProposals(), loadGrades(), loadJournal(), loadPause()]);
     $("#updated").textContent = "atnaujinta " + new Date().toLocaleTimeString("lt-LT");
   } catch(e){ $("#updated").textContent = "klaida: " + e.message; }
 }
 
+$("#pauseBtn").onclick = setPause;
+$("#resumeBtn").onclick = resumeSystem;
 $("#refresh").onclick = loadAll;
 $("#roleFilter").onchange = loadRuns;
 $("#dClose").onclick = () => $("#detail").close();

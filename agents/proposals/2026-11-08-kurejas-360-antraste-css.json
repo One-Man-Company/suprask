@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 120,
+  "created": "2026-11-08T05:58:34+02:00",
+  "type": "ux",
+  "title": "360 px: trijų žaidimų modulių antraštė lūžta dviem eilutėmis — trūksta 7 px",
+  "body": "`check_view.py` dabar tikrina ir 360 px (#3729), ir pirmas pilnas bėgimas parodė tris raudonus modulius: 11-saziningas-dalijimasis, 12-bendradarbiavimo-tiltas ir 13-akmenelis-popierius. Visi trys priklauso krypčiai „Sąžiningumas ir žaidimai“, o ties 390 px jie yra žali. Išmatavau 360 px: 328 px pločio `.eyebrow` eilutėje krypties pavadinimas užima 245 px, skirtukas 11 px, žyma „10 min.“ 68 px, tarpai 11 px — iš viso 335 px, t. y. 7 px daugiau, negu telpa. Todėl žyma nusikelia į antrą eilutę, o antraštės aukštis tampa 45 px vietoj 20 px. Pati žyma nesusispaudžia (`white-space: nowrap`, aukščio 20 px), tad tai ne LL-12, o LL-05 eilutės lūžimas. Taisyti reikia ne taisyklę (#4348 siūlo ją atlaisvinti), o 7 px trūkumą: žondas rodo, kad sumažinus `.eyebrow` `letter-spacing` nuo .12em iki .06em tik ≤360 px pločiui, ta pati eilutė tampa 20 px aukščio, o žyma lieka pirmoje eilutėje (krypties pavadinimas 226 px, žyma 62 px). Siūlau tą vieną media užklausą `assets/css/main.css` faile ir palikti `eyebrowLines <= 1` kaip kietą taisyklę visuose plotuose. Krypties pavadinimo trumpinti nereikia: lūžtų bet kuris ilgesnis pavadinimas, o ne šis vienas.",
+  "target": "assets/css/main.css",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "scripts/check_view.py — 84 patikros (28 maršrutai × 3 plotai), 3 problemos, visos @360px",
+    "agents/log/kurejas-2026-11-08T0558.md §4 — matavimas: 328 px eilutė, 245 + 11 + 68 + 11 px = 335 px, antraštė 45 px @360 ir 20 px @390",
+    "docs/KURINIO-STANDARTAS.md:98 — „Veikia 360 px pločio ekrane“",
+    "assets/css/main.css:453–456 — `.eyebrow { display:flex; flex-wrap:wrap }`, `.nowrap`, komentaras „ilgas krypties pavadinimas neturi nustumti „· 8 min.“ į antrą eilutę“",
+    "agents/proposals/2026-11-08-kurejas-360-eyebrow-signalas.json (#4348) — atmetamas: siūlo leisti lūžimą, o ne pataisyti 7 px"
+  ]
+}

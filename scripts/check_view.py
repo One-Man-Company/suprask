@@ -3,18 +3,22 @@
 Ką vaikas realiai mato: modulio patikra tikroje naršyklėje.
 
 Skirta nuo `check_ui.py`: tas skaito CSS/HTML failus, o šis **atidaro puslapį**
-trimis plotais (desktop / planšetė / telefonas) ir matuoja, ką vaikas iš tikrųjų
-gauna: ar tekstas telpa, ar nėra horizontalios slinkties, ar mygtukai pakankami,
-ar užduotys matomos, ar simuliacija įsikėlė, ar garsas prasideda.
+keliais plotais (desktop / planšetė / telefonas / mažas telefonas) ir matuoja, ką
+vaikas iš tikrųjų gauna: ar tekstas telpa, ar nėra horizontalios slinkties, ar
+mygtukai pakankami, ar užduotys matomos, ar simuliacija įsikėlė, ar garsas prasideda.
 
 Papildomai simuliuoja **Brave skydus**: blokuoja `localStorage`, `crypto.subtle`
 ir `speechSynthesis` — būtent tai anksčiau laužė puslapį.
 
 Naudojimas:
-    python3 scripts/check_view.py                       # visa 1 klasė, trys plotai
+    python3 scripts/check_view.py                       # visa 1 klasė, trys plotai (su 360 px)
     python3 scripts/check_view.py --module 15-laikas
     python3 scripts/check_view.py --base http://127.0.0.1:8987/
     python3 scripts/check_view.py --json > view.json
+
+Plotai: desktop 1440, tablet 1024, phone 390 ir small 360 (standarto §4.6 riba).
+Numatytasis sąrašas yra desktop,phone,small — 360 px tikrinamas visada, nes jo
+reikalauja ir kūrėjo baigties sąlyga, ir `docs/KURINIO-STANDARTAS.md` §4.6.
 """
 
 from __future__ import annotations
@@ -32,6 +36,8 @@ VIEWPORTS = {
     "desktop": {"width": 1440, "height": 900},
     "tablet": {"width": 1024, "height": 768},
     "phone": {"width": 390, "height": 844},
+    # 360 px — pigiausių Android telefonų plotis ir standarto §4.6 riba.
+    "small": {"width": 360, "height": 780},
 }
 
 BRAVE_INIT = """
@@ -181,7 +187,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default="https://one-man-company.github.io/suprask/")
     ap.add_argument("--module", default="")
-    ap.add_argument("--viewports", default="desktop,phone")
+    ap.add_argument("--viewports", default="desktop,phone,small")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
 
@@ -198,7 +204,16 @@ def main() -> int:
         print("KLAIDA: nerasta maršrutų", file=sys.stderr)
         return 2
 
-    names = [v.strip() for v in args.viewports.split(",") if v.strip() in VIEWPORTS]
+    names = [v.strip() for v in args.viewports.split(",") if v.strip()]
+    unknown = [v for v in names if v not in VIEWPORTS]
+    if unknown:
+        # Tylus nežinomo ploto numetimas ataskaitoje atrodytų kaip patikrintas
+        # plotis (LL-37), todėl klaida sakoma garsiai, o ne praleidžiama.
+        print(f"KLAIDA: nežinomi plotai {', '.join(unknown)}; galimi: {', '.join(VIEWPORTS)}", file=sys.stderr)
+        return 2
+    if not names:
+        print(f"KLAIDA: --viewports tuščias; galimi: {', '.join(VIEWPORTS)}", file=sys.stderr)
+        return 2
     chrome = os.environ.get("CHROME_BIN") or str(pathlib.Path.home() / ".local/bin/google-chrome")
 
     results: list[dict] = []
@@ -215,10 +230,18 @@ def main() -> int:
         browser.close()
 
     bad = [r for r in results if not r.get("ok")]
+    plane_list = ", ".join(f"{n} {VIEWPORTS[n]['width']}px" for n in names)
     if args.json:
-        print(json.dumps({"base": args.base, "checked": len(results), "problems": bad, "all": results}, ensure_ascii=False))
+        print(json.dumps({
+            "base": args.base,
+            "viewports": {n: VIEWPORTS[n] for n in names},
+            "checked": len(results),
+            "problems": bad,
+            "all": results,
+        }, ensure_ascii=False))
     else:
-        print(f"Patikrinta: {len(results)} (maršrutai × plotai) · problemos: {len(bad)}")
+        print(f"Plotai: {plane_list}")
+        print(f"Patikrinta: {len(results)} (maršrutų: {len(routes)} · plotų: {len(names)}) · problemos: {len(bad)}")
         for r in bad:
             bits = []
             if r.get("overflow", 0) > 1:

@@ -6,19 +6,19 @@
   "subtitle": "Sudėti ir atimti reiškia judėti tiese",
   "minutes": 9,
   "outcomes": [
-    "Rodau skaičių skaičių tiesėje ir judu ja į dešinę arba į kairę.",
-    "Paaiškinu, kad pridėti — reiškia judėti į dešinę, o atimti — į kairę.",
+    "Parodau skaičiaus vietą skaičių tiesėje. Judu į dešinę ir į kairę.",
+    "Paaiškinu, kad pridėti reiškia judėti į dešinę. Atimti reiškia judėti į kairę.",
     "Suskaičiuoju, kiek žingsnių liko iki tikslo."
   ],
   "concept": {
     "title": "Skaičiai turi savo vietas",
-    "big_idea": "Skaičių tiesė — tai kelias, kuriame kiekvienas skaičius turi savo vietą. Sudėtis — ėjimas į priekį, atimtis — atgal.",
+    "big_idea": "Skaičių tiesė — tai kelias, kuriame kiekvienas skaičius turi savo vietą. Pridėti reiškia eiti į dešinę, atimti reiškia eiti į kairę.",
     "steps": [
       "Rask skaičių 5. Jis yra tarp 4 ir 6.",
-      "Pridėti 3 — tai trys žingsniai į dešinę: 5 → 6 → 7 → 8.",
-      "Atimti 2 — du žingsniai į kairę: 8 → 7 → 6."
+      "Pridėk 3 ir eik į dešinę tris kartus: 5 → 6 → 7 → 8.",
+      "Atimk 2 ir eik į kairę du kartus: 8 → 7 → 6."
     ],
-    "example": "Pradėk nuo 7 ir pridėk 3. Žingsniai: 7 → 8 → 9 → 10. Nereikia mintinai — tiesė parodo."
+    "example": "Pradėk nuo 7 ir pridėk 3. Žingsniai: 7 → 8 → 9 → 10. Tiesė parodo kelią, todėl mintinai skaičiuoti nereikia."
   },
   "sim": {
     "component": "skaiciu-tiese",
@@ -42,19 +42,19 @@
         "6"
       ],
       "answer": 0,
-      "hint": "Neskaičiuok paties 8 kaip pirmo žingsnio. Du žingsniai — du nauji skaičiai.",
+      "hint": "Neskaičiuok 8 kaip pirmo žingsnio. Du žingsniai duoda du naujus skaičius.",
       "why": "8 + 2 = 10."
     },
     {
-      "q": "Atimti reiškia judėti…",
+      "q": "Kuria kryptimi judi skaičių tiesėje, kai atimi?",
       "options": [
-        "į dešinę",
-        "į kairę",
-        "stovėti vietoje"
+        "Į dešinę",
+        "Į kairę",
+        "Niekur"
       ],
       "answer": 1,
-      "hint": "Skaičiai mažėja — kuria kryptimi?",
-      "why": "Atimant skaičius mažėja, todėl judame į kairę."
+      "hint": "Pagalvok, kurioje pusėje stovi mažesni skaičiai.",
+      "why": "Kai atimi, skaičius mažėja, todėl eini į kairę."
     },
     {
       "q": "Kuris skaičius yra tarp 11 ir 13?",
@@ -64,7 +64,7 @@
         "12"
       ],
       "answer": 2,
-      "hint": "Rask 11, tada vieną žingsnį į dešinę.",
+      "hint": "Rask 11 ir eik vieną žingsnį į dešinę.",
       "why": "12 yra tarp 11 ir 13."
     },
     {
@@ -75,12 +75,12 @@
         "12"
       ],
       "answer": 0,
-      "hint": "Keturi žingsniai į kairę nuo 15.",
+      "hint": "Skaičiuok keturis žingsnius į kairę nuo 15.",
       "why": "15 − 4 = 11.",
       "optional": true
     }
   ],
-  "reflect": "Sugalvok judėjimą skaičių tiese. Nuo kurio skaičiaus pradėsi ir kiek žingsnių eisi? Kur atsidursi? Pasakyk draugui — jis turi atspėti tavo kelią.",
+  "reflect": "Sugalvok savo kelią skaičių tiese ir papasakok jį draugui. Nuo kurio skaičiaus pradedi ir kur atsiduri?",
   "teacher": {
     "goal": "Skaičių tiesės kaip modelio naudojimas sudėčiai ir atimčiai iki 20 (programoje — iki 100).",
     "prompt": "Kodėl sudėdami einame į dešinę?",

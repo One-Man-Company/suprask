@@ -11,6 +11,8 @@ agents/runs.db
 agents/runs.db-wal
 agents/runs.db-shm
 agents/.run.lock
+agents/.run.*.lock
+agents/.git.lock
 agents/work/
 # Agentų ataskaitos — audito pėdsakas, todėl JOS ĮTRAUKIAMOS į repo (#484).
 # Iki 2026-11-08 čia buvo `agents/log/*`, tad `git ls-files agents/log/` rodė

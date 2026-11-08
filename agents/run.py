@@ -453,6 +453,22 @@ def parse_porcelain(text: str) -> list[str]:
     return files
 
 
+RUNTIME_RE = re.compile(r"^agents/\.(?:git|run[^/]*)\.lock$")
+
+
+def is_runtime_artifact(rel: str) -> bool:
+    """Ar kelias yra vykdymo būsena, o ne turinys.
+
+    Užraktų failai (`agents/.run.<role>.lock`, `agents/.git.lock`) sukuriami
+    kiekvieną paleidimą ir visada tušti — jie nieko nesako apie pakeitimą.
+    2026-11-08 būtent toks tuščias `agents/.run.ideator.lock` pateko į
+    `[sistema]` commit'ą e4a924b, o su nauja žinute jis atrodytų kaip turinys,
+    kurį kažkas pakeitė. Todėl jie nepatenka nei į `changed_files()`, nei į
+    likučio commit'ą (LL-45).
+    """
+    return bool(RUNTIME_RE.match(rel))
+
+
 def changed_files(before: str) -> list[str]:
     """Failai, kuriuos pakeitė ŠIS paleidimas (ne buvę prieš jį).
 
@@ -472,7 +488,8 @@ def changed_files(before: str) -> list[str]:
     except Exception:  # noqa: BLE001
         return []
     before_paths = set(parse_porcelain(before))
-    return [f for f in parse_porcelain(after) if f not in before_paths]
+    return [f for f in parse_porcelain(after)
+            if f not in before_paths and not is_runtime_artifact(f)]
 
 
 def git_snapshot() -> str:
@@ -517,9 +534,10 @@ def stage(paths: list[str], chunk: int = 400) -> None:
 
 
 def changed_list() -> list[str]:
-    """Visi pakeisti ir nauji failai (be ignoruojamų), po vieną failą eilutėje."""
+    """Visi pakeisti ir nauji failai (be ignoruojamų ir be užraktų)."""
     try:
-        return parse_porcelain(git("status", "--porcelain", "-uall").stdout)
+        return [f for f in parse_porcelain(git("status", "--porcelain", "-uall").stdout)
+                if not is_runtime_artifact(f)]
     except Exception:  # noqa: BLE001
         return []
 
@@ -678,24 +696,89 @@ def _merge_json_union(rel: str, path: Path) -> bool:
     return True
 
 
+def active_role_locks(exclude: str = "") -> list[str]:
+    """Vaidmenys, kurių paleidimas šiuo metu vyksta (jų užraktas laikomas).
+
+    Užraktas `agents/.run.<role>.lock` laikomas visą paleidimą (nuo `main()`
+    iki `finally`), todėl jo būsena — vienintelis patikimas požymis, kad kitas
+    vaidmuo dar dirba tame pačiame darbiniame kataloge.
+
+    Savas vaidmuo praleidžiamas (`exclude`): `flock` užraktas priklauso failo
+    aprašui, ne procesui, todėl bandymas užrakinti savo paties failą per antrą
+    deskriptorių atrodytų kaip svetimas užraktas.
+    """
+    active: list[str] = []
+    for other in sorted(ROLES):
+        if other == exclude:
+            continue
+        path = role_lock_file(other)
+        if not path.exists():  # neužrakintas paleidimas dar nesukūrė failo
+            continue
+        try:
+            with open(path, "a", encoding="utf-8") as fh:
+                try:
+                    fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except BlockingIOError:
+                    active.append(other)
+                else:
+                    fcntl.flock(fh, fcntl.LOCK_UN)
+        except OSError:
+            continue
+    return active
+
+
 def ensure_clean(role: str) -> str:
     """Prieš paleidimą darbinė kopija turi būti švari.
 
     Būtent nešvarūs likučiai iš ankstesnių paleidimų blokuodavo `git merge`
     („local changes would be overwritten“), todėl publikavimas krisdavo su
     `conflict`, o commit'ai likdavo neišstumti — 18 commit'ų, 3 moduliai.
+
+    Tačiau visi vaidmenys dalijasi VIENA darbine kopija, todėl „nešvaru“ dar
+    nereiškia „likutis“. 2026-11-08 `ideator` paleidimas šitaip pasisavino dar
+    nebaigtą kūrėjo darbą (`agents/run.py`, `research/wiki/guidelines/pamokos.md`)
+    į `[sistema]` commit'ą e4a924b: žinutė nebepasakė nei kas, nei kodėl, o
+    kūrėjo `changed_files()` po to teturėjo vieną ataskaitos failą (LL-45).
+    Todėl aktyvaus kito vaidmens atveju medis NELIEČIAMAS, o paleidimas gauna
+    aiškų pranešimą: sąžiningas `conflict` vėliau yra pigesnis už svetimą darbą
+    commit'e dabar.
     """
     try:
-        if not git("status", "--porcelain").stdout.strip():
+        if not git("status", "--porcelain", "-uall").stdout.strip():
             return ""
     except Exception:  # noqa: BLE001
         return ""
-    git("add", "-A")
-    # Neutralus prefiksas: tai NĖRA agento darbas, tik darbinės kopijos likutis.
-    # Anksčiau toks commit'as atrodė kaip agento indėlis ir klaidino git log.
-    if git("commit", "-m", f"[sistema] darbinės kopijos likutis prieš {role} paleidimą").returncode == 0:
-        return "sutvarkytas darbinės kopijos likutis (commit [sistema])"
-    return ""
+
+    # `git add` + `commit` privalo būti serializuoti su publikavimu: du vaidmenys
+    # gali pradėti tą pačią sekundę, o be užrakto jų indeksai susipina.
+    # Laukimas trumpas: likutis nėra skubus, o `publish()` gali laikyti užraktą
+    # ilgai (validacija + garso generavimas), todėl verčiau pranešti, o ne
+    # užblokuoti visą paleidimą.
+    try:
+        with git_lock(timeout=180):
+            dirty = [f for f in parse_porcelain(git("status", "--porcelain", "-uall").stdout)
+                     if not is_runtime_artifact(f)]
+            if not dirty:  # kol laukėme užrakto, kitas paleidimas jau sutvarkė medį
+                return ""
+            busy = active_role_locks(exclude=role)
+            if busy:
+                return (f"darbinė kopija nešvari ({len(dirty)} failų), bet dirba "
+                        f"{', '.join(busy)} — svetimo darbo nekomituoju, palieku jį "
+                        f"tam paleidimui")
+            stage(dirty)
+            listed = ", ".join(dirty[:12]) + (" …" if len(dirty) > 12 else "")
+            body = (f"Likutį rado „{role}“ paleidimas prieš pradėdamas savo darbą.\n\n"
+                    f"Kas: {len(dirty)} failų — {listed}\n"
+                    f"Kodėl likutis: nė vienas kitas vaidmuo nebuvo aktyvus "
+                    f"(`agents/.run.*.lock` neužimti), tad tai nutrūkusio ar rankinio "
+                    f"paleidimo likutis, o ne vykstantis darbas (LL-45).")
+            # Neutralus prefiksas: tai NĖRA agento darbas, tik darbinės kopijos likutis.
+            if git("commit", "-m", f"[sistema] darbinės kopijos likutis prieš {role} paleidimą",
+                   "-m", body).returncode == 0:
+                return f"sutvarkytas darbinės kopijos likutis ({len(dirty)} failų, commit [sistema])"
+            return ""
+    except TimeoutError:
+        return "darbinės kopijos likučio netvarkau: git užraktą laiko kitas paleidimas"
 
 
 

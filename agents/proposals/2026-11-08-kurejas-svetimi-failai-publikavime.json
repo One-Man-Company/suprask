@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 129,
+  "created": "2026-11-08T07:24:43+02:00",
+  "type": "struktura",
+  "title": "Kito vaidmens failai patenka į šio paleidimo PUBLIKAVIMĄ (antras pasisavinimo sluoksnis)",
+  "body": "Pasiūlymas #4998 sutvarkė tik paleidimo pradžią: `ensure_clean()` nebeima svetimo darbo. Lieka antras sluoksnis, kurio `ensure_clean()` nemato. Bėgiklis `before` nuotrauką daro paleidimo pradžioje (`agents/run.py:940`), o `changed_files(before)` pabaigoje grąžina VISKĄ, kas nuo tos akimirkos pasikeitė (`agents/run.py:472-496`) — ne tik tai, ką rašė šis vaidmuo. Jei per ideatoriaus 20 min. vyksmą kūrėjas (eilė gali dirbti iki 720 min., `ROLES['kurejas']['queue']`) įrašo pusiau parašytą modulio JSON, ideatoriaus `publish()` jį įtraukia į savo commit'ą ir žinutę. Pasekmės dvi: (a) pusiau parašytas turinys publikuojamas svetimo vaidmens vardu, (b) kai toks failas krenta validatoriuje, atmetamas VISAS ideatoriaus paleidimas, nors jo pačio darbas buvo geras — ir abu simptomai kaltina ne tą vaidmenį. Zondas tai patvirtina: `changed_files(before)` grąžino `['content/a-darbas.json', 'content/b-darbas.json']`, kur pirmasis priklauso kitam (aktyviam) vaidmeniui, o `agents/.run.ideator.lock` dėka žinome, kad jis tikrai dirba. Atribucijos iš failo turinio atkurti negalima, todėl siūlomas struktūrinis sprendimas: kiekvienas vaidmuo dirba savo `git worktree` (`agents/worktrees/<role>`), o publikavimas iš jo ir yra vienintelis kelias — tada „šio paleidimo failai“ sutampa su „šios darbinės kopijos pakeitimai“ ir laiko tarpas nebeturi reikšmės. Kol to nėra, pigiausias laikinas variantas: prieš `publish()` patikrinti `active_role_locks()` ir, jei kitas vaidmuo dirbo per šį paleidimą, į `detail` įrašyti įspėjimą „N failų galėjo būti kito vaidmens“, o ne tyliai priskirti juos sau.",
+  "target": "agents/run.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "zondas `probe_4998_layer2.py` (scratch): before nuotrauka → kitas vaidmuo rašo content/a-darbas.json → `changed_files(before)` = ['content/a-darbas.json', 'content/b-darbas.json'] — svetimas failas sąraše",
+    "agents/run.py:471-496 — changed_files() lygina tik laiko tarpą (before vs after), autoriaus nežymi",
+    "agents/run.py:940-941 — before = git_snapshot() imamas prieš modelio paleidimą, o publish() vyksta po jo",
+    "agents/run.py:113 `ROLES['kurejas']['queue']` max_minutes 720 vs `ideator` timeout 1800 s — vaidmenų vyksmai realiai persidengia",
+    "agents/log/sistemos-architektas-2026-11-07T2140.md:680 — tas pats pastebėtas anksčiau: „Du vaidmenys dirba viename darbiniame kataloge“"
+  ]
+}

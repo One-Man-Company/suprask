@@ -853,28 +853,66 @@ const gyvunuGrupes = {
    ledukas: tai paaiškina, kodėl garas virsta lašais.
    Ribos: puodas rodomas perpjautas (kitaip vandens nesimatytų), o
    vanduo ore lieka nepavaizduotas — tik žodžiu pasakome, kad jis ten.
-   Modelis neturi laikmačio: vienas paspaudimas = kelios minutės. */
+   Modelis neturi laikmačio: vienas paspaudimas = kelios minutės.
+
+   Trys žodžiai — Vanduo, Garas, Ledas — ateina iš modulio `sim.config.words`,
+   o ne iš kodo: anksčiau konfigūracija buvo negyva (žodžiai kabėjo JSON, o
+   simuliacija juos turėjo įrašytus kietai), todėl redaguojant terminiją
+   pasikeisdavo tik garso įrašai, o ekrane likdavo seni žodžiai (LL-61).
+   Būsenų juosta po scena parodo, kuris iš trijų dalykų scenoje yra DABAR:
+   tai atsakymas į modulio rezultatą „Įvardiju tris vandens būsenas“.
+   Ženklas (● / ○) ir žodis neša informaciją, spalva — tik paryškina. */
 
 const VB_MAX = 5;
 const VB_HEAT = ["Vėsu", "Šilta", "Verdantis"];
+/* Atsarginiai žodžiai — kai komponentas montuojamas be `config`
+   (pvz. bandyme). Modulyje visada laimi `sim.config.words`. */
+const VB_WORDS = { water: "Vanduo", ice: "Ledas", steam: "Garas", drops: "Lašai" };
 
 const vandensBusenos = {
-  mount({ stage, controls, api }) {
+  mount({ stage, controls, api, config }) {
+    const words = { ...VB_WORDS };
+    const cfgWords = config && typeof config.words === "object" && !Array.isArray(config.words)
+      ? config.words : {};
+    for (const key of Object.keys(VB_WORDS)) {
+      const v = cfgWords[key];
+      if (typeof v === "string" && v.trim()) words[key] = v.trim();
+    }
     let level = VB_MAX;      // vandens lygis 0..5
     let heat = 1;            // 0 vėsu, 1 šilta, 2 verdantis
     let lid = false;         // ar dangtis uždėtas
     let drops = 0;           // lašai ant dangčio (0..5)
     let inAir = 0;           // vanduo, išėjęs į orą be dangčio
+    let evaporated = 0;      // kiek vandens apskritai virto garu
     let returned = 0;        // kiek lašų grąžinta į puodą
     let presses = 0;         // kiek kartų kaitinta — tik bangelių vietai
     let reported = false;
     let msg = "Pakaitink puodą ir pažiūrėk, kas kyla virš vandens.";
-    const spoke = { steam: false, drops: false, back: false };
+    const spoke = { steam: false, drops: false, ice: false, back: false };
+
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* Būsenų kortelė: kairėje — ženklas, po juo — žodis iš `sim.config.words`,
+       apačioje — kur tas dalykas yra dabar. Trys signalai (ženklas, žodis,
+       rėmelio storis), todėl spalva nėra vienintelis informacijos nešėjas. */
+    const stateCard = (key) => `
+      <div class="vb-state" data-state="${key}" data-on="false"
+           style="border:2px solid var(--line);border-radius:.6rem;padding:.3rem .2rem;text-align:center">
+        <span class="vb-mark" aria-hidden="true"
+              style="font-size:.7rem;line-height:1;color:var(--ink-soft)">○</span>
+        <span class="vb-name" style="display:block;font-weight:800;font-size:.88rem;line-height:1.2">${esc(words[key])}</span>
+        <span class="vb-where" style="display:block;font-size:.72rem;line-height:1.2;color:var(--ink-soft)">dar nėra</span>
+      </div>`;
 
     stage.innerHTML = `
       <div style="width:100%;max-width:28rem;margin:0 auto">
         <svg id="vb-scene" viewBox="0 0 360 330" role="img"
              aria-label="Vandens būsenų modelis: puodas ant laužo"></svg>
+        <div id="vb-states" role="group" aria-label="Kas dabar yra modelyje"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(5.4rem,1fr));gap:.4rem;margin:.55rem 0 0">
+          ${["water", "steam", "ice"].map(stateCard).join("")}
+        </div>
         <p class="sim-note" style="font-size:.8rem;text-align:center">
           Modelis supaprastintas: puodas rodomas perpjautas, kad matytum vandenį.
         </p>
@@ -976,7 +1014,7 @@ const vandensBusenos = {
         <ellipse cx="180" cy="146" rx="62" ry="9" fill="#dbe5ee" opacity=".7"/>
         ${art.block(166, 108, 28, "#e2f3fc", "", "#a7d3e6")}
         <text x="200" y="126" font-family="system-ui, sans-serif" font-size="11" font-weight="700"
-              fill="#4a5560">ledas</text>
+              fill="#4a5560">${esc(words.ice.toLowerCase())}</text>
         ${dropsUnderLid}`;
 
       const lidOff = `
@@ -987,15 +1025,24 @@ const vandensBusenos = {
         </g>`;
 
       /* Garas: be dangčio kyla aukštyn ir tolsta; su dangčiu lieka po juo. */
-      const steamWisps = heat > 0 && level > 0 && !lid
+      const showSteam = heat > 0 && level > 0 && !lid;
+      const steamWisps = showSteam
         ? (heat === 2
           ? steam(168, 140, 62, 0.62) + steam(184, 138, 74, 0.55) + steam(200, 142, 54, 0.42)
           : steam(172, 142, 42, 0.42) + steam(192, 144, 34, 0.32))
         : "";
 
+      /* Garas yra tai, ko nesimato, todėl jis turi vardą pačioje scenoje,
+         o ne tik kortelėje po ja. */
+      const steamWord = showSteam
+        ? `<text x="208" y="122" font-family="system-ui, sans-serif" font-size="11" font-weight="700"
+                fill="#4a5560">${esc(words.steam.toLowerCase())}</text>`
+        : "";
+
       /* Vanduo, kuris išėjo į orą: silpnos srovelės toliau nuo puodo.
          Jos rodo, kad vanduo liko ore, o ne dingo. */
-      const airWisps = inAir > 0 && !lid
+      const showAir = inAir > 0 && !lid;
+      const airWisps = showAir
         ? steam(286, 132, 46, 0.22) + steam(306, 122, 36, 0.18)
         : "";
 
@@ -1024,13 +1071,42 @@ const vandensBusenos = {
         ${pot}
         ${lid ? lidOn : lidOff}
         ${steamWisps}
+        ${steamWord}
         ${airWisps}`;
 
       svg.setAttribute("aria-label",
         `Puodas ant laužo. Vandens lygis ${level} iš ${VB_MAX}. `
         + `${heat === 0 ? "Ugnis nedega" : strong ? "Ugnis stipri" : "Ugnis silpna"}. `
         + `${lid ? "Dangtis uždėtas" : "Dangtis nuimtas"}. `
-        + `Ant dangčio ${drops} lašų.`);
+        + (drops > 0 ? `${words.drops} ant dangčio: ${drops}.` : ""));
+
+      /* Kortelės atitinka tai, kas modelyje yra DABAR, ir skaitomos iš tų
+         pačių sąlygų, iš kurių piešiama scena (showSteam, showAir, lid) —
+         kitaip paveikslas ir užrašas galėtų išsiskirti (LL-34). Su dangčiu
+         garo nesimato, bet jis ten yra ir virsta lašais, todėl kortelė sako
+         „po dangčiu“. Išgaravus visam vandeniui, „Vanduo“ vėl rodo
+         „dar nėra“ (LL-17). */
+      const where = {
+        water: level > 0 ? "yra puode" : "dar nėra",
+        steam: lid
+          ? (heat > 0 && level > 0 ? "po dangčiu" : "dar nėra")
+          : (showSteam || showAir ? "ore" : "dar nėra"),
+        ice: lid ? "ant dangčio" : "dar nėra",
+      };
+      for (const key of Object.keys(where)) {
+        const card = stage.querySelector(`.vb-state[data-state="${key}"]`);
+        if (!card) continue;
+        const on = where[key] !== "dar nėra";
+        card.dataset.on = on ? "true" : "false";
+        card.style.borderColor = on ? "var(--ink)" : "var(--line)";
+        card.style.background = on ? "var(--paper)" : "transparent";
+        const mark = card.querySelector(".vb-mark");
+        mark.textContent = on ? "●" : "○";
+        mark.style.color = on ? "var(--ink)" : "var(--ink-soft)";
+        const spot = card.querySelector(".vb-where");
+        spot.textContent = where[key];
+        spot.style.color = on ? "var(--ink)" : "var(--ink-soft)";
+      }
 
       q("#vb-heat").value = String(heat);
       q("#vb-heat").setAttribute("aria-valuetext", `Šiluma: ${heatWord()}`);
@@ -1041,18 +1117,31 @@ const vandensBusenos = {
       lidBtn.setAttribute("aria-pressed", String(lid));
       lidBtn.setAttribute("aria-label", lid ? "Nuimk dangtį nuo puodo" : "Uždėk vėsų dangtį ant puodo");
 
-      api.readout(`Vandens lygis ${level} iš ${VB_MAX} · ${lid ? "dangtis uždėtas" : "dangtis nuimtas"}`
-        + `${drops > 0 ? ` · ant dangčio ${drops} lašai` : ""}`);
+      /* Tekstinis kortelių atitikmuo: ką rodo būsenų juosta, tą pasako
+         readout — todėl modelis veikia ir be vaizdo. */
+      const onScene = Object.keys(where)
+        .filter((k) => where[k] !== "dar nėra")
+        .map((k) => words[k]);
+      api.readout(`Vandens lygis ${level} iš ${VB_MAX}. `
+        + `${lid ? "Dangtis uždėtas" : "Dangtis nuimtas"}. `
+        + (onScene.length ? `Dabar: ${onScene.join(", ")}.` : "")
+        + (drops > 0 ? ` ${words.drops} ant dangčio: ${drops}.` : ""));
       api.note(msg);
 
-      if (!spoke.steam && heat > 0 && level < VB_MAX) { spoke.steam = true; api.speak("Garas"); }
-      if (!spoke.drops && drops > 0) { spoke.drops = true; api.speak("Lašai"); }
-      if (!spoke.back && returned > 0) { spoke.back = true; api.speak("Vanduo"); }
+      if (!spoke.steam && evaporated > 0) { spoke.steam = true; api.speak(words.steam); }
+      if (!spoke.drops && drops > 0) { spoke.drops = true; api.speak(words.drops); }
+      if (!spoke.ice && lid) { spoke.ice = true; api.speak(words.ice); }
+      if (!spoke.back && returned > 0) { spoke.back = true; api.speak(words.water); }
     }
 
     function boil() {
       if (level === 0) {
-        msg = "Puodas tuščias. Paspausk „Iš naujo“ ir bandyk dar kartą.";
+        /* Tuščias puodas su lašais ant dangčio nėra aklavietė: vanduo ten pat.
+           Siųsti vaiką į „Iš naujo“ reikštų išmesti būtent tą įrodymą, kurį
+           jis ką tik surinko (LL-18). */
+        msg = drops > 0
+          ? "Puodas tuščias, bet vanduo yra ant dangčio. Paspausk „Grąžink lašus“."
+          : "Puodas tuščias. Paspausk „Iš naujo“ ir bandyk dar kartą.";
         render();
         return;
       }
@@ -1063,6 +1152,7 @@ const vandensBusenos = {
       }
       const amount = Math.min(level, heat);   // 1 arba 2 lygiai per kartą
       level -= amount;
+      evaporated += amount;
       presses += 1;
       if (lid) {
         drops = Math.min(VB_MAX, drops + amount);
@@ -1071,7 +1161,7 @@ const vandensBusenos = {
           : "Dar daugiau garo nusėdo ant dangčio.";
       } else {
         inAir += amount;
-        msg = "Vanduo virto garu ir išėjo į orą. Jis ne dingo — jis ore.";
+        msg = "Vanduo virto garu ir išėjo į orą. Vanduo liko ore, tik jo nematome.";
       }
       render();
     }
@@ -1079,7 +1169,7 @@ const vandensBusenos = {
     function toggleLid() {
       lid = !lid;
       msg = lid
-        ? "Dangtis uždėtas. Jis vėsus, todėl garas ant jo virs lašais."
+        ? "Dangtis uždėtas. Jis vėsus, todėl garas ant jo virsta lašais."
         : "Dangtis nuimtas. Garas kils tiesiai į orą.";
       render();
     }
@@ -1097,8 +1187,11 @@ const vandensBusenos = {
       msg = "Lašai nubėgo atgal į puodą. Vanduo sugrįžo, nebuvo dingęs.";
       render();
       /* Rezultatas — visas ciklas: garas surinktas ant dangčio ir grąžintas.
-         Vienas išgarinimas ar vienas lašas dar nėra įrodymas (LL-29). */
-      if (!reported && returned >= 2) {
+         Vienas išgarinimas dar nėra įrodymas (LL-29), o vieno lašo grąžinimas
+         jau yra: lašas atsirado tik tada, kai garas virto vandeniu, ir tik tada
+         galėjo sugrįžti. Anksčiau sąlyga reikalavo DVIEJŲ lašų, todėl vaikas,
+         kaitinęs „Šilta“, viso ciklo įrodymo taip ir negavo. */
+      if (!reported && returned > 0) {
         reported = true;
         api.progress({ correct: true });
       }
@@ -1115,7 +1208,11 @@ const vandensBusenos = {
     q("#vb-lid").addEventListener("click", toggleLid);
     q("#vb-back").addEventListener("click", backToPot);
     q("#vb-reset").addEventListener("click", () => {
-      level = VB_MAX; heat = 1; lid = false; drops = 0; inAir = 0; returned = 0; presses = 0;
+      level = VB_MAX; heat = 1; lid = false; drops = 0; inAir = 0; evaporated = 0;
+      returned = 0; presses = 0;
+      /* Žodžiai vėl tariami naujame bandyme: vaikas, pradėjęs iš naujo,
+         turi išgirsti tuos pačius vardus, o ne tylą. */
+      spoke.steam = spoke.drops = spoke.ice = spoke.back = false;
       msg = "Naujas bandymas. Pakaitink puodą ir stebėk garą.";
       render();
     });

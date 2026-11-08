@@ -24,7 +24,12 @@
   "sim": {
     "component": "vandens-busenos",
     "config": {
-      "words": ["Vanduo", "Ledas", "Garas", "Dangtis", "Lašai"]
+      "words": {
+        "water": "Vanduo",
+        "ice": "Ledas",
+        "steam": "Garas",
+        "drops": "Lašai"
+      }
     }
   },
   "tasks": [

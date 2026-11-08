@@ -6,19 +6,19 @@
   "subtitle": "Pirma papildyk dešimtuką, paskui pridėk, kas liko",
   "minutes": 9,
   "outcomes": [
-    "Sudedu vienaženklius skaičius per dešimtį: pirma papildau dešimtuką, paskui pridedu likusį.",
-    "Paaiškinu, kodėl 8 + 5 patogiau skaičiuoti kaip 8 + 2 ir 10 + 3."
+    "Sudedu du skaičius per dešimtį. Pirma papildau dešimtuką, paskui pridedu likusį.",
+    "Paaiškinu, kodėl 8 + 5 patogu skaičiuoti per dešimtį."
   ],
   "concept": {
-    "title": "Kelias per dešimtuką",
-    "big_idea": "Kai suma peržengia dešimtį, nereikia skaičiuoti po vieną. Pirma paimk tiek, kiek trūksta iki dešimties. Paskui pridėk, kas liko.",
+    "title": "Kelias per dešimtį",
+    "big_idea": "Kai suma didesnė už dešimt, nereikia skaičiuoti po vieną. Pirma paimk tiek, kiek trūksta iki dešimties. Paskui pridėk, kas liko.",
     "steps": [
-      "Dešimtuke jau guli pirmas skaičius. Suskaičiuok, kiek langelių tušti.",
-      "Tiek pat dėmių paimk iš antro skaičiaus. Dešimtukas prisipildo — tai dešimt.",
-      "Pridėk ant stalo likusias dėmes prie dešimties.",
-      "Pabandyk su kitais skaičiais: 7 + 5, 9 + 6. Kiek trūksta — vis kitas skaičius."
+      "Pirmas skaičius jau dešimtuke. Suskaičiuok tuščius langelius.",
+      "Iš antro skaičiaus paimk tiek dėmių, kiek trūksta. Dešimtukas prisipildo — tai dešimt.",
+      "Prie dešimties pridėk dėmes, kurios liko ant stalo.",
+      "Pabandyk ir su kitais skaičiais: 7 + 5, 9 + 6. Kaskart trūksta kito skaičiaus."
     ],
-    "example": "Krepšyje 8 obuoliai, draugas atneša 5. Du įdedi į pilną dešimtuką, trys lieka. Viso 13."
+    "example": "Krepšyje 8 obuoliai. Draugas atneša dar 5. Paimk 2 obuolius ir įdėk į krepšį — bus dešimt. Liko 3 obuoliai. Viso 13."
   },
   "sim": {
     "component": "sudetis-per-desimti",
@@ -43,7 +43,7 @@
   },
   "tasks": [
     {
-      "q": "Simuliacijoje dešimtuke buvo 8 dėmės. Kiek dėmių reikia, kad jis prisipildytų?",
+      "q": "Dešimtuke yra 8 dėmės. Kiek dėmių trūksta iki dešimties?",
       "options": [
         "2",
         "3",
@@ -54,48 +54,48 @@
       "why": "8 + 2 = 10, todėl dešimtukui trūksta dviejų dėmių."
     },
     {
-      "q": "Kaip 8 + 5 suskirstyti per dešimtuką?",
+      "q": "Kaip 8 + 5 skaičiuoti per dešimtį?",
       "options": [
-        "8 + 5 = 10, paskui dar 3",
+        "Skaičiuoti po vieną: 9, 10, 11, 12, 13",
         "8 + 2 = 10, paskui 10 + 3",
-        "10 + 5 = 15, paskui atimti 2"
+        "Prie dešimties pridėti 5 ir gauti 15"
       ],
       "answer": 1,
-      "hint": "Dešimtukui reikia tik dalies antro dėmens, ne viso.",
-      "why": "Iš penkių paimame du, gauname dešimt, o likusius tris pridedame: 13."
+      "hint": "Ar visus penkis reikia dėti į dešimtuką?",
+      "why": "Iš penkių paimk 2, gausi dešimt, o likusius 3 pridėk: 13."
     },
     {
-      "q": "Ant stalo 9 raudoni ir 6 mėlyni rutuliai. Kiek viso?",
+      "q": "Ant stalo yra 9 raudoni ir 6 mėlyni rutuliai. Kiek iš viso rutulių?",
       "options": [
         "14",
         "15",
         "16"
       ],
       "answer": 1,
-      "hint": "Prisimink: pirma sudaryk dešimtuką iš raudonų, paskui pridėk likusius mėlynus.",
+      "hint": "Kiek mėlynų reikia pridėti prie devynių, kad būtų dešimt?",
       "why": "9 + 1 = 10, o mėlynų lieka 5. 10 + 5 = 15."
     },
     {
       "q": "Vienas vaikas 7 + 5 skaičiuoja po vieną. Kaip būtų greičiau?",
       "options": [
-        "Skaičiuoti po vieną nuo septynių",
-        "Pridėti penkis ir gauti dvylika",
+        "Skaičiuoti toliau po vieną",
+        "Papildyti iki dešimties ir paskui pridėti visus penkis",
         "Paimti 3 iš penkių, gauti dešimt, paskui pridėti 2"
       ],
       "answer": 2,
-      "hint": "Kiek trūksta nuo septynių iki dešimties? Tiek paimk iš penketo.",
-      "why": "Iš penkių paimti trys, dešimtukas prisipildo, lieka du. 10 + 2 = 12."
+      "hint": "Kiek trūksta nuo septynių iki dešimties? Tiek paimk iš penkių.",
+      "why": "Iš penkių paimk 3, dešimtukas prisipildo, lieka 2. 10 + 2 = 12."
     },
     {
-      "q": "Dėžėje telpa 20 kamuolių. Jau įdėta 16, dar įdėjo 7. Kiek kamuolių dabar?",
+      "q": "Dėžėje jau 16 kamuolių. Įdėjo dar 7. Kiek kamuolių dabar?",
       "options": [
         "22",
         "23",
         "24"
       ],
       "answer": 1,
-      "hint": "Papildyk iki 20 taip, kaip pildėte dešimtuką.",
-      "why": "16 + 4 = 20, o likusius 3 pridedame: 23.",
+      "hint": "Papildyk 16 iki 20 taip, kaip pildei dešimtuką.",
+      "why": "16 + 4 = 20, o likusius 3 pridėk: 23.",
       "optional": true
     }
   ],

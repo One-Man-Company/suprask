@@ -14,9 +14,9 @@
     "title": "Tas pats kūnas, kitas vaizdas",
     "big_idea": "Iš skirtingų pusių tas pats kūnas atrodo skirtingai. Kūgis iš priekio atrodo kaip trikampis. Iš viršaus jis atrodo kaip apskritimas. Tačiau kūgis visą laiką lieka vienas.",
     "steps": [
-      "Pasirink kūną ir žvilgsnį. Žiūrėk iš priekio, iš viršaus ar nuo šono.",
+      "Pasirink kūną. Žiūrėk iš priekio, iš viršaus ar nuo šono.",
       "Spėk, kokią formą matai, ir spausk jos mygtuką.",
-      "Pakeisk žvilgsnį. Forma keisis, o kūnas liks tas pats.",
+      "Žiūrėk iš kitos pusės. Forma keisis, o kūnas liks tas pats.",
       "Apžiūrėk kūną iš visų trijų pusių."
     ],
     "example": "Ledų ragelis iš priekio atrodo kaip trikampis. Iš viršaus jis atrodo kaip apskritimas. Tai vis dar vienas kūgis."
@@ -65,7 +65,7 @@
         "Ritinys"
       ],
       "answer": 2,
-      "hint": "Palygink dėžutę su kauliuku. Ar dėžutė turi kampus?",
+      "hint": "Palygink dėžutę su kubu. Ar dėžutė turi kampus?",
       "why": "Ritinio šonas tiesus, o abu galai apvalūs."
     },
     {
@@ -76,13 +76,13 @@
         "Trikampis"
       ],
       "answer": 0,
-      "hint": "Pažiūrėk į kauliuką simuliacijoje iš viršaus.",
+      "hint": "Pažiūrėk į kubą simuliacijoje iš viršaus.",
       "why": "Visos kubo sienos yra kvadratai, todėl vaizdas toks pat."
     },
     {
       "q": "Kamuolys ir lėkštė abu apvalūs. Kuo kamuolys skiriasi nuo lėkštės?",
       "options": [
-        "Kamuolys didesnis",
+        "Kamuolys plokščias",
         "Kamuolys apvalus iš visų pusių",
         "Lėkštė neturi krašto"
       ],

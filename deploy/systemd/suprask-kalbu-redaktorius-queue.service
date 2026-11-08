@@ -1,0 +1,16 @@
+[Unit]
+Description=SUPRASK — kalbu-redaktorius eilė (antradieniais, penktadieniais)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/zoltanas/workspace/suprask
+Environment="PATH=/home/zoltanas/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="SUPRASK_HERMES_BIN=/home/zoltanas/.local/bin/hermes"
+ExecStart=/usr/bin/python3 /home/zoltanas/workspace/suprask/scripts/kalbu_queue.py --max-items 4 --max-minutes 240
+TimeoutStartSec=18000
+Nice=10
+StandardOutput=journal
+StandardError=journal

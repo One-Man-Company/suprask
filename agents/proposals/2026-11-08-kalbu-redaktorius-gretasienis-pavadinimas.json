@@ -1,0 +1,17 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 143,
+  "created": "2026-11-08T09:43:42+02:00",
+  "type": "simuliacija",
+  "title": "Simuliacijoje kūnas vadinamas „Gretasienis“, o modulyje mokoma „stačiakampis gretasienis“",
+  "body": "Modulio outcomes[1] žada, kad vaikas įvardys „stačiakampį gretasienį“ (taip pat teacher.goal, o modulio sources citačiauja oficialią programą), bet simuliacijos kūno mygtukas ir visi trys sim.config.sentences prasideda trumpąja forma „Gretasienis“, o simuliacijos kodas (geometrija.js BODIES) taip pat turi „Gretasienis“. Sutrumpintas pavadinimas gali atrodyti kaip antrasis, penktasis kūnas, o ne kaip tas pats, kurį modulis vadina pilnu vardu. Dar blogiau: sakinyse „Gretasienis iš priekio atrodo kaip stačiakampis“ tas pats žodis „stačiakampis“ vartojamas dviem skirtingiems daiktams — kūno pavadinimo daliai ir jo plokščiam vaizdui — tai būtent 2D/3D painiavas, kurį šis modulis mažina. Pakeitimas sim.config.sentences reikalauja garso pergeneravimo (Piper; žodis keičiasi trijuose tariamuose sakiniuose), o kūno mygtuko etiketės — simulacijų inžinieriaus, nes tai kodas, ne turinys. Siūloma suvienodinti: sim mygtukas ir sim.config sakiniai vartoja „Stačiakampis gretasienis“ (mygtuke galima santrumpa „Gretasienis“ tik su pilnu vardu aria-label), arba — jei trumpinys paliekamas — outcomes[1] ir teacher tekstus suderinti su juo (blogesnis variantas, nes programos terminas pilnas).",
+  "target": "content/lt/grade-01/matematika/21-erdvines-figuros.json (sim.config.sentences) + assets/js/sims/geometrija.js (BODIES gretasienis.name)",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/21-erdvines-figuros.json:10 — outcomes[1]: „Įvardiju kubą, rutulį, ritinį, kūgį ir stačiakampį gretasienį.“",
+    "content/lt/grade-01/matematika/21-erdvines-figuros.json:37-39 — sim.config: „Gretasienis iš priekio atrodo kaip stačiakampis.“ (×3)",
+    "assets/js/sims/geometrija.js:62 — name: „Gretasienis“ (kūno mygtuko etiketė), :64 — why: „Gretasienio sienos yra stačiakampiai.“",
+    "content/lt/grade-01/matematika/21-erdvines-figuros.json:119-120 — sources: NŠA 2024 ir Matematikos programa 2022 vartoja „stačiakampis gretasienis“"
+  ]
+}

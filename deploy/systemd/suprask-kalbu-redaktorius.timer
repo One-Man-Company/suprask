@@ -6,7 +6,7 @@ Description=SUPRASK — kalbu-redaktorius (antradieniais, penktadieniais)
 OnCalendar=Tue,Fri *-*-* 13:10:00
 Persistent=true
 RandomizedDelaySec=240
-Unit=suprask-agent@kalbu-redaktorius.service
+Unit=suprask-kalbu-redaktorius-queue.service
 
 [Install]
 WantedBy=timers.target

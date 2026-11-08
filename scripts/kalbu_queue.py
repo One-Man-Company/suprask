@@ -58,13 +58,32 @@ def order_from_audit(mods: list[dict]) -> list[dict]:
     return [m for _, m in sorted(out, key=lambda x: x[0])]
 
 
+import hashlib
+
+
+def module_hash(module: dict) -> str:
+    """Turinio maiša: modulis „sutvarkytas“ tik tol, kol failas nepasikeitė.
+
+    Taip naujas ar pakeistas modulis (pvz. kūrėjo perrašytas) vėl patenka į
+    eilę, o jau peržiūrėtas ir nepakitęs — ne. Tai atsakymas į klausimą
+    „ar kas nors peržiūrės viską iš naujo kiekvieną kartą?“ — ne.
+    """
+    try:
+        return hashlib.sha256((ROOT / module["path"]).read_bytes()).hexdigest()[:16]
+    except OSError:
+        return ""
+
+
 def load_state() -> dict:
     if STATE.exists():
         try:
-            return json.loads(STATE.read_text(encoding="utf-8"))
+            data = json.loads(STATE.read_text(encoding="utf-8"))
+            if "modules" not in data:  # sena forma {"done": [...]}
+                data = {"modules": {m: {"hash": ""} for m in data.get("done", [])}}
+            return data
         except json.JSONDecodeError:
             pass
-    return {"done": []}
+    return {"modules": {}}
 
 
 def save_state(state: dict) -> None:
@@ -98,8 +117,10 @@ def main() -> int:
     queue = ordered + [m for m in mods if m not in ordered]
 
     state = load_state()
+    reviewed = state.get("modules", {})
     if not args.all:
-        queue = [m for m in queue if m["id"] not in state["done"]]
+        queue = [m for m in queue
+                 if reviewed.get(m["id"], {}).get("hash") != module_hash(m)]
 
     print(f"Modulių iš viso: {len(mods)} · audito tvarka: {'taip' if ordered else 'ne'} · eilėje: {len(queue)}")
     if args.dry_run:
@@ -129,7 +150,10 @@ def main() -> int:
         # „empty“ = agentas dirbo, bet keisti nereikėjo — tai sėkmė, ne klaida.
         if status in ("published", "ok", "partial", "checked", "empty"):
             done += 1
-            state["done"].append(m["id"])
+            state.setdefault("modules", {})[m["id"]] = {
+                "hash": module_hash(m),
+                "at": time.strftime("%Y-%m-%dT%H:%M"),
+            }
             save_state(state)
         else:
             failed += 1

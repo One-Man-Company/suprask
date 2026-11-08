@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 145,
+  "created": "2026-11-08T09:48:00+02:00",
+  "type": "ux",
+  "title": "„Atgal į kryptį“ mygtukas išstumia puslapį 28 px esant 200 % tekstui",
+  "body": "Prie 32 px šaknies ir 360 px ekrano kiekviename modulyje, kurio krypties pavadinimas ilgesnis, `main#app > div.module-foot > a.btn` užima 356,4 px, kai tėvui skirta 296 px — puslapis slenka 28 px. Mygtukas yra `inline-flex` su `padding:.7rem 1.4rem`, o jo turinys („← Sąžiningumas ir žaidimai“) yra vienas nesilaužiamas min-content darinys: `white-space` jau `normal`, todėl tekstas laužosi, bet paminkštinimas ir ikonos tarpas auga kartu su šaknimi ir min-content viršija eilutę. Tai ta pati šeima kaip #4741 (rem minimumas), tik šįkart app.js sugeneruotame bloke, ne simuliacijoje. Siūloma `.module-foot .btn` leisti susitraukti (`max-width:100%`, `min-width:0`) ir paminkštinimą riboti eilutėje (`padding-inline:min(1.4rem, 6cqw)` arba `padding-inline: clamp(1rem, 4vw, 1.4rem)`), o ne mažinti šriftą — vaikas, padidinęs tekstą, turi gauti didesnį, o ne mažesnį tekstą. Būtina sąlyga: prieš keičiant išmatuoti mygtuko plotį ir aukštį prie 16 px (1440/414/360) ir po pakeitimo palyginti — įprastas vaizdas neturi kisti.",
+  "target": "assets/css/main.css",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "matavimas Chromium 155 (Playwright), 2026-11-08: #/modulis/1/zaidimu-teorija/13-akmenelis-popierius @360 px su 32 px šaknies šriftu — `main#app > div.module-foot > a.btn` 356,4 px (tėvas 296), documentElement.scrollWidth 388 vs clientWidth 360 (28 px); tas pats 11-saziningas-dalijimasis",
+    "tas pats matavimas @414 px su 32 px šriftu — slinkties nėra (0/31 modulių), defektas pasireiškia tik ties standarto 360 px riba",
+    "assets/css/main.css:148-155 — `.btn { display:inline-flex; padding:.7rem 1.4rem; }`; `white-space` nenustatytas (normal), tad priežastis yra min-content + paminkštinimas, o ne nowrap",
+    "po #4741 sim taisymų likę išsikišimai @360/32 yra tik `div.task-q > span` (#4748) ir šis `a.btn` — simuliacijų viduje 0 (124 įkėlimai, 31 modulis × 2 pločiai × 2 šaknys)"
+  ]
+}

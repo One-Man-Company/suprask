@@ -51,7 +51,7 @@
 
 ## Nauja pamoka
 
-**LL-56** pridėta į `research/wiki/guidelines/pamokos.md` — metaduomenų laukas (subtitle, outcomes elementas) atvaizduojamas atskirai, be aplinkos sakinių; čia sakinio pradžios įvardis kabo be pagrindo, skirtingai nuo užduočių sakinių, kur prieš tai einantis sakinys duoda antecedentę. (Pirmoji versija buvo pažymėta LL-55, bet tą numerį tarpinės redakcijos metu užėmė kito agento pamoka — panaikinta dubliacija.)
+**LL-58** pridėta į `research/wiki/guidelines/pamokos.md` — metaduomenų laukas (subtitle, outcomes elementas) atvaizduojamas atskirai, be aplinkos sakinių; čia sakinio pradžios įvardis kabo be pagrindo, skirtingai nuo užduočių sakinių, kur prieš tai einantis sakinys duoda antecedentę. (Numeris keistas tris kartus: LL-55, LL-56 ir LL-57 tarpinėse redakcijose atiteko lygiagretių sesijų agentams — panaikinta dubliacija.)
 
 ## Kliūtys / pastatymai bėgikliui
 
@@ -60,6 +60,7 @@
 3. **Trumpalaikė darbinės kopijos būsena** (žr. „Atsakytas radinys"): mano 09:19 skaitymas pagavo „matau", o HEAD nuo 0504a80 turi „matai" — diskas tarpine akimirkia turėjo svetimą nebaigtą redakciją, kuri vėliau atstatyta. `git status` tuo metu jau rodė švarą. Tai #5342 (worktree izoliacija) ir LL-45/LL-54 šeimos pažeidimas skaitymo pusėje.
 4. Darbinėje kopijoje liko **svetas** pakeitimas `assets/js/sims/matematika.js` (run 139) — neliestas, į mano ataskaitą neįtrauktas.
 5. **Garso nepergeneruota** ir nereikia: `generate_audio.collect()` renka tik `sim.config` raktus (`word/syllables/words/sentences/label`, `scripts/generate_audio.py:157-159`) — `sim.config` neliestas.
+6. **Lygiagretus to paties modulio redagavimas** (kitas kalbu-redaktorius, sibling sesija, jo logas `…T0943-21-erdvines-figuros.md`): per mano darbą jis perprašė `tasks[0].hint` („Pažiūrėk, kokia forma kūgis remiasi į stalą." → „Pažiūrėk, ką kūnis turi apačioje."), pridėjo pamoką LL-56, pasiūlymą `…-gretasienis-pavadinimas` ir pakeitė `kalbos-auditas.md`. Mano 4 pakeitimai buvo kitose eilutėse — susidūrimų nėra, abu darbai dabar diske. `check_view` pakartotas ir su jų hint'u: 4 plotai, 0 problemų. Tai #5342 (worktree izoliacija) praktinis patvirtinimas.
 
 ## Patikra
 
@@ -72,4 +73,4 @@
 
 ## Touched
 
-`content/lt/grade-01/matematika/21-erdvines-figuros.json` (4 vietos), `content/lt/grade-01/index.json` (subtitle sinchronizacija), `research/wiki/guidelines/pamokos.md` (LL-56), `agents/proposals/2026-11-08-kalbu-redaktorius-outcomes-vartai.json`, `agents/log/kalbu-redaktorius-2026-11-08T0935-21-erdvines-figuros.md` (šis failas), `agents/state.json`. Turinio pakeitimai bėgiklio sulaimėti commit'e `7db8a6d`; ataskaitos/pasiūlymo/pamokos failai — lauka bėgiklio commit'o.
+`content/lt/grade-01/matematika/21-erdvines-figuros.json` (4 vietos), `content/lt/grade-01/index.json` (subtitle sinchronizacija), `research/wiki/guidelines/pamokos.md` (LL-58), `agents/proposals/2026-11-08-kalbu-redaktorius-outcomes-vartai.json`, `agents/log/kalbu-redaktorius-2026-11-08T0935-21-erdvines-figuros.md` (šis failas), `agents/state.json`. Turinio pakeitimai bėgiklio sulaimėti commit'e `7db8a6d`; ataskaitos/pasiūlymo/pamokos failai — lauka bėgiklio commit'o.

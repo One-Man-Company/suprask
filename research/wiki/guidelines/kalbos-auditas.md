@@ -22,7 +22,7 @@ Sunkumas: **rimta** = vaikas supranta klaidingai ar nebegali skaityti; **vidutin
 
 | # | Modulis | Laukas | Problema | Siūloma formuluotė | Sunkumas |
 |---|---|---|---|---|---|
-| 1 | 10-gyvunu-grupes | tasks[2].hint (eil. 58) | Užuomina nukreipia nuo atsakymo: „bet ne apie jos turinį" — o atsakymas „plunksnos" būtent ir yra pagalvės turinys; vaikas gauna priešingą nuorodą | „Pagalvok, kuo dengtas paukštis — ne kailis, ne žvynai." | rimta |
+| 1 | 10-gyvunu-grupes | tasks[2].hint (eil. 58) | Užuomina nukreipia nuo atsakymo: „bet ne apie jos turinį" — o atsakymas „plunksnos" būtent ir yra pagalvės turinys; vaikas gauna priešingą nuorodą | „Pagalvok, kuo dengtas paukštis — ne kailis, ne žvynai." | rimta · **užtaisyta #144** |
 | 2 | 16-vandens-busenos | concept.example (eil. 22) | „būna aprasojęs" — tokio žodžio nėra (norėta „užparęs"); vaikas negali suprasti | „Ryte vonios veidrodis būna užparęs." | rimta |
 | 3 | 16-vandens-busenos | tasks[2].q (eil. 54) | „aprasojo" — taip pat nežodis | „Ryte vonios veidrodis užparojo. Kas jame?" | rimta |
 | 4 | 01-garso-aukstis (muzika) | tasks[0].q (eil. 48) | „Pakėlei … nelietei" — neegzistuoja šios formos (2 asm.: pakėlai, nepalietei) | „Pakėlai aukštį, o garsumo ratuko nepalietei. Kas pasikeitė?" | rimta |
@@ -82,7 +82,7 @@ Sunkumas: **rimta** = vaikas supranta klaidingai ar nebegali skaityti; **vidutin
 2. **22-sudetis-per-desimti** — nelogiškas pavyzdys („Du įdedi") + 2 per ilgi outcome sakiniai.
 3. **13-akmenelis-popierius** — abstrakčiausias 1 klasės turinys: „atsitiktinumas" outcomes/title/example, 11–12 žodžių outcome sakiniai (2 † įrankio žinomi).
 4. **01-garso-aukstis** — neegzistuojančios veiksmažodžio formos pačioje pirmaj užduotyje + „nebūtinai" concept žingsnyje.
-5. **10-gyvunu-grupes** — tik vienas radinys, bet jis rimtas: hint'as menkina (rodo nuo „plunksnų", kurios yra atsakymas).
+5. **10-gyvunu-grupes** — tik vienas radinys, bet jis rimtas: hint'as menkina (rodo nuo „plunksnų", kurios yra atsakymas). **Užtaisyta #144** (hint'as perrašytas).
 
 Šeštas lauka eilės: **21-erdvines-figuros** (15 žodžių outcome + 2 smulkūs).
 
@@ -92,3 +92,14 @@ Sunkumas: **rimta** = vaikas supranta klaidingai ar nebegali skaityti; **vidutin
 - Terminologija, kuri yra pačia modulio sąvoka („atsitiktinumas", „kūnas/rutulys", „spindulys/atkarpa", „dešimtukas") — nepakeista; pastatyta tik ten, kur sąvoka turi kasdienį sinonimą.
 - „kupiūra" vs „banknotas" (14-pinigai) — jau atviras pasiūlymas #4802, nekartojamas.
 - Pedagoginiai ginčai (06-figuros, 15-laikas/20-laikas programos atitiktis) — metodininko/programos-derintojo sritis.
+
+## Taisymo būsena (paleidimas #143, 2026-11-08T09:43)
+
+- **#6, #31, #32 (21-erdvines-figuros)** — pataisyta commit'e 7db8a6d („darbinės kopijos likutis", surastas prieš šį paleidimą; autorystė — nutrūkęs kalbu-redaktoriaus paleidimas, šis paleidimas tik patvirtino grep'u): outcomes[0] suskaidytas į 5 + 8 žodžių, tasks[3].hint → „Ar nors viena pusė plokščia?", tasks[3].why → „Rutulys (kamuolys) …".
+- **Naujas radinys (#143), pataisyta:** tasks[0].hint „kokia forma kūgis remiasi į stalą" — „remtis į" vaizduoja atremtą kūną, o kūgis stovi ant pagrindo → „Pažiūrėk, ką kūnis turi apačioje." (pamoka LL-56).
+- **Likę atviri:** `outcomes` laukas įrankiui vis dar nepatikrintas (LL-52); „Gretasienis" (sim mygtukas + sim.config 3 sakiniai) vs „stačiakampis gretasienis" (outcomes[1], teacher, programa) — pasiūlymas agents/proposals/2026-11-08-kalbu-redaktorius-gretasienis-pavadinimas.json.
+
+## Taisymo būsena (paleidimas #144, 2026-11-08T09:45)
+
+- **#1 (10-gyvunu-grupes)** — pataisyta: tasks[2].hint „Pagalvok apie pagalvę, bet ne apie jos turinį." → „Pagalvok, kuo dengtas paukštis — ne kailis, ne žvynai." (LL-53; senasis hint'as nukreipė nuo atsakymo „Plunksnos", nes pagalvės turinys būtent plunksnos). Patikrinta: DOM zondas (klaidžiant „Žvynai", `.task-feedback` rodo naują tekstą), `check_view.py` 4 plotai (0 problemų, minTaskFont nepakito), `validate_content.py` 0/0. `check_language.py` modulio įrašas nepakito (0/0/1) — įrankis nemato hint'o krypties; tai LL-53 riba, ne atsitraukimas. Redakcija pateko bėgiklio commit'e d0e319d (likučio commit'as; autorystės pastatas — #4998/#5190 atviri).
+- **Likę atviri:** kitų modulių radiniai (žr. lentelę); `outcomes` vartai (LL-52) — atviras pasiūlymas (#143).

@@ -68,9 +68,14 @@ def main() -> int:
             if "## Baigties sąlyga" not in text:
                 problems.append(f"{role}: trūksta skilties „## Baigties sąlyga“")
 
-        cal = str(cfg.get("on_calendar") or "")
-        if cal and not re.match(r"^(\*|[0-9A-Za-z*/,-]+)(\s+[0-9A-Za-z*/:,-]+){1,4}$", cal):
-            warnings.append(f"{role}: neįprastas on_calendar formatas: {cal}")
+        raw_cal = cfg.get("on_calendar")
+        entries = raw_cal if isinstance(raw_cal, list) else [raw_cal] if raw_cal else []
+        if isinstance(raw_cal, list) and not raw_cal:
+            problems.append(f"{role}: on_calendar sąrašas tuščias")
+        for cal in entries:
+            cal = str(cal)
+            if not re.match(r"^(\*|[0-9A-Za-z*/,:-]+)(\s+[0-9A-Za-z*/:,-]+){1,4}$", cal):
+                warnings.append(f"{role}: neįprastas on_calendar formatas: {cal}")
 
         prof = cfg.get("profile")
         if profiles and prof and prof not in profiles:

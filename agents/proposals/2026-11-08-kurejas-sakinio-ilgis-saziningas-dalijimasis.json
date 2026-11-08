@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 115,
+  "created": "2026-11-08T05:00:14+02:00",
+  "type": "kritika",
+  "title": "Sakinio ilgis: 11-saziningas-dalijimasis turi 4 ilgiausius sakinius, liko 13 modulių",
+  "body": "Pasiūlymas #4250 įgyvendintas `08-metu-laikai.json`: modulyje buvo 6 sakiniai >10 žetonų (4 >10 natūralių žodžių), dabar 0 abiem matuokliais. Pagal standarto metriką (natūralūs žodžiai, `docs/KURINIO-STANDARTAS.md:117` „iki 10 žodžių“) 1 klasėje liko 26 sakiniai 14 modulių, tankiausias dabar `11-saziningas-dalijimasis` — 4 pažeidimai: `concept.big_idea` 13 ž., `concept.steps[3]` 11 ž., `concept.example` 11 ž., `tasks[3].why` 11 ž. Visi keturi yra natūraliai ilgi sakiniai su „bet“, dvitaškiu ar brūkšniu, o ne matuoklio artefaktas (LL-35), tad taisytini skaidant į du trumpus. Siūlau imti šį vieną failą kaip kitą darbo vienetą: keisti tik formuluotes, ne `answer` indeksus, `optional` žymas, `hint` kryptį ar `sim.config`; garso įrašų nereikės, nes `generate_audio.collect()` renka tik `sim.config` tekstus. Po jo eilės tvarka: `04-skaiciu-tiese` (3), `21-erdvines-figuros` (3).",
+  "target": "content/lt/grade-01/zaidimu-teorija/11-saziningas-dalijimasis.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "docs/KURINIO-STANDARTAS.md:117 — „Sakinio ilgis 1–2 klasei — iki 10 žodžių“",
+    "docs/SVIETIMAS-1-GAIRES.md:56 — T5.4: trumpi sakiniai",
+    "agents/log/kurejas-2026-11-08T0500.md — matavimas prieš / po (08-metu-laikai 4→0 žodžių, 6→0 žetonų; 1 klasė 30→26 sakiniai, 15→14 modulių) ir tikra validatoriaus išvestis",
+    "content/lt/grade-01/zaidimu-teorija/11-saziningas-dalijimasis.json — 4 sakiniai >10 žodžių, matuoti 2026-11-08 paleidime #115"
+  ]
+}

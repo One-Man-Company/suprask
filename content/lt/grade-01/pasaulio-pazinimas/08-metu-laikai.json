@@ -12,14 +12,14 @@
   ],
   "concept": {
     "title": "Metai turi keturis skyrius",
-    "big_idea": "Metai sukasi ratu: pavasaris, vasara, ruduo, žiema — ir vėl pavasaris. Kiekvienas laikas keičia šviesą, šilumą ir maistą, todėl keičiasi augalai ir gyvūnai.",
+    "big_idea": "Metai sukasi ratu: pavasaris, vasara, ruduo, žiema ir vėl pavasaris. Šviesa, šiluma ir maistas keičia augalus ir gyvūnus.",
     "steps": [
       "Pavasarį šilta, sniegas tirpsta, sprogsta pumpurai, grįžta paukščiai.",
       "Vasarą daug šviesos ir šilumos — augalai auga, vaisiai noksta.",
-      "Rudenį vėsta, lapai gelsta ir krinta, paukščiai skrenda į šiltus kraštus.",
-      "Žiemą šalta ir mažai šviesos — medžiai ilsisi, kai kurie gyvūnai miega."
+      "Rudenį vėsta. Lapai gelsta ir krinta, paukščiai skrenda į šiltus kraštus.",
+      "Žiemą šalta ir mažai šviesos. Medžiai ilsisi, kai kurie gyvūnai miega."
     ],
-    "example": "Tas pats medis per metus atrodo keturiais skirtingais būdais. Tai ne skirtingi medžiai — tai vienas medis skirtingu metų laiku."
+    "example": "Tas pats medis per metus atrodo keturiais būdais. Tai ne skirtingi medžiai, o vienas medis skirtingu metų laiku."
   },
   "sim": {
     "component": "metu-laikai",
@@ -56,7 +56,7 @@
         "Gandrai ir gervės"
       ],
       "answer": 2,
-      "hint": "Kurie paukščiai vasarą gyvena prie mūsų namų, o žiemą jų nematome?",
+      "hint": "Kuriuos paukščius vasarą matai prie namų? Žiemą jų nebūna.",
       "why": "Gandrai, gervės ir kiti migrantai rudenį išskrenda."
     },
     {

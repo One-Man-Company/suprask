@@ -2,6 +2,17 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-08 (23:05) — Publikavimo patikra #175: repo 31 / paskelbta 31, svetainė baitais lygi `HEAD`
+
+- **`check_published.py`** → repo 31, paskelbta 31, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `e3a61b2` (0 priekyje, 0 atsilieka).
+- **4 gyvi adresai (HTTP):** šaknis `200` (3487 B), `content/lt/grade-01/matematika/24-komandu-seka.json` `200` (6874 B), `content/lt/grade-01/gyvenimo-igudziai/01-dovana-ir-noras.json` `200` (5389 B), `content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json` `200` (4947 B); papildomai `index.json` `200`, `grades.json` `200`, `assets/audio/lt/manifest.json` `200`.
+- **Baitai, ne skaičiai:** visi 31 modulio JSON failai gyvai baitais lygūs `git show HEAD:` (skiriasi 0); `grade-01/index.json` (`dda1273a`, 9192 B), `path.json` (`88ff0a20`, 1103 B), `grades.json` (`2ec1e57d`, 1126 B), `audio/lt/manifest.json` (`de1ad5e4`, 50 497 B, 463 raktai), `main.css` (`c88fab2e`), `matematika.js` (`afc29fd6`) — lygūs. `index.html`, `app.js`, `registry.js`, `gyvenimas.js` skiriasi TIK `?v=e3a61b20` žyma (`pages.yml:33–42`); be žymų — baitais lygūs, žyma lygi `origin/main` pirmiems 8 simboliams (LL-41, ne defektas).
+- **Struktūra:** `index.json` 31 modulis, 31 unikalus ID, trūkstamų failų 0; `path.json` 31 įrašas, 31 unikalus, trūksta 0, perteklius 0 (tvarka neliesta); `grades.json` `grades[0].modules` 31, `updated` 2026-11-08; `index.json` pavadinimai/paantraštės/minutės su modulių JSON sutampa (0 neatitikimų); 133 užduotys.
+- **Simuliacijų registras (node importas):** 31 raktas 8 failuose (kalba 4, geometrija 1, gyvenimas 1, matematika 14, muzika 1, pasaulis 5, technologijos 2, žaidimai 3), visi su `mount()`, neregistruotų 0, nenaudojamų 0, dublikatų 0.
+- **Garsas:** `check_audio.py` → 462 tekstai × 2 įrašai, visi Piper, `rc=0`; manifeste 926 takai, trūkstamų failų 0; diske 932 mp3 → 6 našlaičiai; 1 pasenęs manifesto raktas („Dangtis“, `collect()` jo nebegrąžina). Vaikui nieko netrūksta.
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0 klaidų, 0 įspėjimų. **Gyvas puslapis naršyklėje:** `check_view.py --base https://one-man-company.github.io/suprask/ --viewports phone,small` → 62 patikros (31 maršrutas × 2 plotai), 0 problemų.
+- **Sprendimas:** sutampa; nieko nešalinta, ID nepernumeruoti, `path.json` neliestas. Pastaba: paleidimas #173 (log `agents/log/publikavimo-agentas-2026-11-08T1932.md`) baigėsi prieš įrašant changelog eilutę — šis įrašas ją pakeičia šviežiais to paties `HEAD` skaičiais. Ataskaita `agents/log/publikavimo-agentas-2026-11-08T2305.md`.
+
 ## 2026-11-08 (16:37) — Publikavimo patikra #171: 31 modulis gyvai, svetainė pastatyta iš `origin/main`
 
 - **`origin/main` = `ff7320f`, `HEAD` = `1b1edf7`** — vienas neišstumtas commit'as (`agents/scope.json`, sistemos šlavimas), kuris publikuojamam turiniui įtakos neturi; `git status --porcelain -uall` tuščias.

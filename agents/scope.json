@@ -120,17 +120,18 @@
       "min_subjects": [
         "dorinis-ugdymas",
         "lietuviu-kalba",
-        "pilietiskumas",
+        "pilietiškumas",
         "gamtos-mokslai",
         "matematika",
         "technologijos",
         "daile",
         "muzika",
-        "kunas",
-        "gyvenimo-igudziai",
-        "anglų kalba"
+        "gyvenimo-įgūdžiai",
+        "anglų-kalba",
+        "informatika",
+        "visuomeninis ugdymas"
       ],
-      "updated": "2026-11-08T14:56:09"
+      "updated": "2026-11-08T16:20:24"
     },
     "3": {
       "enabled": false,
@@ -188,9 +189,11 @@
         "daile",
         "muzika",
         "gyvenimo-įgūdžiai",
-        "anglų-kalba"
+        "anglų-kalba",
+        "informatika",
+        "visuomeninis ugdymas"
       ],
-      "updated": "2026-11-08T15:45:52"
+      "updated": "2026-11-08T16:19:51"
     },
     "4": {
       "enabled": false,

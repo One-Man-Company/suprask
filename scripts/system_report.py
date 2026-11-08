@@ -64,6 +64,7 @@ def proposals_summary() -> dict:
     rows = db.proposals(500)
     by_status: dict[str, int] = {}
     oldest_new = None
+    blocked: list[dict] = []
     for r in rows:
         st = r.get("status") or "?"
         by_status[st] = by_status.get(st, 0) + 1
@@ -71,6 +72,9 @@ def proposals_summary() -> dict:
             created = r.get("created") or ""
             if created and (oldest_new is None or created < oldest_new):
                 oldest_new = created
+        elif st == "blocked":
+            blocked.append({"id": int(r["id"]), "title": (r.get("title") or "")[:70],
+                            "note": (r.get("note") or "")[:80]})
     age_days = None
     if oldest_new:
         try:
@@ -79,7 +83,11 @@ def proposals_summary() -> dict:
             age_days = (now - stamp).days
         except ValueError:
             age_days = None
-    return {"by_status": by_status, "oldest_new_days": age_days, "total": len(rows)}
+    # `blocked` yra kapinės: eilė jų nebeliečia, niekas jų nebeatidaro. Todėl
+    # ataskaita privalo jas parodyti vardais, o ne vienu skaičiumi (2026-11-08
+    # visi 6 blokuoti buvo realūs defektai, kurių niekas nebetaisys).
+    return {"by_status": by_status, "oldest_new_days": age_days, "total": len(rows),
+            "blocked": sorted(blocked, key=lambda x: x["id"])}
 
 
 def timers() -> list[dict]:
@@ -190,6 +198,10 @@ def main() -> int:
     print(f"\nPasiūlymai: {p['total']} · " + ", ".join(f"{k} {v}" for k, v in sorted(p["by_status"].items())))
     if p["oldest_new_days"] is not None:
         print(f"Seniausias neapdorotas: prieš {p['oldest_new_days']} d.")
+    if p.get("blocked"):
+        print(f"Blokuoti (niekas nebeatidaro — reikia sprendimo): {len(p['blocked'])}")
+        for b in p["blocked"][:6]:
+            print(f"  #{b['id']} {b['title']} · {b['note']}")
 
     print("\nPatikros:")
     for name, c in data["checks"].items():

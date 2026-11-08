@@ -43,10 +43,24 @@ def resolve(profile: str) -> dict:
     return out
 
 
+def calendar_key(cal) -> str:
+    """`on_calendar` → palyginama eilutė.
+
+    `publikavimo-agentas` turi PENKIS laikus (sąrašą), visi kiti — vieną
+    eilutę. Rikiavimas tiesiog `sorted(..., key=on_calendar)` virsdavo
+    `TypeError: '<' not supported between instances of 'list' and 'str'`, todėl
+    `system_report.py` modelių lentelė NIEKADA nebuvo parodoma — kas paleidžia
+    kiekvieną agentą, nebuvo matoma nė vienoje ataskaitoje (2026-11-08).
+    """
+    if isinstance(cal, (list, tuple)):
+        return min((str(c) for c in cal), default="")
+    return str(cal or "")
+
+
 def for_roles(roles: dict) -> list[dict]:
     """ROLES → eilutės lentelei."""
     rows = []
-    for role, cfg in sorted(roles.items(), key=lambda kv: (kv[1].get("on_calendar") or "", kv[0])):
+    for role, cfg in sorted(roles.items(), key=lambda kv: (calendar_key(kv[1].get("on_calendar")), kv[0])):
         info = resolve(cfg.get("profile", ""))
         rows.append({
             "role": role,
@@ -70,7 +84,7 @@ if __name__ == "__main__":
     keys = ["role", "profile", "provider", "model", "on_calendar"]
     data = []
     for r in rows:
-        cal = r["on_calendar"] or ""
+        cal = calendar_key(r["on_calendar"])
         when = cal.split(" ")[-1].rsplit(":", 1)[0] if ":" in cal else cal
         days = cal.split(" ")[0] if " " in cal else ""
         days = "" if days == "*-*-*" else days.replace(",", ", ")

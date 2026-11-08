@@ -165,6 +165,11 @@ ROLES: dict[str, dict] = {
     "publikavimo-agentas": {
         "file": "roles/publikavimo-agentas.md", "profile": "deepseek41flash", "toolsets": "terminal,file",
         "max_turns": 26, "budget": 1000, "timeout": 1200,
+        # `inspect` — vaidmuo, kurio rezultatas yra ATASKAITA, ne failai. Tik
+        # tokiems paleidimams „failų nepakeista“ virsta `checked` (žr. main()).
+        # Kūrėjui tas pats virsdavo klaidinga sėkme: 37 pasiūlymai per 40 s
+        # buvo „patikrinti“ nieko nepadarius (#117 serija).
+        "inspect": True,
         "cadence": "kasdien 5 kartus (06:20, 11:40, 16:00, 19:30, 23:00)",
         # Laikai parinkti taip, kad iki artimiausio kito agento būtų ≥20 min, o
         # nuo kritiko (14:00) — 2 h. Anksčiau 14:10 krisdavo ant kritiko.
@@ -174,13 +179,13 @@ ROLES: dict[str, dict] = {
     },
     "tikrintojas": {
         "file": "roles/tikrintojas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 30, "budget": 900, "timeout": 1200,
+        "max_turns": 30, "budget": 900, "timeout": 1200, "inspect": True,
         "cadence": "kasdien", "on_calendar": "*-*-* 05:50:00",
         "description": "Validuoja turinį ir sąsają, registruoja klaidas",
     },
     "sveikatos-inspektorius": {
         "file": "roles/sveikatos-inspektorius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 30, "budget": 900, "timeout": 1200,
+        "max_turns": 30, "budget": 900, "timeout": 1200, "inspect": True,
         "cadence": "ketvirtadieniais", "on_calendar": "Thu *-*-* 06:50:00",
         "description": "Tikrina gyvą svetainę, nuorodas ir našumą",
     },
@@ -192,7 +197,7 @@ ROLES: dict[str, dict] = {
     },
     "kuratorius": {
         "file": "roles/kuratorius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 30, "budget": 900, "timeout": 1200,
+        "max_turns": 30, "budget": 900, "timeout": 1200, "inspect": True,
         "cadence": "sekmadieniais", "on_calendar": "Sun *-*-* 18:00:00",
         "description": "Savaitės suvestinė, changelog, atviri klausimai",
     },
@@ -712,6 +717,17 @@ def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool,
     if any(f.startswith(("content/", "assets/audio/")) for f in files) or not files:
         checks.append(("turinys", [sys.executable, "scripts/validate_content.py"]))
         checks.append(("garsas", [venv_python(), "scripts/check_audio.py"]))
+        # LL-52 / #5544: kalbos tikrintuvas buvo CI vartuose, bet ne bėgiklyje,
+        # todėl publikavimas galėjo aplenkti amžiaus ir formuluočių patikrą.
+        # `--strict` krenta tik dėl KLAIDŲ (įspėjimai neblokuoja).
+        grades = sorted({
+            m.group(1) for f in files
+            if (m := re.match(r"content/[^/]+/grade-(\d+)/", f))
+        })
+        for grade_no in grades or []:
+            checks.append((f"kalba (grade {grade_no})",
+                           [sys.executable, "scripts/check_language.py",
+                            "--grade", grade_no, "--strict"]))
     if any(f.startswith(("agents/", "deploy/", "scripts/")) for f in files) or not files:
         # Sistemos vientisumas: po architekto pakeitimų neturi likti vaidmens be
         # timer'io, modelio ar baigties sąlygos.
@@ -778,6 +794,38 @@ def revert(files: list[str]) -> None:
                 pass
 
 
+def target_paths(target: str) -> list[str]:
+    """Pasiūlymo `target` tekstas → failų keliai, kuriuos jis iš tikrųjų nurodo.
+
+    Pasiūlymo formate `target` buvo laisvas tekstas, todėl kritikas rašė
+    „assets/js/sims/geometrija.js:112 (sim pastaba); alternatyva — sim.config
+    raktas“ arba „…16-vandens-busenos.json (sim.config.words) + assets/js/sims/
+    pasaulis.js“. Toks target NIEKADA nesutapdavo su publikavimo `files`, todėl
+    sėkmingai paskelbtas darbas likdavo neuždarytas, o eilė jį pavadindavo
+    `blocked` — 2026-11-08 visi 6 blokuoti pasiūlymai buvo „paleidimas nepavyko:
+    kurejas #N: **published**“. Tai ne pasiūlymų klaida, o bėgiklio aklumas.
+    """
+    out: list[str] = []
+    for token in re.split(r"\s*(?:\+|;|,)\s*", target or ""):
+        token = token.strip().strip("`'\"")
+        token = re.sub(r"\s*\([^()]*\)\s*$", "", token)          # … (sim.config.words)
+        token = re.sub(r":\d+(?:[-–]\d+)?$", "", token)          # …:112
+        token = token.strip().strip("`'\"")
+        if not token:
+            continue
+        if " " in token:
+            head = token.split(" ", 1)[0]
+            if "/" in head:
+                token = head
+            elif " — " in token or " – " in token:
+                continue
+            else:
+                continue
+        if "/" in token and "." in token.rsplit("/", 1)[-1] and token not in out:
+            out.append(token)
+    return out
+
+
 def mark_implemented(proposal_id: int | None, files: list[str], commit_sha: str) -> bool:
     """Pažymi įgyvendintą TIK tą pasiūlymą, kurį paleidimas ėmėsi vykdyti.
 
@@ -795,7 +843,13 @@ def mark_implemented(proposal_id: int | None, files: list[str], commit_sha: str)
     if not row:
         return False
     target = (row.get("target") or "").strip()
-    if target and target not in set(files):
+    wanted = target_paths(target)
+    # Pakeistas turi būti BENT VIENAS tikslo failas. Jei tikslas ne tuščias, bet
+    # failo kelio iš jo ištraukti nepavyksta („docs/“), laikome neįrodyta ir
+    # pasiūlymo neuždarome.
+    if wanted and not (set(wanted) & set(files)):
+        return False
+    if target and not wanted:
         return False
     try:
         db.set_proposal_status(int(proposal_id), "done", f"įgyvendinta commit {commit_sha[:7]}")
@@ -1438,10 +1492,15 @@ def main() -> int:
                          foreign_roles=foreign, notes=notes)
         if status in ("ok", "partial"):
             status = result["status"]
-        # Patikros vaidmenys (tikrintojas, publikavimo-agentas, kuratorius) iš
-        # esmės failų nekeičia — jų rezultatas yra ataskaita. „empty“ klaidingai
-        # atrodydavo kaip „nieko nepadarė“, todėl skiriame „checked“.
-        if status == "empty" and len((out or "").strip()) > 400:
+        # Patikros vaidmenys (tikrintojas, publikavimo-agentas, kuratorius,
+        # sveikatos inspektorius) iš esmės failų nekeičia — jų rezultatas yra
+        # ataskaita. „empty“ klaidingai atrodydavo kaip „nieko nepadarė“, todėl
+        # jiems skiriame „checked“.
+        # KŪRĖJUI toks paaukštinimas yra klaidinga sėkmė: 2026-11-07 eilė per
+        # 40 s „patikrino“ 37 pasiūlymus, kurių nė vienas nebuvo liestas, o
+        # statistika rodė 3 % nenaudingų paleidimų. Todėl `checked` — tik tiems
+        # vaidmenims, kurių ROLES įraše yra `inspect`.
+        if status == "empty" and len((out or "").strip()) > 400 and cfg.get("inspect"):
             status = "checked"
 
         if proposal:

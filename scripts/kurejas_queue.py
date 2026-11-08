@@ -30,8 +30,21 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "agents"))
 import db  # noqa: E402
 import pause as system_pause  # noqa: E402
+import run as runner  # noqa: E402
 
 PRIORITY_ORDER = {"high": 0, "normal": 1, "low": 2}
+
+# Pasiūlymai, kurių tikslas — sistemos failas (agentų bėgiklis, skriptai,
+# publikavimas, dashboard, normatyviniai dokumentai), NE kūrėjo darbas. Kūrėjo
+# vaidmuo jų neliesti negali (ribos), todėl kiekvienas toks bandymas = iki
+# 20 min darbo ir vis tiek `blocked`. 2026-11-08 tokie buvo 9 iš 21 eilės
+# pasiūlymų — eilės galva buvo `agents/run.py`, o ne pamoka vaikui.
+SYSTEM_PREFIXES = ("agents/", "scripts/", "deploy/", "dashboard/", "docs/")
+
+# Trumpesnis paleidimas laikomas „nebandymu“: modelis nepradėjo darbo (tuščias
+# ciklas, neįkeltas profilis). Toks paleidimas neturi sudeginti pasiūlymo —
+# 2026-11-07 eilė per 40 s taip sudegino 37 pasiūlymus (3 s kiekvienas).
+MIN_ATTEMPT_S = 120
 
 # „tema“ tipo pasiūlymas, kurio failas JAU yra, reiškia, kad modulis jau
 # sukurtas (pasiūlymas pasenęs) — jo kurti antrą kartą nereikia.
@@ -105,14 +118,36 @@ def triage() -> tuple[int, int]:
     return obsolete, duplicates
 
 
+def is_system_work(prop: dict) -> bool:
+    """Ar pasiūlymas skirtas sistemos failui, ne pamokos turiniui."""
+    paths = runner.target_paths(prop.get("target") or "")
+    return bool(paths) and all(p.startswith(SYSTEM_PREFIXES) for p in paths)
+
+
 def queue() -> list[dict]:
-    rows = [r for r in db.proposals(500, status="new")]
+    rows = [r for r in db.proposals(500, status="new") if not is_system_work(r)]
     rows.sort(key=lambda r: (PRIORITY_ORDER.get((r.get("priority") or "normal").lower(), 1), int(r["id"])))
     return rows
 
 
-def run_one(proposal_id: int) -> tuple[str, str]:
-    """Paleidžia vieną kūrėjo darbą. Grąžina (statusas, eilutė)."""
+def system_queue() -> list[dict]:
+    """Sisteminiai pasiūlymai — rodomi, bet kūrėjui neduodami."""
+    rows = [r for r in db.proposals(500, status="new") if is_system_work(r)]
+    rows.sort(key=lambda r: (PRIORITY_ORDER.get((r.get("priority") or "normal").lower(), 1), int(r["id"])))
+    return rows
+
+
+def _last_run_id() -> int:
+    try:
+        rows = db.recent_runs(1)
+        return int(rows[0]["id"]) if rows else 0
+    except Exception:  # noqa: BLE001
+        return 0
+
+
+def run_one(proposal_id: int) -> tuple[str, str, dict | None]:
+    """Paleidžia vieną kūrėjo darbą. Grąžina (pasiūlymo būsena, eilutė, run įrašas)."""
+    before_run = _last_run_id()
     cmd = [
         sys.executable, str(ROOT / "agents" / "run.py"), "kurejas",
         "--proposal", str(proposal_id), "--trigger", "queue",
@@ -127,7 +162,16 @@ def run_one(proposal_id: int) -> tuple[str, str]:
         status = rows[0]["status"] if rows else "unknown"
     except Exception:  # noqa: BLE001
         status = "unknown"
-    return status, line
+
+    # Paleidimo įrašas: be jo negalima atskirti „nepavyko“ nuo „net nepradėjo“.
+    run_row = None
+    try:
+        fresh = [r for r in db.recent_runs(8)
+                 if int(r["id"]) > before_run and r.get("role") == "kurejas"]
+        run_row = fresh[0] if fresh else None
+    except Exception:  # noqa: BLE001
+        pass
+    return status, line, run_row
 
 
 def main() -> int:
@@ -141,7 +185,20 @@ def main() -> int:
     ap.add_argument("--max-minutes", type=int, default=720)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-triage", action="store_true", help="nepažymėti pasenusių/dubliuojančių")
+    ap.add_argument("--retry-blocked", type=int, default=0, metavar="N",
+                    help="atidaryti N blokuotų pasiūlymų (blocked → new) ir bandyti iš naujo")
     args = ap.parse_args()
+
+    if args.retry_blocked and not args.dry_run:
+        reopened = 0
+        for row in sorted(db.proposals(500, status="blocked"), key=lambda r: int(r["id"])):
+            if reopened >= args.retry_blocked:
+                break
+            db.set_proposal_status(int(row["id"]), "new",
+                                   f"pakartotinai atidaryta (buvo: {(row.get('note') or '')[:60]})")
+            reopened += 1
+        if reopened:
+            print(f"Atidaryta iš naujo: {reopened} blokuotų pasiūlymų")
 
     if not args.dry_run and not args.no_triage:
         obsolete, duplicates = triage()
@@ -149,7 +206,12 @@ def main() -> int:
             print(f"Tvarkyklė: pasenę {obsolete}, dubliai {duplicates}")
 
     pending = queue()
+    system = system_queue()
     print(f"Eilėje: {len(pending)} pasiūlymų (imsiu iki {args.max_items}, iki {args.max_minutes} min)")
+    if system:
+        print(f"  Sisteminių (ne kūrėjo darbas): {len(system)} — "
+              + ", ".join(f"#{p['id']}" for p in system[:6])
+              + (" …" if len(system) > 6 else ""))
 
     if args.dry_run:
         for p in pending[: args.max_items]:
@@ -157,8 +219,7 @@ def main() -> int:
         return 0
 
     started = time.time()
-    done = blocked = 0
-    processed = 0
+    done = blocked = review = processed = 0
 
     while processed < args.max_items and (time.time() - started) / 60 < args.max_minutes:
         pending = queue()
@@ -170,9 +231,9 @@ def main() -> int:
         print(f"→ #{prop['id']} [{prop.get('priority')}] {prop.get('title')[:60]}")
 
         # Jei kitas agentas laiko užraktą, palaukiam (bet ne amžinai).
-        status, line = "unknown", ""
+        status, line, run_row = "unknown", "", None
         for _ in range(6):
-            status, line = run_one(int(prop["id"]))
+            status, line, run_row = run_one(int(prop["id"]))
             if "jau dirba" not in line:
                 break
             time.sleep(60)
@@ -184,18 +245,41 @@ def main() -> int:
             # agentams (kalbų redaktoriui, architektui): užraktas globalus,
             # todėl be šio lango ilga eilė niekada neužleidžia vietos.
             time.sleep(25)
-        else:
-            blocked += 1
-            if status == "new":
-                # Paleidimas nepakeitė būsenos — žymim, kad eilė nekilų amžinai.
-                db.set_proposal_status(int(prop["id"]), "blocked", f"paleidimas nepavyko: {line[:120]}")
-            # Du iš eilės nepavykę — sustojam, kad nekęstume be galo.
-            if blocked >= 2 and done == 0:
-                print("Du nepavykę iš eilės — stabdau šį paleidimą.")
-                break
+            continue
+
+        # Ar paleidimas apskritai ėmėsi darbo? 3 s paleidimas su 0 failų yra
+        # sugedusi aplinka, o ne pasiūlymo kaltė. Tokiu atveju pasiūlymas
+        # NEPAŽYMIMAS blocked (kitaip jis prarandamas visam laikui) — stabdome
+        # visą eilę ir paliekame tai, ką reikia sutvarkyti žmogui/architektui.
+        duration = int((run_row or {}).get("duration_s") or 0)
+        artifacts = (run_row or {}).get("artifacts") or "[]"
+        run_status = (run_row or {}).get("status") or "—"
+        if run_row is not None and duration < MIN_ATTEMPT_S and artifacts in ("[]", "", None):
+            db.set_proposal_status(int(prop["id"]), "new",
+                                   f"bandymas neįvyko: {run_status} per {duration}s, 0 failų")
+            print(f"   Paleidimas truko {duration}s ir nepakeitė nė vieno failo — "
+                  f"tai ne bandymas. Pasiūlymas lieka new, stabdau eilę.")
+            break
+
+        if run_status == "published":
+            # Darbas paskelbtas, bet pasiūlymas neuždarytas: tikslas nepaliestas
+            # arba jo nesutvarkė `mark_implemented`. Tai PERŽIŪROS, o ne eilės
+            # gedimo atvejis — 2026-11-08 taip buvo visi 6 blokuoti.
+            review += 1
+            db.set_proposal_status(int(prop["id"]), "blocked",
+                                   f"paskelbta, bet tikslas nepakeistas — reikia peržiūros ({line[:80]})")
+            continue
+
+        blocked += 1
+        db.set_proposal_status(int(prop["id"]), "blocked", f"paleidimas nepavyko: {line[:120]}")
+        # Du nepavykę iš eilės — stabdome, kad nekęstume be galo.
+        if blocked >= 2 and done == 0:
+            print("Du nepavykę iš eilės — stabdau šį paleidimą.")
+            break
 
     elapsed = int((time.time() - started) / 60)
-    print(f"\nBaigta per {elapsed} min: įgyvendinta {done}, užblokuota {blocked}, liko {len(queue())}")
+    print(f"\nBaigta per {elapsed} min: įgyvendinta {done}, nepasisekė {blocked}, "
+          f"peržiūrai {review}, liko {len(queue())} (+{len(system_queue())} sisteminių)")
     return 0
 
 

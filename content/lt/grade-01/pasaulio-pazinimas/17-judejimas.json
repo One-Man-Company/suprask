@@ -1,0 +1,98 @@
+{
+  "id": "17-judejimas",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Nuožulnioji plokštuma: kas lemia greitį",
+  "subtitle": "Greitį keičia plokštumos aukštis, o ne daikto svoris",
+  "minutes": 9,
+  "outcomes": [
+    "Nurodau, kad nuo aukštesnės plokštumos rutulys rieda greičiau.",
+    "Paaiškinu, kad vienodo dydžio rutuliai atrieda beveik kartu, nors sveria skirtingai."
+  ],
+  "concept": {
+    "title": "Kas keičia greitį",
+    "big_idea": "Rutulys nuo aukštesnės plokštumos rieda greičiau. Du vienodo dydžio rutuliai atrieda beveik kartu, nors vienas sunkesnis.",
+    "steps": [
+      "Pasirink, kuris rutulys, tavo manymu, atriedės pirmas.",
+      "Spausk „Leisk abu“ ir stebėk. Abu rutuliai atrieda beveik kartu.",
+      "Pasirink „Aukšta“ ir vėl leisk abu. Dabar jie atrieda greičiau.",
+      "Pasirink „Žema“ ir palygink. Abu rutuliai atrieda lėčiau."
+    ],
+    "example": "Rogės nuo statesnio kalno įsibėgėja greičiau nei nuo lėkšto."
+  },
+  "sim": {
+    "component": "nuozulnioji-plokstuma",
+    "config": {
+      "words": ["Lengvas rutulys", "Sunkus rutulys", "Kartu", "Greičiau", "Lėčiau"]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Du vienodo dydžio rutuliai rieda ta pačia plokštuma. Kuris atriedės pirmas?",
+      "options": [
+        "Sunkesnis rutulys",
+        "Lengvesnis rutulys",
+        "Abu beveik kartu"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kas abiem rutuliams vienoda.",
+      "why": "Plokštuma abiem ta pati, todėl jie atrieda beveik kartu."
+    },
+    {
+      "q": "Tas pats rutulys rieda ta pačia plokštuma. Kaip jį priversti riedėti greičiau?",
+      "options": [
+        "Pakelti plokštumą",
+        "Pakeisti rutulį sunkesniu",
+        "Pakeisti rutulį lengvesniu"
+      ],
+      "answer": 0,
+      "hint": "Simuliacijoje rutulys buvo tas pats. Kas keitėsi?",
+      "why": "Aukštesnė plokštuma duoda didesnį nuolydį, todėl rutulys greičiau įsibėgėja."
+    },
+    {
+      "q": "Du vaikai leidžiasi vienodomis rogėmis. Kuris įsibėgės greičiau?",
+      "options": [
+        "Nuo lėkštesnio kalno",
+        "Nuo statesnio kalno",
+        "Abu vienodai"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, kas pasikeitė pakėlus plokštumą.",
+      "why": "Statesnis kalnas veikia kaip aukštesnė plokštuma: greitis didesnis."
+    },
+    {
+      "q": "Rutulys nuo aukštos plokštumos atrieda greičiau. Kodėl taip yra?",
+      "options": [
+        "Nes rutulys sunkesnis",
+        "Nes plokštuma aukštesnė",
+        "Nes rutulys didesnis"
+      ],
+      "answer": 1,
+      "hint": "Palygink abi plokštumas, o ne rutulius.",
+      "why": "Keičiasi plokštuma, o ne rutulys, todėl greitis didesnis abiem.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kodėl sunkus rutulys neatsilieka nuo lengvo? Pasakyk savais žodžiais.",
+  "teacher": {
+    "goal": "Suprasti, kad riedėjimo greitį lemia plokštumos aukštis (nuolydis), o ne daikto svoris. Modelis rodo abu rutulius vienu metu ir leidžia keisti tik vieną sąlygą.",
+    "prompt": "Kodėl sunkesnis rutulys neatriedėjo pirmas?",
+    "offline": "Padėkite liniuotę ar lentelę ant vienos knygos — tai nuožulnioji plokštuma. Riedinkite du vienodo dydžio rutulius: medinį ir plastilino. Pirma paprašykite vaiko spėti, kuris atriedės pirmas. Tada leiskite abu kartu ir paklauskite, ar skirtumą matė. Po to padėkite lentelę ant dviejų knygų ir pakartokite: abu rutuliai rieda greičiau. Paklauskite, kas pasikeitė — daiktas ar plokštuma.",
+    "misconceptions": [
+      "„Lengvesnis rutulys rieda greičiau.“ Modelis paleidžia abu vienu metu: jie atrieda beveik kartu, nors vienas sunkesnis.",
+      "„Plokštumos aukštis nieko nekeičia.“ Kai vaikas pats pasirenka „Aukšta“, abu rutuliai atrieda greičiau.",
+      "„Sunkus daiktas visada greitesnis.“ Tas pats rutulys nuo žemos plokštumos rieda lėčiau, o nuo aukštos — greičiau. Greitį keičia sąlyga.",
+      "„Rutulys rieda, nes jį kas nors stumia.“ Modelyje rutulių niekas nestumia: jie pradeda riedėti nuo nuolydžio."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Pasaulio pažinimas“ 26.4.1: klausimai „Kokie daiktai juda skirtingu greičiu?“ ir „Kaip priversti daiktą judėti greičiau, ar lėčiau?“; bandymas su nuožulniąja plokštuma.",
+    "Pasaulio pažinimo bendroji programa (2022): 1 klasės metų pasiekimas — nusako, kad daiktai juda skirtingai (tiesiai, lanku) ir skirtingu greičiu.",
+    "Hast, M. (2018). Incline Height and Object Weight: Examining the Fluidity of Children's Commonsense Theories of Motion. Eurasia Journal of Mathematics, Science and Technology Education, 14(4), 1407–1413. https://doi.org/10.29333/ejmste/83678 — 144 vaikai 5–12 m.: jaunesni mano, kad lengvesnis rutulys rieda greičiau, ir nemano, kad kitas plokštumos aukštis galėtų ką nors pakeisti."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (greitį lemia sąlyga, ne daiktas) rodoma per bandymą, o ne išvardijami judėjimo tipai.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (rogės, kitas rutulys), o ne įsimintą sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas palyginamas su tuo, kas įvyko; modelis nebaudžia ir leidžia bandyti dar kartą."
+  ]
+}

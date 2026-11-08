@@ -962,9 +962,331 @@ const vandensBusenos = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 5. Judėjimas — nuožulnioji plokštuma                                */
+/* ------------------------------------------------------------------ */
+/* Klaidinga nuostata (Hast, 2018 — 144 vaikai 5–12 m.): jaunesni vaikai
+   mano, kad LENGVESNIS rutulys rieda greičiau, ir nemano, kad kitas
+   plokštumos aukštis apskritai galėtų ką nors pakeisti. Todėl modelyje
+   yra dvi vienodos nuožulnios plokštumos, ant kurių VIENU METU rieda du
+   vienodo dydžio rutuliai: kairėje medinis (lengvas), dešinėje akmeninis
+   (sunkus). Vienintelis kintamasis, kurį vaikas keičia, yra abiejų
+   plokštumų aukštis — todėl priežastis matoma, o ne įsimenama.
+
+   Kodėl dvi plokštumos, o ne viena: žiūrint iš šono ant vienos
+   plokštumos abu rutuliai uždengtų vienas kitą, o paleidus juos
+   skirtingu atstumu nuo viršaus vienas atrodytų „pradėjęs pirmiau“.
+   Dvi vienodos plokštumos leidžia lyginti sąžiningai.
+
+   Fizika supaprastinta: riedėjimo trukmė proporcinga 1/√(sin θ), o
+   rutulio masė į ją neįeina (taip yra ir tikrame riedėjime be oro
+   pasipriešinimo). Sunkesnysis paleidžiamas 2 % greičiau — tiek, kad
+   ekrane nebūtų „lygiai taip pat“, bet akimis skirtumo nesimatytų.
+   Ribos: trinties ir rutulių sukimosi nesimato; tai pasakoma žodžiu
+   po simuliacija. */
+const NP_ANGLE = [12, 21, 30];                       // plokštumos kampas laipsniais
+const NP_NAME = ["žema", "vidutinė", "aukšta"];
+const NP_NAME_NOM = ["Žema", "Vidutinė", "Aukšta"];
+const NP_LEN = 150;                                   // lentos ilgis
+const NP_THICK = 9;                                   // lentos storis
+const NP_R = 10;                                      // rutulio spindulys
+const NP_PIVOT = [{ x: 30, y: 250 }, { x: 190, y: 250 }];
+const NP_D0 = 8;                                      // rutulio vieta viršuje
+const NP_D = NP_LEN - 6;                              // rutulio vieta apačioje
+
+const npGeom = (level) => {
+  const a = (NP_ANGLE[level] * Math.PI) / 180;
+  return { a, cos: Math.cos(a), sin: Math.sin(a), tan: Math.tan(a) };
+};
+
+/* Rutulio centras: `d` — atstumas nuo lentos viršaus žemyn lenta.
+   Rutulys remiasi į lentos viršutinę plokštumą, todėl nuo apatinės
+   briaunos jis atitrauktas lentos storiu ir savo spinduliu. */
+function npBallPos(i, level, d) {
+  const g = npGeom(level);
+  const p = NP_PIVOT[i];
+  const topX = p.x + NP_LEN * g.cos;
+  const topY = p.y - NP_LEN * g.sin;
+  const off = NP_THICK + NP_R;
+  return {
+    cx: topX - d * g.cos - off * g.sin,
+    cy: topY + d * g.sin - off * g.cos,
+  };
+}
+
+const nuozulniojiPlokstuma = {
+  mount({ stage, controls, api }) {
+    let level = 1;              // 0 žema, 1 vidutinė, 2 aukšta
+    let guess = null;           // "light" | "heavy" | "both"
+    let state = "ready";        // ready | rolling | done
+    let dL = NP_D0;             // lengvo rutulio vieta
+    let dH = NP_D0;             // sunkaus rutulio vieta
+    let prevLevel = null;       // su kuo lyginamas paskutinis bandymas
+    let reported = false;       // api.progress iškviestas vieną kartą
+    const heightsRun = new Set();
+    let raf = 0;
+    let msg = "Pirma pasirink spėjimą. Tada spausk „Leisk abu“.";
+    const reduce = typeof window.matchMedia === "function"
+      && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:30rem;margin:0 auto">
+        <svg id="np-scene" viewBox="0 0 360 320" role="img"
+             aria-label="Dvi nuožulnios plokštumos su rutuliais"></svg>
+        <p class="sim-note" style="font-size:.8rem;text-align:center">
+          Modelis supaprastintas: trinties ir rutulių sukimosi nesimato.
+        </p>
+      </div>`;
+
+    const guessBtn = (id, label) =>
+      `<button class="btn secondary" id="${id}" aria-pressed="false"
+               style="min-height:48px;padding:.4rem .3rem;font-size:.9rem;line-height:1.15">${label}</button>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.6rem;width:100%;max-width:34rem;margin:0 auto">
+        <div role="group" aria-label="Tavo spėjimas">
+          <p id="np-guess-label" style="margin:0 0 .3rem;font-weight:800;font-size:.9rem;text-align:center">Tavo spėjimas: kuris atriedės pirmas?</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:.4rem">
+            ${guessBtn("np-guess-light", "Lengvesnis pirmas")}
+            ${guessBtn("np-guess-heavy", "Sunkesnis pirmas")}
+            ${guessBtn("np-guess-both", "Abu kartu")}
+          </div>
+        </div>
+        <div role="group" aria-label="Plokštumos aukštis">
+          <p style="margin:0 0 .3rem;font-weight:800;font-size:.9rem;text-align:center">Plokštumos aukštis</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem">
+            ${guessBtn("np-h0", NP_NAME_NOM[0])}
+            ${guessBtn("np-h1", NP_NAME_NOM[1])}
+            ${guessBtn("np-h2", NP_NAME_NOM[2])}
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center">
+          <button class="btn" id="np-release" style="flex:1 1 9rem;min-height:48px">Leisk abu</button>
+          <button class="btn ghost" id="np-reset" aria-label="Pradėti bandymą iš naujo"
+                  style="flex:0 0 auto;min-height:48px">Iš naujo</button>
+        </div>
+        <p id="np-history" style="margin:0;text-align:center;font-size:.85rem;color:var(--ink-soft)">Bandymai: dar nė vieno.</p>
+      </div>`;
+
+    const svg = stage.querySelector("#np-scene");
+    const q = (sel) => controls.querySelector(sel);
+
+    function paintScene() {
+      const g = npGeom(level);
+      const ramps = NP_PIVOT.map((p, i) => {
+        const topX = p.x + NP_LEN * g.cos;
+        const topY = p.y - NP_LEN * g.sin;
+        // Atramos stulpas siekia lentos apačią, o ne kyšo per ją.
+        const postH = Math.max(10, p.y - (topY + 16 * g.tan));
+        return `${art.plank(topX - 16, p.y, 10, postH, 0)}
+          ${art.plank(topX - 21, p.y, 20, 5, 0)}
+          ${art.plank(p.x - 5, p.y, 11, 10, 0)}
+          ${art.plank(p.x, p.y, NP_LEN, NP_THICK, NP_ANGLE[level])}`;
+      }).join("");
+
+      svg.innerHTML = `
+        ${art.defs("np")}
+        <rect x="0" y="0" width="360" height="320" rx="16" fill="url(#np-sky)"/>
+        ${art.sun(318, 40, 13, "np")}
+        ${art.cloud(58, 44, 0.9)}
+        ${art.cloud(168, 26, 0.6, 0.8)}
+        ${art.birds(238, 56)}
+        ${art.hills(360, 214)}
+        ${art.soil(0, 250, 360, 70, "np")}
+        ${art.grass(8, 252, 1)}
+        ${art.grass(352, 252, 0.9)}
+        ${ramps}
+        <g id="np-ball-light">${art.ball(0, 0, NP_R, "#f2cf94", "#a9793f")}</g>
+        <g id="np-ball-heavy">${art.ball(0, 0, NP_R, "#9aa3ad", "#5d6670")}</g>
+        <text x="34" y="290" font-family="system-ui, sans-serif" font-size="12" font-weight="700"
+              fill="#f7ecd9">lengvas</text>
+        <text x="194" y="290" font-family="system-ui, sans-serif" font-size="12" font-weight="700"
+              fill="#f7ecd9">sunkus</text>`;
+
+      placeBalls();
+    }
+
+    function placeBalls() {
+      const light = svg.querySelector("#np-ball-light");
+      const heavy = svg.querySelector("#np-ball-heavy");
+      if (!light || !heavy) return;
+      const a = npBallPos(0, level, dL);
+      const b = npBallPos(1, level, dH);
+      light.setAttribute("transform", `translate(${a.cx.toFixed(1)} ${a.cy.toFixed(1)})`);
+      heavy.setAttribute("transform", `translate(${b.cx.toFixed(1)} ${b.cy.toFixed(1)})`);
+    }
+
+    function paintToggles() {
+      const pairs = [
+        [q("#np-guess-light"), guess === "light"],
+        [q("#np-guess-heavy"), guess === "heavy"],
+        [q("#np-guess-both"), guess === "both"],
+        [q("#np-h0"), level === 0],
+        [q("#np-h1"), level === 1],
+        [q("#np-h2"), level === 2],
+      ];
+      for (const [btn, on] of pairs) {
+        btn.setAttribute("aria-pressed", String(on));
+        btn.style.background = on ? "var(--ink)" : "var(--paper-2)";
+        btn.style.color = on ? "var(--paper)" : "var(--ink)";
+        btn.style.borderColor = on ? "var(--ink)" : "var(--line)";
+      }
+      q("#np-guess-label").textContent = state === "ready" && prevLevel === null
+        ? "Tavo spėjimas: kuris atriedės pirmas?"
+        : "Tavo spėjimas (jau palygintas)";
+    }
+
+    function paintHistory() {
+      const el = q("#np-history");
+      if (!heightsRun.size) {
+        el.textContent = "Bandymai: dar nė vieno.";
+        return;
+      }
+      const done = NP_NAME_NOM
+        .map((n, i) => (heightsRun.has(i) ? `${n} ✓` : `${n} —`))
+        .join(" · ");
+      el.textContent = `Bandymai: ${done}`;
+      el.setAttribute("aria-label",
+        `Atlikti bandymai: ${[...heightsRun].map((i) => NP_NAME_NOM[i].toLowerCase()).join(", ")}`);
+    }
+
+    function render() {
+      paintScene();
+      paintToggles();
+      paintHistory();
+
+      svg.setAttribute("aria-label",
+        `Dvi vienodos plokštumos. Kairėje lengvas rutulys, dešinėje sunkus. `
+        + `Plokštuma ${NP_NAME[level]}.`
+        + (state === "done" ? " Abu rutuliai atriedėjo beveik kartu." : ""));
+
+      api.readout(`Plokštuma ${NP_NAME[level]} · `
+        + (state === "rolling" ? "rutuliai rieda" : state === "done" ? "rutuliai apačioje" : "rutuliai viršuje"));
+      api.note(msg);
+    }
+
+    const cancelRoll = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+
+    function finishRun() {
+      state = "done";
+      dL = NP_D;
+      dH = NP_D;
+      const first = prevLevel === null;
+      if (first) {
+        const said = guess === "light" ? "lengvesnis pirmas"
+          : guess === "heavy" ? "sunkesnis pirmas" : "abu kartu";
+        msg = `Spėjai: ${said}. Įvyko: abu atriedėjo beveik kartu.`;
+        api.speak("Kartu", { rate: .9 });
+      } else if (level > prevLevel) {
+        msg = "Plokštuma aukštesnė: abu rutuliai atriedėjo greičiau.";
+        api.speak("Greičiau", { rate: .9 });
+      } else if (level < prevLevel) {
+        msg = "Plokštuma žemesnė: abu rutuliai atriedėjo lėčiau.";
+        api.speak("Lėčiau", { rate: .9 });
+      } else {
+        msg = "Ta pati plokštuma: rutuliai vėl atriedėjo beveik kartu.";
+      }
+      const before = prevLevel;
+      prevLevel = level;
+      heightsRun.add(level);
+      /* Rezultatas — dviejų SKIRTINGŲ aukščių palyginimas, o ne vienas
+         bandymas (LL-29). Kartojimas tame pačiame aukštyje pažangos
+         nežymi ir jos neatšaukia. */
+      if (!reported && guess !== null && before !== null && before !== level) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+      render();
+    }
+
+    function release() {
+      if (state === "rolling") return;
+      if (guess === null) {
+        msg = "Pirma pasirink spėjimą. Tada spausk „Leisk abu“.";
+        render();
+        api.readout("Pirma pasirink spėjimą.");
+        q("#np-guess-light").focus();
+        return;
+      }
+      cancelRoll();
+      state = "rolling";
+      dL = NP_D0;
+      dH = NP_D0;
+      msg = "Rutuliai rieda. Stebėk, kuris atriedės pirmas.";
+      render();
+
+      const g = npGeom(level);
+      const T = 760 / Math.sqrt(g.sin);        // trukmė priklauso tik nuo kampo
+      if (reduce) { finishRun(); return; }
+
+      const t0 = performance.now();
+      const tick = (now) => {
+        const pH = Math.min(1, (now - t0) / T);
+        const pL = Math.min(1, (now - t0) / (T * 1.02));
+        dH = NP_D0 + (NP_D - NP_D0) * pH * pH;   // tolygiai greitėjantis judėjimas
+        dL = NP_D0 + (NP_D - NP_D0) * pL * pL;
+        placeBalls();
+        if (pH < 1 || pL < 1) {
+          raf = requestAnimationFrame(tick);
+        } else {
+          raf = 0;
+          finishRun();
+        }
+      };
+      raf = requestAnimationFrame(tick);
+    }
+
+    function setLevel(l) {
+      cancelRoll();
+      level = l;
+      state = "ready";
+      dL = NP_D0;
+      dH = NP_D0;
+      if (guess === null) {
+        msg = "Pirma pasirink spėjimą. Tada spausk „Leisk abu“.";
+      } else if (prevLevel !== null && l > prevLevel) {
+        msg = "Plokštuma aukštesnė. Leisk rutulius ir palygink.";
+      } else if (prevLevel !== null && l < prevLevel) {
+        msg = "Plokštuma žemesnė. Leisk rutulius ir palygink.";
+      } else {
+        msg = "Plokštuma parinkta. Leisk rutulius.";
+      }
+      render();
+    }
+
+    function pickGuess(v) {
+      guess = v;
+      msg = state === "done"
+        ? "Spėjimas pakeistas. Bandyk su kitu plokštumos aukščiu."
+        : "Spėjimas įrašytas. Dabar spausk „Leisk abu“.";
+      render();
+      api.speak(v === "light" ? "Lengvas rutulys" : v === "heavy" ? "Sunkus rutulys" : "Kartu", { rate: .9 });
+    }
+
+    q("#np-guess-light").addEventListener("click", () => pickGuess("light"));
+    q("#np-guess-heavy").addEventListener("click", () => pickGuess("heavy"));
+    q("#np-guess-both").addEventListener("click", () => pickGuess("both"));
+    q("#np-h0").addEventListener("click", () => setLevel(0));
+    q("#np-h1").addEventListener("click", () => setLevel(1));
+    q("#np-h2").addEventListener("click", () => setLevel(2));
+    q("#np-release").addEventListener("click", release);
+    q("#np-reset").addEventListener("click", () => {
+      cancelRoll();
+      level = 1; guess = null; state = "ready"; dL = NP_D0; dH = NP_D0;
+      prevLevel = null; heightsRun.clear();
+      msg = "Naujas bandymas. Pirma pasirink spėjimą.";
+      render();
+    });
+
+    render();
+    return () => cancelRoll();
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
   "gyvunu-grupes": gyvunuGrupes,
   "vandens-busenos": vandensBusenos,
+  "nuozulnioji-plokstuma": nuozulniojiPlokstuma,
 };

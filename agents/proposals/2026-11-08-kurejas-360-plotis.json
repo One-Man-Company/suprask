@@ -1,0 +1,16 @@
+{
+  "role": "kurejas",
+  "run_id": 103,
+  "created": "2026-11-08T01:58:40+02:00",
+  "type": "struktura",
+  "title": "check_view.py neturi 360 px pločio, nors jo reikalauja kūrėjo sąlyga",
+  "body": "Kūrėjo vaidmens baigties sąlyga reikalauja, kad simuliacija veiktų 360 px pločio ekrane, o `scripts/check_view.py` turi tik tris plotus: desktop 1440, tablet 1024 ir phone 390. Todėl 360 px atvejis lieka nepatikrintas įrankiu, kurį cituoja pati sąlyga: šiame paleidime jį teko tikrinti atskiru Playwright zondą, kuris repo nelieka ir kitą kartą nepasileis. Siūlau pridėti ketvirtą plotą `small` = 360×780 į `VIEWPORTS` ir įtraukti jį į numatytąjį `--viewports` sąrašą, kad `check_view.py --module <id>` tikrintų ir siauriausią realų ekraną. Tai ne nauja funkcija, o spragos uždarymas: 390 px yra iPhone plotis, o 360 px — pigiausių Android telefonų, kuriais naudojasi dalis šeimų. Papildomai verta, kad įrankis spausdintų, kuriuos plotus tikrino, jog ataskaitoje matytųsi, ar 360 px tikrai buvo patikrintas.",
+  "target": "scripts/check_view.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_view.py:31–35 — VIEWPORTS turi tik desktop 1440, tablet 1024, phone 390",
+    "scripts/check_view.py:183 — numatytasis --viewports yra desktop,phone",
+    "agents/log/kurejas-2026-11-08T0158.md — 360 px patikrintas atskiru zondą, nes įrankis tokio ploto neturi"
+  ]
+}

@@ -46,7 +46,8 @@
         { "id": "08-metu-laikai", "title": "Metų laikai", "subtitle": "Kodėl keičiasi medžiai, oras ir gyvūnai", "file": "grade-01/pasaulio-pazinimas/08-metu-laikai.json", "minutes": 9, "sim": "metu-laikai" },
         { "id": "09-augalo-gyvenimas", "title": "Augalo gyvenimas", "subtitle": "Ko augalui reikia, kad jis augtų", "file": "grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json", "minutes": 9, "sim": "augalo-gyvenimas" },
         { "id": "10-gyvunu-grupes", "title": "Gyvūnų grupės", "subtitle": "Žinduoliai, paukščiai, žuvys", "file": "grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json", "minutes": 9, "sim": "gyvunu-grupes" },
-        { "id": "16-vandens-busenos", "title": "Kur dingsta vanduo", "subtitle": "Vanduo neprapuola — jis keičia savo formą", "file": "grade-01/pasaulio-pazinimas/16-vandens-busenos.json", "minutes": 9, "sim": "vandens-busenos" }
+        { "id": "16-vandens-busenos", "title": "Kur dingsta vanduo", "subtitle": "Vanduo neprapuola — jis keičia savo formą", "file": "grade-01/pasaulio-pazinimas/16-vandens-busenos.json", "minutes": 9, "sim": "vandens-busenos" },
+        { "id": "17-judejimas", "title": "Nuožulnioji plokštuma: kas lemia greitį", "subtitle": "Greitį keičia plokštumos aukštis, o ne daikto svoris", "file": "grade-01/pasaulio-pazinimas/17-judejimas.json", "minutes": 9, "sim": "nuozulnioji-plokstuma" }
       ]
     },
     {

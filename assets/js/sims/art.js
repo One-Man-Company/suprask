@@ -252,6 +252,46 @@ export const art = {
     </g>`;
   },
 
+  /**
+   * Medinė lenta (nuožulnioji plokštuma, atrama, tiltelis).
+   * `x, y` — apatinis kairysis kampas; `w` — ilgis; `h` — storis.
+   * `angle` — kiek laipsnių pakelta į dešinę (0 — guli). Sukama aplink
+   * apatinį kairįjį kampą, todėl taškas (x, y) lieka vietoje.
+   */
+  plank(x, y, w, h, angle = 0) {
+    const n = Math.max(2, Math.round(w / 26));
+    const grain = Array.from({ length: n }, (_, i) => {
+      const gx = ((i + 0.5) * w) / n;
+      return `<line x1="${gx.toFixed(1)}" y1="${(-h + 1.6).toFixed(1)}" x2="${gx.toFixed(1)}" y2="-1.6"`
+        + ` stroke="${P.woodDark}" stroke-opacity=".22" stroke-width="1.1"/>`;
+    }).join("");
+    return `<g transform="translate(${x} ${y}) rotate(${-angle})">
+      <rect x="0" y="${-h}" width="${w}" height="${h}" rx="${(h * 0.34).toFixed(1)}"
+            fill="${P.wood}" stroke="${P.woodDark}" stroke-width="2.4"/>
+      ${grain}
+      <rect x="1.5" y="${(-h + 1.4).toFixed(1)}" width="${(w - 3).toFixed(1)}" height="${(h * 0.3).toFixed(1)}"
+            rx="${(h * 0.16).toFixed(1)}" fill="#ffffff" opacity=".26"/>
+    </g>`;
+  },
+
+  /**
+   * Rutulys. Atpažįstamas ne vien iš spalvos: turi šviesos atspindį ir
+   * apatinį šešėlį, todėl atrodo apvalus. Spalva nurodoma todėl, kad tame
+   * pačiame bandyme reikia dviejų skirtingų rutulių (lengvo ir sunkaus).
+   */
+  ball(cx, cy, r, color = "#f2cf94", edge = "#a9793f") {
+    return `<g>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" stroke="${edge}" stroke-width="2.4"/>
+      <path d="M${(cx - r * 0.78).toFixed(1)} ${(cy + r * 0.22).toFixed(1)}
+               A ${r} ${r} 0 0 0 ${(cx + r * 0.78).toFixed(1)} ${(cy + r * 0.22).toFixed(1)}"
+            fill="none" stroke="${edge}" stroke-opacity=".32" stroke-width="2"/>
+      <ellipse cx="${(cx - r * 0.3).toFixed(1)}" cy="${(cy - r * 0.34).toFixed(1)}"
+               rx="${(r * 0.3).toFixed(1)}" ry="${(r * 0.2).toFixed(1)}"
+               fill="#ffffff" opacity=".62"
+               transform="rotate(-24 ${(cx - r * 0.3).toFixed(1)} ${(cy - r * 0.34).toFixed(1)})"/>
+    </g>`;
+  },
+
   /** Upė su bangomis ir atspindžiu. */
   river(x, y, w, h, id) {
     const waves = [0, 1, 2].map((i) => {

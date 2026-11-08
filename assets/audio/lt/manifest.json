@@ -799,6 +799,10 @@
   "n": "n/061db2d7c4edc72f-8c518491.mp3",
   "s": "s/061db2d7c4edc72f-1be7692b.mp3"
  },
+ "Greičiau": {
+  "n": "n/60d89cb04b7054d4-88245fc5.mp3",
+  "s": "s/60d89cb04b7054d4-58e113db.mp3"
+ },
  "Gretasienis iš priekio atrodo kaip stačiakampis.": {
   "n": "n/9ec471ce9fcf62a4-360ba9f2.mp3",
   "s": "s/9ec471ce9fcf62a4-bb05e252.mp3"
@@ -838,6 +842,10 @@
  "Karosas": {
   "n": "n/f7523c580e0248c6-81d5ea90.mp3",
   "s": "s/f7523c580e0248c6-2ee7ff89.mp3"
+ },
+ "Kartu": {
+  "n": "n/2425fde6a44ff0ec-1a134412.mp3",
+  "s": "s/2425fde6a44ff0ec-be89e5c8.mp3"
  },
  "Karvė": {
   "n": "n/abd086294f9e82f3-fecb1c32.mp3",
@@ -947,9 +955,17 @@
   "n": "n/fe352e35865e1d09-253da876.mp3",
   "s": "s/fe352e35865e1d09-6278e347.mp3"
  },
+ "Lengvas rutulys": {
+  "n": "n/0379335dceaabec9-5d423f9c.mp3",
+  "s": "s/0379335dceaabec9-322b74bd.mp3"
+ },
  "Lygiosios": {
   "n": "n/e8f8397e285c5f87-8a122b20.mp3",
   "s": "s/e8f8397e285c5f87-99131409.mp3"
+ },
+ "Lėčiau": {
+  "n": "n/4a93b4c998b00b54-0abb8529.mp3",
+  "s": "s/4a93b4c998b00b54-1b672d00.mp3"
  },
  "M": {
   "n": "n/08f271887ce94707-c064f849.mp3",
@@ -1138,6 +1154,10 @@
  "Stulpelio aukštis rodo skaičių.": {
   "n": "n/9a2915bce2544c16-cea31696.mp3",
   "s": "s/9a2915bce2544c16-a0349067.mp3"
+ },
+ "Sunkus rutulys": {
+  "n": "n/0ab991d7bf12a353-6db070b8.mp3",
+  "s": "s/0ab991d7bf12a353-a10394d6.mp3"
  },
  "Suskaičiavai visas figūras. Apskritimų daugiau, nors jie mažesni.": {
   "n": "n/bf35e2dc555cc020-03cd6819.mp3",

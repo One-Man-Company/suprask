@@ -547,6 +547,10 @@
   "n": "n/db209a986e7c2abf-1f57a2cc.mp3",
   "s": "s/db209a986e7c2abf-aaf3a101.mp3"
  },
+ "Akmuo dugne.": {
+  "n": "n/6238c64e4347c0e7-d64863b7.mp3",
+  "s": "s/6238c64e4347c0e7-fcfde44f.mp3"
+ },
  "Antis": {
   "n": "n/335b43e664368642-a91fdbc2.mp3",
   "s": "s/335b43e664368642-e15bb75d.mp3"
@@ -646,6 +650,14 @@
  "Dešinė sunkesnė.": {
   "n": "n/eddc1aa0b9dd380e-aadbab58.mp3",
   "s": "s/eddc1aa0b9dd380e-97141549.mp3"
+ },
+ "Didelis medis plaukia.": {
+  "n": "n/7b582814f525a25f-a9d0c4d2.mp3",
+  "s": "s/7b582814f525a25f-a060312a.mp3"
+ },
+ "Didelis medis sunkesnis už mažą metalą.": {
+  "n": "n/de3ba7a4c9091a43-65a82f35.mp3",
+  "s": "s/de3ba7a4c9091a43-9eb8bf44.mp3"
  },
  "Diena 1": {
   "n": "n/0245796e0f0a4200-a3c3d241.mp3",
@@ -766,6 +778,10 @@
  "Diena 9": {
   "n": "n/9857ee5f9d20326c-986364ea.mp3",
   "s": "s/9857ee5f9d20326c-11bba99c.mp3"
+ },
+ "Dvi naujos kaladėlės. Didelė medinė ir maža metalinė.": {
+  "n": "n/e278741a836e576c-5454a6dd.mp3",
+  "s": "s/e278741a836e576c-938b96b2.mp3"
  },
  "Dėlionė": {
   "n": "n/02effa582a419044-fec7949a.mp3",
@@ -971,6 +987,18 @@
   "n": "n/08f271887ce94707-c064f849.mp3",
   "s": "s/08f271887ce94707-4c32a3d0.mp3"
  },
+ "Mažas metalas dugne.": {
+  "n": "n/343c8f5bfbe1f97c-565e1b9a.mp3",
+  "s": "s/343c8f5bfbe1f97c-567eb694.mp3"
+ },
+ "Medis plaukia.": {
+  "n": "n/77d4cb61d83a42bc-6ba967c4.mp3",
+  "s": "s/77d4cb61d83a42bc-a490a0d5.mp3"
+ },
+ "Metalas dugne.": {
+  "n": "n/2285765af1dbe56e-bc832664.mp3",
+  "s": "s/2285765af1dbe56e-10f0e8c4.mp3"
+ },
  "N": {
   "n": "n/8ce86a6ae65d3692-84095ad0.mp3",
   "s": "s/8ce86a6ae65d3692-081e4fe1.mp3"
@@ -1063,6 +1091,10 @@
   "n": "n/13f77b21b8fd4a6b-b404e361.mp3",
   "s": "s/13f77b21b8fd4a6b-be4a4fd6.mp3"
  },
+ "Pradedam iš naujo. Trys vienodo dydžio kaladėlės.": {
+  "n": "n/5b1b1cb7703dc981-0d5edcfe.mp3",
+  "s": "s/5b1b1cb7703dc981-e06bba54.mp3"
+ },
  "Pradedam. Prijunk laidus ir pažiūrėk, ar lemputė šviečia.": {
   "n": "n/cbe1d27c52bcf99c-cbd96c13.mp3",
   "s": "s/cbe1d27c52bcf99c-38cd0008.mp3"
@@ -1151,9 +1183,17 @@
   "n": "n/050db6f27be6c9b7-ccf54bb1.mp3",
   "s": "s/050db6f27be6c9b7-3887037c.mp3"
  },
+ "Spėjimas įrašytas. Spausk „Nuleisk į vandenį“.": {
+  "n": "n/237272ffa0e70314-8dc07c48.mp3",
+  "s": "s/237272ffa0e70314-23d00f9c.mp3"
+ },
  "Stulpelio aukštis rodo skaičių.": {
   "n": "n/9a2915bce2544c16-cea31696.mp3",
   "s": "s/9a2915bce2544c16-a0349067.mp3"
+ },
+ "Sunkesnis medis plaukia. Lengvesnis metalas dugne.": {
+  "n": "n/b5bcf1521dbe8fda-37f6b285.mp3",
+  "s": "s/b5bcf1521dbe8fda-76442819.mp3"
  },
  "Sunkus rutulys": {
   "n": "n/0ab991d7bf12a353-6db070b8.mp3",
@@ -1215,6 +1255,10 @@
   "n": "n/bc5649b646cf679f-40a5678f.mp3",
   "s": "s/bc5649b646cf679f-4b0d86d5.mp3"
  },
+ "Trys vienodo dydžio kaladėlės. Kuri plauks?": {
+  "n": "n/da3c514821c976da-86f549a5.mp3",
+  "s": "s/da3c514821c976da-278d796c.mp3"
+ },
  "U": {
   "n": "n/a25513c7e0f6eaa8-b4e039e2.mp3",
   "s": "s/a25513c7e0f6eaa8-cefa011a.mp3"
@@ -1274,6 +1318,10 @@
  "Visos figūros savo vietose. Puiku!": {
   "n": "n/936e4c7947cd9753-0a09e79f.mp3",
   "s": "s/936e4c7947cd9753-a2164229.mp3"
+ },
+ "Visos trys vandenyje. Medis plaukia, akmuo ir metalas dugne.": {
+  "n": "n/f42e2afc12600ac5-8c9803ce.mp3",
+  "s": "s/f42e2afc12600ac5-090caee8.mp3"
  },
  "Y": {
   "n": "n/18f5384d58bcb1bb-bd31640d.mp3",

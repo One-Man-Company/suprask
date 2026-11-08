@@ -69,7 +69,8 @@
       "emoji": "🔌",
       "intro": "Kaip daiktai veikia: išbandyk rankomis ir suprask, kodėl.",
       "modules": [
-        { "id": "01-elektros-grandine", "title": "Elektra: kelias turi būti vientisas", "subtitle": "Kodėl su vienu laidu lemputė nešviečia", "file": "grade-01/technologijos/01-elektros-grandine.json", "minutes": 9, "sim": "elektros-grandine" }
+        { "id": "01-elektros-grandine", "title": "Elektra: kelias turi būti vientisas", "subtitle": "Kodėl su vienu laidu lemputė nešviečia", "file": "grade-01/technologijos/01-elektros-grandine.json", "minutes": 9, "sim": "elektros-grandine" },
+        { "id": "02-medziagu-bandymas", "title": "Medžiagos: tinkamumą parodo bandymas", "subtitle": "Lengva kaladėlė skęsta, o sunki plaukia", "file": "grade-01/technologijos/02-medziagu-bandymas.json", "minutes": 9, "sim": "medziagu-bandymas" }
       ]
     }
   ]

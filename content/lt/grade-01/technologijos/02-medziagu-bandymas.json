@@ -1,0 +1,112 @@
+{
+  "id": "02-medziagu-bandymas",
+  "grade": 1,
+  "strand": "technologijos",
+  "title": "Medžiagos: tinkamumą parodo bandymas",
+  "subtitle": "Lengva kaladėlė skęsta, o sunki plaukia",
+  "minutes": 9,
+  "outcomes": [
+    "Išbandau kaladėles vandenyje ir pasakau, kuri plaukia.",
+    "Paaiškinu, kad plaukimą lemia medžiaga, o ne svoris."
+  ],
+  "concept": {
+    "title": "Bandymas, o ne svoris",
+    "big_idea": "Trys vienodo dydžio kaladėlės elgiasi skirtingai: medinė plaukia, metalinė skęsta. Didesnė medinė sveria daugiau už mažą metalinę, bet vis tiek plaukia.",
+    "steps": [
+      "Spėk, kuri kaladėlė plauks. Tada nuleisk ją į vandenį.",
+      "Sudėk visas tris kaladėles. Pažiūrėk, kuri plaukia, o kuri dugne.",
+      "Pasverk didelę medinę ir mažą metalinę. Medinė sunkesnė.",
+      "Nuleisk abi. Sunkesnė medinė plaukia, lengvesnė metalinė skęsta."
+    ],
+    "example": "Medinė lenta plaukia, o metalinė vinis nuskęsta."
+  },
+  "sim": {
+    "component": "medziagu-bandymas",
+    "config": {
+      "sentences": {
+        "pradzia": "Trys vienodo dydžio kaladėlės. Kuri plauks?",
+        "spejimas": "Spėjimas įrašytas. Spausk „Nuleisk į vandenį“.",
+        "medis-plaukia": "Medis plaukia.",
+        "akmuo-dugne": "Akmuo dugne.",
+        "metalas-dugne": "Metalas dugne.",
+        "visos-istirtos": "Visos trys vandenyje. Medis plaukia, akmuo ir metalas dugne.",
+        "antra-dalis": "Dvi naujos kaladėlės. Didelė medinė ir maža metalinė.",
+        "pasverta": "Didelis medis sunkesnis už mažą metalą.",
+        "didelis-medis-plaukia": "Didelis medis plaukia.",
+        "mazas-metalas-dugne": "Mažas metalas dugne.",
+        "baigta": "Sunkesnis medis plaukia. Lengvesnis metalas dugne.",
+        "is-naujo": "Pradedam iš naujo. Trys vienodo dydžio kaladėlės."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Didelė medinė kaladėlė sunkesnė už mažą metalinę. Kuri plauks?",
+      "options": [
+        "Medinė",
+        "Metalinė",
+        "Abi nusileis"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, ką parodė svertas ir kas įvyko vandenyje.",
+      "why": "Medžiaga lemia plaukimą, todėl sunkesnė medinė kaladėlė plaukia."
+    },
+    {
+      "q": "Metalinis šaukštas ir medinė mentelė įmesti į vandenį. Kuri nusileis į dugną?",
+      "options": [
+        "Mentelė",
+        "Šaukštas",
+        "Abi plauks"
+      ],
+      "answer": 1,
+      "hint": "Palygink medžiagas, o ne daiktų dydį.",
+      "why": "Metalas skęsta, medis plaukia, nors mentelė didesnė."
+    },
+    {
+      "q": "Rūta renkasi laiveliui kaladėlę. Blizgi jai atrodo geriausia. Kaip jai patartum elgtis?",
+      "options": [
+        "Išbandyti abi vandenyje",
+        "Imti blizgią kaladėlę",
+        "Imti didesnę kaladėlę"
+      ],
+      "answer": 0,
+      "hint": "Blizgesys nieko nesako apie plaukimą.",
+      "why": "Tinkamumą parodo bandymas, o ne išvaizda."
+    },
+    {
+      "q": "Mažas akmenukas ir didelis medinis rąstas įmesti į vandenį. Kas plauks?",
+      "options": [
+        "Akmenukas",
+        "Rąstas",
+        "Abu nusileis"
+      ],
+      "answer": 1,
+      "hint": "Mažas daiktas ne visada plaukia.",
+      "why": "Akmuo skęsta, medis plaukia, nors rąstas didesnis ir sunkesnis.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip paaiškintum draugui, kad lengvas daiktas gali nuskęsti?",
+  "teacher": {
+    "goal": "Suprasti, kad daikto plaukimą lemia medžiaga, o ne svoris: sunkesnė medinė kaladėlė plaukia, lengvesnė metalinė skęsta. Modelis leidžia pirma spėti, paskui išbandyti ir galiausiai palyginti abu bandymus tame pačiame ekrane.",
+    "prompt": "Kodėl sunkesnė kaladėlė plaukė, o lengvesnė nuskendo?",
+    "offline": "Į dubenį su vandeniu įdėkite tris vienodo dydžio kaladėles: medinę, akmens ir metalinę. Paprašykite vaiko pirma spėti, kuri plauks, tada leiskite įmesti visas tris. Antroje dalyje pasverkite didelę medinę ir mažą metalinę kaladėlę (pakanka sverti rankose ar virtuvinėmis svarstyklėmis) ir abi nuleiskite į vandenį. Trečias bandymas, jau be ekrano: ta pati aliuminio folija plokščia plaukia, o sugniaužta į rutuliuką skęsta — taip parodoma modelio riba, kad laivą laiko ir forma.",
+    "misconceptions": [
+      "„Plaukia, nes lengva, o skęsta, nes sunku.“ Modelis šią taisyklę laužo tame pačiame ekrane: didelė medinė kaladėlė sunkesnė už mažą metalinę, bet plaukia būtent ji.",
+      "„Metalas visada skęsta.“ Tikri laivai metaliniai, bet jie tuščiaviduriai, todėl jų neša forma ir oras viduje. Tai atskiras bandymas su folija, o ne šio modelio išvada — modelis bando tik vientisas kaladėles.",
+      "„Blizgus daiktas tinkamesnis darbui.“ Modelis blizgią metalinę kaladėlę nuleidžia į dugną, o neblizgi medinė plaukia; užduotis apie Rūtą tikrina tą pačią klaidą.",
+      "„Kas didesnis, tas skęsta.“ Vienodo dydžio kaladėlės elgiasi skirtingai, o mažesnė metalinė skęsta, kai didesnė medinė plaukia."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Technologijos“, 23.3 „Konstrukcinės medžiagos“: daiktų medžiagiškumas, savybės (kieta, minkšta, plastiška, blizgi) ir tinkamumo darbui nustatymas.",
+    "Technologijų bendroji programa (2022), 23.3.1: medžiagų savybių pažinimas ir tinkamumo darbui nustatymas 1–2 klasėje.",
+    "Schwichow, M., & Zoupidis, A. (2024). Teaching and learning floating and sinking: A meta-analysis. Journal of Research in Science Teaching, 61(2), 487–516. https://doi.org/10.1002/tea.21909 — mokiniai dažniausiai teigia, kad daiktas plaukia, nes mažas ar lengvas, o skęsta, nes didelis ar sunkus (Fassoulopoulos ir kt., 2003; Smith ir kt., 1992); rankomis atliekami bandymai duoda didesnį efektą už virtualius.",
+    "Paik, S., Song, G., Kim, S., & Ha, M. (2017). Straipsnis apie plaukimo sąvokos vertinimo pakopas. Eurasia Journal of Mathematics, Science and Technology Education, 13(8), 4965–4986. https://doi.org/10.12973/eurasia.2017.00976a — Piaget stadijos: 6–8 m. vaikas sako, kad laivas plaukia, nes yra lengvas; svorio ir skysčio santykį jis supranta apie 9 m., todėl tankio 1 klasėje nedėstome."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (plaukimą lemia medžiaga, o ne svoris). Tankis, masė ir forma sąmoningai neįtraukti — forma lieka mokytojo veiklai su folija.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (vinis ir lenta, šaukštas ir mentelė, akmenukas ir rąstas), o ne įsimintą formuluotę.",
+    "3 žingsnis — pagalba laiku: vaiko spėjimas palyginamas su tuo, kas įvyko; nėra laikmačio, klaida nebaudžiama, yra praplėtimo užduotis."
+  ]
+}

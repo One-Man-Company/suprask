@@ -547,4 +547,67 @@ export const art = {
       ${scale(-6, 0, 10, 12)}${scale(6, 0, 10, 12)}
       ${scale(0, 8, 11, 12)}`);
   },
+
+  /* ------------------------------------------------------------------ */
+  /* Medžiagų kubai (1 klasės technologijos)                             */
+  /*                                                                    */
+  /* Kodėl atskiras metodas: bandyme „kuri kaladėlė plauks?“ vaikas turi  */
+  /* atskirti medžiagą be užrašo skaitymo. Visi trys kubai piešti toje    */
+  /* pačioje geometrijoje — skiriasi tik tekstūra ir spalva, todėl dydis  */
+  /* neneša informacijos, o medžiaga matoma iš karto.                    */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Medžiagos kubas. kind: medis | akmuo | metalas.
+   * `x, y` — priekinio šono viršutinis kairysis kampas, `s` — šono kraštinė.
+   */
+  materialCube(kind, x, y, s) {
+    const dx = s * 0.3;
+    const dy = s * 0.26;
+    const M = {
+      medis: { front: "#c99b64", top: "#e3bd8a", side: "#a97c48", edge: "#7c5327" },
+      akmuo: { front: "#a6a29a", top: "#c5c1b7", side: "#85817a", edge: "#68645c" },
+      metalas: { front: "#b7c4d0", top: "#e0e8ef", side: "#8fa0af", edge: "#64737f" },
+    }[kind] || { front: "#c99b64", top: "#e3bd8a", side: "#a97c48", edge: "#7c5327" };
+    const f = (v) => v.toFixed(1);
+
+    const topFace = `M${f(x)} ${f(y)} L${f(x + dx)} ${f(y - dy)} L${f(x + s + dx)} ${f(y - dy)} L${f(x + s)} ${f(y)} Z`;
+    const sideFace = `M${f(x + s)} ${f(y)} L${f(x + s + dx)} ${f(y - dy)}`
+      + ` L${f(x + s + dx)} ${f(y + s - dy)} L${f(x + s)} ${f(y + s)} Z`;
+
+    let texture = "";
+    if (kind === "medis") {
+      /* Rievės: trys banguotos linijos, skirtos nuo krašto, ir šakelės žymė. */
+      texture = [0.3, 0.52, 0.74].map((t) => {
+        const gy = y + s * t;
+        return `<path d="M${f(x + s * 0.08)} ${f(gy)} q ${f(s * 0.22)} ${f(-s * 0.06)} ${f(s * 0.42)} 0`
+          + ` t ${f(s * 0.42)} 0" stroke="${M.side}" stroke-opacity=".55"`
+          + ` stroke-width="${f(s * 0.045)}" fill="none"/>`;
+      }).join("")
+        + `<circle cx="${f(x + s * 0.66)}" cy="${f(y + s * 0.62)}" r="${f(s * 0.07)}"`
+        + ` fill="${M.side}" fill-opacity=".5"/>`;
+    } else if (kind === "akmuo") {
+      /* Akmuo nelygus: keli tamsūs grūdeliai, išsidėstę nevienodai. */
+      texture = [[0.24, 0.28, 0.05], [0.62, 0.22, 0.04], [0.42, 0.5, 0.06],
+        [0.8, 0.56, 0.045], [0.3, 0.76, 0.05], [0.6, 0.84, 0.035]].map(([fx, fy, r]) =>
+        `<circle cx="${f(x + s * fx)}" cy="${f(y + s * fy)}" r="${f(s * r)}"`
+        + ` fill="${M.side}" fill-opacity=".55"/>`).join("");
+    } else {
+      /* Metalas blizgus: šlifavimo brūkšniai ir šviesi juosta kairėje. */
+      texture = [0.2, 0.42, 0.64, 0.86].map((t) =>
+        `<line x1="${f(x + s * (0.12 + t * 0.1))}" y1="${f(y + s * 0.92)}"`
+        + ` x2="${f(x + s * (0.5 + t * 0.1))}" y2="${f(y + s * 0.08)}"`
+        + ` stroke="#ffffff" stroke-opacity=".5" stroke-width="${f(s * 0.035)}"/>`).join("")
+        + `<rect x="${f(x + s * 0.16)}" y="${f(y + s * 0.1)}" width="${f(s * 0.1)}"`
+        + ` height="${f(s * 0.8)}" rx="${f(s * 0.05)}" fill="#ffffff" opacity=".38"/>`;
+    }
+
+    return `<g stroke-linejoin="round">
+      <path d="${topFace}" fill="${M.top}" stroke="${M.edge}" stroke-width="2.4"/>
+      <path d="${sideFace}" fill="${M.side}" stroke="${M.edge}" stroke-width="2.4"/>
+      <rect x="${f(x)}" y="${f(y)}" width="${f(s)}" height="${f(s)}" rx="${f(s * 0.07)}"
+            fill="${M.front}" stroke="${M.edge}" stroke-width="2.4"/>
+      ${texture}
+    </g>`;
+  },
 };

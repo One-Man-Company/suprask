@@ -1,0 +1,16 @@
+{
+  "role": "kurejas",
+  "run_id": 126,
+  "created": "2026-11-08T07:05:00+02:00",
+  "type": "struktura",
+  "title": "Tolerancija žemiau standarto pločio nepasiekiama: check_view.py neturi nė vieno <360 px ploto",
+  "body": "Įgyvendinant #4348 atskirti du .eyebrow signalai: `eyebrowNowrapLines` (žymos lūžimas — klaida visuose pločiuose) ir `eyebrowLines` (bloko persikėlimas — klaida tik ties 360 px ir plačiau). Pastaroji taisyklė žemiau standarto pločio toleruoja lūžimą ir rodo pastabą, bet patikrinti to negalima: VIEWPORTS turi 1440, 1024, 390 ir 360, o siauresnio ploto nėra, tad šaka nepasiekiama nei `--viewports` sąrašu, nei numatytuoju bėgimu. Matavau 320 px: trys zaidimu-teorija moduliai lūžta į 2 eilutes (žyma sveika, slinkties 0 px) — būtent tas atvejis, dėl kurio #4348 buvo rašytas. Siūlau pridėti penktą plotą `tiny` = 320×780, bet NEĮTRAUKTI jo į numatytąjį sąrašą (numatytasis lieka desktop,phone,small): jis būtų kviečiamas sąmoningai (`--viewports tiny`) kaip diagnostika pigiausių telefonų pločiui ir kaip vienintelis būdas realiai išbandyti tolerancijos šaką. Numatytasis sąrašas neliečiamas, todėl publikavimo vartai netampa griežtesni ir neblokuoja modulių dėl pločio, kurio standartas nežada. Jei 320 px imamas į numatytuosius, pirmiausia reikia CSS sprendimo, nes kitaip trys moduliai taptų raudoni dėl geometrijos, kurią kūrėjas gali pakeisti tik trumpindamas krypties pavadinimą.",
+  "target": "scripts/check_view.py",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "scripts/check_view.py:48–56 — STANDARD_MIN_WIDTH = 360 ir VIEWPORTS be jokio <360 ploto",
+    "scripts/check_view.py:213–227 — eyebrow_ok leidžia bloko lūžimą tik kai viewport['width'] < STANDARD_MIN_WIDTH; ši šaka nepasiekiama per CLI",
+    "agents/log/kurejas-2026-11-08T0700.md §5 — matuota 320 px: 11-saziningas-dalijimasis, 12-bendradarbiavimo-tiltas, 13-akmenelis-popierius lūžta į 2 eilutes (žyma 20 px, slinktis 0 px); su tiny plotu nauja taisyklė duoda 0 problemų + pastabą, sena — 1 problemą"
+  ]
+}

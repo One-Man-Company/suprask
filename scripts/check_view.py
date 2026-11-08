@@ -19,6 +19,16 @@ Naudojimas:
 Plotai: desktop 1440, tablet 1024, phone 390 ir small 360 (standarto §4.6 riba).
 Numatytasis sąrašas yra desktop,phone,small — 360 px tikrinamas visada, nes jo
 reikalauja ir kūrėjo baigties sąlyga, ir `docs/KURINIO-STANDARTAS.md` §4.6.
+
+Antraštės metaduomenų taisyklė (LL-05, #4348). `.eyebrow` turi du atskirus
+defektus, ir jie neturi būti matuojami vienu skaičiumi:
+
+  1. **Žymos lūžimas** („10 min.“ tampa „10 / min.“ arba apskritimu) — klaida
+     VISUOSE pločiuose, nes tai ne geometrijos, o CSS defektas (`nowrap`).
+  2. **Bloko persikėlimas** į antrą eilutę — klaida ties standarto riba
+     (360 px) ir plačiau. Žemiau 360 px standartas nieko nežada, todėl
+     lūžimas toleruojamas, bet parodomas ataskaitoje kaip pastaba, o ne
+     tyliai nuginčijamas (LL-37).
 """
 
 from __future__ import annotations
@@ -39,6 +49,11 @@ VIEWPORTS = {
     # 360 px — pigiausių Android telefonų plotis ir standarto §4.6 riba.
     "small": {"width": 360, "height": 780},
 }
+
+# Standarto §4.6 mažiausias palaikomas plotis. Antraštės metaduomenys privalo
+# tilpti vienoje eilutėje ties šiuo pločiu ir plačiau; žemiau jo lūžimas
+# toleruojamas tik tada, kai turinys realiai netelpa (žr. docstring).
+STANDARD_MIN_WIDTH = 360
 
 BRAVE_INIT = """
 try { Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('insecure', 'SecurityError'); } }); } catch (e) {}
@@ -72,12 +87,42 @@ MEASURE = r"""
 
   const taskFonts = tasks.map(t => parseFloat(getComputedStyle(t.querySelector('.task-q') || t).fontSize) || 0).filter(Boolean);
 
-  // Antraštės metaduomenys (kryptis · minutės) neturi lūžti į dvi eilutes.
-  const eyebrow = document.querySelector('.eyebrow');
+  // Antraštės metaduomenys (kryptis · minutės). Du atskiri signalai (LL-05, #4348):
+  //  - eyebrowNowrapLines: ar pati žyma („10 min.“) liko viena eilutė — klaida visur;
+  //  - eyebrowLines: ar blokas liko vienoje eilutėje (klaida tik ≥360 px);
+  //  - eyebrowFit: diagnostika pranešimui (ar blokas išvis galėjo tilpti), ne vartas.
+  const eyebrow = document.querySelector('.module-head .eyebrow') || document.querySelector('.eyebrow');
   let eyebrowLines = 1;
+  let eyebrowNowrapLines = 1;
+  let eyebrowFit = true;
   if (eyebrow) {
-    const lh = parseFloat(getComputedStyle(eyebrow).lineHeight) || parseFloat(getComputedStyle(eyebrow).fontSize) * 1.4;
-    eyebrowLines = Math.max(1, Math.round(eyebrow.getBoundingClientRect().height / lh));
+    const cs = getComputedStyle(eyebrow);
+    const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.4;
+    // Eilutės skaičiuojamos iš vaikų viršutinių koordinačių, o ne height / lineHeight:
+    // aukštis priklauso nuo eilučių tarpo, todėl dalyba apvalina neteisingai (LL-31).
+    const tops = [...eyebrow.children]
+      .map(el => Math.round(el.getBoundingClientRect().top))
+      .sort((a, b) => a - b);
+    const rows = [];
+    for (const t of tops) if (!rows.length || t - rows[rows.length - 1] > lh / 2) rows.push(t);
+    if (rows.length) {
+      eyebrowLines = rows.length;
+    } else {
+      eyebrowLines = Math.max(1, Math.round(eyebrow.getBoundingClientRect().height / lh));
+    }
+    // Žyma yra flex elementas, todėl jos tekstas lūžta savo dėžutėje — aukštis išduoda.
+    for (const el of eyebrow.querySelectorAll('.nowrap')) {
+      const els = parseFloat(getComputedStyle(el).lineHeight) || lh;
+      eyebrowNowrapLines = Math.max(eyebrowNowrapLines, Math.max(1, Math.round(el.getBoundingClientRect().height / els)));
+    }
+    // Ar blokas išvis galėjo tilpti: vaikų pločiai + tarpai ≤ turinio plotis.
+    const kids = [...eyebrow.children];
+    if (kids.length) {
+      const gap = parseFloat(cs.columnGap) || 0;
+      const need = kids.reduce((s, el) => s + el.getBoundingClientRect().width, 0) + gap * (kids.length - 1);
+      const room = eyebrow.clientWidth - parseFloat(cs.paddingLeft || 0) - parseFloat(cs.paddingRight || 0);
+      eyebrowFit = need <= room + 0.5;
+    }
   }
 
   // Simuliacijos valdikliai: ar yra bent vienas MATOMAS veiksmas, ir ar nėra
@@ -121,6 +166,8 @@ MEASURE = r"""
     clipped,
     simHeight: stageBox ? Math.round(stageBox.height) : 0,
     eyebrowLines,
+    eyebrowNowrapLines,
+    eyebrowFit,
     chipTall,
     voiceOnly,
     simVisibleControls: visibleSim.length,
@@ -165,6 +212,16 @@ def check_route(page, base: str, route: str, viewport: dict) -> dict:
     data["route"] = route
     data["viewport"] = viewport["width"]
     data["errors"] = errors[:5]
+    # Antraštės metaduomenys: žymos lūžimas — klaida visur; bloko lūžimas —
+    # klaida ties standarto riba ir plačiau, o žemiau jos toleruojamas ir
+    # parodomas kaip pastaba (LL-05 vs LL-37, #4348). Sąmoningai NEginčijama
+    # pagal išmatuotą „ar galėjo tilpti“: min-content įvertis klysta, kai
+    # krypties pavadinimas lūžta savo dėžutėje, o klaidingai raudonas vartas
+    # stabdo visą eilę (tai ir buvo #4348 priežastis).
+    eyebrow_ok = (
+        data["eyebrowNowrapLines"] <= 1
+        and (data["eyebrowLines"] <= 1 or viewport["width"] < STANDARD_MIN_WIDTH)
+    )
     data["ok"] = (
         data["overflow"] <= 1
         and data["tasks"] > 0
@@ -174,7 +231,7 @@ def check_route(page, base: str, route: str, viewport: dict) -> dict:
         and not data["loading"]
         and not data["fatal"]
         and not data["errors"]
-        and data["eyebrowLines"] <= 1
+        and eyebrow_ok
         and data["simVisibleControls"] >= 1
         and data["chipTall"] == 0
         and not data["voiceOnly"]
@@ -237,6 +294,9 @@ def main() -> int:
             "viewports": {n: VIEWPORTS[n] for n in names},
             "checked": len(results),
             "problems": bad,
+            # Toleruoti atvejai (antraštė lūžta tik todėl, kad netelpa žemiau
+            # standarto pločio) — atskirai, kad neliktų paslėpti serveryje (LL-37).
+            "notes": [r for r in results if r.get("ok") and r.get("eyebrowLines", 1) > 1],
             "all": results,
         }, ensure_ascii=False))
     else:
@@ -254,8 +314,11 @@ def main() -> int:
                 bits.append(f"mažų taikinių {r['smallCount']}")
             if r.get("clipped"):
                 bits.append(f"apkirptas tekstas: {r['clipped'][0]['text'][:30]}")
-            if r.get("eyebrowLines", 1) > 1:
-                bits.append(f"antraštė lūžta į {r['eyebrowLines']} eilutes")
+            if r.get("eyebrowNowrapLines", 1) > 1:
+                bits.append(f"antraštės žyma „min.“ lūžta į {r['eyebrowNowrapLines']} eilutes")
+            elif r.get("eyebrowLines", 1) > 1:
+                bits.append(f"antraštė lūžta į {r['eyebrowLines']} eilutes"
+                            + (" (blokas tilptų)" if r.get("eyebrowFit") else ""))
             if r.get("chipTall"):
                 bits.append(f"žymų dviejų eilučių: {r['chipTall']}")
             if r.get("voiceOnly"):
@@ -271,6 +334,12 @@ def main() -> int:
             for e in (r.get("errors") or [])[:2]:
                 bits.append(e[:70])
             print(f"  ✗ {r['route']} @{r['viewport']}px: " + "; ".join(bits) or "nežinoma")
+        # Toleruotas, bet ne tylus atvejis (LL-37): antraštė lūžta žemiau standarto
+        # pločio, nes turinys realiai netelpa. Tai ne klaida, bet ataskaitoje matoma.
+        soft = [r for r in results if r.get("ok") and r.get("eyebrowLines", 1) > 1]
+        for r in soft:
+            print(f"  · {r['route']} @{r['viewport']}px: antraštė {r['eyebrowLines']} eilutės — "
+                  f"plotis žemiau standarto {STANDARD_MIN_WIDTH} px; žyma vienoje eilutėje")
         if not bad:
             print("✔ Visi moduliai matomi ir telpa visuose plotuose (su Brave skydų blokais).")
 

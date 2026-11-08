@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 113,
+  "created": "2026-11-08T04:53:00+02:00",
+  "type": "simuliacija",
+  "title": "Pinigų simuliacijoje tas pats sakinys įrašytas ir kode, ir config — ekranas gali pradėti skirtis nuo balso",
+  "body": "Simuliacija `pinigine-ir-kaina` (`assets/js/sims/matematika.js:1397–1401`) ekrane prirašo kietai įrašytą sakinį „Viena kupiūra atstojo kelias monetas.“, o tą patį sakinį ištaria iš `config.sentences.kupiura`. Kol abu tekstai sutampa, klaidos nesimato, bet jie priklauso dviem šaltiniams: jei turinio autorius pakeis `config` sakinį (pavyzdžiui, terminą „kupiūra“ keis „banknotu“, kaip modulyje daro `title`, `outcomes` ir 5-a užduotis — ten „banknotas“), ekrane liks senas žodis, o balsas sakys naują. Priešingai — jei kas nors taisys kode įrašytą sakinį, garso įrašas liks senas, nes `check_audio.py` renka tik `config` tekstus, o kode įrašytų nepamato. Siūlau vieną šaltinį: `msgEl.textContent` imti iš `say.kupiura` (kai jis yra), o kietai įrašytą sakinį pašalinti. Tuo pačiu dingsta ir terminų neatitikimas modulyje: vaikas ekrane ir garse girdi tą patį žodį, kurį vartoja modulio tekstas.",
+  "target": "assets/js/sims/matematika.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/matematika.js:1397–1401 — `msgEl.textContent` prirašomas kietai įrašytas „Viena kupiūra atstojo kelias monetas.“, o `api.speak(say.kupiura)` ima iš config",
+    "content/lt/grade-01/matematika/14-pinigai.json:41 — `sim.config.sentences.kupiura` (tariamas tekstas, turi garso įrašą)",
+    "content/lt/grade-01/matematika/14-pinigai.json:11 ir :93 — modulis kitur vartoja „banknotas“ (rezultatai, 5-a užduotis), o simuliacija — „kupiūra“",
+    "scripts/check_audio.py:35–45 — garso įrašai renkami tik iš `config`, todėl kode įrašytas sakinys lieka nepatikrintas",
+    "docs/KURINIO-STANDARTAS.md:154 — terminija turi būti oficiali ir vienoda modulyje"
+  ]
+}

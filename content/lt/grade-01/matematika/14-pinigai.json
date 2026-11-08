@@ -12,14 +12,14 @@
   ],
   "concept": {
     "title": "Skaičius ant pinigo",
-    "big_idea": "Pinigo vertę pasako ant jo parašytas skaičius. Rinkinio vertė yra tų skaičių suma, o ne pinigų kiekis.",
+    "big_idea": "Pinigo vertę pasako ant jo parašytas skaičius. Rinkinio vertė — tų skaičių suma, ne pinigų kiekis.",
     "steps": [
       "Pasirink prekę ir pažiūrėk į jos kainą.",
       "Pasakyk spėjimą, kiek pinigų prireiks.",
       "Dėk monetas ir banknotus. Juosta rodys sumą.",
       "Pamėgink tą pačią sumą surinkti kitu būdu."
     ],
-    "example": "Už 3 eurų pieštukus gali mokėti 2 eurai ir 1 euras. Trys 1 euro monetos — ta pati suma."
+    "example": "Pieštukai kainuoja 3 eurus. Mokėk 2 eurus ir 1 eurą. Trys 1 euro monetos — ta pati suma."
   },
   "sim": {
     "component": "pinigine-ir-kaina",
@@ -57,16 +57,16 @@
     {
       "q": "Kaina 6 €. Kuris rinkinys sumokės tiksliai?",
       "options": [
-        "5 € + 2 €",
-        "2 € + 2 € + 2 €",
-        "2 € + 2 € + 1 €"
+        "5 € ir 2 €",
+        "2 €, 2 € ir 2 €",
+        "2 €, 2 € ir 1 €"
       ],
       "answer": 1,
       "hint": "Sudėk kiekvieną rinkinį. Palygink su kaina.",
       "why": "Trys 2 eurų monetos duoda 6 eurus. Kiti rinkiniai duoda 7 ir 5."
     },
     {
-      "q": "Vienas vaikas davė 2 € ir 1 €. Kitas davė tris 1 € monetas. Kuris davė daugiau?",
+      "q": "Vienas vaikas davė 2 € ir 1 €. Kitas davė tris 1 € monetas. Kuris davė daugiau pinigų?",
       "options": [
         "Pirmas",
         "Antras",
@@ -77,15 +77,15 @@
       "why": "2 ir 1 yra 3. Trys 1 euro monetos taip pat duoda 3."
     },
     {
-      "q": "Kaina 8 €. Kuris rinkinys sumokės mažiausiai pinigų?",
+      "q": "Kaina 8 €. Kuriame rinkinyje mažiausiai monetų ir banknotų?",
       "options": [
-        "5 € + 1 € + 1 € + 1 €",
-        "5 € + 2 € + 1 €",
-        "2 € + 2 € + 2 € + 2 €"
+        "5 €, 1 €, 1 € ir 1 €",
+        "5 €, 2 € ir 1 €",
+        "2 €, 2 €, 2 € ir 2 €"
       ],
       "answer": 1,
       "hint": "Viena didesnė moneta atstoja kelias mažesnes. Skaičiuok pinigus kiekviename rinkinyje.",
-      "why": "5 ir 2 ir 1 yra 8. Tam reikia trijų pinigų, o kitiems — keturių.",
+      "why": "5 ir 2 ir 1 yra 8. Tam pakanka trijų pinigų, o kitiems reikia keturių.",
       "optional": true
     },
     {

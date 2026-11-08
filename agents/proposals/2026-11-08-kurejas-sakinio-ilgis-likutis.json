@@ -1,0 +1,19 @@
+{
+  "role": "kurejas",
+  "run_id": 113,
+  "created": "2026-11-08T04:52:00+02:00",
+  "type": "kritika",
+  "title": "Sakinio ilgio taisymas liko 17 modulių: 46 sakiniai viršija 10 žodžių ribą",
+  "body": "Pasiūlymas #448 nurodė vieną failą (`content/lt/grade-01/matematika/14-pinigai.json`), ir jame ilgi sakiniai sutvarkyti — modulyje dabar 0 sakinių, ilgesnių nei 10 žodžių. Bet ta pati metrika visoje 1 klasėje rodo 46 sakinius 17 modulių, kurių nė vienas nebuvo šio paleidimo tikslas. Tankiausi: `08-metu-laikai` (6), `16-lygybe-svarstykles` (5), `04-skaiciu-tiese` (4), `19-simto-skaiciu-lentele` (4), `20-laikas-12-ir-24-val` (4), `11-saziningas-dalijimasis` (4). Bendra priežastis viena: sakinys rašomas kaip vienas ilgas paaiškinimas su „o“, „todėl“, „bet“, o ne kaip du trumpi sakiniai. Vienam paleidimui tai per daug, todėl siūlau imti po vieną modulį: pradedant `16-lygybe-svarstykles` (ten ir `check_language.py` įspėjimas apie 13 žodžių `tasks[1].why`), o likusius — eilės tvarka. Kiekviename faile taisoma tik formuluotė: `answer` indeksai, `optional` žymos, `hint` kryptis ir simuliacijos `config` nekeičiami. Matuoklis, kuriuo gauti skaičiai, skaičiuoja sakinio žodžius po `. ! ?`; jis atskirtas nuo pinigų sąrašų (žr. LL-35), todėl pinigų rinkiniai kaip `5 €, 2 € ir 1 €` į šį skaičių nepatenka.",
+  "target": "content/lt/grade-01/matematika/16-lygybe-svarstykles.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "docs/KURINIO-STANDARTAS.md:110 — „Sakinio ilgis 1–2 klasei — iki 10 žodžių“",
+    "docs/SVIETIMAS-1-GAIRES.md:56 — T5.4: trumpi sakiniai",
+    "Matuota 2026-11-08 (paleidimas #113) per visus 28 modulius: 46 sakiniai >10 žodžių 17 modulių; `08-metu-laikai` 6, `16-lygybe-svarstykles` 5, `04-skaiciu-tiese` 4, `19-simto-skaiciu-lentele` 4, `20-laikas-12-ir-24-val` 4, `11-saziningas-dalijimasis` 4, `21-erdvines-figuros` 3, `12-bendradarbiavimo-tiltas` 3, `03-sakinio-tvarka` 2, `05-desimtukas` 2, `22-sudetis-per-desimti` 2, `13-akmenelis-popierius` 2, kiti po 1",
+    "content/lt/grade-01/matematika/16-lygybe-svarstykles.json:tasks[1].why — 13 žodžių, fiksuoja ir scripts/check_language.py --grade 1",
+    "agents/log/kurejas-2026-11-08T0445.md — #448 įgyvendinimas ir matavimo „prieš / po“ skaičiai",
+    "research/wiki/guidelines/pamokos.md#LL-35 — kodėl pinigų sąrašai į sakinio ilgio matavimą neįtraukiami"
+  ]
+}

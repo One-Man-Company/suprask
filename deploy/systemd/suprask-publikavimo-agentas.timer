@@ -1,9 +1,13 @@
 [Unit]
-Description=SUPRASK — publikavimo-agentas (kas 4 h (06,10,14,18,22))
+Description=SUPRASK — publikavimo-agentas (kasdien 5 kartus (06:20, 11:40, 16:00, 19:30, 23:00))
 
 [Timer]
 # Sugeneruota iš agents/run.py ROLES. Nekeisk ranka — paleisk deploy/gen_timers.py.
-OnCalendar=*-*-* 06,10,14,18,22:10:00
+OnCalendar=*-*-* 06:20:00
+OnCalendar=*-*-* 11:40:00
+OnCalendar=*-*-* 16:00:00
+OnCalendar=*-*-* 19:30:00
+OnCalendar=*-*-* 23:00:00
 Persistent=true
 RandomizedDelaySec=240
 Unit=suprask-agent@publikavimo-agentas.service

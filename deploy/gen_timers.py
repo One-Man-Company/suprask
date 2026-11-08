@@ -47,7 +47,7 @@ Description=SUPRASK — {role} ({cadence})
 
 [Timer]
 # Sugeneruota iš agents/run.py ROLES. Nekeisk ranka — paleisk deploy/gen_timers.py.
-OnCalendar={on_calendar}
+{on_calendar_lines}
 Persistent=true
 RandomizedDelaySec=240
 Unit=suprask-agent@{role}.service
@@ -69,7 +69,14 @@ def main() -> int:
         queue = cfg.get("queue")
         unit = f"suprask-{role}-queue.service" if queue else f"suprask-agent@{role}.service"
         path.write_text(
-            TIMER.format(role=role, cadence=cfg["cadence"], on_calendar=cfg["on_calendar"])
+            TIMER.format(
+                role=role,
+                cadence=cfg["cadence"],
+                on_calendar_lines="\n".join(
+                    f"OnCalendar={c}" for c in
+                    (cfg["on_calendar"] if isinstance(cfg["on_calendar"], list) else [cfg["on_calendar"]])
+                ),
+            )
             .replace(f"Unit=suprask-agent@{role}.service", f"Unit={unit}"),
             encoding="utf-8",
         )

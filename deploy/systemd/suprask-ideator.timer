@@ -3,7 +3,7 @@ Description=SUPRASK — ideator (kasdien)
 
 [Timer]
 # Sugeneruota iš agents/run.py ROLES. Nekeisk ranka — paleisk deploy/gen_timers.py.
-OnCalendar=*-*-* 07:10:00
+OnCalendar=*-*-* 07:40:00
 Persistent=true
 RandomizedDelaySec=240
 Unit=suprask-agent@ideator.service

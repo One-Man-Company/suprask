@@ -95,7 +95,7 @@ ROLES: dict[str, dict] = {
     "ideator": {
         "file": "roles/ideator.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
         "max_turns": 30, "budget": 1200, "timeout": 1800,
-        "cadence": "kasdien", "on_calendar": "*-*-* 07:10:00",
+        "cadence": "kasdien", "on_calendar": "*-*-* 07:40:00",
         "description": "Ieško naujų pamokų idėjų ir temų, teikia pasiūlymus",
     },
     "metodininkas": {
@@ -165,13 +165,17 @@ ROLES: dict[str, dict] = {
     "publikavimo-agentas": {
         "file": "roles/publikavimo-agentas.md", "profile": "deepseek41flash", "toolsets": "terminal,file",
         "max_turns": 26, "budget": 1000, "timeout": 1200,
-        "cadence": "kas 4 h (06,10,14,18,22)", "on_calendar": "*-*-* 06,10,14,18,22:10:00",
+        "cadence": "kasdien 5 kartus (06:20, 11:40, 16:00, 19:30, 23:00)",
+        # Laikai parinkti taip, kad iki artimiausio kito agento būtų ≥20 min, o
+        # nuo kritiko (14:00) — 2 h. Anksčiau 14:10 krisdavo ant kritiko.
+        "on_calendar": ["*-*-* 06:20:00", "*-*-* 11:40:00", "*-*-* 16:00:00",
+                        "*-*-* 19:30:00", "*-*-* 23:00:00"],
         "description": "Užtikrina, kad sukurtas turinys būtų paskelbtas ir neprarastų ankstesnių modulių",
     },
     "tikrintojas": {
         "file": "roles/tikrintojas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
         "max_turns": 30, "budget": 900, "timeout": 1200,
-        "cadence": "kasdien", "on_calendar": "*-*-* 06:40:00",
+        "cadence": "kasdien", "on_calendar": "*-*-* 05:50:00",
         "description": "Validuoja turinį ir sąsają, registruoja klaidas",
     },
     "sveikatos-inspektorius": {
@@ -183,7 +187,7 @@ ROLES: dict[str, dict] = {
     "tyrejas": {
         "file": "roles/tyrejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
         "max_turns": 40, "budget": 1500, "timeout": 2400,
-        "cadence": "pirmadieniais", "on_calendar": "Mon *-*-* 07:00:00",
+        "cadence": "pirmadieniais", "on_calendar": "Mon *-*-* 06:40:00",
         "description": "Tiria naujus metodus ir tyrimus, papildo research/wiki/",
     },
     "kuratorius": {

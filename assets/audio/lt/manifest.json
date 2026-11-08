@@ -879,6 +879,10 @@
   "n": "n/27ecfa7c917cb682-2d586633.mp3",
   "s": "s/27ecfa7c917cb682-7ecdb8eb.mp3"
  },
+ "Kelios valandos po pietų. Kiekviena turi antrą vardą.": {
+  "n": "n/1e051d58fe0e58f6-bb1cd972.mp3",
+  "s": "s/1e051d58fe0e58f6-4e6d5162.mp3"
+ },
  "Keturkampis": {
   "n": "n/1c68c529e0dee2d1-8c0ac07a.mp3",
   "s": "s/1c68c529e0dee2d1-dd4ecd72.mp3"
@@ -1075,9 +1079,17 @@
   "n": "n/be1b948182521b61-abb7ba9c.mp3",
   "s": "s/be1b948182521b61-4c74d3a7.mp3"
  },
+ "Po pietų tas pats laikas turi antrą vardą.": {
+  "n": "n/802a0444994b8bf4-ff20e94c.mp3",
+  "s": "s/802a0444994b8bf4-3c355d3f.mp3"
+ },
  "Popierius": {
   "n": "n/0c85494fd5f4f32d-96346576.mp3",
   "s": "s/0c85494fd5f4f32d-c02dfdc8.mp3"
+ },
+ "Pradedam iš naujo. Ciferblatas rodo 2 val. po pietų.": {
+  "n": "n/cf50f1166eb90f2e-fe5271b3.mp3",
+  "s": "s/cf50f1166eb90f2e-7731a29b.mp3"
  },
  "Pradedam iš naujo. Padėk tašką ant tiesės.": {
   "n": "n/6d7863e56d1ac8c6-7771c9df.mp3",
@@ -1103,6 +1115,10 @@
   "n": "n/1b4ed9470469a710-03f84c32.mp3",
   "s": "s/1b4ed9470469a710-113fad5f.mp3"
  },
+ "Prieš pietus abu vardai tokie patys.": {
+  "n": "n/b493f224483334f9-2792defd.mp3",
+  "s": "s/b493f224483334f9-d72a250a.mp3"
+ },
  "Puiku!": {
   "n": "n/2d4f8241c3336b71-33c16e05.mp3",
   "s": "s/2d4f8241c3336b71-1cada9f0.mp3"
@@ -1122,6 +1138,10 @@
  "Ritinys nuo šono vėl atrodo kaip stačiakampis.": {
   "n": "n/03b6cedca03d8bc9-e55cb673.mp3",
   "s": "s/03b6cedca03d8bc9-5ca3a562.mp3"
+ },
+ "Rodyklės liko vietoje. Tas pats laikas turi antrą vardą.": {
+  "n": "n/b350666d958dae16-e0d68324.mp3",
+  "s": "s/b350666d958dae16-ff390d83.mp3"
  },
  "Ruduo": {
   "n": "n/6cef84a6159698ce-597a4673.mp3",
@@ -1182,6 +1202,14 @@
  "Spausk paveikslėlį ir paklausyk žodžio.": {
   "n": "n/050db6f27be6c9b7-ccf54bb1.mp3",
   "s": "s/050db6f27be6c9b7-3887037c.mp3"
+ },
+ "Spėjai kitaip. Rodyklės liko vietoje, keitėsi tik užrašas.": {
+  "n": "n/3237c9dcda911865-e3649eb8.mp3",
+  "s": "s/3237c9dcda911865-e9ef8cd4.mp3"
+ },
+ "Spėjimas įrašytas. Dabar perjunk 24 valandų sistemą.": {
+  "n": "n/c58ee21a4e528a1f-615ea451.mp3",
+  "s": "s/c58ee21a4e528a1f-797c81e7.mp3"
  },
  "Spėjimas įrašytas. Spausk „Nuleisk į vandenį“.": {
   "n": "n/237272ffa0e70314-8dc07c48.mp3",
@@ -1302,6 +1330,10 @@
  "Vasara": {
   "n": "n/bd912f6f1cb9f2ac-617674ef.mp3",
   "s": "s/bd912f6f1cb9f2ac-ee42fdd7.mp3"
+ },
+ "Vidurnaktis yra tarp 23 ir 1 valandos. Apie jį kalbėsime kitą kartą.": {
+  "n": "n/da789db797cb676d-9499359a.mp3",
+  "s": "s/da789db797cb676d-9b5a9b59.mp3"
  },
  "Viena kupiūra atstojo kelias monetas.": {
   "n": "n/cf35d955345c49b9-728b62a4.mp3",

@@ -2643,12 +2643,244 @@ const sudetisPerDesimti = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 12. Du vardai vienam laikui (12 ir 24 valandų sistemos)             */
+/*                                                                    */
+/* Modelis: ciferblate yra dvylika skaičių, o paroje — dvidešimt       */
+/* keturios valandos. Todėl ta pati rodyklės padėtis turi du vardus:   */
+/* prieš pietus jie sutampa (9:00 ir 9:00), po 12 val. antrasis vardas  */
+/* didėja (14:00). Vaikas perjungia sistemą ir mato, kad rodyklės      */
+/* nejuda — keičiasi tik užrašas. Atimties iš 12 modelis nemoko:       */
+/* parodo tapatumą, o ne perskaičiavimo taisyklę (NCETM perskaičiavimo */
+/* aritmetiką priskiria 4 klasei, 8–9 m.).                             */
+/* ------------------------------------------------------------------ */
+const DV_GUESS = ["2:00", "14:00", "12:00"];
+
+const DV_SAY = {
+  spejimas: "Spėjimas įrašytas. Dabar perjunk 24 valandų sistemą.",
+  "tas-pat-laikas": "Rodyklės liko vietoje. Tas pats laikas turi antrą vardą.",
+  "kitas-spejimas": "Spėjai kitaip. Rodyklės liko vietoje, keitėsi tik užrašas.",
+  "abu-vardai": "Prieš pietus abu vardai tokie patys.",
+  "antras-vardas": "Po pietų tas pats laikas turi antrą vardą.",
+  "dienos-riba": "Vidurnaktis yra tarp 23 ir 1 valandos. Apie jį kalbėsime kitą kartą.",
+  baigta: "Kelios valandos po pietų. Kiekviena turi antrą vardą.",
+  "is-naujo": "Pradedam iš naujo. Ciferblatas rodo 2 val. po pietų.",
+};
+
+const laikrodisDuVardai = {
+  mount({ stage, controls, api, config }) {
+    const say = config.sentences || {};
+    const line = (key) => say[key] || DV_SAY[key] || "";
+    const startHour = Math.min(23, Math.max(1, Number(config.startHour) || 14));
+
+    let hour = startHour;
+    let sys = 12;              // kurią sistemą rodo skaitmeninis laukas
+    let guess = null;          // vaiko spėjimas: 0 — 2:00, 1 — 14:00, 2 — 12:00
+    let compared = false;      // spėjimas lyginamas su įvykiu vieną kartą (LL-15)
+    let reported = false;
+    const seenAfterNoon = new Set(); // kurias popietės valandas vaikas jau matė 24 val. sistemoje
+
+    const clockHour = (h) => ((h - 1) % 12) + 1;
+    /* Užrašas be nulio priekyje: taip ryto atvejis (9:00 ir 9:00) lieka
+       tiesiogiai palyginamas su 12 valandų užrašu. Skaitmeniniai laikrodžiai
+       dažnai rašo 09:00 — tai tas pats laikas, ir tai pasakoma mokytojo
+       skiltyje, o ne slepiama modelyje. */
+    const nameIn = (h, s) => (s === 24 ? `${h}:00` : `${clockHour(h)}:00`);
+
+    stage.innerHTML = `
+      <div id="dv-wrap" style="width:100%;max-width:21rem;margin:0 auto;text-align:center;box-sizing:border-box">
+        <svg id="dv-svg" viewBox="0 0 360 360" width="100%" role="img" tabindex="0"
+             aria-label="Laikrodis su rodyklėmis" style="display:block;max-width:100%;outline-offset:4px"></svg>
+        <div id="dv-plate" style="margin-top:.55rem;padding:.45rem .7rem;border:3px solid var(--ink);border-radius:var(--r-m);background:var(--paper)">
+          <p id="dv-sys" style="margin:0;font-size:.84rem;font-weight:800;color:var(--ink-soft)">12 valandų sistema</p>
+          <p id="dv-digital" style="margin:.1rem 0 0;font-family:var(--font-head);font-weight:900;font-size:clamp(1.8rem,8.6vw,2.4rem);line-height:1.1;font-variant-numeric:tabular-nums">2:00</p>
+        </div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div id="dv-guess" style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;width:100%">
+        <button type="button" class="btn secondary" data-g="0" aria-label="Spėju: 2:00" style="min-height:48px">2:00</button>
+        <button type="button" class="btn secondary" data-g="1" aria-label="Spėju: 14:00" style="min-height:48px">14:00</button>
+        <button type="button" class="btn secondary" data-g="2" aria-label="Spėju: 12:00" style="min-height:48px">12:00</button>
+      </div>
+      <div id="dv-tools" style="display:none;gap:.6rem;flex-wrap:wrap;justify-content:center;width:100%">
+        <button type="button" class="btn" id="dv-12" aria-pressed="true" style="min-height:48px">12 val. sistema</button>
+        <button type="button" class="btn secondary" id="dv-24" aria-pressed="false" style="min-height:48px">24 val. sistema</button>
+        <button type="button" class="btn secondary" id="dv-minus" aria-label="Viena valanda atgal" style="min-height:48px">− 1 val.</button>
+        <button type="button" class="btn secondary" id="dv-plus" aria-label="Viena valanda pirmyn" style="min-height:48px">+ 1 val.</button>
+        <button type="button" class="btn ghost" id="dv-reset" style="min-height:48px">Iš naujo</button>
+      </div>`;
+
+    const svg = stage.querySelector("#dv-svg");
+    const plateSys = stage.querySelector("#dv-sys");
+    const digital = stage.querySelector("#dv-digital");
+    const tools = controls.querySelector("#dv-tools");
+    const guessBox = controls.querySelector("#dv-guess");
+    const sys12Btn = controls.querySelector("#dv-12");
+    const sys24Btn = controls.querySelector("#dv-24");
+
+    /* --- ciferblatas --------------------------------------------------- */
+    svg.appendChild(svgEl("circle", { cx: 180, cy: 180, r: 156, fill: "var(--paper-2)", stroke: "var(--line)", "stroke-width": 6 }));
+
+    for (let h = 1; h <= 12; h += 1) {
+      const a = (h * 30 * Math.PI) / 180;
+      svg.appendChild(svgEl("line", {
+        x1: 180 + Math.sin(a) * 142, y1: 180 - Math.cos(a) * 142,
+        x2: 180 + Math.sin(a) * 152, y2: 180 - Math.cos(a) * 152,
+        stroke: "var(--ink-faint)", "stroke-width": 3, "stroke-linecap": "round",
+      }));
+      const label = svgEl("text", {
+        x: 180 + Math.sin(a) * 116,
+        y: 180 - Math.cos(a) * 116 + 8,
+        "text-anchor": "middle",
+        fill: "var(--ink-soft)",
+        "font-size": 22,
+        "font-family": "system-ui",
+        "font-weight": 700,
+      });
+      label.textContent = h;
+      svg.appendChild(label);
+    }
+
+    // Trumpoji rodo valandas (jos sukasi), ilgoji visą laiką stovi ties 12:
+    // minutės yra 2 klasės turinys, todėl modelis jų nekeičia.
+    const hourG = svgEl("g", {});
+    hourG.appendChild(svgEl("line", {
+      x1: 180, y1: 180, x2: 180, y2: 118,
+      stroke: "var(--ink)", "stroke-width": 13, "stroke-linecap": "round",
+    }));
+
+    const minG = svgEl("g", {});
+    minG.appendChild(svgEl("line", {
+      x1: 180, y1: 180, x2: 180, y2: 84,
+      stroke: "var(--accent)", "stroke-width": 5, "stroke-linecap": "round",
+    }));
+    minG.appendChild(svgEl("path", { d: "M180 70 L189 94 L171 94 Z", fill: "var(--accent)" }));
+
+    svg.appendChild(hourG);
+    svg.appendChild(minG);
+    svg.appendChild(svgEl("circle", { cx: 180, cy: 180, r: 9, fill: "var(--ink)" }));
+
+    /* --- būsena -------------------------------------------------------- */
+    const speakKey = () => (hour >= 13 ? "antras-vardas" : "abu-vardai");
+
+    function defaultNote() {
+      if (guess === null) return "Pirma spėk. Tada perjunk sistemą ir pažiūrėk.";
+      if (hour === 12) return "12:00 yra vidurdienis. Abu vardai tokie patys.";
+      if (hour >= 13) {
+        return sys === 24
+          ? `Rodyklės liko ties ${clockHour(hour)}. Tas pats laikas — ${nameIn(hour, 24)}.`
+          : `Rodyklės ties ${clockHour(hour)}. 12 valandų sistema rašo ${nameIn(hour, 12)}.`;
+      }
+      return `Prieš pietus abu vardai tokie patys: ${nameIn(hour, 24)}.`;
+    }
+
+    function update(extra, spoken) {
+      const name = nameIn(hour, sys);
+      digital.textContent = name;
+      plateSys.textContent = sys === 24 ? "24 valandų sistema" : "12 valandų sistema";
+      hourG.setAttribute("transform", `rotate(${(hour % 12) * 30} 180 180)`);
+      svg.setAttribute("aria-label", sys === 24
+        ? `Laikrodis ties ${clockHour(hour)} val. 24 valandų sistema rašo ${name}.`
+        : `Laikrodis ties ${clockHour(hour)} val. 12 valandų sistema rašo ${name}.`);
+
+      api.readout(guess === null
+        ? `Ciferblatas rodo ${clockHour(hour)} val. po pietų. Kaip tą patį laiką parašytų 24 valandų sistema?`
+        : `Ciferblatas ties ${clockHour(hour)}. ${sys} valandų sistema rašo ${name}.`);
+
+      let note = extra || defaultNote();
+
+      // Pažanga žymima tada, kai vaikas 24 val. sistemoje pamatė trečią
+      // skirtingą popietės valandą — ne po pirmo perjungimo (LL-29).
+      if (sys === 24 && hour >= 13) seenAfterNoon.add(hour);
+      if (!reported && seenAfterNoon.size >= 3) {
+        reported = true;
+        api.progress({ correct: true });
+        note = line("baigta");
+      }
+
+      api.note(note);
+      if (spoken) api.speak(line(spoken));
+    }
+
+    function step(d) {
+      const next = Math.max(1, Math.min(23, hour + d));
+      if (next === hour) {
+        update(line("dienos-riba"), "dienos-riba");
+        return;
+      }
+      hour = next;
+      update("", speakKey());
+    }
+
+    function setSys(next) {
+      if (sys === next) {
+        update("", speakKey());
+        return;
+      }
+      sys = next;
+      sys12Btn.setAttribute("aria-pressed", String(next === 12));
+      sys24Btn.setAttribute("aria-pressed", String(next === 24));
+      sys12Btn.classList.toggle("secondary", next !== 12);
+      sys24Btn.classList.toggle("secondary", next !== 24);
+
+      // Spėjimas lyginamas su tuo, kas įvyko per pirmą perjungimą į 24 val.
+      // sistemą popietės valandą (LL-15). Vėliau nebekartojama.
+      let extra = "";
+      let spoken = speakKey();
+      if (!compared && guess !== null && next === 24 && hour >= 13) {
+        compared = true;
+        extra = guess === 1
+          ? `Spėjai ${DV_GUESS[guess]}. Taip ir yra: rodyklės liko ties ${clockHour(hour)}.`
+          : `Spėjai ${DV_GUESS[guess]}. 24 valandų sistema rašo ${nameIn(hour, 24)}. Rodyklės liko ties ${clockHour(hour)}.`;
+        spoken = guess === 1 ? "tas-pat-laikas" : "kitas-spejimas";
+      }
+      update(extra, spoken);
+    }
+
+    function reset() {
+      hour = startHour;
+      sys = 12;
+      guess = null;
+      compared = false;
+      sys12Btn.setAttribute("aria-pressed", "true");
+      sys24Btn.setAttribute("aria-pressed", "false");
+      sys12Btn.classList.remove("secondary");
+      sys24Btn.classList.add("secondary");
+      tools.style.display = "none";
+      guessBox.style.display = "flex";
+      update("Pradedam iš naujo. Pirma spėk, ką parašys 24 valandų sistema.", "is-naujo");
+      guessBox.querySelector("button").focus();
+    }
+
+    guessBox.querySelectorAll("[data-g]").forEach((b) => {
+      b.addEventListener("click", () => {
+        guess = Number(b.dataset.g);
+        guessBox.style.display = "none";
+        tools.style.display = "flex";
+        update(line("spejimas"), "spejimas");
+        sys24Btn.focus();
+      });
+    });
+
+    controls.querySelector("#dv-plus").addEventListener("click", () => step(1));
+    controls.querySelector("#dv-minus").addEventListener("click", () => step(-1));
+    sys12Btn.addEventListener("click", () => setSys(12));
+    sys24Btn.addEventListener("click", () => setSys(24));
+    controls.querySelector("#dv-reset").addEventListener("click", reset);
+
+    update("", null);
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
   figuros,
   desningumai,
   "laikrodis-sujungtos-rodykles": laikrodisSujungtosRodykles,
+  "laikrodis-du-vardai": laikrodisDuVardai,
   "svarstykles-lygybe": svarstyklesLygybe,
   "pinigine-ir-kaina": pinigineIrKaina,
   "vabaliukas-ir-kryptys": vabaliukasIrKryptys,

@@ -9,12 +9,12 @@ Ne įsiminti — suprasti. Simuliacijos, modeliai ir žaidimai, kurie paaiškina
 
 ## Kas yra viduje (šiandien)
 
-**1 klasė — 5 kryptys, 25 moduliai, 25 interaktyvios simuliacijos:**
+**1 klasė — 5 kryptys, 26 moduliai, 26 interaktyvios simuliacijos:**
 
 | Kryptis | Moduliai |
 |---|---|
 | 🔤 Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Sakinio tvarka |
-| 🔢 Matematika | Skaičių tiesė · Dešimtukas · Sudėtis per dešimtį · Figūros · Dėsningumai · Pinigai · Laikas · Lygybė · Kryptys · Taškas, tiesė, spindulys, atkarpa · Erdvinės figūros · Piktograma ir stulpelis |
+| 🔢 Matematika | Skaičių tiesė · Dešimtukas · Sudėtis per dešimtį · Figūros · Dėsningumai · Pinigai · Laikas: vienas ratas · Laikas: 2 val. ir 14:00 · Lygybė · Kryptys · Taškas, tiesė, spindulys, atkarpa · Erdvinės figūros · Piktograma ir stulpelis |
 | 🌍 Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Gyvūnų grupės · Kur dingsta vanduo · Nuožulnioji plokštuma |
 | 🤝 Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius |
 | 🔌 Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas |
@@ -105,7 +105,7 @@ HTTP prieiga ribojama Tailscale tinklu — jokio prisijungimo ekrano. Žr. [`das
 
 ## Garsas
 
-Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 410 tekstų po du variantus (sakinys ir skiemuo) — 820 įrašų, ~22 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
+Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 418 tekstų po du variantus (sakinys ir skiemuo) — 836 įrašų, ~23 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
 
 ## Licencijos
 
@@ -118,6 +118,6 @@ Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė
 | | |
 |---|---|
 | Versija | 0.1 (2026-11) |
-| Parengta | 1 klasė — 5 kryptys, 25 moduliai, 25 simuliacijos, 108 užduotys |
+| Parengta | 1 klasė — 5 kryptys, 26 moduliai, 26 simuliacijos, 112 užduotys |
 | Toliau | 2 klasė, tada 3–4 |
 | Kalbos | lietuvių (struktūra paruošta kitoms) |

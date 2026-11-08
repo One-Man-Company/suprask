@@ -1,0 +1,107 @@
+{
+  "id": "20-laikas-12-ir-24-val",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Laikas: 2 val. ir 14:00 — tas pats laikas",
+  "subtitle": "Ta pati rodyklė turi du vardus: 2:00 ir 14:00",
+  "minutes": 9,
+  "outcomes": [
+    "Nuskaitau tą patį laiką 12 ir 24 valandų sistemose.",
+    "Paaiškinu, kodėl 14:00 ir 2 val. yra tas pats laikas."
+  ],
+  "concept": {
+    "title": "Du vardai, viena padėtis",
+    "big_idea": "Laikrodis turi dvylika skaičių, o para — dvidešimt keturias valandas. Todėl ta pati rodyklės padėtis turi du vardus: 2 val. ir 14:00.",
+    "steps": [
+      "Po dvylikos ciferblatas vėl rodo nuo 1. Todėl 2 val. yra dvi valandos po pietų.",
+      "24 valandų sistema nesisuka atgal: po 12:00 ji skaičiuoja 13, 14, 15.",
+      "Perjunk sistemą. Rodyklėse niekas nepasikeis, keisis tik užrašas."
+    ],
+    "example": "Biliete parašyta 14:00. Tuo metu namų laikrodis rodo 2 val. Abu rodo tą patį laiką."
+  },
+  "sim": {
+    "component": "laikrodis-du-vardai",
+    "config": {
+      "startHour": 14,
+      "sentences": {
+        "spejimas": "Spėjimas įrašytas. Dabar perjunk 24 valandų sistemą.",
+        "tas-pat-laikas": "Rodyklės liko vietoje. Tas pats laikas turi antrą vardą.",
+        "kitas-spejimas": "Spėjai kitaip. Rodyklės liko vietoje, keitėsi tik užrašas.",
+        "abu-vardai": "Prieš pietus abu vardai tokie patys.",
+        "antras-vardas": "Po pietų tas pats laikas turi antrą vardą.",
+        "dienos-riba": "Vidurnaktis yra tarp 23 ir 1 valandos. Apie jį kalbėsime kitą kartą.",
+        "baigta": "Kelios valandos po pietų. Kiekviena turi antrą vardą.",
+        "is-naujo": "Pradedam iš naujo. Ciferblatas rodo 2 val. po pietų."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Telefone parašyta 14:00. Kiek valandų rodo laikrodis su rodyklėmis?",
+      "options": [
+        "4 val.",
+        "2 val.",
+        "12 val."
+      ],
+      "answer": 1,
+      "hint": "Po pietų ciferblatas skaičiuoja antrą ratą. Kiek jis jau parodė po 12?",
+      "why": "14:00 yra antra valanda po vidurdienio, todėl rodyklės rodo 2."
+    },
+    {
+      "q": "Rytas. Laikrodis rodo 9 val. Kaip tą patį laiką parašytų 24 valandų sistema?",
+      "options": [
+        "9:00",
+        "21:00",
+        "19:00"
+      ],
+      "answer": 0,
+      "hint": "Prieš vidurdienį 24 valandų sistema skaičiuoja taip pat.",
+      "why": "Prieš vidurdienį abu užrašai sutampa, todėl lieka 9:00."
+    },
+    {
+      "q": "Vakaras. Močiutės laikrodis rodo 7 val., o virtuvės — 19:00. Ar jie rodo tą patį laiką?",
+      "options": [
+        "Ne, 19 yra kita valanda.",
+        "Ne, vienas rodo rytą, kitas vakarą.",
+        "Taip, abu rodo 7 val. vakaro."
+      ],
+      "answer": 2,
+      "hint": "Laikrodis su rodyklėmis po pietų irgi rodo nuo 1 iki 12.",
+      "why": "19:00 yra septinta valanda po vidurdienio, todėl abu rodo tą patį."
+    },
+    {
+      "q": "Kodėl autobusų tvarkaraštyje rašoma 14:00, o ne 2:00?",
+      "options": [
+        "Kad būtų aišku, kuri paros dalis.",
+        "Kad laikas atrodytų ilgesnis.",
+        "Kad nereikėtų ciferblato."
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, ką 2:00 reiškia naktį ir ką — po pietų.",
+      "why": "Skaičius 14 pasako, kad tai po pietų, o 2 gali būti ir naktį.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kodėl po pietų ciferblatas rodo mažesnį skaičių nei telefonas?",
+  "teacher": {
+    "goal": "Suprasti, kad 12 ir 24 valandų sistemos įvardija tą patį momentą, o ne du skirtingus laikus: 24 valandų sistema skaičiuoja visas paros valandas ir po 12 nesisuka atgal. Modelis rodo tapatumą, o ne atimtį iš 12.",
+    "prompt": "Ką rodo ciferblatas, kai telefone parašyta 14:00?",
+    "offline": "Padarykite popierinį ciferblatą su viena ilga rodykle. Vaikas pastato rodyklę ties 2 ir pasako abu vardus: 2:00 ir 14:00. Tada pasukite rodyklę per kelis skaičius ir pakartokite. Telefone parodykite 24 valandų laiką ir paprašykite vaiko rasti tą pačią padėtį ciferblate. Pastaba: modelis 24 valandų užrašą rašo be nulio priekyje (9:00), o skaitmeniniai laikrodžiai dažnai rodo 09:00 — tai tas pats laikas.",
+    "misconceptions": [
+      "„14:00 yra kita valanda nei 2.“ Modelis rodo tą pačią rodyklės padėtį ir abu užrašus tame pačiame ekrane, todėl 14 atsiranda kaip antras to paties laiko vardas.",
+      "„Skaičius 14 reiškia trukmę — keturiolika valandų.“ Po pietų 24 valandų sistema skaičiuoja paros valandas iš eilės: po 12 seka 13, o ne 1.",
+      "„Prieš pietus ir po pietų laikas visada skiriasi.“ Prieš vidurdienį abu vardai sutampa (9:00 ir 9:00); modelis tai parodo ir taip atskiria tikrąjį skirtumą nuo bendros taisyklės."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, 9 skyrius: laikas pilnomis valandomis (val., h) 12 ir 24 val. laiko sistemose.",
+    "Matematikos bendroji programa (2022), „Geometriniai matavimai“, 1–2 klasė: analoginio ir skaitmeninio laikrodžio rodmuo.",
+    "Thomas, M., Clarke, D. M., McDonough, A., & Clarkson, P. C. (2023). Assessing students’ understanding of time concepts in Years 3 and 4. Mathematics Education Research Journal, 35(Suppl 1), 1–22. https://doi.org/10.1007/s13394-023-00451-3 — 12 valandų ciferblatas per parą apvažiuoja tas pačias valandas du kartus, todėl laiką tenka įvardyti du kartus.",
+    "NCETM. Time, Year 4, Unit 11: 24-hour clock. https://ncetm.org.uk/classroom-resources/cp-year-4-unit-11-time/ — 24 val. sistemos perskaičiavimas (13 = 12 + 1) mokomas 8–9 m., todėl 6–7 m. modelis remiasi tapatumo parodymu, o ne atimtimi."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (tas pats laikas, du vardai). Perskaičiavimo aritmetikos nėra, minučių modelis neapima, o vidurnaktis (00:00) sąmoningai paliktas vėlesniam moduliui.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo perskaityti laiką kitoje sistemoje arba palyginti du prietaisus, o ne atkartoti formuluotę.",
+    "3 žingsnis — pagalba laiku: spėjimas prieš pirmą perjungimą palyginamas su tuo, kas įvyko; nėra laikmačio, klaida nieko neatima, yra praplėtimo užduotis."
+  ]
+}

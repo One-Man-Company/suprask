@@ -35,7 +35,7 @@ atnaujinta: 2026-11-03
 
 ## Statusas
 
-**Live.** 25 moduliai, 5 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
+**Live.** 26 moduliai, 5 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
 
 ## Susieti
 

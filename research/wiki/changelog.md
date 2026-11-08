@@ -12,7 +12,7 @@ Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. For
 - **Gyvas puslapis naršyklėje:** `check_view.py --base https://one-man-company.github.io/suprask/ --viewports phone,small` → 62 patikros (31 maršrutas × 2 plotai), 0 problemų, 0 konsolės klaidų.
 - **Vartai:** `validate_content.py` → 0 klaidų, 0 įspėjimų.
 - **Ką agentai pakeitė nuo praėjusios patikros (`8b29d9b`, 06:13):** 28 → 31 modulis — į indeksą įtraukti `matematika/24-komandu-seka` (#131), `gyvenimo-igudziai/01-dovana-ir-noras` (#136, kartu nauja kryptis) ir `muzika/01-garso-aukstis`; 18 turinio failų (kalbos taisymai #140–#156, simuliacijų išdėstymas 200 % tekste), `path.json` ir `grades.json` atnaujinti.
-- **Sprendimas:** palaikyta; nieko neatšaukta — gyva svetainė atsako, turinys ir garsas sutampa su `origin/main`, modulių skaičius sutampa. Ataskaita `agents/log/leidejas-2026-11-08T1637.md`.
+- **Sprendimas:** palaikyta; nieko neatšaukta — gyva svetainė atsako, turinys ir garsas sutampa su `origin/main`, modulių skaičius sutampa. Ataskaita `agents/log/leidejas-2026-11-08T1633.md`.
 
 ## 2026-11-08 (08:40) — Emocijų metodas M-05: jausmas priklauso nuo noro
 

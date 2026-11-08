@@ -319,10 +319,16 @@ class Handler(BaseHTTPRequestHandler):
                     if isinstance(topics, str):
                         topics = [ln for ln in topics.splitlines() if ln.strip()]
                     topics = [str(x) for x in topics]
+                subjects = payload.get("min_subjects")
+                if subjects is not None:
+                    if isinstance(subjects, str):
+                        subjects = [ln for ln in subjects.splitlines() if ln.strip()]
+                    subjects = [str(x) for x in subjects]
                 cell = grade_scope.set_grade(
                     grade,
                     enabled=None if enabled is None else bool(enabled),
                     min_topics=topics,
+                    min_subjects=subjects,
                 )
                 return self._json({"ok": True, "grade": cell})
             except (KeyError, TypeError, ValueError) as exc:
@@ -382,7 +388,9 @@ button:hover{border-color:var(--accent)}
 button.primary{background:var(--accent);color:#111;border-color:var(--accent);font-weight:700}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .grade{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:9px;background:var(--panel2);color:var(--fg)}
-.grade textarea{width:100%;min-height:64px;margin:8px 0;padding:8px;border:1px solid var(--line);
+.grade .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.grade textarea{width:100%;min-height:52px;margin:6px 0;padding:8px;border:1px solid var(--line);
+  field-sizing:content;max-height:220px;
   border-radius:8px;font:inherit;font-size:13px;line-height:1.45;resize:vertical;
   background:var(--bg);color:var(--fg)}
 .grade .sw{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
@@ -654,13 +662,19 @@ async function loadGrades(){
         <div class="row">
           <b style="min-width:70px">${g.grade} klasė</b>
           <span class="muted" style="flex:1">${esc(g.age || "")} · modulių ${g.modules}${
-            g.min_topics.length ? ` · temos ${g.covered}/${g.min_topics.length}` : ""}</span>
+            g.min_topics.length ? ` · temos ${g.covered}/${g.min_topics.length}` : ""}${
+            (g.subjects || []).length ? ` · dalykai ${(g.subjects || []).filter(s => s.covered).length}/${g.subjects.length}` : ""}</span>
           <label class="sw"><input type="checkbox" data-en ${g.enabled ? "checked" : ""}>
             <span>${g.enabled ? "įjungta" : "išjungta"}</span></label>
         </div>
         <details ${g.enabled ? "open" : ""}>
           <summary class="muted" style="cursor:pointer;font-size:12px;margin-bottom:6px">Temos ir išsaugojimas</summary>
-          <textarea data-topics rows="2" placeholder="viena tema eilutėje, pvz. pinigai">${esc(g.min_topics.join(NL))}</textarea>
+          <div class="lbl">Minimalios temos (viena eilutėje)</div>
+        <textarea data-topics rows="2" placeholder="viena tema eilutėje, pvz. pinigai">${esc(g.min_topics.join(NL))}</textarea>
+        <div class="lbl">Privalomi dalykai (vienas eilutėje)</div>
+        <textarea data-subjects rows="2" placeholder="pvz. matematika">${esc(g.min_subjects.join(NL))}</textarea>
+        <div class="cov">${(g.subjects || []).map(s =>
+          `<span class="chip ${s.covered ? "mint" : ""}" title="${esc(s.modules.join(", "))}">${s.covered ? "✓" : "○"} ${esc(s.label)}</span>`).join("")}</div>
           <div class="cov">${g.coverage.map(c =>
             `<span class="chip ${c.covered ? "mint" : ""}">${c.covered ? "✓" : "○"} ${esc(c.topic)}</span>`).join("")}</div>
           <div class="row"><button data-save>Išsaugoti</button><span class="muted" data-msg></span></div>
@@ -677,12 +691,13 @@ async function saveGrade(el){
   const grade = Number(el.dataset.g);
   const enabled = el.querySelector("[data-en]").checked;
   const min_topics = el.querySelector("[data-topics]").value.split(NL).map(s => s.trim()).filter(Boolean);
+  const min_subjects = el.querySelector("[data-subjects]").value.split(NL).map(s => s.trim()).filter(Boolean);
   const msg = el.querySelector("[data-msg]");
   msg.textContent = "Saugoma…";
   try {
     const r = await j("/api/grades", {
       method: "POST", headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({grade, enabled, min_topics}),
+      body: JSON.stringify({grade, enabled, min_topics, min_subjects}),
     });
     msg.textContent = r.ok ? "Išsaugota ✓" : ("Klaida: " + (r.error || ""));
     if (r.ok) loadGrades();

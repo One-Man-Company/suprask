@@ -366,6 +366,11 @@ def scope_brief() -> str:
              ""]
     for g in enabled:
         lines.append(f"{g['grade']} klasė ({g['age']}): modulių dabar {g['modules']}.")
+        if g.get("subjects"):
+            covered = sum(1 for x in g["subjects"] if x["covered"])
+            lines.append(f"  Privalomi dalykai ({covered}/{len(g['subjects'])} jau turi modulių):")
+            for x in g["subjects"]:
+                lines.append(f"    - {x['label']} — {'jau yra' if x['covered'] else 'DAR NĖRA'}")
         if g["min_topics"]:
             lines.append("  Minimalios temos, kurios PRIVALO būti padengtos:")
             for c in g["coverage"]:
@@ -380,6 +385,9 @@ def scope_brief() -> str:
         "   apimančio ir kitas tos klasės programos temas.",
         "2. Vienai temai gali būti KELI moduliai, o jų skaičius NERIBOJAMAS, jei temai",
         "   išnagrinėti reikia kelių žingsnių (pvz., skirtingi to paties reiškinio aspektai).",
+        "2a. Kiekvienas PRIVALOMAS DALYKAS turi turėti bent vieną modulį JAU DABAR; dalyko moduliai",
+        "    turi atitikti tos klasės bendrąją programą (ne vyresnės), o vienam dalykui gali būti",
+        "    keli moduliai pagal skirtingas pasiekimų sritis.",
         "3. Kiekviena tema turi būti išnagrinėta visapusiškai: kas tai, kodėl taip, kaip atpažinti,",
         "   kur gyvenime sutinkama, ką daryti kitaip — tiek, kiek leidžia klasės amžius.",
         "4. Kalba ir uždavinių sudėtingumas — tos klasės vaikui, ne vyresniam.",

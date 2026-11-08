@@ -11,61 +11,226 @@
         "komandų seka",
         "medžiagos"
       ],
-      "updated": "2026-11-07T20:57:53"
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "pilietiskumas",
+        "gamtos-mokslai",
+        "matematika",
+        "technologijos",
+        "daile",
+        "muzika",
+        "kunas",
+        "gyvenimo-igudziai"
+      ],
+      "updated": "2026-11-08T10:10:21"
     },
     "2": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "pilietiskumas",
+        "gamtos-mokslai",
+        "matematika",
+        "technologijos",
+        "daile",
+        "muzika",
+        "kunas",
+        "gyvenimo-igudziai",
+        "uzsienio-kalba-1"
+      ],
       "updated": "2026-11-07T20:57:53"
     },
     "3": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "pilietiskumas",
+        "gamtos-mokslai",
+        "matematika",
+        "technologijos",
+        "daile",
+        "muzika",
+        "kunas",
+        "gyvenimo-igudziai",
+        "uzsienio-kalba-1"
+      ],
       "updated": null
     },
     "4": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "pilietiskumas",
+        "gamtos-mokslai",
+        "matematika",
+        "technologijos",
+        "daile",
+        "muzika",
+        "kunas",
+        "gyvenimo-igudziai",
+        "uzsienio-kalba-1"
+      ],
       "updated": null
     },
     "5": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "uzsienio-kalba-1",
+        "matematika",
+        "informatika",
+        "gamtos-mokslai",
+        "technologijos",
+        "geografija",
+        "istorija",
+        "daile",
+        "muzika",
+        "kunas",
+        "gyvenimo-igudziai"
+      ],
       "updated": null
     },
     "6": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "uzsienio-kalba-1",
+        "uzsienio-kalba-2",
+        "matematika",
+        "informatika",
+        "gamtos-mokslai",
+        "technologijos",
+        "geografija",
+        "istorija",
+        "daile",
+        "muzika",
+        "kunas",
+        "gyvenimo-igudziai"
+      ],
       "updated": null
     },
     "7": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "uzsienio-kalba-1",
+        "uzsienio-kalba-2",
+        "matematika",
+        "informatika",
+        "biologija",
+        "fizika",
+        "geografija",
+        "istorija",
+        "technologijos",
+        "daile",
+        "muzika",
+        "kunas"
+      ],
       "updated": null
     },
     "8": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "uzsienio-kalba-1",
+        "uzsienio-kalba-2",
+        "matematika",
+        "informatika",
+        "biologija",
+        "chemija",
+        "fizika",
+        "geografija",
+        "istorija",
+        "technologijos",
+        "daile",
+        "muzika",
+        "kunas"
+      ],
       "updated": null
     },
     "9": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "uzsienio-kalba-1",
+        "uzsienio-kalba-2",
+        "matematika",
+        "informatika",
+        "biologija",
+        "chemija",
+        "fizika",
+        "geografija",
+        "istorija",
+        "pilietiskumas",
+        "ekonomika",
+        "technologijos",
+        "kunas"
+      ],
       "updated": null
     },
     "10": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "dorinis-ugdymas",
+        "lietuviu-kalba",
+        "uzsienio-kalba-1",
+        "uzsienio-kalba-2",
+        "matematika",
+        "informatika",
+        "biologija",
+        "chemija",
+        "fizika",
+        "geografija",
+        "istorija",
+        "pilietiskumas",
+        "ekonomika",
+        "technologijos",
+        "kunas"
+      ],
       "updated": null
     },
     "11": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "lietuviu-kalba",
+        "matematika",
+        "istorija",
+        "uzsienio-kalba-1",
+        "kunas",
+        "dorinis-ugdymas"
+      ],
       "updated": null
     },
     "12": {
       "enabled": false,
       "min_topics": [],
+      "min_subjects": [
+        "lietuviu-kalba",
+        "matematika",
+        "istorija",
+        "uzsienio-kalba-1",
+        "kunas",
+        "dorinis-ugdymas"
+      ],
       "updated": null
     }
   }

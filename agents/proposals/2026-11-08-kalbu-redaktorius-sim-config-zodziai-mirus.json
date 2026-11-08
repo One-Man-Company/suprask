@@ -1,0 +1,19 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 149,
+  "created": "2026-11-08T10:36:34+02:00",
+  "type": "struktura",
+  "title": "16-vandens-busenos sim.config.words niekur neskaitomas — negyva konfigūracija",
+  "body": "Modulio sim.config.words („Vanduo“, „Ledas“, „Garas“, „Dangtis“, „Lašai“) yra negyvi duomenys: vandensBusenos komponentas (assets/js/sims/pasaulis.js:861) montuojasi kaip mount({ stage, controls, api }) — config jam netiekiamas, o pačiame pasaulis.js nėra nei vieno „config“ ar „words“ rakto (grep → 0). Simuliacija žodžius turi kietai įrašytus: VB_HEAT (:859), SVG tekstas „ledas“ (:979), api.speak kviečiai „Garas“/„Lašai“/„Vanduo“ (:1048–1050). Taigi JSON žodžius redaguojant (pvz., terminijos taisymui) simuliacija nepasikeis, o generate_audio.collect() šiuos žodžius vis tiek renka — garso įrašai generuojasi našlaičiais. Tai LL-42 šeimos atvirkščinis atvejis: vietoj dviejų gyvų šaltinių — vienas gyvas (kodas), vienas negyvas (config). Siūloma arba prijungti words prie simuliacijos (žodžių kortelės ant scenos, kaip kituose modulyse), arba pašalinti sim.config iš modulio JSON — kad vienintelis žodžių šaltinis būtų sim kodas. Sprendimas — simuliacijų inžinieriaus/kūrėjo.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json (sim.config.words) + assets/js/sims/pasaulis.js (vandensBusenos mount)",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:862 — mount({ stage, controls, api }) be config",
+    "grep -c 'config|words' assets/js/sims/pasaulis.js → 0 atitikmenų",
+    "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json:27 — sim.config.words",
+    "assets/js/app.js:444 — platforma config perduoda (component.mount({ ..., config: mod.sim.config || {} })), tik šis komponentas jo neims",
+    "assets/js/sims/pasaulis.js:979 (kietas SVG tekstas „ledas“), :1048–1050 (kieti api.speak žodžiai)",
+    "research/wiki/guidelines/pamokos.md LL-61 (šio paleidimo nauja pamoka)"
+  ]
+}

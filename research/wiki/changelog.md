@@ -2,6 +2,18 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-08 (16:37) — Publikavimo patikra #171: 31 modulis gyvai, svetainė pastatyta iš `origin/main`
+
+- **`origin/main` = `ff7320f`, `HEAD` = `1b1edf7`** — vienas neišstumtas commit'as (`agents/scope.json`, sistemos šlavimas), kuris publikuojamam turiniui įtakos neturi; `git status --porcelain -uall` tuščias.
+- **`pages.yml`:** trys paskutiniai paleidimai `completed/success` — `42488158893` (24 s, `2026-11-08T14:06:34Z`, head `ff7320f`), `42487737917` (26 s), `42478804725` (30 s).
+- **4 realios gyvos patikros (HTTP):** šaknis `200`, `content/lt/grade-01/index.json` `200`, `assets/audio/lt/manifest.json` `200`, `content/lt/grades.json` `200`; papildomai visi 31 modulio JSON failai — `200`.
+- **Moduliai:** 31 vietoje = 31 gyvai, ID aibės sutampa abiem kryptimis (trūksta 0, perteklius 0); `grades.json` abiejose pusėse `"modules": 31`, `updated: 2026-11-08`. Kryptys: lietuvių kalba 4, matematika 15, pasaulio pažinimas 5, muzika 1, žaidimų teorija 3, technologijos 2, gyvenimo įgūdžiai 1.
+- **Baitai, ne skaičiai:** `grade-01/index.json` (`dda1273a`), `grades.json` (`2ec1e57d`), `path.json` (`88ff0a20`), `audio/lt/manifest.json` (`de1ad5e4`, 463 raktai), `main.css` (`c88fab2e`), `matematika.js` (`afc29fd6`), naujausi moduliai `24-komandu-seka` ir `01-dovana-ir-noras` — gyvai baitais lygūs `HEAD`. `index.html`, `app.js`, `registry.js`, `gyvenimas.js` skiriasi TIK `?v=ff7320fd` žyma, kurią prirašo `pages.yml:33–42`; žyma lygi pirmiems 8 `origin/main` simboliams, tad gyva svetainė pastatyta būtent iš jo (LL-41, ne defektas).
+- **Gyvas puslapis naršyklėje:** `check_view.py --base https://one-man-company.github.io/suprask/ --viewports phone,small` → 62 patikros (31 maršrutas × 2 plotai), 0 problemų, 0 konsolės klaidų.
+- **Vartai:** `validate_content.py` → 0 klaidų, 0 įspėjimų.
+- **Ką agentai pakeitė nuo praėjusios patikros (`8b29d9b`, 06:13):** 28 → 31 modulis — į indeksą įtraukti `matematika/24-komandu-seka` (#131), `gyvenimo-igudziai/01-dovana-ir-noras` (#136, kartu nauja kryptis) ir `muzika/01-garso-aukstis`; 18 turinio failų (kalbos taisymai #140–#156, simuliacijų išdėstymas 200 % tekste), `path.json` ir `grades.json` atnaujinti.
+- **Sprendimas:** palaikyta; nieko neatšaukta — gyva svetainė atsako, turinys ir garsas sutampa su `origin/main`, modulių skaičius sutampa. Ataskaita `agents/log/leidejas-2026-11-08T1637.md`.
+
 ## 2026-11-08 (08:40) — Emocijų metodas M-05: jausmas priklauso nuo noro
 
 - **`grades/01/metodai.md`** — naujas metodas M-05 „Emocijos: tas pats įvykis, skirtingas jausmas“ (tema atidaryta kaip `guidelines/klausimai.md:29`): keturių žingsnių seka, simuliacijos `dovana-ir-noras` penkios būsenos, keturios užduotys su tipinėmis klaidomis, modelio ribos, argumentas, kodėl paveikslėlis čia nepakanka.

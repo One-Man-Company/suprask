@@ -687,6 +687,15 @@ def changed_list() -> list[str]:
         return []
 
 
+def venv_python() -> str:
+    """Projekto venv python, jei yra: garso generavimui reikia piper/edge-tts
+    paketų, kurių sisteminiame python'e nėra. Po systemd unit'u
+    `sys.executable` yra /usr/bin/python3 — todėl garso taisymas tyliai
+    nepavykdavo ir visas paleidimas būdavo atmetamas."""
+    candidate = ROOT / ".venv" / "bin" / "python"
+    return str(candidate) if candidate.exists() else sys.executable
+
+
 def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool, str]:
     """Paleidžia validatorius, susijusius su pakeistais failais.
 
@@ -697,7 +706,7 @@ def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool,
     checks: list[tuple[str, list[str]]] = []
     if any(f.startswith(("content/", "assets/audio/")) for f in files) or not files:
         checks.append(("turinys", [sys.executable, "scripts/validate_content.py"]))
-        checks.append(("garsas", [sys.executable, "scripts/check_audio.py"]))
+        checks.append(("garsas", [venv_python(), "scripts/check_audio.py"]))
     if any(f.startswith(("agents/", "deploy/", "scripts/")) for f in files) or not files:
         # Sistemos vientisumas: po architekto pakeitimų neturi likti vaidmens be
         # timer'io, modelio ar baigties sąlygos.
@@ -726,7 +735,7 @@ def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool,
             ok = False
             if name == "garsas" and allow_audio_repair:
                 repair = subprocess.run(
-                    [sys.executable, "scripts/generate_audio.py", "--engine", "piper"],
+                    [venv_python(), "scripts/generate_audio.py", "--engine", "piper"],
                     cwd=ROOT, capture_output=True, text=True, timeout=1800,
                 )
                 if repair.returncode == 0:

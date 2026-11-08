@@ -1,0 +1,131 @@
+{
+  "id": "04-kaip-zmones-sveikinasi",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Kaip žmonės sveikinasi",
+  "subtitle": "Vienas pastebėjimas dar nėra išvada",
+  "minutes": 9,
+  "outcomes": [
+    "Atlieku nesudėtingą kalbos vartojimo tyrimą: stebiu, kaip sveikinasi žmonės.",
+    "Grupuoju pastebėjimus pagal sveikinimosi būdą.",
+    "Sakau išvadą, kuri remiasi visais pastebėjimais, ne vienu."
+  ],
+  "concept": {
+    "title": "Išvada iš visų pastebėjimų",
+    "big_idea": "Vienas sutiktas žmogus nepasako, kaip sveikinasi visi. Išvadą darome iš visų pastebėjimų.",
+    "steps": [
+      "Sugalvok klausimą: kaip žmonės sveikinasi prie mokyklos?",
+      "Stebėk ir skaičiuok. Kiekvieną žmogų priskirk vienai grupei.",
+      "Išvadą sakyk po daug pastebėjimų, ne po pirmo."
+    ],
+    "example": "Prie durų sutikai vieną berniuką. Jis pasakė „labas“. Iškart sakai: „visi sveikinasi žodžiu“. Bet antras žmogus gali parodyti kitaip."
+  },
+  "sim": {
+    "component": "kaip-zmones-sveikinasi",
+    "config": {
+      "question": "Kaip žmonės sveikinasi prie mokyklos?",
+      "groups": [
+        {
+          "id": "zodis",
+          "label": "Žodžiu",
+          "emoji": "💬",
+          "single": "Visi sveikinasi žodžiu.",
+          "many": "Daugiausia sveikinasi žodžiu."
+        },
+        {
+          "id": "mostas",
+          "label": "Mostelėjo",
+          "emoji": "👋",
+          "single": "Visi mostelėjo.",
+          "many": "Daugiausia mostelėjo."
+        },
+        {
+          "id": "linkt",
+          "label": "Linktelėjo",
+          "emoji": "🙂",
+          "single": "Visi linktelėjo.",
+          "many": "Daugiausia linktelėjo."
+        }
+      ],
+      "tie": "Daugiausia — po lygiai.",
+      "people": [
+        { "label": "Labas!", "group": "zodis" },
+        { "label": "Labas!", "group": "zodis" },
+        { "label": "Linktelėjo", "group": "linkt" },
+        { "label": "Labas rytas!", "group": "zodis" },
+        { "label": "Mostelėjo", "group": "mostas" },
+        { "label": "Labas!", "group": "zodis" },
+        { "label": "Linktelėjo", "group": "linkt" },
+        { "label": "Sveiki!", "group": "zodis" }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Pastebėjai tris žmones. Du pasakė „labas“, vienas linktelėjo. Kaip pasakytum išvadą?",
+      "options": [
+        "Visi sveikinasi žodžiu.",
+        "Visi linktelėjo.",
+        "Daugiausia sveikinasi žodžiu."
+      ],
+      "answer": 2,
+      "hint": "Skaičiuok visus tris žmones, ne tik pirmą.",
+      "why": "Du žodžiu, vienas linktelėjo, todėl išvadoje — „daugiausia“."
+    },
+    {
+      "q": "Prie mokyklos vienas žmogus linktelėjo. Ar jau gali pasakyti, kaip sveikinasi kiti?",
+      "options": [
+        "Taip, visi linkteli.",
+        "Ne, reikia pastebėti daugiau žmonių.",
+        "Taip, visi sveikinasi žodžiu."
+      ],
+      "answer": 1,
+      "hint": "Kiek žmonių jau pastebėjai?",
+      "why": "Išvada apie kitus remiasi visais pastebėjimais, ne vienu."
+    },
+    {
+      "q": "Pastebėjai penkis žmones. Trys pasakė „labas“, vienas mostelėjo, vienas linktelėjo. Kaip pasakytum išvadą?",
+      "options": [
+        "Visi sveikinasi žodžiu.",
+        "Daugiausia sveikinasi žodžiu.",
+        "Visi mostelėjo."
+      ],
+      "answer": 1,
+      "hint": "Kuris sveikinimosi būdas kartojosi dažniausiai?",
+      "why": "Trys iš penkių sveikinasi žodžiu, todėl „daugiausia“."
+    },
+    {
+      "q": "Pirmas draugas sako, kad mėgsta mėlyną. Kaip sužinoti, kokias spalvas mėgsta visi?",
+      "options": [
+        "Klausti dar draugų ir skaičiuoti atsakymus.",
+        "Sakyti, kad visi mėgsta mėlyną.",
+        "Nebeklausti draugų."
+      ],
+      "answer": 0,
+      "hint": "Vienas atsakymas dar nepasako apie visus.",
+      "why": "Tas pats tyrimo kelias tinka ir spalvų klausimui.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip šiandien pasisveikinai su pirmu sutiktu žmogumi? O kaip sveikinasi tavo šeimos nariai?",
+  "teacher": {
+    "goal": "Kalbinis tyrimas pagal pavyzdį (D.5.2): išsiaiškinti, kaip žmonės sveikinasi, surinkti pastebėjimus ir padaryti išvadą.",
+    "prompt": "Kiek žmonių pastebėjai? Ar tavo pirma išvada dar tinka?",
+    "offline": "Pasėdėkite prie mokyklos durų penkias minutes. Skaičiuokite, kaip žmonės sveikinasi. Namie palyginkite su tuo, ką matėte ekrane.",
+    "misconceptions": [
+      "Vaikas vieną ryškų atvejį laiko taisykle: pamatęs, kad žmogus linktelėjo, sako „visi linkteli“.",
+      "Vaikas pirmą išvadą laiko galutine ir neleidžia jos pakeisti naujiems pastebėjimams.",
+      "Vaikas skaičiuoja tik tuos atvejus, kurie patvirtina jo nuomonę, o kitus praleidžia."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“, veiklos pavyzdys „Kaip žmonės sveikinasi?“ (D.5.2).",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), kalbos pažinimo sritis, D.5.2, 1 klasė."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka — išvada remiasi visais pastebėjimais, o ne pirmu atveju.",
+    "2 žingsnis — vertinimas perkėlimo situacijoje: ta pati tyrimo eiga taikoma spalvų klausimui, ne atsimenama apibrėžtis (T2.2).",
+    "3 žingsnis — pagalba laiku: užuomina nukreipia į trūkstamus pastebėjimus, ne į atsakymą (T3.1); jokio laikmačio.",
+    "8 žingsnis — mokytojas lieka mokytoju: veikla be ekrano prie mokyklos durų (T8.3)."
+  ]
+}

@@ -259,8 +259,202 @@ const sakinioTvarka = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 4. Kalbos vartojimo tyrimas: „Kaip žmonės sveikinasi?“              */
+/* ------------------------------------------------------------------ */
+/* Modelis: vienintelis kintamasis — pastebėjimų skaičius, o išvada
+   apskaičiuojama iš sukauptų duomenų. Todėl išvada keičiasi tik tada,
+   kai pasikeičia pastebėjimai, o ne atskirai įrašyta teksto eilute.
+   Žmonių eilė fiksuota sąmoningai (jokio Math.random): tas pats tyrimas
+   visada atkuriamas, o trečias žmogus tyčia sveikinasi kitaip — be
+   prieštaraujančio atvejo modelis neįrodytų, kad pirma išvada netinka. */
+const kaipZmonesSveikinasi = {
+  mount({ stage, controls, api, config }) {
+    const groups = Array.isArray(config.groups) ? config.groups : [];
+    const people = Array.isArray(config.people) ? config.people : [];
+    const ORDINALS = ["Pirmas", "Antras", "Trečias", "Ketvirtas", "Penktas", "Šeštas", "Septintas", "Aštuntas"];
+
+    if (!groups.length || !people.length) {
+      stage.innerHTML = `<p class="error-box">Tyrimo duomenų nėra.</p>`;
+      return null;
+    }
+
+    const counts = {};
+    groups.forEach((g) => { counts[g.id] = 0; });
+
+    let seen = 0;        // vienintelis modelio kintamasis
+    let first = null;    // pirma vaiko užrašyta išvada { text, at }
+    let reported = false;
+
+    function barsMarkup() {
+      return groups.map((g) => `
+        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+          <span style="flex:0 0 auto;min-width:6.6rem;font-weight:800;font-size:clamp(.98rem,3.6vw,1.1rem)">${g.label}</span>
+          <span aria-hidden="true" style="flex:1 1 4.5rem;min-width:3rem;height:.85rem;display:block;overflow:hidden;border-radius:999px;background:var(--line)">
+            <span id="kz-bar-${g.id}" style="display:block;height:100%;width:0%;border-radius:999px;background:var(--accent)"></span>
+          </span>
+          <strong id="kz-n-${g.id}" style="flex:0 0 1.5rem;text-align:right;font-size:clamp(1rem,3.8vw,1.15rem)">0</strong>
+        </div>`).join("");
+    }
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:36rem">
+        <p id="kz-question" style="margin:0 0 .6rem;text-align:center;font-family:var(--font-head);font-weight:900;font-size:clamp(1rem,3.6vw,1.2rem)"></p>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .6rem;border:2px dashed var(--line);border-radius:var(--r-m);background:var(--paper)">
+          <div id="kz-emoji" aria-hidden="true" style="font-size:clamp(2.4rem,11vw,3.4rem);line-height:1">🏫</div>
+          <div id="kz-said" style="font-family:var(--font-head);font-weight:900;font-size:clamp(1.06rem,4vw,1.3rem);text-align:center;overflow-wrap:anywhere">Dar nieko</div>
+          <div id="kz-who" style="font-size:var(--fs-s);color:var(--ink-soft);text-align:center">Spausk „Sekantis žmogus“</div>
+        </div>
+        <div style="display:grid;gap:.4rem;margin-top:.8rem">${barsMarkup()}</div>
+        <div style="margin-top:.8rem;padding:.6rem .8rem;border-left:4px solid var(--sun);border-radius:var(--r-s);background:var(--paper)">
+          <p style="margin:0;font-size:clamp(.98rem,3.6vw,1.1rem)">Pastebėjimų: <strong id="kz-total">0</strong></p>
+          <p style="margin:.25rem 0 0;font-size:clamp(.98rem,3.6vw,1.1rem)">Išvada: <strong id="kz-conc">dar nieko</strong></p>
+          <p id="kz-first" hidden style="margin:.35rem 0 0;font-size:clamp(.95rem,3.4vw,1.06rem);color:var(--ink-soft)"></p>
+        </div>
+      </div>`;
+    controls.innerHTML = `
+      <button class="btn" id="kz-next">Sekantis žmogus</button>
+      <button class="btn secondary" id="kz-say">Mano išvada</button>`;
+
+    const emojiEl = stage.querySelector("#kz-emoji");
+    const saidEl = stage.querySelector("#kz-said");
+    const whoEl = stage.querySelector("#kz-who");
+    const totalEl = stage.querySelector("#kz-total");
+    const concEl = stage.querySelector("#kz-conc");
+    const firstEl = stage.querySelector("#kz-first");
+    const nextEl = controls.querySelector("#kz-next");
+    const sayEl = controls.querySelector("#kz-say");
+    const barEls = {};
+    const countEls = {};
+    groups.forEach((g) => {
+      barEls[g.id] = stage.querySelector(`#kz-bar-${g.id}`);
+      countEls[g.id] = stage.querySelector(`#kz-n-${g.id}`);
+    });
+
+    const questionEl = stage.querySelector("#kz-question");
+    if (questionEl) questionEl.textContent = config.question || "Kaip žmonės sveikinasi?";
+
+    function total() {
+      return groups.reduce((sum, g) => sum + counts[g.id], 0);
+    }
+
+    /* Išvada — ne tekstas iš sąrašo, o skaičiavimas iš duomenų.
+       Kol pastebėtas vienas būdas, sakome „visi“; kai atsiranda antras,
+       ta pati funkcija duoda „daugiausia“. Šis pasikeitimas ir yra
+       mokymosi objektas. */
+    function conclusion() {
+      if (!total()) return null;
+      const seenGroups = groups.filter((g) => counts[g.id] > 0);
+      if (seenGroups.length === 1) return seenGroups[0].single;
+      const best = Math.max(...seenGroups.map((g) => counts[g.id]));
+      const top = seenGroups.filter((g) => counts[g.id] === best);
+      if (top.length > 1) return config.tie || "Daugiausia — po lygiai.";
+      return top[0].many;
+    }
+
+    function render() {
+      totalEl.textContent = String(total());
+      concEl.textContent = conclusion() || "dar nieko";
+      groups.forEach((g) => {
+        if (barEls[g.id]) barEls[g.id].style.width = `${Math.round((counts[g.id] / people.length) * 100)}%`;
+        if (countEls[g.id]) countEls[g.id].textContent = String(counts[g.id]);
+      });
+      if (first) {
+        firstEl.hidden = false;
+        firstEl.textContent = `Pirma išvada (pastebėjimų: ${first.at}): „${first.text}“`;
+      } else {
+        firstEl.hidden = true;
+        firstEl.textContent = "";
+      }
+      nextEl.textContent = seen >= people.length ? "Pradėti iš naujo" : "Sekantis žmogus";
+    }
+
+    /* Sėkmės sąlyga tikrinama iš DABARTINĖS būsenos (§4): visi žmonės
+       pastebėti IR vaiko išvada užrašyta. Ne iš įvykių istorijos. */
+    function maybeProgress() {
+      if (reported) return;
+      if (seen < people.length || !first) return;
+      reported = true;
+      api.progress({ correct: true });
+    }
+
+    function finish() {
+      const now = conclusion();
+      api.readout("Pastebėjai visus žmones");
+      if (!first) {
+        api.note("Pastebėjai visus. Dabar spausk „Mano išvada“ ir palygink.");
+      } else if (now && now !== first.text) {
+        api.note(`Pirma išvada: „${first.text}“ Dabar: „${now}“`);
+      } else {
+        api.note("Pirma išvada liko ta pati. Pastebėjimai ją patvirtino.");
+      }
+    }
+
+    function reset() {
+      seen = 0;
+      groups.forEach((g) => { counts[g.id] = 0; });
+      first = null;
+      emojiEl.textContent = "🏫";
+      saidEl.textContent = "Dar nieko";
+      whoEl.textContent = "Spausk „Sekantis žmogus“";
+      api.readout("");
+      api.note("Pradėk iš naujo. Spausk „Sekantis žmogus“ ir skaičiuok.");
+      render();
+    }
+
+    nextEl.addEventListener("click", () => {
+      if (seen >= people.length) { reset(); return; }
+      const person = people[seen];
+      const group = groups.find((g) => g.id === person.group);
+      if (!group) { api.note("Šio žmogaus grupė nerasta."); return; }
+      const beforeText = conclusion();
+      seen += 1;
+      counts[group.id] += 1;
+      emojiEl.textContent = group.emoji || "";
+      saidEl.textContent = person.label || group.label;
+      whoEl.textContent = `${ORDINALS[seen - 1] || seen} sutiktas žmogus`;
+      api.readout(`${seen} iš ${people.length} žmonių`);
+      api.speak(person.label || group.label);
+      render();
+      const nowText = conclusion();
+      if (seen === people.length) {
+        finish();
+      } else if (!first) {
+        api.note(seen === 1
+          ? "Pirmas pastebėjimas. Užrašyk savo išvadą — spausk „Mano išvada“."
+          : "Dar vienas pastebėjimas. Ar išvada dar tinka?");
+      } else if (nowText !== beforeText) {
+        /* Apie pasikeitimą sakoma TIK tą kartą, kai jis įvyksta. */
+        api.note("Išvada pasikeitė. Taip nutinka, kai pastebi daugiau žmonių.");
+      } else {
+        api.note("Stebėk toliau ir skaičiuok.");
+      }
+      maybeProgress();
+    });
+
+    sayEl.addEventListener("click", () => {
+      const now = conclusion();
+      if (!now) { api.note("Pirmiausia pastebėk bent vieną žmogų."); return; }
+      if (first) {
+        api.note("Pirma išvada jau užrašyta. Nauji pastebėjimai parodys, ar ji tinka.");
+        return;
+      }
+      first = { text: now, at: seen };
+      render();
+      api.readout(`Išvada: ${now}`);
+      api.note("Išvada užrašyta. Stebėk toliau ir žiūrėk, ar ji išlieka.");
+      maybeProgress();
+    });
+
+    render();
+    api.note("Spausk „Sekantis žmogus“ ir skaičiuok. Išvadą pasakyk, kai nori.");
+    return null;
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
   "sakinio-tvarka": sakinioTvarka,
+  "kaip-zmones-sveikinasi": kaipZmonesSveikinasi,
 };

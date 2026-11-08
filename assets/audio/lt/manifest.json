@@ -975,6 +975,14 @@
   "n": "n/72dfcfb0c470ac25-9ec1d812.mp3",
   "s": "s/72dfcfb0c470ac25-9dd58e38.mp3"
  },
+ "Labas rytas!": {
+  "n": "n/44a08e2db1b13745-10199648.mp3",
+  "s": "s/44a08e2db1b13745-767a284c.mp3"
+ },
+ "Labas!": {
+  "n": "n/c90fb2c84132f82d-d754e5bb.mp3",
+  "s": "s/c90fb2c84132f82d-6a39fd21.mp3"
+ },
  "Laimėjai": {
   "n": "n/c91cd8edce6c0d11-1682c91b.mp3",
   "s": "s/c91cd8edce6c0d11-be9a0edb.mp3"
@@ -999,6 +1007,10 @@
   "n": "n/0379335dceaabec9-5d423f9c.mp3",
   "s": "s/0379335dceaabec9-322b74bd.mp3"
  },
+ "Linktelėjo": {
+  "n": "n/86fa18d5636f9dc4-99eb23ab.mp3",
+  "s": "s/86fa18d5636f9dc4-a00ad1c4.mp3"
+ },
  "Lygiosios": {
   "n": "n/e8f8397e285c5f87-8a122b20.mp3",
   "s": "s/e8f8397e285c5f87-99131409.mp3"
@@ -1022,6 +1034,10 @@
  "Metalas dugne.": {
   "n": "n/2285765af1dbe56e-bc832664.mp3",
   "s": "s/2285765af1dbe56e-10f0e8c4.mp3"
+ },
+ "Mostelėjo": {
+  "n": "n/8049a7991ecef952-53cd647e.mp3",
+  "s": "s/8049a7991ecef952-c148f242.mp3"
  },
  "N": {
   "n": "n/8ce86a6ae65d3692-84095ad0.mp3",
@@ -1258,6 +1274,10 @@
  "Suskaičiavai visas figūras. Apskritimų daugiau, nors jie mažesni.": {
   "n": "n/bf35e2dc555cc020-03cd6819.mp3",
   "s": "s/bf35e2dc555cc020-90379820.mp3"
+ },
+ "Sveiki!": {
+  "n": "n/5a7c3a043b7d6b1d-347efa08.mp3",
+  "s": "s/5a7c3a043b7d6b1d-b1ba6e12.mp3"
  },
  "Sąžininga!": {
   "n": "n/1b31cf12d6476dbf-97934113.mp3",
@@ -1690,6 +1710,10 @@
  "Žirklės": {
   "n": "n/29108178601c894d-99c88dea.mp3",
   "s": "s/29108178601c894d-6c479d88.mp3"
+ },
+ "Žodžiu": {
+  "n": "n/ba7ae0cc6626d97e-3a6c4a13.mp3",
+  "s": "s/ba7ae0cc6626d97e-8a3e892c.mp3"
  },
  "Žuvys": {
   "n": "n/a1793e00054053a4-d3300224.mp3",

@@ -19,7 +19,7 @@
       "Kai sija lygi, abi pusės yra tas pats kiekis.",
       "Tą pačią lygybę perskaityk ir kita kryptimi."
     ],
-    "example": "Svarstyklės lygios: kairėje 5 ir 3, dešinėje 8. Užrašai 5 + 3 = 8 ir 8 = 5 + 3 sako tą patį."
+    "example": "Svarstyklės lygios: kairėje 5 ir 3, dešinėje 8. Rašyk 5 + 3 = 8. Perskaityk ir kita kryptimi: 8 = 5 + 3."
   },
   "sim": {
     "component": "svarstykles-lygybe",
@@ -45,7 +45,7 @@
       ],
       "answer": 1,
       "hint": "Tu sudėjai abi puses. Kiek kairiajai trūksta iki dešinės?",
-      "why": "Sija lygi tik tada, kai abiejose pusėse tiek pat, todėl dėžutėje yra 3 kubeliai."
+      "why": "Abiejose pusėse tiek pat. Todėl dėžutėje yra 3 kubeliai."
     },
     {
       "q": "Kairėje 6 kubeliai ir dėžutė, dešinėje 10 kubelių. Kuri kortelė pasako, kas padėta?",
@@ -56,7 +56,7 @@
       ],
       "answer": 0,
       "hint": "Kurioje pusėje stovi dėžutė? Toje pusėje rašyk ▢.",
-      "why": "Dėžutė stovi kairėje, todėl kairėje rašoma 6 + ▢, o dešinėje — visas 10."
+      "why": "Dėžutė stovi kairėje. Todėl rašoma 6 + ▢ = 10."
     },
     {
       "q": "Kortelė sako: 8 = 5 + ▢. Kiek kubelių dėžutėje, kad svarstyklės būtų lygios?",
@@ -67,7 +67,7 @@
       ],
       "answer": 2,
       "hint": "Skaičius prieš ženklą irgi gali būti visas kiekis. Įsivaizduok abi puses kaip lėkštes.",
-      "why": "Užrašai 8 = 5 + 3 ir 5 + 3 = 8 sako tą patį, todėl dėžutėje yra 3 kubeliai."
+      "why": "8 = 5 + 3. Užrašas 5 + 3 = 8 sako tą patį. Dėžutėje yra 3 kubeliai."
     },
     {
       "q": "4 + 3 = 5 + 2. Ar ši lygybė teisinga?",
@@ -78,7 +78,7 @@
       ],
       "answer": 0,
       "hint": "Nelygink pusės su atsakymu. Žiūrėk į abi puses kaip į du kiekius.",
-      "why": "Kairėje 7 ir dešinėje 7, todėl abi pusės lygios, nors skaičiai skirtingi.",
+      "why": "Kairėje 7 ir dešinėje 7. Abi pusės lygios, nors skaičiai skirtingi.",
       "optional": true
     }
   ],

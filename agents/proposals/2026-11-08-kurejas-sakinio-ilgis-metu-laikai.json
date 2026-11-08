@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 114,
+  "created": "2026-11-08T04:51:50+02:00",
+  "type": "kritika",
+  "title": "Sakinio ilgis: 08-metu-laikai turi 6 ilgiausius sakinius, liko 16 modulių",
+  "body": "Pasiūlymas #4200 įgyvendintas `16-lygybe-svarstykles.json`: modulyje buvo 5 sakiniai >10 žodžių, dabar 0, o 1 klasėje liko 41 sakinys 16 modulių. Tankiausias dabar `content/lt/grade-01/pasaulio-pazinimas/08-metu-laikai.json` — 6 pažeidimai, išmatuoti 2026-11-08 paleidime #114 ta pačia metrika: `concept.big_idea` 11 ir 12 ž., `concept.example` 11 ž., `concept.steps[3]` 11 ž., `concept.steps[4]` 12 ž., `tasks[3].hint` 11 ž. Visi jie yra natūralūs ilgi sakiniai su „todėl“, „o“, brūkšniu, o ne matuoklio artefaktas (LL-35), tad taisytini skaidant į du trumpus, ne keičiant matuoklį. Siūlau imti šį vieną failą kaip kitą darbo vienetą: keisti tik formuluotes, ne `answer` indeksus, `optional` žymas, `hint` kryptį ar `sim.config`; garso įrašų nereikės, nes `generate_audio.collect()` renka tik `sim.config` tekstus. Po jo eilės tvarka: `04-skaiciu-tiese` (4), `19-simto-skaiciu-lentele` (4), `20-laikas-12-ir-24-val` (4), `11-saziningas-dalijimasis` (4).",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/08-metu-laikai.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "docs/KURINIO-STANDARTAS.md:110 — „Sakinio ilgis 1–2 klasei — iki 10 žodžių“",
+    "docs/SVIETIMAS-1-GAIRES.md:56 — T5.4: trumpi sakiniai",
+    "agents/log/kurejas-2026-11-08T0451.md — matavimas prieš / po (46→41 sakinys, 17→16 modulių) ir tikra validatoriaus išvestis",
+    "content/lt/grade-01/pasaulio-pazinimas/08-metu-laikai.json — 6 sakiniai >10 žodžių, matuoti 2026-11-08 paleidime #114"
+  ]
+}

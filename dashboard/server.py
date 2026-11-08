@@ -486,7 +486,7 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 <body>
 <header>
   <h1>SUPRASK · agentų valdymas</h1>
-  <span class="badge" id="auto">auto-refresh 15 s</span>
+  <button id="refreshTop" title="Perskaityti iš naujo visus duomenis">Atnaujinti</button>
   <span class="badge" id="updated">—</span>
   <span style="flex:1"></span>
   <span class="badge">vidinis · Tailscale</span>
@@ -829,8 +829,7 @@ async function saveGrade(el){
       method: "POST", headers: {"Content-Type": "application/json"},
       body: JSON.stringify({grade, enabled, min_topics, min_subjects}),
     });
-    msg.textContent = r.ok ? "Išsaugota ✓" : ("Klaida: " + (r.error || ""));
-    if (r.ok) loadGrades();
+    msg.textContent = r.ok ? "Išsaugota ✓ (padengtis atsinaujins po „Atnaujinti“)" : ("Klaida: " + (r.error || ""));
   } catch (e) { msg.textContent = "Klaida: " + e.message; }
 }
 
@@ -856,7 +855,10 @@ document.addEventListener("click", (e) => {
   if (b) { e.preventDefault(); openPrompt(b.dataset.prompt); }
 });
 loadAll().then(() => loadPublish());
-setInterval(loadAll, 15000);
+// Automatinis atnaujinimas SAMONINGAI išjungtas: jis perpiešdavo klasių
+// korteles kas 15 s ir išmesdavo tai, ką žmogus tuo metu rašė (temos, dalykai).
+// Dabar duomenys atnaujinami tik paspaudus „Atnaujinti“.
+$("#refreshTop").onclick = loadAll;
 </script>
 </body></html>
 """

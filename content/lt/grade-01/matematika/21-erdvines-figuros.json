@@ -12,14 +12,14 @@
   ],
   "concept": {
     "title": "Tas pats kūnas, kitas vaizdas",
-    "big_idea": "Iš skirtingų pusių tas pats kūnas atrodo skirtingai. Kūgis iš priekio atrodo kaip trikampis, o iš viršaus — kaip apskritimas. Tačiau kūgis visą laiką lieka vienas.",
+    "big_idea": "Iš skirtingų pusių tas pats kūnas atrodo skirtingai. Kūgis iš priekio atrodo kaip trikampis. Iš viršaus jis atrodo kaip apskritimas. Tačiau kūgis visą laiką lieka vienas.",
     "steps": [
-      "Pasirink kūną ir žvilgsnį: iš priekio, iš viršaus ar nuo šono.",
+      "Pasirink kūną ir žvilgsnį. Žiūrėk iš priekio, iš viršaus ar nuo šono.",
       "Spėk, kokią formą matai, ir spausk jos mygtuką.",
       "Pakeisk žvilgsnį. Forma keisis, o kūnas liks tas pats.",
       "Apžiūrėk kūną iš visų trijų pusių."
     ],
-    "example": "Ledų ragelis iš priekio atrodo kaip trikampis, o iš viršaus — kaip apskritimas. Tai vis dar vienas kūgis."
+    "example": "Ledų ragelis iš priekio atrodo kaip trikampis. Iš viršaus jis atrodo kaip apskritimas. Tai vis dar vienas kūgis."
   },
   "sim": {
     "component": "erdvines-figuros",

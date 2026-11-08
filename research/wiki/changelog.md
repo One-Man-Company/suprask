@@ -2,6 +2,16 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-08 (08:40) — Emocijų metodas M-05: jausmas priklauso nuo noro
+
+- **`grades/01/metodai.md`** — naujas metodas M-05 „Emocijos: tas pats įvykis, skirtingas jausmas“ (tema atidaryta kaip `guidelines/klausimai.md:29`): keturių žingsnių seka, simuliacijos `dovana-ir-noras` penkios būsenos, keturios užduotys su tipinėmis klaidomis, modelio ribos, argumentas, kodėl paveikslėlis čia nepakanka.
+- **`foundations/jausmas-ir-noras.md`** — naujas įrašas: jausmo priežastis yra noras, o noro nesimato; emocijų supratimas skyla į komponentus (Pons ir kt., 2004), mentaliniai paaiškinimai stiprėja su amžiumi (Rieffe ir kt., 2005), atviras nusivylimas 6–7 m. yra amžiaus norma (Saarni, 1979).
+- **`foundations/README.md`** — indekso eilutė.
+- **`guidelines/klausimai.md:29`** — klausimas apie emocijų modelį pažymėtas atsakytu: interaktyvumo nauda parodoma fiksuotu įvykiu ir keičiamu noru, o ne paveikslėliu.
+- **`guidelines/pilotai.md`** — P-017 (nematomas kintamasis + antras veikėjas kaip kontrolinė pora).
+- **Šaltinis:** Pons, Harris & de Rosnay (2004) https://doi.org/10.1080/17405620344000022 · Rieffe, Terwogt & Cowan (2005) https://doi.org/10.1002/icd.391 · Widen & Russell (2008) https://doi.org/10.1016/j.cogdev.2008.01.002 · Saarni (1979) https://doi.org/10.1037/0012-1649.15.4.424 · Harris ir kt. (1986) https://doi.org/10.2307/1130366
+- **Poveikis platformai:** būsimas modulis `content/lt/grade-01/gyvenimo-igudziai/01-dovana-ir-noras.json` ir nauja kryptis `gyvenimo-igudziai`. Taisyklė „kintamasis turi būti tai, ko nesimato, o matomas įvykis fiksuojamas“ taikoma ir kitiems socialiniams modeliams.
+
 ## 2026-11-08 (06:13) — Publikavimo patikra #122: repo 28 / paskelbta 28, svetainė baitais lygi HEAD
 
 - **`scripts/check_published.py`** → repo 28, paskelbta 28, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `rc=0`. `origin/main` = `HEAD` = `8b29d9b`.

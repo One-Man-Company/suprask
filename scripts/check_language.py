@@ -25,10 +25,13 @@ Naudojimas:
     python3 scripts/check_language.py --grade 1 --json
     python3 scripts/check_language.py --strict        # grąžina 1, jei yra klaidų
 
-Pastaba dėl lygių: sakinio ilgis yra `warn`, o ne `error`, nes standarto
-pažeidimas turinyje taisomas atskiru turinio darbu; `--strict` failina tik
-`error` (neteisingas `answer`, variantų defektai). `info` — klausimas
-peržiūrai (įvardis sakinio pradžioje), ne pažeidimas.
+Pastaba dėl lygių (#4516): sakinio ilgis yra `error`, ne `warn`. Standartas
+§6 ribą įvardija kaip taisyklę, o ne kaip pageidavimą, todėl jos pažeidimas
+turi blokuoti publikavimą — kitaip CI ir `--strict` praeina su 16 per ilgų
+sakinių, o vaikas vis tiek skaito sakinį, kurio neįveikia. `ilgas žodis` ir
+kitos formuluotės pastabos lieka `warn` / `info`: jos neturi vienareikšmio
+standarto slenksčio taip, kaip žodžių skaičius. `info` — klausimas peržiūrai
+(įvardis sakinio pradžioje), ne pažeidimas.
 """
 
 from __future__ import annotations
@@ -49,6 +52,12 @@ MAX_WORDS = {1: 10, 2: 10, 3: 14, 4: 14, 5: 18, 6: 18}
 DEFAULT_MAX_WORDS = 24
 MAX_WORD_LEN = {1: 13, 2: 14, 3: 16, 4: 18}
 DEFAULT_MAX_WORD_LEN = 20
+
+# Sakinio ilgio pažeidimo lygis. Standartas §6 tai įvardija kaip taisyklę, todėl
+# `error`: `--strict` ir CI (`.github/workflows/validate.yml`) blokuoja publikavimą.
+# Laikoma vienoje vietoje ir spausdinama kiekvieno paleidimo išvestyje (#4516) —
+# kai lygis buvo `warn`, vartai atrodė žali su 16 per ilgų sakinių.
+SENTENCE_LIMIT_SEVERITY = "error"
 
 # Ta pati taisyklė dokumente, iš kurios imamos ribos. Leidžiami brūkšniai – — -.
 _DASH = r"(?:–|—|-)"
@@ -134,7 +143,7 @@ def check_readability(text: str, grade: int, where: str, out: list[dict]) -> Non
         words = WORD_RE.findall(sentence)
         if len(words) > max_words:
             out.append({
-                "severity": "warn", "where": where, "issue": "per ilgas sakinys",
+                "severity": SENTENCE_LIMIT_SEVERITY, "where": where, "issue": "per ilgas sakinys",
                 "detail": f"{len(words)} žodžių (riba {max_words})", "text": sentence,
             })
         for word in words:
@@ -292,12 +301,15 @@ def main() -> int:
 
     if args.json:
         print(json.dumps({"grade": args.grade, "modules": len(files), "max_words":
-                          level(args.grade, MAX_WORDS, DEFAULT_MAX_WORDS), "issues": issues},
+                          level(args.grade, MAX_WORDS, DEFAULT_MAX_WORDS),
+                          "sentence_limit_severity": SENTENCE_LIMIT_SEVERITY,
+                          "issues": issues},
                          ensure_ascii=False))
     else:
         print(f"Moduliai: {len(files)} · klaidos: {len(errors)} · įspėjimai: {len(warns)}"
               f" · pastabos: {len(infos)} · sakinio riba: "
-              f"{level(args.grade, MAX_WORDS, DEFAULT_MAX_WORDS)} ž.")
+              f"{level(args.grade, MAX_WORDS, DEFAULT_MAX_WORDS)} ž. "
+              f"({SENTENCE_LIMIT_SEVERITY})")
         shown = (errors + warns)[:40]
         for issue in shown:
             print(f"  [{issue['severity']}] {issue['where']}: {issue['issue']} — {issue['detail']}")

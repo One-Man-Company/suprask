@@ -12,7 +12,7 @@
   ],
   "concept": {
     "title": "Dešimt — mūsų rankų skaičius",
-    "big_idea": "Dešimtukas — tai dvi eilės po penkis langelius. Kai matai, kiek langelių pilna, gali pasakyti skaičių iš karto, neskaičiuodamas po vieną.",
+    "big_idea": "Dešimtukas — tai dvi eilės po penkis langelius. Matai, kiek langelių pilna, ir skaičių pasakai iš karto. Skaičiuoti po vieną nereikia.",
     "steps": [
       "Pilnas dešimtukas — 10. Tuščias — 0.",
       "Jei pilni 7 langeliai, trūksta 3 iki dešimties. 7 + 3 = 10.",
@@ -58,7 +58,7 @@
       ],
       "answer": 2,
       "hint": "Pagalvok, ar tau reikia skaičiuoti po vieną, kai langeliai pilni.",
-      "why": "Dešimtukas leidžia skaičių atpažinti akimis — tai greitesnis būdas nei skaičiavimas po vieną."
+      "why": "Dešimtukas leidžia skaičių atpažinti akimis. Taip greičiau nei skaičiuoti po vieną."
     },
     {
       "q": "Dešimtuke trys langeliai tušti. Kiek obuolių yra?",

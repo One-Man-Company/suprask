@@ -3,7 +3,7 @@ title: "1 klasės metodai"
 tipas: metodai
 klase: 1
 amzius: "6–7"
-atnaujinta: 2026-11-07
+atnaujinta: 2026-11-08
 ---
 
 # 1 klasės metodai
@@ -213,7 +213,7 @@ Minučių skaičius šiame metode nemokomas. Programa 1 klasei prašo „nusakyt
 
 1. **„Kairė visiems ta pati pusė.“** Vaikas savo kairę perkelia veikėjui, kuris žiūri į jį. Rigal (1996) šį atsakymo būdą aprašo kaip būdingą mažiausiems ir nykstantį su amžiumi. Paneigiama pačiu modeliu: vabaliukui atsisukus į vaiką, žymė „kairė“ persoka į kitą ekrano pusę. Jei kairė būtų kambario savybė, posūkis jos nepajudintų.
 2. **„Pasukti į kairę visada reiškia į kairę ekrano pusę.“** Tai ta pati klaida, tik apie komandą. Kai vabaliukas žiūri į vaiką, „Pasuk kairėn“ veda į dešinę ekrano pusę. Paneigiama dviem būsenomis, kurias vaikas pasiekia pats.
-3. **„Pasukti reiškia žengti į šoną.“** Way ir Cartwright (2024) individualiai kalbino 36 pirmokus: tik keturi visiškai teisingai atliko abi užduotis, penki negalėjo įvykdyti nė vieno krypties nurodymo, o ne daugelis robotui apskritai davė komandas „kairėn“/„dešinėn“ — dažniau rodė gestais arba sakė „eik ten“. Tą patį žodį „pasuk“ vaikai suprato skirtingai: vieni pasisuko vietoje, kiti žengė į šoną. Todėl modelyje posūkis vyksta **vietoje** (vabaliukas lieka tame pačiame langelyje), o žingsnis yra atskiras mygtukas su atskiru sakiniu.
+3. **„Pasukti reiškia žengti į šoną.“** Way ir Cartwright (2024) individualiai kalbino 36 pirmokus: tik keturi visiškai teisingai atliko abi užduotis, penki negalėjo įvykdyti nė vieno krypties nurodymo, o dauguma robotui komandų „kairėn“/„dešinėn“ iš viso nesakė — dažniau rodė gestais arba sakė „eik ten“. Tą patį žodį „pasuk“ vaikai suprato skirtingai: vieni pasisuko vietoje, kiti žengė į šoną. Todėl modelyje posūkis vyksta **vietoje** (vabaliukas lieka tame pačiame langelyje), o žingsnis yra atskiras mygtukas su atskiru sakiniu.
 4. **„Jei nemoka, vadinasi, dar per mažas.“** Borke (1975) parodė, kad supaprastinus perspektyvos užduotį net trejų metų vaikai atsako ne vien iš savo pozicijos. Nesėkmė labiau priklauso nuo užduoties sandaros negu nuo vaiko savybės, todėl modelis sąmoningai paprastas: vienas veikėjas, viena sąsaja, trys ant trijų langeliai.
 
 **Seka (konkretumas → modelis → simbolis → perkėlimas).**
@@ -265,6 +265,75 @@ Minučių skaičius šiame metode nemokomas. Programa 1 klasei prašo „nusakyt
 **Skaičių tikslinimas.** Ideatoriaus pasiūlyme rašoma „36 pirmokų tyrime 27–28 žinojo, kuri jų kairė, bet tik 6 teisingai nurodė robotui posūkius kairėn ir dešinėn“. Way ir Cartwright (2024) tekste tokių skaičių nėra: ten sakoma, kad tik **keturi** vaikai visiškai teisingai atliko abi užduotis, **penki** negalėjo įvykdyti nė vieno krypties nurodymo, o dauguma komandų kairėn/dešinėn robotui iš viso nesakė. Metodas remiasi šaltinio skaičiais, o ne pasiūlymo santrauka.
 
 **Šaltiniai.** Rigal, R. (1994). Right-left orientation: Development of correct use of right and left terms. *Perceptual and Motor Skills, 79*(3), 1259–1278. https://doi.org/10.2466/pms.1994.79.3.1259 · Rigal, R. (1996). Right-left orientation, mental rotation, and perspective-taking. *Perceptual and Motor Skills, 83*(3), 831–842. https://doi.org/10.2466/pms.1996.83.3.831 · Phinney, J. S., & Nummedal, S. G. (1979). Effects of left-right orientation and position reversals on spatial perspective taking in young children. *Perceptual and Motor Skills, 48*(1), 223–227. https://doi.org/10.2466/pms.1979.48.1.223 · Borke, H. (1975). Piaget's mountains revisited. *Developmental Psychology, 11*(2), 240–243. https://doi.org/10.1037/h0076459 · Way, J., & Cartwright, K. (2024). Turn left, turn right. *MERGA 46 Quick Reads*. http://merga.net.au/wp-content/uploads/2024/09/6-MERGA-46-2024-Quick-Reads_Way-and-Cartwright.pdf · Kocher, D., Sarmiento, L., Heller, S., Yang, Y., Kushnir, T., & Green, K. E. (2020). No, your other left! *IEEE ICDL-EpiRob 2020*, 1–6. https://doi.org/10.1109/icdl-epirob48136.2020.9278108 · Abarbanell, L., & Li, P. (2021). Unraveling the contribution of left-right language on spatial perspective taking. *Spatial Cognition & Computation, 21*(1), 1–38. https://doi.org/10.1080/13875868.2020.1825442
+
+### M-05 — Emocijos: tas pats įvykis, skirtingas jausmas
+
+**Data:** 2026-11-08 · **Tema:** `research/wiki/guidelines/klausimai.md:29` (atviras klausimas, ideator #128) · **Tikslas:** `content/lt/grade-01/gyvenimo-igudziai/01-dovana-ir-noras.json` · **Šaltinis:** `research/wiki/foundations/jausmas-ir-noras.md`
+
+**Viena didelė idėja.** Tas pats įvykis gali kelti skirtingus jausmus. Jausmas priklauso ne vien nuo to, kas nutiko, o ir nuo to, ko žmogus norėjo.
+
+**Kodėl modelis, o ne paveikslėlis.** Klausimas `klausimai.md:29` buvo toks: „gerai nupieštas paveikslėlis su abiem vaikais parodo tą patį“. Ne — parodo vieną būseną. Iš paveikslėlio, kuriame vienas vaikas juokiasi, o kitas nuliūsta prie tos pačios dovanos, vaikas negali pasakyti, **kas** tą skirtumą padarė: gal dovana gera ir tik antrasis nemoka džiaugtis, gal pirmasis jos prašė. Noras yra nematomas, todėl jo negalima nei parodyti, nei pakeisti paveikslėlyje. Modelis laiko tą patį įvykį (dovaną) ir keičia tik norą: pasikeičia vieno vaiko veidas, kito — ne. Toks palyginimas egzistuoja tik todėl, kad egzistuoja antra būsena, o paveikslėlyje jos nėra. Antras interaktyvumo argumentas — spėjimas prieš veiksmą (`r_predict`): paveikslėlis jo nereikalauja, modelis be jo praranda prasmę.
+
+**Kodėl būtent noras, o ne „visi jaučia skirtingai“.** Rieffe, Terwogt ir Cowan (2005) prašė 4, 6 ir 10 metų vaikų (n = 122) paaiškinti, kodėl veikėjas jaučiasi taip, kaip jaučiasi. Mentalinius paaiškinimus (norą, įsitikinimą) jauniausieji vartojo rečiausiai, o su amžiumi jų daugėjo; be to, noras dažniausiai paaiškindavo pyktį, džiaugsmą ir liūdesnį. Vadinasi, 6–7 metų vaikas noro kaip priežasties **jau ieško**, bet dar nepakankamai, kad ja paremtų sprendimą tada, kai noro niekas nepasakė. Todėl modelyje noras ne aiškinamas žodžiais, o parodomas burbulu ir duodamas keisti. Pons, Harris ir de Rosnay (2004), ištyrę 100 vaikų nuo 3 iki 11 metų, parodė, kad emocijų supratimas skyla į devynis komponentus, o trys tarpsniai išsidėsto hierarchiškai: vėlesnis remiasi ankstesniu. Todėl modulis ima patį pirmą ryšį (jausmas ← noras) ir sąmoningai neapima nei slepiamo jausmo, nei mišrių jausmų — tai vėlesni komponentai.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Kas gavo dovaną, tas džiaugiasi.“** Tai ta pati situacinė taisyklė, kurią vaikas taiko, kol noras nepastebėtas: įvykis matomas, noras — ne. Paneigiama modeliu: dovana ta pati, o Rėjaus veidas apsiverčia pakeitus tik jo norą; Ievos veidas nepakinta nė karto, nors dovana ta pati. Jei jausmą lemtų dovana, abu veidai keistųsi kartu.
+2. **„Jei vaikas nuliūdo, dovana buvo bloga (arba jis nedėkingas).“** Paneigiama palyginimu: ta pati dovana vienam džiugu, kitam ne, tad priežastis yra noras, ne daikto vertė ir ne vaiko būdas. Saarni (1979) rodo, kad slėpti nusivylimą vaikai išmoksta palaipsniui (6 → 10 metų), todėl atviras nusivylimas 6–7 metais yra amžių atitinkantis elgesys, o ne auklėjimo trūkumas.
+3. **„Vienas įvykis — vienas teisingas jausmas.“** Būtent šios nuostatos bijojo ideatorius, atmesdamas formą „situacija → viena teisinga emocija“ (`agents/log/ideator-2026-11-03T1655.md:116–117`). Modelyje teisingo jausmo įvykiui nėra: du vaikai prie tos pačios dovanos jaučiasi priešingai, ir abu jausmai teisingi. Užduotys klausia ne „ką jauti tu“, o „ką jaus tas žmogus, jei jis norėjo to“.
+
+**Tikslas sąmoningai kuklus.** Modulis nesiekia, kad vaikas nustatytų kito žmogaus jausmą. To negalima padaryti iš veido, o modelis to ir nerodo: jis rodo, nuo ko jausmas priklauso. Tikslas — kad vaikas pastebėtų ryšį „noras → jausmas“ ir turėtų vieną veiksmą, kuriuo tą ryšį pasitikrintų: pakeisti norą ir pažiūrėti. Widen ir Russell (2008) rodo, kad 6–7 metų vaiko emocijų žodynas dar platus (vienas žodis dengia kelis jausmus), todėl modulis vartoja tik du žodžius — *patenkintas* ir *nusiminęs* — ir nepretenduoja mokyti viso sąrašo.
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas).**
+
+1. **Kūnas.** Mokytojas įvynioja du vienodus pieštukus į du vienodus popieriaus lapus. Prieš tai du savanoriai pasako, ko norėtų: vienas pieštuko, kitas trintuko. Abu gauna pieštuką. Vaikai pamato vieną juoką ir vieną nusivylimą prie vienodų dovanų. Tikslas: pajusti, kad jausmo nepaaiškina pats daiktas. (Savanoriai — mokytojo pasirinkti; niekas neklausia, kaip jaučiasi visas vaikas, ir niekas nieko neįrašo.)
+2. **Ekranas.** Rėjus ir Ieva prie stalo, tarp jų uždara dėžutė. Virš kiekvieno — norų burbulas su daiktu. Vaikas baksteli Rėjaus burbulą ir noras pasikeičia; dovaną atidengia mygtukas „Atidaryk dėžutę“. Tikslas: pamatyti, kad keičiasi vieno veidas, o kito ne.
+3. **Simbolis.** Po veidais atsiranda žodžiai „patenkintas“ ir „nusiminęs“, po jais — sakinys „Rėjus norėjo kamuolio. Ieva norėjo knygos.“ Vaikas perskaito ir pasako, kodėl jausmai skirtingi. Tikslas: jausmą įvardyti žodžiu, o priežastį — noru, ne daiktu.
+4. **Perkėlimas.** Ta pati taisyklė trijose situacijose be modelio: dovana, filmas, žaidimas. Tikslas: taikyti taisyklę ten, kur noro nesimato ir reikia paklausti.
+
+**Privalomas spėjimo žingsnis prieš pirmą keitimą.** `api.readout`: „Rėjus nori kamuolio. Pakeisi jo norą. Kas pasikeis? Pasakyk, tada keisk.“ Vaikas atsako balsu, tada baksteli. Be spėjimo modelis virsta generatoriumi: vaikas baksto tol, kol pamato įdomų veidą, ir ryšio nesudaro — tas pats pavojus kaip M-01–M-04 (`research/wiki/foundations/sujungti-dydziai.md`). Atsakymo variantų ekrane nėra: kintamasis turi likti vienas.
+
+**Simuliacijos specifikacija.** Komponentas `dovana-ir-noras`, failas `assets/js/sims/gyvenimas.js` (naujas; registruojamas `assets/js/registry.js` viena `import * as gyvenimas from "./sims/gyvenimas.js";` eilute ir `Object.assign({}, …, gyvenimas.SIMS)` sąraše). `config`:
+
+```json
+{ "gift": "kamuolys", "other": "knyga",
+  "fixed":   { "name": "Ieva", "wants": "knyga" },
+  "varying": { "name": "Rėjus", "wants": "kamuolys" },
+  "sentences": { "start": "…", "predict": "…", "one": "…", "both": "…", "same": "…" } }
+```
+
+| Būsena | Ką rodo | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia (dėžutė uždaryta, Rėjus nori kamuolio) | du vaikai, du norų burbulai, uždara dėžutė | „Dėžutė uždaryta. Ko nori Rėjus?“ | „Pirma pasakyk, ko nori Rėjus.“ |
+| atidaryta, Rėjus nori kamuolio | Rėjus šypsosi, Ieva nusimena, po veidais žodžiai | „Rėjus džiaugiasi. Ieva nusimena.“ | „Rėjus norėjo kamuolio. Ieva norėjo knygos.“ |
+| Rėjus nori knygos (dovana ta pati) | abu nusimena; Ievos veidas nepakito | „Dabar abu nusimena.“ | „Pasikeitė tik noras. Dovana liko ta pati.“ |
+| grįžta į kamuolį | kaip antra būsena | „Rėjus džiaugiasi. Ieva nusimena.“ | „Noras pasikeitė, pasikeitė ir jausmas.“ |
+| abi būsenos matytos (palyginimas) | abu veidai ir abu sakiniai vienu metu | „Viena dovana, du jausmai.“ | „Tas pats kamuolys. Vienas jo norėjo, kitas ne.“ |
+
+- **Vienas kintamasis:** `varying.wants` ∈ {`kamuolys`, `knyga`}. Vaikas keičia tik tai, ko nori Rėjus. `gift` yra fiksuotas konfigūracijoje ir vaiko nekeičiamas; „Atidaryk dėžutę“ yra žingsnis, o ne antra reikšmė. Ievos noras nekinta — jis yra kontrolinė pora, rodanti, kad veidai kinta ne kartu.
+- **Išdėstymas 360 px:** dvi veikėjų plokštės po 148 px ir 16 px tarpas = 312 px iš 328 px. Veidas 72 px, norų burbulas 56 × 56 px, dėžutė 96 × 72 px. Trys eilutės: veidai, burbulai, sakiniai; jokio horizontalaus slinkimo.
+- **Įėjimai:** norų burbulas — `[role=button]` su `tabindex="0"`, `aria-pressed` ir `aria-label` „Rėjus nori kamuolio. Pakeisk norą.“; „Atidaryk dėžutę“ / „Uždaryk“ 328 × 56 px; „Iš naujo“ ≥ 48 px. Klaviatūra: `Tab` tarp trijų taikinių, `Enter`/`Space` aktyvuoja, `←`/`→` perjungia norą, kai burbulas fokusuotas.
+- **Grįžtamasis ryšys** — iškart po veiksmo (≤ 1 kadras). `readout` įvardija būseną, `api.note` — vieną sakinį apie veiksmą. `api.progress({ correct: true })` — vieną kartą, kai **abiem** norais dėžutė atidaryta (t. y. po palyginimo), o ne po pirmo pakeitimo (LL-29).
+- **Garsas** — penkios nustatytos frazės, lygiai tokios kaip `readout` lentelėje; jos laikomos `config.sentences`, o ne simuliacijos kode (LL-42), todėl `scripts/generate_audio.py` jas mato. `api.note` garsiai neskaitomas (mažas manifestas). Generuojant reikia abiejų variantų (`n`, `s`).
+- **Prieinamumas:** scenos SVG `role="img"`, `aria-label` aprašo, ką rodo kiekvienas vaikas ir ką jis nori, bet nekartoja `readout` sakinio: „Rėjus šypsosi, jo burbule kamuolys. Ieva nusimena, jos burbule knyga. Dėžutėje kamuolys.“ `readout` turi `aria-live="polite"`. Veido išraiška niekada nėra vienintelis informacijos nešėjas: šalia visada yra žodis ir burbulas.
+- **Jokių laikmačių, ėjimų limito, „game over“.** Nusivylimas yra informacija, ne bauda; vaikas norą keičia tiek kartų, kiek nori.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Dėžutėje kamuolys. Rėjus norėjo knygos. Kaip jausis Rėjus?“ — Džiaugsis / Nusimins / Nieko nejaus | Nusimins (1) | „Džiaugsis“ — sprendžia iš dovanos, ne iš noro | „Palygink, ko jis norėjo, su tuo, ką rado.“ |
+| 2 | taikymas | „Ieva nori knygos, o Jonas nori kamuolio. Močiutė atnešė knygą. Kas džiaugsis?“ — Ieva / Jonas / Abu vaikai | Ieva (0) | „Abu vaikai“ — dovana gera, vadinasi, visiems | „Žiūrėk, ko norėjo kiekvienas vaikas.“ |
+| 3 | perkėlimas | „Klasėje rodomas filmas apie šunis. Viena mergaitė turi šunį, kita jo bijo. Ar filmas abiem bus smagus?“ — Ne: vienai smagus, kitai baisus / Taip, visiems bus smagus / Ne, filmas nepatiks nė vienai | Ne: vienai smagus, kitai baisus (0) | „Taip, visiems bus smagus“ — įvykis priskiriamas visiems | „Pagalvok, kaip kiekviena mergaitė žiūri į šunį.“ |
+| 4 | praplėtimas (`optional: true`) | „Dėžutėje pieštukai. Vienas vaikas juokiasi, kitas nuliūsta. Ką tai rodo?“ — Jie norėjo skirtingų dovanų / Pieštukai buvo sulaužyti / Vienas vaikas blogesnis | Jie norėjo skirtingų dovanų (0) | „Vienas vaikas blogesnis“ — jausmą paverčia žmogaus vertinimu | „Tas pats daiktas, o jausmai skirtingi. Kodėl?“ |
+
+**Refleksija.** „Kaip sužinotum, ar draugui patiks dovana? Ką darytum?“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — paklausti. Šis klausimas yra ir modelio ribos tąsa: burbulas ekrane parodo norą, o realiame gyvenime noro nesimato.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).** Modelis žino, ko vaikas nori, nes noras nupieštas burbule; realiame gyvenime taip nebūna — todėl reikia klausti, o ne spėti iš veido. Modelis rodo tik du jausmus (*patenkintas*, *nusiminęs*) ir tik vieną priežastį (noras); tikras jausmas priklauso ir nuo nuovargio, netikėtumo, ankstesnės patirties, o kartais du jausmai būna kartu — to modelis nevaizduoja ir to neslepia. Modelis taip pat nevaizduoja slėpiamo jausmo (kai žmogus šypsosi, nors jam liūdna): tai atskiras komponentas (Pons ir kt., 2004), kuriam reikės atskiro modulio, ir jis 6–7 metais dar tik formuojasi (Harris ir kt., 1986; Saarni, 1979). Todėl teisingas atsakymas modulyje nėra „įvaldymo“ įrodymas, o modelyje parodytas ryšys nėra taisyklė „visada taip“.
+
+**Ką tai reiškia modulio autoriui.** `title` — „Dovana: kodėl vienas džiaugiasi, kitas ne“ (41 simbolis); `subtitle` — „Tas pats daiktas gali nuliūdinti, jei jo nenorėjai“ (50); `minutes` — 9; trys `outcomes`: „Pasakau, ko norėjo veikėjas.“, „Nusakau, kaip jausis žmogus, gavęs ne tai, ko norėjo.“, „Paaiškinu, kodėl ta pati dovana vienam džiugu, kitam ne.“; `concept.title` — „Jausmas priklauso nuo noro“ (26); `concept.big_idea` — „Jausmas priklauso ne vien nuo to, kas nutiko. Jis priklauso ir nuo to, ko žmogus norėjo.“ (88); `concept.steps` — keturi žingsniai iš sekos 1–4; `concept.example` — „Močiutė atnešė šaliką. Vienas anūkas apsidžiaugia, kitas tyliai padeda jį į šalį.“; `teacher.offline` — du vienodi pieštukai dviejuose vienoduose popieriaus lapuose ir du savanoriai, prieš tai pasakę, ko norėtų; po to pokalbis „kodėl vienas džiaugėsi, o kitas ne“; `teacher.misconceptions` — trys nuostatos iš šio skyriaus; `sim` — `{ "component": "dovana-ir-noras", "config": { "gift": "kamuolys", "other": "knyga", "fixed": { "name": "Ieva", "wants": "knyga" }, "varying": { "name": "Rėjus", "wants": "kamuolys" } } }`. Moduliui reikia **naujos krypties** `gyvenimo-igudziai` (`content/lt/grade-01/index.json`: `title` „Gyvenimo įgūdžiai“, `emoji` „💛“, `intro` „Jausmai ir santykiai: nuo savęs prie kito.“) ir įrašo `path.json`; tai kūrėjo darbas, ne metodo dalis. Numeris `01-` laisvas, nes kryptis nauja.
+
+**Šaltiniai.** Pons, F., Harris, P. L., & de Rosnay, M. (2004). Emotion comprehension between 3 and 11 years: Developmental periods and hierarchical organization. *European Journal of Developmental Psychology, 1*(2), 127–152. https://doi.org/10.1080/17405620344000022 · Rieffe, C., Terwogt, M. M., & Cowan, R. (2005). Children's understanding of mental states as causes of emotions. *Infant and Child Development, 14*(3), 259–272. https://doi.org/10.1002/icd.391 · Widen, S. C., & Russell, J. A. (2008). Children acquire emotion categories gradually. *Cognitive Development, 23*(2), 291–312. https://doi.org/10.1016/j.cogdev.2008.01.002 · Saarni, C. (1979). Children's understanding of display rules for expressive behavior. *Developmental Psychology, 15*(4), 424–429. https://doi.org/10.1037/0012-1649.15.4.424 · Harris, P. L., Donnelly, K., Guz, G. R., & Pitt-Watson, R. (1986). Children's understanding of the distinction between real and apparent emotion. *Child Development, 57*(4), 895–909. https://doi.org/10.2307/1130366
 
 ## Atviros prielaidos
 

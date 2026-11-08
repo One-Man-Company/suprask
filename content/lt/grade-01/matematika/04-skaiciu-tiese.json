@@ -80,7 +80,7 @@
       "optional": true
     }
   ],
-  "reflect": "Sugalvok judėjimą: nuo kurio skaičiaus pradėsi, kiek žingsnių eisi ir kur atsidursi? Pasakyk draugui — jis turi atspėti tavo kelią.",
+  "reflect": "Sugalvok judėjimą skaičių tiese. Nuo kurio skaičiaus pradėsi ir kiek žingsnių eisi? Kur atsidursi? Pasakyk draugui — jis turi atspėti tavo kelią.",
   "teacher": {
     "goal": "Skaičių tiesės kaip modelio naudojimas sudėčiai ir atimčiai iki 20 (programoje — iki 100).",
     "prompt": "Kodėl sudėdami einame į dešinę?",

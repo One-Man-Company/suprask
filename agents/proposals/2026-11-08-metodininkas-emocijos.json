@@ -1,0 +1,23 @@
+{
+  "role": "metodininkas",
+  "run_id": 133,
+  "created": "2026-11-08T08:45:00+02:00",
+  "type": "metodas",
+  "title": "Emocijos: tas pats įvykis, skirtingas jausmas",
+  "body": "Metodas M-05 temai „emocijos“ — vienintelei privalomai 1 klasės temai, kurios platformoje dar nėra ir kuri iki šiol buvo sąmoningai blokuota (klausimai.md:29). Atsakoma į tą abejonę: paveikslėlis parodo vieną būseną, todėl iš jo negalima pasakyti, ar jausmą padarė dovana, ar noras; modelis laiko dovaną tą pačią ir keičia tik vieno veikėjo norą, o antras veikėjas (nekintantis noras) yra kontrolinė pora — vienas veidas apsiverčia, kitas ne. Viena idėja: jausmas priklauso ne vien nuo įvykio, o ir nuo to, ko žmogus norėjo. Simuliacija „dovana-ir-noras“ turi vieną kintamąjį (Rėjaus noras: kamuolys ↔ knyga), fiksuotą dovaną ir penkias būsenas su readout/note; prieš pirmą keitimą vaikas spėja, o api.progress žymimas tik po palyginimo, ne po pirmo pakeitimo. Keturios užduotys (atpažinimas, taikymas, perkėlimas į filmą apie šunis, praplėtimas) su tipinėmis klaidomis ir užuominomis; nė viena neklausia vaiko apie jo paties jausmus, todėl nepatenkama į asmens duomenų sritį. Moduliui reikia naujos krypties gyvenimo-igudziai ir simuliacijų failo assets/js/sims/gyvenimas.js (registracija registry.js — viena import eilutė ir vienas Object.assign įrašas). Metodas remiasi emocijų supratimo komponentais (Pons ir kt., 2004), mentalinių paaiškinimų raida (Rieffe ir kt., 2005) ir tuo, kad atviras nusivylimas 6–7 m. yra amžiaus norma (Saarni, 1979).",
+  "target": "content/lt/grade-01/gyvenimo-igudziai/01-dovana-ir-noras.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md#M-05 — visas metodas: seka, penkios simuliacijos būsenos, keturios užduotys, modelio ribos",
+    "research/wiki/foundations/jausmas-ir-noras.md — pagrindas ir platformos pasekmės",
+    "research/wiki/guidelines/klausimai.md:29 — atviras klausimas apie emocijų modelį (pažymėtas atsakytu)",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:96 — pasiekimas „atpažįsta, įvardija ir valdo emocijas, elgesį“; žodynas „piktas, baikštus, patenkintas, pakylėtas, susijaudinęs“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:150 — „Emocijų atpažinimas situacijoje“ įvertintas „labai aukštai — paprasta, giliai reikalinga“",
+    "Pons, F., Harris, P. L., & de Rosnay, M. (2004). Emotion comprehension between 3 and 11 years. European Journal of Developmental Psychology, 1(2), 127–152. https://doi.org/10.1080/17405620344000022",
+    "Rieffe, C., Terwogt, M. M., & Cowan, R. (2005). Children's understanding of mental states as causes of emotions. Infant and Child Development, 14(3), 259–272. https://doi.org/10.1002/icd.391",
+    "Widen, S. C., & Russell, J. A. (2008). Children acquire emotion categories gradually. Cognitive Development, 23(2), 291–312. https://doi.org/10.1016/j.cogdev.2008.01.002",
+    "Saarni, C. (1979). Children's understanding of display rules for expressive behavior. Developmental Psychology, 15(4), 424–429. https://doi.org/10.1037/0012-1649.15.4.424",
+    "Harris, P. L., Donnelly, K., Guz, G. R., & Pitt-Watson, R. (1986). Children's understanding of the distinction between real and apparent emotion. Child Development, 57(4), 895–909. https://doi.org/10.2307/1130366"
+  ]
+}

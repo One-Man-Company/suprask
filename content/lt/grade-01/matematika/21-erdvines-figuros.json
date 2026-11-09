@@ -107,10 +107,10 @@
   "teacher": {
     "goal": "Atpažinti ir įvardyti kubą, rutulį, ritinį, kūgį ir stačiakampį gretasienį bei suprasti, kad tas pats kūnas iš skirtingų pusių atrodo skirtingai, o pats kūnas nesikeičia. Briaunų, viršūnių ir sienų neskaičiuojame — tai ne 1 klasės programa.",
     "prompt": "Kodėl tas pats kūgis iš vienos pusės atrodo kaip trikampis, o iš kitos — kaip apskritimas?",
-    "offline": "Padėkite ant stalo puodelį, kauliuką ir ledų ragelį. Vaikas apžiūri kiekvieną daiktą iš priekio, iš viršaus ir nuo šono, o po kiekvieno žvilgsnio pirštu nupiešia, ką matė. Tada įvardija kūną ir surūšiuoja daiktus į keturias krūvas: kubas, ritinys, kūgis, rutulys.",
+    "offline": "Padėkite ant stalo puodelį, kauliuką, ledų ragelį, kamuolį ir batų dėžutę. Vaikas apžiūri kiekvieną daiktą iš priekio, iš viršaus ir nuo šono, o po kiekvieno žvilgsnio pirštu nupiešia, ką matė. Tada įvardija kūną ir surūšiuoja daiktus į penkias krūvas: kubas, ritinys, kūgis, rutulys, stačiakampis gretasienis.",
     "misconceptions": [
       "„Kūgis yra trikampis, o ritinys — apskritimas“: vaikas kūną atpažįsta iš vieno matomo silueto. Modelis leidžia pažiūrėti į tą patį kūną iš trijų pusių ir parodyti, kad pasikeitė tik vaizdas, ne daiktas.",
-      "„Jei iš priekio matau stačiakampį, tai tikrai kubas“: kubo sienos yra kvadratai, o gretasienio — stačiakampiai. Modelis rodo abu kūnus iš to paties žvilgsnio, todėl skirtumą galima pastebėti, o ne įsiminti.",
+      "„Jei iš priekio matau stačiakampį, tai tikrai kubas“: kubo sienos yra kvadratai, o stačiakampio gretasienio — stačiakampiai. Modelis rodo abu kūnus iš to paties žvilgsnio, todėl skirtumą galima pastebėti, o ne įsiminti.",
       "„Rutulys ir lėkštė abu apvalūs, todėl tai tas pats“: lėkštė plokščia, o rutulys apvalus iš visų pusių. Simuliacijoje rutulio vaizdas nesikeičia, kad ir iš kur žiūrėtum.",
       "„Kūną reikia pasukti, kad pamatytum kitą formą“: sukasi ne daiktas, o žvilgsnis. Kūnas ant stalo visą laiką lieka toje pačioje vietoje."
     ]

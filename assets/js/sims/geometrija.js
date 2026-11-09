@@ -118,14 +118,21 @@ const erdvinesFiguros = {
     /* Tinkleliai rišami prie `min(<rem>,100%)`, o ne prie gryno `rem`:
        200 % teksto atveju šaknies `rem` padvigubėja ir minimumas nebetelpa į
        kortelę (LL-40). Su `min()` stulpelis susitraukia iki kortelės pločio
-       ir eilutė persirikiuoja, o ne išstumia puslapį. */
+       ir eilutė persirikiuoja, o ne išstumia puslapį.
+
+       Kūno takelis — 7.5rem, o ne buvę 6.1rem: ilgiausias oficialaus vardo
+       žodis „Stačiakampis“ prie .8rem/800 yra 96 px, o 6.1rem stulpelis
+       (97.6 px) atėmus paminkštinimą duoda ~84 px — @390 px ekrane žodis
+       lūžo per pusąžodį („Stačiakam / pis“), nors dokumentas neslenka
+       (LL-51). 7.5rem = 120 px → turinys ≥106 px, žodis lieka sveikas
+       @320–1440 ir 200 % tekste. */
     stage.innerHTML = `
       <div id="ef-wrap" style="width:100%;max-width:36rem;margin:0 auto;box-sizing:border-box">
         <p class="sim-note" style="margin:0 0 .5rem;text-align:center">
           Pasirink kūną ir spėk, kokią formą matai. Tada žiūrėk iš kitos pusės.
         </p>
         <div id="ef-bodies" role="group" aria-label="Pasirink kūną"
-             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(6.1rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7.5rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7rem,100%),1fr));gap:.5rem;margin-top:.7rem;box-sizing:border-box">
           <figure style="margin:0;text-align:center;min-width:0">
             <svg id="ef-solid" viewBox="0 0 200 200" width="100%" role="img" aria-label="Kūnas ant stalo"

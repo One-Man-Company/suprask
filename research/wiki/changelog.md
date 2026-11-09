@@ -2,6 +2,16 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-09 (12:00) — Publikavimo patikra #191: repo 35 / paskelbta 35, visi moduliai baitais lygūs `HEAD`
+
+- **`check_published.py`** → repo 35, paskelbta 35, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `5a921b17`, darbinė kopija švari.
+- **Gyvi adresai (HTTP):** `content/lt/grade-01/daile/01-spalva-ir-nuotaika.json` `200` (6242 B), `…/muzika/02-ritmas-ir-perkusija.json` `200` (7902 B), `…/dorinis-ugdymas/01-susitarimas-ir-zaidimas.json` `200` (6209 B), `index.json` `200` (10662 B), `path.json` `200` (1228 B), šaknis `200` (3487 B).
+- **Baitai, ne skaičiai:** 35/35 modulio JSON failai gyvai `200` ir baitais lygūs `git show HEAD:`. `grade-01/index.json` (`def01c20`), `path.json` (`ef2ca057`), `grades.json` (`7370de87`), `audio/lt/manifest.json` (`e396ff29`, 55 401 B, 500 raktų / 1000 takų), `main.css` (`f7c4b8c9`) — lygūs. `pasaulis.js`, `geometrija.js`, `gyvenimas.js`, `technologijos.js`, `zaidimai.js`, `daile.js` skiriasi TIK `?v=5a921b17` žyma; nulupus žymą — baitais lygūs → gyva svetainė pastatyta iš `5a921b17`. Tai patvirtina ir Pages deploymentas prie `5a921b1` (`success`, 2026-11-09T09:54:37Z).
+- **Struktūra:** `index.json` 35 moduliai, 35 unikalūs ID, 9 kryptys (lietuvių 4, matematika 15, pasaulio pažinimas 6, muzika 2, žaidimų teorija 3, technologijos 2, gyvenimo įgūdžiai 1, dorinis ugdymas 1, dailė 1); `path.json` 35 žingsniai, aibės sutampa abiem kryptimis, tvarka neliesta.
+- **Garsas:** imtis `seed 191` — 8/8 gyvų mp3 `200`, 13 626–65 035 B.
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0 klaidų, 0 įspėjimų; `check_docs_facts.py` → 0 klaidų (9 kryptys, 35 moduliai); `check_view.py --base <gyva> --viewports phone,small` → 70 patikrų (35 maršrutai × 2 plotai), 0 problemų, `rc=0`.
+- **Sprendimas:** sutampa. Nieko nešalinta, ID nepernumeruoti, `path.json` nekeistas; ataskaita `agents/log/publikavimo-agentas-2026-11-09T1154.md`.
+
 ## 2026-11-09 (08:32) — Metodas M-06 „Dailė: ta pati forma, kita spalva“ (#6539)
 
 - **`research/wiki/grades/01/metodai.md`** — naujas skyrius **M-06** (prieš „Atviros prielaidos“; `atnaujinta: 2026-11-09`). Viena idėja: forma neša tapatybę, spalva — įspūdį. Modelis `deme-ir-spalvos` keičia vienintelį kintamąjį (didelės dėmės užpildą iš keturių dažų), o geometrija įterpiama vieną kartą ir neperpiešiama, todėl teiginys „formos nepasikeitė“ patikrinamas (`getBBox()` prieš ir po vienodas). Grįžimas į pirmą spalvą — kontrolinis bandymas. 7 būsenos su `readout`/`api.note`, `api.progress` tik po palyginimo (LL-29), 4 užduotys (viena `optional`), 9 garso frazės `config.sentences` (LL-42), nauja `art.js` dalis `spot()`.

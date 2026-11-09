@@ -1,0 +1,16 @@
+{
+  "role": "kurejas",
+  "run_id": 192,
+  "created": "2026-11-09T12:10:00+02:00",
+  "type": "ux",
+  "title": "@320/32: .choice mygtukai išsikiša 7 px — ta pati min-width:auto klasė kaip #4748",
+  "body": "Taisant #4748 (@360/32) patikrinau ir žemiau standarto esantį 320 px plotį. Modulyje `17-judejimas` su 32 px šaknies šriftu dokumentas slenka 7 px: `.choices` tinklelio vaikai `.choice` yra 254,5 px pločio (dešinys kraštas 326,9), nors jų konteineriui skirta 221 px. Priežastis ta pati kaip #4748 ir LL-55: `.choices` yra `display:grid` be `grid-template-columns:minmax(0,1fr)`, o `.choice` neturi `min-width:0`, todėl grid vaiko automatinis minimumas (ilgiausias varianto žodis + `.6rem .9rem` paminkštinimas) neleidžia mygtukui susitraukti. @360/32 šis taškas nesimato (0 px), @320/32 — 7 px; 320 px yra žemiau standarto 360, bet tai realus mažiausių telefonų su padidintu tekstu atvejis ir pigus taisymas tame pačiame `main.css`. Siūloma `.choices { grid-template-columns: minmax(0,1fr) }` ir `.choice { min-width: 0 }`, o jei po to ilgiausias žodis imtų laužtis viduryje — paminkštinimą rašyti `clamp(.6rem, 4vw, .9rem)` arba `min(.9rem, 6cqw)` su `container-type:inline-size` ant `.task`. Pataisa privalo būti no-op prie 16 px šaknies (išmatuoti mygtukų plotį ir aukštį prieš/po) ir patikrinti visus 35 maršrutus @320/32 bei @360/32.",
+  "target": "assets/css/main.css",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "matavimas Chromium (Playwright iš .venv), 2026-11-09, vietinis http.server 8942: #/modulis/1/pasaulio-pazinimas/17-judejimas @320 px su 32 px šaknies šriftu — documentElement.scrollWidth 327, clientWidth 320 (+7); .choice 254,5 px, dešinys kraštas 326,9, tėvas .choices 221 px; tas pats @360/32 — 0 px",
+    "assets/css/main.css:333 — .choices { display: grid; gap: .5rem } (be grid-template-columns), :334–340 — .choice { width: 100%; min-height: var(--tap); padding: .6rem .9rem } be min-width",
+    "palyginimui po #4748 taisymo @320/32 10-gyvunu-grupes — 320/320, 0 px; 17-judejimas — 0 px užduoties klausime (.task-q scrollWidth == clientWidth), likę 7 px tik iš .choice"
+  ]
+}

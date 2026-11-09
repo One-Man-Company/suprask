@@ -328,7 +328,18 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .task { font-size: clamp(1.06rem, 1rem + 0.4vw, 1.18rem); }
 .task-q { font-size: clamp(1.16rem, 1.05rem + 0.6vw, 1.34rem); line-height: 1.45; }
 .task + .task { margin-top: .8rem; }
-.task-q { font-weight: 800; margin-bottom: .7rem; display: flex; gap: .6rem; }
+/* Klausimas su numeriu — dvi kolonos. Buvęs `display:flex` negalėjo
+   susitraukti: flex vaiko `min-width:auto` draudžia mažiau nei ilgiausias
+   žodis, todėl prie 200 % teksto (32 px šaknis) @360 px klausimo `<span>`
+   liko 233–267 px, kai kortelėje buvo 215 px — puslapis slinko 13 px
+   (17-judejimas) ir 38 px (10-gyvunu-grupes), matuota #4748.
+   `minmax(0,1fr)` leidžia teksto kolonai susitraukti, o
+   `overflow-wrap:anywhere` — laužyti žodį, kai jis fiziškai netelpa
+   (WCAG 1.4.10 reflow); be jo žodis liktų neišlaužtas ir vėl stumtų puslapį.
+   Įprastu šriftu abi deklaracijos neturi poveikio — matuota @360/16 ir
+   @390/16: teksto plotis toks pat, lūžta tik tarp žodžių. */
+.task-q { font-weight: 800; margin-bottom: .7rem; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .6rem; align-items: start; }
+.task-q > span:not(.task-num) { min-width: 0; overflow-wrap: anywhere; }
 .task-num { color: var(--ink-faint); }
 .choices { display: grid; gap: .5rem; }
 .choice {

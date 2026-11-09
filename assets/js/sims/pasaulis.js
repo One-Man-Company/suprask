@@ -855,10 +855,21 @@ const gyvunuGrupes = {
    vanduo ore lieka nepavaizduotas — tik žodžiu pasakome, kad jis ten.
    Modelis neturi laikmačio: vienas paspaudimas = kelios minutės.
 
-   Trys žodžiai — Vanduo, Garas, Ledas — ateina iš modulio `sim.config.words`,
-   o ne iš kodo: anksčiau konfigūracija buvo negyva (žodžiai kabėjo JSON, o
-   simuliacija juos turėjo įrašytus kietai), todėl redaguojant terminiją
-   pasikeisdavo tik garso įrašai, o ekrane likdavo seni žodžiai (LL-61).
+   Žodžiai ateina iš modulio `sim.config.words`, o ne iš kodo: anksčiau
+   konfigūracija buvo negyva (žodžiai kabėjo JSON, o simuliacija juos turėjo
+   įrašytus kietai), todėl redaguojant terminiją pasikeisdavo tik garso įrašai,
+   o ekrane likdavo seni žodžiai (LL-61).
+   Sutartis su turiniu — skaitomi LYGIAI šie keturi raktai:
+     water „Vanduo“, ice „Ledas“, steam „Garas“, drops „Lašai“.
+   Kiekvienas jų rodomas būsenų kortelėje, `aria-label`, readout ir tariamas
+   balsu. Nežinomi raktai ignoruojami (neteisinga konfigūracija nelūžta), o
+   naujas raktas ekrane nieko nepakeis, kol neatsiras jo vartotojas kode —
+   todėl į `words` nerašomi nei dangčio, nei šilumos žodžiai: jie sakinyje
+   linksniuojami („ant dangčio“, „dangtį“, „vėsioje“), ir vienos formos
+   keitimas sulaužytų gramatiką.
+   Pakeitus žodį reikia paleisti `scripts/generate_audio.py`: be įrašo
+   `speech.js:134` tyliai pereina prie naršyklės balso, tad vaikas girdėtų
+   kitą balsą nei likusioje platformoje.
    Būsenų juosta po scena parodo, kuris iš trijų dalykų scenoje yra DABAR:
    tai atsakymas į modulio rezultatą „Įvardiju tris vandens būsenas“.
    Ženklas (● / ○) ir žodis neša informaciją, spalva — tik paryškina. */

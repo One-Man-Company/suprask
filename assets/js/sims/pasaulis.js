@@ -1543,10 +1543,359 @@ const nuozulniojiPlokstuma = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Kuprinė (1 klasės pasaulio pažinimas, 26.1.2 „Sveikas gyvenimas“)   */
+/* ------------------------------------------------------------------ */
+/*
+ * Modelis laiko kuprinės svorį PASTOVŲ ir keičia tik du dalykus: petnešų
+ * ilgį ir tai, kiek pečių petnešas laiko. Todėl priežastis matoma, o ne
+ * išvedama: vaikas pamato, kad svoris tas pats, o spaudimo vieta kita.
+ *
+ * Kodėl vaizdas iš nugaros: kuprinė nešama ant nugaros, todėl tik iš
+ * nugaros matoma, aukštai ar žemai ji remiasi ir ar petnešos ją laiko.
+ * Veidas nepiešiamas sąmoningai — taip scena lieka apie kuprinę, o ne apie
+ * veikėją, ir nereikia spėlioti jo nuotaikos.
+ *
+ * Kodėl nemokoma „aukštai geriau“: tyrimai apie aukštą ir žemą padėtį
+ * prieštarauja vieni kitiems (Brackley 2009 — žema davė mažiau pokyčių;
+ * Genitrini 2022 apžvalga — aukšta ir prigludusi kartu su trumpomis
+ * petnešomis). Todėl modulis teigia tik tai, ką rodo modelis: ilgos
+ * petnešos nebeleidžia kuprinei laikytis prie nugaros, o vienas petys
+ * svorį laiko vienoje pusėje.
+ */
+
+const kuprineIrSvoris = {
+  mount({ stage, controls, api, config }) {
+    const SENT = (config && config.sentences) || {};
+    const GROUND = 268;
+    const PACK_W = 60;
+    const PACK_H = 62;
+
+    let strap = "tinkamos";   // tinkamos | ilgos
+    let mode = "abiem";       // abiem | vienas
+    let guess = null;         // nieko | vieta
+    let worn = false;         // kuprinė uždėta ir parodyta
+    let reported = false;
+    const seen = new Set();
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <svg id="kp-scene" viewBox="0 0 360 330" width="100%"
+             style="display:block;max-width:360px;height:auto;margin:0 auto"
+             role="img" aria-label="Vaikas stovi iš nugaros. Kuprinė dar neuždėta."></svg>
+        <p id="kp-where" style="margin:.5rem 0 .15rem;text-align:center;font-weight:800;font-size:1.05rem">
+          Spaudžia: kuprinė dar neuždėta</p>
+        <p class="sim-note" style="margin:0;text-align:center;font-size:.85rem">
+          Kuprinė ta pati. Svoris nepakito.</p>
+        <p class="sim-note" style="margin:.15rem 0 0;text-align:center;font-size:.85rem">
+          Kūno dalys: galva · pečiai · juosmuo · kojos</p>
+      </div>`;
+
+    const btnStyle = "min-height:48px;flex:0 1 auto;min-width:0;max-width:100%;padding:.35rem .7rem;font-size:.95rem";
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.7rem;width:100%;max-width:32rem;min-width:0;margin:0 auto">
+        <div style="min-width:0">
+          <p id="kp-strap-label" style="margin:0 0 .3rem;font-weight:800;text-align:center">Petnešų ilgis</p>
+          <div id="kp-strap" role="group" aria-labelledby="kp-strap-label"
+               style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;min-width:0">
+            <button class="btn secondary" type="button" data-strap="tinkamos" aria-pressed="true" style="${btnStyle}">Tinkamos</button>
+            <button class="btn secondary" type="button" data-strap="ilgos" aria-pressed="false" style="${btnStyle}">Per ilgos</button>
+          </div>
+        </div>
+        <div style="min-width:0">
+          <p id="kp-mode-label" style="margin:0 0 .3rem;font-weight:800;text-align:center">Kaip nešama</p>
+          <div id="kp-mode" role="group" aria-labelledby="kp-mode-label"
+               style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;min-width:0">
+            <button class="btn secondary" type="button" data-mode="abiem" aria-pressed="true" style="${btnStyle}">Abiem pečiais</button>
+            <button class="btn secondary" type="button" data-mode="vienas" aria-pressed="false" style="${btnStyle}">Vienu pečiu</button>
+          </div>
+        </div>
+        <div style="min-width:0">
+          <p id="kp-guess-label" style="margin:0 0 .3rem;font-weight:800;text-align:center">Tavo spėjimas: ką keičia ilgos petnešos?</p>
+          <div id="kp-guess" role="group" aria-labelledby="kp-guess-label"
+               style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;min-width:0">
+            <button class="btn secondary" type="button" data-guess="nieko" aria-pressed="false" style="${btnStyle}">Nieką — svoris tas pats</button>
+            <button class="btn secondary" type="button" data-guess="vieta" aria-pressed="false" style="${btnStyle}">Kitą vietą, kur spaudžia</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;min-width:0">
+          <button class="btn" type="button" id="kp-wear" style="flex:1 1 8rem;min-width:0;max-width:100%;min-height:48px">Uždėti</button>
+          <button class="btn ghost" type="button" id="kp-reset" style="flex:0 1 auto;min-width:0;max-width:100%;min-height:48px">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const svg = stage.querySelector("#kp-scene");
+    const whereEl = stage.querySelector("#kp-where");
+    const strapBtns = Array.from(controls.querySelectorAll("[data-strap]"));
+    const modeBtns = Array.from(controls.querySelectorAll("[data-mode]"));
+    const guessBtns = Array.from(controls.querySelectorAll("[data-guess]"));
+    const wearBtn = controls.querySelector("#kp-wear");
+    const resetBtn = controls.querySelector("#kp-reset");
+
+    /* --- piešinys --------------------------------------------------- */
+
+    function bodyMarkup() {
+      return `
+        <ellipse cx="180" cy="${GROUND}" rx="44" ry="7" fill="#5a4a2a" opacity=".16"/>
+        <rect x="156" y="204" width="20" height="58" rx="9" fill="#40566b"/>
+        <rect x="184" y="204" width="20" height="58" rx="9" fill="#40566b"/>
+        <rect x="146" y="258" width="32" height="10" rx="5" fill="#3a3f45"/>
+        <rect x="182" y="258" width="32" height="10" rx="5" fill="#3a3f45"/>
+        <rect x="146" y="192" width="68" height="26" rx="9" fill="#4a6fa5"/>
+        <path d="M136 136 Q180 116 224 136 L219 200 Q180 210 141 200 Z"
+              fill="#8fbcd4" stroke="#5c86a0" stroke-width="2"/>
+        <rect x="124" y="132" width="15" height="68" rx="7.5" fill="#7aa9c4"/>
+        <rect x="221" y="132" width="15" height="68" rx="7.5" fill="#7aa9c4"/>
+        <circle cx="131" cy="202" r="7.5" fill="#e8b98f"/>
+        <circle cx="229" cy="202" r="7.5" fill="#e8b98f"/>
+        <rect x="171" y="100" width="18" height="28" rx="7" fill="#e8b98f"/>
+        <circle cx="180" cy="82" r="24" fill="#5b4636"/>
+        <circle cx="156" cy="86" r="5" fill="#e8b98f"/>
+        <circle cx="204" cy="86" r="5" fill="#e8b98f"/>`;
+    }
+
+    function packMarkup() {
+      return `
+        <rect x="0" y="0" width="${PACK_W}" height="${PACK_H}" rx="12" fill="#d97a45" stroke="#8f4a21" stroke-width="3"/>
+        <path d="M7 3 H53 Q57 3 57 8 V29 Q30 39 3 29 V8 Q3 3 7 3 Z"
+              fill="#e6935c" stroke="#8f4a21" stroke-width="2.5"/>
+        <rect x="19" y="27" width="22" height="9" rx="4" fill="#8f4a21" opacity=".8"/>
+        <circle cx="30" cy="31.5" r="3.4" fill="#f5d9a8"/>
+        <rect x="12" y="35" width="36" height="21" rx="7" fill="#c96a37" stroke="#8f4a21" stroke-width="2"/>
+        <line x1="30" y1="39" x2="30" y2="52" stroke="#8f4a21" stroke-width="2.5" stroke-linecap="round"/>`;
+    }
+
+    function packPos() {
+      if (mode === "vienas") {
+        return { x: 122, y: strap === "ilgos" ? 158 : 134, rot: -6 };
+      }
+      return { x: 150, y: strap === "ilgos" ? 156 : 130, rot: 0 };
+    }
+
+    /*
+     * Petnešos: trumpos eina tiesiai nuo peties ant kuprinės, ilgos
+     * išlinksta į šoną — todėl matosi, kad jos nebetempia kuprinės prie
+     * nugaros. Nešant vienu pečiu, antroji petneša kabo laisva.
+     */
+    function strapsMarkup() {
+      const s = (d, w = 7) => `<path d="${d}" fill="none" stroke="#4a4038" stroke-width="${w}" stroke-linecap="round"/>`;
+      if (mode === "vienas") {
+        const near = strap === "ilgos"
+          ? "M151 130 C140 140 138 152 148 162"
+          : "M151 130 C145 136 140 138 134 144";
+        const free = strap === "ilgos"
+          ? "M180 176 C192 186 196 194 192 202"
+          : "M180 156 C190 166 194 174 190 184";
+        return s(near) + s(free, 5);
+      }
+      if (strap === "ilgos") {
+        return s("M151 130 C138 138 137 152 152 164") + s("M209 130 C222 138 223 152 208 164");
+      }
+      return s("M151 130 C149 138 150 142 156 148") + s("M209 130 C211 138 210 142 204 148");
+    }
+
+    function leader(x, y, text) {
+      const w = String(text).length * 8.2;
+      const lx = Math.max(4, x - 14 - w);
+      return `<line x1="${x}" y1="${y}" x2="${(lx + w + 4).toFixed(1)}" y2="${y}"
+                    stroke="#4a4038" stroke-width="2" stroke-dasharray="5 5"/>
+        <text x="${lx.toFixed(1)}" y="${y + 5}" font-family="system-ui, sans-serif"
+              font-size="15" font-weight="800" fill="#4a4038">${text}</text>`;
+    }
+
+    /* Spaudimo vieta — banguotas kontūras (art.spot), ne spalvotas plotas:
+       ženklas turi būti matomas ir nespalvotame ekrane, o prasmę neša
+       užrašas ir didelis tekstas po scena. */
+    function pressureMarkup() {
+      if (!worn) return "";
+      const ring = "#b23a2f";
+      if (mode === "vienas") {
+        const y = strap === "ilgos" ? 194 : 118;
+        return art.spot(118, y, 34, 24, ring, "apvali", 3) + leader(116, y + 12, "vienas petys");
+      }
+      if (strap === "ilgos") {
+        return art.spot(144, 190, 72, 26, ring, "apvali", 3) + leader(142, 203, "juosmuo");
+      }
+      return art.spot(132, 116, 30, 24, ring, "apvali", 3)
+        + art.spot(198, 116, 30, 24, ring, "apvali", 3)
+        + leader(130, 128, "pečiai");
+    }
+
+    function sceneMarkup() {
+      const pos = packPos();
+      const groundPack = worn
+        ? ""
+        : `<g id="kp-pack-ground" transform="translate(280 220) rotate(74) scale(0.55)">${packMarkup()}</g>`;
+      const wornPack = worn
+        ? `<g id="kp-pack" transform="translate(${pos.x} ${pos.y}) rotate(${pos.rot})">${packMarkup()}</g>`
+        : "";
+      return `${art.defs("kp")}
+        ${art.sun(320, 44, 14, "kp", 0.9)}
+        ${art.cloud(58, 48, 0.8)}
+        ${art.cloud(150, 30, 0.5, 0.75)}
+        ${art.hills(360, 258)}
+        ${art.grass(96, 266, 1)}
+        ${art.grass(262, 264, 0.9)}
+        ${art.grass(318, 262, 0.8)}
+        ${groundPack}
+        ${bodyMarkup()}
+        ${wornPack}
+        ${worn ? strapsMarkup() : ""}
+        ${pressureMarkup()}`;
+    }
+
+    function sceneLabel() {
+      if (!worn) return "Vaikas stovi iš nugaros. Kuprinė guli ant žemės, dar neuždėta.";
+      const s = strap === "ilgos" ? "Petnešos ilgos." : "Petnešos trumpos.";
+      if (mode === "vienas") return `Vaikas neša kuprinę vienu pečiu. ${s} Svoris remiasi vienoje pusėje.`;
+      return strap === "ilgos"
+        ? `Vaikas neša kuprinę abiem pečiais. ${s} Kuprinė nuslydo žemai, svoris remiasi ties juosmeniu.`
+        : `Vaikas neša kuprinę abiem pečiais. ${s} Kuprinė prigludusi, svorį laiko abu pečiai.`;
+    }
+
+    function whereText() {
+      if (!worn) return "Spaudžia: kuprinė dar neuždėta";
+      if (mode === "vienas") return strap === "ilgos" ? "Spaudžia: vienas petys, žemai" : "Spaudžia: vienas petys";
+      return strap === "ilgos" ? "Spaudžia: juosmuo" : "Spaudžia: abu pečiai";
+    }
+
+    function paintToggles() {
+      const pairs = [
+        ...strapBtns.map((b) => [b, b.dataset.strap === strap]),
+        ...modeBtns.map((b) => [b, b.dataset.mode === mode]),
+        ...guessBtns.map((b) => [b, b.dataset.guess === guess]),
+      ];
+      for (const [b, on] of pairs) {
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "var(--line)";
+        b.style.background = on ? "var(--sun-soft, #fff3cf)" : "";
+      }
+      if (guess && !worn) wearBtn.removeAttribute("aria-disabled");
+      else if (!guess) wearBtn.setAttribute("aria-disabled", "true");
+      else wearBtn.removeAttribute("aria-disabled");
+      wearBtn.style.opacity = guess ? "1" : ".55";
+    }
+
+    function render() {
+      svg.innerHTML = sceneMarkup();
+      svg.setAttribute("aria-label", sceneLabel());
+      whereEl.textContent = whereText();
+      paintToggles();
+    }
+
+    /* --- veiksmas ---------------------------------------------------- */
+
+    function wear() {
+      if (!guess) {
+        api.note("Pirma pasirink spėjimą.");
+        guessBtns[0].focus();
+        return;
+      }
+      worn = true;
+      seen.add(`${mode}-${strap}`);
+
+      const sentence = mode === "vienas"
+        ? (strap === "ilgos"
+          ? (SENT.oneLow || "Kuprinė nuslydo į vieną pusę.")
+          : (SENT.one || "Vienas petys laiko visą svorį."))
+        : (strap === "ilgos"
+          ? (SENT.low || "Kuprinė nuslydo. Svoris remiasi ties juosmeniu.")
+          : (SENT.tight || "Kuprinė prigludusi prie nugaros."));
+
+      api.readout(sentence);
+      if (typeof api.speak === "function") api.speak(sentence, { rate: 0.95 });
+
+      const bothSeen = seen.has("abiem-tinkamos") && seen.has("abiem-ilgos");
+      const oneSeen = [...seen].some((k) => k.indexOf("vienas-") === 0);
+
+      let note;
+      if (mode === "vienas") {
+        note = "Antras petys petnešos nebeturi. Visas svoris vienoje pusėje.";
+      } else if (strap === "ilgos") {
+        note = "Kuprinė nebelaikoma prie nugaros ir nuslydo žemai.";
+      } else {
+        note = "Petnešos laiko kuprinę prie nugaros, svorį neša abu pečiai.";
+      }
+
+      if (bothSeen) {
+        note += " Svoris tas pats, vieta kita.";
+        note += guess === "vieta"
+          ? " Tu taip ir spėjai."
+          : " Tu spėjai, kad niekas nesikeis.";
+      } else {
+        note += strap === "ilgos"
+          ? " Pabandyk ir trumpas petnešas."
+          : " Pabandyk ir ilgas petnešas.";
+      }
+
+      if (bothSeen && oneSeen) {
+        note += " Tu matei abu petnešų ilgius ir vieną petį.";
+        if (!reported) {
+          reported = true;
+          api.progress({ correct: true });
+          note += " Pasakyk, kas keičiasi.";
+        }
+      }
+
+      render();
+      api.note(note);
+    }
+
+    strapBtns.forEach((b) => {
+      b.addEventListener("click", () => {
+        strap = b.dataset.strap;
+        worn = false;
+        render();
+        api.note("Dabar spausk „Uždėti“.");
+      });
+    });
+
+    modeBtns.forEach((b) => {
+      b.addEventListener("click", () => {
+        mode = b.dataset.mode;
+        worn = false;
+        render();
+        api.note("Dabar spausk „Uždėti“.");
+      });
+    });
+
+    guessBtns.forEach((b) => {
+      b.addEventListener("click", () => {
+        guess = b.dataset.guess;
+        render();
+        api.note(worn ? "Spėjimas pakeistas." : "Spėjimas įrašytas. Dabar spausk „Uždėti“.");
+        if (typeof api.speak === "function") {
+          api.speak(guess === "vieta" ? SENT.pick || "Pakeisk petnešų ilgį." : SENT.ask || "Kur remsis svoris?", { rate: 0.9 });
+        }
+      });
+    });
+
+    wearBtn.addEventListener("click", wear);
+
+    resetBtn.addEventListener("click", () => {
+      strap = "tinkamos";
+      mode = "abiem";
+      guess = null;
+      worn = false;
+      render();
+      api.readout(SENT.ask || "Kur remsis svoris? Pirma spėk.");
+      api.note("Naujas bandymas. Pirma spėk.");
+    });
+
+    render();
+    api.readout(SENT.ask || "Kur remsis svoris? Pirma spėk.");
+    api.note("Pasirink petnešų ilgį ir nešimo būdą. Tada spėk.");
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
   "gyvunu-grupes": gyvunuGrupes,
   "vandens-busenos": vandensBusenos,
   "nuozulnioji-plokstuma": nuozulniojiPlokstuma,
+  "kuprine-ir-svoris": kuprineIrSvoris,
 };

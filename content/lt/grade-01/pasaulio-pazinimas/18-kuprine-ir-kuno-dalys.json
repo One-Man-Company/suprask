@@ -1,0 +1,122 @@
+{
+  "id": "18-kuprine-ir-kuno-dalys",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Kuprinė: tas pats svoris, kita vieta",
+  "subtitle": "Svoris toks pat, o spaudžia vis kitur",
+  "minutes": 9,
+  "outcomes": [
+    "Įvardiju kūno dalis: galvą, pečius, juosmenį ir kojas.",
+    "Paaiškinu, kodėl tas pats svoris spaudžia vis kitur.",
+    "Palyginu, kur spaudžia ilgos petnešos ir vienas petys."
+  ],
+  "concept": {
+    "title": "Kur remiasi svoris",
+    "big_idea": "Tas pats kuprinės svoris spaudžia ten, kur kuprinė remiasi. Ilgos petnešos leidžia jai nuslysti žemyn. Vienu pečiu nešamas svoris gula vienoje pusėje.",
+    "steps": [
+      "Pasirink petnešų ilgį ir nešimo būdą.",
+      "Spėk, ar ilgos petnešos ką nors keičia.",
+      "Spausk „Uždėti“ ir žiūrėk, kur remiasi svoris.",
+      "Palygink abu atvejus: kuprinė ta pati."
+    ],
+    "example": "Važiuojant dviračiu, kuprinė ilgomis petnešomis plaka per nugarą."
+  },
+  "sim": {
+    "component": "kuprine-ir-svoris",
+    "config": {
+      "sentences": {
+        "ask": "Kur remsis svoris? Pirma spėk.",
+        "tight": "Kuprinė prigludusi prie nugaros. Svorį laiko abu pečiai.",
+        "low": "Kuprinė nuslydo. Svoris remiasi ties juosmeniu.",
+        "one": "Vienas petys laiko visą kuprinės svorį.",
+        "oneLow": "Kuprinė nuslydo į vieną pusę.",
+        "compare": "Svoris tas pats. Pasikeitė vieta, kur spaudžia.",
+        "done": "Tu matei abu petnešų ilgius ir vieną petį.",
+        "pick": "Pakeisk petnešų ilgį."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Vaikas neša kuprinę abiem pečiais. Petnešos trumpos. Kur remiasi svoris?",
+      "options": [
+        "Ties juosmeniu, žemai",
+        "Ant abiejų pečių",
+        "Tik ant vieno peties"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, kur kuprinė liečia nugarą.",
+      "why": "Trumpos petnešos laiko kuprinę prie nugaros, tad neša abu pečiai."
+    },
+    {
+      "q": "Tas pats vaikas paleido petnešas. Kuprinė nuslydo žemyn. Kas pasikeitė?",
+      "options": [
+        "Pasikeitė vieta, kur spaudžia",
+        "Pasikeitė kuprinės svoris",
+        "Niekas nepasikeitė"
+      ],
+      "answer": 0,
+      "hint": "Kuprinė ta pati. Palygink abu atvejus.",
+      "why": "Svoris liko tas pats, kita tik vieta, kur spaudžia."
+    },
+    {
+      "q": "Vaikas neša kuprinę vienu pečiu. Kur labiausiai spaudžia?",
+      "options": [
+        "Ant abiejų pečių",
+        "Ties juosmeniu per vidurį",
+        "Vienoje pusėje, ant vieno peties"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kiek pečių laiko petnešą.",
+      "why": "Viena petneša laiko visą svorį, todėl spaudžia vieną petį."
+    },
+    {
+      "q": "Kodėl kuprinę geriau nešti abiem pečiais?",
+      "options": [
+        "Nes tada kuprinė lengvesnė",
+        "Nes svoris pasiskirsto dviem pečiams",
+        "Nes tada petnešos trumpos"
+      ],
+      "answer": 1,
+      "hint": "Palygink, kiek pečių laiko svorį.",
+      "why": "Du pečiai dalijasi svorį, todėl vienai pusei tenka mažiau.",
+      "optional": true
+    },
+    {
+      "q": "Kurios kūno dalys laiko kuprinę, kai petnešos tinkamos?",
+      "options": [
+        "Pečiai",
+        "Juosmuo",
+        "Kojos"
+      ],
+      "answer": 0,
+      "hint": "Pažiūrėk, per ką eina petnešos.",
+      "why": "Petnešos eina per pečius, todėl svorį laiko pečiai."
+    }
+  ],
+  "reflect": "Kodėl ta pati kuprinė gali spausti kitur? Pasakyk savais žodžiais.",
+  "teacher": {
+    "goal": "Suprasti, kad kuprinės svorį laiko ta vieta, kur kuprinė remiasi, o ne vien svorio dydis. Modelis svorį laiko pastovų ir keičia tik petnešų ilgį bei nešimo būdą, todėl priežastis matoma, o ne išvedama iš skaičių.",
+    "prompt": "Kodėl ta pati kuprinė vieną kartą spaudė pečius, o kitą — juosmenį?",
+    "offline": "Paimkite vieną kuprinę ir tą patį daiktų kiekį. Pirma paleiskite petnešas ir paprašykite vaiko pasakyti, kur kuprinė spaudžia. Tada įtempkite petnešas ir paklauskite to paties. Po to leiskite vaikui panešti kuprinę vienu pečiu ir abiem. Visur svoris tas pats — keičiasi vieta, kurią laiko petnešos. Pabaigoje paklauskite, kokia petneša laiko svorį kiekvienu atveju.",
+    "misconceptions": [
+      "„Kuprinė kenkia tik tada, kai sunki.“ Modelyje svoris nekinta, bet pakeitus petnešų ilgį pasikeičia vieta, kur spaudžia.",
+      "„Vienas petys nieko nekeičia.“ Pasirinkus „Vienu pečiu“, svoris remiasi vienoje pusėje, o antras petys nebeturi petnešos.",
+      "„Ilgos petnešos tik dėl grožio.“ Su ilgomis petnešomis kuprinė nuslysta ir nebesilaiko prie nugaros.",
+      "„Jei kuprinė prigludusi, ji sunkesnė.“ Svoris tas pats: prigludusi kuprinė tik remiasi į kitą vietą."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Pasaulio pažinimas“, 26.1.2 „Sveikas gyvenimas“, 1516–1524 eil.: „įvardijamos žmogaus kūno dalys ir aptariama, kaip jos nukenčia nuo per sunkios bei nepritaikytos vaiko amžiui kuprinės, jos netaisyklingo nešiojimo (pvz., jei kuprinės petnešos per ilgos, visas kuprinės svoris gula ant inkstų ir pan.)“; siūlomas tyrimas „Kiek sveria mano, mano suolo draugo kuprinė?“.",
+    "Abdelraouf, O. R., Hamada, H. A., Selim, A., Shendy, W., & Zakaria, H. (2016). Effect of backpack shoulder straps length on cervical posture and upper trapezius pressure pain threshold. Journal of Physical Therapy Science, 28(9), 2437–2440. https://doi.org/10.1589/jpts.28.2437 — 25 dalyviai (15–23 m.); su ilgomis petnešomis kaklo laikysena ir pečių raumens slenkstis kito labiau nei su trumpomis. Tyrimas su jaunuoliais, ne su pirmokais, todėl modulyje tai pateikiama kaip petnešų ilgio mechanikos pagrindas, ne kaip vaikų sveikatos įrodymas.",
+    "Genitrini, M., Dotti, F., Bianca, E., & Ferri, A. (2022). Impact of Backpacks on Ergonomics: Biomechanical and Physiological Effects: A Narrative Review. International Journal of Environmental Research and Public Health, 19(11), 6737. https://doi.org/10.3390/ijerph19116737 — apžvalga: trumpesnės ir standesnės petnešos kartu su aukštesne ir prigludusia padėtimi duoda geriausią pusiausvyros, raumenų darbo ir energijos sąnaudų derinį; vaikams siūloma neviršyti 10 % kūno masės.",
+    "Drzał-Grabiec, J., Snela, S., Rachwał, M., Podgórska, J., & Rykała, J. (2015). Effects of carrying a backpack in an asymmetrical manner on the asymmetries of the trunk and parameters defining lateral flexion of the spine. Human Factors, 57(2), 218–226. https://doi.org/10.1177/0018720814546531 — 162 vaikai (11–13 m.), kuprinė 10 % kūno masės: nešant vienu pečiu liemuo pasviro į priešingą pusę, pečių asimetrija padidėjo.",
+    "Brackley, H. M., Stevenson, J. M., & Selinger, J. C. (2009). Effect of backpack load placement on posture and spinal curvature in prepubescent children. Work, 32(3), 351–360. https://doi.org/10.3233/WOR-2009-0833 — 15 dešimtmečių, 15 % kūno masės: žema padėtis davė mažiau laikysenos pokyčių nei aukšta. Aukštos ir žemos padėties tyrimai prieštarauja vieni kitiems, todėl modulis nemoko, kuri padėtis „geresnė“, o rodo tik tai, kur svoris remiasi."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (svorį laiko vieta, kur kuprinė remiasi), o ne kūno dalių sąrašas atmintinai.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo perkelti sąvoką į naują situaciją, o ne atkartoti modulio sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas prieš veiksmą, kiekviena klaida turi užuominą, modelis nieko nebaudžia ir leidžia bandyti iš naujo; 4-a užduotis — praplėtimas.",
+    "P2 / T2.2 / T3.4 / T5.5: veiksmas prieš paaiškinimą, perkėlimas, praplėtimas, 48 px taikiniai; spaudimo vieta rodoma ir žodžiu, ne vien spalva."
+  ]
+}

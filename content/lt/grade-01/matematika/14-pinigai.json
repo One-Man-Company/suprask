@@ -8,7 +8,7 @@
   "outcomes": [
     "Atpažįstu euro monetas ir banknotus pagal užrašytą vertę.",
     "Sudėlioju tikslią sumą iš kelių monetų ir banknotų.",
-    "Paaiškinu, kodėl viena kupiūra gali atstoti kelias monetas."
+    "Paaiškinu, kodėl vienas banknotas gali atstoti kelias monetas."
   ],
   "concept": {
     "title": "Skaičius ant pinigo",
@@ -38,7 +38,7 @@
         "apmoketa": "Apmokėta.",
         "perdaug": "Per daug. Nuimk vieną pinigą.",
         "kitaip": "Ta pati suma, kiti pinigai.",
-        "kupiura": "Viena kupiūra atstojo kelias monetas."
+        "kupiura": "Vienas banknotas atstojo kelias monetas."
       }
     }
   },

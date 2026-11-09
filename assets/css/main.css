@@ -359,6 +359,19 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 /* Navigacija ir lankstomi blokai */
 .crumbs a { display: inline-flex; align-items: center; min-height: var(--tap); vertical-align: middle; }
 .module-foot { margin-top: 2rem; }
+/* Modulio poraštės nuoroda „← <kryptis>“ yra inline-flex, todėl jos plotis
+   imamas shrink-to-fit: mažiausias įmanomas plotis — ilgiausio žodžio
+   min-content plius paminkštinimas. Prie 200 % teksto (32 px šaknis) @360 px
+   „← Sąžiningumas ir žaidimai“ užėmė 356,4 px, kai tėvui skirta 296 px —
+   puslapis slinko 28 px (matuota #5842, trys „Sąžiningumo ir žaidimų“
+   moduliai; @414 to paties nebuvo, nes ten telpa).
+   `max-width:100%` laiko mygtuką tėvo plotyje. Šrifto NEMAŽINAME — vaikas,
+   padidinęs tekstą, turi gauti didesnį, o ne mažesnį tekstą: 33,6 px tekstas
+   lieka 3 eilutėse, ilgiausia eilutė 262,8 px telpa į 296 px dėžę, žodis
+   nelaužomas. Įprastu šriftu deklaracija neturi poveikio: @360–1440 px
+   mygtukas lieka 304,9 px pločio ir 52,4 px aukščio, @320 — 288 × 78,4 px
+   (trys eilutės, kaip ir prieš taisymą). */
+.module-foot > .btn { max-width: 100%; }
 
 details.teacher { border-top: 1px dashed var(--line); margin-top: 1.5rem; padding-top: 1rem; }
 details.teacher summary { cursor: pointer; font-weight: 800; color: var(--ink-soft); min-height: var(--tap); display: flex; align-items: center; }

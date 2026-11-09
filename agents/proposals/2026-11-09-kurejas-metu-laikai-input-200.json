@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 197,
+  "created": "2026-11-09T13:15:00+02:00",
+  "type": "ux",
+  "title": "200 % tekste @360 px mėnesio slankiklis išstumia puslapį 2 px (08-metu-laikai)",
+  "body": "Sutvarkius #5842 (module-foot mygtukas), vienintelis likęs dokumento slinkties taškas 1 klasėje prie 32 px šaknies ir 360 px ekrano yra „Metų laikų“ simuliacijos mėnesio slankiklis. `input#ml-month` (assets/js/sims/pasaulis.js:79) turi `width:100%`, bet grid vaiko `min-width:auto` neleidžia jam susitraukti žemiau savo min-content: computed plotis 300,016 px, kai tėvas (grid, 26rem max) yra 240,8 px — input dešinė 361,6, dokumentas 362/360. `check_view.py` to nemato, nes 16 px šaknyje viskas telpa, o 200 % teksto jis nematuoja (#7396). Siūloma simuliacijos valdiklių blokui (ar grid tėvui) pridėti `min-width:0` grid vaikams ir slankikliui `max-width:100%`, o jei Chrome min-content vis tiek didesnis — `width:min(100%, 100cqw)` su `container-type:inline-size`; šrifto ir 48 px taikinio mažinti negalima. Tai ta pati šeima kaip #4748: grid/flex vaiko `min-width:auto` + kintantis turinys, tik dydį lemia ne žodis, o formos valdiklio min-content.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "Chromium (Playwright), 2026-11-09, HEAD 8895274 + šio paleidimo main.css: #/modulis/1/pasaulio-pazinimas/08-metu-laikai @360 px su 32 px šaknimi — input#ml-month 300,0 px (kairė 61,6, dešinė 361,6), grid tėvas 240,8 px, `input` sw == cw == 300, documentElement 362 vs clientWidth 360",
+    "pasaulis.js:77–81 — valdiklių blokas `<div style=\"display:grid;gap:.4rem;width:100%;max-width:26rem;margin:0 auto\">`, input `style=\"width:100%;height:48px\"`; globa `*{box-sizing:border-box}` neturi įtakos, nes plotį lemia min-content, ne 100 %",
+    "tas pats modulis @390/32 ir @414/32 — slinkties nėra (0 px), defektas pasireiškia tik ties standarto 360 px riba",
+    "šio paleidimo A/B: 35 maršrutai @360/32 — prieš #5842 taisyklę 6 su dokumento slinktimi, po — 1 (šis, +2 px); kiti 5 buvo module-foot mygtukas"
+  ]
+}

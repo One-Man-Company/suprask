@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 190,
+  "created": "2026-11-09T12:10:00+02:00",
+  "type": "ux",
+  "title": "Simuliacijų mygtukai 200 % tekste išsikiša iš kortelės: `.btn` padding 1.4rem",
+  "body": "Išmatavus visas 15 matematikos simuliacijų būsenas @360 px su 32 px šaknies šriftu (Chromium/Playwright), 7 moduliuose valdikliai išsikiša iš `#sim-controls` dėžės: 14-pinigai 280,6 px, 22-sudetis-per-desimti 287,8 px, 23-piktograma 290,4 px, 15-laikas 280,6 px, 18-taskas 272 px, 17-kryptys 256,7 px, 16-lygybe 248 px — kai skirta 241 px; 19-simto `.sim-ask` 272 px. Priežastis ta pati kaip LL-69: `.btn` (main.css:148–155) turi `padding:.7rem 1.4rem`, o prie 32 px šaknies tai 89,6 px horizontalaus „oro“ mygtuke, kurio eilutėje liko 241 px; `.sim-ask` (registry.js:76, main.css:494) input plotis taip pat fiksuotas. Slinkties pačioje simuliacijoje nebelieka tik todėl, kad mygtukai išlenda iš kortelės į jos paraštę — vaikui tai atrodo sulaužyta kortelė, o ne išdėstymas. Siūloma: `.btn` horizontalų paddingą riboti `padding-inline:min(1.4rem,9%)` (16 px šaknyje 9 % iš 241–351 px vis dar didesnis už 1.4rem, tad įprastas vaizdas nepakinta), o `.sim-ask input` — `max-width:100%;min-width:0`. Būtina sąlyga: prieš keičiant užsirašyti mygtukų pločius ir aukščius prie 16 px (360/414/1440) ir po pakeitimo juos palyginti; 200 % tekste patikrinti, kad nė vienas šriftas netapo mažesnis (LL-70).",
+  "target": "assets/css/main.css",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "matavimas Chromium (Playwright iš .venv), 2026-11-09, vietinis http.server 8997, 32 px šaknis: #/modulis/1/matematika/22-sudetis-per-desimti @360 — #sp-fill 287,8 px, kortelės turinio dėžė 240,8; 23-piktograma-ir-stulpelis — „Apskritimų“ 300,4 px; 14-pinigai — pg-item 265 px, .sim-ask 272 px",
+    "assets/css/main.css:148-155 — `.btn { display:inline-flex; padding:.7rem 1.4rem; }`; main.css:494-499 — `.sim-ask input` be max-width",
+    "assets/js/registry.js:76-80 — `.sim-ask` sukuriamas platformos, ne simuliacijos, todėl sim failas jo netaiso",
+    "atnaujinta: assets/js/sims/matematika.js:3021 po #4741 (repeat(3,minmax(0,1fr)) + container-type + min(.72rem,4.6cqw)) — 19-simto valdikliai 241/241, 0 išsikišimų"
+  ]
+}

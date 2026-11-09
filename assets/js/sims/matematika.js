@@ -3008,6 +3008,16 @@ const simtoLentele = {
     const rowOf = (v) => Math.floor((v - 1) / 10) + 1;
     const colOf = (v) => ((v - 1) % 10) + 1;
 
+    /* Judėjimo krypčių tinklelis. Takelio minimumas buvo min(100%,4.6rem):
+       prie 200 % teksto (32 px šaknis) jis davė 147 px takelį, trys takeliai —
+       467 px, kai valdikliams skirta 241 px, ir valdikliai išsikišdavo iš
+       kortelės (#4741 — ta pati taisyklė kaip #dt-grid). minmax(0,1fr)
+       leidžia takeliams susitraukti, o min-width:0 ant mygtukų — kad jų
+       min-content (žodis „Dešinėn“) nesustumtų tinklelio atgal.
+       Užrašų dydis rišamas prie TIKRO tinklelio pločio (cqw), nes rem seka
+       šaknimi: 200 % tekste 1.35rem būtų 43 px ir vėl išstumtų. 16 px šaknyje
+       riba neveikia ir išdėstymas lieka toks pat — mygtukas 81×56,
+       ↑ 21,6 px, užrašas 11,52 px. */
     controls.innerHTML = `
       <div id="shl-guess" role="group" aria-label="Spėk, koks skaičius bus žemyn"
            style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;align-items:center;width:100%">
@@ -3018,30 +3028,30 @@ const simtoLentele = {
       </div>
       <div id="shl-tools" style="display:none;width:100%">
         <div role="group" aria-label="Judėjimas lentelėje"
-             style="display:grid;grid-template-columns:repeat(3,minmax(min(100%,4.6rem),1fr));gap:.4rem;max-width:16rem;margin:0 auto">
+             style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem;max-width:16rem;margin:0 auto;container-type:inline-size">
           <span aria-hidden="true"></span>
           <button type="button" class="btn secondary" data-dir="up" aria-label="Žingsnis aukštyn"
-                  style="min-height:56px;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
-            <span aria-hidden="true" style="font-size:1.35rem;font-weight:900">↑</span>
-            <span aria-hidden="true" style="font-size:.72rem;font-weight:800">Aukštyn</span>
+                  style="min-height:56px;min-width:0;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
+            <span aria-hidden="true" style="font-size:min(1.35rem,10cqw);font-weight:900">↑</span>
+            <span aria-hidden="true" style="font-size:min(.72rem,4.6cqw);font-weight:800">Aukštyn</span>
           </button>
           <span aria-hidden="true"></span>
           <button type="button" class="btn secondary" data-dir="left" aria-label="Žingsnis į kairę"
-                  style="min-height:56px;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
-            <span aria-hidden="true" style="font-size:1.35rem;font-weight:900">←</span>
-            <span aria-hidden="true" style="font-size:.72rem;font-weight:800">Kairėn</span>
+                  style="min-height:56px;min-width:0;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
+            <span aria-hidden="true" style="font-size:min(1.35rem,10cqw);font-weight:900">←</span>
+            <span aria-hidden="true" style="font-size:min(.72rem,4.6cqw);font-weight:800">Kairėn</span>
           </button>
           <span aria-hidden="true"></span>
           <button type="button" class="btn secondary" data-dir="right" aria-label="Žingsnis į dešinę"
-                  style="min-height:56px;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
-            <span aria-hidden="true" style="font-size:1.35rem;font-weight:900">→</span>
-            <span aria-hidden="true" style="font-size:.72rem;font-weight:800">Dešinėn</span>
+                  style="min-height:56px;min-width:0;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
+            <span aria-hidden="true" style="font-size:min(1.35rem,10cqw);font-weight:900">→</span>
+            <span aria-hidden="true" style="font-size:min(.72rem,4.6cqw);font-weight:800">Dešinėn</span>
           </button>
           <span aria-hidden="true"></span>
           <button type="button" class="btn secondary" data-dir="down" aria-label="Žingsnis žemyn"
-                  style="min-height:56px;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
-            <span aria-hidden="true" style="font-size:1.35rem;font-weight:900">↓</span>
-            <span aria-hidden="true" style="font-size:.72rem;font-weight:800">Žemyn</span>
+                  style="min-height:56px;min-width:0;display:flex;flex-direction:column;gap:.1rem;line-height:1.05;padding:.35rem">
+            <span aria-hidden="true" style="font-size:min(1.35rem,10cqw);font-weight:900">↓</span>
+            <span aria-hidden="true" style="font-size:min(.72rem,4.6cqw);font-weight:800">Žemyn</span>
           </button>
           <span aria-hidden="true"></span>
         </div>

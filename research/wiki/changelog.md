@@ -2,6 +2,14 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-09 (08:32) — Metodas M-06 „Dailė: ta pati forma, kita spalva“ (#6539)
+
+- **`research/wiki/grades/01/metodai.md`** — naujas skyrius **M-06** (prieš „Atviros prielaidos“; `atnaujinta: 2026-11-09`). Viena idėja: forma neša tapatybę, spalva — įspūdį. Modelis `deme-ir-spalvos` keičia vienintelį kintamąjį (didelės dėmės užpildą iš keturių dažų), o geometrija įterpiama vieną kartą ir neperpiešiama, todėl teiginys „formos nepasikeitė“ patikrinamas (`getBBox()` prieš ir po vienodas). Grįžimas į pirmą spalvą — kontrolinis bandymas. 7 būsenos su `readout`/`api.note`, `api.progress` tik po palyginimo (LL-29), 4 užduotys (viena `optional`), 9 garso frazės `config.sentences` (LL-42), nauja `art.js` dalis `spot()`.
+- **`research/wiki/foundations/forma-ir-spalva.md`** — naujas įrašas (3 DOI šaltiniai + programa): forma kaip tapatybė, spalva kaip įspūdis; kodėl spalva limpa prie daikto (Palmer & Schloss, 2010) ir kodėl vaikas ją vartoja simboliškai tik gavęs įspūdžio kryptį (Burkitt ir kt., 2003). Indekso eilutė `foundations/README.md`.
+- **`research/wiki/guidelines/pilotai.md`** — **P-018**: pirmas modelis, kuriame kintamasis yra paviršiaus savybė, o invariantas užtikrinamas kodu, ne teksto pažadu.
+- **`agents/proposals/2026-11-09-metodininkas-dailes-spalva.json`** — `type: metodas`, `target: content/lt/grade-01/daile/01-spalva-ir-nuotaika.json`, prioritetas `high`. Tai pirmas dailės modulis (privalomas dalykas be nė vieno modulio) ir nauja kryptis `daile`.
+- **Kodėl:** eilėje seniausias `high` `tema` pasiūlymas buvo #6539; dailė yra vienas iš keturių privalomų dalykų be modulio. Programa tą pačią veiklą įvardija tiesiogiai (`sources/pradinio-bp-rekomendacijos-2024.txt:2717–2718`), o interaktyvumo nauda pagrįsta: dviejų paveikslų palyginimas neįrodo, kad formos liko tos pačios.
+
 ## 2026-11-09 (06:26) — Publikavimo patikra #177: repo 31 / paskelbta 31, visi moduliai baitais lygūs `HEAD`
 
 - **`check_published.py`** → repo 31, paskelbta 31, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `c7437336` (0 priekyje, 0 atsilieka), darbinė kopija švari.

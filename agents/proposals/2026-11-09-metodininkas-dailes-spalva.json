@@ -1,0 +1,23 @@
+{
+  "role": "metodininkas",
+  "run_id": 180,
+  "created": "2026-11-09T08:32:00+02:00",
+  "type": "metodas",
+  "title": "Dailė: forma neša tapatybę, spalva — įspūdį (vienas kintamasis: didelės dėmės užpildas)",
+  "body": "Metodas temai #6539 („Dailė: ta pati kompozicija, kita spalva“) ir pirmam dailės moduliui `01-spalva-ir-nuotaika` (nauja kryptis `daile`). Viena didelė idėja: forma pasako, kas nupiešta, spalva — kaip į tai žiūrima; toje pačioje formoje kita spalva keičia įspūdį, o piešinys lieka tas pats. Modelis sąmoningai abstraktus (didelė dėmė, maža dėmė, linija), nes peizažas įneštų antrą reikšmę — metų laiką (jau `08-metu-laikai`) ir daikto pavadinimą („saulė negali būti mėlyna“). Kintamasis vienas: didelės dėmės užpildas iš keturių dažų; mažos dėmės ir linijos spalva fiksuota, o kompozicija įterpiama vieną kartą ir keičiamas tik `fill`, todėl teiginys „formos nepasikeitė“ yra patikrinamas (`getBBox()` prieš ir po vienodas), o ne pažadas. Grįžimas į pirmą spalvą yra kontrolinis bandymas: vaikas pamato lygiai tą patį paveikslą, ko dviejų paveikslų palyginimas neduoda. Klaidingos nuostatos: „spalva yra daikto pavadinimas“, „jei atrodo kitaip, tai ir nupiešta kitaip“, „spalva tik puošia“; ketvirtoji („yra teisinga nuotaika“) neleidžiama atsirasti, nes užduotys klausia, kas pasikeitė, o jausmo žodį vaikas pasako tik refleksijoje ir jis neverinamas. Inžinieriui duota visa, ko reikia be papildomų klausimų: 7 būsenos su `readout` ir `api.note`, `api.progress` tik po palyginimo (LL-29), 360 px išdėstymas, 9 garso frazės `config.sentences` (LL-42), nauja `art.js` dalis `spot()`, 4 užduotys su tipine klaida ir `hint` (viena `optional`), taip pat modulio laukų reikšmės ir siūloma vieta `path.json`. Šaltiniai su DOI: Burkitt, Barrett & Davis (2003) — 330 vaikų 4–11 m., spalva parinkta pagal įspūdžio charakteristiką visose amžiaus grupėse; Zentner (2001) — 3–4 m. vaikai jau randa spalvos ir jausmo ryšius; Palmer & Schloss (2010) — spalvos vertė kyla iš daikto, su kuriuo ji siejama, todėl vaiko nuostata turi pagrindą. Programa: NŠA (2024) dailės 2 pavyzdys 1 klasei „Kaip susikūrė pasaulis“ — „Tyrinėja ir apibūdina skirtingas spalvų ir dėmių sukuriamas nuotaikas, ritmą“ (`sources/pradinio-bp-rekomendacijos-2024.txt:2717–2718`).",
+  "target": "content/lt/grade-01/daile/01-spalva-ir-nuotaika.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2717–2718 (1–2 kl. dailės turinys: „Tyrinėja ir apibūdina skirtingas spalvų ir dėmių sukuriamas nuotaikas, ritmą“) ir :2714 („2 pavyzdys. 2 pamokų ciklas 1 klasei. Tema: „Kaip susikūrė pasaulis.““)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2622–2625 (1–2 kl. amžiaus ypatumai: linkę fantazuoti, svarbi mokytojo nuomonė)",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:13 (trys dailės pasiekimų sritys) ir :22 (oficialus 1 kl. pamokų ciklas)",
+    "research/wiki/grades/01/metodai.md M-06 — seka, simuliacijos būsenos, užduotys",
+    "research/wiki/foundations/forma-ir-spalva.md — forma kaip tapatybė, spalva kaip įspūdis; mechaniškai fiksuotas invariantas",
+    "Burkitt, E., Barrett, M., & Davis, A. (2003). Children's colour choices for completing drawings of affectively characterised topics. J Child Psychol Psychiatry 44(3), 445–455. https://doi.org/10.1111/1469-7610.00134",
+    "Zentner, M. R. (2001). Preferences for colours and colour–emotion combinations in early childhood. Developmental Science 4(4), 389–398. https://doi.org/10.1111/1467-7687.00180",
+    "Palmer, S. E., & Schloss, K. B. (2010). An ecological valence theory of human color preference. PNAS 107(19), 8877–8882. https://doi.org/10.1073/pnas.0906172107",
+    "agents/scope.py:109–110 (`STRAND_SUBJECT` turi „dailė“ ir „daile“ — strand id turi būti ASCII `daile`)",
+    "content/lt/grade-01/index.json (31 modulis, 7 kryptys, 0 dailės modulių — patikrinta prieš rašant)"
+  ]
+}

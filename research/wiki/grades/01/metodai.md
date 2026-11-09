@@ -3,7 +3,7 @@ title: "1 klasės metodai"
 tipas: metodai
 klase: 1
 amzius: "6–7"
-atnaujinta: 2026-11-08
+atnaujinta: 2026-11-09
 ---
 
 # 1 klasės metodai
@@ -334,6 +334,83 @@ Minučių skaičius šiame metode nemokomas. Programa 1 klasei prašo „nusakyt
 **Ką tai reiškia modulio autoriui.** `title` — „Dovana: kodėl vienas džiaugiasi, kitas ne“ (41 simbolis); `subtitle` — „Tas pats daiktas gali nuliūdinti, jei jo nenorėjai“ (50); `minutes` — 9; trys `outcomes`: „Pasakau, ko norėjo veikėjas.“, „Nusakau, kaip jausis žmogus, gavęs ne tai, ko norėjo.“, „Paaiškinu, kodėl ta pati dovana vienam džiugu, kitam ne.“; `concept.title` — „Jausmas priklauso nuo noro“ (26); `concept.big_idea` — „Jausmas priklauso ne vien nuo to, kas nutiko. Jis priklauso ir nuo to, ko žmogus norėjo.“ (88); `concept.steps` — keturi žingsniai iš sekos 1–4; `concept.example` — „Močiutė atnešė šaliką. Vienas anūkas apsidžiaugia, kitas tyliai padeda jį į šalį.“; `teacher.offline` — du vienodi pieštukai dviejuose vienoduose popieriaus lapuose ir du savanoriai, prieš tai pasakę, ko norėtų; po to pokalbis „kodėl vienas džiaugėsi, o kitas ne“; `teacher.misconceptions` — trys nuostatos iš šio skyriaus; `sim` — `{ "component": "dovana-ir-noras", "config": { "gift": "kamuolys", "other": "knyga", "fixed": { "name": "Ieva", "wants": "knyga" }, "varying": { "name": "Rėjus", "wants": "kamuolys" } } }`. Moduliui reikia **naujos krypties** `gyvenimo-igudziai` (`content/lt/grade-01/index.json`: `title` „Gyvenimo įgūdžiai“, `emoji` „💛“, `intro` „Jausmai ir santykiai: nuo savęs prie kito.“) ir įrašo `path.json`; tai kūrėjo darbas, ne metodo dalis. Numeris `01-` laisvas, nes kryptis nauja.
 
 **Šaltiniai.** Pons, F., Harris, P. L., & de Rosnay, M. (2004). Emotion comprehension between 3 and 11 years: Developmental periods and hierarchical organization. *European Journal of Developmental Psychology, 1*(2), 127–152. https://doi.org/10.1080/17405620344000022 · Rieffe, C., Terwogt, M. M., & Cowan, R. (2005). Children's understanding of mental states as causes of emotions. *Infant and Child Development, 14*(3), 259–272. https://doi.org/10.1002/icd.391 · Widen, S. C., & Russell, J. A. (2008). Children acquire emotion categories gradually. *Cognitive Development, 23*(2), 291–312. https://doi.org/10.1016/j.cogdev.2008.01.002 · Saarni, C. (1979). Children's understanding of display rules for expressive behavior. *Developmental Psychology, 15*(4), 424–429. https://doi.org/10.1037/0012-1649.15.4.424 · Harris, P. L., Donnelly, K., Guz, G. R., & Pitt-Watson, R. (1986). Children's understanding of the distinction between real and apparent emotion. *Child Development, 57*(4), 895–909. https://doi.org/10.2307/1130366
+
+### M-06 — Dailė: ta pati forma, kita spalva
+
+**Data:** 2026-11-09 · **Tema:** `agents/proposals/2026-11-08-ideator-dailes-spalva-ir-nuotaika.json` (#6539) · **Tikslas:** `content/lt/grade-01/daile/01-spalva-ir-nuotaika.json` · **Šaltinis:** `research/wiki/foundations/forma-ir-spalva.md`
+
+**Viena didelė idėja.** Forma pasako, *kas* nupiešta. Spalva pasako, *kaip* į tai žiūrima. Toje pačioje formoje kita spalva keičia įspūdį, o piešinys lieka tas pats.
+
+**Kodėl modelis, o ne paveikslėlis.** Du paveikslai greta parodo skirtumą, bet neįrodo, kad formos liko tos pačios: vaikas neturi būdo patikrinti, ar antrame paveiksle kas nors nepajudėjo, ir paprastai sprendžia, kad „nupiešta kitaip“. Modelis laiko geometriją nepajudinamą — keičiamas tik didelės dėmės užpildas — o grįžimas į ankstesnę spalvą parodo lygiai tą patį paveikslą. Tai kontrolinis bandymas, kurio paveikslėlis negali duoti. Be to, modelis reikalauja spėjimo prieš veiksmą, ko paveikslėlis taip pat nereikalauja.
+
+**Kodėl abstrakti dėmė, o ne peizažas.** Peizaže spalva turi antrą reikšmę: ji žymi metų laiką ar paros laiką (tai jau `08-metu-laikai` sąvoka), o saulė ar medis kviečia sakyti „saulė negali būti mėlyna“ — tada pokalbis pasisuka apie daiktą, o ne apie spalvą kaip priemonę. Dėmė neturi pavadinimo, todėl vienintelis klausimas lieka toks, koks turi būti. Tai ir programos turinys: 1 klasei skirtas ciklas „Kaip susikūrė pasaulis“ prašo „tyrinėti ir apibūdinti skirtingas spalvų ir dėmių sukuriamas nuotaikas, ritmą“ (`sources/pradinio-bp-rekomendacijos-2024.txt:2717–2718`), o ne atpažinti daiktus.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Spalva yra daikto pavadinimas“** (geltona = saulė, žalia = lapas). Ši nuostata ne išgalvota: suaugusiųjų spalvų vertinimai paaiškinami tuo, su kokiais daiktais spalva siejama (Palmer ir Schloss, 2010), o 3–4 metų vaikai jau randa pastovius spalvos ir jausmo ryšius (Zentner, 2001). Paneigiama modeliu: ta pati dėmė nudažoma kita spalva ir lieka ta pačia dėme — jos vieta, dydis ir kraštas nepakinta. Spalva čia pasirenkama, o ne atpažįstama.
+2. **„Jei paveikslas atrodo kitaip, jis ir nupieštas kitaip.“** Vaikas sujungia suvokimo pokytį su piešinio pokyčiu, nes kasdienėje patirtyje abu dažniausiai kinta kartu. Paneigiama mechaniškai: forma neperpiešiama, keičiamas tik `fill`, o grįžimas į pirmą spalvą grąžina lygiai tą patį vaizdą. Skirtumo šaltinis tampa matomas todėl, kad jį galima panaikinti ir vėl sukelti.
+3. **„Spalva tik puošia, prasmę neša forma“** (įprasta darželio taisyklė „spalvink gražiai“). Paneigiama tuo pačiu veiksmu iš kitos pusės: pasikeitus tik užpildams, pasikeičia tai, ką vaikas apie paveikslą pasako, nors nė viena linija nepajudėjo. Jei spalva būtų tik puošmena, pasakojimas nepasikeistų.
+4. **„Yra viena teisinga nuotaika.“** Modelis šios nuostatos nepaneigia, o jos neleidžia atsirasti: užduotys klausia, kas pasikeitė (forma ar spalva), o ne ką jausti; jausmo žodį vaikas pasako refleksijoje ir jis neverinamas.
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas).**
+
+1. **Du lapai, viena dėmė.** Mokytojas duoda du vienodus lapus, kuriuose ta pati didelė dėmė nupiešta pieštuku. Vaikas vieną nudažo šiltai (geltona, raudona), kitą vėsiai (žalia, mėlyna) ir padeda greta. Tikslas: pajusti, kad piešinys nepakito, o įspūdis pasikeitė. Mokytojas neklausia, kuris gražesnis, ir nevertina.
+2. **Ekranas, viena dėmė.** Ta pati kompozicija: didelė dėmė, maža dėmė ir plona linija. Vaikas spaudžia vieną iš keturių dažų; keičiasi tik didelės dėmės užpildas. Tikslas: pamatyti pasekmę be perpiešimo — akimirksniu ir be animacijos įžangos.
+3. **Grįžimas.** Vaikas grąžina pirmą spalvą ir pamato, kad paveikslas atrodo lygiai taip pat kaip pradžioje. Tikslas: atlikti kontrolinį bandymą savo ranka. Be šio žingsnio modelis tinka tik žiūrėjimui, o su juo — įrodymui.
+4. **Simbolis.** Po kompozicija atsiranda dvi eilutės: „FORMA“ su tomis pačiomis trimis formomis, nubrėžtomis plonomis linijomis be užpildo, ir „SPALVA“ su dabartinio dažo kvadratėliu. Vaikas pasako: „Forma ta pati, spalva kita.“ Tikslas: du dalykus įvardyti atskirai. Tai vienintelis žymėjimas, kurio reikia 1 klasei — jokių spalvų ratų, jokių terminų.
+5. **Perkėlimas.** Ta pati taisyklė be modelio: du vienodi kartoniniai apskritimai, nudažyti skirtingai (ar tai ta pati forma?); du to paties piešinio atvirukai skirtingomis spalvomis; nespalvota to paties piešinio kopija. Tikslas: atpažinti, kad formos tapatybė išlieka be spalvos.
+
+**Privalomas spėjimo žingsnis prieš pirmą dažą.** `api.readout`: „Kas pasikeis: formos ar nuotaika? Pasakyk, tada keisk.“ Kol vaikas nepaspaudė „Sakau“, dažų juosta neaktyvi. Be spėjimo modelis virsta dažymu: vaikas spaudo dažus tol, kol atrodo įdomiai, ir ryšio nesudaro — tas pats pavojus kaip M-01–M-05 (`foundations/sujungti-dydziai.md`). Atsakymo variantų ekrane nėra: kintamasis lieka vienas, o spėjimas tikrinamas žodžiu ir užduotyse be modelio.
+
+**Simuliacijos specifikacija.** Komponentas `deme-ir-spalvos`, failas `assets/js/sims/daile.js` (naujas). Registracija `assets/js/registry.js`: viena eilutė `import * as daile from "./sims/daile.js";` ir `Object.assign({}, …, daile.SIMS)` sąraše. `config`:
+
+```json
+{ "colors": [
+    { "id": "geltona", "name": "Geltona", "hex": "#f2c33c" },
+    { "id": "raudona", "name": "Raudona", "hex": "#d9534f" },
+    { "id": "zalia",   "name": "Žalia",   "hex": "#57a05a" },
+    { "id": "melyna",  "name": "Mėlyna",  "hex": "#4a7fbf" } ],
+  "start": "geltona",
+  "sentences": { "...": "devynios frazės iš lentelės žemiau" } }
+```
+
+| Būsena | Ką rodo | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia, kol nepasakyta | didelė dėmė geltona, maža dėmė ir linija tamsios, dažų juosta neaktyvi | „Kas pasikeis: formos ar nuotaika? Pasakyk, tada keisk.“ | „Pirma pasakyk, tada rinkis spalvą.“ |
+| geltona | didelė dėmė geltona | „Geltona dėmė. Formos tos pačios.“ | „Pasikeitė tik užpildas.“ |
+| raudona | didelė dėmė raudona | „Raudona dėmė. Formos tos pačios.“ | „Ta pati vieta, ta pati forma.“ |
+| žalia | didelė dėmė žalia | „Žalia dėmė. Formos tos pačios.“ | „Dėmė liko savo vietoje.“ |
+| mėlyna | didelė dėmė mėlyna | „Mėlyna dėmė. Formos tos pačios.“ | „Pasikeitė spalva, ne piešinys.“ |
+| grįžimas į jau matytą spalvą | ta pati būsena kaip anksčiau, taškas į tašką | „Vėl geltona. Paveikslas toks pat.“ | „Forma nepakito nė vienu tašku.“ |
+| palyginimas (pamatytos ≥ 2 spalvos) | tos pačios formos | „Dvi spalvos. Viena forma.“ | „Pasikeitė įspūdis, o ne piešinys.“ |
+
+- **Vienas kintamasis:** `didelesDemesSpalva` ∈ keturi dažai. Mažos dėmės ir linijos spalva fiksuota (`#3a342b`), jų padėtis ir dydis — konfigūracijoje. Daugiau vaikas nieko nekeičia: nėra slankiklio, dydžio, „naujo piešinio“ mygtuko. Trys formos ir keturi dažai yra mažiausias rinkinys, kuriame matosi ir šiltos, ir vėsios spalvos pora.
+- **Geometrija užrakinta mechaniškai.** Kompozicija į sceną įterpiama vieną kartą `mount()` metu, o keičiant spalvą keičiamas tik `fill` atributas (pvz., `stage.querySelector("#deme-didele").setAttribute("fill", c.hex)`). Jokio `innerHTML` perpiešimo, jokio `transform`. **Patikra, kurią turi atlikti inžinierius:** kiekvienos formos `getBBox()` prieš ir po visų keturių spalvų yra vienodas (x, y, width, height lygūs iki paskutinio skaitmens), o `data-color` keičiasi. Tai ne estetikos reikalavimas — tai modelio teiginio sąlyga: jei geometrija bent kartą persibraižo, sakinys „formos nepasikeitė“ tampa neteisingas.
+- **Nauja `art.js` dalis.** `spot(x, y, w, h, color, kind)` — netaisyklinga dėmė: `path` iš aštuonių taškų su `Q` kreivėmis, todėl kraštas banguotas (elipsė netinka: lygus ovalas atrodo kaip kamuolys, o ne dėmė — LL-13). `kind`: `apvali` | `kampuota`; `fill` iš argumento. Dėmė piešiama vieną kartą, o spalva keičiama per `fill`, kaip aprašyta aukščiau.
+- **Išdėstymas 360 px:** scena 328 × 250 px (`viewBox="0 0 328 250"`, `width:100%`, `max-width:328px`). Didelė dėmė 168 × 132 px, maža dėmė 44 px, linija 148 × 8 px. Dažų juosta: 4 × 64 px + 3 × 12 px tarpų = 292 px iš 328 px, aukštis 56 px. Jokio horizontalaus slinkimo.
+- **Įėjimai:** keturi dažų mygtukai 64 × 56 px, kiekvienas su matomu žodžiu po kvadratėliu ir `aria-label` („Geltona spalva“), `aria-pressed`; „Sakau“ 328 × 56 px; „Iš naujo“ ≥ 48 px. Klaviatūra: `Tab` tarp dažų, `Enter`/`Space` pasirenka, `←`/`→` perjungia fokusą, `R` atstato pradžią.
+- **Grįžtamasis ryšys** — iškart po paspaudimo (≤ 1 kadras), be perėjimo ir be garso įžangos. `readout` įvardija spalvą ir tai, kad formos liko; `api.note` pasako vieną sakinį apie veiksmą, niekada apie vaiką. `api.progress({ correct: true })` — vieną kartą, kai pamatytos bent dvi skirtingos spalvos **ir** grįžta į bent vieną jau matytą (t. y. po palyginimo), o ne po pirmo dažo (LL-29). „Iš naujo“ pažangos netrina (LL-16).
+- **Garsas** — devynios nustatytos frazės, lygiai kaip lentelėje; jos laikomos `config.sentences`, o ne simuliacijos kode (LL-42), todėl `scripts/generate_audio.py` jas mato. `api.note` garsiai neskaitomas (mažas manifestas). Generuojant reikia abiejų variantų (`n`, `s`).
+- **Spalva nėra vienintelis informacijos nešėjas:** po kiekvienu dažu parašytas jo pavadinimas, `readout` jį pasako, būsena dar žymima `aria-pressed`, o formos atpažįstamos iš kontūro. Daltonikui modelis lieka suprantamas kaip „ta pati forma, kiti dažai“, tačiau patiriamas skirtumas mažesnis — tai pasakoma mokytojo bloke, o ne slepiama.
+- **Scenos `aria-label`** (atnaujinamas po kiekvieno pasirinkimo): „Didelė dėmė geltona, maža dėmė ir linija tamsios. Dėmės vieta nepakito.“ Nekartoja `readout` sakinio žodis į žodį.
+- **Jokių laikmačių, ėjimų limito, „game over“.** Grįžimas prie ankstesnės spalvos niekada nelaikomas klaida; dažą galima keisti tiek kartų, kiek nori.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Tas pats piešinys nudažytas geltonai ir mėlynai. Kas pasikeitė?“ — Tik formos / Tik spalva / Ir formos, ir spalva | Tik spalva (1) | trečias — „ir formos“: pasikeitus įspūdžiui vaikui atrodo, kad pasikeitė ir piešinys | „Palygink, ar dėmė liko toje pačioje vietoje.“ |
+| 2 | taikymas | „Dailininkas nori to paties piešinio kitokios nuotaikos. Ką keisti?“ — Formas / Piešti iš naujo / Spalvas | Spalvas (2) | antras — „piešti iš naujo“: nuotaikos pokytis painiojamas su nauju darbu | „Nuotaiką keičia dažai, o ne piešinio formos.“ |
+| 3 | perkėlimas | „Du viršeliai turi tą patį piešinį. Spalvos skiriasi. Ar piešinys tas pats?“ — Taip, piešinys tas pats / Ne, piešinys naujas / Ne, piešinys nebeatpažįstamas | Taip (0) | antras — nauja spalva priimama kaip naujas piešinys | „Žiūrėk į linijas ir dėmių formą, ne į spalvą.“ |
+| 4 | praplėtimas (`optional: true`) | „Tas pats piešinys nuskanuotas nespalvotai. Ar jį dar atpažinsi?“ — Ne, be spalvų nieko nematysi / Taip, formos liko tos pačios / Ne, tai jau kitas piešinys | Taip (1) | pirmas — spalva laikoma vienintele atpažinimo priemone | „Kas piešinyje lieka, kai spalvos dingsta?“ |
+
+**Refleksija.** „Kuris paveikslas tau atrodė niūriau? Ką pakeitei, kad jis toks pasidarytų?“ Klausiama žodžiu, nevertinama; teisingo atsakymo nėra, o laukiamas atsakymas — kad pasikeitė spalva, o ne piešinys.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).** Modelis keičia vieną savybę — didelės dėmės spalvą — ir nevaizduoja nei potėpio, nei dėmės dydžio, nei ritmo, nors programa šalia nuotaikos mini ir ritmą; ritmas lieka mokytojo veiklai. Modelis neparodo, ką vaikas jaučia: žodžius jis pasako pats. Spalvos ir jausmo ryšys yra iš dalies kultūrinis ir išmoktas (Palmer ir Schloss, 2010; Zentner, 2001), todėl modulis nemoko „mėlyna = liūdna“ — jis moko, kad spalva keičia įspūdį ir kad forma nuo to nepakinta. Nespalvotame spaudinyje piešinys netenka spalvos, bet ne formos: todėl praplėtimo užduotis klausia būtent apie tai. Dėmė nėra joks daiktas: jei vaikas ją pavadina „saulute“, mokytojas atsako „tai dėmė“, o ne „ne, saulė geltona“ — taip spalva nepatampa daikto etikete.
+
+**Ką tai reiškia modulio autoriui.** Nauja kryptis `daile` (`content/lt/grade-01/index.json`: `id` `"daile"`, `title` „Dailė“, `emoji` „🎨“, `intro` „Forma, spalva ir nuotaika: žiūrėk, keisk, palygink.“) — būtent ASCII `daile`, nes `agents/scope.py` `STRAND_SUBJECT` turi raktus `"dailė"` ir `"daile"`. `title` — „Dailė: ta pati forma, kita spalva“ (33 simboliai); `subtitle` — „Toje pačioje formoje kitos spalvos keičia nuotaiką“ (50); `minutes` — 9; trys `outcomes`: „Pasakau, kas piešinyje yra forma, o kas spalva.“, „Pakeičiu spalvą ir nusakau, kaip pasikeitė įspūdis.“, „Paaiškinu, kodėl forma liko ta pati.“; `concept.title` — „Spalva keičia nuotaiką“ (22); `concept.big_idea` — „Ta pati forma gali atrodyti linksmai arba niūriai. Įspūdį keičia spalva, o ne naujas piešinys.“ (94); `concept.steps` — keturi žingsniai iš sekos 2–5; `concept.example` — „Tas pats atvirukas išspausdintas du kartus. Viename dėmė geltona, kitame mėlyna. Piešinys tas pats, įspūdis kitas.“; `teacher.offline` — du lapai su ta pačia pieštuku nupiešta dėme, vienas dažomas šiltai, kitas vėsiai, paskui du vienodi kartoniniai apskritimai; `teacher.misconceptions` — trys nuostatos iš šio skyriaus (1–3), o ketvirtoji („yra teisinga nuotaika“) įrašoma kaip modelio riba, ne kaip klaida; `sim` — `{ "component": "deme-ir-spalvos", "config": { … } }`. Numeris `01-` laisvas, nes kryptis nauja. Modulį įrašius, jis turi būti įtrauktas į `content/lt/grade-01/index.json` ir `path.json` (kūrėjo ar dizainerio darbas, ne metodo dalis); siūloma vieta kelyje — tarp `09-augalo-gyvenimas` ir `06-figuros`: vaikas jau matė formas gamtoje, tada atskiria formą nuo spalvos, o geometrija jau įvardija pačias formas („forma lieka ta pati, kad ir kaip ją pasuktum“).
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, „Dailė“: 1–2 klasių amžiaus ypatumai (`sources/pradinio-bp-rekomendacijos-2024.txt:2622–2625`) ir 2 pavyzdys 1 klasei „Kaip susikūrė pasaulis“ (`:2714–2719`). `research/wiki/curriculum/kti-dalykai-1-klase.md` — dailės pasiekimų sritys (`:13`) ir oficialus 1 klasės ciklas (`:22`). Burkitt, E., Barrett, M., & Davis, A. (2003). Children's colour choices for completing drawings of affectively characterised topics. *Journal of Child Psychology and Psychiatry, 44*(3), 445–455. https://doi.org/10.1111/1469-7610.00134 · Zentner, M. R. (2001). Preferences for colours and colour–emotion combinations in early childhood. *Developmental Science, 4*(4), 389–398. https://doi.org/10.1111/1467-7687.00180 · Palmer, S. E., & Schloss, K. B. (2010). An ecological valence theory of human color preference. *PNAS, 107*(19), 8877–8882. https://doi.org/10.1073/pnas.0906172107
 
 ## Atviros prielaidos
 

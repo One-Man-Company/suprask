@@ -2,6 +2,16 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-09 (06:26) — Publikavimo patikra #177: repo 31 / paskelbta 31, visi moduliai baitais lygūs `HEAD`
+
+- **`check_published.py`** → repo 31, paskelbta 31, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `c7437336` (0 priekyje, 0 atsilieka), darbinė kopija švari.
+- **Gyvi adresai (HTTP):** `content/lt/grade-01/lietuviu-kalba/01-garsas-ir-raide.json` `200` (5044 B), `…/matematika/04-skaiciu-tiese.json` `200` (3636 B), `…/pasaulio-pazinimas/16-vandens-busenos.json` `200` (4947 B), šaknis `200` (3487 B).
+- **Baitai, ne skaičiai:** visi 31 modulio JSON failai gyvai `200` ir baitais lygūs `git show HEAD:` (31/31). `grade-01/index.json` (`dda1273a`, 9192 B), `path.json` (`88ff0a20`, 1103 B), `grades.json` (`2ec1e57d`, 1126 B), `audio/lt/manifest.json` (`de1ad5e4`, 50 497 B, 463 raktai), `main.css` (`c88fab2e`), `matematika.js` (`afc29fd6`), `calba.js` (`eb5a6d21`), `muzika.js` (`f8946092`) — lygūs. `pasaulis.js`, `geometrija.js`, `gyvenimas.js`, `technologijos.js`, `zaidimai.js` skiriasi TIK `?v=c7437336` žyma (`pages.yml:33–42`); nulupus žymą — baitais lygūs, žyma = `origin/main` pirmi 8 simboliai → gyva svetainė pastatyta iš `c7437336`.
+- **Struktūra:** `index.json` 31 modulis, 31 unikalus ID, 7 kryptys; `path.json` 31 žingsnis, 31 unikalus, aibės sutampa su indeksu abiem kryptimis (trūksta 0, perteklius 0), tvarka neliesta; `grades.json` `grades[0].modules` 31, `status: live`.
+- **Garsas:** manifesto 463 raktai / 926 takų; 10 atsitiktinių gyvų mp3 (n ir s) — visi `200`, 14–49 KB.
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0 klaidų, 0 įspėjimų (rc 0). Gyvas puslapis naršyklėje: `check_view.py --base https://one-man-company.github.io/suprask/ --viewports phone,small` → 62 patikros (31 maršrutas × 2 plotai), 0 problemų (rc 0).
+- **Sprendimas:** sutampa. Nieko nešalinta, ID nepernumeruoti, `path.json` nekeistas; ataskaita `agents/log/publikavimo-agentas-2026-11-09T0626.md`.
+
 ## 2026-11-08 (23:05) — Publikavimo patikra #175: repo 31 / paskelbta 31, svetainė baitais lygi `HEAD`
 
 - **`check_published.py`** → repo 31, paskelbta 31, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `e3a61b2` (0 priekyje, 0 atsilieka).

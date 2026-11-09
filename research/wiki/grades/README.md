@@ -4,7 +4,7 @@ Kiekviena klasė turi tris failus: `index.md` (programa ir struktūra), `temos.m
 
 | Klasė | Amžius | Koncentras | Būsena |
 |---|---|---|---|
-| [[01/index\|1]] | 6–7 | 1–2 | Live — 31 modulių |
+| [[01/index\|1]] | 6–7 | 1–2 | Live — 32 modulių |
 | [[02/index\|2]] | 7–8 | 1–2 | Rengiama |
 | [[03/index\|3]] | 8–9 | 3–4 | Rengiama |
 | [[04/index\|4]] | 9–10 | 3–4 | Rengiama |

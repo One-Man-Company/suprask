@@ -1,0 +1,117 @@
+{
+  "id": "01-spalva-ir-nuotaika",
+  "grade": 1,
+  "strand": "daile",
+  "title": "Dailė: ta pati forma, kita spalva",
+  "subtitle": "Toje pačioje formoje kitos spalvos keičia nuotaiką",
+  "minutes": 9,
+  "outcomes": [
+    "Pasakau, kas piešinyje yra forma, o kas spalva.",
+    "Pakeičiu spalvą ir nusakau, kaip pasikeitė įspūdis.",
+    "Paaiškinu, kodėl forma liko ta pati."
+  ],
+  "concept": {
+    "title": "Spalva keičia nuotaiką",
+    "big_idea": "Ta pati forma gali atrodyti linksmai arba niūriai. Įspūdį keičia spalva, o ne naujas piešinys.",
+    "steps": [
+      "Pirma pasakyk, kas pasikeis: formos ar nuotaika. Tada rinkis dažą.",
+      "Spausk vieną iš keturių dažų. Keisis tik didelės dėmės spalva.",
+      "Grįžk į pirmą spalvą. Paveikslas atrodys lygiai taip pat.",
+      "Forma pasako, kas nupiešta. Spalva pasako, kaip į tai žiūrima."
+    ],
+    "example": "Tas pats atvirukas išspausdintas du kartus. Viename dėmė geltona, kitame mėlyna. Piešinys tas pats, įspūdis kitas."
+  },
+  "sim": {
+    "component": "deme-ir-spalvos",
+    "config": {
+      "colors": [
+        { "id": "geltona", "name": "Geltona", "hex": "#f2c33c" },
+        { "id": "raudona", "name": "Raudona", "hex": "#d9534f" },
+        { "id": "zalia", "name": "Žalia", "hex": "#57a05a" },
+        { "id": "melyna", "name": "Mėlyna", "hex": "#4a7fbf" }
+      ],
+      "start": "geltona",
+      "sentences": {
+        "guess": "Kas pasikeis: formos ar nuotaika? Pasakyk, tada keisk.",
+        "geltona": "Geltona dėmė. Formos tos pačios.",
+        "raudona": "Raudona dėmė. Formos tos pačios.",
+        "zalia": "Žalia dėmė. Formos tos pačios.",
+        "melyna": "Mėlyna dėmė. Formos tos pačios.",
+        "vel-geltona": "Vėl geltona. Paveikslas toks pat.",
+        "vel-raudona": "Vėl raudona. Paveikslas toks pat.",
+        "vel-zalia": "Vėl žalia. Paveikslas toks pat.",
+        "vel-melyna": "Vėl mėlyna. Paveikslas toks pat."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Tas pats piešinys nudažytas geltonai ir mėlynai. Kas pasikeitė?",
+      "options": [
+        "Tik formos",
+        "Tik spalva",
+        "Ir formos, ir spalva"
+      ],
+      "answer": 1,
+      "hint": "Palygink, ar dėmė liko toje pačioje vietoje.",
+      "why": "Dėmės vieta ir forma nepakito, pasikeitė tik užpildas."
+    },
+    {
+      "q": "Dailininkas nori to paties piešinio kitokios nuotaikos. Kurį dalyką keisti?",
+      "options": [
+        "Formas",
+        "Piešti iš naujo",
+        "Spalvas"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kas tame pačiame piešinyje gali pasikeisti neliečiant linijų.",
+      "why": "Kiti dažai keičia įspūdį, o piešinys lieka tas pats."
+    },
+    {
+      "q": "Du viršeliai turi tą patį piešinį. Spalvos skiriasi. Ar piešinys tas pats?",
+      "options": [
+        "Taip, piešinys tas pats",
+        "Ne, piešinys naujas",
+        "Ne, piešinys jau kitas"
+      ],
+      "answer": 0,
+      "hint": "Žiūrėk į linijas ir dėmių formą, ne į spalvą.",
+      "why": "Spalva keičia įspūdį, bet ne linijas ir ne dėmių formą."
+    },
+    {
+      "q": "Tas pats piešinys nuskanuotas nespalvotai. Ar jį dar atpažinsi?",
+      "options": [
+        "Ne, be spalvų nieko nematysi",
+        "Taip, formos liko tos pačios",
+        "Ne, tai jau kitas piešinys"
+      ],
+      "answer": 1,
+      "hint": "Kas piešinyje lieka, kai spalvos dingsta?",
+      "why": "Forma neša piešinį, todėl jis atpažįstamas ir be spalvų.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kuris paveikslas tau atrodė niūriau? Ką pakeitei, kad jis toks pasidarytų?",
+  "teacher": {
+    "goal": "Atskirti formą nuo spalvos: forma pasako, kas nupiešta, o spalva — kokį įspūdį piešinys daro.",
+    "prompt": "Ar tas pats piešinys gali atrodyti linksmai ir niūriai? Kas jį pakeičia?",
+    "offline": "Duokite vaikui du vienodus lapus su ta pačia pieštuku nupiešta dėme. Vieną lapą dažykite šiltai (geltona, raudona), kitą vėsiai (žalia, mėlyna). Padėkite greta ir paklauskite, ar piešinys pasikeitė. Paskui duokite du vienodus kartoninius apskritimus: vieną nudažytą, kitą ne. Ar tai ta pati forma?",
+    "misconceptions": [
+      "„Spalva yra daikto pavadinimas“ (geltona yra saulė, žalia — lapas). Modelyje ta pati dėmė nudažoma kita spalva ir lieka ta pačia dėme, nes dėmė neturi pavadinimo.",
+      "„Jei paveikslas atrodo kitaip, jis ir nupieštas kitaip.“ Keičiamas tik užpildas, o grįžimas į pirmą spalvą grąžina lygiai tą patį vaizdą.",
+      "„Spalva tik puošia, prasmę neša forma.“ Pasikeitus vien užpildams, pasikeičia ir tai, ką vaikas apie paveikslą pasako, nors nė viena linija nepajudėjo."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), dailė, 2 pavyzdys 1 klasei „Kaip susikūrė pasaulis“: „Tyrinėja ir apibūdina skirtingas spalvų ir dėmių sukuriamas nuotaikas, ritmą“.",
+    "Dailės bendroji programa (2022), 1–2 klasė: meninės raiškos srityje mokiniai tyrinėja dėmes, formas ir spalvas.",
+    "Burkitt, E., Barrett, M., & Davis, A. (2003). Children's colour choices for completing drawings of affectively characterised topics. Journal of Child Psychology and Psychiatry, 44(3), 445–455. https://doi.org/10.1111/1469-7610.00134",
+    "Zentner, M. R. (2001). Preferences for colours and colour–emotion combinations in early childhood. Developmental Science, 4(4), 389–398. https://doi.org/10.1111/1467-7687.00180",
+    "Palmer, S. E., & Schloss, K. B. (2010). An ecological valence theory of human color preference. PNAS, 107(19), 8877–8882. https://doi.org/10.1073/pnas.0906172107"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena nauja sąvoka (spalva kaip įspūdis), o forma lieka žinomas dydis, su kuriuo lyginama.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo atskirti formą nuo spalvos naujoje situacijoje, o ne kartoti apibrėžimą.",
+    "3 žingsnis — pagalba laiku: kiekviena klaida turi užuominą, modelis nieko nebaudžia ir leidžia bandyti dar kartą."
+  ]
+}

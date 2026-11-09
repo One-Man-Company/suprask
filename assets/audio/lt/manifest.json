@@ -635,10 +635,6 @@
   "n": "n/e9ebf47dd9afa46f-0377d56d.mp3",
   "s": "s/e9ebf47dd9afa46f-aaffef6d.mp3"
  },
- "Dangtis": {
-  "n": "n/66f6d14e6d06c745-319522ed.mp3",
-  "s": "s/66f6d14e6d06c745-c73fa8ab.mp3"
- },
  "Dar ne visa kaina.": {
   "n": "n/c890f23c44c2b32e-9abe2ec1.mp3",
   "s": "s/c890f23c44c2b32e-e9ea8cc6.mp3"
@@ -851,6 +847,10 @@
   "n": "n/2158679009f55bad-86b3544d.mp3",
   "s": "s/2158679009f55bad-98b6ed19.mp3"
  },
+ "Geltona dėmė. Formos tos pačios.": {
+  "n": "n/68b5994a2d8b869e-159b3c97.mp3",
+  "s": "s/68b5994a2d8b869e-97f53b18.mp3"
+ },
  "Greičiau": {
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
   "s": "s/60d89cb04b7054d4-58e113db.mp3"
@@ -910,6 +910,10 @@
  "Kas bus vienu langeliu žemyn?": {
   "n": "n/a173a8cebb84e1b1-80d9eea6.mp3",
   "s": "s/a173a8cebb84e1b1-a6d20f06.mp3"
+ },
+ "Kas pasikeis: formos ar nuotaika? Pasakyk, tada keisk.": {
+  "n": "n/4d4a059e036dc52a-2292c4c0.mp3",
+  "s": "s/4d4a059e036dc52a-746b3262.mp3"
  },
  "Katė": {
   "n": "n/7b398e085664430c-5170bfc4.mp3",
@@ -1071,6 +1075,10 @@
   "n": "n/8049a7991ecef952-53cd647e.mp3",
   "s": "s/8049a7991ecef952-c148f242.mp3"
  },
+ "Mėlyna dėmė. Formos tos pačios.": {
+  "n": "n/089a75b857dc98a2-810d65f5.mp3",
+  "s": "s/089a75b857dc98a2-17a97773.mp3"
+ },
  "N": {
   "n": "n/8ce86a6ae65d3692-84095ad0.mp3",
   "s": "s/8ce86a6ae65d3692-081e4fe1.mp3"
@@ -1214,6 +1222,10 @@
  "R": {
   "n": "n/8c2574892063f995-ce5b96a4.mp3",
   "s": "s/8c2574892063f995-df1ac2d4.mp3"
+ },
+ "Raudona dėmė. Formos tos pačios.": {
+  "n": "n/51841b83c864cc90-a41c5d40.mp3",
+  "s": "s/51841b83c864cc90-6dcfdf77.mp3"
  },
  "Ritinys iš priekio atrodo kaip stačiakampis.": {
   "n": "n/3cc41c23fdbd3079-7e46fd23.mp3",
@@ -1515,6 +1527,22 @@
   "n": "n/f42e2afc12600ac5-8c9803ce.mp3",
   "s": "s/f42e2afc12600ac5-090caee8.mp3"
  },
+ "Vėl geltona. Paveikslas toks pat.": {
+  "n": "n/c399364d54a18b91-e0af107e.mp3",
+  "s": "s/c399364d54a18b91-a7c1cddf.mp3"
+ },
+ "Vėl mėlyna. Paveikslas toks pat.": {
+  "n": "n/fc293c945c8bbe85-c16d0ef9.mp3",
+  "s": "s/fc293c945c8bbe85-aa31561d.mp3"
+ },
+ "Vėl raudona. Paveikslas toks pat.": {
+  "n": "n/dd9e3c8e97ae87e3-6b0275a9.mp3",
+  "s": "s/dd9e3c8e97ae87e3-c24af0c8.mp3"
+ },
+ "Vėl žalia. Paveikslas toks pat.": {
+  "n": "n/c46c25cb45cad82f-edbfd1d8.mp3",
+  "s": "s/c46c25cb45cad82f-facc9830.mp3"
+ },
  "Y": {
   "n": "n/18f5384d58bcb1bb-bd31640d.mp3",
   "s": "s/18f5384d58bcb1bb-281338bc.mp3"
@@ -1802,6 +1830,10 @@
  "Ž": {
   "n": "n/44adc66853ea8fee-f460d664.mp3",
   "s": "s/44adc66853ea8fee-cefe4d11.mp3"
+ },
+ "Žalia dėmė. Formos tos pačios.": {
+  "n": "n/7a2f9d68c20dab87-243248de.mp3",
+  "s": "s/7a2f9d68c20dab87-ab7130b4.mp3"
  },
  "Žemas garsas": {
   "n": "n/443a22cde44caf4a-8249b2fa.mp3",

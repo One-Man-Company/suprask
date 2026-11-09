@@ -38,10 +38,11 @@ atnaujinta: 2026-11-08
 | Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius | 3 — gyva |
 | Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas | 2 — gyva |
 | Gyvenimo įgūdžiai | Dovana: kodėl vienas džiaugiasi, kitas ne | 1 — gyva |
+| Dailė | Dailė: ta pati forma, kita spalva | 1 — gyva |
 
 ## Statusas
 
-**Live.** 31 modulių, 7 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
+**Live.** 32 modulių, 8 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
 
 ## Susieti
 

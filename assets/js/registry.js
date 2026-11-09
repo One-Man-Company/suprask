@@ -40,8 +40,9 @@ import * as technologijos from "./sims/technologijos.js";
 import * as zaidimai from "./sims/zaidimai.js";
 import * as muzika from "./sims/muzika.js";
 import * as gyvenimas from "./sims/gyvenimas.js";
+import * as daile from "./sims/daile.js";
 
-const SIMS = Object.assign({}, calba.SIMS, matematika.SIMS, geometrija.SIMS, pasaulis.SIMS, technologijos.SIMS, zaidimai.SIMS, muzika.SIMS, gyvenimas.SIMS);
+const SIMS = Object.assign({}, calba.SIMS, matematika.SIMS, geometrija.SIMS, pasaulis.SIMS, technologijos.SIMS, zaidimai.SIMS, muzika.SIMS, gyvenimas.SIMS, daile.SIMS);
 
 export function getSim(id) {
   return SIMS[id] || null;

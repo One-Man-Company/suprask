@@ -479,9 +479,15 @@ html.js .boot-fallback { display: none; }
    eilutė lūžta visame pločių ruože žemiau 368 px (matuota 358–367 px — 45 px
    aukščio antraštė; 368 px jau 20 px), tad taisome ruožą, o ne vieną zondo
    plotį. Ties 368 px sena taisyklė dar telpa (336 px ≥ 335 px), todėl riba
-   ne platesnė; didesniuose ekranuose .12em lieka nepakitęs. */
+   ne platesnė; didesniuose ekranuose .12em lieka nepakitęs.
+
+   Taikoma TIK `.module-head` — vieninteliam `.eyebrow`, kuris tikrai netelpa:
+   hero („1 klasė · 6–7 metai“, 179,1 px iš 328 px) ir simuliacijos žyma
+   („Pabandyk pats“, 140,2 px iš 298,4 px) telpa ir su .12em, tad joms raidžių
+   tarpo spausti nereikia; ankstesnė bendra `.eyebrow` taisyklė jas liesdavo
+   be priežasties ir toje pačioje eilutėje sumaišydavo du tarpus. */
 @media (max-width: 368px) {
-  .eyebrow { letter-spacing: .06em; }
+  .module-head .eyebrow { letter-spacing: .06em; }
 }
 
 /* Tekstinio atsakymo laukas simuliacijoje (alternatyva balsui) */

@@ -23,6 +23,7 @@ suprask/
 │       └── sims/              # simuliacijos pagal sritį
 │           ├── art.js         # bendros scenos dalys (saulė, kalvos, vazonas…)
 │           ├── calba.js
+│           ├── daile.js
 │           ├── geometrija.js
 │           ├── gyvenimas.js
 │           ├── matematika.js
@@ -177,7 +178,7 @@ Kitą katalogą nurodyk `SUPRASK_PIPER_DIR`.
 
 ## Būsena
 
-- **Live:** 1 klasė — 7 kryptys, 31 modulių, 31 simuliacijų, 133 užduotys.
+- **Live:** 1 klasė — 8 kryptys, 32 modulių, 32 simuliacijų, 137 užduotys.
 - **Ruošiama:** 2–12 klasės (struktūra ir tyrimai wiki lygmenyje).
 
 ## Publikavimas

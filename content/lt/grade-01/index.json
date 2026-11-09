@@ -96,6 +96,16 @@
       "modules": [
         { "id": "01-dovana-ir-noras", "title": "Dovana: kodėl vienas džiaugiasi, kitas ne", "subtitle": "Tas pats daiktas gali nuliūdinti, jei jo nenorėjai", "file": "grade-01/gyvenimo-igudziai/01-dovana-ir-noras.json", "minutes": 9, "sim": "dovana-ir-noras" }
       ]
+    },
+    {
+      "id": "daile",
+      "grade": 1,
+      "title": "Dailė",
+      "emoji": "🎨",
+      "intro": "Forma, spalva ir nuotaika: žiūrėk, keisk, palygink.",
+      "modules": [
+        { "id": "01-spalva-ir-nuotaika", "title": "Dailė: ta pati forma, kita spalva", "subtitle": "Toje pačioje formoje kitos spalvos keičia nuotaiką", "file": "grade-01/daile/01-spalva-ir-nuotaika.json", "minutes": 9, "sim": "deme-ir-spalvos" }
+      ]
     }
   ]
 }

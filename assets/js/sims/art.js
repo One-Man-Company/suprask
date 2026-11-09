@@ -643,4 +643,65 @@ export const art = {
       ${texture}
     </g>`;
   },
+
+  /* ------------------------------------------------------------------ */
+  /* Dailė (1 klasės dailė)                                             */
+  /*                                                                    */
+  /* Dėmė yra PLOKŠČIAS netaisyklingas plotas, o ne kamuolys: kraštas    */
+  /* banguotas, kontūras be apvado. Lygus ovalas 6–7 m. vaikui atrodo   */
+  /* kaip kamuolys ar veidas, o ne kaip dažų dėmė (LL-13).               */
+  /* `kind`: apvali | kampuota | juosta (potėpis).                       */
+  /*                                                                    */
+  /* Svarbu modeliui: dėmė piešiama VIENĄ kartą, o spalva keičiama per   */
+  /* `fill` atributą. Todėl `getBBox()` prieš ir po sutampa, ir teiginys */
+  /* „formos nepajudėjo“ yra patikrinamas, o ne pažadėtas.               */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Netaisyklinga dėmė. `kind`: apvali | kampuota | juosta.
+   * `strokeWidth > 0` — kontūras be užpildo (simboliui „FORMA“ rodyti).
+   */
+  spot(x, y, w, h, color, kind = "apvali", strokeWidth = 0) {
+    const f = (v) => v.toFixed(1);
+    const fill = strokeWidth ? "none" : color;
+    const edge = strokeWidth
+      ? ` stroke="${color}" stroke-width="${strokeWidth}" stroke-linejoin="round"`
+      : "";
+
+    if (kind === "juosta") {
+      /* Potėpis: viena banguota linija, kurios storis yra visas `h`. */
+      const cy = y + h / 2;
+      return `<path d="M${f(x + h)} ${f(cy)} Q ${f(x + w * 0.32)} ${f(y)} ${f(x + w * 0.55)} ${f(cy)}`
+        + ` T ${f(x + w - h)} ${f(cy)}" fill="none" stroke="${color}"`
+        + ` stroke-width="${f(h)}" stroke-linecap="round"/>`;
+    }
+
+    /* Taškai kvadrato dalimis — todėl ta pati funkcija tinka bet kokiam
+       dydžiui, o forma nesislenka keičiant mastelį. */
+    const ring = kind === "kampuota"
+      ? [[0.06, 0.34], [0.18, 0.10], [0.46, 0.04], [0.74, 0.12], [0.96, 0.32],
+        [0.92, 0.64], [0.78, 0.90], [0.48, 0.96], [0.20, 0.86], [0.04, 0.62]]
+      : [[0.50, 0.02], [0.74, 0.08], [0.94, 0.24], [0.97, 0.50], [0.88, 0.74],
+        [0.68, 0.92], [0.42, 0.97], [0.20, 0.88], [0.05, 0.66], [0.03, 0.38],
+        [0.14, 0.12]];
+
+    const pt = ([px, py]) => [x + px * w, y + py * h];
+
+    if (kind === "kampuota") {
+      const d = ring.map((p, i) => `${i ? "L" : "M"}${f(pt(p)[0])} ${f(pt(p)[1])}`).join(" ");
+      return `<path d="${d} Z" fill="${fill}"${edge}/>`;
+    }
+
+    /* Apvali dėmė: kiekvienas taškas yra kreivės atramos taškas, o lankstai
+       sujungiami per tarpinius taškus — todėl kraštas banguotas, ne lygus. */
+    const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    const first = mid(pt(ring[ring.length - 1]), pt(ring[0]));
+    let d = `M${f(first[0])} ${f(first[1])}`;
+    for (let i = 0; i < ring.length; i += 1) {
+      const c = pt(ring[i]);
+      const e = mid(pt(ring[i]), pt(ring[(i + 1) % ring.length]));
+      d += ` Q ${f(c[0])} ${f(c[1])} ${f(e[0])} ${f(e[1])}`;
+    }
+    return `<path d="${d} Z" fill="${fill}"${edge}/>`;
+  },
 };

@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 195,
+  "created": "2026-11-09T12:52:00+02:00",
+  "type": "struktura",
+  "title": "Geometrijos simuliacijoje liko 11 vaikui rodomų sakinių kode, ne turinyje",
+  "body": "Paleidimas #195 pagal #5828 perkėlė simuliacijos įvadinę pastabą į `sim.config.intro` ir sujungė „Iš naujo“ sakinį su `config.sentences`, bet tame pačiame `mount` kūne liko vienuolika vaikui rodomų tekstų, įrašytų kode: skyrių antraštės „Iš kur žiūri? Ką matei, lieka po mygtuku.“ (:154) ir „Kokią formą matai?“ (:157), figūrų užrašai „Kūnas ant stalo“ (:146) ir „Ką matai?“ (:151), pastabos „Tas pats kūnas iš skirtingų pusių atrodo skirtingai.“ (:264, :350), „Pats kūnas nepasikeitė. Pasikeitė tik vaizdas.“ (:305), „Pažiūrėk į paveikslą dešinėje.“ (:307), „Spėk formą arba spausk „Rodyk vaizdą“.“ (:333), „Trys vaizdai, vienas kūnas.“ (:309) ir readout pabaiga „Pasirink, iš kur dar žiūrėsi.“ (:330). Tai ta pati priežastis, dėl kurios #5828 apskritai atsirado: kalbų redaktorius negali jų pataisyti, nes jos yra JS faile, o ne modulio JSON. Be to, AGENTS.md reikalauja, kad nauja kalba būtų pridedama be kodo pakeitimų — kol sakiniai gyvena kode, kiekviena kalba reikalautų JS šakos. Siūloma perkelti šiuos tekstus į `sim.config` (`labels` ir `notes` raktus, kurių `generate_audio.collect()` nerenka, nes jie nerodomi balsu), o kode palikti tik raktų vardus. Šis darbas nėra skubus: dabar nė vienas iš šių tekstų neturi antro egzemplioriaus, todėl jie nesikerta su balsu (LL-42 nepažeistas) ir sąsaja veikia. Bet kiekvienas būsimas formuluotės taisymas ar vertimas liks programavimo darbu, kol jie neiškeliauti.",
+  "target": "assets/js/sims/geometrija.js (11 vaikui rodomų literatų) + content/lt/grade-01/matematika/21-erdvines-figuros.json (sim.config)",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/geometrija.js:146,151,154,157 — figūrų užrašai ir skyrių antraštės kietai markupe",
+    "assets/js/sims/geometrija.js:264,305,307,309,330,333,350 — api.note / api.readout sakiniai kietai kode",
+    "scripts/generate_audio.py:157–175 — garso rinkimas ima tik keys {word, syllables, words, sentences, label}, todėl `labels`/`notes` raktai garso nepareikalaus",
+    "AGENTS.md „Vartotojo pageidavimai“ — struktūra turi leisti pridėti kitas kalbas be kodo pakeitimų",
+    "research/wiki/guidelines/pamokos.md LL-68 — „Proza imama tik iš config, o kode lieka tik skaičiai ir tvarka“"
+  ]
+}

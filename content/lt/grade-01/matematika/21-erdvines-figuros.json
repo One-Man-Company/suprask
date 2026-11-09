@@ -24,6 +24,7 @@
   "sim": {
     "component": "erdvines-figuros",
     "config": {
+      "intro": "Pasirink kūną ir spėk, kokią formą matai. Tada rinkis: iš priekio, iš viršaus ar nuo šono.",
       "sentences": {
         "kugis-priekis": "Kūgis iš priekio atrodo kaip trikampis.",
         "kugis-virsus": "Kūgis iš viršaus atrodo kaip apskritimas.",

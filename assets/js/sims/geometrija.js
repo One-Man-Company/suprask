@@ -126,11 +126,17 @@ const erdvinesFiguros = {
        lūžo per pusąžodį („Stačiakam / pis“), nors dokumentas neslenka
        (LL-51). 7.5rem = 120 px → turinys ≥106 px, žodis lieka sveikas
        @320–1440 ir 200 % tekste. */
+    /* Pastaba — turinys, ne kodas (#5828). Anksčiau ji buvo įrašyta čia, todėl
+       kalbos redaktorius negalėjo jos pataisyti nekeisdamas simuliacijos kodo.
+       Dabar tekstas imamas iš modulio `sim.config.intro`; atsarginis variantas
+       yra TIK pirmasis to paties sakinio sakinys, todėl negali jai prieštarauti
+       (LL-42). Triejų krypčių vardai — tie patys, kaip VIEWS mygtukų etiketės. */
+    const intro = typeof config.intro === "string" && config.intro.trim()
+      ? config.intro.trim()
+      : "Pasirink kūną ir spėk, kokią formą matai.";
     stage.innerHTML = `
       <div id="ef-wrap" style="width:100%;max-width:36rem;margin:0 auto;box-sizing:border-box">
-        <p class="sim-note" style="margin:0 0 .5rem;text-align:center">
-          Pasirink kūną ir spėk, kokią formą matai. Tada žiūrėk iš kitos pusės.
-        </p>
+        <p id="ef-intro" class="sim-note" style="margin:0 0 .5rem;text-align:center"></p>
         <div id="ef-bodies" role="group" aria-label="Pasirink kūną"
              style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7.5rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7rem,100%),1fr));gap:.5rem;margin-top:.7rem;box-sizing:border-box">
@@ -160,6 +166,10 @@ const erdvinesFiguros = {
       </div>`;
 
     const solidSvg = stage.querySelector("#ef-solid");
+    const introEl = stage.querySelector("#ef-intro");
+    /* textContent, o ne innerHTML: tekstas ateina iš turinio failo, todėl
+       negali įterpti žymų. */
+    if (introEl) introEl.textContent = intro;
     const flatSvg = stage.querySelector("#ef-flat");
     const flatCap = stage.querySelector("#ef-flat-cap");
     const bodiesEl = stage.querySelector("#ef-bodies");
@@ -333,7 +343,10 @@ const erdvinesFiguros = {
       done.clear();
       lastSaid = "";
       paint();
-      api.readout("Pradedam iš naujo. Pasirink kūną.");
+      /* Tas pats sakinys, kaip balsui (#5828/LL-42): ekranas ir balsas imami
+         iš vieno šaltinio. Atsarginis — kitais žodžiais ir tik kai config
+         sakinio nėra. */
+      api.readout(S["is-naujo"] || "Pradedam iš naujo.");
       api.note("Tas pats kūnas iš skirtingų pusių atrodo skirtingai.");
       speakOnce(S["is-naujo"]);
     });

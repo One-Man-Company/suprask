@@ -460,6 +460,15 @@ html.js .boot-fallback { display: none; }
 .eyebrow .dot { opacity: .55; }
 .nowrap { white-space: nowrap; }
 
+/* Simuliacijos žyma „Pabandyk pats“ buvo centruojama inline `text-align:center`
+   (app.js:365). Kai .eyebrow tapo flex konteineriu (aukščiau), `text-align`
+   nustojo veikti: anoniminis flex vaikas rikiuojamas pagal `justify-content`,
+   o numatytasis yra flex-start. Matuota Chromium @1440/390/360 px: žymos
+   turinys stovėjo kairėje (L=0, R=831,8 / 188,2 / 168,5 px), nors simuliacija
+   po ja centruota. Todėl centruojame flex ašyje; kitų .eyebrow (hero,
+   module-head) lygiavimas nekeičiamas. */
+.sim-shell > .eyebrow { justify-content: center; }
+
 /* Siauriausiuose ekranuose krypties pavadinimas su žyma netelpa į vieną eilutę.
    Matuota @360 px: eilutė 328 px, o „Sąžiningumas ir žaidimai“ (245 px) +
    skirtukas (11 px) + „10 min.“ (68 px) + tarpai (11 px) = 335 px, t. y. 7 px

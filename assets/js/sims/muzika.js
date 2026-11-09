@@ -328,9 +328,16 @@ const ritmasIrPulsas = {
       bars.appendChild(wrap);
     }
 
+    /* Mygtukų minimumai — `rem`, tad 200 % tekste (32 px šaknis) jie auga
+       kartu su šriftu ir gali būti platesni už visą valdiklių juostą
+       (`min-width` laimi prieš `max-width`): „Paleisk“ 8rem = 256 px, kai
+       @360/32 juostai skirta 241 px, todėl mygtukas išlipo iš kortelės.
+       `min(8rem,100%)` riboja minimumą turimu pločiu (LL-70), o įprastu
+       16 px šriftu 100 % juostos (298 px) didesnis už 8rem — plotis
+       nepakinta (matuota prieš ir po). */
     controls.innerHTML = `
       <button class="btn" type="button" id="rb-guess" style="min-width:7.5rem">Sakau</button>
-      <button class="btn" type="button" id="rb-play" aria-label="Paleisk pulsą ir ritmą" style="min-width:8rem">Paleisk</button>
+      <button class="btn" type="button" id="rb-play" aria-label="Paleisk pulsą ir ritmą" style="min-width:min(8rem,100%)">Paleisk</button>
       <button class="btn secondary" type="button" id="rb-reset" style="min-width:6rem">Iš naujo</button>`;
 
     const guessBtn = controls.querySelector("#rb-guess");

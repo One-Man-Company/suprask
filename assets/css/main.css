@@ -334,7 +334,38 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
   padding: clamp(.8rem, 2.5vw, 1.5rem); box-shadow: var(--shadow-2);
 }
 .sim-stage { display: grid; place-items: center; gap: 1rem; }
-.sim-controls { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; margin-top: 1rem; }
+/* Valdiklių juosta. `.container-type: inline-size` daro ją konteineriu, kad
+   žemiau esanti užklausa galėtų klausti JOS pločio `rem` vienetais — o `rem`
+   užklausoje seka šaknies šriftą. Tai vienintelis būdas CSS pasakyti „juosta
+   siaura būtent dėl padidinto teksto“: `@media` su `em`/`rem` visada matuoja
+   pradinį 16 px, o procentinis paminkštinimas ties shrink-to-fit tėvu
+   suskaičiuojamas kaip 0 (matuota: mygtukas neteko 44,8 px paminkštinimo ir
+   prie 16 px liko 122,3 px pločio vietoj 167 px).
+   `width: 100%` palieka juostos plotį tokį patį, koks buvo (blokinis elementas
+   ir taip užima visą tėvą), kad dydžio izoliavimas nepakeistų jos pločio. */
+.sim-controls { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; margin-top: 1rem; container-type: inline-size; width: 100%; }
+
+/* Kai valdiklių juosta siauresnė už 16 rem (16 px šaknyje — 256 px, 32 px
+   šaknyje — 512 px, t. y. 200 % tekste ji tokia būna beveik visuose
+   telefonuose), mygtukų horizontalus paminkštinimas imamas iš juostos
+   pločio, o ne iš `rem`. Matuota @360/32 px: juosta 241 px, `.btn`
+   paminkštinimas buvo 2×44,8 = 89,6 px, todėl 13 iš 35 maršrutų valdikliai
+   išlipo iš juostos (253–352 px), o 3 — ir už kortelės krašto (daile +28,
+   08-metu-laikai +33,6, 23-piktograma +8). Vaikas matė sulaužytą kortelę,
+   nors puslapio slinkties nebuvo (perteklių sugėrė kortelės paminkštinimas,
+   LL-30). 3,5 cqw = 8,4 px prie 241 px: ilgiausias 1 klasės mygtuko žodis
+   „Piktograma“ prie 33,6 px yra 222,5 px ir telpa į 224,1 px turinio juostą —
+   šrifto nemažiname (LL-70, #5842). `overflow-wrap: anywhere` yra apsauga
+   kraštui: jei žodis vis tiek netelpa, jis laužomas, o ne išlipa iš mygtuko
+   (anoniminio flex vaiko `min-width:auto` kitaip neleistų susitraukti).
+   Įprastu 16 px šriftu užklausa neaktyvi (juosta 298 px), todėl matuota
+   @360/414/1440 — visų 159 mygtukų plotis ir aukštis nepakito nė 0,1 px. */
+@container (max-width: 16rem) {
+  .sim-controls .btn {
+    padding-inline: min(1.4rem, 3.5cqw);
+    max-width: 100%; overflow-wrap: anywhere;
+  }
+}
 .sim-readout {
   font-family: var(--font-head); font-weight: 900; font-size: var(--fs-l);
   text-align: center; min-height: 2.2rem; color: var(--ink);
@@ -533,10 +564,20 @@ html.js .boot-fallback { display: none; }
   .module-head .eyebrow { letter-spacing: .06em; }
 }
 
-/* Tekstinio atsakymo laukas simuliacijoje (alternatyva balsui) */
-.sim-ask { display: flex; gap: .5rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: .5rem; }
+/* Tekstinio atsakymo laukas simuliacijoje (alternatyva balsui).
+   `.sim-ask` yra flex vaikas #sim-controls juostoje, todėl be
+   `max-width:100%` jo plotį lėmė turinys: laukas `width:8.5rem`
+   prie 32 px šaknies yra 272 px, kai kortelėje liko 241 px
+   (matuota 14-pinigai ir 16-lygybe-svarstykles @360/32 — 15,4 px už
+   juostos, nors už kortelės krašto liko 12 px). Laukas yra valdiklis, ne
+   tekstas: jo turinys slenkasi viduje, todėl čia pakanka leisti laukui
+   susitraukti iki turimo pločio (`min-width:0` flex vaikui), o šrifto
+   nemažinti. Įprastu 16 px šriftu `8.5rem` (136 px) telpa visais plotais —
+   matuota @360/414/1440: lauko plotis nepakito. */
+.sim-ask { display: flex; gap: .5rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: .5rem; max-width: 100%; }
 .sim-ask input {
-  min-height: 48px; width: 8.5rem; padding: .5rem .8rem; font: inherit; font-weight: 800;
+  min-height: 48px; width: 8.5rem; max-width: 100%; min-width: 0;
+  padding: .5rem .8rem; font: inherit; font-weight: 800;
   border: 2px solid var(--line); border-radius: var(--r-s); background: var(--paper);
 }
 .sim-ask input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }

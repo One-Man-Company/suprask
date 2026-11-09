@@ -77,6 +77,11 @@ const demeIrSpalvos = {
         </div>
       </div>`;
 
+    /* „Sakau“ minimumas buvo 11rem = 352 px prie 32 px šaknies, todėl
+       mygtukas išlipo iš 241 px valdiklių juostos ir už kortelės krašto
+       (matuota #8535 @360/32, +28 px). `min(11rem,100%)` riboja minimumą
+       turimu pločiu (LL-70); įprastu 16 px šriftu 100 % juostos (298 px)
+       didesnis už 11rem (176 px), tad plotis nepakinta. */
     controls.innerHTML = `
       <div id="deme-colors" role="group" aria-label="Dažai"
            style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;width:100%">
@@ -90,7 +95,7 @@ const demeIrSpalvos = {
             <span style="font-size:.72rem;font-weight:800">${c.name}</span>
           </button>`).join("")}
       </div>
-      <button class="btn" type="button" id="deme-guess" style="min-width:11rem">Sakau</button>
+      <button class="btn" type="button" id="deme-guess" style="min-width:min(11rem,100%)">Sakau</button>
       <button class="btn secondary" type="button" id="deme-reset"
         aria-label="Pradėti iš naujo" style="min-width:6rem">Iš naujo</button>`;
 

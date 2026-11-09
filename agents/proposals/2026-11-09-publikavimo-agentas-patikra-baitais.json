@@ -1,0 +1,17 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 191,
+  "created": "2026-11-09T12:02:00+02:00",
+  "type": "struktura",
+  "title": "check_published.py skaičiuoja ID, o ne baitus ir tik 1 klasę",
+  "body": "Šiandien patikra rodė „sutampa 35/35“, bet tai tebuvo ID aibių palyginimas: įrankis nelygina failų turinio, todėl pasenusi svetainė su tais pačiais ID būtų pavadinta suderinta. Baitų lygybę teko įrodinėti atskiru zondus (pub191.py), kuris lygino visus 35 modulius su `git show HEAD:`. Antra riba: INDEX ir PATH_DOC kietai nurodo `grade-01` (scripts/check_published.py:25, :71), tad kai bus paleista 2 klasė, įrankis jos nematys ir vėl praneš „sutampa“, nors pusė turinio gali būti nepaskelbta. Siūloma: (1) klasių sąrašą imti iš `content/lt/grades.json` (`status: live`) ir tikrinti visas, (2) kiekvieną modulio failą lyginti baitais su `HEAD`, o ne tik ID, (3) išvestyje atskirti „trūksta ID“ nuo „ID yra, turinys pasenęs“. Tai ta pati defektų šeima kaip LL-37 (tyli riba) ir LL-39 (vartai, nematantys standarto apimties).",
+  "target": "scripts/check_published.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_published.py:25 — INDEX = content/lt/grade-01/index.json (kieta klasė)",
+    "scripts/check_published.py:26 ir :72 — PATH_DOC = content/lt/grade-01/path.json (kieta klasė)",
+    "scripts/check_published.py:76-89 — lyginamos tik ID aibės (missing_on_live / hidden_locally / not_in_path), failų baitai netikrinami",
+    "paleidimas #191: baitų lygybę teko tikrinti atskiru zondus ~/.hermes/profiles/deepseek41flash/cache/scratch/pub191.py (35/35 lygūs HEAD)"
+  ]
+}

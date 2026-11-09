@@ -74,12 +74,12 @@ const metuLaikai = {
       </div>`;
 
     controls.innerHTML = `
-      <div style="display:grid;gap:.4rem;width:100%;max-width:26rem;margin:0 auto">
-        <label for="ml-month" style="display:block;text-align:center;font-weight:800;font-size:.95rem">Mėnuo: <span id="ml-mname">Sausis</span></label>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:.4rem;width:100%;max-width:26rem;margin:0 auto">
+        <label for="ml-month" style="display:block;text-align:center;font-weight:800;font-size:.95rem;min-width:0">Mėnuo: <span id="ml-mname">Sausis</span></label>
         <input id="ml-month" type="range" min="1" max="12" step="1" value="1"
                aria-label="Pasirink mėnesį"
-               style="width:100%;height:48px;accent-color:var(--ink)" />
-        <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
+               style="width:100%;max-width:100%;min-width:0;height:48px;accent-color:var(--ink)" />
+        <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;min-width:0">
           <button class="btn secondary" id="ml-prev" aria-label="Ankstesnis mėnuo">◀ Ankstesnis</button>
           <button class="btn secondary" id="ml-next" aria-label="Kitas mėnuo">Kitas ▶</button>
         </div>

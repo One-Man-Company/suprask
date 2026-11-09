@@ -2,6 +2,16 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-09 (16:03) — Publikavimo patikra #208: repo 35 / paskelbta 35, visi moduliai baitais lygūs `HEAD`
+
+- **`check_published.py`** → repo 35, paskelbta 35, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `11bcdca6`, darbinė kopija švari.
+- **Gyvi adresai (HTTP):** `content/lt/grade-01/matematika/24-komandu-seka.json` `200` (6874 B), `…/muzika/02-ritmas-ir-perkusija.json` `200` (7902 B), `…/pasaulio-pazinimas/16-vandens-busenos.json` `200` (4946 B); šaknis `200` (3487 B).
+- **Baitai, ne skaičiai:** 35/35 modulio JSON failai gyvai `200` ir baitais lygūs `git show HEAD:`. `grade-01/index.json` (`def01c20`, 10 662 B), `path.json` (`ef2ca057`, 1228 B), `grades.json` (`7370de87`, 1126 B), `audio/lt/manifest.json` (`fa9b4076`, 55 403 B, 500 raktų / 1000 takų), `main.css` (`a3c0b4fa`, 30 802 B) — lygūs. `index.html`, `app.js`, `registry.js` ir 7 sim failai (`daile`, `dorinis`, `geometrija`, `gyvenimas`, `pasaulis`, `technologijos`, `zaidimai`) skiriasi TIK `?v=11bcdca6` žyma; nulupus žymą — baitais lygūs → gyva svetainė pastatyta iš `11bcdca6`. Tai patvirtina Pages deploymentas prie `11bcdca6` (`completed/success`, 2026-11-09T14:02:32Z).
+- **Struktūra:** `index.json` 35 moduliai, 35 unikalūs ID, 9 kryptys (lietuvių 4, matematika 15, pasaulio pažinimas 6, muzika 2, žaidimų teorija 3, technologijos 2, gyvenimo įgūdžiai 1, dorinis ugdymas 1, dailė 1); `path.json` 35 žingsniai, aibės sutampa abiem kryptimis (trūksta 0, perteklius 0), tvarka neliesta.
+- **Garsas:** imtis `seed 208` — 8/8 gyvų mp3 `200`, 17 179–58 766 B; `check_audio.py` → 500 tekstų × 2 įrašai, visi Piper, `rc=0`.
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0 klaidų, 0 įspėjimų; `check_docs_facts.py` → 0 klaidų (9 kryptys, 35 moduliai); `check_view.py --base <gyva> --viewports phone,small` → 70 patikrų (35 maršrutai × 2 plotai), 0 problemų, `rc=0`.
+- **Sprendimas:** sutampa. Nieko nešalinta, ID nepernumeruoti, `path.json` nekeistas; ataskaita `agents/log/publikavimo-agentas-2026-11-09T1603.md`.
+
 ## 2026-11-09 (12:00) — Publikavimo patikra #191: repo 35 / paskelbta 35, visi moduliai baitais lygūs `HEAD`
 
 - **`check_published.py`** → repo 35, paskelbta 35, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `5a921b17`, darbinė kopija švari.

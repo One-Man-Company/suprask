@@ -1054,7 +1054,7 @@ const vandensBusenos = {
         : "";
 
       /* Vanduo, kuris išėjo į orą: silpnos srovelės toliau nuo puodo.
-         Jos rodo, kad vanduo liko ore, o ne dingo. */
+         Jos rodo, kad vanduo liko ore, o nedingo. */
       const showAir = inAir > 0 && !lid;
       const airWisps = showAir
         ? steam(286, 132, 46, 0.22) + steam(306, 122, 36, 0.18)
@@ -1160,7 +1160,11 @@ const vandensBusenos = {
         return;
       }
       if (heat === 0) {
-        msg = "Vėsioje vanduo beveik negaruoja. Pastumk šilumą į dešinę.";
+        /* Čia buvo „Vėsioje vanduo beveik negaruoja.“ — būdvardžio
+           vietininkas be daikto, kurį 6–7 m. vaikas gali perskaityti kaip
+           vietą. Slankiklio žodis yra „Vėsu“, todėl sakome „Kai vėsu“
+           (ta pati klasė kaip #5986: forma, prie kurios vaikas sustoja). */
+        msg = "Kai vėsu, vanduo beveik negaruoja. Pastumk šilumą į dešinę.";
         render();
         return;
       }

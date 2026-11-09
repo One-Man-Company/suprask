@@ -1,0 +1,136 @@
+{
+  "id": "02-ritmas-ir-perkusija",
+  "grade": 1,
+  "strand": "muzika",
+  "title": "Ritmas: plojimai ant tolygaus pulso",
+  "subtitle": "Pulsas teka tolygiai, o ritmą kuria kortelės",
+  "minutes": 10,
+  "outcomes": [
+    "Skiriu tolygų pulsą nuo ritmo ir parodau abu kartu.",
+    "Sudėlioju keturių taktų ritmą ir jį atlieku plojimais.",
+    "Paaiškinu, kodėl pakeitus korteles pulsas nepakito."
+  ],
+  "concept": {
+    "title": "Pulsas ir ritmas",
+    "big_idea": "Pulsas teka tolygiai, kaip laikrodis. Ritmas yra tai, ką ploji ant pulso.",
+    "steps": [
+      "Pirma pasakyk, kas pasikeis: pulsas ar ritmas.",
+      "Spausk langelį ir keisk kortelę: tyla, tam, ti-ti.",
+      "Spausk „Paleisk“ ir klausyk abiejų sluoksnių kartu.",
+      "Pakeisk korteles ir paleisk dar kartą. Pulsas skambės taip pat."
+    ],
+    "example": "Dainuodamas ploji žodžius, o koja vis tiek muša tolygų taktą."
+  },
+  "sim": {
+    "component": "ritmas-ir-pulsas",
+    "config": {
+      "cards": [
+        { "id": "tam", "word": "Tam", "desc": "vienas plojimas" },
+        { "id": "titi", "word": "Ti-ti", "desc": "du plojimai" },
+        { "id": "tyla", "word": "Tyla", "desc": "tyla" }
+      ],
+      "start": "tam",
+      "sentences": {
+        "ask": "Kas pasikeis, kai pakeisi korteles: pulsas ar ritmas?",
+        "guess": "Pirma pasakyk, tada keisk korteles.",
+        "start": "Pulsas skamba kas vieną. Kortelė sako, ką ploji.",
+        "listen": "Pulsas žemai, plojimai aukštai.",
+        "play": "Klausyk abiejų: pulsas žemai, plojimai aukštai.",
+        "tam": "Vienas plojimas ant pulso.",
+        "titi": "Du plojimai: antras pusiaukelėje.",
+        "tyla": "Tyla. Pulsas teka toliau.",
+        "locked": "Pirma sustabdyk, tada keisk.",
+        "stop": "Sustabdyta. Gali keisti korteles.",
+        "done": "Pulsas ėjo tolygiai, o ritmas keitėsi.",
+        "same": "Ritmas toks pat kaip pulsas.",
+        "reset": "Vėl pradžia: visos kortelės tam.",
+        "nosound": "Garsas išjungtas. Įjunk garsą viršuje ir paleisk dar kartą.",
+        "nosupport": "Šiame įrenginyje garso groti nepavyko."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Tu ploji kiekvieną pulsą. Ką tada girdi?",
+      "options": [
+        "Vieną tolygų sluoksnį",
+        "Du skirtingus sluoksnius",
+        "Visiškai tylą"
+      ],
+      "answer": 0,
+      "hint": "Palygink, ar tavo plojimas sutampa su pulsu.",
+      "why": "Kai ploji kiekvieną pulsą, abu sluoksniai sutampa."
+    },
+    {
+      "q": "Pakeitei korteles, o pulsas liko toks pat. Kas pasikeitė?",
+      "options": [
+        "Pulsas paspartėjo",
+        "Pasikeitė ritmas",
+        "Niekas nepasikeitė"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk į taškus virš kortelių.",
+      "why": "Kortelės keičia ritmą, o pulsas teka tolygiai."
+    },
+    {
+      "q": "Vaikas ploja žodžius, o koja muša tolygiai. Kas yra pulsas?",
+      "options": [
+        "Plojimas",
+        "Koja",
+        "Daina"
+      ],
+      "answer": 1,
+      "hint": "Kas nesikeičia, kol vaikas dainuoja?",
+      "why": "Koja muša tolygų pulsą, o plojimas seka žodžius."
+    },
+    {
+      "q": "Pirmas muša kas pulsą, antras — du kartus. Kas nepakito?",
+      "options": [
+        "Pulsas",
+        "Ritmas",
+        "Abu pasikeitė"
+      ],
+      "answer": 0,
+      "hint": "Klausyk, kas teka po visais smūgiais.",
+      "why": "Pulsas tas pats, keitėsi tik smūgių skaičius."
+    },
+    {
+      "q": "Vieną taktą palikai tylą. Ar pulsas tyloje dingsta?",
+      "options": [
+        "Taip, pulsas nutyla",
+        "Ne, pulsas teka toliau",
+        "Pulsas sulėtėja"
+      ],
+      "answer": 1,
+      "hint": "Paklausyk, kas skamba, kai nieko neploji.",
+      "why": "Tyla nutildo plojimus, bet pulsas teka toliau.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kurį sluoksnį lengviau išlaikyti: pulsą ar plojimus? Papasakok.",
+  "teacher": {
+    "goal": "Atskirti tolygų pulsą nuo ritmo: pulsas nesikeičia, o ritmas yra tai, ką ant jo atlieki. Modelyje pulsas fiksuotas, o keičiasi tik kortelės, todėl priežastis matoma, o ne išvedama iš paaiškinimo.",
+    "prompt": "Kodėl plodamas dainą vaikas pameta tolygų pulsą, nors ritmą ploja teisingai?",
+    "offline": "Susėskite ratu. Pirmiausia visi ploja tolygiai, kaip laikrodis, ir nieko nekeičia — tai pulsas. Tada vienas vaikas ima ploti tik ilgus žodžius, o kiti toliau ploja tolygiai. Pakeiskite ritmą: du plojimai, viena tyla, vėl du plojimai. Paklauskite, ar pulsas pasikeitė. Pabaigoje duokite keturias korteles ir paprašykite sudėlioti keturių taktų ritmą, o klasė jį atliks plojimais ant jūsų rodomo pulso.",
+    "misconceptions": [
+      "„Pulsas ir ritmas yra tas pats.“ Modelyje plojimai keičiasi, o taškai virš jų teka tuo pačiu greičiu; tylos takte pulsas girdimas toliau.",
+      "„Pakeitus korteles pasikeitė ir pulsas.“ Kortelė keičia tik tai, ką ploji; pulsas skamba kas vieną ir prieš, ir po pakeitimo.",
+      "„Tyloje muzika sustoja.“ Tyla yra ritmo dalis: plojimų nėra, o pulsas teka toliau.",
+      "„Greitesnis plojimas pagreitina pulsą.“ Du plojimai telpa į tą patį pulsą, todėl pulsas nepaspartėja."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Muzikos kūryba, komponavimas, 1–2 klasė: „Ritmo dėlionė. … Mokiniams siūloma sukurti 4-ių taktų ritminę kompoziciją, sudėliojant ją iš pateiktų ritmo kortelių. Sukurtą kompoziciją mokinys atlieka skanduodamas sutartus skiemenis arba pritaikydamas kūno perkusijos priemones“ (failas sources/pradinio-bp-rekomendacijos-2024.txt, 3508–3521 eil.); toliau pateiktas pavyzdys su skiemenimis „tam ir ti-ti“.",
+    "NŠA. Tos pačios rekomendacijos, Muzikos klausymasis, 1–2 klasė: „Judesiais ar kūno perkusija perteikti muzikos ritmą, metrą, tempo pokyčius“ (3296–3298 eil.).",
+    "NŠA. Tos pačios rekomendacijos, improvizavimas: „Ritminė improvizacija turėtų remtis aiškia ritmo pulsacija ir pasirinktu metru“ (3492 eil.).",
+    "Muzikos bendroji programa (2022): pasiekimų sritys Muzikavimas (A) ir Muzikos kūryba (B); 1–2 klasėje ritmas atliekamas kūno perkusija ir kuriama ritmo kompozicija iš kortelių.",
+    "Bonacina, S., Krizman, J., White-Schwoch, T., Nicol, T., & Kraus, N. (2019). How Rhythmic Skills Relate and Develop in School-Age Children. Global Pediatric Health, 6, 2333794X19852045. https://doi.org/10.1177/2333794X19852045 — 68 vaikai (5–8 m.): plojimas pagal tolygų pulsą ir ritmo sekos atkartojimas yra atskiri įgūdžiai, o plojimas su grįžtamuoju ryšiu siejasi su kitais ritmo testais.",
+    "Háden, G. P., & Honing, H. (2026). Critical Review on the Development and Evolution of Beat Perception. Annals of the New York Academy of Sciences. https://pmc.ncbi.nlm.nih.gov/articles/PMC13560103/ — apžvalga: 2–6 m. vaikai pulsą atpažįsta, bet sinchronizacija nepastovi, o pulso išlaikymas be išorinio garso yra silpnas; todėl modelyje pulsas skamba visą laiką."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena nauja sąvoka (pulsas kaip atskiras sluoksnis), o plojimas ir taktas lieka žinomi veiksmai; garso savybių sąrašas neplečiamas.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo atpažinti pulsą naujoje situacijoje (koja dainuojant, du būgnininkai, tylos taktas), o ne pakartoti modulio sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas prieš kortelių keitimą, kiekviena klaida turi užuominą, modelis nieko nebaudžia ir leidžia bandyti iš naujo; 5-a užduotis — praplėtimas.",
+    "P2 / T3.4 / T5.5: veiksmas prieš paaiškinimą, praplėtimo užduotis, 48 px taikiniai; pulsas ir ritmas skiriami ir žodžiu, ir tašku, ir kortele, ne vien spalva."
+  ]
+}

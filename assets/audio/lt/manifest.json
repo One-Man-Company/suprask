@@ -811,6 +811,10 @@
   "n": "n/9857ee5f9d20326c-986364ea.mp3",
   "s": "s/9857ee5f9d20326c-11bba99c.mp3"
  },
+ "Du plojimai: antras pusiaukelėje.": {
+  "n": "n/43601bf7064ab95f-d9056be4.mp3",
+  "s": "s/43601bf7064ab95f-b8a6ec6f.mp3"
+ },
  "Dvi naujos kaladėlės. Didelė medinė ir maža metalinė.": {
   "n": "n/e278741a836e576c-5454a6dd.mp3",
   "s": "s/e278741a836e576c-938b96b2.mp3"
@@ -846,6 +850,10 @@
  "Garsas išjungtas": {
   "n": "n/baf0cd4ffdbd715c-3c48511b.mp3",
   "s": "s/baf0cd4ffdbd715c-8ac7ca8e.mp3"
+ },
+ "Garsas išjungtas. Įjunk garsą viršuje ir paleisk dar kartą.": {
+  "n": "n/c5c4012c37b8788e-c9234d64.mp3",
+  "s": "s/c5c4012c37b8788e-a59a30bb.mp3"
  },
  "Garsas įjungtas": {
   "n": "n/061db2d7c4edc72f-8c518491.mp3",
@@ -923,6 +931,10 @@
   "n": "n/a173a8cebb84e1b1-80d9eea6.mp3",
   "s": "s/a173a8cebb84e1b1-a6d20f06.mp3"
  },
+ "Kas pasikeis, kai pakeisi korteles: pulsas ar ritmas?": {
+  "n": "n/d9b40529fa3121c9-772cc6da.mp3",
+  "s": "s/d9b40529fa3121c9-04a356d4.mp3"
+ },
  "Kas pasikeis: formos ar nuotaika? Pasakyk, tada keisk.": {
   "n": "n/4d4a059e036dc52a-2292c4c0.mp3",
   "s": "s/4d4a059e036dc52a-746b3262.mp3"
@@ -970,6 +982,10 @@
  "Kiškis": {
   "n": "n/4e806f63471ec890-48d3820a.mp3",
   "s": "s/4e806f63471ec890-d90fe6f9.mp3"
+ },
+ "Klausyk abiejų: pulsas žemai, plojimai aukštai.": {
+  "n": "n/2b053f0b8f2c5df5-ed72ef17.mp3",
+  "s": "s/2b053f0b8f2c5df5-8a06b845.mp3"
  },
  "Knyga": {
   "n": "n/1f143dc5ee938538-fde9cdac.mp3",
@@ -1191,6 +1207,14 @@
   "n": "n/bbbfb4885794d2cd-da6961e3.mp3",
   "s": "s/bbbfb4885794d2cd-0ea8cb4a.mp3"
  },
+ "Pirma pasakyk, tada keisk korteles.": {
+  "n": "n/76e586fb66924d2d-c80bb9be.mp3",
+  "s": "s/76e586fb66924d2d-3075cfef.mp3"
+ },
+ "Pirma sustabdyk, tada keisk.": {
+  "n": "n/8d98eca84da1aa3c-a1e1f182.mp3",
+  "s": "s/8d98eca84da1aa3c-7089f971.mp3"
+ },
  "Pirmas skaičius jau dešimtuke, o antras laukia ant stalo.": {
   "n": "n/be1b948182521b61-abb7ba9c.mp3",
   "s": "s/be1b948182521b61-4c74d3a7.mp3"
@@ -1247,6 +1271,18 @@
   "n": "n/2d4f8241c3336b71-33c16e05.mp3",
   "s": "s/2d4f8241c3336b71-1cada9f0.mp3"
  },
+ "Pulsas skamba kas vieną. Kortelė sako, ką ploji.": {
+  "n": "n/8cb40e77fabc001c-6835215e.mp3",
+  "s": "s/8cb40e77fabc001c-49150e1b.mp3"
+ },
+ "Pulsas ėjo tolygiai, o ritmas keitėsi.": {
+  "n": "n/8ba043b79326a2ca-00e11e9f.mp3",
+  "s": "s/8ba043b79326a2ca-d751a265.mp3"
+ },
+ "Pulsas žemai, plojimai aukštai.": {
+  "n": "n/9deadd952326e379-e68d462b.mp3",
+  "s": "s/9deadd952326e379-e0d247f1.mp3"
+ },
  "Pėdsakai rodo visą kelią. Kur jis pasisuko?": {
   "n": "n/87353ff8635b1855-41115b15.mp3",
   "s": "s/87353ff8635b1855-655047f3.mp3"
@@ -1270,6 +1306,10 @@
  "Ritinys nuo šono vėl atrodo kaip stačiakampis.": {
   "n": "n/03b6cedca03d8bc9-e55cb673.mp3",
   "s": "s/03b6cedca03d8bc9-5ca3a562.mp3"
+ },
+ "Ritmas toks pat kaip pulsas.": {
+  "n": "n/e9cabf259699edc6-32a35ea9.mp3",
+  "s": "s/e9cabf259699edc6-fc618e78.mp3"
  },
  "Robotas pasiekė vėliavą. Seka tinka.": {
   "n": "n/31c8282a711422b2-fe126ee0.mp3",
@@ -1407,6 +1447,10 @@
   "n": "n/bf35e2dc555cc020-03cd6819.mp3",
   "s": "s/bf35e2dc555cc020-90379820.mp3"
  },
+ "Sustabdyta. Gali keisti korteles.": {
+  "n": "n/06988fc50cfab3d9-83dbbf11.mp3",
+  "s": "s/06988fc50cfab3d9-ceb10e90.mp3"
+ },
  "Sveiki!": {
   "n": "n/5a7c3a043b7d6b1d-347efa08.mp3",
   "s": "s/5a7c3a043b7d6b1d-b1ba6e12.mp3"
@@ -1439,6 +1483,10 @@
   "n": "n/81629f8150ce5420-2d2c7908.mp3",
   "s": "s/81629f8150ce5420-b10f7653.mp3"
  },
+ "Tam": {
+  "n": "n/085baa1d3c064c31-23510c12.mp3",
+  "s": "s/085baa1d3c064c31-6022b5d4.mp3"
+ },
  "Tarp taškų atkarpa su dviem galais. Tiesė neturi galo.": {
   "n": "n/c095a5efbdb25987-f3759fe9.mp3",
   "s": "s/c095a5efbdb25987-432ddd29.mp3"
@@ -1454,6 +1502,10 @@
  "Teisingai!": {
   "n": "n/3d4e2b06ffc71b06-490fd930.mp3",
   "s": "s/3d4e2b06ffc71b06-e65d91d6.mp3"
+ },
+ "Ti-ti": {
+  "n": "n/1baf299ac2cf8410-a997cf2f.mp3",
+  "s": "s/1baf299ac2cf8410-ca8e8e89.mp3"
  },
  "Tiltas pastatytas — perėjo abu!": {
   "n": "n/2e8cb9ac1abdb1f9-e3cafef7.mp3",
@@ -1478,6 +1530,14 @@
  "Tu matei abu petnešų ilgius ir vieną petį.": {
   "n": "n/30ef59c8ede62335-bf69072d.mp3",
   "s": "s/30ef59c8ede62335-7b7e1807.mp3"
+ },
+ "Tyla": {
+  "n": "n/170ba9b291bd200a-0c170880.mp3",
+  "s": "s/170ba9b291bd200a-39cb7c60.mp3"
+ },
+ "Tyla. Pulsas teka toliau.": {
+  "n": "n/ea7f02c0ca090085-e978a36e.mp3",
+  "s": "s/ea7f02c0ca090085-7809cb8d.mp3"
  },
  "Tyliau": {
   "n": "n/50a192a31d5d4db0-5afd4ca2.mp3",
@@ -1563,6 +1623,10 @@
   "n": "n/ee6c6227d0f68c5e-eca930d9.mp3",
   "s": "s/ee6c6227d0f68c5e-42f06e85.mp3"
  },
+ "Vienas plojimas ant pulso.": {
+  "n": "n/f115762ac8ef6168-a8106622.mp3",
+  "s": "s/f115762ac8ef6168-05c2def9.mp3"
+ },
  "Visos figūros savo vietose. Puiku!": {
   "n": "n/936e4c7947cd9753-0a09e79f.mp3",
   "s": "s/936e4c7947cd9753-a2164229.mp3"
@@ -1578,6 +1642,10 @@
  "Vėl mėlyna. Paveikslas toks pat.": {
   "n": "n/fc293c945c8bbe85-c16d0ef9.mp3",
   "s": "s/fc293c945c8bbe85-aa31561d.mp3"
+ },
+ "Vėl pradžia: visos kortelės tam.": {
+  "n": "n/27dea463eaa139ea-905081de.mp3",
+  "s": "s/27dea463eaa139ea-a9909afc.mp3"
  },
  "Vėl raudona. Paveikslas toks pat.": {
   "n": "n/dd9e3c8e97ae87e3-6b0275a9.mp3",
@@ -1846,6 +1914,10 @@
  "Ši seka veda ne prie vėliavos. Viena komanda klaidinga.": {
   "n": "n/6d6f88831dc26d38-c2d34fc3.mp3",
   "s": "s/6d6f88831dc26d38-4fe26aa1.mp3"
+ },
+ "Šiame įrenginyje garso groti nepavyko.": {
+  "n": "n/4a9765d2028c9650-d277e61b.mp3",
+  "s": "s/4a9765d2028c9650-aaf4740e.mp3"
  },
  "Šilta, daug lapų, obuoliai noksta, bitės dūzgia.": {
   "n": "n/d37d19f4b16ea501-556a5c3f.mp3",

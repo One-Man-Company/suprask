@@ -62,7 +62,8 @@
       "emoji": "🎵",
       "intro": "Garsas turi savybes: klausykis, keisk ir palygink.",
       "modules": [
-        { "id": "01-garso-aukstis", "title": "Aukštas garsas ne visada garsus", "subtitle": "Aukštis ir garsumas — dvi skirtingos savybės", "file": "grade-01/muzika/01-garso-aukstis.json", "minutes": 9, "sim": "garso-aukstis" }
+        { "id": "01-garso-aukstis", "title": "Aukštas garsas ne visada garsus", "subtitle": "Aukštis ir garsumas — dvi skirtingos savybės", "file": "grade-01/muzika/01-garso-aukstis.json", "minutes": 9, "sim": "garso-aukstis" },
+        { "id": "02-ritmas-ir-perkusija", "title": "Ritmas: plojimai ant tolygaus pulso", "subtitle": "Pulsas teka tolygiai, o ritmą kuria kortelės", "file": "grade-01/muzika/02-ritmas-ir-perkusija.json", "minutes": 10, "sim": "ritmas-ir-pulsas" }
       ]
     },
     {

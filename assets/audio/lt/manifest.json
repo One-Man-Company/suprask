@@ -875,18 +875,6 @@
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
   "s": "s/60d89cb04b7054d4-58e113db.mp3"
  },
- "Gretasienis iš priekio atrodo kaip stačiakampis.": {
-  "n": "n/9ec471ce9fcf62a4-360ba9f2.mp3",
-  "s": "s/9ec471ce9fcf62a4-bb05e252.mp3"
- },
- "Gretasienis iš viršaus irgi atrodo kaip stačiakampis.": {
-  "n": "n/ea1b6eb2124773ad-5904befc.mp3",
-  "s": "s/ea1b6eb2124773ad-e15ea4e2.mp3"
- },
- "Gretasienis nuo šono irgi atrodo kaip stačiakampis.": {
-  "n": "n/0774e9bd38ac9bdf-a1714d7c.mp3",
-  "s": "s/0774e9bd38ac9bdf-8131ec28.mp3"
- },
  "H": {
   "n": "n/44bd7ae60f478fae-2a69b4b5.mp3",
   "s": "s/44bd7ae60f478fae-d14b26a3.mp3"
@@ -1426,6 +1414,18 @@
  "Spėjimas įrašytas. Spausk „Nuleisk į vandenį“.": {
   "n": "n/237272ffa0e70314-8dc07c48.mp3",
   "s": "s/237272ffa0e70314-23d00f9c.mp3"
+ },
+ "Stačiakampis gretasienis iš priekio atrodo kaip stačiakampis.": {
+  "n": "n/249316b838df9485-1a259bf6.mp3",
+  "s": "s/249316b838df9485-31146597.mp3"
+ },
+ "Stačiakampis gretasienis iš viršaus irgi atrodo kaip stačiakampis.": {
+  "n": "n/7a9597f58a01837d-3a717a79.mp3",
+  "s": "s/7a9597f58a01837d-15db4d99.mp3"
+ },
+ "Stačiakampis gretasienis nuo šono irgi atrodo kaip stačiakampis.": {
+  "n": "n/8e83fef04200b9f4-f2a4c557.mp3",
+  "s": "s/8e83fef04200b9f4-7d2f5fc0.mp3"
  },
  "Stulpelio aukštis rodo skaičių.": {
   "n": "n/9a2915bce2544c16-cea31696.mp3",

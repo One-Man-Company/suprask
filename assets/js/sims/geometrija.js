@@ -37,8 +37,11 @@ const SHAPES = {
 };
 
 /**
- * Kūnai ir jų vaizdai iš trijų pusių. Lentelė yra vienintelis tiesos
- * šaltinis: ir piešinys, ir grįžtamasis ryšys, ir garso sakiniai remiasi ja.
+ * Kūnai ir jų vaizdai iš trijų pusių. Lentelėje lieka tai, ko negalima
+ * perkelti į turinį be matematikos: oficialus vardas, galininkas ir trys
+ * vaizdai. Paaiškinimai (`why`) yra vaikui skaitomas tekstas, todėl jie
+ * imami iš `sim.config.bodies` (#8987) — kalbos redaktorius gali juos
+ * pataisyti nekeisdamas kodo.
  *
  * Vardai — oficialūs (NŠA 2024, matematikos programa 1 klasei): ne
  * „gretasienis“, o „stačiakampis gretasienis“. Modulio rezultatas moko to
@@ -49,35 +52,30 @@ const BODIES = [
     id: "kugis",
     name: "Kūgis",
     acc: "kūgį",
-    why: "Kūgio pagrindas apvalus, o viršus smailas.",
     views: { priekis: "trikampis", virsus: "apskritimas", sonas: "trikampis" },
   },
   {
     id: "ritinys",
     name: "Ritinys",
     acc: "ritinį",
-    why: "Ritinio galai apvalūs, o šonas tiesus.",
     views: { priekis: "staciakampis", virsus: "apskritimas", sonas: "staciakampis" },
   },
   {
     id: "kubas",
     name: "Kubas",
     acc: "kubą",
-    why: "Visos kubo sienos yra kvadratai.",
     views: { priekis: "kvadratas", virsus: "kvadratas", sonas: "kvadratas" },
   },
   {
     id: "gretasienis",
     name: "Stačiakampis gretasienis",
     acc: "stačiakampį gretasienį",
-    why: "Visos jo sienos yra stačiakampiai.",
     views: { priekis: "staciakampis", virsus: "staciakampis", sonas: "staciakampis" },
   },
   {
     id: "rutulys",
     name: "Rutulys",
     acc: "rutulį",
-    why: "Rutulys apvalus iš visų pusių.",
     views: { priekis: "apskritimas", virsus: "apskritimas", sonas: "apskritimas" },
   },
 ];
@@ -105,6 +103,15 @@ function iconMarkup(id) {
 const erdvinesFiguros = {
   mount({ stage, controls, api, config }) {
     const S = config.sentences || {};
+    /* Vaikui rodomi tekstai — tik iš turinio (#8987). `labels` yra trumpi
+       užrašai, `notes` — pastabos, `bodies` — kūno paaiškinimai. Garso
+       rinkimas (`generate_audio.collect()`) šių raktų nerenka, nes jie
+       nėra tariami, todėl naujų mp3 įrašų nereikia. */
+    const L = config.labels || {};
+    const N = config.notes || {};
+    const B = config.bodies || {};
+    const prose = (obj, key) => (typeof obj[key] === "string" ? obj[key].trim() : "");
+    const join = (...parts) => parts.filter(Boolean).join(" ");
     const VIEW_KEYS = VIEWS.map((v) => v.id);
 
     /* `revealed` — kuriuos (kūnas, kryptis) vaizdus vaikas jau matė.
@@ -141,20 +148,20 @@ const erdvinesFiguros = {
              style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7.5rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7rem,100%),1fr));gap:.5rem;margin-top:.7rem;box-sizing:border-box">
           <figure style="margin:0;text-align:center;min-width:0">
-            <svg id="ef-solid" viewBox="0 0 200 200" width="100%" role="img" aria-label="Kūnas ant stalo"
+            <svg id="ef-solid" viewBox="0 0 200 200" width="100%" role="img"
                  style="display:block;max-height:11rem;margin:0 auto"></svg>
-            <figcaption style="font-size:.85rem;color:var(--ink-soft);font-weight:700">Kūnas ant stalo</figcaption>
+            <figcaption id="ef-solid-cap" style="font-size:.85rem;color:var(--ink-soft);font-weight:700"></figcaption>
           </figure>
           <figure style="margin:0;text-align:center;min-width:0">
-            <svg id="ef-flat" viewBox="0 0 200 200" width="100%" role="img" aria-label="Ką matai"
+            <svg id="ef-flat" viewBox="0 0 200 200" width="100%" role="img"
                  style="display:block;max-height:11rem;margin:0 auto"></svg>
-            <figcaption id="ef-flat-cap" style="font-size:.85rem;color:var(--ink-soft);font-weight:700">Ką matai?</figcaption>
+            <figcaption id="ef-flat-cap" style="font-size:.85rem;color:var(--ink-soft);font-weight:700"></figcaption>
           </figure>
         </div>
-        <p style="margin:.7rem 0 .3rem;font-size:.85rem;font-weight:800;color:var(--ink-soft);text-align:center">Iš kur žiūri? Ką matei, lieka po mygtuku.</p>
+        <p id="ef-views-heading" style="margin:.7rem 0 .3rem;font-size:.85rem;font-weight:800;color:var(--ink-soft);text-align:center"></p>
         <div id="ef-views" role="group" aria-label="Iš kur žiūri"
              style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(5rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
-        <p style="margin:.7rem 0 .3rem;font-size:.85rem;font-weight:800;color:var(--ink-soft);text-align:center">Kokią formą matai?</p>
+        <p id="ef-shapes-heading" style="margin:.7rem 0 .3rem;font-size:.85rem;font-weight:800;color:var(--ink-soft);text-align:center"></p>
         <div id="ef-shapes" role="group" aria-label="Kokią formą matai"
              style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(6.4rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
       </div>`;
@@ -172,6 +179,25 @@ const erdvinesFiguros = {
     if (introEl) introEl.textContent = intro;
     const flatSvg = stage.querySelector("#ef-flat");
     const flatCap = stage.querySelector("#ef-flat-cap");
+    const solidCap = stage.querySelector("#ef-solid-cap");
+    const viewsHeading = stage.querySelector("#ef-views-heading");
+    const shapesHeading = stage.querySelector("#ef-shapes-heading");
+    const solidCaption = prose(L, "solidCaption");
+    const flatCaption = prose(L, "flatCaption");
+
+    /* Užrašai imami iš `config.labels` (#8987). Jei rakto nėra, elementas
+       paslepiamas — antras to paties sakinio egzempliorius kode būtų
+       dviejų šaltinių defektas (LL-42). */
+    const showLabel = (el, value) => {
+      if (!el) return;
+      el.textContent = value;
+      el.hidden = !value;
+    };
+    showLabel(solidCap, solidCaption);
+    showLabel(viewsHeading, prose(L, "viewsHeading"));
+    showLabel(shapesHeading, prose(L, "shapesHeading"));
+    if (solidCaption) solidSvg.setAttribute("aria-label", solidCaption);
+    if (flatCaption) flatSvg.setAttribute("aria-label", flatCaption);
     const bodiesEl = stage.querySelector("#ef-bodies");
     const viewsEl = stage.querySelector("#ef-views");
     const shapesEl = stage.querySelector("#ef-shapes");
@@ -230,12 +256,14 @@ const erdvinesFiguros = {
         const shape = SHAPES[b.views[view]];
         flatSvg.innerHTML = art.flatShape(b.views[view], 100, 100, 150, 5);
         flatSvg.setAttribute("aria-label", `${v.label} matai: ${shape.acc}.`);
+        flatCap.hidden = false;
         flatCap.textContent = `${v.prep.charAt(0).toUpperCase() + v.prep.slice(1)} matai ${shape.acc}`;
       } else {
         flatSvg.innerHTML = `<text x="100" y="128" text-anchor="middle" font-family="system-ui, sans-serif"
               font-size="96" font-weight="900" fill="var(--ink-faint)">?</text>`;
         flatSvg.setAttribute("aria-label", "Vaizdas dar neatskleistas");
-        flatCap.textContent = `Ką matai ${v.prep}?`;
+        flatCap.hidden = false;
+        flatCap.textContent = flatCaption ? `${flatCaption} ${v.prep}?` : "?";
       }
 
       bodyBtns.forEach((btn) => mark(btn, btn.dataset.body === body));
@@ -261,7 +289,7 @@ const erdvinesFiguros = {
 
     function announcePrompt() {
       api.readout(promptText());
-      api.note("Tas pats kūnas iš skirtingų pusių atrodo skirtingai.");
+      api.note(prose(N, "prompt"));
     }
 
     function speakOnce(text) {
@@ -299,14 +327,15 @@ const erdvinesFiguros = {
       else head = `Tu spėjai ${SHAPES[guess].acc}. Iš tikrųjų ${b.name.toLowerCase()} ${v.prep}: matai ${shape.acc}.`;
 
       const finished = checkGoal();
-      api.readout(finished ? `${head} Apžiūrėjai jį iš trijų pusių.` : head);
+      api.readout(finished ? join(head, prose(N, "allSides")) : head);
 
+      const why = prose(B, body);
       let note;
-      if (!guess) note = "Pats kūnas nepasikeitė. Pasikeitė tik vaizdas.";
-      else if (guess === target) note = `${b.why} Pats kūnas liko tas pats.`;
-      else note = `${b.why} Pažiūrėk į paveikslą dešinėje.`;
+      if (!guess) note = prose(N, "revealed");
+      else if (guess === target) note = join(why, prose(N, "sameBody"));
+      else note = join(why, prose(N, "lookRight"));
       // Viena pastaba, o ne dvi iš eilės: `api.note` keičia tekstą, ne prideda.
-      if (finished) note = `${note} Trys vaizdai, vienas kūnas.`;
+      if (finished) note = join(note, prose(N, "goal"));
       api.note(note);
 
       speakOnce(S[`${b.id}-${v.id}`]);
@@ -327,10 +356,13 @@ const erdvinesFiguros = {
         const b = byId(body);
         const shape = SHAPES[b.views[view]];
         const prep = viewById(view).prep;
-        api.readout(`${prep.charAt(0).toUpperCase() + prep.slice(1)} matai ${shape.acc}. Pasirink, iš kur dar žiūrėsi.`);
+        api.readout(join(
+          `${prep.charAt(0).toUpperCase() + prep.slice(1)} matai ${shape.acc}.`,
+          prose(N, "chooseView"),
+        ));
       } else {
         api.readout(promptText());
-        api.note("Spėk formą arba spausk „Rodyk vaizdą“.");
+        api.note(prose(N, "guess"));
       }
     }));
 
@@ -347,7 +379,7 @@ const erdvinesFiguros = {
          iš vieno šaltinio. Atsarginis — kitais žodžiais ir tik kai config
          sakinio nėra. */
       api.readout(S["is-naujo"] || "Pradedam iš naujo.");
-      api.note("Tas pats kūnas iš skirtingų pusių atrodo skirtingai.");
+      api.note(prose(N, "prompt"));
       speakOnce(S["is-naujo"]);
     });
 

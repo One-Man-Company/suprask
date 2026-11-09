@@ -25,6 +25,29 @@
     "component": "erdvines-figuros",
     "config": {
       "intro": "Pasirink kūną ir spėk, kokią formą matai. Tada rinkis: iš priekio, iš viršaus ar nuo šono.",
+      "labels": {
+        "solidCaption": "Kūnas ant stalo",
+        "flatCaption": "Ką matai",
+        "viewsHeading": "Iš kur žiūri? Ką matei, lieka po mygtuku.",
+        "shapesHeading": "Kokią formą matai?"
+      },
+      "notes": {
+        "prompt": "Tas pats kūnas iš skirtingų pusių atrodo skirtingai.",
+        "revealed": "Pats kūnas nepasikeitė. Pasikeitė tik vaizdas.",
+        "lookRight": "Pažiūrėk į paveikslą dešinėje.",
+        "goal": "Trys vaizdai, vienas kūnas.",
+        "chooseView": "Pasirink, iš kur dar žiūrėsi.",
+        "guess": "Spėk formą arba spausk „Rodyk vaizdą“.",
+        "allSides": "Apžiūrėjai jį iš trijų pusių.",
+        "sameBody": "Pats kūnas liko tas pats."
+      },
+      "bodies": {
+        "kugis": "Kūgio pagrindas apvalus, o viršus smailas.",
+        "ritinys": "Ritinio galai apvalūs, o šonas tiesus.",
+        "kubas": "Visos kubo sienos yra kvadratai.",
+        "gretasienis": "Visos jo sienos yra stačiakampiai.",
+        "rutulys": "Rutulys apvalus iš visų pusių."
+      },
       "sentences": {
         "kugis-priekis": "Kūgis iš priekio atrodo kaip trikampis.",
         "kugis-virsus": "Kūgis iš viršaus atrodo kaip apskritimas.",

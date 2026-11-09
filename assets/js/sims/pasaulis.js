@@ -918,28 +918,42 @@ const vandensBusenos = {
         </p>
       </div>`;
 
+    /* Valdiklių juosta. 200 % tekste (32 px šaknis) mygtukų `flex-basis:8.5rem`
+       yra 272 px, o 360 px ekrane juostai lieka 241 px. Tinklelis turėjo
+       numanomą (`auto`) takelį, kurio minimumas — vaiko `min-content` (266 px),
+       todėl mygtukai ir šilumos slankiklis išsikišdavo 25 px iš kortelės į
+       puslapio paraštę (matuota: kortelė 241/270 @360/32, 295/299 @414/32).
+       `minmax(0,1fr)` leidžia takeliui susitraukti, o `flex-wrap` juostai
+       išdėlioja mygtukus po vieną pilnu pločiu vietoj išsikišimo (pasiūlymo
+       #4739 klasė — tas pats `min-width:auto`, kaip augalo sąlygų eilutėse).
+
+       Mygtukų horizontalus paddingas `.btn` yra 1.4rem (44,8 px prie 32 px
+       šaknies), todėl „Pakaitink“ (176,7 px teksto) su juo neišsiteko į 241 px.
+       Vietoj fiksuoto rem imame `min(1.4rem,9 %)`: 16 px šaknyje tai vis dar
+       22,4 px, o 200 % tekste ribą nustato turimas plotis (9 % iš 241 = 21,7 px).
+       Vertikalus paddingas neliestas, taikiniai lieka 84–127 px aukščio. */
     controls.innerHTML = `
-      <div style="display:grid;gap:.6rem;width:100%;max-width:32rem;margin:0 auto">
-        <div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:.6rem;width:100%;max-width:32rem;margin:0 auto">
+        <div style="min-width:0">
           <label for="vb-heat" style="display:block;text-align:center;font-weight:800;font-size:.95rem">
             Šiluma: <span id="vb-heat-word">Šilta</span>
           </label>
           <input id="vb-heat" type="range" min="0" max="2" step="1" value="1"
                  aria-label="Šiluma po puodu: vėsu, šilta arba verdantis"
-                 style="width:100%;height:48px;accent-color:var(--ink)" />
+                 style="width:100%;height:48px;margin:0;accent-color:var(--ink)" />
           <div aria-hidden="true" style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink-soft);padding:0 .3rem">
             <span>Vėsu</span><span>Šilta</span><span>Verdantis</span>
           </div>
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center">
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;min-width:0">
           <button class="btn" id="vb-boil" aria-label="Pakaitink puodą kelias minutes"
-                  style="flex:1 1 8.5rem;min-height:48px">Pakaitink</button>
+                  style="flex:1 1 8.5rem;min-height:48px;padding-inline:min(1.4rem,9%)">Pakaitink</button>
           <button class="btn secondary" id="vb-lid" aria-pressed="false"
-                  style="flex:1 1 8.5rem;min-height:48px">Uždėti dangtį</button>
+                  style="flex:1 1 8.5rem;min-height:48px;padding-inline:min(1.4rem,9%)">Uždėti dangtį</button>
           <button class="btn secondary" id="vb-back" aria-label="Pakreipk dangtį ir grąžink lašus į puodą"
-                  style="flex:1 1 8.5rem;min-height:48px">Grąžink lašus</button>
+                  style="flex:1 1 8.5rem;min-height:48px;padding-inline:min(1.4rem,9%)">Grąžink lašus</button>
           <button class="btn ghost" id="vb-reset" aria-label="Pradėti bandymą iš naujo"
-                  style="flex:0 0 auto;min-height:48px">Iš naujo</button>
+                  style="flex:0 0 auto;min-height:48px;padding-inline:min(1.4rem,9%)">Iš naujo</button>
         </div>
       </div>`;
 

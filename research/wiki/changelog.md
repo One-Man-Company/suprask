@@ -2,6 +2,18 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-09 (23:06) — Publikavimo patikra #212: repo 35 / paskelbta 35, svetainė pastatyta iš `b4a6fac3`
+
+- **`check_published.py`** (nuo #211 jau lygina ir baitus, ne tik ID) → repo 35, paskelbta 35, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `path_differs` [], `unpushed_commits` 0, `live_error` tuščias, `rc=0`.
+- **Būsena:** `HEAD` = `origin/main` = `b4a6fac35111217edf907ad5fe5e0b40647762e4`; `git status --porcelain -uall` tuščias. Gyvas `index.html` neša `?v=b4a6fac3` — svetainė pastatyta būtent iš `HEAD`, ne iš ankstesnio `99b8a34`.
+- **3 realios gyvos patikros (HTTP):** `content/lt/grade-01/daile/01-spalva-ir-nuotaika.json` `200` (6242 B), `…/matematika/24-komandu-seka.json` `200` (6874 B), `…/pasaulio-pazinimas/16-vandens-busenos.json` `200` (4946 B). Papildomai `…/pasaulio-pazinimas/18-kuprine-ir-kuno-dalys.json` `200` (8051 B) ir šaknis `200` (3487 B).
+- **Baitai, ne skaičiai (assets, kurių `check_published.py` neapima):** 21/21 — `index.html`, `main.css`, `app.js`, `registry.js`, `progress.js`, `speech.js`, visi 10 sim failų, garso manifestas (500 raktų / 1000 takų), `grades.json`, `index.json`, `path.json` gyvai baitais lygūs `git cat-file blob HEAD:` po to, kai iš gyvo failo **pašalinama** `?v=<sha8>` žyma (LL-76). Skirtumų 0.
+- **Garsas:** imtis `seed 212` — 16/16 gyvų mp3 (`n` ir `s`) `200`, ID3 antraštė, 18 433–69 215 B.
+- **Naršyklė gyvai:** `check_view.py --base <gyva> --viewports small` → 35 maršrutai × 360 px, 0 problemų, `rc=0`.
+- **Nutekėjimo patikra:** `agents/state.json`, `agents/AGENTS.md`, `docs/ARCHITEKTURA.md`, `scripts/check_published.py`, `research/wiki/changelog.md` → `404`; `404.html` → `200`.
+- **Ką tai reiškia turiniui:** nuo #209 turinys ir assets nekeitėsi (tarpinis #211 keitė tik `agents/`, `dashboard/`, `scripts/`), tad vaiko `localStorage` pažanga rodo į tuos pačius modulius. #210 (19:38) patikra changelog įrašo nepaliko — šis įrašas ją uždengia tais pačiais skaičiais, ne nauju teiginiu.
+- **Sprendimas:** sutampa. Nieko nešalinta, ID nepernumeruoti, `path.json` nekeistas; ataskaita `agents/log/publikavimo-agentas-2026-11-09T2306.md`.
+
 ## 2026-11-09 (16:40) — Publikavimo patikra #209 (leidėjas): repo 35 / gyvai 35, svetainė pastatyta iš `97ed524`
 
 - **Būsena:** `HEAD` = `origin/main` = `97ed524d` (0 neišstumtų commit'ų, 0 neprijungtų nuotolinių šakų, `git status --porcelain -uall` tuščias).

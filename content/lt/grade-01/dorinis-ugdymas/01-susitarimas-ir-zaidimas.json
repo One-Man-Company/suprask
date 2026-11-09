@@ -1,0 +1,120 @@
+{
+  "id": "01-susitarimas-ir-zaidimas",
+  "grade": 1,
+  "strand": "dorinis-ugdymas",
+  "title": "Kai vienas nustoja, nukenčia visi",
+  "subtitle": "Bendras darbas baigiamas tik tada, kai padeda visi",
+  "minutes": 9,
+  "outcomes": [
+    "Paaiškinu, kas nutinka bendram darbui, kai vienas nustoja laikytis susitarimo.",
+    "Pasakau, kodėl taisyklė galioja visiems, o ne vien tam, kas ją pamiršo.",
+    "Pasiūlau, ką daryti, kad susitarimo laikytųsi visi."
+  ],
+  "concept": {
+    "title": "Susitarimas ir bendras darbas",
+    "big_idea": "Kai darbas bendras, be vieno vaiko jis nebaigiamas. Susitarimas galioja tiek, kiek jo laikosi visi.",
+    "steps": [
+      "Trys vaikai stato vieną bokštą. Kiekvienas deda po bloką.",
+      "Pirma spėk, ar bokštas bus baigtas. Tada statyk.",
+      "Vieną kartą leisk visiems dėti. Kitą kartą vienam neleisk.",
+      "Palygink: kai deda visi, stogas uždedamas. Kai vieno trūksta, bokštas nebaigtas."
+    ],
+    "example": "Klasėje sutarta, kad visi po žaidimo sudeda kaladėles. Vienas vaikas palieka savo kaladėles ant grindų. Kitas žaidimas prasideda vėliau, nes klasė netvarkinga."
+  },
+  "sim": {
+    "component": "susitarimo-bokstas",
+    "config": {
+      "kids": [
+        { "id": "a", "name": "Rūta", "initial": "R", "color": "#7cc0ea", "dark": "#2f7cb5" },
+        { "id": "b", "name": "Tomas", "initial": "T", "color": "#7cc47a", "dark": "#357a3a" },
+        { "id": "c", "name": "Ieva", "initial": "I", "color": "#f0b45a", "dark": "#a85f16" }
+      ],
+      "rounds": 3,
+      "sentences": {
+        "ask": "Ar bokštas bus baigtas? Pirma spėk, tada statyk.",
+        "stand": "Bokštas baigtas. Visi trys laikėsi eilės.",
+        "fall": "Bokštas nebaigtas. Visiems trūksta vieno stulpo."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Trys vaikai stato vieną bokštą. Kiekvienas deda po bloką. Vienas nustoja dėti. Kas nutinka?",
+      "options": [
+        "Bokštas lieka toks pat",
+        "Bokštas lieka nebaigtas visiems",
+        "Nukenčia tik tas, kuris nustojo"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, ar stogas turi į ką atsiremti.",
+      "why": "Be vieno stulpo stogas neuždedamas, todėl bokštas nebaigtas visiems."
+    },
+    {
+      "q": "Kodėl vieno vaiko darbas svarbus visiems?",
+      "options": [
+        "Nes visi stato tą patį bokštą",
+        "Nes blokai priklauso tam vaikui",
+        "Nes vaikai stato po vieną"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kas laiko bendrą stogą.",
+      "why": "Bendrame darbe kiekvienas stulpas laiko visą bokštą."
+    },
+    {
+      "q": "Klasė sutarė po darbo sudėti dažus. Vienas vaikas palieka dažus ant stalo. Kas nutinka kitiems?",
+      "options": [
+        "Niekas nepastebi",
+        "Tik tas vaikas turi tvarkytis",
+        "Kiti negali pradėti kito darbo"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, ar stalas reikalingas visiems.",
+      "why": "Kol stalas netvarkingas, kitas darbas negali prasidėti."
+    },
+    {
+      "q": "Žaidime sutarta, kad kiekvienas gauna po tris korteles. Vienas vaikas pasiima penkias. Ką tai reiškia kitiems?",
+      "options": [
+        "Niekas nepasikeis",
+        "Kitiems lieka mažiau kortelių",
+        "Tas vaikas laimės daugiau"
+      ],
+      "answer": 1,
+      "hint": "Suskaičiuok, kiek kortelių liko kitiems.",
+      "why": "Kai vienas pasiima daugiau, kitiems lieka mažiau."
+    },
+    {
+      "q": "Kaip elgtis, kai draugas nustoja?",
+      "options": [
+        "Nustoti dirbti ir išeiti",
+        "Ramiai priminti susitarimą ir paprašyti padėti",
+        "Sugriauti ir kitų darbą"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, kad susitarimas yra bendras reikalas.",
+      "why": "Kai primeni susitarimą ramiai, visi gali tęsti darbą.",
+      "optional": true
+    }
+  ],
+  "reflect": "Ką jauti, kai draugas nustoja laikytis susitarimo? Ką jam pasakytum?",
+  "teacher": {
+    "goal": "Suprasti, kad bendrame darbe vieno vaiko indėlis reikalingas visiems, o susitarimas galioja tik tada, kai jo laikosi visi.",
+    "prompt": "Kas nutinka, kai vienas nustoja dėti? Kodėl tai liečia ir kitus vaikus?",
+    "offline": "Duokite trims vaikams po tris kaladėles ir sutarkite, kad kiekvienas stato savo stulpą į bendrą bokštą. Pirmą kartą padeda visi trys, tada ant viršaus dedama knyga. Antrą kartą vienas vaikas pasilieka savo kaladėles. Paklauskite, ar bokštas toks, kaip sutarta, ir kam jo trūksta. Tada grąžinkite ėjimą ir pakartokite.",
+    "misconceptions": [
+      "„Jei aš nesilaikau taisyklės, tai liečia tik mane.“ Modelyje vieno vaiko stulpo trūksta, todėl bendras bokštas nebaigiamas ir kitiems.",
+      "„Susitarimas yra suaugusiojo taisyklė.“ Vaikai patys stato ir mato, kad be kiekvieno indėlio jų pačių tikslas nepasiekiamas.",
+      "„Pakanka, kad daugumos laikytųsi.“ Bokštas sutartas iš trijų stulpų; be vieno jis ne toks, kaip sutarta, nors du vaikai dėjo."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), dorinis ugdymas (etika): „Bendrai aptariami visuotini susitarimai“.",
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024): „Etikos programa pradiniame ugdyme yra integruota… per kitus dalykus ir įvairias veiklas“.",
+    "Piaget, J. (1932). The Moral Judgment of the Child. London: Kegan Paul. (6–7 m. vaikas taisykles linkęs laikyti suaugusiojo nustatytomis, o ne susitarimu.)",
+    "Tomasello, M., & Vaish, A. (2013). Origins of human cooperation and morality. Annual Review of Psychology, 64, 231–255. https://doi.org/10.1146/annurev-psych-113011-143812"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (bendras susitarimas), o bokšto statymas turi vieną kintamąjį — kas nustoja dėti.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo perkelti sąvoką į klasės ir žaidimo situacijas, o ne atkartoti apibrėžimą.",
+    "3 žingsnis — pagalba laiku: kiekviena klaida turi užuominą, modelis leidžia bandyti iš naujo, o spėjimas lyginamas su tuo, kas įvyko."
+  ]
+}

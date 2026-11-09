@@ -9,7 +9,7 @@ Ne įsiminti — suprasti. Simuliacijos, modeliai ir žaidimai, kurie paaiškina
 
 ## Kas yra viduje (šiandien)
 
-**1 klasė — 8 kryptys, 32 modulių, 32 interaktyvių simuliacijų:**
+**1 klasė — 9 kryptys, 33 modulių, 33 interaktyvių simuliacijų:**
 
 | Kryptis | Moduliai |
 |---|---|
@@ -20,6 +20,7 @@ Ne įsiminti — suprasti. Simuliacijos, modeliai ir žaidimai, kurie paaiškina
 | 🤝 Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius |
 | 🔌 Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas |
 | 💛 Gyvenimo įgūdžiai | Dovana: kodėl vienas džiaugiasi, kitas ne |
+| 🕊️ Dorinis ugdymas | Kai vienas nustoja, nukenčia visi |
 | 🎨 Dailė | Dailė: ta pati forma, kita spalva |
 
 Kiekvienas modulis: viena didelė idėja → simuliacija → paaiškinimas → 4–5 užduotys → refleksija → blokas mokytojui ir tėvams (su veikla be ekrano ir dažnomis klaidomis).
@@ -108,7 +109,7 @@ HTTP prieiga ribojama Tailscale tinklu — jokio prisijungimo ekrano. Žr. [`das
 
 ## Garsas
 
-Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 471 tekstas po du variantus (sakinys ir skiemuo) — 942 įrašų, ~27 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
+Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 474 tekstai po du variantus (sakinys ir skiemuo) — 948 įrašų, ~26 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
 
 ## Licencijos
 
@@ -121,6 +122,6 @@ Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė
 | | |
 |---|---|
 | Versija | 0.1 (2026-11) |
-| Parengta | 1 klasė — 8 kryptys, 32 modulių, 32 simuliacijų, 137 užduotys |
+| Parengta | 1 klasė — 9 kryptys, 33 modulių, 33 simuliacijų, 142 užduotys |
 | Toliau | 2 klasė, tada 3–4 |
 | Kalbos | lietuvių (struktūra paruošta kitoms) |

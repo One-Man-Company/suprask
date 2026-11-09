@@ -98,6 +98,16 @@
       ]
     },
     {
+      "id": "dorinis-ugdymas",
+      "grade": 1,
+      "title": "Dorinis ugdymas",
+      "emoji": "🕊️",
+      "intro": "Susitarimai ir rūpestis kitu: ką reiškia gyventi ir dirbti kartu.",
+      "modules": [
+        { "id": "01-susitarimas-ir-zaidimas", "title": "Kai vienas nustoja, nukenčia visi", "subtitle": "Bendras darbas baigiamas tik tada, kai padeda visi", "file": "grade-01/dorinis-ugdymas/01-susitarimas-ir-zaidimas.json", "minutes": 9, "sim": "susitarimo-bokstas" }
+      ]
+    },
+    {
       "id": "daile",
       "grade": 1,
       "title": "Dailė",

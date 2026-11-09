@@ -567,6 +567,10 @@
   "n": "n/d60877883231afcc-89b11dae.mp3",
   "s": "s/d60877883231afcc-33128294.mp3"
  },
+ "Ar bokštas bus baigtas? Pirma spėk, tada statyk.": {
+  "n": "n/9038b62647cab700-944feae6.mp3",
+  "s": "s/9038b62647cab700-96eb6de0.mp3"
+ },
  "Atkarpa ilgesnė. Ji vis dar turi du galus.": {
   "n": "n/96cea72c8e4c28bf-ea64f2e5.mp3",
   "s": "s/96cea72c8e4c28bf-b8c26745.mp3"
@@ -618,6 +622,14 @@
  "Bakstelėk figūrą. Ji įsiskaito į savo grupę.": {
   "n": "n/5d730d6540952a24-d9140fb7.mp3",
   "s": "s/5d730d6540952a24-82ec682c.mp3"
+ },
+ "Bokštas baigtas. Visi trys laikėsi eilės.": {
+  "n": "n/aed22faebf5b8ad4-6facec28.mp3",
+  "s": "s/aed22faebf5b8ad4-b4d307a6.mp3"
+ },
+ "Bokštas nebaigtas. Visiems trūksta vieno stulpo.": {
+  "n": "n/8897cc3a91841130-977dd4f4.mp3",
+  "s": "s/8897cc3a91841130-57174ec3.mp3"
  },
  "C": {
   "n": "n/6b23c0d5f35d1b11-9538f709.mp3",

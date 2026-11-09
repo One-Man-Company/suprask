@@ -4,7 +4,7 @@ tipas: klase
 klase: 1
 amzius: "6–7"
 koncentras: "1–2 klasių koncentras"
-atnaujinta: 2026-11-08
+atnaujinta: 2026-11-09
 ---
 
 # 1 klasė (6–7 metai)
@@ -14,7 +14,7 @@ atnaujinta: 2026-11-08
 ## Programa
 
 - **Koncentras:** 1–2 klasių koncentras
-- **Dalykai:** lietuvių kalba ir literatūra, matematika, pasaulio pažinimas (visuomeninis ugdymas + gamtos mokslai), dailė, muzika, technologijos, fizinis ugdymas, gyvenimo įgūdžiai, informatika (integruotai)
+- **Dalykai:** lietuvių kalba ir literatūra, matematika, pasaulio pažinimas (visuomeninis ugdymas + gamtos mokslai), dailė, muzika, technologijos, fizinis ugdymas, gyvenimo įgūdžiai, dorinis ugdymas, informatika (integruotai)
 
 ## Ką platforma gali duoti šiai klasei
 
@@ -38,11 +38,12 @@ atnaujinta: 2026-11-08
 | Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius | 3 — gyva |
 | Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas | 2 — gyva |
 | Gyvenimo įgūdžiai | Dovana: kodėl vienas džiaugiasi, kitas ne | 1 — gyva |
+| Dorinis ugdymas | Kai vienas nustoja, nukenčia visi | 1 — gyva |
 | Dailė | Dailė: ta pati forma, kita spalva | 1 — gyva |
 
 ## Statusas
 
-**Live.** 32 modulių, 8 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
+**Live.** 33 modulių, 9 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
 
 ## Susieti
 

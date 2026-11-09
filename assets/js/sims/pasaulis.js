@@ -15,10 +15,12 @@ const svgEl = (tag, attrs = {}) => {
 /* 1. Metų laikai — metų ratas                                         */
 /* ------------------------------------------------------------------ */
 /* Vienas kintamasis — mėnuo. Iš jo išvedama dienos trukmė, saulės
-   kelio aukštis ir medžio būsena. Tai modelis, o ne keturi paruošti
+   kelio aukštis ir lapų stadija. Tai modelis, o ne keturi paruošti
    paveikslėliai: tempiant per metus matyti, kad pokytis laipsniškas,
    o ne „persijungia“ tam tikrą dieną. Dienos trukmė — apytikrė
-   Vilniaus platumai (≈55° š. pl.), apvalinta iki 5 min. */
+   Vilniaus platumai (≈55° š. pl.), apvalinta iki 5 min.
+   `lapai` — penkios stadijos (0 be lapų … 4 krinta paskutiniai lapai);
+   būtent ji, o ne sezono vardas, nustato medžio išvaizdą. */
 const MENUO = [
   { n: "Sausis", acc: "sausį", s: "Žiema", dm: 475, alt: 12, lapai: 0, sniegas: true, pauksciai: false,
     note: "Mažai šviesos. Medis ilsisi, daug paukščių išskrido." },
@@ -30,20 +32,32 @@ const MENUO = [
     note: "Diena sparčiai ilgėja, todėl šilčiau ir žolė žaliuoja." },
   { n: "Gegužė", acc: "gegužę", s: "Pavasaris", dm: 970, alt: 53, lapai: 2, sniegas: false, pauksciai: true,
     note: "Beveik ilgiausia diena. Medis jau su lapais." },
-  { n: "Birželis", acc: "birželį", s: "Vasara", dm: 1045, alt: 58, lapai: 3, sniegas: false, pauksciai: true,
+  { n: "Birželis", acc: "birželį", s: "Vasara", dm: 1045, alt: 58, lapai: 2, sniegas: false, pauksciai: true,
     note: "Ilgiausia diena: daugiausia šviesos ir šilumos." },
-  { n: "Liepa", acc: "liepą", s: "Vasara", dm: 1005, alt: 55, lapai: 3, sniegas: false, pauksciai: true,
+  { n: "Liepa", acc: "liepą", s: "Vasara", dm: 1005, alt: 55, lapai: 2, sniegas: false, pauksciai: true,
     note: "Diena dar ilga, nors jau pamažu trumpėja." },
-  { n: "Rugpjūtis", acc: "rugpjūtį", s: "Vasara", dm: 885, alt: 47, lapai: 3, sniegas: false, pauksciai: true,
+  { n: "Rugpjūtis", acc: "rugpjūtį", s: "Vasara", dm: 885, alt: 47, lapai: 2, sniegas: false, pauksciai: true,
     note: "Diena trumpėja. Vaisiai noksta, paukščiai ruošiasi." },
-  { n: "Rugsėjis", acc: "rugsėjį", s: "Ruduo", dm: 750, alt: 36, lapai: 4, sniegas: false, pauksciai: false,
+  { n: "Rugsėjis", acc: "rugsėjį", s: "Ruduo", dm: 750, alt: 36, lapai: 3, sniegas: false, pauksciai: false,
     note: "Lapai gelsta. Gandrai skrenda į šiltus kraštus." },
   { n: "Spalis", acc: "spalį", s: "Ruduo", dm: 625, alt: 25, lapai: 4, sniegas: false, pauksciai: false,
     note: "Diena trumpėja greitai. Lapai krinta." },
-  { n: "Lapkritis", acc: "lapkritį", s: "Ruduo", dm: 500, alt: 15, lapai: 5, sniegas: false, pauksciai: false,
+  { n: "Lapkritis", acc: "lapkritį", s: "Ruduo", dm: 500, alt: 15, lapai: 4, sniegas: false, pauksciai: false,
     note: "Šviesos vis mažiau. Medis beveik be lapų." },
   { n: "Gruodis", acc: "gruodį", s: "Žiema", dm: 435, alt: 11, lapai: 0, sniegas: true, pauksciai: false,
     note: "Trumpiausia diena. Sniegas, medis ilsisi." },
+];
+
+/* Lapų stadija → art.js medžio variantas ir žodis ekrano skaitytuvui.
+   Anksčiau medis buvo kviečiamas su sezono vardu, todėl spalį ir lapkritį
+   rodė tą patį pilną vainiką, nors užrašas sako „beveik be lapų“ (LL-13),
+   o gegužę — žiedus, nors užrašas sako „jau su lapais“. */
+const MEDIS = [
+  { art: "ziema", zodis: "be lapų" },
+  { art: "pavasaris", zodis: "pumpurai" },
+  { art: "vasara", zodis: "žali lapai" },
+  { art: "ruduo", zodis: "geltoni lapai" },
+  { art: "ruduo-krenta", zodis: "krinta paskutiniai lapai" },
 ];
 
 const metuLaikai = {
@@ -78,7 +92,7 @@ const metuLaikai = {
         <label for="ml-month" style="display:block;text-align:center;font-weight:800;font-size:.95rem;min-width:0">Mėnuo: <span id="ml-mname">Sausis</span></label>
         <input id="ml-month" type="range" min="1" max="12" step="1" value="1"
                aria-label="Pasirink mėnesį"
-               style="width:100%;max-width:100%;min-width:0;height:48px;accent-color:var(--ink)" />
+               style="width:100%;max-width:100%;min-width:0;margin:0;height:48px;accent-color:var(--ink)" />
         <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;min-width:0">
           <button class="btn secondary" id="ml-prev" aria-label="Ankstesnis mėnuo">◀ Ankstesnis</button>
           <button class="btn secondary" id="ml-next" aria-label="Kitas mėnuo">Kitas ▶</button>
@@ -94,32 +108,6 @@ const metuLaikai = {
     const range = controls.querySelector("#ml-month");
 
     const hm = (min) => `${Math.floor(min / 60)} val. ${String(min % 60).padStart(2, "0")} min.`;
-
-    /* Medis: tas pats medis, penki jo metų etapai. */
-    function tree(d) {
-      const trunk = `<rect x="50" y="146" width="12" height="60" rx="4" fill="#8a6242"/>`;
-      const branch = `<path d="M56 150 L38 130 M56 150 L74 128 M56 148 L56 118"
-        stroke="#8a6242" stroke-width="5" fill="none" stroke-linecap="round"/>`;
-      const c = (x, y, r, col) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${col}"/>`;
-      if (d.lapai === 0) return trunk + branch;
-      if (d.lapai === 1) return trunk + branch
-        + c(40, 132, 5, "#8ed081") + c(72, 130, 5, "#8ed081") + c(56, 116, 6, "#8ed081");
-      if (d.lapai === 2) return trunk + branch
-        + c(56, 138, 18, "#8ed081") + c(38, 146, 12, "#8ed081") + c(74, 146, 12, "#8ed081");
-      if (d.lapai === 3) return trunk
-        + c(56, 134, 30, "#4f9e4a") + c(34, 148, 20, "#4f9e4a") + c(78, 148, 20, "#4f9e4a");
-      if (d.lapai === 4) return trunk
-        + c(56, 134, 30, "#d98324") + c(34, 148, 20, "#d98324") + c(78, 148, 20, "#d98324");
-      return trunk + branch
-        + c(40, 136, 10, "#d98324") + c(72, 138, 10, "#d98324") + c(56, 126, 9, "#d98324");
-    }
-
-    const GROUND = {
-      "Žiema": "#f1f7fb",
-      "Pavasaris": "#a9d98a",
-      "Vasara": "#6dbb62",
-      "Ruduo": "#c9b05e",
-    };
 
     function render() {
       const d = M[i];
@@ -139,6 +127,7 @@ const metuLaikai = {
       const seasonKey = d.s === "Žiema" ? "ziema"
         : d.s === "Pavasaris" ? "pavasaris"
           : d.s === "Vasara" ? "vasara" : "ruduo";
+      const medis = MEDIS[d.lapai] || MEDIS[0];
       const skyRef = seasonKey === "ziema" ? "ml-winter"
         : seasonKey === "ruduo" ? "ml-autumn" : "ml-sky";
 
@@ -165,12 +154,12 @@ const metuLaikai = {
         ${art.grass(296, 208, 0.95, seasonKey === "ziema" ? "#bcd4de" : "#5aa552")}
         ${art.grass(330, 210, 0.8, seasonKey === "ziema" ? "#bcd4de" : "#5aa552")}
         ${snow}
-        ${art.tree(58, 209, 1.4, seasonKey)}
+        ${art.tree(58, 209, 1.4, medis.art)}
         <text x="20" y="40" font-family="system-ui" font-size="22" font-weight="800" fill="#3a342b">${d.n}</text>
         <text x="20" y="62" font-family="system-ui" font-size="15" font-weight="600" fill="#5f574d">${d.s}</text>`;
 
       svg.setAttribute("aria-label",
-        `Metų laikų modelis: ${d.n}, ${d.s.toLowerCase()}, šviesu ${hm(d.dm)}`);
+        `Metų laikų modelis: ${d.n}, ${d.s.toLowerCase()}, medis ${medis.zodis}, šviesu ${hm(d.dm)}`);
 
       mname.textContent = d.n;
       range.value = String(i + 1);

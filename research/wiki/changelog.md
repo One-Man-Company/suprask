@@ -2,6 +2,19 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-09 (16:40) — Publikavimo patikra #209 (leidėjas): repo 35 / gyvai 35, svetainė pastatyta iš `97ed524`
+
+- **Būsena:** `HEAD` = `origin/main` = `97ed524d` (0 neišstumtų commit'ų, 0 neprijungtų nuotolinių šakų, `git status --porcelain -uall` tuščias).
+- **`pages.yml`:** paskutiniai 5 paleidimai `completed/success`; paskutinis — `97ed524d`, `2026-11-09T14:09:13Z`, 1 m 40 s. Jokio raudono deploy šiandien.
+- **3 realios gyvos patikros (HTTP):** šaknis `https://one-man-company.github.io/suprask/` `200` (3487 B); `content/lt/grade-01/index.json` `200` (10 662 B); `assets/audio/lt/manifest.json` `200` (500 raktų). Papildomai `content/lt/grades.json` `200` (1126 B).
+- **Baitai, ne skaičiai:** 35/35 modulio JSON failų gyvai `200` ir baitais lygūs `git cat-file blob HEAD:` (skiriasi 0); `grade-01/index.json` (10 662 B), `path.json` (1228 B), `grades.json` (1126 B) — baitais lygūs `HEAD`. Gyvas `index.html` neša `?v=97ed524d` — tai pirmi 8 `HEAD` simboliai, tad gyva svetainė pastatyta būtent iš `97ed524d`, ne iš ankstesnio `11bcdca`.
+- **Struktūra:** `index.json` 35 moduliai, 35 unikalūs ID, 9 kryptys; gyvos aibės sutampa su repo abiem kryptymis (trūksta 0, perteklius 0), `grades.json` `grades[0].modules` = 35, `status: live`.
+- **Naršyklė gyvai:** `check_view.py --base <gyva> --viewports phone,small` → 70 patikrų (35 maršrutai × 390/360 px), 0 problemų, `rc=0`.
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0 klaidų, 0 įspėjimų; `check_docs_facts.py` → 0 klaidų, 0 įspėjimų (9 kryptys, 35 moduliai).
+- **Garsas:** imtis `seed 209` — 16/16 gyvų mp3 (`n` ir `s`) `200`, 17 179–89 486 B.
+- **Ką agentai pakeitė nuo 2026-11-08 16:00 (`git log --since`):** 4 nauji moduliai — `daile/01-spalva-ir-nuotaika` (pirmas dailės krypties modulis), `dorinis-ugdymas/01-susitarimas-ir-zaidimas`, `muzika/02-ritmas-ir-perkusija`, `pasaulio-pazinimas/18-kuprine-ir-kuno-dalys` (31 → 35 moduliai, 7 → 9 kryptys); taisyti `14-pinigai`, `21-erdvines-figuros`, `16-vandens-busenos`; `main.css` (`.choice` 320 px, `.module-foot` 200 %), `geometrija.js`, `muzika.js`, `daile.js`, `pasaulis.js`, garso manifestas (+ nauji mp3).
+- **Sprendimas:** palaikyta. Nieko neatsukta — joks gyvas adresas negrąžino ne `200`, nė vienas modulis nesiskyrė nuo `HEAD`, nė viena patikra nekrito. Ataskaita `agents/log/leidejas-2026-11-09T1635.md`.
+
 ## 2026-11-09 (16:03) — Publikavimo patikra #208: repo 35 / paskelbta 35, visi moduliai baitais lygūs `HEAD`
 
 - **`check_published.py`** → repo 35, paskelbta 35, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, neišstumtų commit'ų 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `11bcdca6`, darbinė kopija švari.

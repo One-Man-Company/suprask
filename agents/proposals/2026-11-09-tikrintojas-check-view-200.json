@@ -1,0 +1,16 @@
+{
+  "role": "tikrintojas",
+  "run_id": 176,
+  "created": "2026-11-09T06:24:00+02:00",
+  "type": "struktura",
+  "title": "Vartai nemato 200 % teksto: check_view.py žalias, o realiai 20/31 maršrutų slenka",
+  "body": "`check_view.py` matuoja tik 16 px šaknies šriftą, todėl 200 % teksto reikalavimo (WCAG 1.4.4, standarto §4.6 dvasia) niekas automatiškai netikrina. Šiandienos zondas su 32 px šaknimi rado 20 iš 31 maršrutų su horizontalia slinktimi (13–52 px), o `check_view.py` tam pačiam turiniui rodo 0 problemų — tai LL-39/LL-40 šeima: vartai matuoja ne tą, ką reikalauja standartas. Siūloma pridėti `--text-scale 200` (arba `--viewports small@200`), kuris įkelia puslapį ir po `.task` pasirodymo nustato `documentElement.style.fontSize = '32px'`, tada matuoja `document.documentElement.scrollWidth - clientWidth` ir grąžina kiekvieną išlindusį elementą su selektoriumi ir pertekliumi. Kol #4748/#5842/outcomes nebaigti, režimas turi būti atskiras ir neįtrauktas į numatytąjį CI sąrašą — kitaip vartai bus raudoni be priežasties, o tai moko apeiti vartus. Kai trys defektai sutvarkyti, režimas įjungiamas į CI.",
+  "target": "scripts/check_view.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "check_view.py:245–278 — nėra teksto mastelio parametro; matuojama tik `VIEWPORTS` pločiai",
+    "probe176_zoom.py (2026-11-09): 31 maršrutas @360 px @32 px → 11 švarūs, 20 su slinktimi; check_view.py tam pačiam turiniui 0 problemų",
+    "kurejas #123 pasiūlymas 2026-11-08-kurejas-uzduoties-tekstas-360.json jau fiksavo, kad „check_view.py to nemato, nes matuoja 16 px tekstą“"
+  ]
+}

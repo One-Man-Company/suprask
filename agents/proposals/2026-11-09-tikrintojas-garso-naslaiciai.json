@@ -1,0 +1,16 @@
+{
+  "role": "tikrintojas",
+  "run_id": 176,
+  "created": "2026-11-09T06:20:00+02:00",
+  "type": "struktura",
+  "title": "Garso patikra vienkryptė: 6 našlaitiniai mp3 nematomi, o skaičius rodomas kaip pilnas",
+  "body": "`check_audio.py` tikrina tik manifestas → diskas kryptį: kiekvienas tariamas tekstas privalo turėti abu įrašus. Atvirkštinė kryptis netikrinama, todėl diske (ir git istorijoje) likę 6 mp3, kurių manifestas nebemini: n/3411685a32f5488c-16de49ed.mp3, n/59d9a6e94dad56c2-46ad1e6b.mp3, n/6d5d3fd7188894fe-3379e4c5.mp3, s/3411685a32f5488c-3b304f65.mp3, s/59d9a6e94dad56c2-c8b44551.mp3, s/6d5d3fd7188894fe-f2825ead.mp3 (į tracked nuo commito 435a36a). Šiandienos matavimas: manifestas 463 raktai = 926 nuorodos, diske 932 failai; platformos būsena skelbia „932 garso failai“ — skirtumas niekur nepaaiškinamas. Tai ta pati šeima kaip LL-37/LL-64: skaičius pranešamas kaip pilnas, nors dalis jo priklauso tekstams, kurių nebėra. Siūloma: `check_audio.py` grąžina įspėjimą (ne klaidą, kad CI nekristų dėl istorinių failų) su našlaičių sąrašu ir `--prune` režimu, kuris šalina tik manifeste nebeminimus failus; platformos būsenos generatorius rodo „naudojami / viso“.",
+  "target": "scripts/check_audio.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "python3 scripts/check_audio.py (2026-11-09): „✔ Garsas pilnas: 462 tekstų, visi turi po du įrašus, visi iš Piper balso.“",
+    "zondas probe176_index.py: manifest raktų 463 (nuorodų 926), mp3 diske 932; diske 6 mp3, kurių manifestas nenurodo",
+    "git ls-files assets/audio/lt | wc -l → 933 (įskaitant manifest.json); git log -- assets/audio/lt/n/3411685a32f5488c-16de49ed.mp3 → 435a36a [kurejas] #27"
+  ]
+}

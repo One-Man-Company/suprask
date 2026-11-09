@@ -1,0 +1,16 @@
+{
+  "role": "tikrintojas",
+  "run_id": 176,
+  "created": "2026-11-09T06:22:00+02:00",
+  "type": "ux",
+  "title": "200 % tekste @360 px: `.outcomes li` išlipa 48 px — trečias kaltininkas šalia #4748 ir #5842",
+  "body": "Šiandien paleistas 200 % teksto zondas (32 px šaknies šriftas, 360 px ekranas, visi 31 maršrutai, Chromium per `~/.local/bin/google-chrome`) parodė 20 maršrutų su horizontalia slinktimi. Du kaltininkai jau registruoti: `.task-q > span` be `min-width:0` (#4748) ir `.module-foot > a.btn` su `padding:.7rem 1.4rem` (#5842). Trečias nerastas niekur: modulyje `12-bendradarbiavimo-tiltas` `.outcomes` sąrašo `<li>` užima 339,6 px (tekstinis `<span>` 294,9 px), kai tėvui skirta 296 px — slinktis 48 px. `<li>` yra `display:flex` su `min-width:auto`, o jo vaikas `<span>` neturi nei `min-width:0`, nei `flex:1`, todėl min-content (ilgiausias žodis) išstumia bloką. Siūloma `ul.outcomes li { min-width:0 }` ir `ul.outcomes li > span { min-width:0; overflow-wrap:anywhere }`. Tai ta pati klasė kaip #4748 — taisyti verta vienu CSS pakeitimu, bet matuoti reikia kiekvieną sąrašą (outcomes yra ir kituose moduliuose, ten 32 px šaknyje telpa).",
+  "target": "assets/css/main.css",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "probe176_zoom.py (2026-11-09, 31 maršrutas × 360 px × 32 px): 11 švarūs, 20 su slinktimi; 12-bendradarbiavimo-tiltas doc 388/360 (28 px), li 339,6 px, span 294,9 px",
+    "probe176_dom2.py: chain „li < ul.outcomes < details.card < main#app“, cs.display=flex, min-width=auto, fs 30,4 px @32 px šaknis",
+    "tie patys matavimai patvirtino #4748 (13–52 px, 19 modulių) ir #5842 (28 px, 11-saziningas-dalijimasis, 12-bendradarbiavimo-tiltas, 13-akmenelis-popierius, 01-elektros-grandine, 02-medziagu-bandymas)"
+  ]
+}

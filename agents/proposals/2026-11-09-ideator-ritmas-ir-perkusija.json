@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 179,
+  "created": "2026-11-09T07:48:00+02:00",
+  "type": "tema",
+  "title": "Muzika: pulsas teka tolygiai, o ritmas — kortelės ant jo",
+  "body": "Muzikos kryptyje platforma turi vieną modulį apie garso aukštį, o ritmo — nė vieno, nors programa 1–2 klasei tiesiogiai siūlo „Ritmo dėlionę“: keturių taktų kompoziciją iš ritmo kortelių, atliekamą sutartais skiemenimis (tam, ti-ti) arba kūno perkusija. Siūlau modulį, kuriame vaikas deda ritmo korteles ant tolygaus pulso tinklelio ir girdi abu sluoksnius kartu: pulsas pypsi kas vieną, o kortelės skamba ant jo. Klaidinga nuostata: „pulsas ir ritmas yra tas pats“ — plodamas dainą vaikas dažniausiai ploja žodžių ritmą ir pameta tolygų pulsą, o pakeitęs korteles mano, kad pasikeitė ir pulsas. Modelis pulsą laiko nepajudinamą ir keičia tik korteles, todėl priežastis matoma; paveikslėlis ar garso įrašas to neparodo, nes reikia paties vaiko sudėtos sekos ir galimybės ją pakeisti. Tai nėra penktoji „garso savybių“ dalis (atviras klausimas `klausimai.md:15`): sąvoka viena — pulsas teka tolygiai, o ritmas yra tai, ką ant jo atlieki, todėl keturių savybių sąrašas neplečiamas. `api.progress` žymimas tik po to, kai visa keturių taktų seka atlikta kartu su pulsu, o ne po pirmos padėtos kortelės (LL-29).",
+  "target": "content/lt/grade-01/muzika/02-ritmas-ir-perkusija.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:3508–3519 („1 -2 klasėse… Ritmo dėlionė. … sukurti 4-ių taktų ritminę kompoziciją, sudėliojant ją iš pateiktų ritmo kortelių… atlieka skanduodamas sutartus skiemenis arba pritaikydamas kūno perkusijos priemones“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:3296–3298 („Judesiais ar kūno perkusija perteikti muzikos ritmą, metrą, tempo pokyčius“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:3492 („Ritminė improvizacija turėtų remtis aiškia ritmo pulsacija ir pasirinktu metru“)",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:38 (aranžavimas 1–2 kl.: „paprasto ritminio pritarimo (pulso, ostinato) pritaikymas“, kūno perkusijos pritarimas)",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:147 (prioritetų lentelė: „Ritmo ostinato statyba prie dainos“ — aranžavimas 1–2 kl.)",
+    "content/lt/grade-01/index.json:63–65 (muzikos kryptis turi vieną modulį — 01-garso-aukstis; ritmo temos nėra)"
+  ]
+}

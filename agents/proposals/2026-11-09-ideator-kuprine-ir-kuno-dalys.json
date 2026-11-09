@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 179,
+  "created": "2026-11-09T07:48:00+02:00",
+  "type": "tema",
+  "title": "Kuprinė: tas pats svoris, ilgos petnešos — kita vieta, kur spaudžia",
+  "body": "Pasaulio pažinime 1 klasei programa skiria temą „Sveikas gyvenimas“ (26.1.2) ir joje prašo įvardyti žmogaus kūno dalis bei aptarti, kaip jos nukenčia nuo per sunkios ar netaisyklingai nešiojamos kuprinės — pavyzdžiui, kai petnešos per ilgos. Platformoje šios temos nėra: penki pasaulio pažinimo moduliai liečia metų laikus, augalą, gyvūnus, vandenį ir judėjimą, o „Sveikas gyvenimas“ neturi nė vieno. Siūlau modelį, kuriame kuprinės svoris nekinta, kinta tik petnešų ilgis ir nešimo būdas (abiem pečiais ar vienu), o paveikslėlyje matyti, kur svoris remiasi ir kaip pakrypsta kūnas. Klaidinga nuostata: „kuprinė kenkia tik tada, kai sunki“ — 6–7 m. vaikas svorį sieja su daiktų kiekiu, o ne su padėtimi, todėl tas pats svoris su ilgomis petnešomis jam atrodo nekenksmingas. Modelis svorį laiko pastovų ir keičia vieną kintamąjį, todėl priežastis matoma; paveikslėlis parodytų vieną būseną ir neatsakytų, kas pasikeitė. Modulis neklausia apie vaiko kūną ar jo kuprinę — visi klausimai apie modelio veikėją, tad asmens duomenų nerenkama; svoris rodomas kaip „tas pats“, be skaičių, kad neužkliūtų už atviro masės klausimo (`klausimai.md:16`).",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/18-kuprine-ir-kuno-dalys.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1522–1524 („įvardijamos žmogaus kūno dalys ir aptariama, kaip jos nukenčia nuo per sunkios bei nepritaikytos vaiko amžiui kuprinės, jos netaisyklingo nešiojimo (pvz., jei kuprinės petnešos per ilgos, visas kuprinės svoris gula ant inkstų ir pan.)“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:14967–14973 (Gamtos mokslai, 1 klasė, 26.1.2: projektas „Kiek sveria mano kuprinė?“ ir praktinė veikla „Ar taisyklingai nešioju kuprinę?“ — „koks turi būti kuprinės diržų ilgis“)",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:104 (26.1.2 turinys: kūno dalys, kuprinės svoris ir nešiojimas, petnešų ilgis → svoris gula ant inkstų, dienos režimas)",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:128 (1-oko metų pabaigos reikalavimas: „Įvardija pagrindines kūno dalis ir paaiškina, kodėl per sunki kuprinė kenkia“)",
+    "content/lt/grade-01/index.json:50–54 (penki pasaulio pažinimo moduliai — nė vieno pagal 26.1.2 „Sveikas gyvenimas“)"
+  ]
+}

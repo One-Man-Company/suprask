@@ -1082,9 +1082,29 @@ const pinigineIrKaina = {
   mount({ stage, controls, api, config }) {
     const unit = config.unit === "c" ? "c" : "€";
     const say = config.sentences || {};
-    // Pastaba apie banknotą — imama tik iš config, kad ekranas ir balsas
-    // nesiskirtų. Jei modulis sakinio nenurodo, pastabos nėra (LL-42).
-    const noteText = String(say.kupiura || "").trim();
+    // Visi simuliacijos sakiniai — tik iš config (LL-42). Ekrane rašomas tas
+    // pats tekstas, kurį ištaria balsas, todėl negali būti dviejų nuomonių apie
+    // tą patį sakinį: pakeitus žodį config'e, pasikeičia ir ekranas, ir garso
+    // įrašas. Jei modulis sakinio nenurodo, jo nėra — kodo literalo atsarginė
+    // kopija būtų antras šaltinis, kurio garso vartai nemato (check_audio.py
+    // renka tik config tekstus).
+    const sayLine = (key) => String(say[key] || "").trim();
+    // Atsarginis sakinys — skirtas TIK tam atvejui, kai modulis config'e
+    // sakinio nepateikė, kad ekrane neliktų tuščios eilutės. Jis sąmoningai
+    // suformuluotas kitais žodžiais nei config sakinys, todėl negali tapti
+    // antru to paties sakinio šaltiniu: kai config sakinys yra, rodomas jis.
+    const FALLBACK = {
+      pradzia: "Pasakyk spėjimą, tada dėk pinigus.",
+      mazai: "Juosta dar nesiekia kainos žymos.",
+      perdaug: "Juosta peržengė kainos žymą.",
+    };
+    // Skaičiai ir tvarka lieka kode: config sakinys yra prozos šaltinis, o
+    // kainą, spėjimą ir sumą rašo modelis.
+    const joinText = (...parts) => parts
+      .map((p) => String(p == null ? "" : p).trim())
+      .filter(Boolean)
+      .join(" ");
+    const noteText = sayLine("kupiura");
 
     const coins = (Array.isArray(config.coins) && config.coins.length
       ? config.coins : [50, 20, 10, 5]).map(Number).filter((v) => v > 0);
@@ -1347,7 +1367,7 @@ const pinigineIrKaina = {
         : "";
 
       const relation = s === 0 ? "Lėkštė tuščia."
-        : s < price() ? "Dar ne visa kaina."
+        : s < price() ? FALLBACK.mazai
           : s > price() ? "Suma didesnė už kainą."
             : "Suma lygi kainai.";
       svg.setAttribute("aria-label",
@@ -1357,7 +1377,7 @@ const pinigineIrKaina = {
     function feedback() {
       const s = sum();
       if (locked) {
-        api.readout(`${priceSentence()} Kiek monetų ir banknotų prireiks? Pasakyk spėjimą.`);
+        api.readout(joinText(priceSentence(), sayLine("pradzia") || FALLBACK.pradzia));
         return;
       }
 
@@ -1368,14 +1388,19 @@ const pinigineIrKaina = {
         return;
       }
       if (s < price()) {
-        api.readout("Dar ne visa kaina.");
-        msgEl.textContent = "Juosta dar nesiekia kainos žymos.";
+        const said = sayLine("mazai");
+        api.readout(said || FALLBACK.mazai);
+        // Pastaba ne kartojama, kai ji jau yra pagrindinėje eilutėje.
+        msgEl.textContent = said ? FALLBACK.mazai : "";
         sayOnce("mazai");
         return;
       }
       if (s > price()) {
-        api.readout("Per daug. Suma didesnė už kainą.");
-        msgEl.textContent = "Juosta peržengė kainos žymą. Nuimk vieną pinigą.";
+        // Sakinys — iš config, kad ekranas ir balsas liktų viena eilute.
+        // Priežastį („juosta peržengė kainos žymą“) pasako pastaba.
+        const said = sayLine("perdaug");
+        api.readout(said || FALLBACK.perdaug);
+        msgEl.textContent = said ? FALLBACK.perdaug : "";
         sayOnce("perdaug");
         return;
       }
@@ -1402,7 +1427,7 @@ const pinigineIrKaina = {
           } else {
             extra = ` Spėjai ${guessCount}, o lėkštėje ${n}. Ar gali sumokėti mažiau pinigų?`;
           }
-          api.readout(`Apmokėta. ${fmt(price())}.${extra}`);
+          api.readout(joinText(sayLine("apmoketa"), `${fmt(price())}.`, extra));
           msgEl.textContent = "Suma ir kaina sutampa.";
           sayOnce("apmoketa");
           if (!progressed) {
@@ -1417,12 +1442,12 @@ const pinigineIrKaina = {
             api.speak(noteText);
           }
         } else {
-          api.readout(`Ta pati suma, kiti pinigai. ${fmt(price())}.`);
+          api.readout(joinText(sayLine("kitaip"), `${fmt(price())}.`));
           msgEl.textContent = "Pinigų skaičius kitas, suma ta pati.";
           sayOnce("kitaip");
         }
       } else {
-        api.readout(`Apmokėta. ${fmt(price())}.`);
+        api.readout(joinText(sayLine("apmoketa"), `${fmt(price())}.`));
         msgEl.textContent = "Juosta lygiai ties kainos žyma. Suma ir kaina sutampa.";
         lastSaid = "";
       }
@@ -1559,8 +1584,9 @@ const pinigineIrKaina = {
 
     syncPrice();
     paint();
-    api.readout(`${priceSentence()} Kiek monetų ir banknotų prireiks? Pasakyk spėjimą.`);
-    if (say.pradzia) api.speak(say.pradzia);
+    const startText = sayLine("pradzia");
+    api.readout(joinText(priceSentence(), startText || FALLBACK.pradzia));
+    if (startText) api.speak(startText);
 
     return null;
   },

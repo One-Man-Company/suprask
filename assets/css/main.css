@@ -391,9 +391,22 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .task-q { font-weight: 800; margin-bottom: .7rem; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .6rem; align-items: start; }
 .task-q > span:not(.task-num) { min-width: 0; overflow-wrap: anywhere; }
 .task-num { color: var(--ink-faint); }
-.choices { display: grid; gap: .5rem; }
+/* Atsakymų variantai. `1fr` takelio minimumas yra `auto` (min-content), todėl
+   grid vaikas `.choice` negalėjo susitraukti žemiau ilgiausio varianto žodžio:
+   matuota @320/32 (32 px šaknis) — `.choices` turinio juosta 175,2 px,
+   `.choice` 254,5 px, dešinys kraštas 326,9, puslapis slinko 7 px (17-judejimas).
+   Taisant pasirodė, kad taip buvo 34/35 maršrutų (išsikišimas 0,3–101,9 px),
+   o dokumento slinktį slėpė kortelės paminkštinimas (LL-30), tad vaikas matė
+   per didelį tarpą arba nukirptą mygtuką. `minmax(0,1fr)` leidžia takeliui
+   susitraukti, `min-width:0` — pačiam mygtukui, o `overflow-wrap:anywhere`
+   laužo žodį tik tada, kai jis fiziškai netelpa (WCAG 1.4.10 reflow; tas pats
+   sprendimas kaip `.task-q`, #4748). Šrifto nemažiname (#5842, LL-70).
+   Įprastu 16 px šriftu deklaracijos neturi poveikio: matuota 35 maršrutai ×
+   320/360/390/414/768/1440 px prieš ir po — mygtukų plotis ir aukštis nepakito. */
+.choices { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; }
 .choice {
   display: flex; align-items: center; gap: .7rem; width: 100%; text-align: start;
+  min-width: 0; overflow-wrap: anywhere;
   min-height: var(--tap); padding: .6rem .9rem; font-size: var(--fs-m); font-family: var(--font);
   background: var(--paper); border: 2px solid var(--line); border-radius: var(--r-s); cursor: pointer;
   transition: border-color .12s, background .12s;

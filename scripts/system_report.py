@@ -23,9 +23,18 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "agents"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 import db  # noqa: E402
 import scope as grade_scope  # noqa: E402
+
+# Klasifikacija „šis pasiūlymas — sisteminis, ne kūrėjo darbas“ gyvena vienoje
+# vietoje (`kurejas_queue.py`). Ataskaita ją importuoja, o ne kartoja: jei
+# sąrašas išsiskirs, ataskaita rodys vieną eilę, o kūrėjo eilė gyvuos pagal kitą.
+try:
+    from kurejas_queue import SYSTEM_PREFIXES  # noqa: E402
+except Exception:  # noqa: BLE001
+    SYSTEM_PREFIXES = ("agents/", "scripts/", "deploy/", "dashboard/", "docs/")
 
 BAD = ("empty", "conflict", "rejected", "timeout", "failed", "skipped", "blocked")
 
@@ -65,6 +74,31 @@ def proposals_summary() -> dict:
     by_status: dict[str, int] = {}
     oldest_new = None
     blocked: list[dict] = []
+    # Sisteminiai pasiūlymai (tikslas `agents/`, `scripts/`, `deploy/`,
+    # `dashboard/`, `docs/`) kūrėjui sąmoningai neduodami — jų neįgyvendina
+    # niekas, kol architektas nepaima. Todėl jie turi būti ataskaitoje
+    # sąrašu, o ne bendru „new“ skaičiumi: 2026-11-09 tokių buvo 8, o
+    # kiekvienas jų yra vartų aklumas, kuris liks nematomas visą savaitę.
+    system_queue: list[dict] = []
+    now = dt.datetime.now().astimezone()
+    for r in rows:
+        if (r.get("status") or "") != "new":
+            continue
+        target = (r.get("target") or "").strip()
+        paths = [p.strip() for p in target.replace(";", ",").split(",") if p.strip()]
+        if not paths or not all(p.startswith(SYSTEM_PREFIXES) for p in paths):
+            continue
+        created = r.get("created") or ""
+        age = None
+        if created:
+            try:
+                stamp = dt.datetime.fromisoformat(created)
+                age = (now - (stamp if stamp.tzinfo else stamp.replace(tzinfo=now.tzinfo))).days
+            except ValueError:
+                age = None
+        system_queue.append({"id": int(r["id"]), "title": (r.get("title") or "")[:80],
+                             "target": target[:80], "age_days": age})
+
     for r in rows:
         st = r.get("status") or "?"
         by_status[st] = by_status.get(st, 0) + 1
@@ -79,15 +113,17 @@ def proposals_summary() -> dict:
     if oldest_new:
         try:
             stamp = dt.datetime.fromisoformat(oldest_new)
-            now = dt.datetime.now(stamp.tzinfo) if stamp.tzinfo else dt.datetime.now()
-            age_days = (now - stamp).days
+            now2 = dt.datetime.now(stamp.tzinfo) if stamp.tzinfo else dt.datetime.now()
+            age_days = (now2 - stamp).days
         except ValueError:
             age_days = None
     # `blocked` yra kapinės: eilė jų nebeliečia, niekas jų nebeatidaro. Todėl
     # ataskaita privalo jas parodyti vardais, o ne vienu skaičiumi (2026-11-08
     # visi 6 blokuoti buvo realūs defektai, kurių niekas nebetaisys).
     return {"by_status": by_status, "oldest_new_days": age_days, "total": len(rows),
-            "blocked": sorted(blocked, key=lambda x: x["id"])}
+            "blocked": sorted(blocked, key=lambda x: x["id"]),
+            "system_queue": sorted(system_queue, key=lambda x: (-(x["age_days"] or 0), x["id"]))}
+
 
 
 def timers() -> list[dict]:
@@ -202,6 +238,11 @@ def main() -> int:
         print(f"Blokuoti (niekas nebeatidaro — reikia sprendimo): {len(p['blocked'])}")
         for b in p["blocked"][:6]:
             print(f"  #{b['id']} {b['title']} · {b['note']}")
+    if p.get("system_queue"):
+        print(f"\nSisteminiai pasiūlymai (kūrėjas jų neima — tai architekto eilė): {len(p['system_queue'])}")
+        for s in p["system_queue"]:
+            age = f", prieš {s['age_days']} d." if s.get("age_days") else ""
+            print(f"  #{s['id']} {s['title']} → {s['target']}{age}")
 
     print("\nPatikros:")
     for name, c in data["checks"].items():

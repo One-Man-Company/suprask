@@ -122,6 +122,35 @@ def main() -> int:
     except Exception:  # noqa: BLE001
         pass
 
+    # Sisteminiai pasiūlymai neturi savininko eilėje: kūrėjas jų sąmoningai
+    # neima, o architektas paleidžiamas kartą per dieną. 2026-11-09 tokių buvo
+    # 8, seniausias — 1 d.; jei jie laukia ilgiau nei 3 d., tai jau ne eilė, o
+    # pamirštas darbas, kuris tyliai palieka vartus aklus.
+    try:
+        import db as _db2
+        from kurejas_queue import SYSTEM_PREFIXES as _sys_prefixes
+
+        cutoff = dt.datetime.now().astimezone() - dt.timedelta(days=3)
+        waiting: list[str] = []
+        for r in _db2.proposals(500, status="new"):
+            target = (r.get("target") or "").strip()
+            paths = [p.strip() for p in target.replace(";", ",").split(",") if p.strip()]
+            if not paths or not all(p.startswith(_sys_prefixes) for p in paths):
+                continue
+            try:
+                stamp = dt.datetime.fromisoformat(r.get("created") or "")
+            except ValueError:
+                continue
+            if stamp.tzinfo is None:
+                stamp = stamp.replace(tzinfo=cutoff.tzinfo)
+            if stamp < cutoff:
+                waiting.append(f"#{r['id']} {(r.get('title') or '')[:60]}")
+        if waiting:
+            warnings.append(f"sisteminiai pasiūlymai laukia >3 d. ({len(waiting)}): "
+                            + "; ".join(waiting[:4]))
+    except Exception:  # noqa: BLE001
+        pass
+
     if args.json:
         print(json.dumps({"ok": not problems, "problems": problems, "warnings": warnings,
                           "roles": len(roles)}, ensure_ascii=False, indent=2))

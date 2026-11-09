@@ -581,7 +581,7 @@ async function loadOverview(){
     <div class="card"><h2>Šiuo metu dirba</h2><div class="big" id="runCount">—</div>
       <div id="runList" class="kv" style="display:block"></div></div>
     <div class="card"><h2>Moduliai</h2><div class="big">${st.modules}</div><div class="kv"><span>užduotys</span><b>${st.tasks}</b></div><div class="kv"><span>simuliacijos</span><b>${st.sims}</b></div></div>
-    <div class="card"><h2>Garsas</h2><div class="big">${st.audio_files}</div><div class="kv"><span>įrašai</span><b>${st.audio_mb} MB</b></div><div class="kv"><span>kalba</span><b>lt-LT</b></div></div>
+    <div class="card"><h2>Garsas</h2><div class="big">${st.audio_files}</div><div class="kv"><span>naudojami iš</span><b>${st.audio_total ?? st.audio_files}</b></div><div class="kv"><span>apimtis</span><b>${st.audio_mb} MB</b></div><div class="kv"><span>kalba</span><b>lt-LT</b></div></div>
     <div class="card"><h2>Šiandien</h2><div class="big">${d.runs_today}</div><div class="kv"><span>paleidimai</span><b>${d.runs_today}</b></div><div class="kv"><span>atviri pasiūlymai</span><b id="openProp">—</b></div></div>
     <div class="card" id="pubCard"><h2>Publikavimas</h2><div class="big" id="pubBig">—</div>
       <div class="kv"><span>repo</span><b id="pubLocal">—</b></div>

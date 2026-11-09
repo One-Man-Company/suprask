@@ -39,3 +39,59 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
 - **Nepadaryta:** dienoraščio įrašo negeneravo pats (šis įrašas įrašytas ranka);
   dėl to `check_agents.py` dabar įspėja, jei po architekto darbo dienoraštis
   nepapildytas.
+
+## 2026-11-09 20:31 · sistemos-architektas #211
+
+- **Mačiau:** 208 paleidimai per 7 d.; nenaudingų paleidimų dabar daugiausia
+  istorinėse šakose (`sveikatos-inspektorius` 100 % iš 1, `metodininkas` 50 %,
+  `dizaineris` ir `programos-derintojas` po 50 %), o naujausi paleidimai (nuo
+  11-08) — be konfliktų. Pasiūlymai: 93 (new 12, blocked 1, done 71, obsolete 9).
+  **Visi 12 `new` yra sisteminiai** (`scripts/`, `agents/`, `docs/`, `dashboard/`) —
+  kūrėjas jų sąmoningai neima, o sąrašo, kuriuo kas nors jais eitų, nebuvo:
+  kiekvienas toks pasiūlymas yra vartų aklumas, kuris laukia savaitę.
+  Konkretūs įrodymai: `check_audio.py` sakė „500 tekstų, visi turi po du įrašus“
+  (tiesa), bet diske 1014 mp3, manifestas nurodo 1000 — 14 našlaičių nematomi;
+  `check_published.py` sakė „sutampa 35/35“, nors lygino tik ID aibes vienoje
+  kietai įrašytoje klasėje, o publikavimo agentas baitų lygybę ėjo įrodinėti
+  atskirais zondais du paleidimus iš eilės (#208, #210).
+- **Keičiau:**
+  - `scripts/check_audio.py` — atvirkštinė kryptis (diskas → manifestas):
+    našlaičiai išvardijami, skaičius skelbiamas kaip „naudojama N iš M“, yra
+    `--json` ir `--prune`; našlaitis lieka įspėjimu, ne klaida, kad CI nekristų
+    dėl istorinių failų.
+  - `scripts/check_published.py` — klasės imamos iš `grades.json`
+    (`status: live`), kiekvienas modulio failas lyginamas baitais (sha256) su
+    repo failu lygiagrečiai, pranešime atskirta „trūksta ID“ / „ID yra, turinys
+    pasenęs“; nesutapimas patikrinamas antrą kartą (LL-76).
+  - `agents/db.py` — bendra būsena skelbia naudojamų įrašų skaičių, ne disko
+    failų (`audio_files` = naudojami, `audio_total` = viso), o `grades_live`
+    imamas iš `grades.json`, ne įrašytas ranka.
+  - `scripts/system_report.py` — naujas blokas „Sisteminiai pasiūlymai
+    (architekto eilė)“ su amžiumi; klasifikacija importuojama iš
+    `kurejas_queue.py`, kad nebūtų antro sąrašo.
+  - `scripts/check_agents.py` — įspėjimas, kai sisteminis pasiūlymas laukia
+    ilgiau nei 3 d.
+  - `dashboard/server.py` — garso kortelė rodo „naudojami / viso“.
+- **Kodėl:** visi trys pataisymai yra ta pati klasė — **vartai matavo dalį, o
+  pranešdavo apie visumą**. Tai ne kosmetika: publikavimo vartai, kurie nemato
+  pasenusio failo, palieka vaikui seną turinį su „viskas sutampa“ ataskaita, o
+  garso vartai, kurie nemato našlaičių, leidžia manyti, kad 1014 failų yra
+  panaudoti. Trečiasis pakeitimas gydo priežastį, dėl kurios tokie pasiūlymai
+  užsiguli: eilė buvo, bet jos niekas nematė vienoje vietoje.
+- **Patikra:** `py_compile` ✔; `check_published.py` → 35/35, 5,1 s,
+  „✔ Repo ir gyva svetainė sutampa (ID, seka ir failų baitai)“; zondas su
+  vienu pridėtu baitu modulyje `01-garsas-ir-raide` → „PASENĘS TURINYS … repo
+  5045 B, gyvai 5044 B“, `rc=1`, failas grąžintas (`git checkout --`);
+  `check_audio.py` → „naudojama 1000 iš 1014 mp3“, 14 našlaičių išvardyti,
+  `rc=0`; `check_agents.py` 15 vaidmenų, 0 įspėjimų; `validate_content.py` 0/0;
+  `check_ui.py` ✔; `check_lessons.py` 77 įrašai ✔; `check_art.py` ✔;
+  `check_language.py --grade 1 --strict` rc 0; dashboard
+  `try-restart` + `/api/overview` → `audio_files 1000, audio_total 1014`,
+  HTML 200, kortelėje „naudojami iš“.
+- **Neišspręsta sąmoningai:** #7396 (`check_view.py` neturi 200 % teksto
+  režimo), #4921 (nė vieno <360 px ploto), #5827 (`check_language.py` nemato
+  `outcomes`), #4808 (atsarginiai simuliacijų sakiniai), #4516 (sakinio ilgis
+  lieka įspėjimu), #4455 (ataskaitų dydis), #5047, #5190, #5342, #5400 —
+  visos dabar matomos architekto eilėje su amžiumi. #5834 lieka `blocked`:
+  reikia žmogaus sprendimo, ar toliau vertinti kaip neįgyvendintą.
+

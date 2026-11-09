@@ -228,13 +228,33 @@ def content_stats() -> dict:
         tasks += len(d.get("tasks") or [])
         if (d.get("sim") or {}).get("component"):
             sims.add(d["sim"]["component"])
-    audio = list((ROOT / "assets" / "audio" / "lt").glob("*/*.mp3"))
+    audio_dir = ROOT / "assets" / "audio" / "lt"
+    audio = list(audio_dir.glob("*/*.mp3"))
+    # „Įrašų“ skaičius turi reikšti tai, ką vaikas gali išgirsti. Diske gali
+    # likti failų, kurių manifestas nebemini (2026-11-09: 14 iš 1014); jei
+    # rodomas vien disko skaičius, jis atrodo kaip panaudotas turtas, nors
+    # dalis jo negrojama nė viename modulyje.
+    used = len(audio)
+    try:
+        manifest = json.loads((audio_dir / "manifest.json").read_text(encoding="utf-8"))
+        refs = {entry.get(v) for entry in manifest.values() if isinstance(entry, dict)
+                for v in ("n", "s") if entry.get(v)}
+        used = len(refs)
+    except (OSError, json.JSONDecodeError):
+        pass
+    live = 0
+    try:
+        grades = json.loads((ROOT / "content" / "lt" / "grades.json").read_text(encoding="utf-8"))
+        live = sum(1 for g in grades.get("grades", []) if g.get("status") == "live")
+    except (OSError, json.JSONDecodeError):
+        live = 0
     return {
         "modules": modules,
         "tasks": tasks,
         "sims": len(sims),
-        "grades_live": 1,
-        "audio_files": len(audio),
+        "grades_live": live,
+        "audio_files": used,
+        "audio_total": len(audio),
         "audio_mb": round(sum(a.stat().st_size for a in audio) / 1024 / 1024, 1),
     }
 

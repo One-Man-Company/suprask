@@ -481,3 +481,10 @@ Naują pamoką **prideda** tas, kas rado defektą; senos netrinamos ir neperraš
 - **Taisyklė:** prieš programuojant pasekmę, surašoma, ką konstrukcija daro fiziškai, ir modelis gali teigti tik tiek. Jei norima dramatiškesnės pasekmės, keičiama konstrukcija (pvz., vienas bendras bokštas su trūkstamu bloku), o ne jos elgsena. Moralinė išvada turi išlikti teisinga ir tada, kai vaikas paklausia „o kodėl taip?“.
 - **Patikra:** `dorinis.js` modelis: be vieno vaiko stulpo stogas tiesiog neuždedamas (rodomas ant žemės), o ne „nugriūna“; `sceneLabel` ir `readout` sako „Bokštas nebaigtas“, ne „Bokštas krito“. 360 px zondas: iki 9 blokų su stogu, be vieno — 6 blokai + brūkšniuotas trūkstamas stulpas + stogas ant žemės; 0 konsolės klaidų.
 
+## LL-67 — Dvi neteisingos galimybės, kurios sako tą patį
+
+- **Simptomas:** `01-spalva-ir-nuotaika` (1 kl.) trečios užduoties variantai buvo „Taip, piešinys tas pats“ / „Ne, piešinys naujas“ / „Ne, piešinys jau kitas“. Du neteisingi variantai reiškė tą patį, todėl vaikas galėjo rinktis tik spėliodamas tarp dviejų neigimų, o ne parodydamas, kurią klaidą daro. `validate_content.py` buvo žalias (atsakymų pasiskirstymas 1, 2, 0, 1), `check_language.py` — 0 klaidų.
+- **Priežastis:** variantai buvo rašomi kaip to paties neigimo stiliaus atspalviai („naujas“ / „jau kitas“), o ne kaip atskiros klaidingos nuostatos. Vartai tikrina, ar yra vienas teisingas variantas ir ar jis nėra visada pirmas; jie netikrina, ar kiekvienas neteisingas variantas pasako ką nors skirtinga.
+- **Taisyklė:** kiekvienas neteisingas variantas turi atstovauti atskirai vaiko klaidai, kuri duoda skirtingą grįžtamąjį ryšį. Rašant variantus jie perskaitomi poromis: jei vieną galima pakeisti kitu nepakeitus klausimo prasmės — tai vienas variantas, o ne du. Sinonimas keičiamas kita nuostata (čia „Ne, pasikeitė dėmės forma“ — formos klaida vietoje dar vieno „ne“).
+- **Patikra:** zondas atspausdina kiekvieno klausimo variantus ir poromis lygina jų reikšmę: 4 klausimai × 3 variantai, nė vienos poros, kuri pasakytų tą patį. `validate_content.py` ir `check_language.py` to nepagauna, todėl peržiūra daroma ranka prieš publikavimą.
+

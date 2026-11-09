@@ -28,7 +28,7 @@ const STROKE = { x: 170, y: 196, w: 146, h: 9 };
 
 const NOTES = {
   geltona: "Geltona buvo pradžioje. Formos liko tos pačios.",
-  raudona: "Pasikeitė tik užpildas.",
+  raudona: "Pasikeitė tik spalva. Dėmės forma liko tokia pati.",
   zalia: "Dėmė liko savo vietoje.",
   melyna: "Pasikeitė spalva, ne piešinys.",
 };

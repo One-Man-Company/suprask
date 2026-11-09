@@ -71,8 +71,8 @@
       "q": "Du viršeliai turi tą patį piešinį. Spalvos skiriasi. Ar piešinys tas pats?",
       "options": [
         "Taip, piešinys tas pats",
-        "Ne, piešinys naujas",
-        "Ne, piešinys jau kitas"
+        "Ne, piešinys nupieštas iš naujo",
+        "Ne, pasikeitė dėmės forma"
       ],
       "answer": 0,
       "hint": "Žiūrėk į linijas ir dėmių formą, ne į spalvą.",

@@ -296,7 +296,26 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .crumbs a { color: var(--ink-soft); }
 
 .outcomes { list-style: none; padding: 0; margin: 0; display: grid; gap: .4rem; }
-.outcomes li { display: flex; gap: .6rem; align-items: flex-start; font-size: var(--fs-s); color: var(--ink-soft); }
+/* `ul` yra tinklelis, o `li` — jo takelis su numatytuoju `min-width:auto`
+   minimumu (ilgiausio žodžio plotis). Prie 200 % teksto (32 px šaknis) @360 px
+   modulyje 12-bendradarbiavimo-tiltas sąrašo juosta buvo 223,6 px, o `<li>`
+   išsitempė iki 339,6 px (jo `<span>` — 294,9 px): 116 px išlipo iš sąrašo,
+   puslapis slinko 48 px. Tai trečia tos pačios klasės vieta šalia `.task-q`
+   (#4748) ir `.module-foot > .btn` (#5842).
+   `min-width:0` leidžia takeliui ir flex vaikui susitraukti žemiau min-content,
+   o `overflow-wrap:anywhere` — laužyti žodį, kai jis fiziškai netelpa
+   (WCAG 1.4.10). Vien `break-word` (bendra taisyklė aukščiau) čia netinka:
+   jis laužo tik perteklių, bet min-content dydžio nekeičia. Žodžio lūžimas
+   čia ne LL-51 atvejis: ilgiausias žodis „bendradarbiavimas“ pats yra
+   294,9 px, t. y. didesnis už VISĄ sąrašo juostą (223,6 px) — 200 % tekste
+   jo neįtalpina jokia šio bloko geometrija, o kita išeitis būtų puslapio
+   slanktis, kurios būti negali (WCAG 1.4.10 reflow). Šrifto nemažiname (#5842).
+   Įprastu šriftu deklaracijos neturi poveikio: matuota @360/16 prieš ir po —
+   sąrašas 290,8 px, `<li>` 290,8 px, `<span>` 268,5 px, eilučių 3 ir 2
+   (tos pačios), puslapio slinktis 0. Skiriasi tik 32 px atvejis: `<li>`
+   339,6 → 223,6, `<span>` 294,9 → 179, slinktis 48 → 0. */
+.outcomes li { display: flex; gap: .6rem; align-items: flex-start; font-size: var(--fs-s); color: var(--ink-soft); min-width: 0; }
+.outcomes li > span { min-width: 0; overflow-wrap: anywhere; }
 .outcomes li::before { content: "✓"; color: var(--ok); font-weight: 900; }
 
 .steps { counter-reset: step; list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }

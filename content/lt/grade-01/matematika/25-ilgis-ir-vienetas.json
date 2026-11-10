@@ -1,0 +1,163 @@
+{
+  "id": "25-ilgis-ir-vienetas",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Ilgis: tas pats daiktas, kitas skaičius",
+  "subtitle": "Skaičius priklauso nuo vieneto, kuriuo matuoji",
+  "minutes": 9,
+  "outcomes": [
+    "Išmatuoju daiktą pasirinktu vienetu ir pasakau skaičių su vienetu.",
+    "Palyginu to paties daikto matavimus skirtingais vienetais.",
+    "Paaiškinu, kodėl mažesnis vienetas duoda didesnį skaičių."
+  ],
+  "concept": {
+    "title": "Ilgis yra vienetų skaičius",
+    "big_idea": "Tas pats daiktas, matuojamas skirtingais vienetais, gauna skirtingus skaičius. Jo ilgis nepakinta. Skaičius pasako ilgį tik tada, kai pasakai vienetą.",
+    "steps": [
+      "Matuok vieną po kito, be tarpų. Skaičiuok, kiek jų telpa.",
+      "Skaičius su vienetu pasako ilgį: šešios sąvaržėlės.",
+      "Didesnis vienetas telpa mažiau kartų. Mažesnis — daugiau.",
+      "Todėl ta pati lenta turi kelis skaičius."
+    ],
+    "example": "Klasė matuoja suolą. Viena grupė matuoja trintukais, kita pieštukais. Skaičiai skirsis, suolas liks tas pats."
+  },
+  "sim": {
+    "component": "ilgis-ir-vienetas",
+    "config": {
+      "board": { "px": 240 },
+      "units": [
+        { "id": "savarzele", "pl": "sąvaržėlės", "instr": "sąvaržėlėmis", "px": 40 },
+        { "id": "trintukas", "pl": "trintukai", "instr": "trintukais", "px": 60 },
+        { "id": "piestukas", "pl": "pieštukai", "instr": "pieštukais", "px": 120 }
+      ],
+      "start": "savarzele",
+      "dirGuess": "trintukas",
+      "firstGuess": [6, 4, 8],
+      "sentences": {
+        "start": "Kiek sąvaržėlių telpa ant lentos? Pasirink skaičių.",
+        "guessNote": "Pirma spėk, tada matuok.",
+        "guess": {
+          "6": "Tu sakei 6. Dabar matuok.",
+          "4": "Tu sakei 4. Dabar matuok.",
+          "8": "Tu sakei 8. Dabar matuok."
+        },
+        "place": "Dėk toliau, kol lenta baigsis.",
+        "full": {
+          "savarzele": "Lenta baigėsi. Šešios sąvaržėlės.",
+          "trintukas": "Lenta baigėsi. Keturi trintukai.",
+          "piestukas": "Lenta baigėsi. Du pieštukai."
+        },
+        "cmp": {
+          "6": "Tu sakei 6. Tilpo 6.",
+          "4": "Tu sakei 4. Tilpo 6.",
+          "8": "Tu sakei 8. Tilpo 6."
+        },
+        "ask": "Trintukas ilgesnis už sąvaržėlę. Ar trintukų bus daugiau, ar mažiau?",
+        "askNote": "Pasakyk, tada matuok.",
+        "dirMore": "Tu sakei daugiau. Gavosi mažiau: keturi trintukai.",
+        "dirLess": "Tu sakei mažiau. Gavosi mažiau: keturi trintukai.",
+        "next": "Naujas vienetas. Matuok iš naujo.",
+        "back": "Skaičius grįžo. Lenta nepakito.",
+        "last": "Dar mažiau. Tas pats ilgis.",
+        "all": "Trys skaičiai, viena lenta.",
+        "same": "Skaičius kitas, ilgis tas pats.",
+        "reset": "Pradedam iš naujo. Pirma spėk.",
+        "fullBoard": "Daugiau netelpa. Lenta baigėsi.",
+        "mismatch": "Vienetai nesuderinti su lenta.",
+        "counts": {
+          "savarzele": [
+            "Viena sąvaržėlė",
+            "Dvi sąvaržėlės",
+            "Trys sąvaržėlės",
+            "Keturios sąvaržėlės",
+            "Penkios sąvaržėlės",
+            "Šešios sąvaržėlės"
+          ],
+          "trintukas": [
+            "Vienas trintukas",
+            "Du trintukai",
+            "Trys trintukai",
+            "Keturi trintukai"
+          ],
+          "piestukas": [
+            "Vienas pieštukas",
+            "Du pieštukai"
+          ]
+        }
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Ant lentos telpa 6 sąvaržėlės. Kuri eilutė pasako lentos ilgį?",
+      "options": [
+        "6",
+        "6 lentos",
+        "6 sąvaržėlės"
+      ],
+      "answer": 2,
+      "hint": "Skaičius vienas nieko nesako. Pažiūrėk, kuo matuota.",
+      "why": "Skaičius be vieneto nepasako, kuo matuota."
+    },
+    {
+      "q": "Lenta yra 6 sąvaržėlės. Trintukas ilgesnis už sąvaržėlę. Kiek trintukų telpa?",
+      "options": [
+        "2",
+        "8",
+        "4"
+      ],
+      "answer": 2,
+      "hint": "Trintukas didesnis už sąvaržėlę. Skaičius turi būti mažesnis už 6.",
+      "why": "Didesnis vienetas telpa mažiau kartų, todėl trintukų yra 4."
+    },
+    {
+      "q": "Močiutė matavo kilimą savo pėdomis ir gavo 8. Anūkas turi mažesnes pėdas. Kiek pėdų suskaičiuos anūkas?",
+      "options": [
+        "Mažiau nei 8",
+        "Daugiau nei 8",
+        "Taip pat 8"
+      ],
+      "answer": 1,
+      "hint": "Mažesnė pėda telpa daugiau kartų į tą patį kilimą.",
+      "why": "Mažesnis vienetas telpa daugiau kartų. Anūkas gaus daugiau nei 8."
+    },
+    {
+      "q": "Du vaikai matavo tą patį suolą. Vienas gavo 3, kitas 9. Ar taip gali būti?",
+      "options": [
+        "Ne, tas pats suolas duoda tą patį skaičių",
+        "Taip, jei vienas matavo trumpesniu vienetu",
+        "Ne, 9 yra per daug"
+      ],
+      "answer": 1,
+      "hint": "Skaičius priklauso nuo vieneto, ne nuo suolo.",
+      "why": "Tas pats suolas turi skirtingus skaičius, kai vienetai skirtingi.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip paaiškintum, kodėl Jonas gavo 6, o Rūta 2?",
+  "teacher": {
+    "goal": "Suprasti, kad ilgis yra vienetų skaičius: tas pats daiktas, matuojamas skirtingais vienetais, gauna skirtingus skaičius, o jo ilgis nepakinta.",
+    "prompt": "Kodėl tas pats suolas vienam buvo 3, kitam 9?",
+    "offline": "Duokite dviem vaikams po vienodą popieriaus juostą. Vienas matuoja trintuku, kitas pieštuku, abu dėlioja vienetą prie vieneto be tarpų. Kiekvienas pasako skaičių su vienetu („4 trintukai“, „2 pieštukai“), tada vaikai apsikeičia vienetais ir matuoja iš naujo. Juostos ilgis nekeičiamas ir nekerpamas.",
+    "misconceptions": [
+      "„Daugiau vienetų reiškia ilgesnį daiktą“ — lenta modelio nesikeičia, o prie to paties galo atsiranda 6, paskui 4, paskui 2. Jei skaičius reikštų ilgį, lenta turėtų pailgėti tris kartus.",
+      "„Skaičius vienas pasako ilgį“ — ta pati lenta turi ir 6, ir 4, ir 2, todėl skaičius be vieneto neatskiria net to paties daikto matavimų.",
+      "„Mažesnis vienetas duoda mažesnį skaičių“ — sąvaržėlė yra mažiausia ir duoda didžiausią skaičių (6), pieštukas didžiausias ir duoda mažiausią (2).",
+      "„Vienetus galima maišyti“ — modelis matuoja tik vienos rūšies vienetais ir šios klaidos neparodo; ją su tikrais daiktais aptaria mokytojas."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), matematikos ilgalaikis (metų) planas 1 klasei — „Ilgis 5“ ir integruota veikla „Kokio ilgio mano kuprinėje esantys daiktai?“ (matematika, lietuvių kalba ir literatūra), sources/pradinio-bp-rekomendacijos-2024.txt:17300–17301, 17325–17326.",
+    "NŠA (2024), ten pat, sources/pradinio-bp-rekomendacijos-2024.txt:1010–1017 — „mato jausmo“ ugdymas ir metodas „spėti ir tikrinti“; antroje klasėje numatyti gretimų matavimo vienetų sąryšiai, todėl 1 klasėje lieka sąlyginiai vienetai.",
+    "Carpenter, T. P., & Lewis, R. (1976). The development of the concept of a standard unit of measure in young children. Journal for Research in Mathematics Education, 7(1), 53–58. https://doi.org/10.5951/jresematheduc.7.1.0053",
+    "Sarama, J., Clements, D. H., Barrett, J., van Dine, D. W., & McDonel, J. S. (2011). Evaluation of a learning trajectory for length in the early years. ZDM Mathematics Education, 43(5), 667–680. https://doi.org/10.1007/s11858-011-0326-5",
+    "Sarama, J., Clements, D. H., Barrett, J. E., Cullen, C. J., Hudyma, A., & Vanegas, Y. (2022). Length measurement in the early years: Teaching and learning with learning trajectories. Mathematical Thinking and Learning, 24(4), 267–290. https://doi.org/10.1080/10986065.2020.1858245",
+    "Hiebert, J. (1981). Cognitive development and learning linear measurement. Journal for Research in Mathematics Education, 12(3), 197–211. https://doi.org/10.5951/jresematheduc.12.3.0197",
+    "Metodas M-07 — research/wiki/grades/01/metodai.md (2026-11-10)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (skaičius priklauso nuo vieneto); centimetrų skalė ir vienetų sąryšiai sąmoningai neįtraukti — tai 2 klasės turinys.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę naujoje situacijoje (močiutės pėdos, du vaikai su tuo pačiu suolu), o ne įsimintą formuluotę.",
+    "3 žingsnis — pagalba laiku: spėjimas prieš matavimą palyginamas su rezultatu, kiekviena užduotis turi užuominą, „Iš naujo“ nieko nebaudžia, yra praplėtimo užduotis."
+  ]
+}

@@ -37,7 +37,8 @@
         { "id": "21-erdvines-figuros", "title": "Erdvinės figūros", "subtitle": "Kūgis tas pats — iš priekio trikampis, iš viršaus apskritimas", "file": "grade-01/matematika/21-erdvines-figuros.json", "minutes": 9, "sim": "erdvines-figuros" },
         { "id": "22-sudetis-per-desimti", "title": "Sudėtis per dešimtį", "subtitle": "Pirma papildyk dešimtuką, paskui pridėk, kas liko", "file": "grade-01/matematika/22-sudetis-per-desimti.json", "minutes": 9, "sim": "sudetis-per-desimti" },
         { "id": "23-piktograma-ir-stulpelis", "title": "Piktograma ir stulpelis", "subtitle": "Aukštas stulpelis rodo daug daiktų, o ne didelius daiktus", "file": "grade-01/matematika/23-piktograma-ir-stulpelis.json", "minutes": 9, "sim": "piktograma-ir-stulpelis" },
-        { "id": "24-komandu-seka", "title": "Komandų seka: viena klaida pakreipia kelią", "subtitle": "Kiekviena komanda pradeda ten, kur baigėsi ankstesnė", "file": "grade-01/matematika/24-komandu-seka.json", "minutes": 9, "sim": "komandu-seka" }
+        { "id": "24-komandu-seka", "title": "Komandų seka: viena klaida pakreipia kelią", "subtitle": "Kiekviena komanda pradeda ten, kur baigėsi ankstesnė", "file": "grade-01/matematika/24-komandu-seka.json", "minutes": 9, "sim": "komandu-seka" },
+        { "id": "25-ilgis-ir-vienetas", "title": "Ilgis: tas pats daiktas, kitas skaičius", "subtitle": "Skaičius priklauso nuo vieneto, kuriuo matuoji", "file": "grade-01/matematika/25-ilgis-ir-vienetas.json", "minutes": 9, "sim": "ilgis-ir-vienetas" }
       ]
     },
     {

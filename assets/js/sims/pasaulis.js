@@ -2174,6 +2174,19 @@ const dumaiIrIsejimas = {
       return true;
     }
 
+    /* Pažanga žymima tik pamačius abu kelius IR bent du dūmų kiekius — kitaip
+       vaikas „baigtų“ nematęs, kad sluoksnis leidžiasi (LL-29 atvirkštinė
+       pusė). Kad sąlyga nebūtų paslėpta, vaikui pasakoma, ko dar trūksta:
+       be šios eilutės abu kelius išbandęs vaikas negauna jokio signalo, kad
+       dar kažko laukiama. */
+    function hintIfMoreNeeded() {
+      if (reported) return "";
+      if (routesSeen.size === 2 && levelsSeen.size < 2) {
+        return " Padidink dūmus ir pažiūrėk dar kartą.";
+      }
+      return "";
+    }
+
     function chooseRoute(next) {
       route = next;
       routesSeen.add(next);
@@ -2186,6 +2199,7 @@ const dumaiIrIsejimas = {
       render();
       let note = noteFor();
       if (maybeReport()) note += " " + (SENT.done || "Dabar pasakyk, kodėl.");
+      else note += hintIfMoreNeeded();
       api.note(note);
     }
 
@@ -2198,6 +2212,7 @@ const dumaiIrIsejimas = {
       if (typeof api.speak === "function") api.speak(sentence, { rate: 0.95 });
       let note = noteFor();
       if (maybeReport()) note += " " + (SENT.done || "Dabar pasakyk, kodėl.");
+      else note += hintIfMoreNeeded();
       api.note(note);
     }
 

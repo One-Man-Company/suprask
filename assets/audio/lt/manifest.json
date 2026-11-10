@@ -647,6 +647,10 @@
   "n": "n/e9ebf47dd9afa46f-0377d56d.mp3",
   "s": "s/e9ebf47dd9afa46f-aaffef6d.mp3"
  },
+ "Dar mažiau. Tas pats ilgis.": {
+  "n": "n/dd3f0aa81557d05b-8af8f770.mp3",
+  "s": "s/dd3f0aa81557d05b-9c804484.mp3"
+ },
  "Dar ne visa kaina.": {
   "n": "n/c890f23c44c2b32e-9abe2ec1.mp3",
   "s": "s/c890f23c44c2b32e-e9ea8cc6.mp3"
@@ -654,6 +658,10 @@
  "Daug dūmų. Oras liko vien prie grindų.": {
   "n": "n/12617fd356b73d7e-1ff3f32e.mp3",
   "s": "s/12617fd356b73d7e-0500193c.mp3"
+ },
+ "Daugiau netelpa. Lenta baigėsi.": {
+  "n": "n/237847f39258af0d-d504f68b.mp3",
+  "s": "s/237847f39258af0d-3622516b.mp3"
  },
  "Delfinas": {
   "n": "n/9876039e0dd3dcb0-e2b5db09.mp3",
@@ -815,13 +823,29 @@
   "n": "n/9857ee5f9d20326c-986364ea.mp3",
   "s": "s/9857ee5f9d20326c-11bba99c.mp3"
  },
+ "Du pieštukai": {
+  "n": "n/f9fe9bbda32a3b44-cd96117e.mp3",
+  "s": "s/f9fe9bbda32a3b44-3cea0532.mp3"
+ },
  "Du plojimai: antras pusiaukelėje.": {
   "n": "n/43601bf7064ab95f-d9056be4.mp3",
   "s": "s/43601bf7064ab95f-b8a6ec6f.mp3"
  },
+ "Du trintukai": {
+  "n": "n/442c5f55b789e782-81475ca4.mp3",
+  "s": "s/442c5f55b789e782-3272b377.mp3"
+ },
  "Dvi naujos kaladėlės. Didelė medinė ir maža metalinė.": {
   "n": "n/e278741a836e576c-5454a6dd.mp3",
   "s": "s/e278741a836e576c-938b96b2.mp3"
+ },
+ "Dvi sąvaržėlės": {
+  "n": "n/908e68faac5b6eb7-3654cdc9.mp3",
+  "s": "s/908e68faac5b6eb7-43667770.mp3"
+ },
+ "Dėk toliau, kol lenta baigsis.": {
+  "n": "n/9e26240796099d8e-b5dc13a4.mp3",
+  "s": "s/9e26240796099d8e-451c8d54.mp3"
  },
  "Dėlionė": {
   "n": "n/02effa582a419044-fec7949a.mp3",
@@ -963,6 +987,14 @@
   "n": "n/1e051d58fe0e58f6-bb1cd972.mp3",
   "s": "s/1e051d58fe0e58f6-4e6d5162.mp3"
  },
+ "Keturi trintukai": {
+  "n": "n/3eb66ac94d4b6d16-02bc7d41.mp3",
+  "s": "s/3eb66ac94d4b6d16-43105f01.mp3"
+ },
+ "Keturios sąvaržėlės": {
+  "n": "n/f27cdd838f6daead-a92e514a.mp3",
+  "s": "s/f27cdd838f6daead-ef6ee7d0.mp3"
+ },
  "Keturkampis": {
   "n": "n/1c68c529e0dee2d1-8c0ac07a.mp3",
   "s": "s/1c68c529e0dee2d1-dd4ecd72.mp3"
@@ -978,6 +1010,10 @@
  "Kiek savo blokų duosi draugui?": {
   "n": "n/968dc7212ae0e27f-06711a0e.mp3",
   "s": "s/968dc7212ae0e27f-18db5161.mp3"
+ },
+ "Kiek sąvaržėlių telpa ant lentos? Pasirink skaičių.": {
+  "n": "n/6c802c2052303da5-d1daa1c8.mp3",
+  "s": "s/6c802c2052303da5-0b499785.mp3"
  },
  "Kiek trūksta iki 10?": {
   "n": "n/9fd129ef9e44b5d4-073f1b15.mp3",
@@ -1095,6 +1131,18 @@
   "n": "n/0379335dceaabec9-5d423f9c.mp3",
   "s": "s/0379335dceaabec9-322b74bd.mp3"
  },
+ "Lenta baigėsi. Du pieštukai.": {
+  "n": "n/fa917bbc6ccbe8b9-735e8b34.mp3",
+  "s": "s/fa917bbc6ccbe8b9-34ab77af.mp3"
+ },
+ "Lenta baigėsi. Keturi trintukai.": {
+  "n": "n/a05277a57e1af8ee-2f7792ee.mp3",
+  "s": "s/a05277a57e1af8ee-ca5cd3cf.mp3"
+ },
+ "Lenta baigėsi. Šešios sąvaržėlės.": {
+  "n": "n/ddba4fc539a8eb99-87701608.mp3",
+  "s": "s/ddba4fc539a8eb99-48f9bd31.mp3"
+ },
  "Linktelėjo": {
   "n": "n/86fa18d5636f9dc4-99eb23ab.mp3",
   "s": "s/86fa18d5636f9dc4-a00ad1c4.mp3"
@@ -1134,6 +1182,10 @@
  "N": {
   "n": "n/8ce86a6ae65d3692-84095ad0.mp3",
   "s": "s/8ce86a6ae65d3692-081e4fe1.mp3"
+ },
+ "Naujas vienetas. Matuok iš naujo.": {
+  "n": "n/6deac8e8dd8e0386-dbb49464.mp3",
+  "s": "s/6deac8e8dd8e0386-99482a3d.mp3"
  },
  "Nė vieno laido. Kelias visai nutrūkęs.": {
   "n": "n/59d8042b3c1fd28c-3f002c4f.mp3",
@@ -1175,6 +1227,10 @@
   "n": "n/e2c3c41a3f0bb8ee-c7db9c56.mp3",
   "s": "s/e2c3c41a3f0bb8ee-58662b22.mp3"
  },
+ "Pasakyk, tada matuok.": {
+  "n": "n/b090c43c90462b3c-6238cfb7.mp3",
+  "s": "s/b090c43c90462b3c-c3990d3f.mp3"
+ },
  "Pasiekei lapą.": {
   "n": "n/e4ff17609ce48006-064c37ee.mp3",
   "s": "s/e4ff17609ce48006-c893f127.mp3"
@@ -1199,6 +1255,10 @@
   "n": "n/9f5897c7a3b79e29-125b8a6f.mp3",
   "s": "s/9f5897c7a3b79e29-df222f4d.mp3"
  },
+ "Penkios sąvaržėlės": {
+  "n": "n/4442964276270f3f-3cf8a61e.mp3",
+  "s": "s/4442964276270f3f-b2f72d26.mp3"
+ },
  "Per daug. Nuimk vieną pinigą.": {
   "n": "n/432afa070cceea11-9cf15bfe.mp3",
   "s": "s/432afa070cceea11-3e66e30b.mp3"
@@ -1218,6 +1278,10 @@
  "Pirma pasakyk, tada keisk korteles.": {
   "n": "n/76e586fb66924d2d-c80bb9be.mp3",
   "s": "s/76e586fb66924d2d-3075cfef.mp3"
+ },
+ "Pirma spėk, tada matuok.": {
+  "n": "n/ac090d01c5a41fa1-7058ffff.mp3",
+  "s": "s/ac090d01c5a41fa1-06420e77.mp3"
  },
  "Pirma sustabdyk, tada keisk.": {
   "n": "n/8d98eca84da1aa3c-a1e1f182.mp3",
@@ -1407,6 +1471,14 @@
   "n": "n/b6c14d77fa5c0a82-984de7a3.mp3",
   "s": "s/b6c14d77fa5c0a82-20e4c44b.mp3"
  },
+ "Skaičius grįžo. Lenta nepakito.": {
+  "n": "n/6e2894ddcd7406bc-6f234281.mp3",
+  "s": "s/6e2894ddcd7406bc-47cfaf25.mp3"
+ },
+ "Skaičius kitas, ilgis tas pats.": {
+  "n": "n/f9f4cc8ceeef0aad-656c362a.mp3",
+  "s": "s/f9f4cc8ceeef0aad-571d829a.mp3"
+ },
  "Sniegas tirpsta, paukščiai grįžta, medžiai žydi.": {
   "n": "n/c685e0360afa3917-c5f4e703.mp3",
   "s": "s/c685e0360afa3917-04cee785.mp3"
@@ -1543,6 +1615,22 @@
   "n": "n/bc5649b646cf679f-40a5678f.mp3",
   "s": "s/bc5649b646cf679f-4b0d86d5.mp3"
  },
+ "Trintukas ilgesnis už sąvaržėlę. Ar trintukų bus daugiau, ar mažiau?": {
+  "n": "n/5649faf6bb1d075e-0574fb55.mp3",
+  "s": "s/5649faf6bb1d075e-83e5f559.mp3"
+ },
+ "Trys skaičiai, viena lenta.": {
+  "n": "n/bb0ea531b3d25363-87c18e5f.mp3",
+  "s": "s/bb0ea531b3d25363-5664d65b.mp3"
+ },
+ "Trys sąvaržėlės": {
+  "n": "n/63126725f06b1f64-cf9c1615.mp3",
+  "s": "s/63126725f06b1f64-77eff421.mp3"
+ },
+ "Trys trintukai": {
+  "n": "n/f7f0f61bfcd44263-806425f3.mp3",
+  "s": "s/f7f0f61bfcd44263-aeb9fa84.mp3"
+ },
  "Trys vienodo dydžio kaladėlės. Kuri plauks?": {
   "n": "n/da3c514821c976da-86f549a5.mp3",
   "s": "s/da3c514821c976da-278d796c.mp3"
@@ -1554,6 +1642,38 @@
  "Tu pabandei abu kelius. Pasakyk, kodėl durys geresnės.": {
   "n": "n/91436dd683db3b2d-e84b1bbd.mp3",
   "s": "s/91436dd683db3b2d-01b15bc6.mp3"
+ },
+ "Tu sakei 4. Dabar matuok.": {
+  "n": "n/a0995374aea2c166-34371bdb.mp3",
+  "s": "s/a0995374aea2c166-3bec3e08.mp3"
+ },
+ "Tu sakei 4. Tilpo 6.": {
+  "n": "n/2298548454344a8b-db8866d4.mp3",
+  "s": "s/2298548454344a8b-3bd6c42e.mp3"
+ },
+ "Tu sakei 6. Dabar matuok.": {
+  "n": "n/a230fb4722feb44c-3607e0d7.mp3",
+  "s": "s/a230fb4722feb44c-e69096ca.mp3"
+ },
+ "Tu sakei 6. Tilpo 6.": {
+  "n": "n/a3eb2fe612683d15-2d298432.mp3",
+  "s": "s/a3eb2fe612683d15-fd156e95.mp3"
+ },
+ "Tu sakei 8. Dabar matuok.": {
+  "n": "n/89458dc06aeffaae-93852d04.mp3",
+  "s": "s/89458dc06aeffaae-382ab0fc.mp3"
+ },
+ "Tu sakei 8. Tilpo 6.": {
+  "n": "n/dda0c0b9cb84ad76-09c1a6cf.mp3",
+  "s": "s/dda0c0b9cb84ad76-6d1d4031.mp3"
+ },
+ "Tu sakei daugiau. Gavosi mažiau: keturi trintukai.": {
+  "n": "n/8cdea8b24d6025d0-b612aaca.mp3",
+  "s": "s/8cdea8b24d6025d0-b09e1da1.mp3"
+ },
+ "Tu sakei mažiau. Gavosi mažiau: keturi trintukai.": {
+  "n": "n/bf74e66fcf175dce-a10f18e3.mp3",
+  "s": "s/bf74e66fcf175dce-a3f05722.mp3"
  },
  "Tyla": {
   "n": "n/170ba9b291bd200a-0c170880.mp3",
@@ -1631,6 +1751,10 @@
   "n": "n/9a42e38296157a8d-74837e91.mp3",
   "s": "s/9a42e38296157a8d-5d075e7d.mp3"
  },
+ "Viena sąvaržėlė": {
+  "n": "n/d4244a5ac9b74e8c-0f697101.mp3",
+  "s": "s/d4244a5ac9b74e8c-ae97f632.mp3"
+ },
  "Vienas banknotas atstojo kelias monetas.": {
   "n": "n/6c9af7476a67ef8e-d77aaffc.mp3",
   "s": "s/6c9af7476a67ef8e-9cef0004.mp3"
@@ -1647,9 +1771,21 @@
   "n": "n/ee6c6227d0f68c5e-eca930d9.mp3",
   "s": "s/ee6c6227d0f68c5e-42f06e85.mp3"
  },
+ "Vienas pieštukas": {
+  "n": "n/2aaae08e5fe209f9-f894b49c.mp3",
+  "s": "s/2aaae08e5fe209f9-793315f3.mp3"
+ },
  "Vienas plojimas ant pulso.": {
   "n": "n/f115762ac8ef6168-a8106622.mp3",
   "s": "s/f115762ac8ef6168-05c2def9.mp3"
+ },
+ "Vienas trintukas": {
+  "n": "n/99f866719c8f932d-00938715.mp3",
+  "s": "s/99f866719c8f932d-4bd92e02.mp3"
+ },
+ "Vienetai nesuderinti su lenta.": {
+  "n": "n/003868e611555a1e-a0b8966d.mp3",
+  "s": "s/003868e611555a1e-47869961.mp3"
  },
  "Visos figūros savo vietose. Puiku!": {
   "n": "n/936e4c7947cd9753-0a09e79f.mp3",
@@ -1942,6 +2078,10 @@
  "Šalta, sniegas, medžiai be lapų, vanduo užšąla.": {
   "n": "n/2cb3683e3c35df4c-a7a95b8d.mp3",
   "s": "s/2cb3683e3c35df4c-4ec89bf3.mp3"
+ },
+ "Šešios sąvaržėlės": {
+  "n": "n/0b02554737373e75-76eaee8e.mp3",
+  "s": "s/0b02554737373e75-734a0814.mp3"
  },
  "Ši seka veda ne prie vėliavos. Viena komanda klaidinga.": {
   "n": "n/6d6f88831dc26d38-c2d34fc3.mp3",

@@ -1,5 +1,5 @@
 /**
- * Erdvinių kūnų simuliacija (1 klasė, matematika).
+ * Erdvinių kūnų ir ilgio matavimo simuliacijos (1 klasė, matematika).
  *
  * Modelis: vienas kūnas stovi ant stalo, o vaikas keičia TIK tai, iš kur
  * žiūri — iš priekio, iš viršaus, nuo šono. Kiekvieną kartą jis pirma spėja,
@@ -18,6 +18,10 @@
  *
  * Scena surenkama iš `art.js` dalių (LL-13): art.solidCone/solidCylinder/
  * solidBox/solidSphere/flatShape/viewArrow.
+ *
+ * Antras komponentas šiame faile — `ilgis-ir-vienetas` (ilgio matavimas
+ * sąlyginiais vienetais, matas M-07). Kodėl ne `matematika.js`, paaiškinta
+ * prie jo bloko žemiau.
  */
 import { art } from "./art.js";
 
@@ -390,6 +394,413 @@ const erdvinesFiguros = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Ilgis ir vienetas — sąlyginiai matavimo vienetai (1 klasė)           */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Modelis: lenta įterpiama VIENĄ kartą ir nejuda, o vaikas keičia tik
+ * vienetą — sąvaržėlę, trintuką ar pieštuką. Skaičius išeina kitas
+ * (6, 4, 2), o lenta lieka ta pati. Grįžus prie jau matuoto vieneto
+ * gaunamas lygiai toks pat vaizdas: tai kontrolinis bandymas, kurio du
+ * atskiri paveikslai negali duoti.
+ *
+ * Skaičius niekada nerodomas vienas — visada su vienetu („Trys sąvaržėlės“).
+ * Dalyba tikrinama, ne apvalinama: jei vienetas netelpa sveiką kartų skaičių,
+ * modelis pasako, kad vienetai nesuderinti su lenta.
+ *
+ * Scena surenkama iš `art.js` (LL-13): `art.defs` + `art.plank`. Vienetų
+ * žetonai skiriasi forma, o ne vien spalva.
+ *
+ * Komponentas gyvena čia, o ne `matematika.js`, nes pastarasis dar yra
+ * vienintelė `check_art.py` LEGACY scena: importavus jame art.js, visą failą
+ * tektų skelbti migruotu, nors kitos jo scenos tebepiešiamos savo formomis.
+ */
+const IV_BOARD_X = 40;
+const IV_BOARD_BOTTOM = 148;
+const IV_BOARD_H = 46;
+const IV_TOKEN_Y = 112;
+const IV_VB_W = 328;
+
+/** Vieneto žetonas. Forma atpažįstama ir be spalvos (LL-13).
+ *  Piešinys užima LYGIAI savo laukelį [x, x + px]: todėl vienetai dėliojami
+ *  be tarpų, o paskutinio žetono kraštas sutampa su lentos galu. */
+function ilgioToken(unit, x) {
+  const w = unit.px;
+  const y = IV_TOKEN_Y;
+  if (unit.id === "trintukas") {
+    return `<g><rect x="${x}" y="${y + 5}" width="${w}" height="20" rx="4"
+      fill="#f0a6b8" stroke="#a85f76" stroke-width="2.4"/>
+      <rect x="${x + w - 15}" y="${y + 8}" width="11" height="14" fill="#ffffff" opacity=".6"/></g>`;
+  }
+  if (unit.id === "piestukas") {
+    return `<g>
+      <rect x="${x}" y="${y + 8}" width="${w - 30}" height="14" rx="2"
+        fill="#f6c86e" stroke="#a9793f" stroke-width="2.2"/>
+      <path d="M${x + w - 30} ${y + 8} L${x + w} ${y + 15} L${x + w - 30} ${y + 22} Z"
+        fill="#f6c86e" stroke="#a9793f" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M${x + w - 12} ${y + 13} L${x + w} ${y + 15} L${x + w - 12} ${y + 17} Z" fill="#3a3a3a"/>
+      <rect x="${x + 1}" y="${y + 8}" width="9" height="14" fill="#e46b6b" opacity=".85"/>
+    </g>`;
+  }
+  return `<g>
+    <rect x="${x}" y="${y + 5}" width="${w}" height="20" rx="9"
+      fill="none" stroke="#5b6b7a" stroke-width="3"/>
+    <rect x="${x + 6}" y="${y + 11}" width="${w - 12}" height="8" rx="4"
+      fill="none" stroke="#5b6b7a" stroke-width="2.4"/>
+  </g>`;
+}
+
+const ilgisIrVienetas = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const bag = (key) => (S[key] && typeof S[key] === "object" ? S[key] : {});
+    const line = (key) => (typeof S[key] === "string" ? S[key] : "");
+    const tell = (text) => { if (text) api.speak(text); };
+    const cap = (text) => (text ? text.charAt(0).toUpperCase() + text.slice(1) : "");
+    const positive = (value, fallback) => {
+      const n = Number(value);
+      return Number.isFinite(n) && n > 0 ? n : fallback;
+    };
+
+    const units = (Array.isArray(config.units) ? config.units : [])
+      .filter((u) => u && typeof u.id === "string" && Number(u.px) > 0)
+      .map((u) => ({
+        id: u.id,
+        pl: typeof u.pl === "string" ? u.pl : u.id,
+        instr: typeof u.instr === "string" ? u.instr : u.id,
+        px: Number(u.px),
+      }));
+    const boardPx = positive(config.board && config.board.px, 240);
+    const unitById = (id) => units.find((u) => u.id === id) || null;
+    const countOf = (u) => Math.round(boardPx / u.px);
+    const whole = units.length > 0
+      && units.every((u) => Math.abs(boardPx / u.px - Math.round(boardPx / u.px)) < 1e-9);
+
+    if (!whole) {
+      // Tylus apvalinimas būtų neteisingas modelis: „7,5 trintuko“ vaikas nemato.
+      console.error("ilgis-ir-vienetas: vienetai nesuderinti su lenta", boardPx, units.map((u) => u.px));
+      stage.innerHTML = '<p class="sim-note" style="margin:0"></p>';
+      stage.firstElementChild.textContent = line("mismatch");
+      api.readout(line("mismatch"));
+      return () => {};
+    }
+
+    const startId = unitById(config.start) ? config.start : units[0].id;
+    const dirUnit = unitById(config.dirGuess) ? config.dirGuess : "";
+    const guessValues = (Array.isArray(config.firstGuess) ? config.firstGuess : [])
+      .map((n) => Number(n))
+      .filter((n) => Number.isInteger(n) && n > 0)
+      .slice(0, 3);
+
+    const countPhrase = (u, n) => {
+      const list = bag("counts")[u.id];
+      if (!Array.isArray(list) || n < 1 || n > list.length) return "";
+      return typeof list[n - 1] === "string" ? list[n - 1] : "";
+    };
+
+    stage.innerHTML = `
+      <div id="iv-wrap" style="width:100%;max-width:22rem;margin:0 auto;box-sizing:border-box;min-width:0">
+        <svg id="iv-svg" viewBox="0 0 ${IV_VB_W} 184" width="100%" role="img"
+             style="display:block;width:100%;height:auto"></svg>
+        <p id="iv-records" class="sim-note" style="margin:.4rem 0 0"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:.5rem;width:100%;min-width:0">
+        <div id="iv-guess" role="group" aria-label="Spėk, kiek vienetų telpa"
+             style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem"></div>
+        <div id="iv-dir" role="group" aria-label="Ar telps daugiau, ar mažiau"
+             style="display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem"></div>
+        <div id="iv-units" role="group" aria-label="Kuo matuoti"
+             style="display:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem"></div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;min-width:0">
+          <button class="btn secondary" type="button" id="iv-place"
+                  style="display:none;min-height:48px;flex:1 1 10rem">Dėk vieną</button>
+          <button class="btn ghost" type="button" id="iv-reset" style="min-height:48px">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const svg = stage.querySelector("#iv-svg");
+    const recordsEl = stage.querySelector("#iv-records");
+    const guessEl = controls.querySelector("#iv-guess");
+    const dirEl = controls.querySelector("#iv-dir");
+    const unitsEl = controls.querySelector("#iv-units");
+    const placeBtn = controls.querySelector("#iv-place");
+    const resetBtn = controls.querySelector("#iv-reset");
+
+    svg.innerHTML = [
+      art.defs("iv"),
+      art.plank(IV_BOARD_X, IV_BOARD_BOTTOM, boardPx, IV_BOARD_H),
+      `<line x1="${IV_BOARD_X + boardPx}" y1="${IV_BOARD_BOTTOM - IV_BOARD_H - 10}"
+        x2="${IV_BOARD_X + boardPx}" y2="${IV_BOARD_BOTTOM + 6}"
+        style="stroke:var(--ink);stroke-opacity:.45;stroke-width:2.5"
+        stroke-dasharray="5 5" stroke-linecap="round"/>`,
+      '<g id="iv-tokens"></g>',
+      `<text id="iv-count" x="${IV_VB_W / 2}" y="174" text-anchor="middle"
+        style="font-family:var(--font-head);font-size:15px;font-weight:800;fill:var(--ink)"></text>`,
+    ].join("");
+
+    const tokensG = svg.querySelector("#iv-tokens");
+    const countEl = svg.querySelector("#iv-count");
+
+    guessEl.innerHTML = guessValues.map((n) => (
+      `<button class="btn secondary" type="button" data-guess="${n}"
+        aria-label="Spėju ${n}" style="min-height:48px">${n}</button>`
+    )).join("");
+
+    dirEl.innerHTML = `
+      <button class="btn secondary" type="button" data-dir="more" aria-label="Bus daugiau vienetų"
+              style="min-height:48px">Daugiau</button>
+      <button class="btn secondary" type="button" data-dir="less" aria-label="Bus mažiau vienetų"
+              style="min-height:48px">Mažiau</button>`;
+
+    unitsEl.innerHTML = units.map((u) => (
+      `<button class="btn secondary" type="button" data-unit="${u.id}" aria-pressed="false"
+        aria-label="Matuoti ${u.instr}"
+        style="min-height:56px;padding:.4rem .3rem;font-size:.85rem;line-height:1.15;overflow-wrap:anywhere">${cap(u.pl)}</button>`
+    )).join("");
+
+    let state = {
+      unit: startId,
+      placed: 0,
+      phase: "guess",      // guess | dir | measure
+      firstGuess: null,
+      dirGuess: null,
+      measured: new Map(), // vienetas → kiek vienetų telpo
+      reported: false,
+    };
+
+    const show = (el, on, display) => { if (el) el.style.display = on ? display : "none"; };
+
+    function paint() {
+      const u = unitById(state.unit);
+      if (!u) return;
+      const total = countOf(u);
+      let markup = "";
+      for (let i = 0; i < state.placed && i < total; i += 1) {
+        markup += ilgioToken(u, IV_BOARD_X + i * u.px);
+      }
+      tokensG.innerHTML = markup;
+      const phrase = state.placed > 0 ? countPhrase(u, state.placed) : "";
+      countEl.textContent = phrase;
+      svg.setAttribute("aria-label",
+        `Lenta. ${phrase ? `${phrase}.` : "Dar nieko nepadėta."} Lentos galas pažymėtas.`);
+    }
+
+    function markUnits() {
+      units.forEach((u) => {
+        const btn = unitsEl.querySelector(`[data-unit="${u.id}"]`);
+        if (!btn) return;
+        const on = u.id === state.unit;
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        btn.style.borderColor = on ? "var(--accent)" : "var(--line)";
+        btn.style.background = on
+          ? "color-mix(in srgb, var(--accent) 14%, var(--paper-2))"
+          : "var(--paper-2)";
+        btn.style.boxShadow = on ? "inset 0 0 0 2px var(--accent)" : "0 3px 0 var(--line)";
+      });
+    }
+
+    function sync() {
+      // Vienetų eilutė atsiranda tik po pirmo matavimo: pirma spėjimas ir
+      // matavimas sąvaržėlėmis, tik tada keičiamas vienetas (M-07 seka).
+      show(guessEl, state.phase === "guess", "grid");
+      show(dirEl, state.phase === "dir", "grid");
+      show(unitsEl, state.measured.size > 0, "grid");
+      const u = unitById(state.unit);
+      show(placeBtn, state.phase === "measure" && !!u && state.placed < countOf(u), "inline-flex");
+      paint();
+      markUnits();
+    }
+
+    function showRecords() {
+      const done = units.filter((u) => state.measured.has(u.id));
+      if (!done.length) { recordsEl.textContent = ""; return; }
+      const parts = done.map((u) => countPhrase(u, countOf(u))).filter(Boolean);
+      recordsEl.textContent = state.measured.size === units.length
+        ? `${parts.join(" · ")} — ${line("same")}`
+        : parts.join(" · ");
+    }
+
+    function finishUnit(u) {
+      state.measured.set(u.id, countOf(u));
+      const full = bag("full")[u.id] || "";
+      let note;
+      if (state.measured.size === 1 && state.firstGuess != null) {
+        note = bag("cmp")[String(state.firstGuess)] || "";
+      } else if (u.id === dirUnit && state.dirGuess) {
+        note = state.dirGuess === "more" ? line("dirMore") : line("dirLess");
+      } else {
+        note = line("last");
+      }
+      showRecords();
+      sync();
+      if (state.measured.size === units.length) {
+        // Tikslas pasiektas DABAR: visi trys vienetai, o ne pirmas matavimas.
+        api.readout([full, line("all")].filter(Boolean).join(" "));
+        api.note(line("same"));
+        tell(full);
+        if (!state.reported) {
+          state.reported = true;
+          api.progress({ correct: true });
+        }
+        resetBtn.focus();
+        return;
+      }
+      api.readout(full);
+      api.note(note);
+      tell(full);
+      const next = units.find((u2) => !state.measured.has(u2.id));
+      if (next) {
+        const btn = unitsEl.querySelector(`[data-unit="${next.id}"]`);
+        if (btn) btn.focus();
+      } else {
+        resetBtn.focus();
+      }
+    }
+
+    function placeOne() {
+      if (state.phase !== "measure") return;
+      const u = unitById(state.unit);
+      if (!u) return;
+      const total = countOf(u);
+      if (state.placed >= total) {
+        api.note(line("fullBoard"));
+        return;
+      }
+      state.placed += 1;
+      sync();
+      const phrase = countPhrase(u, state.placed);
+      api.readout(phrase ? `${phrase}.` : "");
+      if (state.placed < total) {
+        api.note(line("place"));
+        tell(phrase);
+        return;
+      }
+      finishUnit(u);
+    }
+
+    function selectUnit(id) {
+      const u = unitById(id);
+      if (!u || state.phase === "guess") return;
+      state.unit = id;
+      if (state.measured.has(id)) {
+        // Grįžimas prie jau matuoto vieneto: lygiai tas pats vaizdas.
+        state.placed = countOf(u);
+        state.phase = "measure";
+        sync();
+        api.readout(bag("full")[id] || "");
+        api.note(line("back"));
+        tell(bag("full")[id] || "");
+        return;
+      }
+      state.placed = 0;
+      if (id === dirUnit && !state.dirGuess) {
+        state.phase = "dir";
+        sync();
+        api.readout(line("ask"));
+        api.note(line("askNote"));
+        tell(line("ask"));
+        const first = dirEl.querySelector("button");
+        if (first) first.focus();
+        return;
+      }
+      state.phase = "measure";
+      sync();
+      api.readout(line("next"));
+      api.note(line("place"));
+      tell(line("next"));
+      placeBtn.focus();
+    }
+
+    function chooseGuess(n) {
+      if (state.phase !== "guess") return;
+      state.firstGuess = n;
+      state.phase = "measure";
+      state.placed = 0;
+      sync();
+      const text = bag("guess")[String(n)] || "";
+      if (text) api.readout(text);
+      api.note(line("guessNote"));
+      tell(text);
+      placeBtn.focus();
+    }
+
+    function chooseDir(kind) {
+      if (state.phase !== "dir") return;
+      state.dirGuess = kind === "less" ? "less" : "more";
+      state.phase = "measure";
+      state.placed = 0;
+      sync();
+      api.readout(line("next"));
+      api.note(line("place"));
+      tell(line("next"));
+      placeBtn.focus();
+    }
+
+    function resetAll() {
+      state = {
+        unit: startId,
+        placed: 0,
+        phase: "guess",
+        firstGuess: null,
+        dirGuess: null,
+        measured: new Map(),
+        reported: false,
+      };
+      recordsEl.textContent = "";
+      sync();
+      api.readout(line("start"));
+      api.note(line("guessNote"));
+      tell(line("start"));
+      const first = guessEl.querySelector("button");
+      if (first) first.focus();
+    }
+
+    guessEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-guess]");
+      if (btn) chooseGuess(Number(btn.dataset.guess));
+    });
+    dirEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-dir]");
+      if (btn) chooseDir(btn.dataset.dir);
+    });
+    unitsEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-unit]");
+      if (btn) selectUnit(btn.dataset.unit);
+    });
+    placeBtn.addEventListener("click", placeOne);
+    resetBtn.addEventListener("click", resetAll);
+
+    /* Klaviatūra: ←/→ perjungia vienetus, R atstato — tik kai fokusas
+       valdikliuose, kad nepagrobtų puslapio slinkimo. */
+    controls.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        if (state.phase === "guess") return;
+        const i = units.findIndex((u) => u.id === state.unit);
+        if (i < 0) return;
+        e.preventDefault();
+        const next = units[(i + (e.key === "ArrowRight" ? 1 : units.length - 1)) % units.length];
+        selectUnit(next.id);
+        const btn = unitsEl.querySelector(`[data-unit="${next.id}"]`);
+        if (btn) btn.focus();
+      } else if (e.key === "r" || e.key === "R") {
+        e.preventDefault();
+        resetAll();
+      }
+    });
+
+    sync();
+    api.readout(line("start"));
+    api.note(line("guessNote"));
+    tell(line("start"));
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "erdvines-figuros": erdvinesFiguros,
+  "ilgis-ir-vienetas": ilgisIrVienetas,
 };

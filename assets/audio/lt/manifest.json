@@ -651,6 +651,10 @@
   "n": "n/c890f23c44c2b32e-9abe2ec1.mp3",
   "s": "s/c890f23c44c2b32e-e9ea8cc6.mp3"
  },
+ "Daug dūmų. Oras liko vien prie grindų.": {
+  "n": "n/12617fd356b73d7e-1ff3f32e.mp3",
+  "s": "s/12617fd356b73d7e-0500193c.mp3"
+ },
  "Delfinas": {
   "n": "n/9876039e0dd3dcb0-e2b5db09.mp3",
   "s": "s/9876039e0dd3dcb0-8321f789.mp3"
@@ -827,6 +831,18 @@
   "n": "n/fdbffaed2b3dcb3a-e2e6471c.mp3",
   "s": "s/fdbffaed2b3dcb3a-274a249b.mp3"
  },
+ "Dūmai leidžiasi. Prie grindų dar oras.": {
+  "n": "n/423818fec9d5a505-5fc9bdcb.mp3",
+  "s": "s/423818fec9d5a505-ef459e8e.mp3"
+ },
+ "Dūmų mažai. Jie laikosi prie lubų.": {
+  "n": "n/d6b709e2fbada3a2-82d6bc4a.mp3",
+  "s": "s/d6b709e2fbada3a2-4c4a662a.mp3"
+ },
+ "Dūmų nėra. Oras švarus visame kambaryje.": {
+  "n": "n/e94d734a358e3195-c0ceaee6.mp3",
+  "s": "s/e94d734a358e3195-418ff380.mp3"
+ },
  "E": {
   "n": "n/a9f51566bd6705f7-5d6f8aea.mp3",
   "s": "s/a9f51566bd6705f7-5c0b3da6.mp3"
@@ -902,6 +918,10 @@
  "Kairėn skaičius mažėja vienu.": {
   "n": "n/0dd8eb7a2556331e-2ae58fcd.mp3",
   "s": "s/0dd8eb7a2556331e-f737fefa.mp3"
+ },
+ "Kambaryje dūmai. Ką darysi?": {
+  "n": "n/b3a5b2ab7c38ae41-4f0e4691.mp3",
+  "s": "s/b3a5b2ab7c38ae41-a2837e77.mp3"
  },
  "Karosas": {
   "n": "n/f7523c580e0248c6-81d5ea90.mp3",
@@ -1531,6 +1551,10 @@
   "n": "n/30ef59c8ede62335-bf69072d.mp3",
   "s": "s/30ef59c8ede62335-7b7e1807.mp3"
  },
+ "Tu pabandei abu kelius. Pasakyk, kodėl durys geresnės.": {
+  "n": "n/91436dd683db3b2d-e84b1bbd.mp3",
+  "s": "s/91436dd683db3b2d-01b15bc6.mp3"
+ },
  "Tyla": {
   "n": "n/170ba9b291bd200a-0c170880.mp3",
   "s": "s/170ba9b291bd200a-39cb7c60.mp3"
@@ -1887,6 +1911,10 @@
   "n": "n/ad412e2f29d9d8d7-f44c3952.mp3",
   "s": "s/ad412e2f29d9d8d7-a088f18c.mp3"
  },
+ "Ėjai žemai pro duris ir išėjai lauk.": {
+  "n": "n/8f37985cdee9e67e-512c7d5a.mp3",
+  "s": "s/8f37985cdee9e67e-55a44aed.mp3"
+ },
  "ė": {
   "n": "n/731213862be15789-6988949b.mp3",
   "s": "s/731213862be15789-8fa14359.mp3"
@@ -1902,6 +1930,10 @@
  "Į": {
   "n": "n/36d6fa8ed74757e8-00157337.mp3",
   "s": "s/36d6fa8ed74757e8-ebc2064f.mp3"
+ },
+ "Įlindai į spintą. Iš ten į lauką neišeisi.": {
+  "n": "n/a75b0d0d04b2cc13-89ea952a.mp3",
+  "s": "s/a75b0d0d04b2cc13-5be8e779.mp3"
  },
  "į": {
   "n": "n/53274be64bc5ff6a-5d267384.mp3",

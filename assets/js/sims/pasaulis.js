@@ -1909,6 +1909,317 @@ const kuprineIrSvoris = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Dūmai (1 klasės pasaulio pažinimas, 26.1.1 „Saugus elgesys“)       */
+/* ------------------------------------------------------------------ */
+/*
+ * Vienas kintamasis — dūmų kiekis. Iš jo išvedamas sluoksnio storis: dūmai
+ * kyla, todėl pirmiausia prisipildo lubos, o paskui riba leidžiasi žemyn.
+ * Vaikas pasirenka kelią: žemai pro duris arba į spintą.
+ *
+ * Kodėl spinta, o ne lova: lova atvira iš šono, todėl po ja oras būtų toks
+ * pat kaip prie grindų, ir sakinys „po lova dūmai leidžiasi“ būtų neteisingas
+ * (LL-18). Spinta uždara, todėl dūmai į ją patenka iš viršaus ir joje tikrai
+ * kaupiasi — būtent tai modelis ir rodo. Spintoje tikrai mažiau dūmų nei prie
+ * lubų, ir modelis to neslepia: saugumas čia reiškia išėjimą, o ne slėptuvę.
+ *
+ * Ko modelis nesako: kad pro duris visada saugu. Durys čia atviros ir vėsios.
+ * Jei durys karštos, jų nevarstyti — tai suaugusiojo sprendimas (Mokytojui).
+ */
+const dumaiIrIsejimas = {
+  mount({ stage, controls, api, config }) {
+    const SENT = (config && config.sentences) || {};
+
+    /* Scenos geometrija. Kambarys — 2,5 m aukščio pjūvis 360×344 tinkle:
+       lubos 68, grindys 300, taigi 232 px ≈ 2,5 m, o 1 px ≈ 1 cm. Vaikas
+       (41 px × 2,0) išeina ≈ 0,8 m, t. y. tikras pirmokas. */
+    const CEIL = 68;
+    const FLOOR = 300;
+    const WALL_L = 30;
+    const WALL_R = 330;
+    const DOOR_X = 44;
+    const DOOR_W = 72;
+    const DOOR_TOP = 190;
+    const WAR_X = 236;
+    const WAR_W = 82;
+    const WAR_TOP = 150;
+    const WAR_IN = 162;
+
+    /* Sluoksnio storis nuo lubų (px): 0, 62, 118, 164. Trečiu lygiu riba
+       yra 232, taigi prie grindų lieka 68 px — pakanka šliaužiančiam vaikui
+       (jo figūra baigiasi ties 246), bet stovinčio galva jau dūmuose
+       (212 < 232). */
+    const LAYER = [0, 62, 118, 164];
+    /* Tas pats spintos viduje. Spinta uždara, tad jos oras keičiasi lėčiau,
+       bet dūmai vis tiek leidžiasi: 162 → 188 / 216 / 246. */
+    const WAR_LAYER = [0, 26, 54, 84];
+
+    let level = 1;
+    let route = null;                 // null | "durys" | "spinta"
+    const routesSeen = new Set();
+    const levelsSeen = new Set();
+    let reported = false;
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <svg id="dm-scene" viewBox="0 0 360 344" width="100%"
+             style="display:block;max-width:360px;height:auto;margin:0 auto"
+             role="img" aria-label="Kambarys. Dūmų dar nedaug, jie laikosi prie lubų."></svg>
+        <p id="dm-way" style="margin:.55rem 0 .1rem;text-align:center;font-weight:800;font-size:1.05rem">
+          Kelias lauk: dar nepasirinktas</p>
+        <p class="sim-note" style="margin:0;text-align:center;font-size:.85rem">
+          Pilka spalva rodo dūmus. Ruda — spinta.</p>
+      </div>`;
+
+    const btnStyle = "min-height:48px;flex:1 1 8rem;min-width:0;max-width:100%;padding:.35rem .6rem;font-size:.95rem";
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.7rem;width:100%;max-width:32rem;min-width:0;margin:0 auto">
+        <div style="min-width:0">
+          <p id="dm-level-label" style="margin:0 0 .3rem;font-weight:800;text-align:center">Kiek dūmų?</p>
+          <div id="dm-level" role="group" aria-labelledby="dm-level-label"
+               style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;min-width:0">
+            <button class="btn secondary" type="button" data-level="0" aria-pressed="false" style="${btnStyle}">Nėra</button>
+            <button class="btn secondary" type="button" data-level="1" aria-pressed="true" style="${btnStyle}">Mažai</button>
+            <button class="btn secondary" type="button" data-level="2" aria-pressed="false" style="${btnStyle}">Daug</button>
+            <button class="btn secondary" type="button" data-level="3" aria-pressed="false" style="${btnStyle}">Labai daug</button>
+          </div>
+        </div>
+        <div style="min-width:0">
+          <p id="dm-route-label" style="margin:0 0 .3rem;font-weight:800;text-align:center">Ką darysi?</p>
+          <div id="dm-route" role="group" aria-labelledby="dm-route-label"
+               style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;min-width:0">
+            <button class="btn secondary" type="button" data-route="durys" aria-pressed="false" style="${btnStyle}">Eiti žemai pro duris</button>
+            <button class="btn secondary" type="button" data-route="spinta" aria-pressed="false" style="${btnStyle}">Įlįsti į spintą</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;min-width:0">
+          <button class="btn ghost" type="button" id="dm-reset"
+                  style="flex:0 1 auto;min-width:0;max-width:100%;min-height:48px">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const svg = stage.querySelector("#dm-scene");
+    const wayEl = stage.querySelector("#dm-way");
+    const levelBtns = Array.from(controls.querySelectorAll("[data-level]"));
+    const routeBtns = Array.from(controls.querySelectorAll("[data-route]"));
+    const resetBtn = controls.querySelector("#dm-reset");
+
+    /* --- piešinys ---------------------------------------------------- */
+
+    function roomMarkup() {
+      /* Kambarys — pjūvis: siena, cokolis ir lentų grindys. Tai ne peizažas,
+         todėl dangaus ir žemės čia nėra; art.js dalys naudojamos dūmams ir
+         vaikui, o kambario plokštumos — jo paties, kad mastelis nesikeistų. */
+      const boards = [0, 1, 2, 3, 4, 5]
+        .map((i) => `<line x1="${WALL_L + 8 + i * 49}" y1="${FLOOR + 1}" x2="${WALL_L + 8 + i * 49}" y2="${FLOOR + 15}"
+              stroke="#cbb79b" stroke-width="1.6"/>`).join("");
+      return `<rect x="${WALL_L}" y="${CEIL}" width="${WALL_R - WALL_L}" height="${FLOOR - CEIL}" fill="#f7f0e4"/>
+        <rect x="${WALL_L}" y="${FLOOR - 10}" width="${WALL_R - WALL_L}" height="10" fill="#e9ddc9"/>
+        <rect x="${WALL_L}" y="${FLOOR}" width="${WALL_R - WALL_L}" height="16" fill="#e3d3bb"/>
+        ${boards}
+        <line x1="${WALL_L}" y1="${CEIL - 2}" x2="${WALL_R}" y2="${CEIL - 2}" stroke="#c8b79d" stroke-width="5" stroke-linecap="round"/>`;
+    }
+
+    function doorMarkup() {
+      return `<g>
+        <rect x="${DOOR_X}" y="${DOOR_TOP}" width="${DOOR_W}" height="${FLOOR - DOOR_TOP}" fill="#dcebf4"/>
+        <rect x="${DOOR_X}" y="${DOOR_TOP}" width="${DOOR_W}" height="${FLOOR - DOOR_TOP}"
+              fill="none" stroke="#b98f63" stroke-width="4" stroke-linejoin="round"/>
+        <line x1="${DOOR_X + 6}" y1="${FLOOR - 3}" x2="${DOOR_X + DOOR_W - 6}" y2="${FLOOR - 3}"
+              stroke="#b9d3e2" stroke-width="3"/>
+      </g>`;
+    }
+
+    function wardrobeMarkup() {
+      const ix = WAR_X + 8;
+      const iy = WAR_IN;
+      const iw = WAR_W - 16;
+      const ih = FLOOR - WAR_IN - 4;
+      return `<g>
+        <rect x="${WAR_X}" y="${WAR_TOP}" width="${WAR_W}" height="${FLOOR - WAR_TOP}" rx="5"
+              fill="#c89a6a" stroke="#8d6843" stroke-width="3"/>
+        <rect x="${ix}" y="${iy}" width="${iw}" height="${ih}" fill="#f0e4d0"/>
+        ${art.smoke(ix, iy, iw, WAR_LAYER[level], "dm", 0.35 + level * 0.15)}
+        <rect x="${WAR_X}" y="${WAR_TOP}" width="8" height="${FLOOR - WAR_TOP}" fill="#b98a5c"/>
+        <rect x="${WAR_X + WAR_W - 8}" y="${WAR_TOP}" width="8" height="${FLOOR - WAR_TOP}" fill="#b98a5c"/>
+        <rect x="${WAR_X}" y="${WAR_TOP}" width="${WAR_W}" height="8" fill="#b98a5c"/>
+        <rect x="${WAR_X + 9}" y="${WAR_TOP - 20}" width="${WAR_W - 18}" height="17" rx="4" fill="#f7f0e4"/>
+        <text x="${WAR_X + WAR_W / 2}" y="${WAR_TOP - 7}" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#4a3d2c">spinta</text>
+      </g>`;
+    }
+
+    /* Durys spintoje uždarytos: brėžiamas tik kontūras, todėl vidus lieka
+       matomas (pjūvis), o vaikas mato, kad durų atidaryti negalima. */
+    function closedDoorsMarkup() {
+      return `<rect x="${WAR_X + 5}" y="${WAR_TOP + 5}" width="${WAR_W - 10}" height="${FLOOR - WAR_TOP - 9}"
+              rx="4" fill="none" stroke="#6b5a45" stroke-width="2.5" stroke-dasharray="7 6"/>`;
+    }
+
+    function childMarkup() {
+      if (route === "spinta") {
+        return `<g>${art.kid(WAR_X + WAR_W / 2, FLOOR - 4, 1.9)}</g>`;
+      }
+      if (route === "durys") {
+        /* Pasviręs vaikas: kūnas ištįsęs link durų, galva keliais centimetrais
+           virš grindų. Tai ne puošmena — būtent toks aukštis parodo, kad
+           galva lieka po dūmų sluoksniu (žr. LAYER). Atramos taškas 286, o ne
+           prie grindų, kad pasukta figūra nenusileistų po grindų linija. */
+        return `<g transform="rotate(-74 156 286)">${art.kid(156, 286, 2)}</g>`;
+      }
+      return art.kid(178, FLOOR, 2);
+    }
+
+    function routeMarkup() {
+      const ink = "#3a4a5a";
+      if (route === "durys") {
+        /* Kelias brėžiamas PO vaiku (žr. sceneMarkup tvarką), todėl linija
+           nekerta kūno. Rodyklė išeina pro duris — užrašo nereikia, nes
+           po scena yra eilutė „Kelias lauk: yra“. */
+        return `<g>
+          <path d="M156 294 H58" fill="none" stroke="${ink}" stroke-width="4"
+                stroke-linecap="round" stroke-dasharray="9 7"/>
+          <path d="M42 294 L58 285 L58 303 Z" fill="${ink}"/>
+        </g>`;
+      }
+      if (route === "spinta") {
+        /* Kelias baigiasi spintos sienele — rodyklės nėra, nes eiti nėra kur. */
+        const ix = WAR_X + 8;
+        const iw = WAR_W - 16;
+        return `<g>
+          <path d="M${WAR_X + WAR_W / 2} 292 H${ix + iw - 2}" fill="none" stroke="${ink}"
+                stroke-width="4" stroke-linecap="round" stroke-dasharray="9 7"/>
+          <path d="M${ix + iw - 2} 284 V300" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>
+        </g>`;
+      }
+      return "";
+    }
+
+    function sceneMarkup() {
+      return `${art.defs("dm")}
+        ${roomMarkup()}
+        ${doorMarkup()}
+        ${art.smoke(WALL_L, CEIL, WALL_R - WALL_L, LAYER[level], "dm", 0.2 + level * 0.22)}
+        ${level > 0 ? `<text x="${WALL_L + 10}" y="${CEIL + 22}" font-family="system-ui, sans-serif"
+              font-size="14" font-weight="800" fill="#242a31">dūmai</text>` : ""}
+        ${wardrobeMarkup()}
+        ${route === "spinta" ? closedDoorsMarkup() : ""}
+        ${routeMarkup()}
+        ${childMarkup()}`;
+    }
+
+    function sceneLabel() {
+      const t = ["Dūmų nėra.", "Mažai dūmų, jie laikosi prie lubų.",
+        "Daug dūmų, sluoksnis nusileido iki kambario vidurio.",
+        "Labai daug dūmų, oras liko tik prie grindų."][level];
+      if (!route) return `Kambarys. ${t} Vaikas stovi kambaryje.`;
+      if (route === "durys") {
+        return `Kambarys. ${t} Vaikas šliaužia prie durų pačia apačia, pro duris matosi laukas.`;
+      }
+      return `Kambarys. ${t} Vaikas įlindęs į spintą, spintos durys uždarytos.`;
+    }
+
+    function verdictText() {
+      if (!route) return "Kelias lauk: dar nepasirinktas";
+      return route === "durys" ? "Kelias lauk: yra" : "Kelias lauk: nėra";
+    }
+
+    function paintToggles() {
+      for (const b of levelBtns) {
+        const on = Number(b.dataset.level) === level;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "var(--line)";
+        b.style.background = on ? "var(--sun-soft, #fff3cf)" : "";
+      }
+      for (const b of routeBtns) {
+        const on = b.dataset.route === route;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "var(--line)";
+        b.style.background = on ? "var(--sun-soft, #fff3cf)" : "";
+      }
+    }
+
+    function render() {
+      svg.innerHTML = sceneMarkup();
+      svg.setAttribute("aria-label", sceneLabel());
+      wayEl.textContent = verdictText();
+      paintToggles();
+    }
+
+    /* --- veiksmas ---------------------------------------------------- */
+
+    function levelSentence() {
+      return [SENT.none, SENT.few, SENT.mid, SENT.lots][level]
+        || "Dūmų kiekis pasikeitė.";
+    }
+
+    function noteFor() {
+      if (!route) return "Pasirink dūmų kiekį ir kelią.";
+      if (route === "durys") {
+        if (level === 0) return "Dūmų nėra, bet kelias per duris visada veda lauk.";
+        if (level === 1) return "Dūmai dar virš tavo galvos. Eini prie durų ir lauk.";
+        return "Dūmai nusileido žemai. Eini pačia apačia, po jais.";
+      }
+      if (level === 0) return "Spintoje dar švaru, bet durys į lauką liko už nugaros.";
+      if (level === 1) return "Spintoje mažiau dūmų nei kambaryje. Bet iš ten neišeisi.";
+      return "Dūmai į spintą patenka iš viršaus ir leidžiasi prie tavęs.";
+    }
+
+    function maybeReport() {
+      if (reported) return false;
+      if (routesSeen.size < 2 || levelsSeen.size < 2) return false;
+      reported = true;
+      api.progress({ correct: true });
+      return true;
+    }
+
+    function chooseRoute(next) {
+      route = next;
+      routesSeen.add(next);
+      levelsSeen.add(level);
+      const sentence = next === "durys"
+        ? (SENT.door || "Ėjai žemai pro duris ir išėjai į lauką.")
+        : (SENT.closet || "Įlindai į spintą. Iš ten į lauką neišeisi.");
+      api.readout(sentence);
+      if (typeof api.speak === "function") api.speak(sentence, { rate: 0.95 });
+      render();
+      let note = noteFor();
+      if (maybeReport()) note += " " + (SENT.done || "Dabar pasakyk, kodėl.");
+      api.note(note);
+    }
+
+    function setLevel(next) {
+      level = next;
+      if (route) levelsSeen.add(next);
+      render();
+      const sentence = levelSentence();
+      api.readout(sentence);
+      if (typeof api.speak === "function") api.speak(sentence, { rate: 0.95 });
+      let note = noteFor();
+      if (maybeReport()) note += " " + (SENT.done || "Dabar pasakyk, kodėl.");
+      api.note(note);
+    }
+
+    levelBtns.forEach((b) => b.addEventListener("click", () => setLevel(Number(b.dataset.level))));
+    routeBtns.forEach((b) => b.addEventListener("click", () => chooseRoute(b.dataset.route)));
+
+    resetBtn.addEventListener("click", () => {
+      level = 1;
+      route = null;
+      render();
+      api.readout(SENT.ask || "Kambaryje dūmai. Ką darysi?");
+      api.note("Naujas bandymas. Pasirink kelią.");
+    });
+
+    render();
+    api.readout(SENT.ask || "Kambaryje dūmai. Ką darysi?");
+    api.note("Padidink dūmus ir pažiūrėk, iki kur jie nusileidžia.");
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
@@ -1916,4 +2227,5 @@ export const SIMS = {
   "vandens-busenos": vandensBusenos,
   "nuozulnioji-plokstuma": nuozulniojiPlokstuma,
   "kuprine-ir-svoris": kuprineIrSvoris,
+  "dumai-ir-isejimas": dumaiIrIsejimas,
 };

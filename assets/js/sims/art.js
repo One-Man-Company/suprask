@@ -83,6 +83,9 @@ export const art = {
         <stop offset=".62" stop-color="${SOLID.front}"/>
         <stop offset="1" stop-color="${SOLID.side}"/>
       </radialGradient>
+      <linearGradient id="${id}-smoke" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#98a2ae"/><stop offset="1" stop-color="#c7ced7"/>
+      </linearGradient>
     </defs>`;
   },
 
@@ -398,6 +401,45 @@ export const art = {
       return `<path d="M${dx} ${dy} q 3 5 0 7 q -3 -2 0 -7 z" fill="${color}" opacity=".8"/>`;
     }).join("");
     return `<g>${d}</g>`;
+  },
+
+  /**
+   * Dūmų sluoksnis, besileidžiantis nuo lubų (1 klasės saugus elgesys).
+   *
+   * `h` — sluoksnio storis nuo `yTop` žemyn. Apatinis kraštas banguotas, bet
+   * NIEKADA nenusileidžia žemiau `yTop + h`: todėl modelio sakinys „sluoksnis
+   * nusileido iki čia“ sutampa su piešiniu, o ne su juo ginčijasi (LL-13).
+   * `density` 0..1 — kiek sluoksnis tankus (spalvos ir pūkų sodrumas).
+   */
+  smoke(x, yTop, w, h, id, density = 0.6) {
+    const k = Math.max(0, Math.min(1, density));
+    if (!(h > 0) || !(w > 0)) return "";
+    const b = yTop + h;
+    const amp = Math.min(6, Math.max(2, h * 0.18));
+    const segs = 5;
+    const step = w / segs;
+    let d = `M${x.toFixed(1)} ${yTop.toFixed(1)} H${(x + w).toFixed(1)} V${b.toFixed(1)}`;
+    for (let i = segs - 1; i >= 0; i -= 1) {
+      const xr = x + step * (i + 1);
+      const xl = x + step * i;
+      const cy = i % 2 === 0 ? b - 2 * amp : b;
+      d += ` Q${((xl + xr) / 2).toFixed(1)} ${cy.toFixed(1)} ${xl.toFixed(1)} ${b.toFixed(1)}`;
+    }
+    d += " Z";
+    /* Pūkai laikomi sluoksnio viduje: viršus ne aukščiau `yTop`, apačia —
+       ne žemiau `b`, kad banguotas kraštas liktų vienintelė riba. */
+    const n = Math.max(3, Math.round(w / 70));
+    const puffs = Array.from({ length: n }, (_, i) => {
+      const px = x + (i + 0.5) * (w / n);
+      const pr = Math.min(22, h * 0.4);
+      const py = yTop + h * 0.55;
+      return `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${pr.toFixed(1)}"`
+        + ` fill="#cfd4db" opacity=".45"/>`;
+    }).join("");
+    return `<g opacity="${(0.55 + 0.4 * k).toFixed(2)}">
+      <path d="${d}" fill="url(#${id}-smoke)"/>
+      ${puffs}
+    </g>`;
   },
 
   /* ------------------------------------------------------------------ */

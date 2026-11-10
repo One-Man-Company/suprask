@@ -1,0 +1,121 @@
+{
+  "id": "19-dumai-ir-isejimas",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Dūmai: žemai ir lauk, o ne slėptis",
+  "subtitle": "Dūmai pirmiausia prisipildo viršaus, todėl kelias lauk eina prie grindų",
+  "minutes": 9,
+  "outcomes": [
+    "Paaiškinu, kodėl dūmai pirmiausia kaupiasi prie lubų.",
+    "Pasirenku kelią lauk prie grindų, o ne slėptuvę.",
+    "Pasakau, kodėl mažiau dūmų dar nereiškia, kad saugu."
+  ],
+  "concept": {
+    "title": "Dūmai kyla ir leidžiasi",
+    "big_idea": "Dūmai kyla į viršų, todėl pirmiausia prisipildo lubos. Paskui sluoksnis leidžiasi žemyn. Oras ilgiausiai lieka prie grindų, o kelias lauk — pro duris.",
+    "steps": [
+      "Padidink dūmus ir stebėk, kaip sluoksnis leidžiasi.",
+      "Pasirink kelią ir pažiūrėk, kur jis baigiasi.",
+      "Palygink duris ir spintą: pro duris išeini lauk."
+    ],
+    "example": "Kai kambaryje dūmai, eini prie durų pasilenkęs."
+  },
+  "sim": {
+    "component": "dumai-ir-isejimas",
+    "config": {
+      "sentences": {
+        "ask": "Kambaryje dūmai. Ką darysi?",
+        "none": "Dūmų nėra. Oras švarus visame kambaryje.",
+        "few": "Dūmų mažai. Jie laikosi prie lubų.",
+        "mid": "Dūmai leidžiasi. Prie grindų dar oras.",
+        "lots": "Daug dūmų. Oras liko vien prie grindų.",
+        "door": "Ėjai žemai pro duris ir išėjai lauk.",
+        "closet": "Įlindai į spintą. Iš ten į lauką neišeisi.",
+        "done": "Tu pabandei abu kelius. Pasakyk, kodėl durys geresnės."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Kambaryje daug dūmų. Kur oras švariausias?",
+      "options": [
+        "Prie lubų",
+        "Viduryje kambario",
+        "Prie grindų"
+      ],
+      "answer": 2,
+      "hint": "Prisimink, nuo kur dūmai pradeda sluoksnį.",
+      "why": "Dūmai kyla ir kaupiasi po lubomis. Prie grindų oras lieka ilgiausiai."
+    },
+    {
+      "q": "Dūmai jau nusileido iki tavo juosmens. Kaip eisi?",
+      "options": [
+        "Bėgsiu tiesiai per kambarį",
+        "Šliaušiu prie durų pačia apačia",
+        "Įlįsiu į spintą ir lauksiu"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kuriame aukštyje dūmų mažiausia.",
+      "why": "Pačioje apačioje dūmų mažiausia, todėl prie durų šliauni žemai."
+    },
+    {
+      "q": "Spintoje mažiau dūmų nei prie lubų. Kodėl ten vis tiek nesaugu?",
+      "options": [
+        "Nes iš spintos nėra kelio lauk",
+        "Nes spintoje visada šalta",
+        "Nes spinta per maža"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kaip iš spintos išeisi.",
+      "why": "Saugu tada, kai gali išeiti lauk, o spinta kelio neturi."
+    },
+    {
+      "q": "Namo koridoriuje dūmai, o laukujės durys tolėliau. Kur eisi?",
+      "options": [
+        "Grįšiu į kambarį ir įlįsiu į spintą",
+        "Eisiu prie durų pasilenkęs",
+        "Stovėsiu ir lauksiu, kol dūmai išsisklaidys"
+      ],
+      "answer": 1,
+      "hint": "Kur oras žemiau, o kur kelias lauk?",
+      "why": "Dūmai laikosi viršuje, o durys veda lauk.",
+      "optional": true
+    },
+    {
+      "q": "Kodėl prie lubų dūmų daugiau nei prie grindų?",
+      "options": [
+        "Nes lubos vėsesnės",
+        "Nes grindys kietos",
+        "Nes dūmai kyla į viršų"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kaip dūmai elgiasi virš ugnies.",
+      "why": "Šilti dūmai kyla, todėl jie pirmiausia susirenka po lubomis."
+    }
+  ],
+  "reflect": "Kodėl geriau eiti pro duris, o ne slėptis spintoje?",
+  "teacher": {
+    "goal": "Suprasti, kad dūmai kyla ir kaupiasi po lubomis, todėl oras ilgiausiai lieka prie grindų, o saugumą lemia kelias lauk, ne slėptuvė. Modelis sąmoningai nerodo liepsnų prie vaiko, neturi laikmačio ir nebaudžia. Jame durys atviros ir vėsios: jei tikroje situacijoje durys karštos, jų atidaryti negalima — tai suaugusiojo sprendimas. Šešiamečiui suaugusiojo pagalba vis tiek reikalinga, todėl modulis moko krypties, o ne savarankiško gelbėjimosi.",
+    "prompt": "Paklausk: „Kur kambaryje oras švariausias? Kodėl?“",
+    "offline": "Ant grindų padėkite didelį popieriaus lapą — tai kambarys. Viename krašte nupieškite duris su rodykle lauk, kitame — spintą. Antklodę ar skarelę laikykite virš plano ir pamažu leiskite žemyn: tai dūmų sluoksnis. Paprašykite vaiko pirštu parodyti kelią prie durų ir tegul pirštas lieka kuo žemiau. Paskui tegul pirštas įlenda į spintą ir pabando rasti kelią lauk — jo nėra. Pabaigoje paklauskite, kuo abu keliai skiriasi, kai antklodė nusileidžia žemiau.",
+    "misconceptions": [
+      "„Pasislėpus saugu.“ Modelyje spinta tikrai turi mažiau dūmų nei prie lubų, bet joje nėra kelio lauk, o dūmai į ją patenka iš viršaus ir leidžiasi.",
+      "„Dūmai kyla, tad reikia lipti aukščiau.“ Jie kyla, bet kaupiasi po lubomis ir sluoksnis leidžiasi žemyn, todėl aukštai oras dingsta pirmiausia.",
+      "„Kol dūmų mažai, galima palaukti.“ Kiekį vaikas keičia pats, todėl mato, kad su kiekvienu padidinimu prie grindų lieka vis mažiau vietos.",
+      "„Spinta apsaugo nuo dūmų.“ Spinta uždara, todėl dūmai joje kaupiasi, o išeiti iš jos nėra kur.",
+      "„Pro duris visada saugu.“ Durys gali būti karštos arba už jų jau dūmai; tada jų neatidarome ir šaukiame pagalbos. To modelis nesprendžia."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Pasaulio pažinimas“, 26.1.1 „Saugus elgesys“ (šaltinio failas sources/pradinio-bp-rekomendacijos-2024.txt, 14961–14966 eil.): „Projektas „Mano elgesys ištikus nelaimei“. Projekto tikslas: Išsiaiškinti, kur kreiptis pagalbos ištikus nelaimei, kaip elgtis kilus gaisrui. (Situacijų ištikus nelaimei inscenizacija).“",
+    "Nationwide Children's Hospital, Center for Injury Research and Policy. „Fire Safety for Children“: „When a fire starts, children often become scared and confused. They tend to hide somewhere they feel safe, such as in a closet or under the bed.“ — https://www.nationwidechildrens.org/research/areas-of-research/center-for-injury-research-and-policy/injury-topics/home-safety/fire-safety-for-children (patikrinta 2026-11-10).",
+    "American Academy of Pediatrics, HealthyChildren.org. „Fire Safety: Protecting Your Family from a Home Fire“ (atnaujinta 2023-03-24): „Crawl low under smoke… cleaner air is always near the floor“; „keeping her head less than 2 feet above the floor“. — https://www.healthychildren.org/English/safety-prevention/all-around/Pages/Fire-Safety.aspx",
+    "National Fire Protection Association. „How to make a home fire escape plan“: „everyone in the family should practice getting low and going under the smoke to your exit“. — https://www.nfpa.org/education-and-research/home-fire-safety/escape-planning"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (dūmų sluoksnis leidžiasi, todėl kelias lauk yra prie grindų), o ne gaisro taisyklių sąrašas.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo perkelti taisyklę į naują situaciją (koridorius, spinta), o ne atkartoti modulio sakinį.",
+    "3 žingsnis — pagalba laiku: veiksmas prieš paaiškinimą, kiekviena klaida turi užuominą, nėra laikmačio; 4-a užduotis — praplėtimas.",
+    "P2 / T2.3 / T3.4 / T5.4 / T5.5: vaikas pirmiausia keičia dūmų kiekį ir žiūri pasekmę; grįžtamasis ryšys sako, kas teisinga ir kodėl; yra praplėtimas; be bauginimo; 48 px taikiniai, kelias rodomas ir žodžiu, ne vien spalva."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 215,
+  "created": "2026-11-10T07:53:00+02:00",
+  "type": "tema",
+  "title": "Dūmai kyla: kodėl reikia eiti žemai ir lauk, o ne slėptis",
+  "body": "Programa 1 klasei skiria „Saugų elgesį“ (26.1.1) ir projektą „Mano elgesys ištikus nelaimei“, kuriame prašoma išsiaiškinti, „kaip elgtis kilus gaisrui“, o metodas — situacijų inscenizacija; platformoje saugaus elgesio modulio nėra (šeši pasaulio pažinimo moduliai liečia metų laikus, augalą, gyvūnus, vandenį, judėjimą ir kuprinę). Siūlau modelį „dūmai kambaryje“: vaikas didina dūmų kiekį, mato, kaip sluoksnis leidžiasi nuo lubų, ir renkasi kelią — žemai pro duris, pro langą arba likti po lova. Klaidinga nuostata: „pasislėpus saugu“ — gaisro metu vaikai dažniausiai slepiasi spintoje ar po lova, o ne išeina, ir būtent todėl jų nesuranda (Nationwide Children's). Modelis šią nuostatą griuna sąžiningai: po lova tikrai mažiau dūmų, bet sluoksnis leidžiasi ir slėptuvė tampa aklaviete, o kelias žemai pro duris lieka praėjimas visą laiką. Paveikslėlis parodytų vieną būseną; čia reikia dviejų dalykų, kurių paveikslėlis neturi — kintamojo (dūmų kiekio) ir pasirinkimo, kuris keičia pasekmę. Sąmoningai nedėsiu gesinimo ir „stop, drop and roll“ tame pačiame modulyje: 3–5 m. amžiaus saugaus elgesio mokymo gairės sako dirbti su „tik 1 arba 2 pagrindinėmis sąvokomis“, o gairių P1 reikalauja vienos didelės idėjos. Modulyje nėra laikmačio, liepsnų prie vaiko ir grasinimo — tik oro sluoksniai ir viena taisyklė: dūmai kyla, todėl eik žemai ir lauk.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/19-dumai-ir-isejimas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:84 (1 klasės gamtos mokslų temų sąraše: „26.1.1 | Saugus elgesys“)",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:106 („Saugus elgesys (26.1.1). Projektas „Kaip išvengti traumų?“ … projektas „Mano elgesys ištikus nelaimei“ („kur kreiptis pagalbos ištikus nelaimei, kaip elgtis kilus gaisrui“, situacijų inscenizacija)“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:14964–14966 („Projektas „Mano elgesys ištikus nelaimei“. Projekto tikslas: Išsiaiškinti, kur kreiptis pagalbos ištikus nelaimei, kaip elgtis kilus gaisrui. (Situacijų ištikus nelaimei inscenizacija).“)",
+    "content/lt/grade-01/index.json:50–55 (šeši pasaulio pažinimo moduliai: metų laikai, augalo gyvenimas, gyvūnų grupės, vandens būsenos, judėjimas, kuprinė — nė vieno pagal 26.1.1); paieška `grep -rn \"gaisr\\|dūm\\|slėptis\" content/lt/grade-01` randa tik 16-vandens-busenos.json:90 palyginimą „Garas yra dūmai“ — gaisro temos nėra",
+    "Nationwide Children's Hospital, Center for Injury Research and Policy. „Fire Safety for Children“: „When a fire starts, children often become scared and confused. They tend to hide somewhere they feel safe, such as in a closet or under the bed.“ https://www.nationwidechildrens.org/research/areas-of-research/center-for-injury-research-and-policy/injury-topics/home-safety/fire-safety-for-children",
+    "Massachusetts Public Fire and Safety Education Curriculum Planning Guidebook (3–5 m. elgesio tikslai, 345-003 „Understanding and Practicing Crawl Low Under Smoke“), skyrius „Developmental information“: „Deal with only 1 or 2 basic concepts.“ https://www.mass.gov/doc/curriculum-planning-guidebook-pre-k-behaviors/download"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 215,
+  "created": "2026-11-10T07:48:00+02:00",
+  "type": "tema",
+  "title": "Ilgis: tas pats daiktas, skirtingi vienetai — skirtingas skaičius",
+  "body": "1 klasės matematikos metų plane programa ilgiui skiria 5 pamokas ir prie jų siūlo integruotą veiklą „Kokio ilgio mano kuprinėje esantys daiktai?“ (matematika + lietuvių kalba ir literatūra), o platformoje ilgio matavimo nėra: 15 matematikos modulių apima skaičių tiesę, dešimtuką, figūras, pinigus ir laiką, bet ne ilgį. Siūlau modelį, kuriame du vaikai matuoja tą patį daiktą skirtingais vienetais — vienas sąvaržėlėmis, kitas pieštuku — ir gauna skirtingus skaičius; vaikas keičia vienetą ir mato, kad daiktas nepakito, o skaičius pasikeitė, todėl skaičius be vieneto nieko nesako. Klaidinga nuostata: „didesnis skaičius reiškia ilgesnį daiktą“ — vaikas lygina 6 sąvaržėles su 2 pieštukais ir sako, kad pirmasis daiktas ilgesnis, nors tai tas pats daiktas. Paveikslėlis parodytų vieną matavimą ir neatskleistų, kad skaičius priklauso nuo vieneto; tik tame pačiame daikte keičiant vienetą tai matoma, todėl modelis duoda tai, ko paveikslėlis negali. Sąmoningai neliečiu liniuotės skalės ir centimetrų su milimetrais: programa sako, kad „antroje klasėje numatyta nagrinėti masės, laiko, ilgio, tūrio gretimų smulkesnių ir stambesnių matavimo vienetų sąryšius“, tad 1 klasei lieka sąlyginiai vienetai ir vienodo vieneto taisyklė (LL-23). Modulis praverstų ir kaip priedas prie 19-simto-skaiciu-lentele: ten skaičius turi vietą, o čia skaičius turi vienetą.",
+  "target": "content/lt/grade-01/matematika/25-ilgis-ir-vienetas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17167–17169 (skirsnio antraštė: „Matematika / 1 klasė / Matematikos ilgalaikis (metų) planas 1 klasei“ — lentelė, kurioje yra ilgio eilutė, priklauso 1 klasei)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17300–17305 („Ilgis 5   Integruota veikla „Kokio ilgio mano kuprinėje esantys daiktai?“ (matematika, lietuvių kalba ir literatūra)“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1015–1017 („Antroje klasėje numatyta nagrinėti masės, laiko, ilgio, tūrio gretimų smulkesnių ir stambesnių matavimo vienetų sąryšius“ — vienetų sąryšiai yra 2 klasės turinys, ne 1-osios)",
+    "research/wiki/curriculum/matematika-1-klase.md:141 („Ilgis | 1 klasėje dokumente nenurodytas; 2 klasėje — „cm ir mm““) — šis wiki teiginys prieštarauja šaltinio 17300–17305 eilutei ir turi būti taisomas tyrėjo; klausimas `klausimai.md:50` tuo pagrindu uždaromas",
+    "content/lt/grade-01/index.json:26–40 (15 matematikos modulių: skaičių tiesė, dešimtukas, figūros, dėsningumai, pinigai, laikas ×2, lygybė, kryptys, taškas/tiesė, šimto lentelė, erdvinės figūros, sudėtis per dešimtį, piktograma, komandų seka — nė vieno apie ilgį)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1010–1014 (bendras matavimo principas 1–2 klasei: „mato jausmo“ ugdymas, metodas „spėti ir tikrinti“, dydžio didumo vertinimas „iš akies“ prieš matuojant)"
+  ]
+}

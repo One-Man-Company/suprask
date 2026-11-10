@@ -3,7 +3,7 @@ title: "1 klasės metodai"
 tipas: metodai
 klase: 1
 amzius: "6–7"
-atnaujinta: 2026-11-09
+atnaujinta: 2026-11-10
 ---
 
 # 1 klasės metodai
@@ -412,7 +412,102 @@ Minučių skaičius šiame metode nemokomas. Programa 1 klasei prašo „nusakyt
 
 **Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, „Dailė“: 1–2 klasių amžiaus ypatumai (`sources/pradinio-bp-rekomendacijos-2024.txt:2622–2625`) ir 2 pavyzdys 1 klasei „Kaip susikūrė pasaulis“ (`:2714–2719`). `research/wiki/curriculum/kti-dalykai-1-klase.md` — dailės pasiekimų sritys (`:13`) ir oficialus 1 klasės ciklas (`:22`). Burkitt, E., Barrett, M., & Davis, A. (2003). Children's colour choices for completing drawings of affectively characterised topics. *Journal of Child Psychology and Psychiatry, 44*(3), 445–455. https://doi.org/10.1111/1469-7610.00134 · Zentner, M. R. (2001). Preferences for colours and colour–emotion combinations in early childhood. *Developmental Science, 4*(4), 389–398. https://doi.org/10.1111/1467-7687.00180 · Palmer, S. E., & Schloss, K. B. (2010). An ecological valence theory of human color preference. *PNAS, 107*(19), 8877–8882. https://doi.org/10.1073/pnas.0906172107
 
+### M-07 — Ilgis: tas pats daiktas, kitas vienetas — kitas skaičius
+
+**Data:** 2026-11-10 · **Tema:** `agents/proposals/2026-11-10-ideator-ilgis-ir-vienetas.json` (#10854) · **Tikslas:** `content/lt/grade-01/matematika/25-ilgis-ir-vienetas.json` · **Šaltinis:** `research/wiki/foundations/vienetas-ir-skaičius.md`
+
+**Viena didelė idėja.** Ilgis yra vienetų skaičius. Tas pats daiktas, matuojamas skirtingais vienetais, gauna skirtingus skaičius, o jo ilgis nepakinta. Todėl skaičius pasako ilgį tik tada, kai pasakytas ir vienetas.
+
+**Kodėl modelis, o ne paveikslėlis.** Paveikslėlyje matomas vienas matavimas: lenta ir, tarkime, šešios sąvaržėlės. Iš jo vaikas negali sužinoti, kad toje pačioje lentoje telpa ir dvi pieštukų — o būtent tai ir yra sąvoka. Du paveikslai greta parodytų du skaičius, bet neįrodytų, kad lenta ta pati: vaikas neturi būdo patikrinti, ar antrame paveiksle lenta nepasikeitė. Modelis laiko lentą vienoje vietoje (jos stačiakampis įterpiamas vieną kartą ir nejuda), o vaikas keičia tik vienetą ir grįžta prie jau matyto — todėl lenta lieka ta pati mechaniškai, o ne iš teksto. Grįžimas į ankstesnį vienetą grąžina lygiai tą patį vaizdą: tai kontrolinis bandymas, kurio paveikslėlis negali duoti.
+
+**Kodėl būtent vienetas, o ne liniuotė.** Programa 1 klasei ilgiui skiria 5 pamokas ir integruotą veiklą „Kokio ilgio mano kuprinėje esantys daiktai?“, kurios tikslas — „mokytis formuluoti matematinius klausimus ir į juos atsakyti pagal gautus matavimo rezultatus“ (`sources/pradinio-bp-rekomendacijos-2024.txt:17300–17301, 17325–17326`). Bendras programos posūkis — nuo skaičiavimų prie „mato jausmo“ ir metodo „spėti ir tikrinti“ (`:1010–1014`). Standartiniai vienetai (cm, mm) ir jų sąryšiai programoje priskirti antrai klasei (`:1015–1017`), todėl modelyje jų nėra: liko sąlyginiai vienetai ir viena taisyklė. Tai ir T1.2 — viena nauja sąvoka, o ne matavimo priemonių apžvalga.
+
+**Ką rodo tyrimai.** Carpenter ir Lewis (1976), plėsdami ankstesnį Carpenter (1975) tyrimą, rašo: kai vaikai matavo lygius kiekius skirtingo dydžio vienetais, **daugiau kaip pusė** tiriamųjų tvirtino, kad didesnis vienetų skaičius reiškia didesnį kiekį — nors prieš matuodami buvo matę, kad kiekiai lygūs. Autoriai tai aiškina kaip konservavimo uždavinio atmainą: vaikas susitelkia į vieną dominuojantį matmenį (skaičių) ir nemato kompensuojančio ryšio tarp vieneto dydžio ir vienetų skaičiaus. Būtent šis ryšys ir yra modelio šerdis.
+
+Sarama, Clements, Barrett, van Dine ir McDonel (2011) patikrino ir patikslino ilgio matavimo mokymosi trajektoriją; vėlesniame tos pačios grupės darbe aprašytas trečias lygis — *Length Unit Relater and Repeater*: vaikas matuoja kartodamas vieną vienetą, supranta, kad vienetai turi būti vienodo ilgio, ir **sąsają tarp vieneto dydžio ir vienetų skaičiaus (atvirkštinį ryšį)**. Antras lygis (*End-to-End*) dar gali neatpažinti vienodų vienetų reikalingumo. 1 klasės vaikai būna abiejuose lygiuose, todėl modulis nepretenduoja „įveikti“ trajektorijos — jis duoda vieną patirtį, kurioje atvirkštinis ryšys matomas, o ne pasakomas.
+
+Hiebert (1981) parodė, kad ilgio konservavimas ir tranzityvumas reikalingi kai kuriems matavimo supratimams, bet poveikis priklauso nuo užduoties, o ne nuo bendro pasirengimo. Todėl modelis nereikalauja, kad vaikas mintyse lygintų du skirtingus daiktus: jis rodo **tą patį** daiktą du kartus, o palyginimas vyksta ekrane, ne atmintyje.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Daugiau vienetų reiškia ilgesnį daiktą.“** Tai pagrindinė nuostata, kurią fiksuoja Carpenter ir Lewis (1976): skaičius yra vienintelis matomas matmuo, o vieneto dydis — ne. Paneigiama modeliu: lenta nejuda, jos dešinysis galas pažymėtas ta pačia brūkšniuota linija, o prie jos parašoma 6 sąvaržėlės, paskui 4 trintukai, paskui 2 pieštukai. Trys skaičiai, vienas galas. Jei skaičius reikštų ilgį, lenta turėtų pailgėti tris kartus — to neįvyksta.
+2. **„Skaičius vienas pasako ilgį.“** Vaikas, paklaustas „kiek ilgio?“, atsako „6“. Paneigiama tuo, kad ta pati lenta turi ir 6, ir 2, ir 4: skaičius be vieneto negali atskirti net to paties daikto matavimų. Todėl modelis niekada nerodo nuogo skaičiaus — kiekviena eilutė yra „6 sąvaržėlės“, o įrašų juostoje trys matavimai stovi greta.
+3. **„Mažesnis vienetas duoda mažesnį skaičių.“** Priešinga klaida, kuri išlenda perkėlimo užduotyse (anūko pėdos). Paneigiama tvarka: sąvaržėlė (mažiausia) duoda 6, trintukas — 4, pieštukas (didžiausias) — 2. Trys žingsniai ta pačia kryptimi, todėl taisyklė matoma, o ne įsimenama.
+4. **„Vienetus galima maišyti.“** Modelis šios nuostatos nepaneigia, o neleidžia jai atsirasti: matuojama tik vieno rūšies vienetais, o maišymas aptariamas mokytojo veikloje. Tai pasakyta modelio ribose, o ne nutylėta.
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas).**
+
+1. **Dvi juostos, skirtingi vienetai.** Mokytojas duoda dvi vienodo ilgio popieriaus juostas ir dviem vaikams — skirtingas matavimo priemones: vienam trintuką, kitam pieštuką. Abu matuoja **tą pačią** juostą ir pasako skaičių su vienetu („4 trintukai“, „2 pieštukai“). Tikslas: pajusti, kad tas pats daiktas davė skirtingus skaičius, o juostos nepakeitė. Mokytojas neklausia, kuris teisus.
+2. **Ekranas, pirmas matavimas.** Lenta su brūkšniuotu galu. Vaikas pirma spėja, kiek sąvaržėlių tilps (6 / 4 / 8), tada deda jas po vieną mygtuku „Dėk vieną“. Kiekviena sąvaržėlė atsiranda prie ankstesnės, be tarpų, o skaitiklis rodo „3 sąvaržėlės“. Tikslas: pamatyti, kad matavimas yra **kartojimas**, o skaičius — padėtų vienetų skaičius.
+3. **Ekranas, kitas vienetas.** Vaikas pasirenka trintuką. Modelis paklausia: „Trintukas ilgesnis už sąvaržėlę. Ar trintukų bus daugiau, ar mažiau?“ Vaikas paspaudžia „Daugiau“ arba „Mažiau“, tada matuoja. Tikslas: įsipareigoti spėjimui, kol modelis jo neatliko už jį, ir pamatyti, ar spėjimas pasitvirtino.
+4. **Simbolis.** Po trečio matavimo po lenta atsiranda įrašų juosta: „6 sąvaržėlės · 4 trintukai · 2 pieštukai — tas pats ilgis“. Vaikas perskaito ir pasako, kodėl skaičiai skiriasi. Tikslas: skaičių sieti su vienetu žodžiu, o ne vien matyti.
+5. **Perkėlimas.** Ta pati taisyklė be modelio: močiutės ir anūko pėdos toje pačioje kilime; du vaikai, gavę 3 ir 9 matuodami tą patį suolą; kuprinės daiktai, išmatuoti sąvaržėlėmis ir pieštukais (programos integruota veikla). Tikslas: atpažinti, kad skirtingi skaičiai gali reikšti tą patį ilgį.
+
+**Privalomas spėjimo žingsnis prieš pirmą matavimą ir prieš antrą vienetą.** Du spėjimai, abu palyginami su įvykiu (LL-15). Pirmasis — skaičius iš trijų variantų (6 / 4 / 8; teisingas variantas sąmoningai ne viduryje), ir po matavimo modelis pasako: „Tu sakei 8. Tilpo 6.“ Antrasis — kryptis („daugiau“ / „mažiau“), ir po matavimo: „Tu sakei daugiau, o gavosi mažiau: 4.“ Spėjimas niekada nėra vadinamas klaida ir niekada neištrinamas; jis tik palyginamas. Be jo modelis virsta demonstracija: vaikas spaudžia „Dėk vieną“ tol, kol lenta baigiasi, ir atvirkštinio ryšio nesudaro — tas pats pavojus kaip M-01–M-06 (`foundations/sujungti-dydziai.md`).
+
+**Simuliacijos specifikacija.** Komponentas `ilgis-ir-vienetas`, failas `assets/js/sims/matematika.js` (registracija nereikia keisti — `registry.js` jau importuoja `matematika.js`). `config`:
+
+```json
+{ "board": { "name": "lenta", "px": 240 },
+  "units": [
+    { "id": "savarzele", "name": "sąvaržėlė", "sg": "sąvaržėlė", "pl": "sąvaržėlės", "px": 40 },
+    { "id": "trintukas", "name": "trintukas", "sg": "trintukas", "pl": "trintukai", "px": 60 },
+    { "id": "piestukas", "name": "pieštukas", "sg": "pieštukas", "pl": "pieštukai", "px": 120 } ],
+  "start": "savarzele",
+  "firstGuess": [6, 4, 8],
+  "sentences": { "start": "…", "place": "…", "full": "…", "ask": "…",
+                 "more": "…", "less": "…", "same": "…", "back": "…", "all": "…",
+                 "counts": { "savarzele": ["Viena sąvaržėlė", "…"], "trintukas": ["…"], "piestukas": ["…"] } } }
+```
+
+Skaičius visada išvedamas, ne įrašytas: `kiekis = board.px / unit.px` (240/40 = 6, 240/60 = 4, 240/120 = 2). Jei dalyba ne sveikoji, komponentas meta klaidą į `console` ir rodo „Vienetai nesuderinti su lenta.“ — tylus apvalinimas būtų neteisingas modelis.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | tuščia lenta, brūkšniuotas galas, trys skaičiai 6 / 4 / 8, vienetų mygtukai neaktyvūs | „Kiek sąvaržėlių telpa ant lentos? Pasirink skaičių.“ | „Pirma spėk, tada matuok.“ |
+| spėjimas 8 | tas pats, spėjimas pažymėtas, mygtukai aktyvūs | „Tu sakei 8. Dabar matuok.“ | „Dėk sąvaržėles vieną po kitos.“ |
+| matuojama, k = 1–5 | k sąvaržėlių prie kairiojo galo, skaitiklis „k sąvaržėlės“ | „Ant lentos 3 sąvaržėlės.“ | „Dėk toliau, kol lenta baigsis.“ |
+| sąvaržėlė pilna (6) | 6 vienetai lygiai iki brūkšniuoto galo | „Lenta baigėsi. 6 sąvaržėlės.“ | „Tu sakei 8. Tilpo 6.“ |
+| perjungimas į trintuką | tuščia lenta, du mygtukai „Daugiau“ / „Mažiau“ | „Trintukas ilgesnis už sąvaržėlę. Ar trintukų bus daugiau, ar mažiau?“ | „Pasakyk, tada matuok.“ |
+| trintukas pilnas (4) | 4 vienetai iki to paties galo | „Lenta baigėsi. 4 trintukai.“ | „Tu sakei mažiau. Gavosi mažiau: 4.“ (arba „Tu sakei daugiau, o gavosi mažiau: 4.“) |
+| pieštukas pilnas (2) | 2 vienetai iki to paties galo | „Lenta baigėsi. 2 pieštukai.“ | „Dar mažiau. Tas pats ilgis.“ |
+| grįžimas į jau matuotą vienetą | ta pati būsena kaip anksčiau, taškas į tašką | „Vėl 6 sąvaržėlės. Lenta ta pati.“ | „Skaičius grįžo, lenta nepakito.“ |
+| visi trys išmatuoti | įrašų juosta „6 sąvaržėlės · 4 trintukai · 2 pieštukai — tas pats ilgis“ | „Trys skaičiai, viena lenta.“ | „Skaičius kitas, ilgis tas pats.“ |
+
+- **Vienas kintamasis:** `unitId` ∈ {`savarzele`, `trintukas`, `piestukas`}. Vaikas keičia tik vienetą. Lenta, jos ilgis, brūkšniuotas galas ir vienetų dydžiai yra konfigūracijoje ir vaiko nekeičiami. Spėjimas ir „Dėk vieną“ yra matavimo veiksmas, o ne antras kintamasis.
+- **Lentos geometrija užrakinta mechaniškai.** `art.plank(44, 148, 240, 22)` įterpiamas vieną kartą `mount()` metu; keičiant vienetą keičiasi tik vienetų sluoksnis (`<g id="iv-tokens">`), o lentos `getBBox()` prieš ir po visų trijų vienetų yra vienodas (x, y, width, height iki paskutinio skaitmens). Tai ne estetikos reikalavimas: jei lenta bent kartą persibraižo, sakinys „lenta ta pati“ tampa neteisingas.
+- **Skaičius niekada ne vienas.** Skaitiklis, `readout` ir įrašų juosta visada rašo skaičių su vienetu („3 sąvaržėlės“, ne „3“). Formos: 1 → `sg`, 2–6 → `pl`; funkcija `ltForm(n)` grąžina formą pagal paskutinį skaitmenį (10–20 — daugiskaitos kilmininkas, bet modelyje tokių skaičių nepasitaiko).
+- **Išdėstymas 360 px:** scena `viewBox="0 0 328 160"`, `width:100%`, `max-width:328px`. Lenta x 44–284 (240 px), vienetų eilutė ta pačia pradžia, aukštis 24 px; brūkšniuotas galas x = 284 nuo y = 88 iki 152. Vienetai: 40 / 60 / 120 px — 6 × 40 = 4 × 60 = 2 × 120 = 240. Vienetų juosta valdikliuose: trys mygtukai po 72 × 56 px + 2 × 8 px tarpai = 232 px iš 328 px. Jokio horizontalaus slinkimo.
+- **Vienetų piešinys:** kiekvienas vienetas — savo pločio žetonas (24 px aukščio) su atpažįstamu ženklu: sąvaržėlė — dviguba U formos linija, trintukas — stačiakampis su šviesia juosta viename gale, pieštukas — juosta su smailiu galu ir tamsiu švinu. Tai schematiški ženklai, ne tikro dydžio piešiniai (žr. modelio ribas), bet jie skiriasi **forma**, ne vien spalva. Scenoje nėra dangaus, žemės ar lapų, todėl `art.js` dalys nenaudojamos, išskyrus lentai skirtą `art.plank()`.
+- **Įėjimai:** trys vienetų mygtukai 72 × 56 px su matomu pavadinimu ir `aria-label` („Matuoti sąvaržėlėmis“), `aria-pressed`; „Dėk vieną“ 100 % × 56 px; spėjimo mygtukai 6 / 4 / 8 ir „Daugiau“ / „Mažiau“ po 96 × 56 px; „Iš naujo“ ≥ 96 × 48 px. Klaviatūra: `Tab` tarp taikinių, `Enter`/`Space` aktyvuoja, `←`/`→` perjungia vienetus, `R` atstato. Fokusas po veiksmo: į „Dėk vieną“, kai matuojama; į pirmą vienetą, kai matavimas baigtas; į pirmą spėjimo variantą, kai rodomas spėjimas (LL-32).
+- **Grįžtamasis ryšys** — iškart po paspaudimo (≤ 1 kadras), be perėjimo ir be garso įžangos. `readout` įvardija būseną, `api.note` — vieną sakinį apie veiksmą, niekada apie vaiką. `api.progress({ correct: true })` — vieną kartą, kai **visi trys** vienetai išmatuoti iki galo, o ne po pirmo matavimo (LL-29). „Iš naujo“ pažangos netrina (LL-16).
+- **Perjungimas matavimo viduryje:** pasirinkus kitą vienetą, padėtų vienetų skaičius atstatomas į 0, `api.note`: „Naujas vienetas. Matuok iš naujo.“ Tai ne klaida ir ne bauda.
+- **Perpildymas:** kai lenta pilna, „Dėk vieną“ tampa neaktyvus, `api.note`: „Daugiau netelpa. Lenta baigėsi.“ Jokio klaidos pranešimo.
+- **Garsas** — devynios nustatytos frazės (`start`, `place`, `full`, `ask`, `more`, `less`, `same`, `back`, `all`) ir dvylika skaičių frazių (`sentences.counts`: 6 + 4 + 2), visos laikomos `config.sentences`, o ne simuliacijos kode (LL-42). `walk_strings()` renka ir įdėtas `counts` reikšmes (`scripts/generate_audio.py:130–155`), todėl `check_audio.py` jas matys. `api.note` garsiai neskaitomas (mažas manifestas). Generuojant reikia abiejų variantų (`n`, `s`).
+- **Prieinamumas:** scenos SVG `role="img"`, `aria-label` atnaujinamas po kiekvieno veiksmo („Lenta, ant jos trys sąvaržėlės. Lentos galas pažymėtas.“) ir nekartoja `readout` žodis į žodį. `readout` turi `aria-live="polite"`. Vienetai skiriasi forma ir pavadinimu, ne vien spalva; spėjimo būsena žymima `aria-pressed`.
+- **Jokių laikmačių, ėjimų limito, „game over“.** Matuoti galima tiek kartų, kiek vaikas nori; grįžimas prie ankstesnio vieneto niekada nelaikomas klaida.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Ant lentos telpa 6 sąvaržėlės arba 2 pieštukai. Kuri eilutė pasako lentos ilgį?“ — 6 / 2 / 6 sąvaržėlės arba 2 pieštukai | 6 sąvaržėlės arba 2 pieštukai (2) | pirmas arba antras — nuogas skaičius priimamas kaip ilgis | „Skaičius vienas nieko nesako. Pažiūrėk, kuo matuota.“ |
+| 2 | taikymas | „Lenta yra 6 sąvaržėlės. Trintukas ilgesnis už sąvaržėlę. Kiek trintukų telpa?“ — 2 / 8 / 4 | 4 (2) | 8 — ilgesnis vienetas laikomas didesniu skaičiumi (pagrindinė nuostata) | „Trintukas didesnis už sąvaržėlę. Skaičius turi būti mažesnis už 6.“ |
+| 3 | perkėlimas | „Močiutė matavo kilimą savo pėdomis ir gavo 8. Anūkas turi mažesnes pėdas. Kiek pėdų suskaičiuos anūkas?“ — Mažiau nei 8 / Daugiau nei 8 / Taip pat 8 | Daugiau nei 8 (1) | trečias — skaičius laikomas kilimo savybe; pirmas — mažesnė pėda siejama su mažesniu skaičiumi | „Mažesnė pėda telpa daugiau kartų į tą patį kilimą.“ |
+| 4 | perkėlimas (`optional: true`) | „Du vaikai matavo tą patį suolą. Vienas gavo 3, kitas 9. Ar taip gali būti?“ — Ne, tas pats suolas duoda tą patį skaičių / Taip, jei vienas matavo trumpesniu vienetu / Ne, 9 yra per daug | Taip, jei vienas matavo trumpesniu vienetu (1) | pirmas — tas pats daiktas turi turėti vieną skaičių | „Skaičius priklauso nuo vieneto, ne nuo suolo.“ |
+
+**Refleksija.** „Kaip paaiškintum, kodėl Jonas gavo 6, o Rūta 2?“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — kad jie matavo skirtingais vienetais, o lenta ta pati.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).** Lenta padalijama be liekanos: 240 px dalijasi iš 40, 60 ir 120. Tikrame matavime dažnai lieka likutis („4 trintukai ir dar gabaliukas“), ir tai yra antra sąvoka, kuri lieka mokytojo veiklai — modelis to neslepia, bet ir nevaizduoja. Vienetai ekrane yra schematiški žetonai, ne tikro dydžio piešiniai: tikras pieštukas yra apie penkis kartus ilgesnis už sąvaržėlę, o ekrane — tris kartus; svarbu ne tikslus santykis, o tai, kad kiekvienas vienetas yra viena visa kopija ir visos kopijos vienodo ilgio. Modelis neleidžia maišyti skirtingų vienetų, todėl negali parodyti, kodėl maišymas klaidingas — tą atvejį aptaria mokytojas su tikrais daiktais. Centimetrų ir liniuotės modelis nerodo: jų skalė ir nulis yra 2 klasės turinys. Pats matavimas ekrane yra kartojimas, bet skaičius atsiranda todėl, kad vaikas jį suskaičiavo spausdamas, o ne todėl, kad modelis jį paskaičiavo — todėl spėjimas ir palyginimas yra būtini, o teisingas skaičius nelaikomas supratimo įrodymu.
+
+**Ką tai reiškia modulio autoriui.** `title` — „Ilgis: tas pats daiktas, kitas skaičius“ (39 simboliai); `subtitle` — „Skaičius priklauso nuo vieneto, kuriuo matuoji“ (46); `minutes` — 9; trys `outcomes`: „Išmatuoju daiktą pasirinktu vienetu ir pasakau skaičių su vienetu.“, „Palyginu to paties daikto matavimus skirtingais vienetais.“, „Paaiškinu, kodėl mažesnis vienetas duoda didesnį skaičių.“; `concept.title` — „Ilgis yra vienetų skaičius“ (26); `concept.big_idea` — „Tas pats daiktas, matuojamas skirtingais vienetais, gauna skirtingus skaičius. Jo ilgis nepakinta. Skaičius pasako ilgį tik tada, kai pasakai vienetą.“ (150); `concept.steps` — keturi žingsniai iš sekos 2–5; `concept.example` — „Klasė matuoja suolą. Viena grupė matuoja trintukais, kita pieštukais. Skaičiai skirsis, suolas liks tas pats.“; `teacher.offline` — dvi vienodo ilgio popieriaus juostos, vienas vaikas matuoja trintuku, kitas pieštuku, abu pasako skaičių su vienetu, tada keičiasi vienetais; `teacher.misconceptions` — trys nuostatos iš šio skyriaus (1–3), o ketvirtoji („vienetus galima maišyti“) įrašoma kaip modelio riba; `sim` — `{ "component": "ilgis-ir-vienetas", "config": { … } }`. Numeris `25-` laisvas (24 jau užimtas). Modulį įrašius, jis turi būti įtrauktas į `content/lt/grade-01/index.json` ir `path.json` (kūrėjo ar dizainerio darbas, ne metodo dalis); siūloma vieta kelyje — po `18-taskas-tiese-spindulys-atkarpa`, nes ten jau kalbama apie atkarpą ir jos ilgį, o prieš `21-erdvines-figuros`.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, Matematikos ilgalaikis (metų) planas 1 klasei — „Ilgis 5“ ir integruota veikla „Kokio ilgio mano kuprinėje esantys daiktai?“ (`sources/pradinio-bp-rekomendacijos-2024.txt:17300–17301`, veiklos tikslas `:17325–17326`), matavimo principas `:1010–1014`, 2 klasės vienetų sąryšiai `:1015–1017`. Carpenter, T. P., & Lewis, R. (1976). The development of the concept of a standard unit of measure in young children. *Journal for Research in Mathematics Education, 7*(1), 53–58. https://doi.org/10.5951/jresematheduc.7.1.0053 · Sarama, J., Clements, D. H., Barrett, J., van Dine, D. W., & McDonel, J. S. (2011). Evaluation of a learning trajectory for length in the early years. *ZDM Mathematics Education, 43*(5), 667–680. https://doi.org/10.1007/s11858-011-0326-5 · Sarama, J., Clements, D. H., Barrett, J. E., Cullen, C. J., Hudyma, A., & Vanegas, Y. (2022). Length measurement in the early years: Teaching and learning with learning trajectories. *Mathematical Thinking and Learning, 24*(4), 267–290. https://doi.org/10.1080/10986065.2020.1858245 · Hiebert, J. (1981). Cognitive development and learning linear measurement. *Journal for Research in Mathematics Education, 12*(3), 197–211. https://doi.org/10.5951/jresematheduc.12.3.0197
+
+**Pastaba dėl wiki.** `research/wiki/curriculum/matematika-1-klase.md:141` teigia, kad 1 klasėje ilgis „dokumente nenurodytas“; metų plano eilutė `:17300` tam prieštarauja („Ilgis 5“). Metodas remiasi šaltiniu, o wiki eilutė taisytina atskirame tyrėjo darbe — šiame faile ji neliesta.
+
 ## Atviros prielaidos
+
 
 - _(kas šioje klasėje dar nepatikrinta; žr. [[../../guidelines/klausimai|klausimus]])_
 

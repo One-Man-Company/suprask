@@ -1,0 +1,18 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 219,
+  "created": "2026-11-10T10:20:00+02:00",
+  "type": "struktura",
+  "title": "Garso patikra nemato tiesioginių api.speak eilučių: du sakiniai tyliai iškrenta",
+  "body": "check_audio.py tekstus renka tik iš modulių sim.config, todėl simuliacijų kode įrašyti api.speak(\"...\") sakiniai lieka nematomi, o suvestinė vis tiek sako „Garsas pilnas: 543 tekstų, 1086 įrašų, naudojama 1086 iš 1086 mp3“. Du konkretūs atvejai: assets/js/sims/calba.js:229 api.speak(\"Sudėjai visus sakinius!\") ir assets/js/sims/matematika.js:81 api.speak(\"Visi taikiniai pasiekti!\") — abiejų nėra assets/audio/lt/manifest.json (grep 0). speech.js:134 tokiu atveju tyliai pereina prie naršyklės tts(), tad vaikas, kuriam garsas yra pagrindinis kanalas, išgirsta robotizuotą arba visai jokio balso, o patikra rodo žalią. Siūloma: check_audio.py papildyti literalių api.speak(\"...\") skaitymu (be kintamųjų) ir generuoti jiems įrašus per generate_audio.py collect(), o manifeste esančius nenaudojamus tekstus ir toliau tikrinti atvirkštine kryptimi (#7397).",
+  "target": "scripts/check_audio.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/calba.js:229",
+    "assets/js/sims/matematika.js:81",
+    "assets/js/speech.js:134",
+    "assets/audio/lt/manifest.json (0 atitikmenų abiem sakiniams)",
+    "python3 scripts/check_audio.py → „✔ Garsas pilnas: 543 tekstų, 1086 įrašų“"
+  ]
+}

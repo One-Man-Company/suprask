@@ -1,0 +1,16 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 219,
+  "created": "2026-11-10T10:22:00+02:00",
+  "type": "kritika",
+  "title": "13-akmenelis-popierius: „visada grįžta prie trečdalio“ prieštarauja to paties modulio žingsniui „bet ne tiksliai 10“",
+  "body": "Modulio concept.example sako „Po 30 ėjimų rezultatas visada grįžta prie maždaug trečdalio“, o concept.steps[2] tame pačiame faile — „laimėjimų skaičius bus arti 10 — bet ne tiksliai 10“. Du sakiniai moko priešingai: vienas teigia grįžimą kaip garantiją, kitas — tik artumą. 30 ėjimų imtyje laimėjimų skaičius paprastai svyruoja apie 10 su standartiniu nuokrypiu apie 2,6, tad 6 ar 14 laimėjimų yra visiškai įprastas rezultatas, o ne „negrįžimas“. Vaikas, kuris po 30 ėjimų suskaičiuos 15 laimėjimų, gaus įrodymą prieš modulio teiginį. Simuliacija šiame darbe šios problemos nebeturi (lūkesčio sakinys apskaičiuojamas iš ėjimų skaičiaus ir rodomas tik tada, kai trečdalis yra sveikas), bet modulio tekstas lieka. Siūloma „visada“ pakeisti „paprastai“ ir sutrumpinti sakinį iki 10 žodžių, kad abu modulio sakiniai mokytų tą patį.",
+  "target": "content/lt/grade-01/zaidimu-teorija/13-akmenelis-popierius.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/zaidimu-teorija/13-akmenelis-popierius.json concept.example",
+    "content/lt/grade-01/zaidimu-teorija/13-akmenelis-popierius.json concept.steps[2]",
+    "research/wiki/guidelines/pamokos.md LL-79 (tas pats defektas simuliacijos lygmenyje, jau pataisytas)"
+  ]
+}

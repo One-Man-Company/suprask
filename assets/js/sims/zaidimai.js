@@ -180,8 +180,24 @@ const akmenelisPopierius = {
       { id: "zirkles", emoji: "✌️", label: "Žirklės", acc: "žirkles", beats: "popierius" },
       { id: "popierius", emoji: "✋", label: "Popierius", acc: "popierių", beats: "akmenelis" },
     ];
+    const ROWS = [
+      { k: "win", label: "Laimėjimai", c: "#4fc3a1" },
+      { k: "lose", label: "Pralaimėjimai", c: "#f2708a" },
+      { k: "draw", label: "Lygiosios", c: "#ffc94d" },
+    ];
+    /* Modulio rezultatas žada „stebiu rezultatus ir lyginu juos su lūkesčiu“,
+       o simuliacija anksčiau tik skaičiavo ir po dešimto ėjimo PASKELBDAMA
+       „kiekvienas variantas laimi maždaug trečdalį kartų“ — neparodžiusi nei
+       lūkesčio, nei palyginimo su juo. Dabar trečdalis rodomas kaip skaičius,
+       o palyginti kviečiamas vaikas (P2: pirma veiksmas, paskui
+       paaiškinimas). Trečdalis imamas ties 9 ėjimais, nes 9 : 3 = 3 —
+       sveikas skaičius, kurį vaikas perskaičiuoja pats. */
+    const THIRD_AT = 9;
+    const DUEL = "Akmenėlis nugali žirkles. Žirklės nugali popierių. Popierius nugali akmenėlį.";
+    const ejimai = (n) => (n % 10 === 1 && n % 100 !== 11 ? "ėjimas" : "ėjimai");
     const score = { win: 0, lose: 0, draw: 0 };
-    let last = "Paklausk draugo arba spausk savo ėjimą.";
+    let streak = { id: null, n: 0 };
+    let announced = false;
 
     /* Kortelė yra `#sim-stage` tinklelio vaikas: be `min-width:0` jos
        mažiausias plotis lygus turinio min-content, todėl prie 200 % teksto
@@ -194,37 +210,52 @@ const akmenelisPopierius = {
           <span id="ap-you">❔</span><span style="font-size:min(1.2rem,9cqw);color:var(--ink-faint)">prieš</span><span id="ap-pc">❔</span>
         </div>
         <p id="ap-msg" style="font-family:var(--font-head);font-weight:800;min-height:1.6rem"></p>
-        <div id="ap-bars" style="display:grid;gap:.4rem;max-width:24rem;margin:0 auto"></div>
+        <div id="ap-bars" style="display:flex;flex-direction:column;gap:.4rem;max-width:26rem;margin:0 auto"></div>
+        <p id="ap-third" style="font-size:.95rem;font-weight:700;margin:.6rem 0 0"></p>
       </div>`;
     controls.innerHTML = `
-      <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center">
-        ${moves.map((m) => `<button class="btn secondary" data-move="${m.id}" style="font-size:2rem;min-width:4.4rem" aria-label="${m.label}">${m.emoji}</button>`).join("")}
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;min-width:0">
+        ${moves.map((m) => `<button class="btn secondary" data-move="${m.id}" style="font-size:min(2rem,10vw);min-width:min(4.4rem,22vw);min-height:48px" aria-label="${m.label}">${m.emoji}</button>`).join("")}
       </div>
       <button class="btn ghost" id="ap-reset">Nuo nulio</button>`;
     const youEl = stage.querySelector("#ap-you");
     const pcEl = stage.querySelector("#ap-pc");
     const msgEl = stage.querySelector("#ap-msg");
     const barsEl = stage.querySelector("#ap-bars");
+    const thirdEl = stage.querySelector("#ap-third");
 
     function bars() {
       const total = score.win + score.lose + score.draw || 1;
-      const rows = [
-        { k: "Laimėjai", v: score.win, c: "#4fc3a1" },
-        { k: "Pralaimėjai", v: score.lose, c: "#f2708a" },
-        { k: "Lygiosios", v: score.draw, c: "#ffc94d" },
-      ];
       /* Fiksuotos `7rem`/`3rem` kolonos prie 200 % teksto (32 px šaknis) užėmė
          336 px ir stulpelis nebetilpo į 294,8 px kortelę (#4741). Dabar tai
-         lanksti eilutė: įprastu šriftu pločiai tie patys (112 + likęs + 48),
-         o padidinus tekstą eilutė persirikiuoja, o ne išstumia puslapį. */
-      barsEl.innerHTML = rows.map((r) => `
-        <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;font-size:.9rem;font-weight:700">
-          <span style="flex:0 0 auto;width:7rem;max-width:100%;text-align:right">${r.k}</span>
+         lanksti eilutė: įprastu šriftu pločiai tie patys, o padidinus tekstą
+         eilutė persirikiuoja (LL-41, LL-51), o ne išstumia puslapį. */
+      barsEl.innerHTML = ROWS.map((r) => `
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem .5rem;align-items:center;font-size:.9rem;font-weight:700;min-width:0">
+          <span style="flex:0 0 auto">${r.label}</span>
           <span style="flex:1 1 5rem;min-width:2.5rem;height:1.2rem;background:var(--line);border-radius:999px;overflow:hidden">
-            <span style="display:block;height:100%;width:${(r.v / total) * 100}%;background:${r.c}"></span>
+            <span style="display:block;height:100%;width:${(score[r.k] / total) * 100}%;background:${r.c}"></span>
           </span>
-          <span style="flex:0 0 auto;width:3rem">${r.v}</span>
+          <span style="flex:0 0 auto;min-width:1.2rem;text-align:right">${score[r.k]}</span>
         </div>`).join("");
+      /* Trečdalis imamas iš TIKRŲ ėjimų, o ne paskelbiamas iš anksto: kai
+         ėjimų skaičius nesidalija iš 3, neišgalvotas skaičius nerodomas.
+         „1 ėjimas“ / „2 ėjimai“ — skaičiaus forma, ne daugiskaita visada. */
+      const played = score.win + score.lose + score.draw;
+      thirdEl.textContent = played === 0
+        ? "Iš viso 0 ėjimų."
+        : played % 3 === 0
+          ? `${played} ${ejimai(played)}. Jei visi trys lygūs — po ${played / 3}.`
+          : `${played} ${ejimai(played)}.`;
+    }
+
+    /* Trys paaiškinimo eilės, visos trumpesnės už 10 žodžių. Serija rodoma
+       TIK jai prasidėjus, o ne po dešimto ėjimo: kitaip vaikas „karštą ranką“
+       jau spėja įsidėmėti, o neigimą išgirsta kaip pamokymą, ne pastebėjimą. */
+    function explain(played) {
+      if (streak.n >= 3) return `Jau ${streak.n} tokie patys rezultatai iš eilės. Kitas ėjimas gali būti bet kuris.`;
+      if (played > 0 && played % 3 === 0) return `Po ${played} ėjimų trečdalis — po ${played / 3}. Palygink su savo skaičiais.`;
+      return DUEL;
     }
 
     function play(id) {
@@ -232,28 +263,43 @@ const akmenelisPopierius = {
       const pc = moves[Math.floor(Math.random() * moves.length)];
       youEl.textContent = me.emoji;
       pcEl.textContent = pc.emoji;
-      if (me.id === pc.id) { score.draw += 1; msgEl.textContent = "Lygiosios — abu parodėte tą patį."; }
-      else if (me.beats === pc.id) { score.win += 1; msgEl.textContent = `${me.label} nugali ${pc.acc}!`; }
-      else { score.lose += 1; msgEl.textContent = `${pc.label} nugali ${me.acc}.`; }
-      bars();
-      api.readout(`Tu ${score.win} · Kompiuteris ${score.lose} · Lygiosios ${score.draw}`);
-      const total = score.win + score.lose + score.draw;
-      if (total >= 10) {
-        api.note(`Po ${total} ėjimų: kiekvienas variantas laimi maždaug trečdalį kartų. Nėra „karštos rankos“ — tik atsitiktinumas.`);
-        api.progress({ correct: true });
+      let out;
+      if (me.id === pc.id) {
+        out = "draw"; score.draw += 1;
+        msgEl.textContent = "Lygiosios — abu parodėte tą patį.";
+      } else if (me.beats === pc.id) {
+        out = "win"; score.win += 1;
+        msgEl.textContent = `${me.label} nugali ${pc.acc}!`;
       } else {
-        api.note(last);
+        out = "lose"; score.lose += 1;
+        msgEl.textContent = `${pc.label} nugali ${me.acc}.`;
+      }
+      streak = streak.id === out ? { id: out, n: streak.n + 1 } : { id: out, n: 1 };
+
+      const played = score.win + score.lose + score.draw;
+      bars();
+      api.readout(`Laimėjimai ${score.win}, pralaimėjimai ${score.lose}, lygiosios ${score.draw}. Ėjimų ${played}.`);
+      api.note(explain(played));
+      if (played >= THIRD_AT && !announced) {
+        announced = true;
+        api.progress({ correct: true });
       }
     }
 
     controls.querySelectorAll("[data-move]").forEach((b) => b.addEventListener("click", () => play(b.dataset.move)));
     controls.querySelector("#ap-reset").addEventListener("click", () => {
       score.win = 0; score.lose = 0; score.draw = 0;
+      streak = { id: null, n: 0 };
       youEl.textContent = "❔"; pcEl.textContent = "❔";
-      msgEl.textContent = ""; bars(); api.readout("0 · 0 · 0");
+      msgEl.textContent = "";
+      bars();
+      api.readout("Laimėjimai 0, pralaimėjimai 0, lygiosios 0. Ėjimų 0.");
+      api.note(DUEL);
     });
 
     bars();
+    api.readout("Laimėjimai 0, pralaimėjimai 0, lygiosios 0. Ėjimų 0.");
+    api.note(DUEL);
     return null;
   },
 };

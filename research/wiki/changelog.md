@@ -2,6 +2,16 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-11 (23:06) — Publikavimo patikra #239: repo 37 / paskelbta 37, svetainė pastatyta iš `f1b14162`
+
+- **`check_published.py`** → repo 37, paskelbta 37, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `path_differs` false, `unpushed_commits` 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `f1b14162b153586521308198b5374e1ca97c1100`; `git status --porcelain -uall` tuščias.
+- **Baitai, ne skaičiai:** 37/37 modulio JSON baitais lygūs `git cat-file blob HEAD:`; `grade-01/index.json` (11 209 B), `path.json` (1 284 B), `grades.json` (1 126 B), `audio/lt/manifest.json` (60 762 B, 543 raktai) — lygūs. 7 assets (`index.html`, `404.html`, `main.css`, `app.js`, `registry.js`, `progress.js`, `speech.js`) lygūs po to, kai iš gyvo failo nuimama `?v=<sha8>` žyma (LL-76).
+- **Pastatyta iš `HEAD`:** gyvas `index.html` neša `?v=f1b14162` = pirmi 8 `HEAD` simboliai. 3 gyvi moduliai: `matematika/25-ilgis-ir-vienetas.json` `200` (8812 B), `lietuviu-kalba/01-garsas-ir-raide.json` `200` (5044 B), `pasaulio-pazinimas/16-vandens-busenos.json` `200` (4946 B).
+- **Garsas:** imtis 6 raktai × n/s = 12/12 `200`, `ID3`, 15 925–50 407 B; `check_audio.py` → 543 tekstų, 1086 įrašų, 1086/1086 mp3, 0 našlaičių.
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0/0; `check_docs_facts.py` → 0/0 (9 kryptys, 37 moduliai); `check_view.py --base <gyva> --module 25-ilgis-ir-vienetas --viewports phone,small` → 2 patikros, 0 problemų.
+- **Nuo #237:** `git diff --stat 7e8afe3..HEAD` turinio ir assets nelietė (#238 liečia tik `agents/`, `dashboard/`, `scripts/`), todėl skaičiai nepakito — pasikeitė tik statybos commit'as `7e8afe3` → `f1b1416`. #237 changelog įrašas nebuvo įrašytas; šis įrašas jį uždengia tais pačiais skaičiais.
+- **Sprendimas:** sutampa. Nieko nešalinta, ID nepernumeruoti, `path.json` nekeistas; ataskaita `agents/log/publikavimo-agentas-2026-11-11T2306.md`.
+
 ## 2026-11-09 (23:06) — Publikavimo patikra #212: repo 35 / paskelbta 35, svetainė pastatyta iš `b4a6fac3`
 
 - **`check_published.py`** (nuo #211 jau lygina ir baitus, ne tik ID) → repo 35, paskelbta 35, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `path_differs` [], `unpushed_commits` 0, `live_error` tuščias, `rc=0`.

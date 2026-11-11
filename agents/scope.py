@@ -162,16 +162,27 @@ def _label(key: str) -> str:
 def normalise_subject(text: str) -> str:
     """Įveda žmogus: gali būti raktas (matematika) arba pavadinimas (Matematika).
     Grąžiname raktą, jei atpažįstame; kitaip paliekame įvestą tekstą — sąrašas
-    nėra uždaras, mokytojas gali turėti savo dalyką."""
-    raw = text.strip()
-    low = raw.lower().replace("ė", "e").replace("ų", "u").replace("ū", "u")
+    nėra uždaras, mokytojas gali turėti savo dalyką.
+
+    Lyginama per `_norm()` (be diakritikų, be skyrybos), nes žmogus dashboard'e
+    rašo „gyvenimo-įgūdžiai“, o raktas yra ascii `gyvenimo-igudziai`. Anksčiau
+    buvo keičiamos tik trys raidės (ė/ų/ū), todėl „gyvenimo-įgūdžiai“,
+    „pilietiškumas“ ir panašūs įrašai likdavo neatpažinti ir padengtis
+    pranešdavo „DAR NĖRA“ apie dalyką, kurio modulis jau yra (2026-11-11
+    Žr. LL-81).
+    """
+    raw = str(text).strip()
+    if not raw:
+        return raw
+    slug = _norm(raw).replace(" ", "-")
     for key, label in SUBJECTS.items():
-        if raw == key or low == key:
+        if slug == key or slug == _norm(label).replace(" ", "-"):
             return key
-        lab_low = label.lower().replace("ė", "e").replace("ų", "u").replace("ū", "u")
-        if low == lab_low:
+    for key, label in SUBJECTS.items():
+        key_slug = key.replace("-", " ")
+        label_slug = _norm(label)
+        if slug and (slug in {key_slug, label_slug} or slug.replace("-", " ") in {key_slug, label_slug}):
             return key
-    slug = re.sub(r"[^a-z0-9]+", "-", low).strip("-")
     for key, label in SUBJECTS.items():
         if slug and (slug in key or key in slug):
             return key
@@ -281,11 +292,49 @@ def subject_coverage(grade: int) -> list[dict]:
     return out
 
 
+def _word_matcher(word: str) -> re.Pattern[str] | None:
+    """Žodžio kamieno ieškotojas normalizuotame modulio tekste.
+
+    Lietuvių kalboje kinta galūnė, o kamienas lieka: tema „Garsai ir raidės“, o
+    modulis vadinasi „Garsas ir raidė“. Todėl lyginame ne visą žodį, o ilgiausią
+    prefiksą, kuris dar gali atstoti kitą to paties žodžio formą: „garsai“ →
+    „gars“, „skiemenavimas“ → „skiemen“, o tekstas turi „skiemenų“.
+
+    Prefiksas trumpinamas ne daugiau kaip 3 raidėmis ir ne trumpiau kaip iki
+    5 raidžių — kitaip „reiskiniai“ atitiktų „reiškia“ ir tema „Orų reiškiniai“
+    būtų paskelbta padengta moduliu apie skaičių tiesę (2026-11-11 zondas).
+    Ieškoma tik žodžio pradžioje, kad „ras“ neatitiktų „paraše“.
+    """
+    if len(word) < 4:
+        return None
+    floor = max(5, len(word) - 3)
+    lengths = [n for n in range(len(word), floor - 1, -1)] or [len(word)]
+    alts = "|".join(re.escape(word[:n]) for n in lengths)
+    return re.compile(rf"(?:^| )(?:{alts})")
+
+
+def _word_hits(word: str, blob: str) -> bool:
+    pattern = _word_matcher(word)
+    if pattern is None:
+        return word in blob
+    return pattern.search(blob) is not None
+
+
 def coverage(grade: int) -> list[dict]:
     """Ar minimalios temos jau turi bent vieną modulį.
 
-    Tai apytikrė patikra (žodžių sutapimas), ne semantinė: ji skirta parodyti,
-    ko dar niekas nelietė, o ne pakeisti žmogaus sprendimą.
+    Tai apytikrė patikra (žodžių kamienų sutapimas), ne semantinė: ji skirta
+    parodyti, ko dar niekas nelietė, o ne pakeisti žmogaus sprendimą. Todėl
+    atsakymas turi tris reikšmes, ne dvi:
+
+    - `covered` — tema pakankamai sutampa su moduliu (≥60 % temų žodžių),
+    - `partial` — modulis temą liečia, bet ne visus jos žodžius; tai DARBAS,
+      ne padengta tema (anksčiau toks atvejis atrodė kaip „DAR NĖRA“, o agentas
+      kūrė tai, kas jau buvo),
+    - nei viena, nei kita — temos nelietė niekas.
+
+    Vienas žodis modulio tekste skaitomas kaip dalis tik tada, kai jis rastas
+    žodžio pradžioje (žr. `_word_matcher`).
     """
     data = load()
     cell = data["grades"].get(str(int(grade)), {})
@@ -293,12 +342,30 @@ def coverage(grade: int) -> list[dict]:
     result = []
     for topic in cell.get("min_topics", []):
         words = [w for w in _norm(topic).split() if len(w) >= 4] or _norm(topic).split()
-        hits = []
+        scored: list[tuple[int, int, str]] = []  # (id sutapimai, teksto sutapimai, modulio id)
         for mid, blob in modules:
-            matched = sum(1 for w in words if w in blob)
-            if words and matched >= max(1, -(-len(words) * 6 // 10)):  # 60 %
-                hits.append(mid)
-        result.append({"topic": topic, "covered": bool(hits), "modules": hits[:4]})
+            matched = sum(1 for w in words if _word_hits(w, blob))
+            if not matched:
+                continue
+            # Modulio id (failo vardas) yra žmogaus duotas temos pavadinimas, todėl
+            # jo sutapimas vertesnis už atsitiktinį žodį outcomes tekste:
+            # „Sudėtis ir atimtis“ pirmiausia turi rodyti 22-sudetis-per-desimti,
+            # o ne modulį, kurio aprašyme žodis „sudėti“ pavartotas vieną kartą.
+            id_hit = sum(1 for w in words if _word_hits(w, _norm(mid)))
+            scored.append((id_hit, matched, mid))
+        scored.sort(key=lambda x: (-x[0], -x[1], x[2]))
+        need = max(1, -(-len(words) * 6 // 10))  # 60 %
+        strong = [mid for _, m, mid in scored if m >= need]
+        weak = [mid for _, m, mid in scored if m < need]
+        hits = strong + weak
+        result.append({
+            "topic": topic,
+            "covered": bool(strong),
+            "partial": bool(weak) and not strong,
+            "modules": hits[:4],
+            "matched": max((m for _, m, _ in scored), default=0),
+            "words": len(words),
+        })
     return result
 
 

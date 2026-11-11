@@ -151,6 +151,48 @@ def main() -> int:
     except Exception:  # noqa: BLE001
         pass
 
+    # Turinio sastings: sistemos tikslas — pamoka vaikui, ne paleidimų skaičius.
+    # Pauzė atrodė kaip sveika sistema (pristabdyti paleidimai skaitėsi kaip
+    # eiliniai), todėl 2026-11-11 turinys neaugo 34 val., o jokia patikra to
+    # nepasakė. Dabar tikriname du dalykus: ar sistema pristabdyta, ir ar yra
+    # ką kurti (eilėje yra ne sisteminis pasiūlymas), o kūrėjas vis tiek tyli.
+    try:
+        import pause as _pause
+        paused, until = _pause.is_paused()
+        if paused:
+            warnings.append(f"sistema pristabdyta iki {until} — agentai dirba tuščiai, turinys neauga")
+    except Exception:  # noqa: BLE001
+        pass
+
+    try:
+        import db as _db3
+        from kurejas_queue import SYSTEM_PREFIXES as _sys_p
+
+        def _takeable(rows: list[dict]) -> list[dict]:
+            out = []
+            for r in rows:
+                target = (r.get("target") or "").strip()
+                paths = [p.strip() for p in target.replace(";", ",").split(",") if p.strip()]
+                if paths and all(p.startswith(_sys_p) for p in paths):
+                    continue
+                out.append(r)
+            return out
+
+        queue = _takeable(_db3.proposals(500, status="new"))
+        published = [r for r in _db3.recent_runs(120)
+                     if r.get("role") == "kurejas" and r.get("status") == "published"]
+        if queue and published:
+            last = dt.datetime.fromisoformat(published[0].get("finished") or published[0].get("started") or "")
+            if last.tzinfo is None:
+                last = last.replace(tzinfo=dt.datetime.now().astimezone().tzinfo)
+            idle_h = (dt.datetime.now().astimezone() - last).total_seconds() / 3600
+            if idle_h > 36:
+                tail = "pasiūlymas" if len(queue) == 1 else "pasiūlymai"
+                warnings.append(f"kūrėjas nepaskelbė naujo turinio {idle_h:.0f} val., o eilėje {len(queue)} {tail}"
+                                " — turinys neauga, nors darbas yra")
+    except Exception:  # noqa: BLE001
+        pass
+
     if args.json:
         print(json.dumps({"ok": not problems, "problems": problems, "warnings": warnings,
                           "roles": len(roles)}, ensure_ascii=False, indent=2))

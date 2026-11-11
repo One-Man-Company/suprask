@@ -384,7 +384,13 @@ def scope_brief() -> str:
         if g["min_topics"]:
             lines.append("  Minimalios temos, kurios PRIVALO būti padengtos:")
             for c in g["coverage"]:
-                mark = "jau yra" if c["covered"] else "DAR NĖRA"
+                if c["covered"]:
+                    mark = "jau yra" + (f" ({', '.join(c['modules'][:2])})" if c.get("modules") else "")
+                elif c.get("partial"):
+                    near = ", ".join(c["modules"][:2]) or "—"
+                    mark = f"iš dalies ({near}) — temos branduolio dar nėra"
+                else:
+                    mark = "DAR NĖRA"
                 lines.append(f"    - {c['topic']} — {mark}")
         else:
             lines.append("  Minimalių temų sąrašas tuščias — vadovaukis programos žemėlapiu.")
@@ -398,6 +404,9 @@ def scope_brief() -> str:
         "2a. Kiekvienas PRIVALOMAS DALYKAS turi turėti bent vieną modulį JAU DABAR; dalyko moduliai",
         "    turi atitikti tos klasės bendrąją programą (ne vyresnės), o vienam dalykui gali būti",
         "    keli moduliai pagal skirtingas pasiekimų sritis.",
+        "2b. Žyma „iš dalies“ NĖRA padengta tema: modulis temą paliečia, bet temos branduolio",
+        "    (vienos didelės idėjos, kurią vaikas supranta darydamas) dar nėra. Skliaustuose nurodytas",
+        "    modulis, kurį verta perskaityti prieš kuriant, kad nekartotum jau padaryto modelio.",
         "3. Kiekviena tema turi būti išnagrinėta visapusiškai: kas tai, kodėl taip, kaip atpažinti,",
         "   kur gyvenime sutinkama, ką daryti kitaip — tiek, kiek leidžia klasės amžius.",
         "4. Kalba ir uždavinių sudėtingumas — tos klasės vaikui, ne vyresniam.",

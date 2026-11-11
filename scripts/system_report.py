@@ -47,11 +47,19 @@ def runs_summary(days: int) -> tuple[dict, list[dict]]:
         role = r.get("role") or "?"
         cell = per_role.setdefault(role, {
             "runs": 0, "published": 0, "ok": 0, "empty": 0, "conflict": 0,
-            "rejected": 0, "timeout": 0, "skipped": 0, "other": 0,
+            "rejected": 0, "timeout": 0, "skipped": 0, "other": 0, "paused": 0,
             "duration_s": 0, "last": None,
         })
-        cell["runs"] += 1
         st = (r.get("status") or "other").lower()
+        # Pristabdytas paleidimas NĖRA bandymas: jis įvyko tam, kad bėgiklis
+        # pasakytų „sistema pristabdyta“, ir truko 0 s. Jei jis skaičiuojamas kaip
+        # paleidimas, vidutinė trukmė krenta, o „nenaudingų“ dalis išsiskiedžia —
+        # 2026-11-11 sistema buvo sustojusi ~28 val., o lentelė rodė sveikus
+        # skaičius ir 0 % nenaudingų (LL-82).
+        if st == "paused":
+            cell["paused"] += 1
+            continue
+        cell["runs"] += 1
         if st in cell:
             cell[st] += 1
         else:
@@ -67,6 +75,52 @@ def runs_summary(days: int) -> tuple[dict, list[dict]]:
             sum(cell[k] for k in ("empty", "conflict", "rejected", "timeout", "skipped")) / max(1, cell["runs"]), 2
         )
     return per_role, rows
+
+
+def _stamp(value: str) -> dt.datetime | None:
+    try:
+        return dt.datetime.fromisoformat(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def pause_windows(rows: list[dict]) -> list[dict]:
+    """Kiek laiko sistema buvo pristabdyta (žmogaus sprendimas dashboard'e).
+
+    Pristabdymas yra teisėtas, bet jo trukmė iki šiol nebuvo niekur matuojama:
+    `paused` paleidimai liko sąraše kaip eiliniai, o turinys per tą laiką neaugo.
+    Todėl laiką skaičiuojame iš paleidimų laiko žymų: pristabdytų paleidimų
+    atkarpa baigiasi pirmu ne pristabdytu paleidimu po jos (arba dabartimi, jei
+    sistema vis dar pristabdyta).
+
+    Atkarpa NEdalijama pagal tarpą tarp paleidimų: grafikas ir taip daro
+    kelių valandų pertraukas, o pauzės būsena tęsiasi iki pirmo realaus
+    paleidimo. 2026-11-11 pirmoji versija dalijo ties 2 val. ir vieną ~18 val.
+    pauzę suskaičiavo kaip 6 atkarpas / 107,7 val. (LL-82).
+    """
+    items = sorted(((_stamp(r.get("started") or ""), (r.get("status") or "").lower()) for r in rows),
+                   key=lambda x: x[0] or dt.datetime.min.replace(tzinfo=dt.timezone.utc))
+    windows: list[dict] = []
+    cur: dict | None = None
+    for stamp, status in items:
+        if stamp is None:
+            continue
+        if status == "paused":
+            if cur:
+                cur["last"] = stamp
+                cur["n"] += 1
+            else:
+                cur = {"start": stamp, "last": stamp, "n": 1, "end": None}
+        elif cur:
+            cur["end"] = stamp
+            windows.append(cur)
+            cur = None
+    if cur:
+        windows.append(cur)
+    for w in windows:
+        end = w["end"] or dt.datetime.now(tz=w["last"].tzinfo)
+        w["hours"] = round(max(0.0, (end - w["start"]).total_seconds()) / 3600, 1)
+    return windows
 
 
 def proposals_summary() -> dict:
@@ -205,10 +259,15 @@ def main() -> int:
     args = ap.parse_args()
 
     per_role, rows = runs_summary(args.days)
+    paused_n = sum(c["paused"] for c in per_role.values())
+    windows = [w for w in pause_windows(rows) if w["hours"] >= 0.5]
     data = {
         "generated": dt.datetime.now().isoformat(timespec="seconds"),
         "days": args.days,
-        "runs": {"total": len(rows), "per_role": per_role},
+        "runs": {"total": len(rows), "paused": paused_n, "per_role": per_role},
+        "pauses": [{"start": w["start"].isoformat(timespec="minutes"),
+                    "end": (w["end"] or w["last"]).isoformat(timespec="minutes"),
+                    "hours": w["hours"], "runs": w["n"]} for w in windows],
         "proposals": proposals_summary(),
         "timers": timers(),
         "checks": checks(),
@@ -224,11 +283,21 @@ def main() -> int:
         return 0
 
     print(f"AGENTŲ SISTEMOS ATASKAITA · {data['generated']} · paskutinės {args.days} d.")
-    print(f"\nPaleidimai: {len(rows)}")
-    print(f"{'vaidmuo':<24}{'paleid.':>8}{'publ.':>7}{'tušti':>7}{'konfl.':>7}{'atm.':>6}{'vid.m':>7}{'nenaud.':>9}")
+    pause_note = f" (dar {paused_n} pristabdyta — žr. žemiau)" if paused_n else ""
+    print(f"\nPaleidimai: {len(rows)}{pause_note}")
+    print(f"{'vaidmuo':<24}{'paleid.':>8}{'publ.':>7}{'tušti':>7}{'konfl.':>7}{'atm.':>6}{'vid.m':>7}{'nenaud.':>9}{'prist.':>7}")
     for role, c in sorted(per_role.items(), key=lambda kv: -kv[1]["runs"]):
         print(f"{role:<24}{c['runs']:>8}{c['published']:>7}{c['empty']:>7}{c['conflict']:>7}"
-              f"{c['rejected']:>6}{c['avg_min']:>7}{int(c['useless_ratio'] * 100):>8}%")
+              f"{c['rejected']:>6}{c['avg_min']:>7}{int(c['useless_ratio'] * 100):>8}%{c['paused']:>7}")
+
+    if windows:
+        total_h = sum(w["hours"] for w in windows)
+        print(f"\nPristabdyta: {len(windows)} atkarp.(-os), iš viso {total_h:.1f} val. "
+              f"(pristabdyti paleidimai neskaičiuojami kaip bandymai)")
+        for w in windows:
+            end = w["end"] or w["last"]
+            tail = " (be pabaigos — galbūt dar pristabdyta)" if w["end"] is None else ""
+            print(f"  {w['start']:%Y-%m-%d %H:%M} → {end:%Y-%m-%d %H:%M} · {w['hours']:.1f} val. · {w['n']} paleid.{tail}")
 
     p = data["proposals"]
     print(f"\nPasiūlymai: {p['total']} · " + ", ".join(f"{k} {v}" for k, v in sorted(p["by_status"].items())))

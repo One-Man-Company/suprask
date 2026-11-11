@@ -806,7 +806,7 @@ async function loadGrades(){
         <div class="cov">${(g.subjects || []).map(s =>
           `<span class="chip ${s.covered ? "mint" : ""}" title="${esc(s.modules.join(", "))}">${s.covered ? "✓" : "○"} ${esc(s.label)}</span>`).join("")}</div>
           <div class="cov">${g.coverage.map(c =>
-            `<span class="chip ${c.covered ? "mint" : ""}">${c.covered ? "✓" : "○"} ${esc(c.topic)}</span>`).join("")}</div>
+            `<span class="chip ${c.covered ? "mint" : ""}" title="${esc((c.modules || []).join(", "))}">${c.covered ? "✓" : (c.partial ? "~" : "○")} ${esc(c.topic)}</span>`).join("")}</div>
           <div class="row"><button data-save>Išsaugoti</button><span class="muted" data-msg></span></div>
         </details>
       </div>`).join("");

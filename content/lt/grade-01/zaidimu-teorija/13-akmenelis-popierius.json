@@ -8,7 +8,7 @@
   "outcomes": [
     "Paaiškinu, kad kai variantai lygūs, laimėjimas priklauso nuo atsitiktinumo.",
     "Stebiu rezultatus ir lyginu juos su lūkesčiu.",
-    "Nustoju tikėti „karšta ranka“ — po daug bandymų rezultatas artėja prie trečdalio."
+    "Nustoju tikėti „karšta ranka“ — daug ėjimų duoda apie trečdalį."
   ],
   "concept": {
     "title": "Atsitiktinumas nėra „sėkmės serija“",
@@ -18,7 +18,7 @@
       "Todėl vieno ėjimo „stiprumas“ yra tik vienas iš trijų.",
       "Jei žaidi 30 kartų, laimėjimų skaičius bus arti 10 — bet ne tiksliai 10."
     ],
-    "example": "Laimėjai 5 kartus iš eilės? Tai ne „karšta ranka“ — tai atsitiktinumas. Po 30 ėjimų rezultatas visada grįžta prie maždaug trečdalio."
+    "example": "Laimėjai 5 kartus iš eilės? Tai ne „karšta ranka“ — tai atsitiktinumas. Po 30 ėjimų laimėjimų paprastai būna apie 10. Kartais bus 7, kartais 14."
   },
   "sim": {
     "component": "akmenelis-popierius",

@@ -506,6 +506,93 @@ Skaičius visada išvedamas, ne įrašytas: `kiekis = board.px / unit.px` (240/4
 
 **Pastaba dėl wiki.** `research/wiki/curriculum/matematika-1-klase.md:141` teigia, kad 1 klasėje ilgis „dokumente nenurodytas“; metų plano eilutė `:17300` tam prieštarauja („Ilgis 5“). Metodas remiasi šaltiniu, o wiki eilutė taisytina atskirame tyrėjo darbe — šiame faile ji neliesta.
 
+### M-08 — Kas gyvas: pokytis, o ne judėjimas
+
+**Data:** 2026-11-12 · **Tema:** `agents/proposals/2026-11-12-metodininkas-kas-gyvas.json` (idėja parengta ideator paleidime #243, bet pasiūlymo failas neįrašytas; metodas ją paima iš `agents/log/ideator-2026-11-12T0742.md:31–37`) · **Tikslas:** `content/lt/grade-01/pasaulio-pazinimas/20-kas-gyvas.json` · **Šaltinis:** [[../../foundations/gyvybe-ir-judesys|gyvybe-ir-judesys]]
+
+**Viena didelė idėja.** Gyvas organizmas keičiasi pats: auga ir atsako į tai, ko jam reikia. Daiktas gali judėti ir vis tiek nepakisti. Todėl vien judėjimas nepasako, kas gyva.
+
+**Ką sako programa.** 1 klasės gamtos mokslų ilgalaikiame plane yra atskira tema **26.2.4 „Bendri gyvų organizmų požymiai“** (1 val.), o veiklos — demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“ ir žaidimas „Gyvas–negyvas“ (`sources/pradinio-bp-rekomendacijos-2024.txt:17645–17648`). Bendra 1–2 kl. nuostata tuos požymius vardija taip: „juda, kvėpuoja, auga, maitinasi, dauginasi“ (`:12629–12632`). Todėl modelis **neneigia** judėjimo kaip požymio: jis rodo, kad vienas judesys sprendimo nepadaro, o augimas ir reakcija — padaro. Tai LL-18 atvejis, kurio apeiti negalima: „juda“ oficialiame sąraše yra, tad ginčijamas ne jo statusas, o vieno požymio pakankamumas. Tema neperžengia 1 klasės ribos: augalo dalių funkcijos ir „gyvybės“ apibrėžimas moksliniu lygmeniu (27.2.1) neimamos.
+
+**Kodėl modelis, o ne paveikslėlis.** Gyvybė pasireiškia laike: augalas per savaitę paauga, akmenukas nepakinta. Viename paveikslėlyje to nėra. Dviejų paveikslų greta vaikas negali patikrinti, kad akmenukas ir kamuoliukas tikrai stovėjo toje pačioje vietoje ir su jais nieko neatsitiko — trūksta to paties kadro. Modelyje visi trys daiktai stovi vienoje scenoje, o vaikas keičia tik vieną dalyką (vandenį) ir gali bet kada pastumti kamuoliuką: kamuoliukas nurieda, o jo pokytis lentelėje lieka 0. Tai bandymas, kurio paveikslėlis negali duoti — judėjimo hipotezė patikrinama tame pačiame ekrane, o ne paneigiama tekstu.
+
+**Ką rodo tyrimai.** Villarroel (2013) individualiai apklausė 118 vaikų (4–5, 5–6 ir 6–7 m. grupės) ir prašė kiekvieną nuotraukoje pavaizduotą objektą (medis, gėlės, šuo, paukštis, motociklas, automobilis, debesys, saulė) priskirti gyviems ar negyviems. **6–7 m. grupėje 39,5 % teisingai priskyrė visus objektus**; augalus teisingai priskyrė 79,1 %, transporto priemones — 86 %, dangaus reiškinius (saulę, debesis) — 60,5 %. 4–5 m. grupėje vaikai transporto priemonėms gyvybę priskyrė **dažniau nei atsitiktinai** (`:733–735`, `:751–753`, `:848–853`). Tai reiškia, kad judėjimas kaip kriterijus nėra atsitiktinė vaiko klaida, o sistema, kuri nyksta lėtai — ir kad augalas yra sunkiausias atvejis, nes jis nejuda.
+
+Leddon, Waxman ir Medin (2009) parodė, kad pats klausimo žodis klaidina: kai vaikų klausiama „ar tai gyva?“ („alive“), jie augalus priskiria gyviems rečiau, o pakeitus klausimą mažiau dviprasmišku („ar tai gyvas padaras?“) vaikai parodo turį bendrą sąvoką, siejančią augalus su gyvūnais. Villarroel savo tyrime šią metodinę išvadą pritaikė tiesiogiai (`:470–479`). Praktinė pasekmė moduliui: **klausiama „Kuris yra gyvas organizmas?“, ne „Ar jis gyvas?“**, ir vartojamas programos terminas „gyvas organizmas“, o ne kasdienis „gyvas“.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Gyva tai, kas juda.“** Paneigiama kamuoliuku: jis juda tik tada, kai jį pastumi, ir po to nurieda bei sustoja, o pokyčių lentelėje lieka 0. Antras prieštaraujantis pavyzdys tame pačiame ekrane — augalas, kuris nejuda, bet auga (LL-28).
+2. **„Augalas negyvas, nes nejuda ir nieko neveikia.“** Paneigiama augalu: per savaitę su vandeniu jis paauga, be vandens — nuleidžia lapus. Abu pokyčiai yra reakcija į tai, ko jam reikia; nei akmenukas, nei kamuoliukas į vandenį nereaguoja.
+3. **„Jei per savaitę nepakito, tai negyva.“** Šios nuostatos modelis nepaneigia, o pripažįsta kaip savo ribą: praplėtimo užduotis klausia apie sausą žirną lentynoje, o mokytojo skiltyje pasakyta, kad sėkla gali ilgai laukti vandens. Modelis nevaizduoja ramybės būsenos, bet jos neignoruoja.
+4. **„Gyvybę rodo kvėpavimas, o jo nesimato.“** Modelis kvėpavimo nevaizduoja ir to neslepia: tai atskiras programos bandymas „Ar vazoninė gėlė kvėpuoja?“ mokytojo veikloje, o ne simuliacijos apgavystė.
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas).**
+
+1. **Trys daiktai ant stalo.** Mokytojas padeda ant stalo pupos daigą vazone, akmenuką ir kamuoliuką. Klausimas: „Kuris iš jų yra gyvas organizmas?“ Vaikai ginčijasi; kas nors pastumia kamuoliuką, ir jis nurieda. Atsakymo mokytojas neteikia. Tikslas: iškelti kasdienį kriterijų — judėjimą — į kalbą, kad modelis turėtų ką griauti.
+2. **Spėjimas ir pirma savaitė ekrane.** Vaikas paspaudžia vieną iš trijų spėjimų („augalas / akmenukas / kamuoliukas pasikeis“), tada „Palaistyk“ ir „Po savaitės“. Augalas paauga dvi padalas, lapai pasisuka į šviesą; akmenukas ir kamuoliukas lieka tokie patys. `readout` lygina spėjimą su įvykiu. Tikslas: įsipareigoti spėjimui ir pamatyti pirmą pokytį (LL-15).
+3. **Kamuoliuko stūmimas.** Vaikas spaudžia „Pastumk kamuoliuką“: kamuoliukas nurieda ir sustoja, o lentelėje jo pokytis lieka 0. `api.note`: „Jį pastūmei tu. Pats jis nejuda ir neauga.“ Tikslas: atskirti judėjimą nuo pokyčio tame pačiame kadre.
+4. **Antra savaitė be vandens.** Vaikas perjungia į „Nelaistyk“ ir paspaudžia „Po savaitės“. Augalo lapai nuleisti, spalva blankesnė; akmenukas ir kamuoliukas vėl nepakito. `api.note`: „Augalas atsakė į tai, ko jam trūko.“ Tikslas: parodyti, kad gyvybė yra reakcija, o ne tik augimas.
+5. **Simbolis ir perkėlimas.** Po abiejų savaičių atsiranda pokyčių lentelė („augalas +2 · akmenukas 0 · kamuoliukas 0“) ir vienas sakinys: „Gyvas organizmas keičiasi pats.“ Vaikas jį perskaito ir pasako, kodėl kamuoliukas nepateko į lentelę. Tada — tos pačios taisyklės atvejai be modelio: žaislinis automobilis su rakteliu, medis žiemą, sausas žirnas. Tikslas: perkelti taisyklę į situacijas, kurių ekrane nebuvo.
+
+**Simuliacijos specifikacija.** Komponentas `kas-gyvas`, failas `assets/js/sims/pasaulis.js` (šis failas jau importuoja `art.js`, o `check_art.py` LEGACY sąraše yra tik `matematika.js`, todėl sceną privaloma rinkti iš `art.js` dalių: `plank`, `pot`, `soil`, `stem`, `leaf`, `ball`). `config`:
+
+```json
+{ "objects": [
+    { "id": "augalas", "name": "pupos daigas", "art": "plant" },
+    { "id": "akmenukas", "name": "akmenukas", "art": "pebble" },
+    { "id": "kamuoliukas", "name": "kamuoliukas", "art": "ball" } ],
+  "weeks": 2,
+  "growthPx": 16,
+  "guess": ["augalas", "akmenukas", "kamuoliukas"],
+  "sentences": { "guess": "…", "watered": "…", "grew": "…", "dry": "…",
+                 "drooped": "…", "push": "…", "pushNote": "…", "table": "…", "done": "…" } }
+```
+
+Skaičiai išvedami, ne įrašyti: pokytis lentelėje = `weeks * growthPx / 8` (dvi savaitės su vandeniu → +2; be vandens → −2; akmenukas ir kamuoliukas → 0 visada, nes jų `change()` grąžina 0). Jei `growthPx` nesidalija iš 8, komponentas meta klaidą į `console` ir rodo „Augimas nesuderintas su padalomis.“ — tylus apvalinimas būtų neteisingas modelis.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | trys daiktai ant lentynos, spėjimo mygtukai aktyvūs, „Po savaitės“ neaktyvus | „Kuris daiktas per savaitę pasikeis? Spėk.“ | „Pirma spėk, tada laistyk.“ |
+| spėjimas | spėjimas pažymėtas, atsirado „Palaistyk / Nelaistyk“ | „Tu sakei: augalas. Dabar pasirink vandenį.“ | „Augalas gali gauti vandens arba ne.“ |
+| pirma savaitė, laistyta | augalas aukštesnis dviem padalom, lapai pasisukę | „Augalas paaugo. Kiti du nepakito.“ | „Tu sakei augalas. Taip ir įvyko.“ |
+| pirma savaitė, nelaistyta | augalo lapai nuleisti, spalva blanki | „Augalo lapai nuleisti. Kiti du nepakito.“ | „Augalas atsakė į tai, ko jam trūko.“ |
+| kamuoliukas pastumtas | kamuoliukas pasislinkęs į dešinę ir stovi; kiti nejuda | „Kamuoliukas nuriedėjo ir sustojo.“ | „Jį pastūmei tu. Pats jis nejuda ir neauga.“ |
+| antra savaitė (priešinga sąlyga) | augalas keičiasi priešinga kryptimi; lentelėje −2 | „Antra savaitė. Augalas vėl pasikeitė.“ | „Vanduo keičia augalą, o ne akmenuką.“ |
+| abi savaitės | pokyčių lentelė „augalas +2 · akmenukas 0 · kamuoliukas 0“ | „Trys daiktai, vienas pasikeitė.“ | „Gyvas organizmas keičiasi pats.“ |
+| „Iš naujo“ | pradinė būsena, spėjimas neištrintas | „Vėl trys daiktai.“ | „Gali bandyti iš naujo.“ |
+
+- **Vienas kintamasis:** `watered` ∈ {`true`, `false`}. Jis vienintelis keičia augalo būseną ir lentelės skaičių. Stūmimas yra parodomasis veiksmas: `pushBall()` keičia tik kamuoliuko `cx` ir sąmoningai neliečia jokio skaičiaus — tai turi būti užtikrinta kodu, o ne teksto pažadu.
+- **Laikas be laikmačio:** „savaitė“ yra vienas paspaudimas, o ne laukimas. Jokių `setInterval`, jokio „po 3 sekundžių“. Jei animacijai naudojamas `setTimeout`, `mount()` grąžina valymo funkciją (KURINIO-STANDARTAS §4.7).
+- **Išdėstymas 360 px:** scena `viewBox="0 0 328 200"`, `width:100%`, `max-width:328px`. Lentyna — `art.plank(16, 138, 296, 10)`. Augalas x ≈ 52 (vazonas 34×28, stiebas iki 46 px, du lapai), akmenukas — `art.ball(158, 124, 14)`, kamuoliukas — `art.ball(252, 112, 26)`. Dešinėje 0–4 padalų juosta x = 310, aukštis 4 × 18 px. Pokyčių lentelė — trys žetonai po 96 px (×3 = 288 iš 328). Pavadinimai po daiktais 13 px, nekertami (`scrollWidth == clientWidth`).
+- **Įėjimai:** trys spėjimo mygtukai 96 × 56 px su `aria-label` („Spėju: augalas“); „Palaistyk / Nelaistyk“ 100 % × 56 px su `aria-pressed`; „Po savaitės“ 100 % × 56 px; „Pastumk kamuoliuką“ 100 % × 56 px; „Iš naujo“ ≥ 96 × 48 px. Klaviatūra: `Tab`, `Enter`/`Space`, `←`/`→` perjungia spėjimo variantus, `W` perjungia vandenį, `R` atstato. Fokusas po veiksmo: į „Po savaitės“, kai pasirinktas vanduo; į „Pastumk kamuoliuką“, kai pasirodo lentelė (LL-32).
+- **Grįžtamasis ryšys** — iškart po paspaudimo, be garso įžangos. `readout` įvardija būseną ir palygina su spėjimu, `api.note` sako **kodėl**, niekada „teisingai“ ir niekada apie vaiką (T5.1). `api.progress({ correct: true })` — vieną kartą, kai **abi savaitės** praėjusios skirtingomis sąlygomis, o ne po pirmos (LL-29). „Iš naujo“ pažangos netrina (LL-16).
+- **Augalas nenumiršta.** Net dvi savaites be vandens jis lieka gyvas, tik nuleidęs lapus: modelis nebaudžia ir nevaizduoja mirties, o `readout` sako „Augalas laukia vandens.“ Jei po antros sausos savaitės lapai virsta rudi, tekstas vis tiek sako „gyvas, bet ištroškęs“ — 6–7 m. vaikui mirtis modelyje nereikalinga, o neteisinga būsena būtų blogesnė už supaprastinimą.
+- **Garsas** — devynios frazės `config.sentences` (LL-42), visos trumpesnės nei 10 žodžių; `api.note` garsiai neskaitomas. Generuojami abu variantai (`n`, `s`), `check_audio.py` privalo matyti visas devynias.
+- **Prieinamumas:** scenos SVG `role="img"` su `aria-label`, atnaujinamu po kiekvieno veiksmo („Lentynoje pupos daigas, akmenukas ir kamuoliukas. Augalas aukštesnis.“); `readout` — `aria-live="polite"`. Daiktai skiriasi forma ir pavadinimu, ne vien spalva; spėjimo būsena — `aria-pressed`. Visi taikiniai ≥ 48 px.
+- **Jokio laiko limito, ėjimų limito, „game over“.**
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Po savaitės augalas paaugo, akmenukas ir kamuoliukas liko tokie patys. Kuris yra gyvas organizmas?“ — Augalas / Kamuoliukas / Akmenukas | Augalas (0) | Kamuoliukas — judėjimas laikomas gyvybės požymiu | „Pažiūrėk, kas pasikeitė, o kas tik pajudėjo.“ |
+| 2 | taikymas | „Kamuoliuką pastūmei ir jis nuriedėjo. Ar jis dėl to tapo gyvas?“ — Taip, nes juda / Ne, jis juda tik tada, kai jį stumi / Ne, nes jis kvėpuoja | Ne, juda tik kai stumi (1) | pirmas — judėjimas priskiriamas pačiam daiktui | „Kas jį pajudino? Ar jis pajudėtų pats?“ |
+| 3 | perkėlimas | „Žaislinis automobilis važiuoja, kai pasuki raktelį. Augalas nejuda. Kuris gyvas organizmas?“ — Augalas, nes auga ir reaguoja į vandenį / Automobilis, nes juda / Abu | Augalas (0) | antras — „juda“ painiojamas su „gyvas“ | „Judėjimą sukelia raktelis, o augimą — vanduo.“ |
+| 4 | perkėlimas (`optional: true`) | „Sausas žirnas guli lentynoje ir per savaitę nepakito. Ar jis gyvas organizmas?“ — Ne, nes nepasikeitė / Taip, jis tik laukia vandens / Ne, nes nejuda | Taip, laukia vandens (1) | pirmas — nepakitusi būsena laikoma negyva | „Palaistyk jį ir palauk ilgiau.“ |
+
+Atsakymų indeksai 0 / 1 / 0 / 1 — trečiasis sąmoningai ne viduryje (validatorius tikrina pasiskirstymą). Užuominos niekada nekartoja teisingo varianto žodžių (`validate_content.py` tai tikrina).
+
+**Refleksija.** „Kodėl kamuoliukas nuriedėjo, bet neliko gyvas?“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — kad jį pastūmė vaikas, o augalas keitėsi pats.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).** Modelis rodo dviejų savaičių pokytį, o tikroje gamtoje kai kurie augalai per savaitę beveik nepakinta, o žiemą medis apskritai atrodo nejudąs. Todėl taisyklė „pokytis per savaitę“ yra modelio supaprastinimas, o ne gyvybės apibrėžimas: praplėtimo užduotis su sausu žirnu ir mokytojo veikla su medžiu žiemą pasako, kad gyvybė gali ir „laukti“. Modelis nevaizduoja kvėpavimo, maitinimosi ir dauginimosi — programos sąraše jie yra, bet ekrane būtų ne stebimi, o deklaruojami. Debesų ir saulės modelis sąmoningai neliečia: jie juda ir keičia pavidalą, bet nėra organizmai, o šiam skirtumui reikia atskiros temos (Villarroel duomenimis, būtent dangaus reiškiniai 6–7 m. vaikams sunkiausi — 60,5 %). Kamuoliukas ekrane juda todėl, kad jį stumia vaikas; savarankiško judėjimo modelis nerodo ir to neslepia.
+
+**Ką tai reiškia modulio autoriui.** `title` — „Kas gyvas: auga ir reaguoja, ne tik juda“ (40 simbolių); `subtitle` — „Gyvybę rodo pokytis: augalas auga, o kamuoliukas tik rieda“ (58); `minutes` — 9; trys `outcomes`: „Skiriu, kas per savaitę pasikeitė, o kas tik pajudėjo.“, „Paaiškinu, kodėl judėjimas vienas neparodo, kas gyva.“, „Pasakau, kaip augalas reaguoja į vandenį.“; `concept.title` — „Gyvybę rodo pokytis“ (19); `concept.big_idea` — „Gyvas organizmas keičiasi pats: auga ir reaguoja į tai, ko jam reikia. Kamuoliukas juda tik tada, kai jį pastumi, bet pats nepakinta. Todėl vien judėjimas neparodo, kas gyva.“ (174); `concept.steps` — trys žingsniai iš sekos 2–5; `concept.example` — „Kambaryje augalas prie lango. Jį palaistai ir po savaitės jis didesnis. Kamuoliukas tas pats, nors ir nuriedėjo.“; `teacher.offline` — trys realūs daiktai (pupos daigas, akmenukas, kamuoliukas), spėjimas, savaitės stebėjimas su dviem augalais (vienas laistomas, kitas ne), pokyčių lentelė popieriuje; `teacher.misconceptions` — trys nuostatos iš šio skyriaus, o ketvirtoji („kvėpavimo nesimato“) įrašoma kaip modelio riba; `sim` — `{ "component": "kas-gyvas", "config": { … } }`. Numeris `20-` laisvas (pasaulio pažinime yra 08–10 ir 16–19). Modulį įrašius, jis turi būti įtrauktas į `content/lt/grade-01/index.json` ir `path.json` (kūrėjo ar dizainerio darbas, ne metodo dalis); siūloma vieta kelyje — po `09-augalo-gyvenimas`, nes ten jau kalbama apie tai, ko augalui reikia, o čia klausiama, kas apskritai gyvas.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, Gamtos mokslai, 1 klasės ilgalaikis planas — 26.2.4 „Bendri gyvų organizmų požymiai“ ir veiklos (`sources/pradinio-bp-rekomendacijos-2024.txt:17645–17648`); bendra 1–2 kl. nuostata apie požymius (`:12629–12632`); F1 pasiekimas (`:40886–40887`). Villarroel, J. D. (2013). Environmental judgment in early childhood and its relationship with the understanding of the concept of living beings. *SpringerPlus, 2*, 87. https://doi.org/10.1186/2193-1801-2-87 (atvira prieiga; 6–7 m. grupė `:733–735`, `:848–853`, transporto priemonės 4–5 m. grupėje `:751–753`, klausimo formuluotė `:470–479`). Leddon, E. M., Waxman, S. R., & Medin, D. L. (2009). Unmasking „Alive“: Children's appreciation of a concept linking all living things. *Journal of Cognition and Development, 9*(4), 461–473. https://doi.org/10.1080/15248370802678463 (PMID 19319203; PMCID PMC2659632).
+
+**Pastaba dėl wiki.** `research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:82–88` temų lentelėje 26.2.4 nėra — ji yra ilgalaikiame plane (`:17645`), todėl lentelė tyrėjui papildytina; šiame faile curriculum įrašas neliestas (ne mano vaidmens failas).
+
 ## Atviros prielaidos
 
 

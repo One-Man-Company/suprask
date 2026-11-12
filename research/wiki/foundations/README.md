@@ -12,6 +12,8 @@
 | [[interaktyvumo-principai]] | UI 6–7 metų vaikams, taikiniai, grįžtamasis ryšys | ≥48 px, jokių laikmačių, klaida ne aklavietė |
 | [[zenklas-kaip-busena]] | lygybės ženklas kaip būsena, operaciniai šablonai, modelio išdėstymas | modelis rodo abi lygybės kryptis ir bent vieną atvejį be vieno skaičiaus pusėje |
 | [[dydis-ir-skaicius]] | dydis ir kiekis prieš užrašytą vertę, moneta kaip pavyzdys | jei daiktas neša skaičių, modelis parodo jo poveikį atskirai; grafika neprieštarauja taisyklei |
+| [[vienetas-ir-skaicius]] | ilgis kaip vienetų skaičius; atvirkštinis vieneto dydžio ir skaičiaus ryšys | skaičius rodomas tik su vienetu; daiktas fiksuojamas mechaniškai, keičiamas tik vienetas |
+| [[gyvybe-ir-judesys]] | judėjimas kaip gyvybės kriterijus; klausimo formuluotė; gyvybė kaip pokytis laike | klausiama „gyvas organizmas“; modelyje yra judantis, bet nekintantis daiktas |
 | [[kryptis-ir-ziurovo-pozicija]] | kairė/dešinė kaip kūno, o ne kambario savybė; įsisavinimo tvarka | seka: savo kūnas → veikėjas žiūri ta pačia kryptimi → žiūri į vaiką; žymė sukasi su kūnu |
 | [[forma-ir-spalva]] | forma kaip tapatybė, spalva kaip įspūdis; spalvos prisirišimas prie daikto | forma fiksuojama mechaniškai, keičiamas tik užpildas; grįžimas į ankstesnę spalvą kaip kontrolė |
 | [[jausmas-ir-noras]] | jausmo priežastis yra noras, o noro nesimato; emocijų komponentai | įvykis fiksuotas, noras keičiamas; antras veikėjas kaip kontrolė; nieko neklausiama apie vaiko jausmus |

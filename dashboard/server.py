@@ -716,11 +716,16 @@ async function loadPublish(){
     if (p.error) { setText("#pubBig",  "klaida"); setText("#pubNote",  String(p.error).slice(0,60)); return; }
     const drift = (p.missing_on_live||[]).length;
     const risky = (p.hidden_locally||[]).length;
-    setText("#pubBig",  (drift === 0 && !p.unpushed_commits) ? "sutampa" : `${drift} neskelbta`);
+    // Sprendimas ateina iš įrankio (`verdict`), ne skaičiuojamas čia: kortelė,
+    // kuri „sutampa“ sprendė iš dviejų raktų, o vartai rc=1 dar ir dėl pasenusio
+    // failo ar seka, rodė žalią, kai publikavimas raudonas (#12895).
+    const v = p.verdict;
+    setText("#pubBig", v ? v.label : (drift === 0 && !p.unpushed_commits) ? "sutampa" : `${drift} neskelbta`);
     setText("#pubLocal",  p.local);
     setText("#pubLive",  p.published);
     setText("#pubUnpushed",  p.unpushed_commits);
     setText("#pubNote",  risky ? `repo nebeturi: ${p.hidden_locally.join(", ").slice(0,40)}`
+      : (v && v.reasons && v.reasons.length > 1) ? v.reasons.slice(1).join(" · ").slice(0,50)
       : drift ? p.missing_on_live.join(", ").slice(0,50)
       : (p.last_commit||"").slice(0,46));
   } catch(e) {

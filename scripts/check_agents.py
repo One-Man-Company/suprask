@@ -108,17 +108,29 @@ def main() -> int:
             warnings.append(f"{f.name}: timer'is be atitinkamo vaidmens ROLES")
 
     # Dienoraštis: architektas privalo palikti įrašą po kiekvieno darbo.
+    # Tikrinamas paskutinis BAIGTAS paleidimas, o ne pirmas sąraše: kol
+    # architektas dirba, `recent_runs()` pirmas įrašas yra `running`, ir senoji
+    # sąlyga (imamas arch[0], o jo statusas netinka) neįsijungdavo būtent tuo
+    # metu, kai patikra daroma — t. y. vartai buvo akli visada, kai jų reikia.
+    # Įrodymas: 2026-11-11 (#238) ir 2026-11-12 paleidimai dienoraščio
+    # nepapildė, o check_agents.py rodė 0 įspėjimų apie dienoraštį.
     journal = ROOT / "agents" / "system-journal.md"
     try:
         import db as _db
-        arch = [r for r in _db.recent_runs(80) if r.get("role") == "sistemos-architektas"]
+        finished_ok = {"published", "partial", "ok", "checked"}
+        arch = [r for r in _db.recent_runs(80)
+                if r.get("role") == "sistemos-architektas" and r.get("status") in finished_ok]
         if arch and journal.exists():
             last = arch[0]
-            finished = last.get("finished") or ""
-            if last.get("status") in ("published", "partial", "ok", "checked") and finished:
-                stamp = dt.datetime.fromisoformat(finished).timestamp()
-                if journal.stat().st_mtime < stamp - 5:
-                    warnings.append("sistemos-architektas baigė darbą, bet agents/system-journal.md nepapildytas")
+            started = last.get("started") or ""
+            if started:
+                # Įrašas rašomas paleidimo metu, todėl lyginama su PRADŽIA:
+                # paleidimo pabaigos laikas dar nesurašytas, kai patikra bėga.
+                stamp = dt.datetime.fromisoformat(started).timestamp()
+                if journal.stat().st_mtime < stamp:
+                    warnings.append(
+                        "sistemos-architektas baigė darbą (#%s) be agents/system-journal.md įrašo"
+                        % last.get("id"))
     except Exception:  # noqa: BLE001
         pass
 

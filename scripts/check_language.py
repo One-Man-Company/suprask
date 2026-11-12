@@ -242,6 +242,16 @@ def check_module(path: pathlib.Path, out: list[dict]) -> None:
     check_concept(data, grade, rel, out)
     check_sim_config(data, grade, rel, out)
 
+    # `outcomes` — tai, ką vaikas perskaito kaip „ką išmoksiu“ dar prieš
+    # spausdamas „Pradedu“. Laukas nebuvo tikrinamas nė vienu matuokliu, todėl
+    # 12 žodžių sakinys ir trys ilgi žodžiai gyveno tyliai (LL-52, #5827):
+    # check_language.py buvo žalias, o vaikas skaitė per ilgą sakinį.
+    # Sąmoningai tik perskaitomumas: dviprasmybės ir įvardžio pradžios taisyklės
+    # lieka užduotims, kad „arba“ sąraše neduotų klaidingų įspėjimų.
+    for i, outcome in enumerate(data.get("outcomes") or [], 1):
+        if isinstance(outcome, str):
+            check_readability(outcome, grade, f"{rel}:outcomes[{i}]", out)
+
     for i, task in enumerate(data.get("tasks") or [], 1):
         q = task.get("q") or ""
         where = f"{rel}:tasks[{i}]"

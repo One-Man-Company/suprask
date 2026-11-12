@@ -354,7 +354,7 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
         "live_version": "", "repo_version": "",
     }
 
-    return {
+    out = {
         "grades": per_grade,
         "live_grades": grades,
         # Suderinta su senuoju formatu (changelog'ai ir dashboard'as skaito šiuos raktus).
@@ -376,15 +376,51 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
         "last_commit": last_commit(),
         "live_error": "; ".join(live_errors),
     }
+    # Sprendimas keliauja kartu su duomenimis: dashboard'as neperrašo taisyklės
+    # savo (LL-10 — būsena iš to paties šaltinio, iš kurio imamas rc).
+    out["verdict"] = verdict(out)
+    return out
+
+
+def verdict(data: dict) -> dict:
+    """Vienintelis sprendimo šaltinis: kodėl publikuota / kodėl ne.
+
+    Dashboard'as anksčiau pats skaičiavo „sutampa“ iš dviejų raktų
+    (`missing_on_live`, `unpushed_commits`), o vartai rc=1 dar ir dėl `stale`,
+    `stale_unknown`, `aux_stale`, `path_differs`, `shell_stale`. Žmogus matė
+    žalią kortelę, kai įrankis buvo raudonas (#12895, LL-10 klasė). Todėl
+    priežastys skaičiuojamos čia, o `problems()` ir dashboard'as tik skaito
+    rezultatą.
+    """
+    reasons: list[str] = []
+    if data.get("live_error"):
+        reasons.append("gyva svetainė nepasiekiama")
+    if data.get("missing_on_live"):
+        reasons.append(f"{len(data['missing_on_live'])} neskelbta")
+    if data.get("hidden_locally"):
+        reasons.append(f"{len(data['hidden_locally'])} dingo iš repo")
+    if data.get("not_in_path"):
+        reasons.append(f"{len(data['not_in_path'])} ne kelyje")
+    if data.get("stale"):
+        reasons.append(f"{len(data['stale'])} pasenęs modulis")
+    if data.get("stale_unknown"):
+        reasons.append(f"{len(data['stale_unknown'])} nepasiekiamas modulis")
+    if data.get("path_differs"):
+        reasons.append("kelio seka skiriasi")
+    if data.get("aux_stale"):
+        reasons.append(f"{len(data['aux_stale'])} pasenęs pagrindinis failas")
+    if data.get("shell_stale"):
+        reasons.append(f"{len(data['shell_stale'])} pasenęs kodas")
+    if data.get("shell_unreachable"):
+        reasons.append(f"{len(data['shell_unreachable'])} nepasiekiamas kodas")
+    if data.get("unpushed_commits"):
+        reasons.append(f"{data['unpushed_commits']} neišsiųstas commit")
+    return {"ok": not reasons, "reasons": reasons,
+            "label": "sutampa" if not reasons else reasons[0]}
 
 
 def problems(data: dict) -> bool:
-    return bool(
-        data["missing_on_live"] or data["hidden_locally"] or data["not_in_path"]
-        or data["stale"] or data["stale_unknown"] or data["path_differs"]
-        or data.get("aux_stale") or data.get("shell_stale") or data.get("shell_unreachable")
-        or data["unpushed_commits"] or data["live_error"]
-    )
+    return not verdict(data)["ok"]
 
 
 def main() -> int:

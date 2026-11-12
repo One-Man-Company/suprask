@@ -19,6 +19,11 @@ atskiriama „trūksta ID“ nuo „ID yra, turinys pasenęs“. Nesutapimas
 patikrinamas antrą kartą — GitHub Pages pirmomis sekundėmis po deploymento
 gali grąžinti mišrią krašto būseną (LL-76).
 
+2026-11-12 (paleidimas #247): lyginami ir failai, kuriuos svetainė skaito
+prieš modulį — `grades.json`, klasės `index.json`, `path.json` ir
+`assets/audio/lt/manifest.json`. Anksčiau moduliai galėjo būti 200, o gyvas
+manifestas pasenęs: naujo modulio garsas 404, o visi vartai žali (LL-78).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -31,6 +36,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import pathlib
 import subprocess
 import sys
@@ -41,8 +47,18 @@ from concurrent.futures import ThreadPoolExecutor
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content" / "lt"
 GRADES = CONTENT / "grades.json"
-LIVE_ROOT = "https://one-man-company.github.io/suprask/"
-UA = {"User-Agent": "suprask-check/1.1"}
+LIVE_ROOT = os.environ.get("SUPRASK_LIVE_ROOT", "https://one-man-company.github.io/suprask/")
+UA = {"User-Agent": "suprask-check/1.2"}
+
+# Failai, kuriuos svetainė skaito prieš bet kurį modulį. Jie nelyginami modulio
+# baitų cikle (jis eina tik per `content/lt/<klase>/`), todėl pasenęs gyvas
+# `manifest.json` anksčiau likdavo nepastebėtas: visi moduliai 200, visi vartai
+# žali, o naujo modulio garso įrašo svetainėje nėra (404). LL-78.
+AUX_FILES = [
+    ("content/lt/grades.json", CONTENT / "grades.json"),
+    ("assets/audio/lt/manifest.json", ROOT / "assets" / "audio" / "lt" / "manifest.json"),
+]
+
 
 
 def grade_dir(grade: int) -> str:
@@ -82,22 +98,30 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def same_bytes(rel: str) -> tuple[bool, int, int]:
-    """(ar gyvas failas baitais lygus repo failui, repo baitai, gyvi baitai)."""
-    local_path = CONTENT / rel
+def compare(local_path: pathlib.Path, url_rel: str) -> tuple[bool, int, int]:
+    """(ar gyvas failas baitais lygus repo failui, repo baitai, gyvi baitai).
+
+    -1 gyvuose reiškia „nepasiektas“, 0 — „repo failo nėra“.
+    """
     if not local_path.exists():
         return False, 0, 0
     local = local_path.read_bytes()
-    live = fetch(LIVE_ROOT + "content/lt/" + rel)
+    live = fetch(LIVE_ROOT + url_rel)
     if live is None:
         return False, len(local), -1
     if sha(live) != sha(local):
         # LL-76: pirmomis sekundėmis po deploymento kraštas gali būti mišrus.
         time.sleep(1.5)
-        live = fetch(LIVE_ROOT + "content/lt/" + rel)
+        live = fetch(LIVE_ROOT + url_rel)
         if live is None:
             return False, len(local), -1
     return sha(live) == sha(local), len(local), len(live)
+
+
+def same_bytes(rel: str) -> tuple[bool, int, int]:
+    """(ar gyvas failas baitais lygus repo failui, repo baitai, gyvi baitai)."""
+    return compare(CONTENT / rel, "content/lt/" + rel)
+
 
 
 def check_grade(grade: int, compare_bytes: bool = True) -> dict:
@@ -154,6 +178,17 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
                                   "live_bytes": live_size})
     out["stale"] = stale
     out["stale_unknown"] = stale_unknown
+
+    # LL-78: klasės indeksas ir seka skaitomi prieš modulį, todėl jų baitai
+    # lyginami atskirai — kitaip „ID yra“ dar nereiškia „svetainė rodo tą patį“.
+    aux_stale: list[dict] = []
+    if compare_bytes:
+        for name in ("index.json", "path.json"):
+            url_rel = f"content/lt/{gd}/{name}"
+            ok, local_size, live_size = compare(CONTENT / gd / name, url_rel)
+            if not ok:
+                aux_stale.append({"file": url_rel, "repo_bytes": local_size, "live_bytes": live_size})
+    out["aux_stale"] = aux_stale
     return out
 
 
@@ -188,6 +223,16 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
         return out
 
     live_errors = [f"{grade_dir(g['grade'])}: {g['live_error']}" for g in per_grade if g.get("live_error")]
+
+    # Svarbiausias failas, kurio modulio baitų ciklas neapima: garso manifestas.
+    # Jo stagnacija reiškia 404 naujo modulio garsui, o visi kiti vartai žali.
+    aux_stale = list(merge("aux_stale"))
+    if compare_bytes:
+        for url_rel, local_path in AUX_FILES:
+            ok, local_size, live_size = compare(local_path, url_rel)
+            if not ok:
+                aux_stale.append({"file": url_rel, "repo_bytes": local_size, "live_bytes": live_size})
+
     return {
         "grades": per_grade,
         "live_grades": grades,
@@ -199,6 +244,7 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
         "not_in_path": merge("not_in_path"),
         "stale": merge("stale"),
         "stale_unknown": merge("stale_unknown"),
+        "aux_stale": aux_stale,
         "path_differs": [g["grade"] for g in per_grade if g.get("path_differs")],
         "unpushed_commits": len(unpushed()),
         "last_commit": last_commit(),
@@ -210,7 +256,7 @@ def problems(data: dict) -> bool:
     return bool(
         data["missing_on_live"] or data["hidden_locally"] or data["not_in_path"]
         or data["stale"] or data["stale_unknown"] or data["path_differs"]
-        or data["unpushed_commits"] or data["live_error"]
+        or data.get("aux_stale") or data["unpushed_commits"] or data["live_error"]
     )
 
 
@@ -248,10 +294,15 @@ def main() -> int:
         print(f"NĖRA path.json sekoje ({len(data['not_in_path'])}): {', '.join(data['not_in_path'])}")
     if data["path_differs"]:
         print(f"path.json seka skiriasi: klasė {', '.join(map(str, data['path_differs']))}")
+    if data["aux_stale"]:
+        print(f"PASENĘS PAGRINDINIS FAILAS — moduliai 200, bet svetainė skaito kitą ({len(data['aux_stale'])}):")
+        for s in data["aux_stale"]:
+            live = "nepasiektas" if s["live_bytes"] < 0 else f"gyvai {s['live_bytes']} B"
+            print(f"  - {s['file']}: repo {s['repo_bytes']} B, {live}")
     if data["unpushed_commits"]:
         print(f"Neišstumta commit'ų: {data['unpushed_commits']}")
     if not problems(data):
-        print("✔ Repo ir gyva svetainė sutampa (ID, seka ir failų baitai).")
+        print("✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai).")
 
     return 1 if problems(data) else 0
 

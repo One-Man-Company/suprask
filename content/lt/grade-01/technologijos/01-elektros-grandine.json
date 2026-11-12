@@ -27,8 +27,8 @@
       "sentences": {
         "pradzia": "Pradedam. Prijunk laidus ir pažiūrėk, ar lemputė šviečia.",
         "nera-laido": "Nė vieno laido. Kelias visai nutrūkęs.",
-        "vienas-virsutinis": "Vienas laidas. Nuo baterijos iki lemputės kelias yra, o atgal nėra.",
-        "vienas-apatinis": "Vienas laidas. Atgal į bateriją veda, bet iki lemputės neateina.",
+        "vienas-virsutinis": "Viršutinis laidas yra. Apatinio nėra, todėl kelias neužsidaro.",
+        "vienas-apatinis": "Apatinis laidas yra. Viršutinio nėra, todėl kelias neužsidaro.",
         "jungiklis": "Abu laidai prijungti. Jungiklis atidarytas, todėl kelias nutrūkęs.",
         "sviecia": "Kelias vientisas. Lemputė šviečia.",
         "is-naujo": "Pradedam iš naujo. Prijunk laidus."

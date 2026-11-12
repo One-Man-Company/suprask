@@ -73,26 +73,53 @@ const CSS = `
 .cc-switch:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #cc-top { top: 35px; }
 #cc-bottom { top: 131px; }
+/*
+ * Gnybtai. Keturi kontaktai ten, kur laidas susitinka su baterija ir lempute:
+ * viršuje prie baterijos pliuso, apačioje prie minuso, ir abu lemputės šone.
+ * Prijungtas gnybtas užpildytas, neprijungtas — tuščias žiedas. Todėl vaikas
+ * mato NE TIK kad laido nėra, bet ir KURIOJE VIETOJE kelias atviras, o
+ * informaciją neša ir forma, ir tekstas, ne vien spalva.
+ */
+.cc-term {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  pointer-events: none;
+  transition: background-color .18s ease;
+}
+.cc-term.is-on { background: var(--ink); }
+.cc-term.t-bat { left: 69px; }
+.cc-term.t-lamp { right: 69px; }
+.cc-term.t-top { top: 52px; }
+.cc-term.t-bot { top: 148px; }
 .cc-bar {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: 0;
-  right: 0;
   height: 9px;
   border-radius: 5px;
   background: var(--ink);
   transition: left .18s ease, right .18s ease;
 }
+/*
+ * Prijungtas laidas baigiasi ties gnybtu (18 px nuo laido dėžės krašto).
+ * Neprijungtas atsitraukia iki 34 px, todėl tarpas tarp gnybto ir laido yra
+ * 15 px — matoma pertrauka, o ne 10 px „beveik liečia“ (kritiko radinys #41:
+ * laidas liečia lemputę, o tekstas sako „neateina“).
+ */
+.cc-whole { left: 18px; right: 18px; }
+.cc-half-l { left: 18px; right: calc(50% + 28px); }
+.cc-half-r { left: calc(50% + 28px); right: 18px; }
+.cc-wire.is-off .cc-whole { left: 34px; right: 34px; }
+.cc-wire.is-off .cc-half-l { left: 34px; }
+.cc-wire.is-off .cc-half-r { right: 34px; }
 .cc-wire.is-off .cc-bar {
-  left: 22px;
-  right: 22px;
   background: repeating-linear-gradient(90deg, var(--ink-faint) 0 9px, transparent 9px 15px);
 }
-.cc-half-l { right: calc(50% + 28px); }
-.cc-half-r { left: calc(50% + 28px); }
-.cc-wire.is-off .cc-half-l { left: 22px; }
-.cc-wire.is-off .cc-half-r { right: 22px; }
 .cc-switch {
   position: absolute;
   left: 50%;
@@ -130,6 +157,12 @@ const CSS = `
   transition: transform .18s ease;
 }
 .cc-switch.is-open .cc-lever { transform: translateY(-50%) rotate(-34deg); }
+/* Jungiklis yra apatiniame laide. Kai tas laidas neprijungtas, svirtis
+   braižoma ta pačia brūkšniuota linija kaip trūkstamas laidas — kitaip
+   valdiklis atrodo esąs kelyje, kurio nėra. */
+.cc-switch.is-off .cc-lever {
+  background: repeating-linear-gradient(90deg, var(--ink-faint) 0 6px, transparent 6px 11px);
+}
 .cc-switch-name {
   position: absolute;
   left: 50%;
@@ -141,15 +174,18 @@ const CSS = `
   white-space: nowrap;
 }
 @media (prefers-reduced-motion: reduce) {
-  .cc-bar, .cc-lever { transition: none; }
+  .cc-bar, .cc-lever, .cc-term { transition: none; }
 }
 `;
 
 const DEFAULT_SAY = {
   pradzia: "Pradedam. Prijunk laidus ir pažiūrėk, ar lemputė šviečia.",
   "nera-laido": "Nė vieno laido. Kelias visai nutrūkęs.",
-  "vienas-virsutinis": "Vienas laidas. Nuo baterijos iki lemputės kelias yra, o atgal nėra.",
-  "vienas-apatinis": "Vienas laidas. Atgal į bateriją veda, bet iki lemputės neateina.",
+  // Sakinys turi atitikti paveikslą (LL-13): su vienu laidu jis TIKRAI liečia
+  // ir bateriją, ir lemputę, todėl „iki lemputės neateina“ buvo netiesa.
+  // Tiesą pasako tai, ko trūksta: kito laido nėra, todėl kelias neužsidaro.
+  "vienas-virsutinis": "Viršutinis laidas yra. Apatinio nėra, todėl kelias neužsidaro.",
+  "vienas-apatinis": "Apatinis laidas yra. Viršutinio nėra, todėl kelias neužsidaro.",
   jungiklis: "Abu laidai prijungti. Jungiklis atidarytas, todėl kelias nutrūkęs.",
   sviecia: "Kelias vientisas. Lemputė šviečia.",
   "is-naujo": "Pradedam iš naujo. Prijunk laidus.",
@@ -157,8 +193,8 @@ const DEFAULT_SAY = {
 
 const NOTES = {
   "nera-laido": "Bakstelėk laidą — jis prisijungs prie baterijos ir lemputės.",
-  "vienas-virsutinis": "Kelias turi sugrįžti į bateriją. Prijunk ir antrą laidą.",
-  "vienas-apatinis": "Kelias prasideda ne nuo baterijos. Prijunk ir viršutinį laidą.",
+  "vienas-virsutinis": "Kelias turi sugrįžti. Prijunk apatinį laidą.",
+  "vienas-apatinis": "Kelias turi sugrįžti. Prijunk viršutinį laidą.",
   jungiklis: "Jungiklis yra tame pačiame kelyje. Uždaryk jį ir lemputė vėl švies.",
   sviecia: "Dabar atidaryk jungiklį ir pažiūrėk, kas nutiks keliui.",
 };
@@ -179,7 +215,7 @@ const elektrosGrandine = {
     const line = (key) => say[key] || DEFAULT_SAY[key] || "";
 
     stage.innerHTML = `
-      <div class="cc-board">
+      <div class="cc-board" id="cc-board" role="group" aria-label="Baterija ir lemputė, sujungtos dviem laidais">
         <div class="cc-part cc-battery" role="img" aria-label="Baterija su pliuso ir minuso galais">
           <span class="cc-sign" aria-hidden="true">+</span>
           <span class="cc-name">Baterija</span>
@@ -189,8 +225,12 @@ const elektrosGrandine = {
           <span class="cc-bulb" aria-hidden="true"></span>
           <span class="cc-name">Lemputė</span>
         </div>
+        <span class="cc-term t-bat t-top" id="cc-t-bat-top" aria-hidden="true"></span>
+        <span class="cc-term t-bat t-bot" id="cc-t-bat-bot" aria-hidden="true"></span>
+        <span class="cc-term t-lamp t-top" id="cc-t-lamp-top" aria-hidden="true"></span>
+        <span class="cc-term t-lamp t-bot" id="cc-t-lamp-bot" aria-hidden="true"></span>
         <button type="button" class="cc-wire is-off" id="cc-top" aria-pressed="false">
-          <span class="cc-bar" aria-hidden="true"></span>
+          <span class="cc-bar cc-whole" aria-hidden="true"></span>
         </button>
         <button type="button" class="cc-wire is-off" id="cc-bottom" aria-pressed="false">
           <span class="cc-bar cc-half-l" aria-hidden="true"></span>
@@ -209,6 +249,13 @@ const elektrosGrandine = {
     const bottomBtn = stage.querySelector("#cc-bottom");
     const switchBtn = stage.querySelector("#cc-switch");
     const lamp = stage.querySelector("#cc-lamp");
+    const board = stage.querySelector("#cc-board");
+    const terms = {
+      topBat: stage.querySelector("#cc-t-bat-top"),
+      topLamp: stage.querySelector("#cc-t-lamp-top"),
+      botBat: stage.querySelector("#cc-t-bat-bot"),
+      botLamp: stage.querySelector("#cc-t-lamp-bot"),
+    };
 
     // Būsena: du laidai (prijungtas / nuimtas) ir jungiklis (uždarytas / atidarytas).
     let top = false;
@@ -238,18 +285,38 @@ const elektrosGrandine = {
       topBtn.classList.toggle("is-off", !top);
       bottomBtn.classList.toggle("is-off", !bottom);
       switchBtn.classList.toggle("is-open", !closed);
+      // Jungiklis guli apatiniame laide: kai laido nėra, jo svirtis irgi
+      // braižoma kaip trūkstama, kad valdiklis nekviestų spausti kelio,
+      // kurio nėra (LL-04, LL-13). Tokiu metu jis ir negaudo paspaudimų —
+      // kitaip vidurinė apatinio laido dalis būtų akla zona: vaikas nori
+      // prijungti laidą, o paliečia jungiklį ir nieko neįvyksta.
+      switchBtn.classList.toggle("is-off", !bottom);
+      switchBtn.style.pointerEvents = bottom ? "" : "none";
       lamp.classList.toggle("is-on", lit);
+
+      terms.topBat.classList.toggle("is-on", top);
+      terms.topLamp.classList.toggle("is-on", top);
+      terms.botBat.classList.toggle("is-on", bottom);
+      terms.botLamp.classList.toggle("is-on", bottom);
 
       label(topBtn, "Viršutinis laidas", top, "Prijungtas", "Neprijungtas");
       label(bottomBtn, "Apatinis laidas", bottom, "Prijungtas", "Neprijungtas");
       switchBtn.setAttribute("aria-pressed", String(closed));
       switchBtn.setAttribute(
         "aria-label",
-        closed
-          ? "Jungiklis. Uždarytas: kelias vientisas. Bakstelėk, kad atidarytum."
-          : "Jungiklis. Atidarytas: kelias nutrūkęs. Bakstelėk, kad uždarytum.",
+        !bottom
+          ? "Jungiklis. Apatinis laidas neprijungtas, todėl jungiklis kelyje nedalyvauja."
+          : closed
+            ? "Jungiklis. Uždarytas: kelias vientisas. Bakstelėk, kad atidarytum."
+            : "Jungiklis. Atidarytas: kelias nutrūkęs. Bakstelėk, kad uždarytum.",
       );
       lamp.setAttribute("aria-label", lit ? "Lemputė šviečia" : "Lemputė nešviečia");
+      board.setAttribute(
+        "aria-label",
+        `Baterija kairėje, lemputė dešinėje. Viršutinis laidas ${top ? "prijungtas" : "neprijungtas"}. `
+          + `Apatinis laidas ${bottom ? "prijungtas" : "neprijungtas"}. `
+          + `Jungiklis ${closed ? "uždarytas" : "atidarytas"}. Lemputė ${lit ? "šviečia" : "nešviečia"}.`,
+      );
 
       api.readout(line(key));
       api.note(NOTES[key] || "");

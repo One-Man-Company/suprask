@@ -555,6 +555,10 @@
   "n": "n/335b43e664368642-a91fdbc2.mp3",
   "s": "s/335b43e664368642-e15bb75d.mp3"
  },
+ "Apatinis laidas yra. Viršutinio nėra, todėl kelias neužsidaro.": {
+  "n": "n/fde3a3fddc606794-934e1f91.mp3",
+  "s": "s/fde3a3fddc606794-7918621f.mp3"
+ },
  "Apmokėta.": {
   "n": "n/24d5e93000980e92-ec3867b5.mp3",
   "s": "s/24d5e93000980e92-4a828617.mp3"
@@ -1759,14 +1763,6 @@
   "n": "n/6c9af7476a67ef8e-d77aaffc.mp3",
   "s": "s/6c9af7476a67ef8e-9cef0004.mp3"
  },
- "Vienas laidas. Atgal į bateriją veda, bet iki lemputės neateina.": {
-  "n": "n/9f7ecc7800d17921-c50a9021.mp3",
-  "s": "s/9f7ecc7800d17921-9c8b99c3.mp3"
- },
- "Vienas laidas. Nuo baterijos iki lemputės kelias yra, o atgal nėra.": {
-  "n": "n/7402659b79e86e1e-6d8130b1.mp3",
-  "s": "s/7402659b79e86e1e-83e00727.mp3"
- },
  "Vienas petys laiko visą kuprinės svorį.": {
   "n": "n/ee6c6227d0f68c5e-eca930d9.mp3",
   "s": "s/ee6c6227d0f68c5e-42f06e85.mp3"
@@ -1786,6 +1782,10 @@
  "Vienetai nesuderinti su lenta.": {
   "n": "n/003868e611555a1e-a0b8966d.mp3",
   "s": "s/003868e611555a1e-47869961.mp3"
+ },
+ "Viršutinis laidas yra. Apatinio nėra, todėl kelias neužsidaro.": {
+  "n": "n/4523bd23cb838fb1-fe805551.mp3",
+  "s": "s/4523bd23cb838fb1-4726d579.mp3"
  },
  "Visos figūros savo vietose. Puiku!": {
   "n": "n/936e4c7947cd9753-0a09e79f.mp3",

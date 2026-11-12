@@ -2,6 +2,16 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-12 (16:10) — Publikavimo patikra #251: repo 37 / paskelbta 37, įrankio `aux_stale` ir `stale` šakos pirmą kartą paleistos realiai
+
+- **`check_published.py`** → repo 37, paskelbta 37, `grade-01: repo 37, gyvai 37`; `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `aux_stale` 0, `path_differs` [], `unpushed_commits` 0, `live_error` tuščias, `rc=0` (6,6 s). `HEAD` = `origin/main` = `dde4bae`; pirmos patikros metu `a6abeba`.
+- **3 gyvi adresai (+2):** `matematika/25-ilgis-ir-vienetas.json` `200` (8812 B), `lietuviu-kalba/03-sakinio-tvarka.json` `200` (4209 B — #250 failas, baitai sutampa), `pasaulio-pazinimas/16-vandens-busenos.json` `200` (4946 B), `grades.json` `200` (1126 B), `assets/audio/lt/manifest.json` `200` (60 758 B).
+- **Naršyklė prieš gyvą bazę:** `check_view.py --base <gyva> --module 25-ilgis-ir-vienetas --viewports phone,small` → 2 patikros (390/360 px), 0 problemų.
+- **Įrankio šakos, kurių #247 nebuvo paleidęs** (lokalūs veidrodžiai su tyčia suklastotu gyvu failu): pasenęs modulio failas → `rc=1` su baitais; `--json` → `rc=1`; nepasiekiama bazė → `live_error`, `rc=1`, be crash; pasenęs `manifest.json` → `aux_stale`, `rc=1`; pasenęs klasės `index.json` + trumpesnė seka → `aux_stale` + `path_differs`, `rc=1`; `--no-bytes` → baitų nepraneša, `path_differs` pagauna.
+- **Ištaisyta:** modulis, kurio ID gyvame `index.json` nėra, buvo rodomas ir „NESKELBTA“, ir „PASENĘS TURINYS“. Baitų ciklas dabar praleidžia `missing_on_live` ID (`scripts/check_published.py:166–176`); po taisymo tas pats veidrodis duoda tik `NESKELBTA (9)`, rc 1, o pasenęs failas su pilnu index'u tebepranešamas `PASENĘS TURINYS`. Seni JSON raktai nepakeisti.
+- **Vartai:** `validate_content.py --grade 1 --strict` 0/0; `check_docs_facts.py` 0/0 (9 kryptys, 37 moduliai); `check_audio.py` 543 tekstų / 1086 įrašų / 1086 mp3.
+- **Sprendimas:** sutampa. Nieko nešalinta, ID nepernumeruoti, `path.json`, `index.json`, `grades.json` ir garsas neliesti; turinys nepaliestas. Ataskaita `agents/log/publikavimo-agentas-2026-11-12T1610.md` (1600 failas — sutrumpinta to paties paleidimo versija). Pasiūlymas: `agents/proposals/2026-11-12-publikavimo-agentas-dashboard-stale.json`; pamoka LL-82.
+
 ## 2026-11-11 (23:06) — Publikavimo patikra #239: repo 37 / paskelbta 37, svetainė pastatyta iš `f1b14162`
 
 - **`check_published.py`** → repo 37, paskelbta 37, `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `path_differs` false, `unpushed_commits` 0, `live_error` tuščias, `rc=0`. `HEAD` = `origin/main` = `f1b14162b153586521308198b5374e1ca97c1100`; `git status --porcelain -uall` tuščias.

@@ -166,7 +166,13 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     stale: list[dict] = []
     stale_unknown: list[str] = []
     if compare_bytes:
-        todo = [(mid, files[mid]) for mid in local_ids if mid in files]
+        # Modulys, kurio ID gyvame `index.json` nėra, jau įvardytas kaip
+        # NESKELBTA — jo baitų skirtumas nieko neprideda, o pranešime atrodytų
+        # kaip antras, kitoks defektas („turinys pasenęs“), nors turinys
+        # nepasenęs: jo svetainėje tiesiog nėra. 2026-11-12 zondas su veidrodžiu
+        # rodė tą patį ID abiejose eilutėse.
+        missing = set(out["missing_on_live"])
+        todo = [(mid, files[mid]) for mid in local_ids if mid in files and mid not in missing]
         with ThreadPoolExecutor(max_workers=8) as pool:
             results = list(pool.map(lambda pair: (pair[0], pair[1], same_bytes(*pair[1:])), todo))
         for mid, rel, (ok, local_size, live_size) in results:

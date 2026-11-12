@@ -1,0 +1,17 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 251,
+  "created": "2026-11-12T16:10:00+02:00",
+  "type": "struktura",
+  "title": "Dashboard'o publikavimo kortelė sprendžia „sutampa“ iš dviejų raktų, o įrankis turi aštuonis",
+  "body": "dashboard/server.py:719 rašo „sutampa“, kai missing_on_live tuščias ir unpushed_commits lygus 0. Nuo #247/#251 check_published.py grąžina daugiau priežasčių, dėl kurių rc=1: stale (ID yra, failas gyvai kitas), stale_unknown (gyvas failas nepasiekiamas), aux_stale (grades.json, klasės index.json, path.json, manifest.json skiriasi) ir path_differs. Šio paleidimo veidrodžių testai tai įrodo tiesiogiai: A — pasenęs modulio failas 8812 B prieš 8813 B, rc 1, bet kortelė rašytų „sutampa“; D — pasenęs manifestas (60758 B prieš 63911 B), rc 1, kortelė vėl „sutampa“; E — path.json seka trumpesnė, rc 1, kortelė „sutampa“. Tai ta pati klasė kaip LL-10 (statusas pagal rezultatą, ne pagal išėjimo kodą): žmogus mato žalią indikatorių, kai vartai raudoni. Siūloma kortelės būseną imti iš vieno šaltinio — arba iš įrankio rc, arba iš visų aštuonių raktų: jei bent vienas netuščias, kortelė turi rodyti ne „sutampa“, o konkrečią priežastį (pavyzdžiui, „1 pasenęs failas“). Be to, verta, kad /api/publish-status atskirai perduotų sprendimo priežastį, kad dashboard'as neperrašinėtų taisyklės savo kaip dabar.",
+  "target": "dashboard/server.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "dashboard/server.py:717–725 — drift = missing_on_live.length; setText(\"#pubBig\", (drift === 0 && !p.unpushed_commits) ? \"sutampa\" : ...)",
+    "scripts/check_published.py:255–260 — problems() skaičiuoja ir stale, stale_unknown, aux_stale, path_differs",
+    "agents/log/publikavimo-agentas-2026-11-12T1610.md §3 D/E — veidrodžių testai: staleness → rc 1, o kortelės sąlyga tenkinta",
+    "research/wiki/changelog.md 2026-11-12 (16:10) — šio paleidimo skaičiai"
+  ]
+}

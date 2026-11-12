@@ -24,6 +24,19 @@ prieš modulį — `grades.json`, klasės `index.json`, `path.json` ir
 `assets/audio/lt/manifest.json`. Anksčiau moduliai galėjo būti 200, o gyvas
 manifestas pasenęs: naujo modulio garsas 404, o visi vartai žali (LL-78).
 
+2026-11-12 (paleidimas #253): lyginamas ir svetainės **kodas**, ne tik
+turinys — `index.html`, `assets/js/**/*.js`, `assets/css/*.css`. Anksčiau
+įrankis tikrino vien `content/lt/**` ir du pagalbinius failus, todėl
+nepaskelbtas simuliacijos pataisymas buvo nematomas: modulių baitai sutampa,
+o vaikas vykdo seną `assets/js/sims/*.js` (LL-83).
+
+Dėmesio: `?v=<commit>` — ne turinio skirtumas. `.github/workflows/pages.yml`
+prieš publikavimą prirašo commit'o trumpinį prie CSS/JS nuorodų, kad
+naršyklė nepaimtų iš GitHub Pages tarpinės atminties seno failo. Todėl
+svetainės failai lyginami **nuėmus `?v=`**, o pati versija perskaitoma ir
+palyginama su `git HEAD` — kitu atveju įrankis klaidingai skelbtų „pasenęs
+kodas“ po kiekvieno publikavimo.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -38,6 +51,7 @@ import hashlib
 import json
 import os
 import pathlib
+import re
 import subprocess
 import sys
 import time
@@ -58,6 +72,19 @@ AUX_FILES = [
     ("content/lt/grades.json", CONTENT / "grades.json"),
     ("assets/audio/lt/manifest.json", ROOT / "assets" / "audio" / "lt" / "manifest.json"),
 ]
+
+# Svetainės kodas, kuris vykdomas naršyklėje. `content/` baitai sako, ką vaikas
+# turėtų matyti, bet ne ką jis iš tikrųjų vykdo: simuliacijos, maršrutizatorius
+# ir stilius gyvena `assets/`. Nepaskelbtas `assets/js/sims/*.js` pataisymas
+# anksčiau likdavo nematomas — visi modulių baitai sutapdavo (LL-83).
+SHELL_GLOBS = [
+    ("index.html", None),
+    ("assets/js", "*.js"),
+    ("assets/css", "*.css"),
+]
+# `?v=<commit>` prirašo `.github/workflows/pages.yml`. Tai ne turinio skirtumas,
+# todėl prieš lyginimą žymė nuimama, o versija perskaitoma atskirai.
+VERSION_PARAM = re.compile(r"\?v=[0-9a-f]{6,40}")
 
 
 
@@ -121,6 +148,88 @@ def compare(local_path: pathlib.Path, url_rel: str) -> tuple[bool, int, int]:
 def same_bytes(rel: str) -> tuple[bool, int, int]:
     """(ar gyvas failas baitais lygus repo failui, repo baitai, gyvi baitai)."""
     return compare(CONTENT / rel, "content/lt/" + rel)
+
+
+def shell_files() -> list[str]:
+    """Svetainės kodo failai, kuriuos naršyklė įkelia (`index.html`, JS, CSS).
+
+    Sąrašas imamas iš katalogų, ne įrašomas ranka: nauja simuliacija
+    `assets/js/sims/` faile atsiranda be įrankio pakeitimo.
+    """
+    out: list[str] = []
+    for name, pattern in SHELL_GLOBS:
+        path = ROOT / name
+        if pattern is None:
+            if path.exists():
+                out.append(name)
+            continue
+        if path.is_dir():
+            out += [str(p.relative_to(ROOT)) for p in sorted(path.rglob(pattern))]
+    return out
+
+
+def strip_version(text: str) -> str:
+    """Nuima `?v=<commit>` — publikavimo žymą, ne turinio skirtumą."""
+    return VERSION_PARAM.sub("", text)
+
+
+def _shell_state(rel: str) -> tuple[str, int, int]:
+    """("ok"|"differs"|"unreachable", repo baitai, gyvi baitai)."""
+    local_path = ROOT / rel
+    if not local_path.exists():
+        return "ok", 0, 0
+    local = local_path.read_bytes()
+    live = fetch(LIVE_ROOT + rel)
+    if live is None:
+        return "unreachable", len(local), -1
+    for attempt in (0, 1):
+        if strip_version(live.decode("utf-8", "replace")) == strip_version(local.decode("utf-8", "replace")):
+            return "ok", len(local), len(live)
+        if attempt == 0:
+            # LL-76: pirmomis sekundėmis po deploymento kraštas gali būti mišrus.
+            time.sleep(2.5)
+            live = fetch(LIVE_ROOT + rel)
+            if live is None:
+                return "unreachable", len(local), -1
+    return "differs", len(local), len(live)
+
+
+def repo_version() -> str:
+    try:
+        return subprocess.run(
+            ["git", "rev-parse", "--short=8", "HEAD"], cwd=ROOT, capture_output=True, text=True, timeout=20
+        ).stdout.strip()
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def live_version() -> str:
+    """Commit'as, iš kurio sukurta gyva svetainė (`?v=` žymė `index.html`)."""
+    blob = fetch(LIVE_ROOT + "index.html")
+    if blob is None:
+        return ""
+    match = VERSION_PARAM.search(blob.decode("utf-8", "replace"))
+    return match.group(0)[3:] if match else ""
+
+
+def check_shell() -> dict:
+    files = shell_files()
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        results = list(pool.map(lambda rel: (rel, _shell_state(rel)), files))
+    stale: list[dict] = []
+    unreachable: list[str] = []
+    for rel, (state, local_size, live_size) in results:
+        if state == "differs":
+            stale.append({"file": rel, "repo_bytes": local_size, "live_bytes": live_size})
+        elif state == "unreachable":
+            unreachable.append(rel)
+    return {
+        "shell_stale": stale,
+        "shell_unreachable": unreachable,
+        "shell_count": len(files),
+        "live_version": live_version(),
+        "repo_version": repo_version(),
+    }
 
 
 
@@ -239,6 +348,12 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
             if not ok:
                 aux_stale.append({"file": url_rel, "repo_bytes": local_size, "live_bytes": live_size})
 
+    # Svetainės kodas: ką vaikas iš tikrųjų įkelia, o ne tik ką rodo turinio JSON.
+    shell = check_shell() if compare_bytes else {
+        "shell_stale": [], "shell_unreachable": [], "shell_count": 0,
+        "live_version": "", "repo_version": "",
+    }
+
     return {
         "grades": per_grade,
         "live_grades": grades,
@@ -251,6 +366,11 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
         "stale": merge("stale"),
         "stale_unknown": merge("stale_unknown"),
         "aux_stale": aux_stale,
+        "shell_stale": shell["shell_stale"],
+        "shell_unreachable": shell["shell_unreachable"],
+        "shell_count": shell["shell_count"],
+        "live_version": shell["live_version"],
+        "repo_version": shell["repo_version"],
         "path_differs": [g["grade"] for g in per_grade if g.get("path_differs")],
         "unpushed_commits": len(unpushed()),
         "last_commit": last_commit(),
@@ -262,7 +382,8 @@ def problems(data: dict) -> bool:
     return bool(
         data["missing_on_live"] or data["hidden_locally"] or data["not_in_path"]
         or data["stale"] or data["stale_unknown"] or data["path_differs"]
-        or data.get("aux_stale") or data["unpushed_commits"] or data["live_error"]
+        or data.get("aux_stale") or data.get("shell_stale") or data.get("shell_unreachable")
+        or data["unpushed_commits"] or data["live_error"]
     )
 
 
@@ -305,10 +426,21 @@ def main() -> int:
         for s in data["aux_stale"]:
             live = "nepasiektas" if s["live_bytes"] < 0 else f"gyvai {s['live_bytes']} B"
             print(f"  - {s['file']}: repo {s['repo_bytes']} B, {live}")
+    if data.get("shell_stale"):
+        print(f"PASENĘS KODAS — naršyklė vykdo kitą failą ({len(data['shell_stale'])}):")
+        for s in data["shell_stale"]:
+            print(f"  - {s['file']}: repo {s['repo_bytes']} B, gyvai {s['live_bytes']} B")
+        if data.get("live_version") or data.get("repo_version"):
+            print(f"  gyvai versija {data.get('live_version') or '?'}, repo HEAD {data.get('repo_version') or '?'}")
+    if data.get("shell_unreachable"):
+        print(f"NEPASIEKIAMI svetainės kodo failai ({len(data['shell_unreachable'])}): "
+              f"{', '.join(data['shell_unreachable'])}")
     if data["unpushed_commits"]:
         print(f"Neišstumta commit'ų: {data['unpushed_commits']}")
     if not problems(data):
-        print("✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai).")
+        print(f"✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai, "
+              f"svetainės kodas {data.get('shell_count', 0)} failų"
+              f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
 
     return 1 if problems(data) else 0
 

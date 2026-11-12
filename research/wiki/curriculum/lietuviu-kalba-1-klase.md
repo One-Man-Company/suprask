@@ -2,7 +2,7 @@
 title: "Lietuvių kalba ir literatūra, 1 klasė"
 tipas: curriculum
 klase: 1
-atnaujinta: 2026-11-03
+atnaujinta: 2026-11-12
 saltinis: "Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (NŠA, 2024)"
 ---
 
@@ -32,7 +32,7 @@ Dokumentas **neformuluoja** atskiros „skaitymo raidos pakopų“ schemos — t
 1. **Garsas kalbos sraute.** „Skiria lietuvių kalbos garsus kalbos sraute“ (D.1.1, *1–2 klasės pasiekimai*, 2 pavyzdys). Vaikas išmoksta išgirsti garsą žodyje, atskirti kalbos garsus nuo triukšmo, muzikos, gamtos garsų.
 2. **Garsas ↔ raidė.** Ta pati D.1.1 formuluotė: „užrašo juos atitinkamomis raidėmis; paaiškina, kuo raidė skiriasi nuo garso“. Tai 1 klasės kertinis supratimas, ne tik techninis raidžių atpažinimas.
 3. **Garsinė žodžio sandara.** „Žinos lietuvių kalbos garsinę sandarą: balsius, priebalsius, dvibalsius“ (*4. Kalbinių gebėjimų ugdymas, 1 lentelė, „Garsas“*).
-4. **Skiemuo → žodis.** Dokumente skiemuo minimas tik kaip skaitmeninės priemonės turinys („Žodžių sudarymas iš skiemenų“, *1 lentelė*), o ne kaip atskiras programos reikalavimas. Skiemens kaip **privalomo** 1 klasės turinio elemente statusas — [PATIKRINTI] BP tekste.
+4. **Skiemuo → žodis.** Visame rekomendacijų tekste žodis su šaknimi „skiem-“ sutinkamas tik 16 kartų, ir nė vienas atvejis nėra 1–2 klasės lietuvių kalbos pasiekimas: 13 — muzikos turinys (eiluotės ritmas, kūno perkusija, skiemeniniai natų pavadinimai, pvz. :3518, :11354, :25331), 1 — muzikos integracijos su gimtąja kalba sąsaja („skiemenys (kirčiuoti ir nekirčiuoti)“, :10809), 1 — skaitmeninės priemonės pavadinimas („Žodžių sudarymas iš skiemenų“, :14532), 1 — bendras pradinio ugdymo pažinimo kompetencijos aprašas („Raides jungia, sudaro skiemenis, žodžius, sakinius“, :17002). Pasiekimų lygmenyje 1–2 klasė eina kita seka: D.1.3.1 balsiai → D.1.3.4 dvibalsiai (:39749–39774), skiemens lygmens nėra. Skiemens kaip **privalomo** 1 klasės turinio elemento statusas lieka [PATIKRINTI] pilname BP tekste (vietiniame kataloge jo nėra); platformai skiemeninis skaitymas pagrįstas netiesiogiai — kaip B.1.2 skaitymo technikos prielaida.
 5. **Sakinys → tekstas.** „Iš pradžių derinant žodžius su paveikslėliais, o išmokus rašyti visas raides – reikšti mintis sakiniais“ (*1 lentelė, „Teksto kūrimas“*). Ši formuluotė netiesiogiai patvirtina, kad **visos raidės** įgyjamos būtent 1–2 klasių koncentre.
 
 ## 3. Skaitymo technika
@@ -118,7 +118,22 @@ Ko dokumentas **nereikalauja** 1 klasėje: skaitymo greičio normos, privalomų 
 4. **Grįžtamasis ryšys turi būti momentinis** — dokumentas pabrėžia, kad mokiniai „tuojau pat gauna grįžtamąjį ryšį“ (*skaitymo dalis*).
 5. **Nerašyti ilgų instrukcijų.** 1 klasės mokinys skaito dar lėtai; instrukciją reikia įgarsinti.
 
+## 9. Modulių atitiktis programai (patikra 2026-11-12, paleidimas #250)
+
+Tikrinti visi keturi 1 klasės lietuvių kalbos moduliai pagal `sources/pradinio-bp-rekomendacijos-2024.txt`. Eilutės numeriai — šio failo.
+
+| Modulis | Pasiekimas programoje | Sprendimas |
+|---|---|---|
+| `01-garsas-ir-raide` | D.1.1 („Skiria lietuvių kalbos garsus kalbos sraute, užrašo juos atitinkamomis raidėmis; paaiškina, kuo raidė skiriasi nuo garso“, :382–386) + oficialus 1 kl. veiklos pavyzdys „Kuo raidė skiriasi nuo garso?“ (:374) | **atitinka** |
+| `02-skiemenu-jungimas` | Atskiro pasiekimo nėra; sąsaja tik netiesioginė per B.1.2 (:7604). Skiemuo tekste — muzikos turinys (:3518, :10809, :11354, :25331), skaitmeninės priemonės pavadinimas (:14532), kompetencijos aprašas (:17002) | **iš dalies** — taisyti `sources`/`svietimas1`, žymėti [PATIKRINTI]; modulio nenaikinti |
+| `03-sakinio-tvarka` | Modulio branduolys — žodžių eilė, kurios programoje nėra (paieška „žodžių tvarka“ — 0). 1–2 kl. sakinys = klausimai žodžiams ir jų derinimas, D.3.3.1–D.3.3.4 (:39795–39809) | **neatitinka** — siūloma perkelti į D.3.3 ir keisti simuliaciją (žr. `agents/proposals/2026-11-12-programos-derintojas-sakinio-tvarka.json`) |
+| `04-kaip-zmones-sveikinasi` | D.5.2 + oficialus 1 kl. veiklos pavyzdys „Kaip žmonės sveikinasi?“ (:317) | **atitinka** |
+| *(nėra modulio)* | B.1.2 „randa tekste aiškiai pateiktą informaciją“ (:7604), B.3.1 „Remiasi iliustracijomis skaitydamas tekstą“ (:7607); oficiali veikla „Mokausi rasti man svarbią informaciją“ (:16553) | **spraga** — siūlomas modulis `05-plakatas-ir-informacija` (B sritis platformoje neturi nė vieno modulio; C sritis taip pat) |
+
+Pastaba: 1–2 kl. D.3.3.1 formuluotė yra „Pagal pavyzdį sakinyje randa žodžius…“, t. y. pirmoje klasėje pakanka paieškos pagal pavyzdį, o savarankiška paieška (D.3.3.2) — jau kitas lygis.
+
 Susiję: [[matematika-1-klase]] · [[pasaulio-pazinimas-1-klase]] · [[kti-dalykai-1-klase]] · [[1-klases-temų-žemėlapis]]
+
 
 ## Šaltiniai
 

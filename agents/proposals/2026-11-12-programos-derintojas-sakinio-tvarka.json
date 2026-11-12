@@ -1,0 +1,19 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 250,
+  "created": "2026-11-12T15:06:00+02:00",
+  "type": "atitiktis",
+  "title": "„Sakinio tvarka“ moko taisyklės, kurios lietuvių kalboje nėra, o programoje — ne tos temos",
+  "body": "Modulio branduolys „Sakinyje žodžiai eina tam tikra tvarka. Sumaišius juos, sakinys praranda prasmę“ prieštarauja ir programai, ir pačiam moduliui: jo pavyzdys pripažįsta, kad „Pieną katė geria“ suprantama, o pirmoji užduotis tą pačią konstrukciją („Knygą berniukas skaito“) laiko neteisinga. 1–2 klasės programoje sakinys aprašomas ne žodžių eile, o klausimais žodžiams: „Nagrinėjant neilgus spausdintus sakinius, mokomasi kelti sakinio žodžiams klausimus ir suprasti, kad sakinio žodžiai vieni su kitais susiję ir yra derinami tarpusavyje“, o pasiekimai D.3.3.1–D.3.3.4 prašo „rasti žodžius, atsakančius į klausimus kas?, ką veikia?“. Žodžių tvarkos temos šiame dokumente nėra (paieška „žodžių tvarka“ — 0 atvejų), o lietuvių kalboje žodžių eilė yra informacinė, ne gramatinė, todėl dabartinė užduotis moko klaidingos taisyklės ir atitinka LL-18 tipą (neteisingas variantas, kuris gyvenime teisingas). Siūlau perkelti modulį į D.3.3.1–D.3.3.4 ir pakeisti simuliaciją: vaikas ne dėlioja žodžių eilę, o žymi sakinio žodį, atsakantį į „kas?“, paskui į „ką veikia?“. Būtent tokį veiksmą aprašo ir pati rekomendacijų skaitmeninės užduoties instrukcija: „Pirmiausia rask žodį atsakantį į klausimą kas?, po to – ką veikia? Likęs žodis užbaigs sakinį.“ Taip teisingas atsakymas yra vienas ir nepriklauso nuo to, kokia tvarka sakinys perskaitytas.",
+  "target": "content/lt/grade-01/lietuviu-kalba/03-sakinio-tvarka.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/03-sakinio-tvarka.json:15 (big_idea: „Sakinyje žodžiai eina tam tikra tvarka. Sumaišius juos, sakinys praranda prasmę.“)",
+    "content/lt/grade-01/lietuviu-kalba/03-sakinio-tvarka.json:21 (example: „Pieną katė geria“ — taip pat suprantama) — prieštarauja :15; užduotis :53–61 (answer 0, „Knygą berniukas skaito“ laikoma neteisinga)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:39795–39796 („1-2 klasės. Sakinys. … mokomasi kelti sakinio žodžiams klausimus ir suprasti, kad sakinio žodžiai vieni su kitais susiję ir yra derinami tarpusavyje“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:39798–39809 (D.3.3.1 „Pagal pavyzdį sakinyje randa žodžius, atsakančius į klausimus kas?, ką veikia?“ … D.3.3.4)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:39815–39822 (skaitmeninės užduoties instrukcija: „Pirmiausia rask žodį atsakantį į klausimą kas?, po to – ką veikia? Likęs žodis užbaigs sakinį.“)",
+    "assets/js/sims/calba.js:243 (chosen.join(\" \") === current().join(\" \") — lyginama tiksli žodžių eilė, todėl „Ryte saulė šviečia“ gauna „Dar ne“, nors sakinys taisyklingas)"
+  ]
+}

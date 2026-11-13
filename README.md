@@ -13,7 +13,7 @@ Ne įsiminti — suprasti. Simuliacijos, modeliai ir žaidimai, kurie paaiškina
 
 | Kryptis | Moduliai |
 |---|---|
-| 🔤 Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Sakinio tvarka · Kaip žmonės sveikinasi · Plakatas: kur ieškoti atsakymo |
+| 🔤 Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Kas? Ką veikia? · Kaip žmonės sveikinasi · Plakatas: kur ieškoti atsakymo |
 | 🔢 Matematika | Skaičių tiesė · Dešimtukas · Sudėtis per dešimtį · Šimto lentelė · Figūros · Dėsningumai · Pinigai · Laikas: vienas ratas · Laikas: 2 val. ir 14:00 · Lygybė · Kryptys · Taškas, tiesė, spindulys, atkarpa · Ilgis · Erdvinės figūros · Piktograma ir stulpelis · Komandų seka |
 | 🌍 Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Gyvūnų grupės · Kur dingsta vanduo · Nuožulnioji plokštuma · Kuprinė: tas pats svoris · Dūmai: žemai ir lauk |
 | 🎵 Muzika | Aukštas garsas ne visada garsus · Ritmas: plojimai ant pulso |
@@ -109,7 +109,7 @@ HTTP prieiga ribojama Tailscale tinklu — jokio prisijungimo ekrano. Žr. [`das
 
 ## Garsas
 
-Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 552 tekstų po du variantus (sakinys ir skiemuo) — 1104 įrašų, ~32 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
+Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 558 tekstų po du variantus (sakinys ir skiemuo) — 1116 įrašų, ~34 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
 
 ## Licencijos
 

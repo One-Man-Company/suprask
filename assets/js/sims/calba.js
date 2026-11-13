@@ -160,104 +160,169 @@ const skiemenuJungimas = {
 };
 
 /* ------------------------------------------------------------------ */
-/* 3. Sakinio tvarka                                                   */
+/* 3. Sakinio žodžiai: kas? ką veikia?                                 */
 /* ------------------------------------------------------------------ */
-const sakinioTvarka = {
+/* Modelis: vienintelis keičiamas dalykas — žodžių tvarka. Vaikas žymi
+   žodį, atsakantį į „kas?“, paskui į „ką veikia?“. Perstačius žodžius
+   tie patys žodžiai lieka veikėju ir veiksmu, todėl klaidinga nuostata
+   „veikėjas yra pirmas žodis“ griūna pačioje simuliacijoje (LL-28).
+   Sąraše yra sakinių, kuriuose veikėjas ne pirmas — be jų modelis
+   neįrodytų, kad tvarka nieko nelemia.
+   Pažanga žymima tik peržiūrėjus visus sakinius (KURINIO-STANDARTAS §4). */
+const sakinioZodziai = {
   mount({ stage, controls, api, config }) {
-    const sentences = config.sentences || [];
-    let s = 0;
-    let chosen = [];
-    let observer = null;
-    let reported = false;  // api.progress — tik sudėjus visus sakinius (§4)
-    let finished = false;
-    let locked = false;    // sakinys jau sudėtas — laukiama kito
+    const sentences = Array.isArray(config.sentences) ? config.sentences : [];
+    if (!sentences.length) {
+      stage.innerHTML = `<p class="error-box">Sakinių nėra.</p>`;
+      return null;
+    }
+
+    let s = 0;                                   // sakinio eilė
+    let order = 0;                               // 0 — įprasta, 1 — kita tvarka
+    let step = "kas";                            // kas | veikia | baigta
+    let found = { doer: false, action: false };
+    let reported = false;
 
     stage.innerHTML = `
-      <div style="width:100%;max-width:40rem">
-        <div id="st-slots" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;min-height:4.5rem;padding:.8rem;border:2px dashed var(--line);border-radius:var(--r-m);background:var(--paper)"></div>
-        <div id="st-bank" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:1rem"></div>
-        <p class="sim-note" id="st-msg"></p>
+      <div style="width:100%;max-width:36rem">
+        <p id="sz-q" style="margin:0 0 .6rem;text-align:center;font-family:var(--font-head);font-weight:900;font-size:clamp(1.1rem,4.4vw,1.45rem);overflow-wrap:anywhere"></p>
+        <div id="sz-words" role="group" aria-label="Sakinio žodžiai" style="display:flex;gap:.55rem;flex-wrap:wrap;justify-content:center;padding:.75rem;border:2px dashed var(--line);border-radius:var(--r-m);background:var(--paper)"></div>
+        <p class="sim-note" id="sz-msg" style="min-height:2.6rem;margin-top:.6rem"></p>
       </div>`;
-    controls.innerHTML = `<button class="btn secondary" id="st-clear">Iš naujo</button>`;
-    const slotsEl = stage.querySelector("#st-slots");
-    const bankEl = stage.querySelector("#st-bank");
-    const msgEl = stage.querySelector("#st-msg");
+    controls.innerHTML = `
+      <button class="btn secondary" id="sz-order">Kita tvarka</button>
+      <button class="btn" id="sz-next" disabled>Kitas sakinys</button>`;
 
-    function current() { return sentences[s % sentences.length]; }
+    const qEl = stage.querySelector("#sz-q");
+    const wordsEl = stage.querySelector("#sz-words");
+    const msgEl = stage.querySelector("#sz-msg");
+    const orderBtn = controls.querySelector("#sz-order");
+    const nextBtn = controls.querySelector("#sz-next");
 
-    function draw() {
-      chosen = [];
-      finished = false;
-      locked = false;
-      const words = shuffle(current());
-      slotsEl.innerHTML = "";
-      bankEl.innerHTML = words.map((w2, i) => `<button class="btn secondary" data-w="${i}" data-word="${w2}">${w2}</button>`).join("");
-      bankEl.querySelectorAll("[data-w]").forEach((b) => {
-        b.addEventListener("click", () => {
-          b.disabled = true;
-          b.style.opacity = ".35";
-          chosen.push(b.dataset.word);
-          api.speak(b.dataset.word, { rate: .85 });
-          renderSlots();
-        });
-      });
-      renderSlots();
-      msgEl.textContent = "Dėliok žodžius iš kairės į dešinę. Sakinys prasideda didžiąja raide.";
+    const cur = () => sentences[s % sentences.length];
+
+    /* Žodžių eilė. `variant_order` yra tų pačių žodžių permutacija:
+       žodžių tekstai nesikeičia, keičiasi tik jų vieta. */
+    function permutation() {
+      const sent = cur();
+      const base = Array.isArray(sent.words) ? sent.words : [];
+      const alt = Array.isArray(sent.variant_order) ? sent.variant_order : [];
+      const valid = alt.length === base.length
+        && alt.every((i) => Number.isInteger(i) && i >= 0 && i < base.length)
+        && new Set(alt).size === base.length;
+      return order === 1 && valid ? alt : base.map((_, i) => i);
     }
 
-    function renderSlots() {
-      slotsEl.innerHTML = chosen.map((w2, i) => `<button class="btn secondary" data-slot="${i}">${w2}</button>`).join("") ||
-        `<span style="color:var(--ink-faint);align-self:center">Čia dėsis žodžiai…</span>`;
-      slotsEl.querySelectorAll("[data-slot]").forEach((b) => {
-        b.addEventListener("click", () => {
-          const idx = Number(b.dataset.slot);
-          chosen.splice(idx, 1);
-          bankEl.querySelectorAll("[data-w]").forEach((x) => {
-            x.disabled = false; x.style.opacity = "1";
-          });
-          renderSlots();
-        });
+    function roleOf(index, sent) {
+      if (found.doer && index === sent.doer) return "kas?";
+      if (found.action && index === sent.action) return "ką veikia?";
+      return "";
+    }
+
+    function drawWords() {
+      const sent = cur();
+      const base = Array.isArray(sent.words) ? sent.words : [];
+      wordsEl.innerHTML = permutation().map((bi) => {
+        const role = roleOf(bi, sent);
+        const label = role ? ` — ${role}` : "";
+        return `<button class="btn secondary" data-bi="${bi}" aria-label="${base[bi]}${label}" style="display:flex;flex-direction:column;align-items:center;gap:.2rem;min-width:5.5rem">
+          <span aria-hidden="true" style="font-size:.78em;font-weight:800;line-height:1;min-height:1em;color:${role ? "var(--ok)" : "var(--ink-faint)"}">${role || "\u00a0"}</span>
+          <span style="font-size:1.05em;font-weight:900">${base[bi]}</span>
+        </button>`;
+      }).join("");
+      wordsEl.querySelectorAll("[data-bi]").forEach((b) => {
+        b.addEventListener("click", () => pick(Number(b.dataset.bi)));
       });
     }
 
-    function finish() {
-      finished = true;
-      chosen = [];
-      slotsEl.innerHTML = "";
-      bankEl.innerHTML = "";
-      msgEl.textContent = "Sudėjai visus sakinius!";
-      api.readout("Visi sakiniai sudėti");
-      api.note("Sudėjai visus sakinius. Pasakyk vieną iš jų draugui — jis turi suprasti iš pirmo karto.");
-      api.speak("Sudėjai visus sakinius!");
+    function pick(index) {
+      const sent = cur();
+      const base = Array.isArray(sent.words) ? sent.words : [];
+      const word = base[index] || "";
+
+      /* Jau rastas žodis — tik pakartojam garsą, būsena nesikeičia. */
+      if (roleOf(index, sent)) { api.speak(word, { rate: .85 }); return; }
+
+      if (step === "kas" && index !== sent.doer) {
+        msgEl.textContent = `„${word}“ — ne. ${sent.ask_cas}`;
+        api.readout("Dar ne. Paklausk sakinio, kas atlieka veiksmą.");
+        return;
+      }
+      if (step === "veikia" && index !== sent.action) {
+        msgEl.textContent = `„${word}“ — ne. ${sent.ask_veikia}`;
+        api.readout("Dar ne. Ieškok žodžio, kuris sako, ką veikėjas daro.");
+        return;
+      }
+
+      api.speak(word, { rate: .85 });
+
+      if (step === "kas") {
+        found.doer = true;
+        step = "veikia";
+        qEl.textContent = sent.ask_veikia;
+        msgEl.textContent = `„${word}“ — veikėjas. Dabar ieškok veiksmo.`;
+        api.readout(`Kas? — ${word}. Dabar ką veikia?`);
+        api.speak(sent.ask_veikia, { rate: .85 });
+        drawWords();
+        return;
+      }
+
+      found.action = true;
+      step = "baigta";
+      qEl.textContent = "Sakinys surinktas";
+      const rest = base.filter((_, i) => i !== sent.doer && i !== sent.action);
+      msgEl.textContent = rest.length
+        ? `Liko žodis „${rest[0]}“. Ir jam galima užduoti klausimą.`
+        : `Radai abu žodžius: ${base[sent.doer]} ir ${base[sent.action]}.`;
+      api.note(`Perskaityk visą sakinį: „${sent.text}“.`);
+      api.readout("Sakinys surinktas");
+      api.speak(sent.text, { rate: .8 });
+      nextBtn.disabled = false;
+      drawWords();
+
       /* Tikslas pasiektas DABAR — paskutinis sakinys, o ne pirmas (§4). */
-      if (!reported) {
+      if (!reported && s === sentences.length - 1) {
         reported = true;
         api.progress({ correct: true });
       }
     }
 
-    controls.querySelector("#st-clear").addEventListener("click", draw);
+    function draw() {
+      const sent = cur();
+      step = "kas";
+      order = 0;
+      found = { doer: false, action: false };
+      nextBtn.disabled = true;
+      qEl.textContent = sent.ask_cas;
+      msgEl.textContent = "Spausk žodį, kuris atsako į klausimą.";
+      api.note("");
+      drawWords();
+      api.readout(`Sakinys ${s + 1} iš ${sentences.length}`);
+      api.speak(sent.ask_cas, { rate: .85 });
+    }
 
-    /* automatinis patikrinimas, kai sudėti visi žodžiai */
-    observer = new MutationObserver(() => {
-      if (finished || locked) return;
-      if (chosen.length !== current().length) return;
-      const okWords = chosen.join(" ") === current().join(" ");
-      if (okWords) {
-        locked = true;
-        msgEl.textContent = "Teisingai! Perskaityk sakinį garsiai.";
-        api.readout("Sakinys sudėtas");
-        api.speak(current().join(" "), { rate: .85 });
-        /* Pažanga čia nežymima: tai dar vienas sakinys iš kelių (§4). */
-        setTimeout(() => { s += 1; if (s < sentences.length) draw(); else finish(); }, 2200);
-      } else {
-        msgEl.textContent = "Dar ne. Perskaityk, kas gavosi — ar sakinys turi prasmę?";
-      }
+    /* Ta pati mintis kita tvarka: klausimai ir atsakymai nesikeičia. */
+    orderBtn.addEventListener("click", () => {
+      const sent = cur();
+      order = order === 0 ? 1 : 0;
+      step = "kas";
+      found = { doer: false, action: false };
+      nextBtn.disabled = true;
+      qEl.textContent = sent.ask_cas;
+      msgEl.textContent = "Žodžiai persirikiavo. Klausimai tie patys, atsakymai tie patys.";
+      api.note("");
+      drawWords();
+      api.readout("Žodžiai persirikiavo kita tvarka.");
+      api.speak(sent.ask_cas, { rate: .85 });
     });
-    observer.observe(slotsEl, { childList: true });
+
+    nextBtn.addEventListener("click", () => {
+      s = (s + 1) % sentences.length;
+      draw();
+    });
 
     draw();
-    return () => { if (observer) observer.disconnect(); };
+    return null;
   },
 };
 
@@ -713,7 +778,7 @@ const plakatasIrInformacija = {
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
-  "sakinio-tvarka": sakinioTvarka,
+  "sakinio-zodziai": sakinioZodziai,
   "kaip-zmones-sveikinasi": kaipZmonesSveikinasi,
   "plakatas-ir-informacija": plakatasIrInformacija,
 };

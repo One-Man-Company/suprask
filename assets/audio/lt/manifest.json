@@ -599,14 +599,6 @@
   "n": "n/8771ad44a23fe671-01bc7581.mp3",
   "s": "s/8771ad44a23fe671-dc120609.mp3"
  },
- "Aš": {
-  "n": "n/6997ca107bbce6fd-b5c8ab81.mp3",
-  "s": "s/6997ca107bbce6fd-5032ffe0.mp3"
- },
- "Aš myliu mamą": {
-  "n": "n/920d19e4b1f3e034-a652e031.mp3",
-  "s": "s/920d19e4b1f3e034-87e1aa4c.mp3"
- },
  "Aštuoni ir keturi yra dvylika.": {
   "n": "n/d72621a20deaef02-f2091c70.mp3",
   "s": "s/d72621a20deaef02-e539c28e.mp3"
@@ -967,6 +959,10 @@
   "n": "n/a173a8cebb84e1b1-80d9eea6.mp3",
   "s": "s/a173a8cebb84e1b1-a6d20f06.mp3"
  },
+ "Kas geria?": {
+  "n": "n/304a8cc0a125d425-6272726a.mp3",
+  "s": "s/304a8cc0a125d425-5bb83eec.mp3"
+ },
  "Kas pasikeis, kai pakeisi korteles: pulsas ar ritmas?": {
   "n": "n/d9b40529fa3121c9-772cc6da.mp3",
   "s": "s/d9b40529fa3121c9-04a356d4.mp3"
@@ -975,9 +971,17 @@
   "n": "n/4d4a059e036dc52a-2292c4c0.mp3",
   "s": "s/4d4a059e036dc52a-746b3262.mp3"
  },
- "Katė": {
-  "n": "n/7b398e085664430c-5170bfc4.mp3",
-  "s": "s/7b398e085664430c-995490e8.mp3"
+ "Kas skaito?": {
+  "n": "n/6eafab6b6c189196-153e66e3.mp3",
+  "s": "s/6eafab6b6c189196-188e2b9b.mp3"
+ },
+ "Kas šviečia?": {
+  "n": "n/d5b7b711ce02a209-62865e54.mp3",
+  "s": "s/d5b7b711ce02a209-8c6231b4.mp3"
+ },
+ "Kas žaidžia?": {
+  "n": "n/9eb4558529b2e878-e0f81a83.mp3",
+  "s": "s/9eb4558529b2e878-3d47c07e.mp3"
  },
  "Katė geria pieną": {
   "n": "n/84b87a10530b2560-6bfb479a.mp3",
@@ -1043,6 +1047,10 @@
   "n": "n/1f143dc5ee938538-fde9cdac.mp3",
   "s": "s/1f143dc5ee938538-102c46f6.mp3"
  },
+ "Knygą berniukas skaito": {
+  "n": "n/e927c1df157f689c-81339e4b.mp3",
+  "s": "s/e927c1df157f689c-fa32ea24.mp3"
+ },
  "Komanda išbraukta. Likusios lieka savo vietose.": {
   "n": "n/819d393f28d0e197-0682aca2.mp3",
   "s": "s/819d393f28d0e197-c9ec711a.mp3"
@@ -1102,6 +1110,22 @@
  "Ką suprasi": {
   "n": "n/6ed7616494dc4ee2-b0c27f98.mp3",
   "s": "s/6ed7616494dc4ee2-cfa088fa.mp3"
+ },
+ "Ką veikia berniukas?": {
+  "n": "n/e41f1ea659417f65-7a8cf24c.mp3",
+  "s": "s/e41f1ea659417f65-c4fc9116.mp3"
+ },
+ "Ką veikia katė?": {
+  "n": "n/1cc129d26129d9c7-01d68432.mp3",
+  "s": "s/1cc129d26129d9c7-a9219287.mp3"
+ },
+ "Ką veikia saulė?": {
+  "n": "n/3f798c5a5cb62187-c299dc64.mp3",
+  "s": "s/3f798c5a5cb62187-4e96f468.mp3"
+ },
+ "Ką veikia vaikai?": {
+  "n": "n/df459385673675a7-7af619a4.mp3",
+  "s": "s/df459385673675a7-0e341c19.mp3"
  },
  "Kūgis iš priekio atrodo kaip trikampis.": {
   "n": "n/a50cafa172c33295-c29c8855.mp3",
@@ -1451,6 +1475,10 @@
   "n": "n/b24014ac6331c4cc-aa9629f5.mp3",
   "s": "s/b24014ac6331c4cc-9a3a1150.mp3"
  },
+ "Ryte saulė šviečia": {
+  "n": "n/993ea2f2170bad01-ff6a0359.mp3",
+  "s": "s/993ea2f2170bad01-f4e18d8d.mp3"
+ },
  "Rėjus džiaugiasi. Ieva nusimena.": {
   "n": "n/2e761873673f5560-c05ac06f.mp3",
   "s": "s/2e761873673f5560-97191ef1.mp3"
@@ -1462,14 +1490,6 @@
  "S": {
   "n": "n/8de0b3c47f112c59-db2f4c1a.mp3",
   "s": "s/8de0b3c47f112c59-e9441265.mp3"
- },
- "Saulė": {
-  "n": "n/0b735fb4437afe45-2ec18b01.mp3",
-  "s": "s/0b735fb4437afe45-54525c48.mp3"
- },
- "Saulė šviečia ryte": {
-  "n": "n/f45e5e9c1be148e8-2f6e804e.mp3",
-  "s": "s/f45e5e9c1be148e8-e6386132.mp3"
  },
  "Seka baigėsi ne prie vėliavos.": {
   "n": "n/6c592c218e675828-3cbab252.mp3",
@@ -1755,13 +1775,9 @@
   "n": "n/0ea6c9e2a57235ea-22e65b61.mp3",
   "s": "s/0ea6c9e2a57235ea-86177549.mp3"
  },
- "Vaikai": {
-  "n": "n/09a538658c8a3ee8-f6d17b33.mp3",
-  "s": "s/09a538658c8a3ee8-00b8b46a.mp3"
- },
- "Vaikai eina į mokyklą": {
-  "n": "n/8064f97af3a77698-8e04eda4.mp3",
-  "s": "s/8064f97af3a77698-c3d0a4ae.mp3"
+ "Vaikai žaidžia kieme": {
+  "n": "n/c82b4dc6fa6e3cee-e2a3996a.mp3",
+  "s": "s/c82b4dc6fa6e3cee-b73fa4d0.mp3"
  },
  "Vanduo": {
   "n": "n/74417ae0342a57f0-2b53b370.mp3",
@@ -1867,6 +1883,10 @@
   "n": "n/3e23e8160039594a-6a770dfd.mp3",
   "s": "s/3e23e8160039594a-fe75090f.mp3"
  },
+ "berniukas": {
+  "n": "n/fd6be65d5c46e196-bb358764.mp3",
+  "s": "s/fd6be65d5c46e196-fa8e16f5.mp3"
+ },
  "buo": {
   "n": "n/4443b4d940219077-62b01d5e.mp3",
   "s": "s/4443b4d940219077-2b7525ba.mp3"
@@ -1882,10 +1902,6 @@
  "e": {
   "n": "n/3f79bb7b435b0532-51b2286e.mp3",
   "s": "s/3f79bb7b435b0532-ec152a13.mp3"
- },
- "eina": {
-  "n": "n/b46aac06506c6c8f-789a4f48.mp3",
-  "s": "s/b46aac06506c6c8f-1e2346db.mp3"
  },
  "f": {
   "n": "n/252f10c83610ebca-774a8742.mp3",
@@ -1918,6 +1934,14 @@
  "katė": {
   "n": "n/8c355f6e873fec60-771bfc81.mp3",
   "s": "s/8c355f6e873fec60-f8fd85f0.mp3"
+ },
+ "kieme": {
+  "n": "n/9ccbcda6035caeaa-22def03a.mp3",
+  "s": "s/9ccbcda6035caeaa-ece459a2.mp3"
+ },
+ "knygą": {
+  "n": "n/72e7d8afce87edf9-f6a2249b.mp3",
+  "s": "s/72e7d8afce87edf9-be5e35d8.mp3"
  },
  "kyk": {
   "n": "n/8b6c2979aad8c381-ffb380cc.mp3",
@@ -1955,10 +1979,6 @@
   "n": "n/ccb711f092ac8ef1-1226f1e8.mp3",
   "s": "s/ccb711f092ac8ef1-ea703381.mp3"
  },
- "mamą": {
-  "n": "n/f04f6659de803587-4abb199a.mp3",
-  "s": "s/f04f6659de803587-3b7ded36.mp3"
- },
  "medis": {
   "n": "n/b419bcf82fa62b4f-c7daee08.mp3",
   "s": "s/b419bcf82fa62b4f-e582c165.mp3"
@@ -1970,14 +1990,6 @@
  "mokykla": {
   "n": "n/abb838da0f22d104-7edc8654.mp3",
   "s": "s/abb838da0f22d104-b77d9912.mp3"
- },
- "mokyklą": {
-  "n": "n/b1b084e5cafb619e-4a94da34.mp3",
-  "s": "s/b1b084e5cafb619e-cfd2ad59.mp3"
- },
- "myliu": {
-  "n": "n/88f353e98b2f7a45-ed70c80b.mp3",
-  "s": "s/88f353e98b2f7a45-079d74b4.mp3"
  },
  "n": {
   "n": "n/1b16b1df538ba12d-e0be721a.mp3",
@@ -2031,6 +2043,10 @@
   "n": "n/3d0fc6381d32fc43-ff9c62c3.mp3",
   "s": "s/3d0fc6381d32fc43-4ea5a242.mp3"
  },
+ "skaito": {
+  "n": "n/e66d5a0b2c8eee42-d326dd5b.mp3",
+  "s": "s/e66d5a0b2c8eee42-541efaf5.mp3"
+ },
  "t": {
   "n": "n/e3b98a4da31a127d-2c148cc0.mp3",
   "s": "s/e3b98a4da31a127d-d9ee2c00.mp3"
@@ -2054,6 +2070,10 @@
  "v": {
   "n": "n/4c94485e0c21ae6c-a3dbfeaf.mp3",
   "s": "s/4c94485e0c21ae6c-62a183ed.mp3"
+ },
+ "vaikai": {
+  "n": "n/1e6f43ca03f499d1-c008dacd.mp3",
+  "s": "s/1e6f43ca03f499d1-4bcdc3b0.mp3"
  },
  "y": {
   "n": "n/a1fce4363854ff88-af3e54bb.mp3",
@@ -2202,6 +2222,10 @@
  "ž": {
   "n": "n/4b6877a9d48058e5-2f50e91b.mp3",
   "s": "s/4b6877a9d48058e5-76492022.mp3"
+ },
+ "žaidžia": {
+  "n": "n/adb96e58edb1ac83-2fc8933a.mp3",
+  "s": "s/adb96e58edb1ac83-319a19ab.mp3"
  },
  "žuvis": {
   "n": "n/989380e2150c9683-e154cad6.mp3",

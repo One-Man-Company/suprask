@@ -1,0 +1,135 @@
+{
+  "id": "03-sakinio-zodziai",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Kas? Ką veikia?",
+  "subtitle": "Sakinio žodį randi pagal klausimą",
+  "minutes": 10,
+  "outcomes": [
+    "Parodau sakinio žodį, kuris sako, kas veikia.",
+    "Parodau sakinio žodį, kuris sako, ką veikia.",
+    "Paaiškinu, kad žodį randu pagal klausimą, o ne pagal vietą."
+  ],
+  "concept": {
+    "title": "Klausimas veda prie žodžio",
+    "big_idea": "Sakinio žodžiai susiję: vienas sako, kas veikia, kitas — ką veikia. Žodį randi pagal klausimą, o ne pagal jo vietą.",
+    "steps": [
+      "Pirma paklausk: kas? Taip randi veikėją.",
+      "Tada paklausk: ką veikia? Taip randi veiksmą.",
+      "Perskaityk visą sakinį. Patikrink, ar žodžiai dera tarpusavyje.",
+      "Žodžiai gali stovėti ir kita tvarka. Veikėjas ir veiksmas nesikeičia."
+    ],
+    "example": "Sakinyje „Pieną katė geria“ pirmas žodis yra „pieną“. Bet į klausimą kas? atsako „katė“. Juk geria katė."
+  },
+  "sim": {
+    "component": "sakinio-zodziai",
+    "config": {
+      "sentences": [
+        {
+          "text": "Katė geria pieną",
+          "words": ["katė", "geria", "pieną"],
+          "doer": 0,
+          "action": 1,
+          "variant_order": [2, 0, 1],
+          "ask_cas": "Kas geria?",
+          "ask_veikia": "Ką veikia katė?"
+        },
+        {
+          "text": "Ryte saulė šviečia",
+          "words": ["ryte", "saulė", "šviečia"],
+          "doer": 1,
+          "action": 2,
+          "variant_order": [1, 2, 0],
+          "ask_cas": "Kas šviečia?",
+          "ask_veikia": "Ką veikia saulė?"
+        },
+        {
+          "text": "Knygą berniukas skaito",
+          "words": ["knygą", "berniukas", "skaito"],
+          "doer": 1,
+          "action": 2,
+          "variant_order": [1, 2, 0],
+          "ask_cas": "Kas skaito?",
+          "ask_veikia": "Ką veikia berniukas?"
+        },
+        {
+          "text": "Vaikai žaidžia kieme",
+          "words": ["vaikai", "žaidžia", "kieme"],
+          "doer": 0,
+          "action": 1,
+          "variant_order": [2, 0, 1],
+          "ask_cas": "Kas žaidžia?",
+          "ask_veikia": "Ką veikia vaikai?"
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "q": "Sakinyje „Senelis laisto gėles“ kuris žodis atsako į klausimą kas?",
+      "options": [
+        "Senelis",
+        "laisto",
+        "gėles"
+      ],
+      "answer": 0,
+      "hint": "Paklausk viso sakinio: kas laisto?",
+      "why": "„Senelis“ atsako į klausimą kas? Jis laisto gėles."
+    },
+    {
+      "q": "Sakinyje „Ryte saulė šviečia“ kuris žodis sako, ką veikia saulė?",
+      "options": [
+        "Ryte",
+        "šviečia",
+        "saulė"
+      ],
+      "answer": 1,
+      "hint": "Klausk, ką saulė daro. Ryte — tai laikas.",
+      "why": "„Šviečia“ sako, ką saulė veikia. „Ryte“ sako, kada."
+    },
+    {
+      "q": "Sakinyje „Knygą berniukas skaito“ kuris žodis atsako į klausimą kas?",
+      "options": [
+        "knygą",
+        "skaito",
+        "berniukas"
+      ],
+      "answer": 2,
+      "hint": "Pirmas žodis ne visada sako, kas veikia.",
+      "why": "„Berniukas“ atsako į klausimą kas? Jis skaito. Žodis ne pirmas, bet jis veikėjas."
+    },
+    {
+      "q": "Kuris žodis sakinyje „Vaikai žaidžia kieme“ atsako į klausimą kur?",
+      "options": [
+        "vaikai",
+        "žaidžia",
+        "kieme"
+      ],
+      "answer": 2,
+      "hint": "Tai ne veikėjas ir ne veiksmas. Klausk apie vietą.",
+      "why": "„Kieme“ atsako į klausimą kur? Tai vieta, o ne veikėjas.",
+      "optional": true
+    }
+  ],
+  "reflect": "Pasakyk sakinį apie savo rytą. Kuris žodis jame sako, kas veikia?",
+  "teacher": {
+    "goal": "Sakinio sandara per klausimus (D.3.3.1–D.3.3.4): rasti žodį, atsakantį į kas? ir ką veikia?, ir suprasti, kad žodžiai dera tarpusavyje. Žodžių eilė nėra taisyklė.",
+    "prompt": "Kurį žodį radai pirmiau? Kaip supratai, kad jis atsako į klausimą?",
+    "offline": "Užrašykite sakinį ant trijų lapelių — po vieną žodį. Paprašykite vaiko parodyti, kas veikia, ir ką jis veikia. Tada perstatykite lapelius ir užduokite tuos pačius klausimus: atsakymai tie patys.",
+    "misconceptions": [
+      "Vaikas veikėju laiko pirmą sakinio žodį. Sakinys „Knygą berniukas skaito“ parodo, kad pirmas žodis gali būti ne veikėjas.",
+      "Vaikas mano, kad kita žodžių tvarka yra klaida. Lietuvių kalboje tvarka keičia akcentą, o ne veikėją.",
+      "Vaikas veiksmą painioja su daiktu ir žymi ne tą žodį."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“, 1–2 klasės sakinio tema ir pasiekimai D.3.3.1–D.3.3.4.",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), D.3.3.1–D.3.3.4: veikėjas, veiksmas, klausimai sakinio žodžiams."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena didelė idėja: sakinio žodį randi pagal klausimą, ne pagal vietą.",
+    "2 žingsnis — užduotys perkelia klausimus į naujus sakinius, įskaitant tokį, kuriame veikėjas ne pirmas (T2.2).",
+    "3 žingsnis — užuomina nukreipia į klausimą, o ne į atsakymą; bandymų skaičius neribojamas (T3.1, T3.3).",
+    "8 žingsnis — veikla be ekrano su žodžių lapeliais ir jų perstatymu (T8.3)."
+  ]
+}

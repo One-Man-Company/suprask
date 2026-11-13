@@ -126,7 +126,7 @@ Tikrinti visi keturi 1 klasės lietuvių kalbos moduliai pagal `sources/pradinio
 |---|---|---|
 | `01-garsas-ir-raide` | D.1.1 („Skiria lietuvių kalbos garsus kalbos sraute, užrašo juos atitinkamomis raidėmis; paaiškina, kuo raidė skiriasi nuo garso“, :382–386) + oficialus 1 kl. veiklos pavyzdys „Kuo raidė skiriasi nuo garso?“ (:374) | **atitinka** |
 | `02-skiemenu-jungimas` | Atskiro pasiekimo nėra; sąsaja tik netiesioginė per B.1.2 (:7604). Skiemuo tekste — muzikos turinys (:3518, :10809, :11354, :25331), skaitmeninės priemonės pavadinimas (:14532), kompetencijos aprašas (:17002) | **iš dalies** — taisyti `sources`/`svietimas1`, žymėti [PATIKRINTI]; modulio nenaikinti |
-| `03-sakinio-tvarka` | Modulio branduolys — žodžių eilė, kurios programoje nėra (paieška „žodžių tvarka“ — 0). 1–2 kl. sakinys = klausimai žodžiams ir jų derinimas, D.3.3.1–D.3.3.4 (:39795–39809) | **neatitinka** — siūloma perkelti į D.3.3 ir keisti simuliaciją (žr. `agents/proposals/2026-11-12-programos-derintojas-sakinio-tvarka.json`) |
+| `03-sakinio-zodziai` | D.3.3.1–D.3.3.4 („kas?“, „ką veikia?“, veikėjas ir veiksmas; :39795–39809) | **pakeista #261** — senasis `03-sakinio-tvarka` (žodžių eilė) pakeistas klausimų modeliu; atitiktį tvirtina programos derintojas |
 | `04-kaip-zmones-sveikinasi` | D.5.2 + oficialus 1 kl. veiklos pavyzdys „Kaip žmonės sveikinasi?“ (:317) | **atitinka** |
 | *(nėra modulio)* | B.1.2 „randa tekste aiškiai pateiktą informaciją“ (:7604), B.3.1 „Remiasi iliustracijomis skaitydamas tekstą“ (:7607); oficiali veikla „Mokausi rasti man svarbią informaciją“ (:16553) | **spraga** — siūlomas modulis `05-plakatas-ir-informacija` (B sritis platformoje neturi nė vieno modulio; C sritis taip pat) |
 

@@ -1,0 +1,13 @@
+{
+  "note": "Priimti (peržiūrėti, ne spėjami) modulių pervadinimai. Įrašas čia reiškia: senas ID dingo sąmoningai, naujas ID yra jo įpėdinis ir dabartiniame index.json egzistuoja. Tai NE atleidimas nuo pasekmės: vaiko localStorage žyma už seną ID lieka našlaitė, kol progress.js neturi alias mechanizmo (žr. agents/proposals/). Įrašo be įpėdinio rašyti negalima — dingęs ID be įpėdinio yra regresija, kurią check_published.py turi rodyti raudonai.",
+  "renames": [
+    {
+      "grade": 1,
+      "from": "03-sakinio-tvarka",
+      "to": "03-sakinio-zodziai",
+      "run": 261,
+      "date": "2026-11-13",
+      "reason": "Programos derintojas (#261): modulio pavadinimas keistas į programos terminą. Turinio sprendimas priimtas ir paskelbtas; publikavimo agentas ID negrąžina (tai ne jo vaidmuo), bet ir nešalina — fiksuoja įvykį, kad vartai jo nebematytų kaip naujo defekto."
+    }
+  ]
+}

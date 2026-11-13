@@ -30,6 +30,15 @@ turinys — `index.html`, `assets/js/**/*.js`, `assets/css/*.css`. Anksčiau
 nepaskelbtas simuliacijos pataisymas buvo nematomas: modulių baitai sutampa,
 o vaikas vykdo seną `assets/js/sims/*.js` (LL-83).
 
+2026-11-13 (paleidimas #271): tikrinama ir **git istorija**, ne tik dabartis.
+Modulis `03-sakinio-tvarka` pervadintas į `03-sakinio-zodziai` (#261): repo ir
+gyva svetainė po to sutapo 39/39, visi baitai lygūs, visi vartai žali — o vaiko
+`localStorage` žyma tam moduliui liko be modulio. Įrankis tokio įvykio nematė,
+nes lygino tik dvi dabarties būsenas. Dabar iš klasės `index.json` istorijos
+surenkami visi kada nors buvę ID; tie, kurių dabartiniame indekse nėra,
+pranešami kaip `vanished_ids`. Priimtas pervadinimas (su aiškiu įpėdiniu)
+registruojamas `scripts/known_renames.json` — kitaip vartai raudoni.
+
 Dėmesio: `?v=<commit>` — ne turinio skirtumas. `.github/workflows/pages.yml`
 prieš publikavimą prirašo commit'o trumpinį prie CSS/JS nuorodų, kad
 naršyklė nepaimtų iš GitHub Pages tarpinės atminties seno failo. Todėl
@@ -86,10 +95,98 @@ SHELL_GLOBS = [
 # todėl prieš lyginimą žymė nuimama, o versija perskaitoma atskirai.
 VERSION_PARAM = re.compile(r"\?v=[0-9a-f]{6,40}")
 
+# Priimti modulių pervadinimai. Failas yra įrankio duomenys, ne turinio schema:
+# jis nekeičia modulio formato, tik pasako, kad dingęs ID turi įpėdinį ir kad
+# sprendimas buvo peržiūrėtas. Be jo kiekvienas sąmoningas pervadinimas darytų
+# vartus amžinai raudonus, o amžinai raudoni vartai — tas pats kaip jokių (LL-37).
+RENAMES = ROOT / "scripts" / "known_renames.json"
+HISTORY_LIMIT = 400
+
 
 
 def grade_dir(grade: int) -> str:
     return f"grade-{grade:02d}"
+
+
+def known_renames() -> dict[tuple[int, str], str]:
+    """(klasė, senas ID) → naujas ID. Priimti pervadinimai, ne spėjimai."""
+    try:
+        data = json.loads(RENAMES.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    out: dict[tuple[int, str], str] = {}
+    for item in data.get("renames", []):
+        if item.get("from") and item.get("to"):
+            out[(int(item.get("grade", 0)), str(item["from"]))] = str(item["to"])
+    return out
+
+
+def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
+    """Visi ID, kada nors buvę klasės `index.json`, pastaba ir ar patikra įvyko.
+
+    Dabarties lyginimas pervadinimo nemato: jei repo ir gyva svetainė pakeistos
+    kartu, abi pusės sutampa, o vaiko žyma vis tiek neteko modulio (LL-88).
+    Todėl imama git istorija. Kiekvienam ID įsimenama **naujausia** revizija,
+    kurioje jis buvo (`revs` eina nuo naujausios).
+
+    Trečias reikšmės narys `checked` saugo nuo tylios „0 dingusių“: jei istorijos
+    perskaityti nepavyksta, tai nėra švarus rezultatas (LL-37/LL-10).
+    """
+    path = f"content/lt/{grade_dir(grade)}/index.json"
+    note = ""
+    try:
+        shallow = subprocess.run(
+            ["git", "rev-parse", "--is-shallow-repository"],
+            cwd=ROOT, capture_output=True, text=True, timeout=20,
+        ).stdout.strip()
+        if shallow == "true":
+            return {}, "git istorija sekli — dingusių ID patikra neįmanoma", False
+        revs = subprocess.run(
+            ["git", "log", f"--max-count={HISTORY_LIMIT}", "--format=%h", "--", path],
+            cwd=ROOT, capture_output=True, text=True, timeout=120,
+        ).stdout.split()
+    except Exception as exc:  # noqa: BLE001
+        return {}, f"git istorijos nepavyko perskaityti ({type(exc).__name__})", False
+
+    if len(revs) >= HISTORY_LIMIT:
+        note = f"istorija ribota iki {HISTORY_LIMIT} revizijų — senesni ID nepatikrinti"
+
+    seen: dict[str, str] = {}
+    for rev in revs:
+        try:
+            blob = subprocess.run(
+                ["git", "show", f"{rev}:{path}"],
+                cwd=ROOT, capture_output=True, text=True, timeout=30,
+            ).stdout
+            data = json.loads(blob)
+        except Exception:  # noqa: BLE001
+            continue  # revizijoje indekso dar nebuvo arba jis ne JSON
+        for strand in data.get("strands", []):
+            for mod in strand.get("modules", []):
+                mid = mod.get("id")
+                if mid and mid not in seen:
+                    seen[mid] = rev
+    return seen, note, True
+
+
+def vanished(grade: int, current_ids: list[str]) -> dict:
+    """Dingę ID su įpėdiniu, jei pervadinimas priimtas ir užregistruotas."""
+    hist, note, checked = historical_ids(grade)
+    known = known_renames()
+    cur = set(current_ids)
+    items: list[dict] = []
+    for mid, rev in sorted(hist.items()):
+        if mid in cur:
+            continue
+        successor = known.get((grade, mid), "")
+        items.append({
+            "grade": grade,
+            "id": mid,
+            "last_rev": rev,
+            "successor": successor,
+            "resolved": bool(successor) and successor in cur,
+        })
+    return {"items": items, "note": note, "checked": checked}
 
 
 def live_grades() -> list[int]:
@@ -262,6 +359,14 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     out["missing_on_live"] = [m for m in local_ids if m not in live_ids]
     out["hidden_locally"] = [m for m in live_ids if m not in local_ids]
 
+    # LL-88: abi dabartys gali sutapti, o ID vis tiek gali būti dingęs.
+    # Nuo to priklauso vaiko `localStorage` žyma, todėl tikrinama ne tik
+    # „repo vs gyva“, bet ir „šiandien vs istorija“.
+    gone = vanished(grade, local_ids)
+    out["vanished_ids"] = gone["items"]
+    out["history_note"] = gone["note"]
+    out["history_checked"] = gone["checked"]
+
     try:
         local_seq = list(json.loads((CONTENT / gd / "path.json").read_text(encoding="utf-8")).get("sequence", []))
     except (OSError, json.JSONDecodeError):
@@ -363,6 +468,9 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
         "missing_on_live": merge("missing_on_live"),
         "hidden_locally": merge("hidden_locally"),
         "not_in_path": merge("not_in_path"),
+        "vanished_ids": merge("vanished_ids"),
+        "history_note": "; ".join(g.get("history_note", "") for g in per_grade if g.get("history_note")),
+        "history_unchecked": [g["grade"] for g in per_grade if g.get("history_checked") is False],
         "stale": merge("stale"),
         "stale_unknown": merge("stale_unknown"),
         "aux_stale": aux_stale,
@@ -401,6 +509,11 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(data['hidden_locally'])} dingo iš repo")
     if data.get("not_in_path"):
         reasons.append(f"{len(data['not_in_path'])} ne kelyje")
+    unexplained = [v for v in data.get("vanished_ids", []) if not v.get("resolved")]
+    if unexplained:
+        reasons.append(f"{len(unexplained)} dingęs ID (pažanga liko be modulio)")
+    if data.get("history_unchecked"):
+        reasons.append("dingusių ID patikra neįvyko")
     if data.get("stale"):
         reasons.append(f"{len(data['stale'])} pasenęs modulis")
     if data.get("stale_unknown"):
@@ -455,6 +568,19 @@ def main() -> int:
         print(f"NEPASIEKIAMI gyvi failai ({len(data['stale_unknown'])}): {', '.join(data['stale_unknown'])}")
     if data["not_in_path"]:
         print(f"NĖRA path.json sekoje ({len(data['not_in_path'])}): {', '.join(data['not_in_path'])}")
+    accepted = [v for v in data.get("vanished_ids", []) if v.get("resolved")]
+    unexplained = [v for v in data.get("vanished_ids", []) if not v.get("resolved")]
+    if unexplained:
+        print(f"DINGĘ ID — vaiko pažanga liko be modulio ({len(unexplained)}):")
+        for v in unexplained:
+            print(f"  - grade-{v['grade']:02d} {v['id']} (paskutinį kartą {v['last_rev']})")
+    if accepted:
+        print(f"Pervadinti ID, priimta ir užregistruota ({len(accepted)}):")
+        for v in accepted:
+            print(f"  - grade-{v['grade']:02d} {v['id']} → {v['successor']} "
+                  f"(žyma tam moduliui nebegalioja)")
+    if data.get("history_note"):
+        print(f"Dingusių ID patikros riba: {data['history_note']}")
     if data["path_differs"]:
         print(f"path.json seka skiriasi: klasė {', '.join(map(str, data['path_differs']))}")
     if data["aux_stale"]:

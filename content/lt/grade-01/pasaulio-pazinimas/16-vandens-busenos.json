@@ -8,18 +8,18 @@
   "outcomes": [
     "Pasakau, kad išgaravęs vanduo neišnyksta, o būna ore kaip garas.",
     "Paaiškinu, kodėl ant vėsaus dangčio susidaro lašai.",
-    "Įvardiju tris vandens būsenas: ledą, vandenį ir garą."
+    "Pasakau tris vandens būsenas: ledą, vandenį ir garą."
   ],
   "concept": {
     "title": "Vanduo keičia formą",
-    "big_idea": "Vanduo gali būti ledas, vanduo arba garas. Kai pakaiti, kyla į orą, o kai atvėsta, tampa lašais.",
+    "big_idea": "Ledas ir garas yra tas pats vanduo. Kai pakaiti, kyla į orą, o kai atvėsta, tampa lašais.",
     "steps": [
       "Įpilk vandens ir pakaitink. Virš puodo pakyla garas.",
       "Garas yra tas pats vanduo, tik ore. Jo nematome.",
       "Uždėk vėsų dangtį. Ant jo susirenka lašai.",
       "Pakreipk dangtį. Lašai nubėga atgal į puodą."
     ],
-    "example": "Ryte vonios veidrodis būna užparęs. Tai garas iš dušo atvėso ir virto lašais."
+    "example": "Ryte vonios veidrodis būna šlapias nuo lašų. Garas iš dušo atvėso ir virto lašais."
   },
   "sim": {
     "component": "vandens-busenos",
@@ -34,48 +34,48 @@
   },
   "tasks": [
     {
-      "q": "Puode vandens sumažėjo, nors puodas sveikas. Kur jis dingo?",
+      "q": "Puode vandens sumažėjo, nors puodas sveikas. Kur dingo vanduo?",
       "options": [
         "Išgaravo į orą",
         "Išbėgo pro dugną",
-        "Sugėrė puodo sienos"
+        "Vandenį sugėrė puodas"
       ],
       "answer": 0,
-      "hint": "Prisimink, ką matei kylant virš puodo.",
+      "hint": "Prisimink, ką matei virš puodo.",
       "why": "Vanduo virto garu ir pakilo į orą. Jis nedingo, tik pakeitė formą."
     },
     {
-      "q": "Ant vėsaus dangčio atsirado lašų. Iš kur jie?",
+      "q": "Ant vėsaus dangčio atsirado lašų. Iš kur jie atsirado?",
       "options": [
-        "Iš dangčio medžiagos",
+        "Iš paties dangčio",
         "Iš garo, kuris kilo iš puodo",
         "Iš lietaus lauke"
       ],
       "answer": 1,
       "hint": "Pagalvok, kas buvo tarp vandens ir dangčio.",
-      "why": "Vėsus dangtis atvėsino garą, ir šis virto lašais."
+      "why": "Vėsus dangtis atvėsino garą. Garas virto lašais."
     },
     {
-      "q": "Ryte vonios veidrodis užparojo. Kas jame?",
+      "q": "Ryte ant vonios veidrodžio atsirado lašų. Kas tie lašai?",
       "options": [
         "Dulkės nuo sienos",
-        "Sienos dažai",
+        "Vanduo iš paties veidrodžio",
         "Vanduo, kuris buvo ore"
       ],
       "answer": 2,
-      "hint": "Prisimink, kas nutinka šiltam garui ant vėsaus paviršiaus.",
+      "hint": "Pagalvok, ar lašus pagamino veidrodis.",
       "why": "Šiltas garas atvėso ant vėsaus veidrodžio ir virto lašais."
     },
     {
-      "q": "Ledukas stiklinėje ištirpo. Kas nutiko vandeniui?",
+      "q": "Ledukas stiklinėje ištirpo. Kas liko vietoj leduko?",
       "options": [
-        "Jis virto garu",
-        "Jis tapo skysčiu",
-        "Jis dingo"
+        "Garas",
+        "Vanduo",
+        "Niekas"
       ],
       "answer": 1,
-      "hint": "Ledukas mažėjo, o stiklinėje atsirado vandens.",
-      "why": "Ledas yra kietas vanduo. Šilumoje jis tirpsta ir vėl tampa skysčiu.",
+      "hint": "Ledukas sumažėjo, bet stiklinė ne tuščia.",
+      "why": "Ledas yra kietas vanduo. Šilumoje jis tirpsta ir vėl tampa vandeniu.",
       "optional": true
     }
   ],

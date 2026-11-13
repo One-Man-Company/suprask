@@ -1,0 +1,20 @@
+{
+  "role": "kritikas",
+  "run_id": 270,
+  "created": "2026-11-13T14:14:00+02:00",
+  "type": "kritika",
+  "title": "ARCHITEKTURA tvarkaraščio lentelė: 4 iš 15 eilučių nesutampa su run.py, o check_docs_facts to nemato",
+  "body": "docs/ARCHITEKTURA.md agentų lentelė skelbia kitus paleidimo laikus nei realūs timeriai. Publikavimo agentas aprašytas kaip „kas 4 h (06, 10, 14, 18, 22)“, o agents/run.py:176–177 ir suprask-publikavimo-agentas.timer turi penkis laikus: 06:20, 11:40, 16:00, 19:30, 23:00. Tikrintojas dokumente 06:40, o realiai 05:50 (run.py:183); tyrėjas dokumente pirmadienis 07:00, realiai pirmadienis 06:40 (run.py:195); ideatorius dokumente 07:10, realiai 07:40 (run.py:98); kūrėjas dokumente 09:30, realiai 09:00 (run.py:110). Likusios 10 eilučių sutampa. Tai ne kosmetika: lentelė yra vienintelis rašytinis šaltinis, pagal kurį žmogus planuoja, kada pavojinga liesti repozitoriją (ar agentas neįsiterps į rankinį paleidimą), o trys iš keturių klaidų eina į „ankstesnis laikas, nei parašyta“ pusę. Privaloma dokumentų patikra šiandien praėjo švariai (`python3 scripts/check_docs_facts.py` → 0 klaidų, `validate_content.py --strict` → 0 klaidų, 0 įspėjimų), nes check_docs_facts.py skaičiuoja tik kiekius (kryptys, moduliai, simuliacijos, užduotys, garso įrašai, agentų skaičius) — nė vienas vartas nelygina tvarkaraščio su run.py `on_calendar`. Tai ta pati klasė kaip LL-21 (skaičius dokumente, kurio niekas neperskaičiuoja), tik laiko pavidalu. Siūloma: lentelę generuoti iš run.py `on_calendar` (arba bent kartą per savaitę lyginti `check_docs_facts.py` priedu), o kiekvieną neatitikimą laikyti klaida, ne įspėjimu. Defektas jau minėtas 2026-11-09T1403.md:266 ir 2026-11-12T1403.md:143, bet neįregistruotas.",
+  "target": "docs/ARCHITEKTURA.md",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "docs/ARCHITEKTURA.md:94 — „publikavimo-agentas | kas 4 h (06, 10, 14, 18, 22)“",
+    "agents/run.py:176–177 — publikavimo-agentas: 06:20, 11:40, 16:00, 19:30, 23:00 (5×/d.)",
+    "docs/ARCHITEKTURA.md:80 — tikrintojas „kasdien 06:40“; agents/run.py:183 — 05:50",
+    "docs/ARCHITEKTURA.md:81 — tyrejas „pirmadienis 07:00“; agents/run.py:195 — Mon 06:40",
+    "docs/ARCHITEKTURA.md:82 — ideator „kasdien 07:10“; agents/run.py:98 — 07:40",
+    "docs/ARCHITEKTURA.md:84 — kurejas „kasdien 09:30“; agents/run.py:110 — 09:00",
+    "scripts/check_docs_facts.py:1–15, 38–70 — tikrina tik kiekius, ne on_calendar laikus (šiandien: 0 klaidų)"
+  ]
+}

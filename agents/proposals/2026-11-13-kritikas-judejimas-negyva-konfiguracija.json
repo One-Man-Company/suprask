@@ -1,0 +1,21 @@
+{
+  "role": "kritikas",
+  "run_id": 270,
+  "created": "2026-11-13T14:12:00+02:00",
+  "type": "kritika",
+  "title": "17-judejimas sim.config.words niekur neskaitomas, o jo forma (masyvas) netiktų net perduotas",
+  "body": "Modulio „Kas greičiau nuriedės“ sim.config.words yra penkių žodžių masyvas. Simuliacijos komponentas „nuozulnioji-plokstuma“ montuojasi kaip mount({ stage, controls, api }) — config parametro apskritai neima, todėl JSON žodžiai į ekraną ir į balsą nepatenka. Mygtukų etiketės ir tariami žodžiai kode kieti: „Lengvesnis pirmas / Sunkesnis pirmas / Abu kartu“ (1328–1330), „Kartu / Greičiau / Lėčiau“ (1457–1463) ir „Lengvas rutulys / Sunkus rutulys / Kartu“ (1541). Tuo pačiu metu scripts/generate_audio.py:167–168 renka visas sim.config eilutes, vadinasi, JSON žodis yra vienintelis kelias į garso manifestą, bet ne į ekraną: pakeitus žodį JSON'e pasikeis garso rinkinys, o simuliacija liks sena — vaikas girdės viena, matys kita. Be to, net jei config būtų perduotas, komponentas tikėtųsi objekto (pasaulis.js:875 tikrina !Array.isArray), o JSON turi masyvą, tad konfigūracija būtų tyliai atmesta. Tokia pati negyva konfigūracija 16-vandens-busenos buvo sutvarkyta (pasaulis.js:873–879 dabar skaito config.words), todėl atvirą #5984, kuris rodo į jau sutaisytą modulį, reikia uždaryti arba peradresuoti — kitaip eilė duos darbą taisyti veikiantį failą (LL-36). Sprendimas: arba perduoti config ir priimti objektą, arba išimti sim.config iš 17-judejimas JSON ir palikti vieną gyvą šaltinį — simuliacijos kodą. Defektas jau aprašytas 2026-11-08T1400.md:305, 2026-11-09T1403.md:262 ir 2026-11-12T1403.md:142, bet iki šiol neįregistruotas.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/17-judejimas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/17-judejimas.json:24–27 — sim.component „nuozulnioji-plokstuma“, sim.config.words masyvas („Lengvas rutulys“, „Sunkus rutulys“, „Kartu“, „Greičiau“, „Lėčiau“)",
+    "assets/js/sims/pasaulis.js:1295 — mount({ stage, controls, api }) be config",
+    "assets/js/sims/pasaulis.js:1328–1330 — kietos etiketės „Lengvesnis pirmas“, „Sunkesnis pirmas“, „Abu kartu“",
+    "assets/js/sims/pasaulis.js:1457–1463 — kieti api.speak(„Kartu“), („Greičiau“), („Lėčiau“)",
+    "assets/js/sims/pasaulis.js:1541 — kietas api.speak(„Lengvas rutulys“ / „Sunkus rutulys“ / „Kartu“)",
+    "assets/js/sims/pasaulis.js:875 — cfgWords priima tik objektą (!Array.isArray), tad masyvas būtų atmestas",
+    "scripts/generate_audio.py:167–168 — sim.config eilutės patenka į garso manifestą",
+    "assets/js/sims/pasaulis.js:873–879 — 16-vandens-busenos jau skaito config.words (šio defekto įrodymas ten nebeegzistuoja, LL-36)"
+  ]
+}

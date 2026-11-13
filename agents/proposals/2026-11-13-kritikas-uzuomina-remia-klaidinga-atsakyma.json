@@ -1,0 +1,20 @@
+{
+  "role": "kritikas",
+  "run_id": 270,
+  "created": "2026-11-13T14:10:00+02:00",
+  "type": "kritika",
+  "title": "Geometrijos užduoties užuomina remia klaidingą variantą ir prieštarauja modulio pavyzdžiui",
+  "body": "Modulyje „Taškas, tiesė, spindulys, atkarpa“ užduotis „Kodėl nubrėžtos tiesės galo nematome?“ turi tris variantus, iš kurių klaidingas yra „Ji labai ilga, bet turi galą“. To paties klausimo užuomina „Kur baigiasi pieštuko linija, kai braižai per visą lapą?“ į šį klaidingą variantą veda tiesiogiai: į ją sąžiningas 6–7 metų vaiko atsakymas yra „puslapio krašte“, t. y. „linija turi galą, tik labai toli“. Modulio pavyzdys (eilutė 22) tą pačią frazę „pieštuko linija“ vartoja atkarpos apibrėžimui („Pieštuko linija baigiasi ten, kur pakeli pieštuką. Tai atkarpa.“), todėl vaikas, prisiminęs pavyzdį, užuominą perskaito kaip atkarpos kriterijų ir pasirenka klaidingą atsakymą. Užuomina turi nukreipti į klaidą, o ne į klaidingą atsakymą (gairių T3.1, T3.2; KURINIO-STANDARTAS 3 skyrius). Užuominai pakaktų klausti apie brėžinio ir tiesės skirtumą, pvz. „Ar lapo kraštas priklauso tiesei, ar tik tavo brėžiniui?“. Ta pati eilutė pažeidžia ir terminijos reikalavimą: standartas (KURINIO-STANDARTAS:116) reikalauja „skaičių tiesė“, o ne „linija“; „linija“ šiame modulyje vartojama :22, :47, :69, :80, :100. Defektas jau aprašytas dviejuose ankstesniuose kritiko loguose (2026-11-09T1403.md:259, 2026-11-12T1403.md:141), bet neįregistruotas pasiūlymu, todėl liko nepataisytas.",
+  "target": "content/lt/grade-01/matematika/18-taskas-tiese-spindulys-atkarpa.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/18-taskas-tiese-spindulys-atkarpa.json:69 — hint: „Kur baigiasi pieštuko linija, kai braižai per visą lapą?“",
+    "content/lt/grade-01/matematika/18-taskas-tiese-spindulys-atkarpa.json:62 — q: „Kodėl nubrėžtos tiesės galo nematome?“",
+    "content/lt/grade-01/matematika/18-taskas-tiese-spindulys-atkarpa.json:65 — klaidingas variantas: „Ji labai ilga, bet turi galą“ (answer 0, t. y. :67)",
+    "content/lt/grade-01/matematika/18-taskas-tiese-spindulys-atkarpa.json:70 — why: „Tiesė neturi galo: lapo kraštas tik nutraukia brėžinį.“",
+    "content/lt/grade-01/matematika/18-taskas-tiese-spindulys-atkarpa.json:22 — example: „Pieštuko linija baigiasi ten, kur pakeli pieštuką. Tai atkarpa.“ (tas pats vaizdinys priešingai pusei)",
+    "docs/KURINIO-STANDARTAS.md:116 — terminija: „skaičių tiesė“, ne „linija“",
+    "agents/log/kritikas-2026-11-09T1403.md:259 ir agents/log/kritikas-2026-11-12T1403.md:141 — defektas jau rastas, bet neįregistruotas"
+  ]
+}

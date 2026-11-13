@@ -84,15 +84,15 @@
       "why": "Sau-lė — du skiemenys."
     },
     {
-      "q": "Kuris variantas yra vientisas žodis?",
+      "q": "Kuris užrašas yra vienas žodis „pilis“?",
       "options": [
-        "mo-kyk-la",
-        "mokykla",
-        "mok- yk - la"
+        "pi lis",
+        "p i l i s",
+        "pilis"
       ],
-      "answer": 1,
-      "hint": "Skaitydamas žodį sustoji tik tada, kai baigiasi žodis.",
-      "why": "Rašydami ir skaitydami žodį, jo viduryje pauzių nedarome."
+      "answer": 2,
+      "hint": "Skaitydamas žodį sustok tik tada, kai jis baigiasi.",
+      "why": "Tarpai rodo pauzes žodžio viduje, o žodis rašomas vientisai."
     },
     {
       "q": "Skiemenys „o“ ir „buo“ ir „lys“ sudaro žodį…",
@@ -120,7 +120,7 @@
   ],
   "reflect": "Suplok savo vardą. Kiek skiemenų? O draugo vardas — kiek? Kuris ilgesnis?",
   "teacher": {
-    "goal": "Skiemeninio skaitymo įgūdis: sintezė (skiemenų jungimas) ir analizė (skiemenų skaičiavimas).",
+    "goal": "Skiemeninio skaitymo įgūdis: sintezė (skiemenų jungimas) ir analizė (skiemenų skaičiavimas). Programa jo atskiru 1–2 kl. pasiekimu neįvardija — jis remia B.1.2 skaitymo technikos prielaidą.",
     "prompt": "Kaip skaitysi žodį, kurį matai pirmą kartą?",
     "offline": "Žaisk „plojimų krepšį“: vardink daiktus klasėje, vaikas ploja skiemenis. Sudėk į dvi krūvas — vieno ir dviejų skiemenų.",
     "misconceptions": [
@@ -130,8 +130,9 @@
     ]
   },
   "sources": [
-    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“.",
-    "Lietuvių kalbos ir literatūros bendroji programa (2022), skaitymo ir teksto suvokimo pasiekimai, 1–2 kl."
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“, 1–2 kl. B.1.2: „Skaito savo poreikius ir galimybes atitinkančius tekstus, randa tekste aiškiai pateiktą informaciją.“",
+    "Ten pat, pradinio ugdymo pažinimo kompetencijos aprašas: „Raides jungia, sudaro skiemenis, žodžius, sakinius.“ Tai bendras aprašas, ne pasiekimų kodas.",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022): skiemens kaip atskiro 1–2 kl. pasiekimo neįvardija, D.1.3.1–D.1.3.4 — balsiai, priebalsiai, dvibalsiai. Modulis remia B.1.2 skaitymo technikos prielaidą, o ne atskirą pasiekimą. [PATIKRINTI] pilname BP tekste — vietiniame kataloge jo nėra."
   ],
   "svietimas1": [
     "1 žingsnis — mažiau temų, daugiau gylio: viena strategija (jungimas) praktikuojama giliai",

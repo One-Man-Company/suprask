@@ -17,6 +17,7 @@ Išėjimo kodas: 0 — visi teiginiai sutampa, 1 — bent vienas nesutampa.
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import re
 import sys
@@ -226,6 +227,75 @@ def check_architektura(check: Check, text: str, f: dict) -> None:
     for sim_file in sorted((ROOT / "assets" / "js" / "sims").glob("*.js")):
         if sim_file.name not in text:
             check.fail(f"{where}: struktūros medyje trūksta assets/js/sims/{sim_file.name}")
+
+    check_schedule(check, text)
+
+
+def role_schedule() -> dict[str, dict]:
+    """`ROLES` iš `agents/run.py` — perskaitomas iš AST, ne importuojant bėgiklį.
+
+    Importuoti negalima: `run.py` krauna `db`, `scope`, `pause`, t. y. daro
+    šalutinius veiksmus. AST skaitymas duoda tą patį sąrašą neįvykdęs nė eilutės,
+    ir nereikia antro sąrašo dokumentacijoje (LL-21: skaičius turi būti
+    perskaičiuojamas, ne perrašomas).
+    """
+    src = (ROOT / "agents" / "run.py").read_text(encoding="utf-8")
+    for node in ast.parse(src).body:
+        value = None
+        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            if node.target.id == "ROLES":
+                value = node.value
+        elif isinstance(node, ast.Assign) and len(node.targets) == 1:
+            if isinstance(node.targets[0], ast.Name) and node.targets[0].id == "ROLES":
+                value = node.value
+        if value is not None:
+            return ast.literal_eval(value)
+    return {}
+
+
+def check_schedule(check: Check, text: str) -> None:
+    """Ar ARCHITEKTURA tvarkaraščio lentelė atitinka `ROLES` grafikus.
+
+    Kodėl: 2026-11-13 lentelėje 5 iš 15 eilučių rodė laiką, kurio sistema
+    nebeturi (tikrintojas 06:40, nors timeris 05:50; kurejas 09:30, nors 09:00;
+    publikavimo agentas „kas 4 h“, nors 5 kartus per dieną). Tai dokumentas,
+    kuriuo vadovaujasi ir žmonės, ir agentai, o `check_docs_facts.py` tikrino
+    tik modulių skaičius — tvarkaraštis buvo vienintelė lentelė be vartų.
+    """
+    where = "docs/ARCHITEKTURA.md"
+    roles = role_schedule()
+    if not roles:
+        check.fail(f"{where}: nepavyko perskaityti ROLES iš agents/run.py")
+        return
+
+    rows: dict[str, str] = {}
+    for line in text.splitlines():
+        match = re.match(r"^\|\s*`([a-z][a-z-]+)`\s*\|([^|]*)\|", line)
+        if match:
+            rows[match.group(1)] = line
+
+    for role in sorted(set(roles) - set(rows)):
+        check.fail(f"{where}: tvarkaraščio lentelėje trūksta vaidmens `{role}`")
+
+    for role, line in sorted(rows.items()):
+        if role not in roles:
+            continue
+        cell = line.split("|")[2]
+        calendar = roles[role].get("on_calendar") or ""
+        calendars = calendar if isinstance(calendar, list) else [calendar]
+        expected = sorted({
+            clock[:5]
+            for entry in calendars
+            for clock in re.findall(r"\d{2}:\d{2}:\d{2}", entry)
+        })
+        found = sorted(set(re.findall(r"\d{2}:\d{2}", cell)))
+        if expected != found:
+            check.fail(
+                f"{where}:{line_of(text, line.strip())}: `{role}` laikas lentelėje {', '.join(found) or '—'}, "
+                f"o agents/run.py ROLES.on_calendar → {', '.join(expected) or '—'}"
+            )
+        else:
+            print(f"✔ {where}:{line_of(text, line.strip())}: `{role}` laikas = {', '.join(found)}")
 
 
 def check_grades_json(check: Check, f: dict) -> None:

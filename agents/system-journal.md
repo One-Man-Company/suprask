@@ -95,3 +95,62 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   visos dabar matomos architekto eilėje su amžiumi. #5834 lieka `blocked`:
   reikia žmogaus sprendimo, ar toliau vertinti kaip neįgyvendintą.
 
+## 2026-11-13 20:20 · sistemos-architektas #274
+
+- **Mačiau:** 241 paleidimas per 7 d.; nenaudingų — `tikrintojas` 25 % (8 paleid.,
+  1 tuščias), `metodininkas` 17 %, `ideator` 14 %, `kalbu-redaktorius` 11 %,
+  `publikavimo-agentas` 7 %. Pasiūlymai 107 (`new` 14, `done` 83, `blocked` 1,
+  `obsolete` 9), seniausias neapdorotas 5 d. Mano paties eilėje — 11 sisteminių,
+  9 laukė >3 d. (vienintelis `check_agents.py` įspėjimas). Trys iš jų buvo
+  viena klasė su aiškiu įrodymu: `check_audio.py` „✔ Garsas pilnas: 567 tekstų“,
+  nors simuliacijų kode buvę `api.speak("Visi taikiniai pasiekti!")` ir
+  `api.speak(S.pradek || "Bakstelėk figūrą.")` neturėjo įrašo; ARCHITEKTURA
+  tvarkaraščio lentelėje 5 iš 15 eilučių rodė laiką, kurio sistema neturi;
+  `add_optional_tasks.py` seną ID praleido tyliai, o „Pridėta 0“ skambėjo
+  kaip sėkmė.
+- **Keičiau:**
+  - `scripts/generate_audio.py` — `spoken_literals()`: statinės `api.speak("…")`
+    eilutės ir `||` atsarginiai sakiniai iš `assets/js/sims/*.js` (anksčiau
+    tekstai rinkti TIK iš `content/**.json` `sim.config`); `collect()` juos
+    įtraukia, todėl manifestas ir vartai ima atskaitą iš tos pusės, kurioje
+    vaikas girdi.
+  - `scripts/check_audio.py` — pranešama aprėptis („iš jų 8 — tiesioginės
+    api.speak eilutės“), kad dalinė aprėptis nebūtų rodoma kaip visuma.
+  - `scripts/check_docs_facts.py` — `check_schedule()`: `ROLES` skaitomas iš
+    `agents/run.py` per `ast` (ne importuojant bėgiklį), lentelės laikai lyginami
+    su `on_calendar`, trūkstamas vaidmuo — klaida.
+  - `docs/ARCHITEKTURA.md` — 5 tvarkaraščio eilutės pagal `ROLES` (tikrintojas
+    05:50, tyrejas 06:40, ideator 07:40, kurejas 09:00, publikavimo-agentas
+    5 kartus per dieną).
+  - `scripts/add_optional_tasks.py` — seni ID per `scripts/known_renames.json`,
+    aprėpties suvestinė, nieko neatitinkančių raktų sąrašas, `--check` (rc=1).
+  - `README.md` — garso skaičiai perskaičiuoti (569 tekstų, 1138 įrašų);
+    `research/wiki/guidelines/pamokos.md` — LL-90; `agents/runs.db` — #11235,
+    #4808, #14727, #15044 → `done` su įrodymais.
+- **Kodėl:** trys darbai turi vieną priežastį — **vartai ėmė atskaitą iš to
+  paties šaltinio, kurį saugo**. Garso vartai lygino manifestą su sąrašu,
+  sugeneruotu iš to paties `collect()`, todėl santykis buvo teisingas pagal
+  konstrukciją, kad ir ko jie nematė; dokumentų vartai lygino skaičius, kuriuos
+  patys perskaičiuoja, o tvarkaraštį paliko be vartų; optional įrankis dirbo
+  pagal raktą, kurio nebeliko. Visų trijų pasekmė matoma (viena — girdima)
+  vaikui, ne tik ataskaitoje.
+- **Patikra:** `check_audio.py` prieš → „✔ 567 tekstų, 1134 įrašų“; po taisymo
+  → `KLAIDA: 1 tekstų be garso įrašo: Visi taikiniai pasiekti!`, po `||`
+  šablonų → dar „Bakstelėk figūrą.“; sugeneravus garsą (Piper, 2 tekstai) →
+  „✔ 569 tekstų (iš jų 8 — tiesioginės api.speak eilutės), 1138 įrašų,
+  naudojama 1138 iš 1138 mp3“. `check_docs_facts.py` su `check_schedule()` →
+  5 klaidos su eilučių numeriais, pataisius lentelę → „0 klaidų, 0 įspėjimų“.
+  `add_optional_tasks.py` → „Modulių: 39 · su praplėtimu: 39 · be praplėtimo: 0“,
+  „Atpažinta pagal pervadinimą (1): 03-sakinio-tvarka → 03-sakinio-zodziai“;
+  scratch zondas: nuėmus `optional` → `--write` grąžina, `--check` su spragą
+  turinčiu moduliu → `rc=1`. Kiti vartai: `validate_content.py --grade 1` 0/0,
+  `check_language.py --grade 1` 0 klaidų (7 įspėjimai — buvę), `check_ui.py`
+  0/0, `check_art.py` ✔, `check_lessons.py` ✔ 90 įrašų, `check_agents.py`
+  15 vaidmenų, 1 įspėjimas (7 seni sisteminiai). `system_report.py` po:
+  `new` 14→10, `done` 83→87, sisteminė eilė 11→7.
+- **Neišspręsta sąmoningai:** #4455, #4516 (turinio sprendimas, ne vartai),
+  #5190, #5342, #5400, #7396/#4921 (`check_view.py` 200 % tekstas ir <360 px —
+  reikia Playwright matavimo), #15045 (alias `progress.js` — kito vaidmens
+  failas), #5834 (`blocked` — žmogaus sprendimas). `agents/scope.json`,
+  `content/`, `assets/js/sims/`, CSS ir kitos klasės neliestos.
+

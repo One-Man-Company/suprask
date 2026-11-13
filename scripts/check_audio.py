@@ -62,6 +62,7 @@ def check(probe_engine: bool = True) -> dict:
 
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     texts = generate_audio.collect()
+    literals = generate_audio.spoken_literals()
     refs = referenced(manifest)
     disk = on_disk()
 
@@ -103,6 +104,7 @@ def check(probe_engine: bool = True) -> dict:
     return {
         "ok": not missing and not wrong_engine,
         "texts": len(texts),
+        "literals": len(literals),
         "referenced": len(refs),
         "on_disk": len(disk),
         "orphans": orphans,
@@ -152,7 +154,8 @@ def main() -> int:
 
     used = data["referenced"]
     total = data["on_disk"]
-    print(f"✔ Garsas pilnas: {data['texts']} tekstų, {used} įrašų, visi iš Piper balso, "
+    print(f"✔ Garsas pilnas: {data['texts']} tekstų (iš jų {data['literals']} — tiesioginės "
+          f"api.speak eilutės simuliacijų kode), {used} įrašų, visi iš Piper balso, "
           f"naudojama {used} iš {total} mp3.")
 
     if data["orphans"]:

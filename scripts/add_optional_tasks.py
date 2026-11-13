@@ -111,37 +111,100 @@ OPTIONAL = {
 }
 
 
+def rename_map() -> dict[str, str]:
+    """Seno ID → naujo ID iš `scripts/known_renames.json`.
+
+    Kodėl: 2026-11-13 `OPTIONAL` raktai ėjo pagal senus ID („03-sakinio-tvarka“),
+    o modulis jau „03-sakinio-zodziai“. Toks modulis buvo tyliai praleidžiamas —
+    įrankis pranešdavo „Pridėta 0“, lyg viskas būtų padaryta. Čia tas pats
+    žemėlapis, kuriuo remiasi `check_published.py`, kad pervadinimas nebūtų
+    kiekvieno įrankio problema atskirai.
+    """
+    path = ROOT / "scripts" / "known_renames.json"
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return {entry["from"]: entry["to"] for entry in data.get("renames", []) if entry.get("from") and entry.get("to")}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--write", action="store_true")
+    ap.add_argument("--check", action="store_true",
+                    help="grąžina 1, jei liko modulių be praplėtimo arba OPTIONAL raktas nieko neatitinka")
     args = ap.parse_args()
 
+    aliases = rename_map()
+    old_id = {new: old for old, new in aliases.items()}  # dabartinis ID → OPTIONAL raktas
     changed = 0
+    seen = 0
+    with_optional: list[str] = []
+    without_optional: list[str] = []
+    used_keys: set[str] = set()
+    via_rename: list[str] = []
+
     for path in sorted(CONTENT.glob("grade-*/**/*.json")):
-        if path.name == "index.json":
+        if path.name in {"index.json", "path.json"}:
             continue
         data = json.loads(path.read_text(encoding="utf-8"))
-        mid = data.get("id")
-        extra = OPTIONAL.get(mid)
-        if not extra:
+        mid = str(data.get("id") or "")
+        if not mid:
+            print(f"{path.relative_to(ROOT)}: trūksta „id“ — praleista")
             continue
+        seen += 1
+        key = old_id.get(mid)
+        extra = OPTIONAL.get(mid)
+        if extra:
+            used_keys.add(mid)
+        elif key and key in OPTIONAL:
+            # Modulis pervadintas: praplėtimo tekstas galioja ir toliau, tik
+            # raktas likęs senas. Atpažįstama per `known_renames.json`, o ne
+            # tyliai praleidžiama.
+            extra = OPTIONAL[key]
+            used_keys.add(key)
+            via_rename.append(f"{key} → {mid}")
+
         tasks = data.setdefault("tasks", [])
         if any(t.get("optional") for t in tasks):
+            with_optional.append(mid)
+            continue
+        if not extra:
+            without_optional.append(mid)
             continue
         if len(tasks) >= 5:
-            print(f"{mid}: jau 5 užduotys — praleista")
+            without_optional.append(mid)
+            print(f"{mid}: jau 5 užduotys, praplėtimo nėra — praleista (reikia žmogaus sprendimo)")
             continue
         task = dict(extra)
         task["optional"] = True
         tasks.append(task)
         changed += 1
+        with_optional.append(mid)
         print(f"{mid}: +1 praplėtimo užduotis (viso {len(tasks)})")
         if args.write:
             path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
+    unused = sorted(set(OPTIONAL) - used_keys)
+
+    print(f"\nModulių: {seen} · su praplėtimu: {len(with_optional)} · be praplėtimo: {len(without_optional)}")
+    if via_rename:
+        print(f"Atpažinta pagal pervadinimą ({len(via_rename)}): " + "; ".join(via_rename))
+        print("  → praplėtimo tekstas rastas, bet raktą verta pervadinti į dabartinį ID")
+    if unused:
+        print(f"OPTIONAL raktai, kurių né vienas modulis neatitinka ({len(unused)}): "
+              + ", ".join(unused))
+        print("  → tai seni ID: įrašyk juos į scripts/known_renames.json arba pašalink iš OPTIONAL")
+    if without_optional:
+        print("Moduliai be praplėtimo užduoties: " + ", ".join(without_optional))
+        print("  → validate_content.py reikalauja „optional“ kiekviename modulyje")
     print(f"\n{'Pridėta' if args.write else 'Būtų pridėta'} užduočių: {changed}")
     if not args.write:
         print("Sausas bėgimas. Įrašymui pridėk --write")
+    if args.check and (unused or without_optional or changed):
+        return 1
     return 0
 
 

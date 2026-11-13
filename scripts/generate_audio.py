@@ -22,6 +22,7 @@ import hashlib
 import json
 import os
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -154,8 +155,47 @@ def _all_strings(v):
             yield from _all_strings(x)
 
 
+SPEAK_LITERAL = re.compile(
+    r"""api\.speak\(\s*(?:"([^"\\\n]{2,120})"|'([^'\\\n]{2,120})'|`([^`\\$\n]{2,120})`)"""
+)
+# Atsarginis tekstas: `api.speak(S.pradek || "Bakstelėk figūrą.")`. Toks sakinys
+# tariamas tada, kai config reikšmės nėra, todėl jis taip pat yra vaikui
+# girdimas tekstas (proposal #4808). Skiriamas nuo `api.speak(line("tiese"))`,
+# kur „tiese“ yra config raktas, o ne sakinys.
+SPEAK_FALLBACK = re.compile(r"""api\.speak\([^;\n]{0,160}?\|\|\s*"([^"\\\n]{2,120})"\s*\)""")
+
+
+def spoken_literals() -> set[str]:
+    """Sakiniai, kuriuos simuliacija taria tiesiogine eilute, o ne iš `sim.config`.
+
+    Kodėl tai reikia rinkti: `collect()` iki šiol ėmė tekstus TIK iš modulių JSON
+    (`sim.config` raktų) ir `EXTRA`. Simuliacijų kode likę `api.speak("…")`
+    sakiniai nebuvo renkami, todėl jų niekas nesugeneruodavo ir `check_audio.py`
+    jų nematė — vaikas paspaudęs mygtuką negirdėdavo nieko, o vartai sakydavo
+    „Garsas pilnas“. Šiandien (2026-11-13) toks buvo „Visi taikiniai pasiekti!“
+    (matematika.js) — sėkmės pranešimas, kuris tyliai iškrisdavo.
+
+    Imamos tik statinės eilutės: šablonai su `${…}` ir kintamieji (`String(x)`)
+    praleidžiami, nes jų teksto iš anksto sugeneruoti negalima. Tai žinoma
+    riba: kintamas tekstas lieka naršyklės balsui (arba tyla) ir į šį vartų
+    sąrašą nepatenka.
+    """
+    texts: set[str] = set()
+    for path in sorted((ROOT / "assets" / "js" / "sims").glob("*.js")):
+        src = path.read_text(encoding="utf-8")
+        for match in SPEAK_LITERAL.finditer(src):
+            literal = next((g for g in match.groups() if g), "")
+            if literal.strip():
+                texts.add(literal.strip())
+        for match in SPEAK_FALLBACK.finditer(src):
+            if match.group(1).strip():
+                texts.add(match.group(1).strip())
+    return texts
+
+
 def collect() -> list[str]:
     texts: set[str] = set(EXTRA)
+    texts |= spoken_literals()
     keys = {"word", "syllables", "words", "sentences", "label"}
     for path in sorted(CONTENT.glob("grade-*/**/*.json")):
         if path.name == "index.json":

@@ -2,6 +2,16 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-13 (19:47) — Publikavimo patikra #273: 39/39 sutampa; vartai nustojo teigti, kad žyma „nebegalioja“
+
+- **Būsena:** `HEAD` = `origin/main` = `a7936290`, `git rev-list --left-right --count origin/main...HEAD` → `0 0`, darbinė kopija po darbo turi tik `scripts/check_published.py` (šio paleidimo taisymas) ir du naujus pasiūlymų failus. Gyvas `index.html` neša `?v=a7936290` — svetainė pastatyta iš šio commit'o (`live_version` = `repo_version`).
+- **`check_published.py`:** repo 39 / paskelbta 39 (`grade-01: repo 39, gyvai 39`); `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `aux_stale` 0, `shell_stale` 0, `shell_unreachable` 0, `path_differs` `[]`, `unpushed_commits` 0, `shell_count` 17, `verdict.label` = `sutampa`, `rc=0`. Modulių, `index.json`, `path.json`, `grades.json`, garso manifesto ir svetainės kodo baitai sutampa su gyvais.
+- **3 gyvi adresai:** `content/lt/grade-01/matematika/04-skaiciu-tiese.json` → `200`; `…/lietuviu-kalba/03-sakinio-zodziai.json` → `200`; `…/pasaulio-pazinimas/16-vandens-busenos.json` → `200`.
+- **Ką keitė šis paleidimas:** `scripts/check_published.py:579–583` priimto pervadinimo eilutė skelbė „(žyma tam moduliui nebegalioja)“. Tai netiesa: `assets/js/progress.js:31` žymą saugo pagal modulio ID, `get():77` ir `count():88–96` lygina tą patį raktą, o `grep 'renamed|alias|sakinio-tvarka' assets/js` → 0 atvejų, t. y. naršyklė senojo ID net nepažįsta. Įrašas `scripts/known_renames.json` yra vartų sprendimas, ne pasekmės panaikinimas — dabar išvestis tai ir sako („žyma už seno ID vaiko naršyklėje LIEKA — alias mechanizmo nėra“), o `rc` ir `verdict` nepasikeitė. Nauja pamoka LL-89 (`guidelines/pamokos.md`).
+- **Eilės įrašai (pirmą kartą, po #271 ataskaitoje likusio pažado):** `agents/proposals/2026-11-13-publikavimo-agentas-progreso-alias.json` (high, `progress.js` + `index.json` laukas `renamed_from`) ir `agents/proposals/2026-11-13-publikavimo-agentas-add-optional-rakto-likutis.json` (low, `scripts/add_optional_tasks.py`: 13 raktų 39 moduliams, vienas raktas — į jau nebeegzistuojantį `03-sakinio-tvarka`; 39/39 moduliai šiandien turi po lygiai vieną `optional` užduotį, tad defektas latentinis).
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0 klaidų, 0 įspėjimų, `rc=0`; `check_docs_facts.py` → 0/0 (9 kryptys, 39 moduliai, 39 simuliacijos, 169 užduotys, 567 garso tekstai, 1 134 įrašai); `check_agents.py` → 15 vaidmenų, `rc=0`, 2 įspėjimai (abu seni).
+- **Sprendimas:** **sutampa**. Niekas nešalinta, ID nepernumeruoti, `index.json` / `path.json` / `grades.json` / garsas / turinys neliesti. Ataskaita `agents/log/publikavimo-agentas-2026-11-13T1947.md`.
+
 ## 2026-11-13 (16:40) — Publikavimo patikra #272: repo 39 / paskelbta 39, trys nauji moduliai gyvai, pervadinimas matomas istorijoje
 
 - **Būsena:** `HEAD` = `origin/main` = `4e381f15` (`git rev-list --left-right --count origin/main...HEAD` → `0 0`), darbinė kopija švari (`git status --porcelain -uall` → 0 eilučių). Gyvas `index.html` neša `?v=4e381f15` — svetainė pastatyta būtent iš šio commit'o.

@@ -578,7 +578,8 @@ def main() -> int:
         print(f"Pervadinti ID, priimta ir užregistruota ({len(accepted)}):")
         for v in accepted:
             print(f"  - grade-{v['grade']:02d} {v['id']} → {v['successor']} "
-                  f"(žyma tam moduliui nebegalioja)")
+                  f"(registruota; žyma už seno ID vaiko naršyklėje LIEKA — "
+                  f"alias mechanizmo nėra, žr. agents/proposals/)")
     if data.get("history_note"):
         print(f"Dingusių ID patikros riba: {data['history_note']}")
     if data["path_differs"]:

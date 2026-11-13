@@ -1,0 +1,19 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 273,
+  "created": "2026-11-13T19:40:00+02:00",
+  "type": "struktura",
+  "title": "Pervadintas modulis praranda vaiko pažangą: reikia alias žemėlapio, kurį skaito naršyklė",
+  "body": "Aštuonioliktame publikavimo patikros paleidime vartai rodo, kad repo ir gyva svetainė sutampa 39/39, o modulio 03-sakinio-tvarka žyma vaiko naršyklėje vis dar yra. Kai modulis pervadintas į 03-sakinio-zodziai, abi pusės pasikeitė kartu, tad publikavimo vartai buvo žali, o vaikas, kuris tą modulį jau buvo atlikęs, dabar mato jį kaip neatliktą ir jo darbo nebeatpažįsta. Tai ne kosmetika: gairių T3.5 ir T3.6 reikalauja, kad perėjimas neprarastų konteksto, o pažanga yra vienintelis platformos atminties sluoksnis. Siūlau dviejų dalių sprendimą. Pirma, index.json modulio įrašas gauna neprivalomą lauką renamed_from (masyvas senų ID), kuris keliauja su turiniu ir todėl jau yra paskelbtas be jokio papildomo failo. Antra, progress.js skaitymo kelyje (slot, get, count) senas ID pakeičiamas dabartiniu ir žyma perrašoma vieną kartą, kad ji nebūtų migruojama per kiekvieną puslapio atidarymą. Be to, projekto duomenų failas scripts/known_renames.json negali būti vienintelė vieta: jo svetainė neskaito, jis matomas tik vartams. Jei laukas atmetamas, reikia atskiro served failo content/lt/<klase>/aliases.json; tada KURINIO-STANDARTAS turi būti papildytas tuo pačiu pakeitimu, kad schema ir validatorius nesiskirtų.",
+  "target": "assets/js/progress.js + content/lt/grade-01/index.json (modulio įrašo laukas renamed_from)",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/progress.js:31 — slot() saugo ir skaito žymą tik pagal modulio ID, jokio alias atvejo nėra; get():77 ir count():88–96 lygina tą patį raktą",
+    "assets/js/ — grep 'renamed|alias|sakinio-tvarka' teksto kode: 0 atvejų, t. y. naršyklė senojo ID net nepažįsta",
+    "scripts/known_renames.json — priimtas pervadinimas 03-sakinio-tvarka → 03-sakinio-zodziai (paleidimas #261), bet failas yra įrankio duomenys, ne served turinys",
+    "docs/SVIETIMAS-1-GAIRES.md:49 (T3.6) — perėjimas tarp klasių ir temų niekada nepraranda konteksto",
+    "docs/SVIETIMAS-1-GAIRES.md:48 (T3.5) — pažanga matoma vaikui paprastai (atlikta / ne)",
+    "research/wiki/changelog.md įrašas 2026-11-13 (16:40) — pasekmė įvardyta, bet nepaversta darbu"
+  ]
+}

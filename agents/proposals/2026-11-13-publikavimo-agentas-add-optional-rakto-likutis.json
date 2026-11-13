@@ -1,0 +1,18 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 273,
+  "created": "2026-11-13T19:42:00+02:00",
+  "type": "struktura",
+  "title": "Praplėtimo užduočių įrankis tyliai praleidžia modulius: raktas į seną ID ir nė vieno pranešimo",
+  "body": "scripts/add_optional_tasks.py laiko užduotis žodyne pagal modulio ID. Šiandien tame žodyne yra 13 raktų, o modulių — 39, ir vienas raktas (03-sakinio-tvarka) rodo į ID, kurio nebėra nuo pervadinimo #261. Tai nėra šiandien matomas turinio defektas: kiekvienas 39 modulių jau turi lygiai vieną optional užduotį, tad validatorius žalias. Bet įrankis turi dvi tylėjimo formas. Pirma, raktas be modulio nieko neveikia ir niekas to nepraneša — po kiekvieno pervadinimo lieka vis daugiau neveikiančių raktų, o kitas žmogus, pridėjęs užduotį „senam“ moduliui, nematys, kad ji niekur nepateko. Antra, modulis be rakto tiesiog praleidžiamas — t. y. įrankis, kurio paskirtis užtikrinti gairių T3.4 (bent viena gilesnė užduotis), negali pasakyti, kuriems moduliams jos trūksta. Siūlau: (a) pakeisti raktą 03-sakinio-tvarka → 03-sakinio-zodziai (arba išimti, jei užduotis jau yra modulyje); (b) paleidus be --write, įrankis spausdintų tris aibes — raktai be modulio, moduliai be rakto, moduliai be optional užduoties — ir grąžintų rc 1, jei pirmoji arba trečioji netuščia. Taip tas pats įrankis tampa ataskaita, o ne vienkartiniu rašymu.",
+  "target": "scripts/add_optional_tasks.py",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "scripts/add_optional_tasks.py — OPTIONAL žodynas, 13 raktų; tarp jų 03-sakinio-tvarka",
+    "content/lt/grade-01/index.json — 39 modulių ID; 03-sakinio-tvarka tarp jų nėra, yra 03-sakinio-zodziai",
+    "scripts/known_renames.json — tas pats pervadinimas užregistruotas (paleidimas #261)",
+    "Patikra šiame paleidime: 39/39 moduliai turi lygiai vieną optional:true užduotį, todėl defektas latentinis, ne matomas",
+    "docs/SVIETIMAS-1-GAIRES.md:47 (T3.4) — kiekviename modulyje numatyta bent viena gilesnė užduotis"
+  ]
+}

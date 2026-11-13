@@ -2,6 +2,17 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-13 (06:23) — Publikavimo patikra #257: repo 37 / paskelbta 37, veidrodžių A/B/C scenarijai išmatuoti pirmą kartą
+
+- **`check_published.py`** → repo 37, paskelbta 37, `grade-01: repo 37, gyvai 37`; `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `aux_stale` 0, `shell_stale` 0, `shell_unreachable` 0, `path_differs` [], `live_error` tuščias, `unpushed_commits` 0, `verdict.label` = `sutampa`, `rc=0` (4,7 s).
+- **Pastatyta iš `HEAD`:** `HEAD` = `origin/main` = `3d8f4782` (`git rev-list --left-right --count origin/main...HEAD` → `0 0`), darbinė kopija švari (`git status --porcelain -uall` → 0 eilučių), gyvas `index.html` neša `?v=3d8f4782` — svetainė pastatyta būtent iš šio commit'o. Svetainės kodas: **17 failų** baitais sutampa po `?v=` žymos nuėmimo.
+- **3 gyvi adresai (+2):** `matematika/25-ilgis-ir-vienetas.json` `200` (8812 B), `lietuviu-kalba/01-garsas-ir-raide.json` `200` (5044 B), `pasaulio-pazinimas/16-vandens-busenos.json` `200` (4946 B); papildomai `grade-01/index.json` `200` (11 209 B) ir `assets/audio/lt/manifest.json` `200` (60 758 B).
+- **A/B/C veidrodžiai (paleisti, o ne tik paruošti — #255 tai buvo palikę atvirą):** (A) `127.0.0.1:8976`, `assets/js/sims/muzika.js` 23 121 B prieš repo 23 086 B → `PASENĘS KODAS — naršyklė vykdo kitą failą`, `rc=1`; (B) `:8977`, to paties failo nėra → `NEPASIEKIAMI svetainės kodo failai`, `rc=1`; (C) `:8978`, failai **tie patys**, skiriasi tik `?v=3f05969b` žyma → `rc=0`, `sutampa`, o `live_version` rodomas kaip informacija, ne kaip defektas. Taigi #253 įrankio pakeitimas veikia į abi puses: kodo skirtumą pagauna, žymos nepaverčia klaidingu signalu.
+- **Naršyklė prieš gyvą bazę:** `check_view.py --base <gyva> --module 25-ilgis-ir-vienetas --viewports phone,small` → 2 patikros, 0 problemų, `rc=0`; `--module 03-sakinio-tvarka` → 2 patikros, 0 problemų.
+- **Garsas:** manifestas 543 raktai; imtis `seed 257` (4 raktai × `n`/`s`) → **8/8** `200`, `ID3`, 14 462–51 869 B. Struktūrinė patikra, kurios manifestas vienas nepajėgia: `git ls-files 'assets/audio/lt/*.mp3'` = **1086** ir diske = **1086** — nė vienas įrašas nėra netrackintas, todėl manifeste esantis takas negali duoti 404 dėl `.gitignore`.
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0 klaidų, 0 įspėjimų (`rc=0`); `check_docs_facts.py` → 0 klaidų, 0 įspėjimų (9 kryptys, 37 moduliai, 37 sim., 161 užduotis, 543 garso tekstai, 1086 įrašai).
+- **Sprendimas:** **sutampa**. Nieko nešalinta, ID nepernumeruoti, `index.json` / `path.json` / `grades.json` / garso manifestas neliesti. Šis įrašas uždengia ir #255 (2026-11-12 23:04), kurio changelog eilutė nebuvo įrašyta, o skaičiai buvo tie patys (37/37 prie `3f05969b`). Nauja pamoka **LL-84** (vartai lygino tai, ką vaikas turėtų matyti, o ne tai, ką naršyklė vykdo). Ataskaita `agents/log/publikavimo-agentas-2026-11-13T0623.md`.
+
 ## 2026-11-12 (16:37) — Publikavimo patikra #252 (leidėjas): repo 37 / gyvai 37, 74 gyvos naršyklės patikros, 0 problemų
 
 - **Būsena:** `HEAD` = `7b7e445`, `origin/main` = `dde4bae`, neišstumtų commit'ų 1 (bėgiklio šlavimo commit'as `7b7e445` — 5 failai, visi `agents/`, `research/`, `scripts/`). Nė vienas jo failas nepublikuojamas: `git diff --name-only dde4bae..HEAD | grep -E "^(index\.html|404\.html|assets/|content/)"` → **0 eilučių**, nes `pages.yml` į `_site` kopijuoja tik `index.html`, `404.html`, `assets/`, `content/`. Darbinė kopija švari.

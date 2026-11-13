@@ -3,7 +3,7 @@
   "grade": 1,
   "strand": "matematika",
   "title": "Erdvinės figūros",
-  "subtitle": "Kūgis tas pats — iš priekio trikampis, iš viršaus apskritimas",
+  "subtitle": "Vienas kūgis: iš priekio trikampis, iš viršaus apskritimas",
   "minutes": 9,
   "outcomes": [
     "Skiriu kūną nuo jo vaizdo. Kūgis iš priekio atrodo kitaip nei iš viršaus.",
@@ -12,7 +12,7 @@
   ],
   "concept": {
     "title": "Tas pats kūnas, kitas vaizdas",
-    "big_idea": "Iš skirtingų pusių tas pats kūnas atrodo skirtingai. Kūgis iš priekio atrodo kaip trikampis. Iš viršaus jis atrodo kaip apskritimas. Tačiau kūgis visą laiką lieka vienas.",
+    "big_idea": "Vienas kūnas iš skirtingų pusių atrodo kitaip. Kūgis iš priekio atrodo kaip trikampis. Iš viršaus jis atrodo kaip apskritimas. Bet tai vis dar vienas kūgis.",
     "steps": [
       "Pasirink kūną. Žiūrėk iš priekio, iš viršaus ar nuo šono.",
       "Spėk, kokią formą matai, ir spausk jos mygtuką.",
@@ -28,11 +28,11 @@
       "labels": {
         "solidCaption": "Kūnas ant stalo",
         "flatCaption": "Ką matai",
-        "viewsHeading": "Iš kur žiūri? Ką matei, lieka po mygtuku.",
+        "viewsHeading": "Iš kur žiūrėsi? Mygtuke matysi, ką jau matei.",
         "shapesHeading": "Kokią formą matai?"
       },
       "notes": {
-        "prompt": "Tas pats kūnas iš skirtingų pusių atrodo skirtingai.",
+        "prompt": "Vienas kūnas iš skirtingų pusių atrodo kitaip.",
         "revealed": "Pats kūnas nepasikeitė. Pasikeitė tik vaizdas.",
         "lookRight": "Pažiūrėk į paveikslą dešinėje.",
         "goal": "Trys vaizdai, vienas kūnas.",
@@ -44,8 +44,8 @@
       "bodies": {
         "kugis": "Kūgio pagrindas apvalus, o viršus smailas.",
         "ritinys": "Ritinio galai apvalūs, o šonas tiesus.",
-        "kubas": "Visos kubo sienos yra kvadratai.",
-        "gretasienis": "Visos jo sienos yra stačiakampiai.",
+        "kubas": "Visos kubo pusės yra kvadratai.",
+        "gretasienis": "Visos gretasienio pusės yra stačiakampiai.",
         "rutulys": "Rutulys apvalus iš visų pusių."
       },
       "sentences": {
@@ -78,33 +78,33 @@
         "Kvadratą"
       ],
       "answer": 1,
-      "hint": "Pažiūrėk, ką kūnis turi apačioje.",
+      "hint": "Pažiūrėk, kokia kūgio apačia.",
       "why": "Kūgio pagrindas apvalus, todėl iš viršaus matai apskritimą."
     },
     {
-      "q": "Konservų dėžutė stovi. Iš priekio matai stačiakampį, iš viršaus — apskritimą. Kuris tai kūnas?",
+      "q": "Konservų dėžutė stovi. Iš priekio matai stačiakampį. Iš viršaus matai apskritimą. Kuris tai kūnas?",
       "options": [
         "Kubas",
         "Rutulys",
         "Ritinys"
       ],
       "answer": 2,
-      "hint": "Palygink dėžutę su kubu. Ar dėžutė turi kampus?",
+      "hint": "Kubas iš viršaus atrodo kaip kvadratas. Pažiūrėk į dėžutę iš viršaus.",
       "why": "Ritinio šonas tiesus, o abu galai apvalūs."
     },
     {
-      "q": "Kauliukas yra kubas. Kuri forma matoma iš viršaus?",
+      "q": "Kauliukas yra kubas. Kuri forma matosi iš viršaus?",
       "options": [
         "Kvadratas",
         "Apskritimas",
         "Trikampis"
       ],
       "answer": 0,
-      "hint": "Pažiūrėk į kubą simuliacijoje iš viršaus.",
-      "why": "Visos kubo sienos yra kvadratai, todėl vaizdas toks pat."
+      "hint": "Simuliacijoje pasirink kubą. Pažiūrėk, kas matosi iš viršaus.",
+      "why": "Visos kubo pusės yra kvadratai. Todėl iš viršaus matai kvadratą."
     },
     {
-      "q": "Kamuolys ir lėkštė abu apvalūs. Kuo kamuolys skiriasi nuo lėkštės?",
+      "q": "Kamuolys apvalus. Lėkštė irgi apvali. Kuo kamuolys skiriasi nuo lėkštės?",
       "options": [
         "Kamuolys plokščias",
         "Kamuolys apvalus iš visų pusių",
@@ -115,19 +115,19 @@
       "why": "Rutulys (kamuolys) apvalus iš visų pusių, o lėkštė plokščia."
     },
     {
-      "q": "Iš priekio matai trikampį, iš viršaus — apskritimą. Kuris kūnas taip atrodo?",
+      "q": "Iš priekio matai trikampį. Iš viršaus matai apskritimą. Kuris tai kūnas?",
       "options": [
         "Kūgis",
         "Ritinys",
         "Kubas"
       ],
       "answer": 0,
-      "hint": "Palygink su ritiniu: ar jo viršus smailus?",
+      "hint": "Palygink su ritiniu. Ar ritinio viršus smailus?",
       "why": "Kūgis siaurėja į viršų, o jo pagrindas apvalus.",
       "optional": true
     }
   ],
-  "reflect": "Rask klasėje daiktą, kuris iš skirtingų pusių atrodo skirtingai. Kaip jis atrodo iš viršaus?",
+  "reflect": "Rask klasėje daiktą, kuris iš kiekvienos pusės atrodo kitaip. Kaip jis atrodo iš viršaus?",
   "teacher": {
     "goal": "Atpažinti ir įvardyti kubą, rutulį, ritinį, kūgį ir stačiakampį gretasienį bei suprasti, kad tas pats kūnas iš skirtingų pusių atrodo skirtingai, o pats kūnas nesikeičia. Briaunų, viršūnių ir sienų neskaičiuojame — tai ne 1 klasės programa.",
     "prompt": "Kodėl tas pats kūgis iš vienos pusės atrodo kaip trikampis, o iš kitos — kaip apskritimas?",

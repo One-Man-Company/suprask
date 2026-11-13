@@ -2,6 +2,15 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-13 (23:06) — Publikavimo patikra #275: 39/39 sutampa, garsas išmatuotas 1 138/1 138, jokių pakeitimų
+
+- **Būsena:** `HEAD` = `origin/main` = `27635c28`, `git rev-list --left-right --count origin/main...HEAD` → `0	0`, darbinė kopija prieš darbą švari (0 eilučių). Gyvas `index.html` neša `?v=27635c28` — svetainė pastatyta iš šio commit'o. Neišstumtų commit'ų: 0.
+- **`check_published.py`:** repo 39 / paskelbta 39 (`grade-01: repo 39, gyvai 39`); `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `aux_stale` 0, `shell_stale` 0, `shell_unreachable` 0, `path_differs` `[]`, `shell_count` 17, `history_checked` true, `verdict.label` = `sutampa`, `rc=0` (6,2 s).
+- **3 gyvi adresai (+3):** `matematika/04-skaiciu-tiese.json` → `200` (3 636 B), `lietuviu-kalba/03-sakinio-zodziai.json` → `200` (5 459 B), `pasaulio-pazinimas/16-vandens-busenos.json` → `200` (4 932 B); papildomai `/` `200` (3 487 B), `grade-01/index.json` `200` (11 741 B), `assets/audio/lt/manifest.json` `200` (63 966 B = repo baitai).
+- **Vientisumas, kurio vartai nemato:** `index.json` 39 nuorodos ↔ 39 failai diske (našlaičių 0 abiem kryptimis); `path.json` 39 unikalių ID, ne sekoje/ne indekse — 0; `03-sakinio-tvarka` kode (`*.json/*.js/*.html`) — 0 atvejų. **Garsas:** manifestas 569 raktai → 1 138 nuorodų, trūkstamų diske 0, diske be manifesto 0, `git ls-files` = diskas = **1 138**, gyvai 1 138 × `200`, ne 200 — 0.
+- **Ką keitė šis paleidimas:** nieko — nebuvo defekto. Praėjusį kartą (#273) vienintelis pakeitimas buvo įrankio išvesties eilutė, kuri teigė daugiau, nei matė; pakartoti tokį ėjimą be radinio būtų ta pati klaida.
+- **Sprendimas:** **sutampa**. Nieko nešalinta, ID nepernumeruoti, `content/**`, `assets/**`, `scripts/**`, `docs/**` neliesti. Ataskaita `agents/log/publikavimo-agentas-2026-11-13T2306.md`. Atvira lieka tik alias problema (#15045) — `assets/js/progress.js` darbas, ne publikavimo.
+
 ## 2026-11-13 (19:47) — Publikavimo patikra #273: 39/39 sutampa; vartai nustojo teigti, kad žyma „nebegalioja“
 
 - **Būsena:** `HEAD` = `origin/main` = `a7936290`, `git rev-list --left-right --count origin/main...HEAD` → `0 0`, darbinė kopija po darbo turi tik `scripts/check_published.py` (šio paleidimo taisymas) ir du naujus pasiūlymų failus. Gyvas `index.html` neša `?v=a7936290` — svetainė pastatyta iš šio commit'o (`live_version` = `repo_version`).

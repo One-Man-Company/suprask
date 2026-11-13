@@ -3,22 +3,22 @@
   "grade": 1,
   "strand": "matematika",
   "title": "Šimto lentelė: žemyn reiškia dešimt",
-  "subtitle": "Į dešinę skaičius padidėja vienu, žemyn — dešimčia",
+  "subtitle": "Į dešinę skaičius padidėja vienu, o žemyn padidėja dešimčia",
   "minutes": 9,
   "outcomes": [
-    "Skaitau šimto lentelę: į dešinę skaičius padidėja vienu, žemyn — dešimčia.",
-    "Paaiškinu, kodėl lentelėje po 19 žemiau stovi 29, o ne 20."
+    "Skaitau šimto lentelę. Į dešinę skaičius padidėja vienu, o žemyn padidėja dešimčia.",
+    "Paaiškinu, kodėl žemiau 19 stovi 29, o ne 20."
   ],
   "concept": {
     "title": "Lentelė, o ne sąrašas",
-    "big_idea": "Šimto lentelėje skaičiai sustatyti dešimtukais. Todėl kaimynas žemiau yra dešimčia didesnis, o ne vienu.",
+    "big_idea": "Šimto lentelėje skaičiai sustatyti dešimtukais. Todėl skaičius žemiau yra dešimčia didesnis, o ne vienu.",
     "steps": [
-      "Rask 19. Jis stovi antros eilutės gale.",
+      "Rask 19. Jis stovi antroje eilutėje, devintas.",
       "Nueik vienu langeliu žemyn ir atsidursi ties 29.",
-      "Palygink: pabaiga ta pati (9), o dešimtis kita (1 ir 2).",
-      "Į dešinę nuo 19 yra 20, nes ten keičiasi pabaiga."
+      "Palygink 19 ir 29. Pabaiga ta pati, o dešimtis kita.",
+      "Į dešinę nuo 19 yra 20: ten skaičius didėja vienu."
     ],
-    "example": "Ant sienos pakabintas šimto langelių plakatas. Pirštu nuo 19 žemyn — 29, o į dešinę — 20."
+    "example": "Ant sienos kabo šimto langelių plakatas. Pirštu nueik nuo 19 žemyn ir rasi 29. Į dešinę rasi 20."
   },
   "sim": {
     "component": "simto-lentele",
@@ -39,7 +39,7 @@
   },
   "tasks": [
     {
-      "q": "Simuliacijoje nuo 19 nuėjai žemyn. Kuris skaičius dabar pažymėtas?",
+      "q": "Simuliacijoje nuo 19 eini vienu langeliu žemyn. Kuris skaičius pažymėtas?",
       "options": [
         "20",
         "29",
@@ -50,7 +50,7 @@
       "why": "19 + 10 = 29, todėl žemiau stovi 29."
     },
     {
-      "q": "Kuris skaičius lentelėje stovi tiesiai po 46?",
+      "q": "Kuris skaičius yra vienu langeliu žemyn nuo 46?",
       "options": [
         "47",
         "45",
@@ -58,7 +58,7 @@
       ],
       "answer": 2,
       "hint": "Skaičiuok dešimtukais, o ne po vieną.",
-      "why": "46 + 10 = 56, todėl po 46 stovi 56."
+      "why": "46 + 10 = 56, todėl žemiau 46 stovi 56."
     },
     {
       "q": "Kuris skaičius stovi vienu langeliu į dešinę nuo 72?",
@@ -68,34 +68,34 @@
         "82"
       ],
       "answer": 0,
-      "hint": "Dešinėn skaičius didėja vienu, o dešimtis lieka ta pati.",
+      "hint": "Į dešinę skaičius didėja vienu, o dešimtis lieka ta pati.",
       "why": "72 + 1 = 73: pasikeičia tik pabaiga."
     },
     {
-      "q": "Kurį skaičių pasieksi nuo 63 trimis žingsniais žemyn?",
+      "q": "Kurį skaičių pasieksi nuo 63 trimis langeliais žemyn?",
       "options": [
         "66",
         "73",
         "93"
       ],
       "answer": 2,
-      "hint": "Vienas žingsnis žemyn — dešimt. Suskaičiuok tris dešimtis.",
-      "why": "63 + 30 = 93, nes trys žingsniai žemyn yra trys dešimtys."
+      "hint": "Vienas langelis žemyn reiškia dešimt. Suskaičiuok tris dešimtis.",
+      "why": "63 + 30 = 93, nes trys langeliai žemyn yra trys dešimtys."
     },
     {
-      "q": "Kur pateksi nuo 87 dviem žingsniais į kairę ir vienu žemyn?",
+      "q": "Nuo 87 eik du langelius kairėn, paskui vieną langelį žemyn. Kurį skaičių pasieksi?",
       "options": [
         "95",
         "85",
         "76"
       ],
       "answer": 0,
-      "hint": "Kairėn keičia pabaigą, žemyn keičia dešimtį.",
-      "why": "87 → 85, paskui 85 + 10 = 95.",
+      "hint": "Judant kairėn keičiasi pabaiga, judant žemyn keičiasi dešimtis.",
+      "why": "87 − 2 = 85, paskui 85 + 10 = 95.",
       "optional": true
     }
   ],
-  "reflect": "Pagalvok, kodėl lentelėje po 19 žemiau yra 29. Papasakok savais žodžiais.",
+  "reflect": "Pagalvok, kodėl žemiau 19 yra 29. Papasakok savais žodžiais.",
   "teacher": {
     "goal": "Suprasti, kad šimto lentelėje judėjimas į dešinę keičia vienetus, o žemyn — dešimtis; kad po 19 žemiau stovi 29, o ne 20.",
     "prompt": "Kodėl lentelėje po 19 žemiau stovi 29?",

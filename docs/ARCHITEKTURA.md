@@ -179,7 +179,7 @@ Kitą katalogą nurodyk `SUPRASK_PIPER_DIR`.
 
 ## Būsena
 
-- **Live:** 1 klasė — 9 kryptys, 37 modulių, 37 simuliacijų, 161 užduotys.
+- **Live:** 1 klasė — 9 kryptys, 38 modulių, 38 simuliacijų, 165 užduotys.
 - **Ruošiama:** 2–12 klasės (struktūra ir tyrimai wiki lygmenyje).
 
 ## Publikavimas

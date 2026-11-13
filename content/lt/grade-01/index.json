@@ -13,7 +13,8 @@
         { "id": "01-garsas-ir-raide", "title": "Garsas ir raidė", "subtitle": "Kuo skiriasi tai, ką girdime, nuo to, ką matome", "file": "grade-01/lietuviu-kalba/01-garsas-ir-raide.json", "minutes": 8, "sim": "garso-raides" },
         { "id": "02-skiemenu-jungimas", "title": "Skiemenų jungimas", "subtitle": "Kaip du skiemenys tampa žodžiu", "file": "grade-01/lietuviu-kalba/02-skiemenu-jungimas.json", "minutes": 8, "sim": "skiemenu-jungimas" },
         { "id": "03-sakinio-tvarka", "title": "Sakinio tvarka", "subtitle": "Žodžių eilė keičia prasmę", "file": "grade-01/lietuviu-kalba/03-sakinio-tvarka.json", "minutes": 10, "sim": "sakinio-tvarka" },
-        { "id": "04-kaip-zmones-sveikinasi", "title": "Kaip žmonės sveikinasi", "subtitle": "Vienas pastebėjimas dar nėra išvada", "file": "grade-01/lietuviu-kalba/04-kaip-zmones-sveikinasi.json", "minutes": 9, "sim": "kaip-zmones-sveikinasi" }
+        { "id": "04-kaip-zmones-sveikinasi", "title": "Kaip žmonės sveikinasi", "subtitle": "Vienas pastebėjimas dar nėra išvada", "file": "grade-01/lietuviu-kalba/04-kaip-zmones-sveikinasi.json", "minutes": 9, "sim": "kaip-zmones-sveikinasi" },
+        { "id": "05-plakatas-ir-informacija", "title": "Plakatas: kur ieškoti atsakymo", "subtitle": "Atsakymo ieškok ir užraše, ir piešinyje", "file": "grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json", "minutes": 9, "sim": "plakatas-ir-informacija" }
       ]
     },
     {

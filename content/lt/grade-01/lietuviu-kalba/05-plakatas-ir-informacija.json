@@ -1,0 +1,169 @@
+{
+  "id": "05-plakatas-ir-informacija",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Plakatas: kur ieškoti atsakymo",
+  "subtitle": "Atsakymo ieškok ir užraše, ir piešinyje",
+  "minutes": 9,
+  "outcomes": [
+    "Surandu plakate tą dalį, kuri atsako į klausimą.",
+    "Skaitau ir užrašus, ir piešinius: informacija būna abiejuose.",
+    "Pasakau, kuri plakato dalis man padėjo atsakyti."
+  ],
+  "concept": {
+    "title": "Atsakymas yra plakate",
+    "big_idea": "Plakate informacija būna ir užrašyta, ir nupiešta. Todėl atsakymo ieškai abiejose vietose.",
+    "steps": [
+      "Perskaityk klausimą ir pasakyk, ko ieškai.",
+      "Peržvelk visą plakatą: užrašus ir piešinius.",
+      "Spausk tą dalį, kuri atsako. Ne spėk, o parodyk vietą."
+    ],
+    "example": "Mama klausia, kur segėti atšvaitą. Atsakymas parašytas plakate. Kiek atšvaitų turi berniukas? Atsakymas nupieštas."
+  },
+  "sim": {
+    "component": "plakatas-ir-informacija",
+    "config": {
+      "poster": {
+        "title": "Saugus kelias į mokyklą",
+        "zones": [
+          {
+            "id": "uzrasas-atsvaitas",
+            "kind": "uzrasas",
+            "label": "Užrašas apie atšvaitą",
+            "text": "Segėk atšvaitą dešinėje pusėje, kelių aukštyje."
+          },
+          {
+            "id": "piesinys-atsvaitas",
+            "kind": "piesinys",
+            "art": "berniukas",
+            "label": "Piešinys su berniuku",
+            "alt": "Berniukas tamsoje. Du atšvaitai: vienas kelių aukštyje, kitas ant kuprinės."
+          },
+          {
+            "id": "uzrasas-dviratis",
+            "kind": "uzrasas",
+            "label": "Užrašas apie dviratį",
+            "text": "Važiuodamas dviračiu laikykis dešinės kelio pusės."
+          },
+          {
+            "id": "piesinys-dviratis",
+            "kind": "piesinys",
+            "art": "dviratis",
+            "label": "Piešinys su dviračiu",
+            "alt": "Dviratis iš šono. Baltas žibintas prie vairo, raudonas atšvaitas gale."
+          },
+          {
+            "id": "uzrasas-gatva",
+            "kind": "uzrasas",
+            "label": "Užrašas apie gatvę",
+            "text": "Prieš eidamas per gatvę nusiimk ausinukus ir apsidairyk."
+          }
+        ],
+        "questions": [
+          {
+            "label": "Kurioje pusėje segamas atšvaitas?",
+            "zone": "uzrasas-atsvaitas",
+            "result": "Užraše parašyta: segėk dešinėje pusėje, kelių aukštyje.",
+            "miss": {
+              "piesinys-atsvaitas": "Piešinyje matai, kur atšvaitai. Bet pusė čia neįvardyta.",
+              "uzrasas-gatva": "Šis užrašas kalba apie gatvę, ne apie atšvaitą."
+            }
+          },
+          {
+            "label": "Kiek atšvaitų turi berniukas?",
+            "zone": "piesinys-atsvaitas",
+            "result": "Piešinyje matai du atšvaitus: vieną prie kojos, kitą ant kuprinės.",
+            "miss": {
+              "uzrasas-atsvaitas": "Užraše parašyta, kur segėti. Kiek jų — neparašyta."
+            }
+          },
+          {
+            "label": "Kurioje dviračio pusėje yra baltas žibintas?",
+            "zone": "piesinys-dviratis",
+            "result": "Piešinyje baltas žibintas yra priekyje, prie vairo.",
+            "miss": {
+              "uzrasas-dviratis": "Šis užrašas sako, kur važiuoti. Apie žibintą jame nėra."
+            }
+          },
+          {
+            "label": "Ką nusiimti prieš einant per gatvę?",
+            "zone": "uzrasas-gatva",
+            "result": "Užraše parašyta: nusiimk ausinukus ir apsidairyk.",
+            "miss": {
+              "piesinys-atsvaitas": "Šiame piešinyje berniukas eina keliu. Apie ausinukus nieko nėra."
+            }
+          }
+        ]
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Plakate parašyta: „Plauk rankas 20 sekundžių“. Kuri plakato dalis atsakytų į klausimą apie laiką?",
+      "options": [
+        "Piešinys su muilo putomis",
+        "Užrašas po pavadinimu",
+        "Plakato pavadinimas"
+      ],
+      "answer": 1,
+      "hint": "Skaičių paprastai parašo, o ne nupiešia.",
+      "why": "Laikas parašytas žodžiais, todėl atsakymas yra tekste."
+    },
+    {
+      "q": "Plakate apie rūšiavimą nupiešti trys konteineriai, o užrašų nėra. Kur ieškosi, kiek jų?",
+      "options": [
+        "Iš piešinio",
+        "Iš užrašo po piešiniu",
+        "Iš plakato pavadinimo"
+      ],
+      "answer": 0,
+      "hint": "Plakate nėra nė vieno sakinio. Ką dar jis turi?",
+      "why": "Kai užrašų nėra, informacija lieka piešinyje."
+    },
+    {
+      "q": "Draugė sako: „Man užtenka užrašų, piešinių nežiūriu.“ Kaip jai paaiškintum?",
+      "options": [
+        "Kad piešinys tik puošia plakatą.",
+        "Kad užrašus skaityti nebūtina.",
+        "Kad piešinyje būna papildomos informacijos."
+      ],
+      "answer": 2,
+      "hint": "Prisimink, iš kur sužinojai, kiek atšvaitų turi berniukas.",
+      "why": "Vieną dalį pasako žodžiai, kitą parodo paveikslas."
+    },
+    {
+      "q": "Gaisro gesintuvo plakate yra ir užrašas, ir piešinys. Kur ieškosi, kaip laikyti gesintuvą?",
+      "options": [
+        "Antraštėje",
+        "Piešinyje",
+        "Po plakatu"
+      ],
+      "answer": 1,
+      "hint": "Skaityk klausimą: ko prašoma — teksto ar judesio?",
+      "why": "Judesį parodo piešinys, o užrašas tik įvardija veiksmą.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kurią plakato dalį tu pirma pastebi: užrašą ar piešinį? Kodėl?",
+  "teacher": {
+    "goal": "Skaitymo sritis B (B.1.2, B.3.1): rasti plakate aiškiai pateiktą informaciją ir remtis piešiniu, kai užrašo nepakanka.",
+    "prompt": "Kurioje plakato dalyje radai atsakymą? Kaip supratai, kad ten?",
+    "offline": "Namie ar poliklinikoje raskite vieną plakatą. Perskaitykite užrašus, apžiūrėkite piešinį. Paklauskite vaiko, ko užrašas nepasako, o ką parodo piešinys. Tada paslėpkite piešinį delnu ir paklauskite, ar dabar atsakymas dar randamas.",
+    "misconceptions": [
+      "Vaikas atsakymo ieško tik užrašuose ir piešinių nežiūri — klausimas apie skaičių ar judesį lieka neatsakytas.",
+      "Vaikas plakatą laiko tik paveikslėliu ir neperskaito nė vieno užrašo.",
+      "Vaikas atsako iš atminties, o ne ieško toje vietoje, kur informacija pateikta."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“, 1–2 klasės veikla „Mokausi rasti man svarbią informaciją“.",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), skaitymo sritis B.1.2 ir B.3.1, 1 klasė.",
+    "Lietuvos transporto saugos administracija. „Atšvaitai“: kabantis atšvaitas segamas dešinėje pusėje, kelių aukštyje."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena didelė idėja: plakate informacija yra dviejų rūšių, parašyta ir nupiešta.",
+    "2 žingsnis — užduotys perkelia taisyklę į kitus plakatus (rankų plovimas, rūšiavimas, gesintuvas), o ne kartoja tą patį (T2.2).",
+    "3 žingsnis — užuomina nukreipia į paieškos klaidą, o ne į atsakymą; jokio laikmačio (T3.1, T3.3).",
+    "8 žingsnis — veikla be ekrano su tikru plakatu namie ar poliklinikoje, įskaitant piešinio paslėpimą (T8.3)."
+  ]
+}

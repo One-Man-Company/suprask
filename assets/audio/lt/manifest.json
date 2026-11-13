@@ -1003,6 +1003,10 @@
   "n": "n/1c68c529e0dee2d1-8c0ac07a.mp3",
   "s": "s/1c68c529e0dee2d1-dd4ecd72.mp3"
  },
+ "Kiek atšvaitų turi berniukas?": {
+  "n": "n/6e57d8e4d1eb04ae-d2eed0e6.mp3",
+  "s": "s/6e57d8e4d1eb04ae-4a7ca2b7.mp3"
+ },
  "Kiek dėmių trūksta iki dešimties?": {
   "n": "n/bf34b68515d8a369-20bfcf55.mp3",
   "s": "s/bf34b68515d8a369-f0ddec9a.mp3"
@@ -1075,6 +1079,14 @@
   "n": "n/571b562406a49d23-a8761906.mp3",
   "s": "s/571b562406a49d23-0094e045.mp3"
  },
+ "Kurioje dviračio pusėje yra baltas žibintas?": {
+  "n": "n/2a03abd8b8205149-4f2c558e.mp3",
+  "s": "s/2a03abd8b8205149-c8c37a33.mp3"
+ },
+ "Kurioje pusėje segamas atšvaitas?": {
+  "n": "n/9a7fa5b59a3baa59-be1f99eb.mp3",
+  "s": "s/9a7fa5b59a3baa59-bfbbaced.mp3"
+ },
  "Kuris elementas eina toliau?": {
   "n": "n/dd82140a8fe00a5e-a7ae467a.mp3",
   "s": "s/dd82140a8fe00a5e-5f4d075c.mp3"
@@ -1082,6 +1094,10 @@
  "Kvadratas": {
   "n": "n/2604dbae09165b63-51fa9a25.mp3",
   "s": "s/2604dbae09165b63-f89814b5.mp3"
+ },
+ "Ką nusiimti prieš einant per gatvę?": {
+  "n": "n/2b495d4a7d0785ec-a22eedd1.mp3",
+  "s": "s/2b495d4a7d0785ec-ec3697f1.mp3"
  },
  "Ką suprasi": {
   "n": "n/6ed7616494dc4ee2-b0c27f98.mp3",
@@ -1266,6 +1282,14 @@
  "Per daug. Nuimk vieną pinigą.": {
   "n": "n/432afa070cceea11-9cf15bfe.mp3",
   "s": "s/432afa070cceea11-3e66e30b.mp3"
+ },
+ "Piešinys su berniuku": {
+  "n": "n/ecf4b0d268d2d5e7-c3c4e646.mp3",
+  "s": "s/ecf4b0d268d2d5e7-60540135.mp3"
+ },
+ "Piešinys su dviračiu": {
+  "n": "n/8add678db1e62507-04b028c7.mp3",
+  "s": "s/8add678db1e62507-a044c931.mp3"
  },
  "Pieštukai": {
   "n": "n/b8e0d102388d6cca-9cef34b6.mp3",
@@ -1698,6 +1722,18 @@
  "U": {
   "n": "n/a25513c7e0f6eaa8-b4e039e2.mp3",
   "s": "s/a25513c7e0f6eaa8-cefa011a.mp3"
+ },
+ "Užrašas apie atšvaitą": {
+  "n": "n/207e10a1ce1968f6-9717a853.mp3",
+  "s": "s/207e10a1ce1968f6-0e34bf18.mp3"
+ },
+ "Užrašas apie dviratį": {
+  "n": "n/d7ecd8e68bfa3c45-60483627.mp3",
+  "s": "s/d7ecd8e68bfa3c45-57e9e28f.mp3"
+ },
+ "Užrašas apie gatvę": {
+  "n": "n/6cc355817afde025-f97a8124.mp3",
+  "s": "s/6cc355817afde025-9a16a80f.mp3"
  },
  "V": {
   "n": "n/de5a6f78116eca62-7dfb4afb.mp3",

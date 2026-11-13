@@ -5,88 +5,189 @@ import { art } from "./art.js";
  * kuriame vaikas pats priima sprendimus ir mato jų pasekmes abiem pusėms.
  */
 
-const NS = "http://www.w3.org/2000/svg";
-const svgEl = (tag, attrs = {}) => {
-  const e = document.createElementNS(NS, tag);
-  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
-  return e;
-};
-
 /* ------------------------------------------------------------------ */
-/* 1. Sąžiningas dalijimasis (tortas)                                  */
+/* 1. Sąžiningas dalijimasis (dalink ir rinkis)                        */
 /* ------------------------------------------------------------------ */
 const saziningasDalijimasis = {
   mount({ stage, controls, api }) {
     const SLICES = 8;
-    const owners = new Array(SLICES).fill(null); // null | "a" | "b"
     const R = 92;
     const CX = 110;
     const CY = 110;
+    const FILL = { a: "#5aa9e6", b: "#ffc94d", "": "#f7e6cf" };
 
-    /* Torto piešinys buvo `width="min(78vw,300px)"` — plotis nuo ekrano, o ne
-       nuo kortelės. Prie 200 % teksto kortelė susitraukia (šaknies `rem`
-       padidina paraštes), 78vw lieka 323 px, todėl SVG išstūmė kortelę 26 px
-       (#4741). Dabar plotis 100 % kortelės, o 300 px ir 78vw lieka tik
-       viršutine riba: įprastu šriftu matoma lygiai tiek pat (300 px @414,
-       280,8 px @360). */
+    /* Modelis: dalija VAIKAS, o renkasi DRAUGAS pirmas. Todėl krūvos
+       vadinamos „pirma“ ir „antra“, ne „tu“ ir „draugas“: dalintojas nežino,
+       kurią gaus — būtent todėl verta dalinti lygiai.
+       Senoji versija krūvas vadino „Tu / Draugas“, o žodį „Sąžininga!“ ir
+       pažangą skelbė TIK tada, kai po 4. Taip ji mokė priešingai tam, ką
+       žada pats modulis: antras rezultatas — „Pastebiu, kad sąžininga ne
+       visada reiškia po lygiai“, trečias žingsnis ir pavyzdys — „vienas
+       dalija, kitas renkasi pirmas“. Simuliacijoje taisyklės nebuvo nė
+       viename etape, o nelygus padalijimas buvo tik moralizuojamas
+       („Kaip jaustųsi draugas?“), neužleidžiant pasekmei kalbėti. */
+    const owners = new Array(SLICES).fill(null); // null | "a" | "b"
+    const seen = { equal: false, unequal: false };
+    let choice = null; // { friend: "a"|"b", friendN, mineN, equal } | null
+    let reported = false;
+
     stage.innerHTML = `
       <div style="text-align:center;min-width:0;max-width:100%;box-sizing:border-box">
-        <svg id="sd-cake" viewBox="0 0 220 220" role="img" aria-label="Tortas, padalintas į 8 dalis"
-             style="width:100%;max-width:min(78vw,300px);height:auto"></svg>
-        <p id="sd-count" style="font-family:var(--font-head);font-weight:900;font-size:1.15rem;margin:.4rem 0"></p>
+        <svg id="sd-cake" viewBox="0 0 220 220" role="img"
+             style="display:block;width:100%;max-width:min(78vw,300px);height:auto;margin:0 auto"></svg>
+        <p id="sd-count" style="font-family:var(--font-head);font-weight:900;font-size:1.05rem;margin:.45rem 0 0"></p>
+        <div id="sd-result" style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:.55rem"></div>
       </div>`;
-    controls.innerHTML = `<button class="btn secondary" id="sd-reset">Iš naujo</button>`;
+    controls.innerHTML = `
+      <button class="btn" id="sd-choose">Draugas renkasi pirmas</button>
+      <button class="btn ghost" id="sd-reset">Iš naujo</button>`;
     const svg = stage.querySelector("#sd-cake");
     const countEl = stage.querySelector("#sd-count");
+    const resultEl = stage.querySelector("#sd-result");
 
-    function pt(angle) {
+    const pileN = (k) => owners.filter((o) => o === k).length;
+    const gab = (n) => (n % 10 === 1 && n % 100 !== 11 ? "gabaliukas" : "gabaliukai");
+    const pt = (angle) => {
       const rad = (angle * Math.PI) / 180;
       return [CX + R * Math.cos(rad), CY + R * Math.sin(rad)];
+    };
+    const angleOf = (i) => (360 / SLICES) * i - 90;
+
+    function segPath(i) {
+      const a0 = angleOf(i);
+      const a1 = a0 + 360 / SLICES;
+      const [x0, y0] = pt(a0);
+      const [x1, y1] = pt(a1);
+      return `M${CX},${CY} L${x0.toFixed(2)},${y0.toFixed(2)} A${R},${R} 0 0 1 ${x1.toFixed(2)},${y1.toFixed(2)} Z`;
     }
+
+    /* Skiriamoji žymė yra FORMA, ne spalva: pirma krūva — taškas, antra —
+       tuščias žiedas. Ji turi `pointer-events:none`, nes kitaip žymė
+       uždengtų gabaliuko vidurį ir dalis paspaudimų dingtų (LL-03). */
+    function mark(i, owner) {
+      if (!owner) return "";
+      const rad = ((angleOf(i) + 360 / SLICES / 2) * Math.PI) / 180;
+      const x = (CX + R * 0.58 * Math.cos(rad)).toFixed(1);
+      const y = (CY + R * 0.58 * Math.sin(rad)).toFixed(1);
+      return owner === "a"
+        ? `<circle cx="${x}" cy="${y}" r="6.5" fill="#2a3442" style="pointer-events:none"/>`
+        : `<circle cx="${x}" cy="${y}" r="5.4" fill="none" stroke="#2a3442" stroke-width="3" style="pointer-events:none"/>`;
+    }
+
+    const cardMark = (k) => (k === "a"
+      ? `<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" style="flex:0 0 auto"><circle cx="10" cy="10" r="6" fill="#2a3442"/></svg>`
+      : `<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" style="flex:0 0 auto"><circle cx="10" cy="10" r="5.4" fill="none" stroke="#2a3442" stroke-width="2.6"/></svg>`);
+
+    const sliceName = (i) => owners[i] === "a" ? "pirma krūva" : owners[i] === "b" ? "antra krūva" : "be krūvos";
 
     function draw() {
-      svg.innerHTML = `<circle cx="${CX}" cy="${CY}" r="${R + 8}" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 6"/>`;
+      const a = pileN("a");
+      const b = pileN("b");
+      const left = SLICES - a - b;
+
+      let shapes = `<circle cx="${CX}" cy="${CY}" r="${R + 8}" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 6" style="pointer-events:none"/>`;
       for (let i = 0; i < SLICES; i += 1) {
-        const a0 = (360 / SLICES) * i - 90;
-        const a1 = a0 + 360 / SLICES;
-        const [x0, y0] = pt(a0);
-        const [x1, y1] = pt(a1);
-        const owner = owners[i];
-        const fill = owner === "a" ? "#5aa9e6" : owner === "b" ? "#ffc94d" : "#f7e6cf";
-        const slice = svgEl("path", {
-          d: `M${CX},${CY} L${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} Z`,
-          fill, stroke: "var(--paper-2)", "stroke-width": 3, class: "piece", "data-i": i,
-          role: "button", tabindex: 0, "aria-label": `Dalis ${i + 1}`,
-        });
-        slice.style.cursor = "pointer";
-        const flip = () => {
-          owners[i] = owners[i] === null ? "a" : owners[i] === "a" ? "b" : null;
-          draw();
-        };
-        slice.addEventListener("click", flip);
-        slice.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } });
-        svg.appendChild(slice);
+        shapes += `
+          <path d="${segPath(i)}" fill="${FILL[owners[i] || ""]}" stroke="var(--paper-2)" stroke-width="3" style="pointer-events:none"/>
+          ${mark(i, owners[i])}
+          <path class="piece" data-i="${i}" d="${segPath(i)}" fill="transparent" role="button" tabindex="0"
+                aria-label="Gabaliukas ${i + 1}: ${sliceName(i)}" style="cursor:pointer"/>`;
       }
-      svg.appendChild(svgEl("circle", { cx: CX, cy: CY, r: 6, fill: "var(--ink-faint)" }));
+      shapes += `<circle cx="${CX}" cy="${CY}" r="6" fill="var(--ink-faint)" style="pointer-events:none"/>`;
+      svg.innerHTML = shapes;
 
-      const a = owners.filter((o) => o === "a").length;
-      const b = owners.filter((o) => o === "b").length;
-      const left = owners.filter((o) => o === null).length;
-      countEl.textContent = `Tu: ${a} · Draugas: ${b} · Nepadalinta: ${left}`;
-      api.readout(`Tu ${a}, draugas ${b}`);
+      countEl.textContent = `Pirma krūva ${a} · Antra krūva ${b} · Be krūvos ${left}`;
 
-      if (left === 0 && a === b) {
-        api.note("Sąžininga! Abu gavote po tiek pat. Ar yra kitas būdas padalinti sąžiningai?");
-        api.progress({ correct: true });
-      } else if (left === 0 && a !== b) {
-        api.note(a > b ? "Tu pasiėmei daugiau. Kaip jaustųsi draugas?" : "Draugas gavo daugiau. Ar taip norėjai?");
+      if (choice) {
+        resultEl.innerHTML = `
+          <div style="flex:1 1 7rem;min-width:0;border:2px solid var(--line);border-radius:.8rem;padding:.45rem .4rem;background:var(--paper);display:grid;justify-items:center;gap:.1rem">
+            <div style="display:flex;align-items:center;gap:.35rem;font-size:.9rem;font-weight:800;color:var(--ink-soft)">${cardMark(choice.friend)} Draugas paėmė</div>
+            <div style="font-family:var(--font-head);font-size:1.6rem;font-weight:900">${choice.friendN}</div>
+          </div>
+          <div style="flex:1 1 7rem;min-width:0;border:2px solid var(--line);border-radius:.8rem;padding:.45rem .4rem;background:var(--paper-2);display:grid;justify-items:center;gap:.1rem">
+            <div style="display:flex;align-items:center;gap:.35rem;font-size:.9rem;font-weight:800;color:var(--ink-soft)">${cardMark(choice.friend === "a" ? "b" : "a")} Tau liko</div>
+            <div style="font-family:var(--font-head);font-size:1.6rem;font-weight:900">${choice.mineN}</div>
+          </div>`;
       } else {
-        api.note("Spausk dalis: pirmas spausdinimas — tau, antras — draugui, trečias — atgal.");
+        resultEl.innerHTML = "";
+      }
+
+      let text;
+      let note;
+      if (choice) {
+        text = `Draugas paėmė ${choice.friendN}. Tau liko ${choice.mineN}.`;
+        note = choice.equal
+          ? (seen.unequal ? "Po lygiai tau liko tiek pat. Abu atvejus jau matei." : "Po lygiai tau liko tiek pat. Pabandyk nelygias krūvas.")
+          : (seen.equal ? "Kas dalija, tas nepasirenka pirmas. Dabar žinai." : "Kas dalija, tas nepasirenka pirmas.");
+      } else if (left > 0) {
+        text = `Vienoje ${a}, kitoje ${b}. Liko ${left} ${gab(left)}.`;
+        note = "Bakstelėk gabaliuką: pirma krūva, antra, paskui atgal.";
+      } else {
+        text = `Vienoje ${a}, kitoje ${b}.`;
+        note = "Dabar spausk „Draugas renkasi pirmas“.";
+      }
+
+      svg.setAttribute(
+        "aria-label",
+        choice
+          ? `Tortas padalintas į dvi krūvas. Draugas paėmė ${choice.friendN}, tau liko ${choice.mineN}.`
+          : `Tortas padalintas: pirma krūva ${a}, antra ${b}, be krūvos ${left}.`
+      );
+      api.readout(text);
+      api.note(note);
+
+      if (seen.equal && seen.unequal && !reported) {
+        reported = true;
+        api.progress({ correct: true });
       }
     }
 
+    function flip(i) {
+      const cur = owners[i];
+      owners[i] = cur === null ? "a" : cur === "a" ? "b" : null;
+      /* Pakeitus padalijimą, ankstesnis draugo pasirinkimas nebegalioja:
+         kitaip ekrane liktų skaičiai, kurių tortas nebeatitinka (LL-15). */
+      choice = null;
+      draw();
+    }
+
+    function choose() {
+      const a = pileN("a");
+      const b = pileN("b");
+      const left = SLICES - a - b;
+      if (left > 0) {
+        api.note(`Dar ${left} ${gab(left)} nepadėta. Padalink visą tortą.`);
+        return;
+      }
+      if (a === b) {
+        choice = { friend: "a", friendN: a, mineN: b, equal: true };
+        seen.equal = true;
+      } else {
+        const friend = a > b ? "a" : "b";
+        choice = { friend, friendN: Math.max(a, b), mineN: Math.min(a, b), equal: false };
+        seen.unequal = true;
+      }
+      draw();
+    }
+
+    svg.addEventListener("click", (e) => {
+      const el = e.target.closest("[data-i]");
+      if (el) flip(Number(el.dataset.i));
+    });
+    svg.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const el = e.target.closest("[data-i]");
+      if (!el) return;
+      e.preventDefault();
+      flip(Number(el.dataset.i));
+    });
+    controls.querySelector("#sd-choose").addEventListener("click", choose);
     controls.querySelector("#sd-reset").addEventListener("click", () => {
       owners.fill(null);
+      choice = null;
+      seen.equal = false;
+      seen.unequal = false;
+      reported = false;
       draw();
     });
 

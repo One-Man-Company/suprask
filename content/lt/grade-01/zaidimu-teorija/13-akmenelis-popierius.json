@@ -6,19 +6,19 @@
   "subtitle": "Kodėl negalima tiksliai numatyti",
   "minutes": 10,
   "outcomes": [
-    "Paaiškinu, kad kai variantai lygūs, laimėjimas priklauso nuo atsitiktinumo.",
-    "Stebiu rezultatus ir lyginu juos su lūkesčiu.",
-    "Nustoju tikėti „karšta ranka“ — daug ėjimų duoda apie trečdalį."
+    "Paaiškinu, kodėl laimėjimas priklauso nuo atsitiktinumo.",
+    "Skaičiuoju rezultatus ir lyginu juos su trečdaliu.",
+    "Nustoju tikėti, kad laimėsiu visada. Laimiu maždaug kas trečią kartą."
   ],
   "concept": {
-    "title": "Atsitiktinumas nėra „sėkmės serija“",
+    "title": "Niekas nelaimi dažniau",
     "big_idea": "Žaidime trys lygūs pasirinkimai. Nė vienas nelaimi dažniau, jei abu žaidėjai renkasi atsitiktinai. Po daug ėjimų kiekvienas rezultatas pasitaiko maždaug trečdalį kartų.",
     "steps": [
       "Yra trys ėjimai: akmenėlis, žirklės, popierius. Kiekvienas nugali vieną ir pralaimi kitam.",
-      "Todėl vieno ėjimo „stiprumas“ yra tik vienas iš trijų.",
-      "Jei žaidi 30 kartų, laimėjimų skaičius bus arti 10 — bet ne tiksliai 10."
+      "Todėl vienas ėjimas nugali tik vieną iš trijų.",
+      "Sužaisk 30 kartų. Laimėsi apie 10 kartų, kartais mažiau, kartais daugiau."
     ],
-    "example": "Laimėjai 5 kartus iš eilės? Tai ne „karšta ranka“ — tai atsitiktinumas. Po 30 ėjimų laimėjimų paprastai būna apie 10. Kartais bus 7, kartais 14."
+    "example": "Laimėjai 5 kartus iš eilės? Taip gali nutikti atsitiktinai. Po 30 ėjimų laimėjimų paprastai būna apie 10. Kartais bus 7, kartais 14."
   },
   "sim": {
     "component": "akmenelis-popierius",
@@ -26,18 +26,18 @@
   },
   "tasks": [
     {
-      "q": "Kiek šansų laimėti vienu ėjimu prieš atsitiktinį ėjimą?",
+      "q": "Kitas žaidėjas ėjimą renkasi atsitiktinai. Kiek tu laimėsi iš trijų ėjimų?",
       "options": [
         "Vienas iš trijų",
         "Vienas iš dviejų",
         "Visi trys"
       ],
       "answer": 0,
-      "hint": "Yra trys ėjimai: vienas laimi, vienas pralaimi, vienas lygiosios.",
-      "why": "Iš trijų galimybių viena laimi — maždaug 1/3."
+      "hint": "Galvok apie kito žaidėjo ėjimus, ne apie savo.",
+      "why": "Iš trijų atvejų laimėsi vieną kartą — trečdalį visų ėjimų."
     },
     {
-      "q": "Po 30 ėjimų, kiek maždaug bus lygiųjų?",
+      "q": "Sužaisk 30 kartų. Kiek maždaug bus lygiųjų?",
       "options": [
         "Apie 25",
         "Apie 10",
@@ -45,18 +45,18 @@
       ],
       "answer": 1,
       "hint": "Trečdalis iš 30.",
-      "why": "30 : 3 = 10, todėl apie 10."
+      "why": "Trečdalis iš 30 yra 10. Todėl lygiosios bus apie 10 kartų."
     },
     {
-      "q": "Jei laimėjai 5 kartus iš eilės, tai reiškia…",
+      "q": "Laimėjai 5 kartus iš eilės. Kodėl taip atsitiko?",
       "options": [
-        "Kad visada laimėsi",
-        "Kad varžovas klysta",
-        "Kad taip atsitiko — tai dar ne taisyklė"
+        "Nes visada laimėsiu",
+        "Nes kitas žaidėjas klysta",
+        "Nes taip nutinka atsitiktinai"
       ],
       "answer": 2,
-      "hint": "Ar simuliacijoje tai kartosis visada?",
-      "why": "Trumpa sėkmės seka dar neįrodo, kad laimėsi ir toliau."
+      "hint": "Pažaisk simuliacijoje dar kelis kartus. Ar laimėsi visada?",
+      "why": "Keli laimėjimai dar ne taisyklė. Kitas ėjimas gali būti bet koks."
     },
     {
       "q": "Kuris ėjimas nugali žirkles?",
@@ -66,12 +66,12 @@
         "Žirklės"
       ],
       "answer": 0,
-      "hint": "Kiekvienas ėjimas nugali vieną ir pralaimi kitam. Ko žirklės negali perkirpti?",
-      "why": "Akmenėlis nugali žirkles, žirklės — popierių, popierius — akmenėlį.",
+      "hint": "Kiekvienas ėjimas nugali vieną ir pralaimi kitam. Išbandyk visus tris simuliacijoje.",
+      "why": "Akmenėlis nugali žirkles. Žirklės nugali popierių. Popierius nugali akmenėlį.",
       "optional": true
     }
   ],
-  "reflect": "Sužaisk su draugu 20 ėjimų ir suskaičiuok, kiek kartų laimėjo kiekvienas. Ar buvo netikėta?",
+  "reflect": "Sužaisk su draugu 20 ėjimų. Suskaičiuok, kiek kartų laimėjo kiekvienas. Ar rezultatas nustebino?",
   "teacher": {
     "goal": "Tikimybės ir atsitiktinumo intuicija; apsauga nuo „karštos rankos“ klaidos.",
     "prompt": "Kaip sužinoti, ar žaidimas sąžiningas?",

@@ -1,0 +1,22 @@
+{
+  "role": "metodininkas",
+  "run_id": 259,
+  "created": "2026-11-13T08:24:00+02:00",
+  "type": "metodas",
+  "title": "Kas gyvas: pokytis, o ne judėjimas (judantis kamuoliukas kaip kontrolinis objektas)",
+  "body": "Metodas 1 klasės pasaulio pažinimo temai 26.2.4 „Bendri gyvų organizmų požymiai“ ir naujam moduliui `20-kas-gyvas`. Viena didelė idėja: gyvas organizmas keičiasi pats — auga ir atsako į tai, ko jam reikia — o daiktas gali judėti ir vis tiek nepakisti, todėl vien judėjimas nepasako, kas gyva. Modelis laiko tris daiktus vienoje scenoje (pupos daigas, akmenukas, kamuoliukas) ir keičia tik vieną kintamąjį — `watered`; kamuoliukas yra kontrolinis objektas: vaikas jį pats pastumia, jis nurieda, o pokyčių lentelėje lieka 0. Tai bandymas tame pačiame kadre, kurio paveikslėlis negali duoti, todėl judėjimo hipotezė patikrinama, o ne paneigiama tekstu. Metodas neneigia judėjimo kaip požymio (jis yra oficialiame sąraše), o rodo vieno požymio nepakankamumą, ir klausia „Kuris yra gyvas organizmas?“, ne „Ar jis gyvas?“ — Leddon, Waxman ir Medin (2009) parodė, kad pats žodis „alive“ užstoja sąvoką. Modelio ribos pasakomos, o ne nutylimos: augalas be vandens lieka gyvas (tik nuleidžia lapus), kvėpavimas nevaizduojamas, dangaus reiškiniai sąmoningai neliečiami. Visa implementuojama specifikacija — 5 žingsnių seka, 8 būsenos su `readout`/`api.note`, 360 px išdėstymas iš `art.js` dalių (`plank`, `pot`, `soil`, `stem`, `leaf`, `ball`), 9 garso frazės `config.sentences`, 4 užduotys su tipine klaida ir `hint` (4-a `optional`) — yra `research/wiki/grades/01/metodai.md` skyriuje M-08, todėl inžinieriui papildomų klausimų nekyla. Šaltiniai: Villarroel (2013), https://doi.org/10.1186/2193-1801-2-87 (39,5 % 6–7 m. vaikų teisingai priskyrė visus objektus; augalai 79,1 %, transportas 86 %, dangaus reiškiniai 60,5 %) ir Leddon, Waxman & Medin (2009), https://doi.org/10.1080/15248370802678463; programa — NŠA (2024) gamtos mokslų 1 klasės ilgalaikis planas, 26.2.4 (1 val.), veiklos „Ar vazoninė gėlė kvėpuoja?“ ir „Gyvas–negyvas“.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/20-kas-gyvas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17645–17648 (26.2.4 „Bendri gyvų organizmų požymiai“, 1 val.; veiklos — demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“ ir žaidimas „Gyvas–negyvas“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:12629–12632 (bendra 1–2 kl. nuostata: „atskirti gyvus organizmus nuo negyvų daiktų, išskirti bendrus gyvo organizmo požymius (juda, kvėpuoja, auga, maitinasi, dauginasi)“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:40886–40887 (F1 pasiekimas — gyvas organizmas ir jo gyvybiniai poreikiai)",
+    "research/wiki/grades/01/metodai.md M-08 — seka, simuliacijos būsenos, config, užduotys, modelio ribos (eilutė 509)",
+    "research/wiki/foundations/gyvybe-ir-judesys.md — judėjimas kaip gyvybės kriterijus, klausimo formuluotė, gyvybė kaip pokytis laike",
+    "Villarroel, J. D. (2013). Environmental judgment in early childhood and its relationship with the understanding of the concept of living beings. SpringerPlus 2, 87. https://doi.org/10.1186/2193-1801-2-87",
+    "Leddon, E. M., Waxman, S. R., & Medin, D. L. (2009). Unmasking „Alive“: Children's appreciation of a concept linking all living things. Journal of Cognition and Development 9(4), 461–473. https://doi.org/10.1080/15248370802678463",
+    "assets/js/sims/art.js:297 (`plank`) ir :318 (`ball`) — metodo scenos dalys egzistuoja; assets/js/sims/pasaulis.js:1 importuoja art.js, o scripts/check_art.py:31 LEGACY sąraše yra tik matematika.js",
+    "content/lt/grade-01/pasaulio-pazinimas/ (08–10, 16–19) — numeris `20-` laisvas; temos „Gyvoji gamta“ platformoje dar nėra (agents/scope.py), 09-augalo-gyvenimas liečia augalo poreikius, ne gyvybės požymius"
+  ]
+}

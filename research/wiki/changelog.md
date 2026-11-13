@@ -2,6 +2,15 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-13 (08:24) — Metodas M-08 „Kas gyvas“: pasiūlymas, kurį kūrėjas gali imti be papildomų klausimų
+
+- **`grades/01/metodai.md`** → skyrius **M-08 „Kas gyvas: pokytis, o ne judėjimas“** (parašytas 2026-11-12 paleidime #244, šiame paleidime #259 darbas užbaigtas). Temos branduolys — 1 klasės gamtos mokslų 26.2.4 „Bendri gyvų organizmų požymiai“ (1 val., `sources/pradinio-bp-rekomendacijos-2024.txt:17645–17648`). Modelis laiko tris daiktus vienoje scenoje ir keičia vieną kintamąjį (`watered`); kamuoliukas yra judantis, bet nekintantis kontrolinis objektas, o augalas nejuda, bet keičiasi.
+- **`agents/proposals/2026-11-12-metodininkas-kas-gyvas.json`** → **įrašytas** (`type: metodas`, `priority: high`, `target: content/lt/grade-01/pasaulio-pazinimas/20-kas-gyvas.json`). Be jo M-08 metodo nebūtų matęs kūrėjas: metodas buvo diske, o eilės įrašo nebuvo.
+- **`guidelines/pilotai.md`** → **P-019** (pirmas modelis, kuriame judėjimas ir pokytis išskiriami tame pačiame kadre; hipotezė, 4 matavimo kriterijai, iš anksto įvardyti atsarginiai sprendimai).
+- **`guidelines/klausimai.md:50`** → uždarytas klausimas „Ar ilgio matavimas priklauso 1 klasei?“: ilgis 1 klasei **priklauso** (`sources/pradinio-bp-rekomendacijos-2024.txt:17300`, tema „Ilgis 5“), modulis `25-ilgis-ir-vienetas` sukurtas, metodas M-07.
+- **Šaltiniai (DOI, abu tikrinti ne iš atminties):** Villarroel (2013) https://doi.org/10.1186/2193-1801-2-87 — 6–7 m. grupėje 39,5 % teisingai priskyrė visus objektus, augalus 79,1 %, transportą 86 %, dangaus reiškinius 60,5 %; Leddon, Waxman & Medin (2009) https://doi.org/10.1080/15248370802678463 — klausimo formuluotė („alive“ užstoja sąvoką), todėl modulyje klausiama „gyvas organizmas“.
+- **Poveikis platformai:** naujas 1 klasės pasaulio pažinimo modulis su nauja simuliacija `kas-gyvas` (`assets/js/sims/pasaulis.js`, scena iš `art.js` dalių `plank`, `pot`, `soil`, `stem`, `leaf`, `ball`). Turinio failai šiame paleidime neliesti — modulio skaičiai (37 moduliai, 161 užduotis, 1086 garso įrašai) nepakito.
+
 ## 2026-11-13 (06:23) — Publikavimo patikra #257: repo 37 / paskelbta 37, veidrodžių A/B/C scenarijai išmatuoti pirmą kartą
 
 - **`check_published.py`** → repo 37, paskelbta 37, `grade-01: repo 37, gyvai 37`; `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `aux_stale` 0, `shell_stale` 0, `shell_unreachable` 0, `path_differs` [], `live_error` tuščias, `unpushed_commits` 0, `verdict.label` = `sutampa`, `rc=0` (4,7 s).

@@ -55,7 +55,8 @@
         { "id": "16-vandens-busenos", "title": "Kur dingsta vanduo", "subtitle": "Vanduo neišnyksta — jis keičia savo formą", "file": "grade-01/pasaulio-pazinimas/16-vandens-busenos.json", "minutes": 9, "sim": "vandens-busenos" },
         { "id": "17-judejimas", "title": "Nuožulnioji plokštuma: kas lemia greitį", "subtitle": "Greitį keičia plokštumos aukštis, o ne rutulio svoris", "file": "grade-01/pasaulio-pazinimas/17-judejimas.json", "minutes": 9, "sim": "nuozulnioji-plokstuma" },
         { "id": "18-kuprine-ir-kuno-dalys", "title": "Kuprinė: tas pats svoris, kita vieta", "subtitle": "Svoris toks pat, o spaudžia vis kitur", "file": "grade-01/pasaulio-pazinimas/18-kuprine-ir-kuno-dalys.json", "minutes": 9, "sim": "kuprine-ir-svoris" },
-        { "id": "19-dumai-ir-isejimas", "title": "Dūmai: žemai ir lauk, o ne slėptis", "subtitle": "Dūmai pirmiausia prisipildo viršaus, todėl kelias lauk eina prie grindų", "file": "grade-01/pasaulio-pazinimas/19-dumai-ir-isejimas.json", "minutes": 9, "sim": "dumai-ir-isejimas" }
+        { "id": "19-dumai-ir-isejimas", "title": "Dūmai: žemai ir lauk, o ne slėptis", "subtitle": "Dūmai pirmiausia prisipildo viršaus, todėl kelias lauk eina prie grindų", "file": "grade-01/pasaulio-pazinimas/19-dumai-ir-isejimas.json", "minutes": 9, "sim": "dumai-ir-isejimas" },
+        { "id": "20-kas-gyvas", "title": "Kas gyvas: auga ir reaguoja, ne tik juda", "subtitle": "Gyvybę rodo pokytis: augalas auga, o kamuoliukas tik rieda", "file": "grade-01/pasaulio-pazinimas/20-kas-gyvas.json", "minutes": 9, "sim": "kas-gyvas" }
       ]
     },
     {

@@ -1,0 +1,117 @@
+{
+  "id": "20-kas-gyvas",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Kas gyvas: auga ir reaguoja, ne tik juda",
+  "subtitle": "Gyvybę rodo pokytis: augalas auga, o kamuoliukas tik rieda",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu, kas per savaitę pasikeitė, o kas tik pajudėjo.",
+    "Paaiškinu, kodėl judėjimas vienas neparodo, kas gyva.",
+    "Pasakau, kaip augalas reaguoja į vandenį."
+  ],
+  "concept": {
+    "title": "Gyvybę rodo pokytis",
+    "big_idea": "Gyvas organizmas keičiasi pats. Jis auga ir reaguoja į tai, ko jam reikia. Kamuoliukas juda tik tada, kai jį pastumi, bet pats nepakinta. Todėl vien judėjimas neparodo, kas gyva.",
+    "steps": [
+      "Pirma spėk, kuris daiktas pasikeis per savaitę.",
+      "Paspausk „Po savaitės“ ir palygink visus tris daiktus.",
+      "Tada pakeisk vandenį ir dar kartą pažiūrėk, kas pasikeitė."
+    ],
+    "example": "Kambaryje augalas prie lango. Jį palaistai ir po savaitės jis didesnis. Kamuoliukas tas pats, nors ir nuriedėjo."
+  },
+  "sim": {
+    "component": "kas-gyvas",
+    "config": {
+      "objects": [
+        { "id": "augalas", "name": "pupos daigas", "art": "plant" },
+        { "id": "akmenukas", "name": "akmenukas", "art": "pebble" },
+        { "id": "kamuoliukas", "name": "kamuoliukas", "art": "ball" }
+      ],
+      "weeks": 2,
+      "growthPx": 8,
+      "guess": ["augalas", "akmenukas", "kamuoliukas"],
+      "sentences": {
+        "intro": "Kuris daiktas per savaitę pasikeis? Spėk.",
+        "guess": "Spėjimas užrašytas. Dabar pasirink vandenį.",
+        "grew": "Augalas paaugo. Kiti du nepakito.",
+        "dry": "Augalo lapai nuleisti. Kiti du nepakito.",
+        "push": "Kamuoliukas nuriedėjo ir sustojo.",
+        "pushNote": "Jį pastūmei tu. Pats jis nejuda ir neauga.",
+        "table": "Trys daiktai, vienas pasikeitė.",
+        "done": "Gyvas organizmas keičiasi pats.",
+        "again": "Gali bandyti iš naujo."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Po savaitės augalas paaugo, akmenukas ir kamuoliukas liko tokie patys. Kuris yra gyvas organizmas?",
+      "options": [
+        "Augalas",
+        "Kamuoliukas",
+        "Akmenukas"
+      ],
+      "answer": 0,
+      "hint": "Pažiūrėk, kas pasikeitė, o kas tik pajudėjo.",
+      "why": "Augalas auga ir reaguoja, o kiti du tik juda."
+    },
+    {
+      "q": "Kamuoliuką pastūmei ir jis nuriedėjo. Ar jis dėl to tapo gyvas?",
+      "options": [
+        "Taip, nes juda",
+        "Taip, nes pats rieda",
+        "Ne, juda tik tada, kai jį stumi"
+      ],
+      "answer": 2,
+      "hint": "Kas jį pajudino? Ar jis pajudėtų pats?",
+      "why": "Kamuoliukas juda tik tada, kai jį pastumi."
+    },
+    {
+      "q": "Žaislinis automobilis važiuoja, kai pasuki raktelį. Augalas nejuda. Kuris gyvas organizmas?",
+      "options": [
+        "Augalas, nes auga ir reaguoja į vandenį",
+        "Automobilis, nes juda",
+        "Abu yra gyvi organizmai"
+      ],
+      "answer": 0,
+      "hint": "Kas sukelia judėjimą, o kas augimą?",
+      "why": "Raktelis suka automobilį, o augalas pats auga."
+    },
+    {
+      "q": "Sausas žirnas guli lentynoje ir per savaitę nepakito. Ar jis gyvas organizmas?",
+      "options": [
+        "Ne, nes nepasikeitė",
+        "Taip, jis tik laukia vandens",
+        "Ne, nes nejuda"
+      ],
+      "answer": 1,
+      "hint": "Palaistyk jį ir palauk ilgiau.",
+      "why": "Sėkla gali ilgai laukti vandens ir paskui sudygti.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kodėl kamuoliukas nuriedėjo, bet neliko gyvas?",
+  "teacher": {
+    "goal": "Suprasti, kad gyvybę rodo pokytis laike — augimas ir reakcija į poreikį, — o ne vienas judesys. Modelis laiko tris daiktus viename kadre ir leidžia keisti tik vieną sąlygą (vandenį).",
+    "prompt": "Kodėl kamuoliukas nuriedėjo, o augalas liko gyvas?",
+    "offline": "Padėkite ant stalo tris daiktus: pupos daigą vazone, akmenuką ir kamuoliuką. Paprašykite vaiko spėti, kuris pasikeis per savaitę. Kamuoliuką leiskite pastumti — jis nurieda ir sustoja. Tada dvi savaites laistykite vieną augalą ir nelaistykite kito, o pokyčius žymėkite lentelėje popieriuje. Septintą dieną paklauskite, kuris daiktas pasikeitė pats.",
+    "misconceptions": [
+      "„Gyva tai, kas juda.“ Modelis turi judantį kamuoliuką, kuris nurieda tik tada, kai jį pastumi, o pokyčių lentelėje lieka 0.",
+      "„Augalas negyvas, nes nejuda.“ Augalas per savaitę su vandeniu paauga, o be vandens nuleidžia lapus — abu pokyčiai yra reakcija į tai, ko jam reikia.",
+      "„Jei per savaitę nepakito, tai negyva.“ Modelis to nepaneigia: sausas žirnas gali ilgai laukti vandens, todėl praplėtimo užduotis klausia būtent apie jį.",
+      "„Gyvybę rodo kvėpavimas, o jo nesimato.“ Modelis kvėpavimo nevaizduoja ir to neslepia — tai atskiras bandymas su vazonine gėle mokytojo veikloje."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Gamtos mokslai, 1 klasės ilgalaikis planas — 26.2.4 „Bendri gyvų organizmų požymiai“ (1 val.); veiklos — demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“ ir žaidimas „Gyvas–negyvas“.",
+    "NŠA (2024), bendra 1–2 klasės nuostata: atskirti gyvus organizmus nuo negyvų daiktų, išskirti bendrus gyvo organizmo požymius (juda, kvėpuoja, auga, maitinasi, dauginasi).",
+    "Villarroel, J. D. (2013). Environmental judgment in early childhood and its relationship with the understanding of the concept of living beings. SpringerPlus, 2, 87. https://doi.org/10.1186/2193-1801-2-87 — 6–7 m. grupėje 39,5 % vaikų teisingai priskyrė visus objektus; augalus — 79,1 %, transporto priemones — 86 %.",
+    "Leddon, E. M., Waxman, S. R., & Medin, D. L. (2009). Unmasking „Alive“: Children's appreciation of a concept linking all living things. Journal of Cognition and Development, 9(4), 461–473. https://doi.org/10.1080/15248370802678463 — klausimas „ar tai gyva?“ pats užstoja sąvoką, todėl modulyje klausiama „kuris yra gyvas organizmas?“."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (gyvybę rodo pokytis, ne judėjimas) rodoma per bandymą tame pačiame kadre.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (žaislinis automobilis, sausas žirnas), o ne įsimintą sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas palyginamas su tuo, kas įvyko; modelis nebaudžia ir leidžia bandyti dar kartą."
+  ]
+}

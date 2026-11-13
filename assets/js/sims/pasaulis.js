@@ -2235,6 +2235,300 @@ const dumaiIrIsejimas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 8. Kas gyvas — pokytis, o ne judėjimas                              */
+/* ------------------------------------------------------------------ */
+/* Vienas kintamasis — vanduo. „Savaitė“ yra paspaudimas, ne laukimas,
+   todėl nėra `setInterval` ir nėra laiko limito. Kamuoliukas scenoje yra
+   kontrolinis objektas: `pushBall()` keičia TIK jo `cx`, o lentelėje jo
+   skaičius lieka 0, nes `changeOf()` jam grąžina 0 — tai užtikrina kodas,
+   o ne teksto pažadas (LL-28: be prieštaraujančio pavyzdžio modelis tik
+   patvirtintų klaidingą nuostatą „gyva tai, kas juda“). */
+const KG_PAD = 8;                 // viena padala scenoje = 8 px
+const KG_STEM_BASE = 40;          // pradinis stiebo aukštis
+const KG_BALL_REST = 246;
+const KG_BALL_MOVED = 282;
+const KG_MAX_WEEKS = 3;           // dvi savaitės + trečia, kai abi buvo vienodos
+
+const kasGyvas = {
+  mount({ stage, controls, api, config = {} }) {
+    const objects = Array.isArray(config.objects) && config.objects.length
+      ? config.objects
+      : [
+        { id: "augalas", name: "pupos daigas" },
+        { id: "akmenukas", name: "akmenukas" },
+        { id: "kamuoliukas", name: "kamuoliukas" },
+      ];
+    const S = config.sentences || {};
+    const growthPx = Number(config.growthPx) > 0 ? Number(config.growthPx) : KG_PAD;
+    const step = growthPx / KG_PAD;          // padalos per savaitę
+
+    /* Skaičius lentelėje išvedamas, o ne įrašytas: jei `growthPx` nesidalija
+       iš padalos, piešinys ir lentelė pradėtų rodyti skirtingus dalykus.
+       Tylus apvalinimas būtų neteisingas modelis, todėl klaida sakoma. */
+    if (!Number.isInteger(step)) {
+      console.error(`kas-gyvas: growthPx=${growthPx} nesidalija iš ${KG_PAD} — lentelė apvalinama.`);
+    }
+
+    const nameOf = (id) => (objects.find((o) => o.id === id) || {}).name || id;
+    const guessIds = (Array.isArray(config.guess) && config.guess.length
+      ? config.guess : objects.map((o) => o.id))
+      .filter((id) => objects.some((o) => o.id === id));
+
+    let guess = null;
+    let watered = true;
+    let weeks = [];          // true — laistyta, false — sausa
+    let ballMoved = false;
+    let flash = "";          // trumpas paaiškinimas po veiksmo
+    let spoken = "";
+    let reported = false;    // api.progress — vieną kartą (LL-17)
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:26rem;margin:0 auto">
+        <svg id="kg-scene" viewBox="0 0 328 188" width="100%" role="img"
+             aria-label="Lentynoje pupos daigas, akmenukas ir kamuoliukas"></svg>
+        <p class="sim-note" style="font-size:.8rem;text-align:center">Modelis rodo savaitės pokytį. Kvėpavimo jame nematyti.</p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.5rem;width:100%;max-width:34rem;margin:0 auto">
+        <p style="margin:0;font-size:.95rem;font-weight:800;text-align:center">Kas pasikeis per savaitę?</p>
+        <div id="kg-guess" role="group" aria-label="Spėjimas"
+             style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem">
+          ${guessIds.map((id) => `<button class="btn secondary" data-guess="${id}" aria-pressed="false"
+             style="min-width:0;min-height:56px;padding:.35rem .2rem;font-size:.9rem;line-height:1.15">${nameOf(id)}</button>`).join("")}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem">
+          <button class="btn secondary" id="kg-wet" aria-pressed="true"
+                  style="min-width:0;min-height:56px;padding:.3rem .2rem;font-size:.95rem">Palaistyk</button>
+          <button class="btn secondary" id="kg-dry" aria-pressed="false"
+                  style="min-width:0;min-height:56px;padding:.3rem .2rem;font-size:.95rem">Nelaistyk</button>
+        </div>
+        <button class="btn" id="kg-week" style="min-height:56px;font-size:.95rem">Po savaitės</button>
+        <button class="btn secondary" id="kg-push" style="min-height:56px;font-size:.95rem">Pastumk kamuoliuką</button>
+        <div id="kg-table" style="display:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem"></div>
+        <p id="kg-end" role="status" aria-live="polite"
+           style="min-width:0;margin:0;font-size:.9rem;line-height:1.35;font-weight:700;text-align:center"></p>
+        <button class="btn ghost" id="kg-reset" style="min-height:48px;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
+    const svg = stage.querySelector("#kg-scene");
+    const q = (sel) => controls.querySelector(sel);
+    const guessButtons = [...controls.querySelectorAll("[data-guess]")];
+
+    const changeOf = (id) => (id === "augalas"
+      ? weeks.reduce((sum, wet) => sum + (wet ? step : -step), 0)
+      : 0);
+    const signed = (v) => (v > 0 ? `+${v}` : v < 0 ? `−${Math.abs(v)}` : "0");
+    const contrast = () => weeks.some((w, i) => weeks.slice(i + 1).some((x) => x !== w));
+
+    const paint = (btn, on) => {
+      btn.style.background = on ? "var(--ink)" : "var(--paper-2)";
+      btn.style.color = on ? "var(--paper)" : "var(--ink)";
+      btn.style.borderColor = on ? "var(--ink)" : "var(--line)";
+    };
+
+    function scene() {
+      const change = changeOf("augalas");
+      const h = Math.max(24, Math.min(84, KG_STEM_BASE + change * KG_PAD));
+      const dry = weeks.length > 0 && weeks[weeks.length - 1] === false;
+      const leafS = Math.max(8, Math.min(13, 10 + change));
+      const ballX = ballMoved ? KG_BALL_MOVED : KG_BALL_REST;
+      const stemCol = dry ? "#8d7a55" : "#4c8b3a";
+      const leafCol = dry ? "#a98f55" : "#5fbf62";
+      const label = (x, lines) => `<text x="${x}" y="${lines.length > 1 ? 166 : 172}" text-anchor="middle"
+        font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#3a342b"
+        >${lines.map((l, i) => `<tspan x="${x}" dy="${i ? 15 : 0}">${l}</tspan>`).join("")}</text>`;
+
+      svg.innerHTML = `
+        ${art.plank(16, 150, 296, 10)}
+        ${art.pot(38, 112, 34, 28)}
+        ${art.stem(55, 114, h, 4, stemCol, dry)}
+        ${art.leaf(55, 114 - h * 0.52, leafS, -1, dry, leafCol)}
+        ${art.leaf(55, 114 - h * 0.34, leafS, 1, dry, leafCol)}
+        ${art.ball(150, 127, 13, "#b3aea4", "#6f6a61")}
+        ${art.ball(ballX, 114, 26, "#f2cf94", "#a9793f")}
+        ${label(55, ["pupos", "daigas"])}${label(150, ["akmenukas"])}${label(262, ["kamuoliukas"])}`;
+
+      svg.setAttribute("aria-label",
+        `Lentynoje pupos daigas, akmenukas ir kamuoliukas. `
+        + `${dry ? "Augalo lapai nuleisti." : "Augalas su lapais."}`
+        + (weeks.length
+          ? ` Po ${weeks.length === 1 ? "vienos savaitės" : weeks.length === 2 ? "dviejų savaičių" : "trijų savaičių"}`
+            + ` augalas ${signed(change)}.`
+          : ""));
+    }
+
+    function render() {
+      scene();
+
+      const change = changeOf("augalas");
+      const ended = weeks.length >= KG_MAX_WEEKS;
+
+      for (const btn of guessButtons) {
+        const on = btn.dataset.guess === guess;
+        paint(btn, on);
+        btn.setAttribute("aria-pressed", String(on));
+        btn.disabled = weeks.length > 0;
+        btn.setAttribute("aria-label", weeks.length > 0
+          ? `Spėjimas užrašytas: ${nameOf(btn.dataset.guess)}. Spausk „Iš naujo“, jei nori pradėti iš naujo.`
+          : `Spėju: ${nameOf(btn.dataset.guess)}`);
+      }
+
+      const wetBtn = q("#kg-wet");
+      const dryBtn = q("#kg-dry");
+      for (const [btn, on] of [[wetBtn, watered], [dryBtn, !watered]]) {
+        paint(btn, on);
+        btn.setAttribute("aria-pressed", String(on));
+        btn.disabled = ended;
+        btn.setAttribute("aria-label", ended
+          ? "Vandens keisti nebegalima: modelis baigėsi. Paspausk „Iš naujo“."
+          : `${btn === wetBtn ? "Laistyti" : "Nelaistyti"} šią savaitę`);
+      }
+
+      const weekBtn = q("#kg-week");
+      const hadWeekFocus = document.activeElement === weekBtn;
+      weekBtn.disabled = ended || !guess;
+      weekBtn.setAttribute("aria-label", ended
+        ? "Modelis baigėsi. Paspausk „Iš naujo“."
+        : !guess ? "Pirma pasirink spėjimą, tada spausk „Po savaitės“."
+          : "Po savaitės");
+
+      /* Išjungtas valdiklis, ant kurio stovėjo fokusas, naršyklės metamas į
+         `body` — klaviatūros naudotojas nebeturi kur eiti (LL-32). Todėl
+         fokusas perkeliamas į vienintelį likusį veiksmą. */
+      if (weeks.length > 0 && guessButtons.includes(document.activeElement)) {
+        (weekBtn.disabled ? q("#kg-reset") : weekBtn).focus();
+      }
+      if (ended && (hadWeekFocus || document.activeElement === wetBtn
+        || document.activeElement === dryBtn)) {
+        q("#kg-reset").focus();
+      }
+
+      const table = q("#kg-table");
+      if (weeks.length) {
+        table.style.display = "grid";
+        table.innerHTML = objects.map((o) => `<div style="min-width:0;border:2px solid var(--line);
+          border-radius:var(--r-s);background:var(--paper-2);padding:.25rem .2rem;text-align:center">
+          <span style="display:block;font-size:.875rem;line-height:1.15;font-weight:700;color:var(--ink-soft);overflow-wrap:anywhere">${o.name}</span>
+          <strong style="display:block;font-size:1.15rem;line-height:1.25">${signed(changeOf(o.id))}</strong>
+        </div>`).join("");
+      } else {
+        table.style.display = "none";
+        table.innerHTML = "";
+      }
+
+      let end = "";
+      if (!guess) end = "Pirma spėk, tada spausk „Po savaitės“.";
+      else if (!weeks.length) end = "Spėjimas užrašytas. Pasirink vandenį ir spausk „Po savaitės“.";
+      else if (weeks.length === 1) end = "Viena savaitė. Ar kas nors pasikeitė?";
+      else if (contrast()) end = "Dvi savaitės. Palygink tris skaičius.";
+      else if (!ended) end = "Savaitės buvo vienodos. Pabandyk dar vieną kitaip.";
+      else end = "Modelis baigėsi. Paspausk „Iš naujo“.";
+      q("#kg-end").textContent = end;
+
+      const weekWord = weeks.length === 1 ? "Viena savaitė"
+        : weeks.length === 2 ? "Dvi savaitės" : "Trys savaitės";
+      api.readout(weeks.length
+        ? `${weekWord}. Augalas ${signed(change)}. Akmenukas 0. Kamuoliukas 0.`
+        : (guess ? `Tu sakei: ${nameOf(guess)}. Dabar pasirink vandenį.`
+          : "Kuris daiktas per savaitę pasikeis? Spėk."));
+
+      let note;
+      if (!guess) note = "Pirma spėk, tada laistyk.";
+      else if (!weeks.length) note = "Pasirink, ar šią savaitę laistysi.";
+      else if (flash) note = flash;
+      else if (weeks.length === 1) {
+        note = guess === "augalas"
+          ? "Tu sakei augalas. Taip ir įvyko."
+          : "Tu sakei kitaip. Pasikeitė augalas.";
+      } else if (contrast()) note = `${S.table || "Trys daiktai, vienas pasikeitė."} ${S.done || "Gyvas organizmas keičiasi pats."}`;
+      else if (!ended) note = "Savaitės buvo vienodos. Pakeisk vandenį ir pamatysi kitą kryptį.";
+      else note = "Kamuoliukas juda, bet lentelėje jo pokytis 0.";
+      api.note(note);
+
+      const speechKey = weeks.length ? `w${weeks.length}-${weeks[weeks.length - 1] ? "wet" : "dry"}` : "";
+      if (!reported && weeks.length >= 2 && contrast()) {
+        reported = true;
+        spoken = speechKey;
+        api.progress({ correct: true });
+        if (S.done) api.speak(S.done, { rate: 0.9 });
+      } else if (speechKey && speechKey !== spoken) {
+        spoken = speechKey;
+        const line = weeks[weeks.length - 1] ? S.grew : S.dry;
+        if (line) api.speak(line, { rate: 0.9 });
+      }
+    }
+
+    function pushBall() {
+      ballMoved = !ballMoved;
+      flash = ballMoved ? (S.pushNote || "") : "";
+      if (ballMoved && S.push) api.speak(S.push, { rate: 0.9 });
+      render();
+    }
+
+    function nextWeek() {
+      if (!guess || weeks.length >= KG_MAX_WEEKS) return;
+      weeks.push(watered);
+      flash = "";
+      render();
+    }
+
+    function chooseGuess(id) {
+      if (weeks.length) return;
+      guess = id;
+      flash = "";
+      if (S.guess) api.speak(S.guess, { rate: 0.9 });
+      render();
+      /* Spėjimas įrašytas — kitas privalomas žingsnis yra savaitė, todėl
+         fokusas keliamas ten (metodo M-08 reikalavimas). Pasirinkimą vis
+         dar galima pakeisti pele arba Shift+Tab. */
+      if (!q("#kg-week").disabled) q("#kg-week").focus();
+    }
+
+    function setWater(value) {
+      if (weeks.length >= KG_MAX_WEEKS) return;
+      watered = value;
+      flash = "";
+      render();
+    }
+
+    function reset() {
+      guess = null;
+      watered = true;
+      weeks = [];
+      ballMoved = false;
+      flash = "";
+      spoken = "";
+      if (S.again) api.speak(S.again, { rate: 0.9 });
+      render();
+    }
+
+    for (const btn of guessButtons) btn.addEventListener("click", () => chooseGuess(btn.dataset.guess));
+    q("#kg-wet").addEventListener("click", () => setWater(true));
+    q("#kg-dry").addEventListener("click", () => setWater(false));
+    q("#kg-week").addEventListener("click", nextWeek);
+    q("#kg-push").addEventListener("click", pushBall);
+    q("#kg-reset").addEventListener("click", reset);
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const idx = guessButtons.indexOf(document.activeElement);
+      if (idx >= 0 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+        e.preventDefault();
+        const to = (idx + (e.key === "ArrowRight" ? 1 : guessButtons.length - 1)) % guessButtons.length;
+        guessButtons[to].focus();
+        return;
+      }
+      if (e.key === "w" || e.key === "W") { e.preventDefault(); setWater(!watered); }
+      if (e.key === "r" || e.key === "R") { e.preventDefault(); reset(); }
+    });
+
+    render();
+    return null;
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
@@ -2243,4 +2537,5 @@ export const SIMS = {
   "nuozulnioji-plokstuma": nuozulniojiPlokstuma,
   "kuprine-ir-svoris": kuprineIrSvoris,
   "dumai-ir-isejimas": dumaiIrIsejimas,
+  "kas-gyvas": kasGyvas,
 };

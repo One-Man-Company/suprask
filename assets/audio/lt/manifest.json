@@ -583,9 +583,17 @@
   "n": "n/850358511b12a071-dbb36792.mp3",
   "s": "s/850358511b12a071-5964052b.mp3"
  },
+ "Augalas paaugo. Kiti du nepakito.": {
+  "n": "n/c233c5fdbd319065-83103cae.mp3",
+  "s": "s/c233c5fdbd319065-f3a955f5.mp3"
+ },
  "Augalas su lapais": {
   "n": "n/0993a152cf6c1f0c-fff0ba6b.mp3",
   "s": "s/0993a152cf6c1f0c-5f9202cb.mp3"
+ },
+ "Augalo lapai nuleisti. Kiti du nepakito.": {
+  "n": "n/878e35b6b2c58aec-df987297.mp3",
+  "s": "s/878e35b6b2c58aec-f85caac5.mp3"
  },
  "Aukštas garsas": {
   "n": "n/8418d5512290620e-59ee1030.mp3",
@@ -879,6 +887,10 @@
   "n": "n/333e0a1e27815d0c-0c135f4c.mp3",
   "s": "s/333e0a1e27815d0c-41491a62.mp3"
  },
+ "Gali bandyti iš naujo.": {
+  "n": "n/9047d71491bb5f87-9fe2355a.mp3",
+  "s": "s/9047d71491bb5f87-ff910e0e.mp3"
+ },
  "Garas": {
   "n": "n/a5c481c3f32ee5e4-7e4f2324.mp3",
   "s": "s/a5c481c3f32ee5e4-1ca3e48b.mp3"
@@ -911,6 +923,10 @@
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
   "s": "s/60d89cb04b7054d4-58e113db.mp3"
  },
+ "Gyvas organizmas keičiasi pats.": {
+  "n": "n/3b7d70d5ad3f7025-e518050a.mp3",
+  "s": "s/3b7d70d5ad3f7025-e2b6db98.mp3"
+ },
  "H": {
   "n": "n/44bd7ae60f478fae-2a69b4b5.mp3",
   "s": "s/44bd7ae60f478fae-d14b26a3.mp3"
@@ -927,6 +943,10 @@
   "n": "n/26c7dabd254a2784-d431e77b.mp3",
   "s": "s/26c7dabd254a2784-ab191d0f.mp3"
  },
+ "Jį pastūmei tu. Pats jis nejuda ir neauga.": {
+  "n": "n/4a3400f703cd9805-2c10057b.mp3",
+  "s": "s/4a3400f703cd9805-fbe33dd2.mp3"
+ },
  "K": {
   "n": "n/86be9a55762d316a-5317057b.mp3",
   "s": "s/86be9a55762d316a-9982aa77.mp3"
@@ -942,6 +962,10 @@
  "Kambaryje dūmai. Ką darysi?": {
   "n": "n/b3a5b2ab7c38ae41-4f0e4691.mp3",
   "s": "s/b3a5b2ab7c38ae41-a2837e77.mp3"
+ },
+ "Kamuoliukas nuriedėjo ir sustojo.": {
+  "n": "n/ae9e0b98fa70df84-faaefe4b.mp3",
+  "s": "s/ae9e0b98fa70df84-899817cc.mp3"
  },
  "Karosas": {
   "n": "n/f7523c580e0248c6-81d5ea90.mp3",
@@ -1094,6 +1118,10 @@
  "Kurioje pusėje segamas atšvaitas?": {
   "n": "n/9a7fa5b59a3baa59-be1f99eb.mp3",
   "s": "s/9a7fa5b59a3baa59-bfbbaced.mp3"
+ },
+ "Kuris daiktas per savaitę pasikeis? Spėk.": {
+  "n": "n/aaf67528a54f74ec-60d13c72.mp3",
+  "s": "s/aaf67528a54f74ec-bd64af5c.mp3"
  },
  "Kuris elementas eina toliau?": {
   "n": "n/dd82140a8fe00a5e-a7ae467a.mp3",
@@ -1543,6 +1571,10 @@
   "n": "n/3237c9dcda911865-e3649eb8.mp3",
   "s": "s/3237c9dcda911865-e9ef8cd4.mp3"
  },
+ "Spėjimas užrašytas. Dabar pasirink vandenį.": {
+  "n": "n/124584c5355fcdcc-56ecbc6f.mp3",
+  "s": "s/124584c5355fcdcc-5f5e9c43.mp3"
+ },
  "Spėjimas įrašytas. Dabar perjunk 24 valandų sistemą.": {
   "n": "n/c58ee21a4e528a1f-615ea451.mp3",
   "s": "s/c58ee21a4e528a1f-797c81e7.mp3"
@@ -1666,6 +1698,10 @@
  "Trintukas ilgesnis už sąvaržėlę. Ar trintukų bus daugiau, ar mažiau?": {
   "n": "n/5649faf6bb1d075e-0574fb55.mp3",
   "s": "s/5649faf6bb1d075e-83e5f559.mp3"
+ },
+ "Trys daiktai, vienas pasikeitė.": {
+  "n": "n/19477f386ec2e893-df5dac84.mp3",
+  "s": "s/19477f386ec2e893-78d346f8.mp3"
  },
  "Trys skaičiai, viena lenta.": {
   "n": "n/bb0ea531b3d25363-87c18e5f.mp3",

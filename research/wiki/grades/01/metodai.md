@@ -3,7 +3,7 @@ title: "1 klasės metodai"
 tipas: metodai
 klase: 1
 amzius: "6–7"
-atnaujinta: 2026-11-10
+atnaujinta: 2026-11-14
 ---
 
 # 1 klasės metodai
@@ -592,6 +592,159 @@ Atsakymų indeksai 0 / 1 / 0 / 1 — trečiasis sąmoningai ne viduryje (validat
 **Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, Gamtos mokslai, 1 klasės ilgalaikis planas — 26.2.4 „Bendri gyvų organizmų požymiai“ ir veiklos (`sources/pradinio-bp-rekomendacijos-2024.txt:17645–17648`); bendra 1–2 kl. nuostata apie požymius (`:12629–12632`); F1 pasiekimas (`:40886–40887`). Villarroel, J. D. (2013). Environmental judgment in early childhood and its relationship with the understanding of the concept of living beings. *SpringerPlus, 2*, 87. https://doi.org/10.1186/2193-1801-2-87 (atvira prieiga; 6–7 m. grupė `:733–735`, `:848–853`, transporto priemonės 4–5 m. grupėje `:751–753`, klausimo formuluotė `:470–479`). Leddon, E. M., Waxman, S. R., & Medin, D. L. (2009). Unmasking „Alive“: Children's appreciation of a concept linking all living things. *Journal of Cognition and Development, 9*(4), 461–473. https://doi.org/10.1080/15248370802678463 (PMID 19319203; PMCID PMC2659632).
 
 **Pastaba dėl wiki.** `research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:82–88` temų lentelėje 26.2.4 nėra — ji yra ilgalaikiame plane (`:17645`), todėl lentelė tyrėjui papildytina; šiame faile curriculum įrašas neliestas (ne mano vaidmens failas).
+
+### M-09 — Kas sukūrė šį daiktą: grandinė nuo daikto iki gamtos
+
+**Data:** 2026-11-14 · **Tema:** `agents/proposals/2026-11-14-ideator-kas-sukure-dailka.json` (#15581) · **Tikslas:** `content/lt/grade-01/pasaulio-pazinimas/21-kas-sukure-daikta.json` · **Šaltinis:** [[../../foundations/kilme-ir-grandine|kilme-ir-grandine]]
+
+**Viena didelė idėja.** Kiekvienas daiktas prasideda gamtoje: popierius — ąžuole, stiklinė — smėlyje. Parduotuvė yra kelio gale, o ne pradžioje.
+
+**Ką sako programa.** 1 klasės gamtos mokslų ilgalaikiame plane yra **26.3.1 „Gamtos ištekliai, jų tarša ir tausojimas“ (2 val.)**, o veikla įvardyta pažodžiui — „darbas grupėse ar porose (pvz., žaidimas „Kas sukūrė šį daiktą?“)“ (`sources/pradinio-bp-rekomendacijos-2024.txt:17649–17656`; ta pati eilutė integracijos lentelėje `:8452–8458`). To paties dokumento „5 temos su įgyvendinimo rekomendacijomis“ lentelėje 26.3.1 nėra (`research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:82–88`, ten pat `[PATIKRINTI]` apie numeracijos spragas). Tai dokumento spraga, o ne temos nebuvimas: planas jai skiria dvi valandas, todėl modulis remiasi ilgalaikiu planu, o ne penkių temų sąrašu (žr. „Pastaba dėl wiki“).
+
+**Kodėl modelis, o ne paveikslėlis.** Paveikslėlyje, kuriame nupiešta grandinė, vaikas mato rezultatą, bet negali patikrinti dviejų dalykų, kurie ir yra sąvoka. Pirma, jis negali pamatyti, kad **klaidingas šaltinis grandinės nebaigia**: piešinyje visos kortelės jau sudėtos teisingai, todėl ryšys atrodo kaip iliustracija, o ne kaip taisyklė. Antra, jis negali grįžti atgal: paveikslėlis neatsako, kas nutinka, jei popierius būtų daromas iš smėlio. Modelis leidžia rinktis šaltinį ir pamatyti, kad pasirinkus netinkamą kortelę grandinė sustoja vienu žingsniu anksčiau, o `api.note` pasako, kokia **savybė** nesutampa. Be to, prieš pirmą pasirinkimą prašoma spėjimo apie kelio pradžią — tai ne puošmena, o būdas pamatyti nuostatą, kurią modelis turi paneigti (LL-15).
+
+**Ką rodo tyrimai.** Anderson, Ellis ir Jones (2014) tyrė 182 darželinukus ir pirmokus (K–1 klasės) JAV pietryčiuose ir klausė, ar kasdieniai daiktai yra augalai. **89 % darželinukų ir 85 % pirmokų nepripažino, kad telefono stulpai daromi iš medžių kamienų**; paklausti, iš kur stulpas, dažniausiai atsakė „iš telefono kompanijos“. **80 % darželinukų ir 87 % pirmokų nesiejo popieriaus su medžiais** (lentelėje popierių kaip augalą įvardijo 20 % darželinukų ir 13 % pirmokų). Tai tiksli formuluotė tos nuostatos, kurią turi paneigti modelis: daiktas turi **gamintoją**, bet neturi **šaltinio** — kol kas nors nepamoko jo ieškoti.
+
+Bjørgen, Moe, Wold ir Melis (2023) kalbino 56 penkerių–šešerių metų vaikus Norvegijoje apie aštuonių maisto produktų kilmę. Vaikai gerai žinojo, iš kur pienas (94 %), mėsa (79 %), duona (67 %) ir miltai (67 %), bet prasčiau — sūrį (30 %), makaronus (30 %) ir dešrą (33 %). Autoriams svarbiausia išvada: sunkiausia ten, kur tarp žaliavos ir produkto yra **keli nematomi žingsniai**. Todėl modelis kiekvieną žingsnį rodo atskirai ir neleidžia jo praleisti.
+
+Joshi, Azuma ir Feenstra (2008) apžvalgoje aprašytas programos vertinimas, kuriame vaikai dėliojo korteles „nuo ūkio iki stalo“: teisingai seką sudėjo 12 % prieš ir 52 % po programos. Tai ne 1 klasės ir ne Lietuvos duomenys, todėl jie naudojami tik kaip veiklos formos precedentas — kortelių seka yra išmatuojamai veiksminga, bet pati savaime dar neįrodo supratimo.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Daiktas atsiranda parduotuvėje.“** Tai pagrindinė nuostata, kurią fiksuoja Anderson ir kt. (2014): vaikas įvardija matomą agentą (parduotuvę, įmonę, gamyklą), o ne medžiagos šaltinį. Paneigiama ne tekstu, o veiksmu: vaikas pats stato grandinę atgal, o spėjimas „parduotuvėje“ lieka matomas viršuje ir pabaigoje lyginamas su grandinės galu („Tu sakei: parduotuvėje. Grandinė baigėsi miške.“).
+2. **„Gamta — tai tik miškas.“** Antras daiktas yra stiklinė, o jos grandinė baigiasi **smėlyje**. Jei gamta būtų tik žaluma, stiklinės kelias neturėtų kur baigtis; modelis rodo, kad gamta yra ir negyvoji.
+3. **„Gamykla sukuria medžiagą iš nieko.“** Kiekvienas žingsnis turi savo šaltinį, o netinkama kortelė grandinės nepratęsia. Paaiškinimas remiasi savybe, ne autoritetu: smėlis birus, popierius lankstosi; mediena turi kamieną, smėlis — ne.
+4. **„Jei daiktas pirktas, jis jau ne iš gamtos.“** Tai ta pati pirmoji nuostata, pasakyta iš kitos pusės, todėl modelis jos atskirai neįvardija: parduotuvė grandinėje yra, tik paskutinė. Parduotuvės kortelė atsiranda peržiūros pabaigoje („Popierius atvežamas į parduotuvę.“), kad vieta būtų parodyta, o ne neigiama.
+
+**Tikslas sąmoningai kuklus.** Modulis nesiekia, kad vaikas žinotų, iš ko padarytas kiekvienas daiktas. Jis siekia vieno įgūdžio: **paklausti „iš ko?“ ir eiti atgal, kol kelias baigiasi gamtoje**. Todėl modelio grandinė trumpa — du žingsniai nuo daikto iki gamtos (popierius → mediena → ąžuolas; stiklinė → stiklas → smėlis), o ne visa gamybos grandinė su transportu ir pakuote. Darbinė atmintis 6–7 metų vaikui laiko du–tris elementus; ilgesnė grandinė pavirstų sekos įsiminimu, o ne kilmės supratimu (`foundations/kognityvine-apkrova.md`).
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas).**
+
+1. **Stalas ir kortelės.** Mokytojas padeda popieriaus lapą, medinę liniuotę ir stiklinę, o vaikams duoda tris korteles: ąžuolas, mediena, smėlis. Prašoma prie lapo padėti tai, iš ko jis atsirado, o prie stiklinės — savo. Vaikai ginčijasi; mokytojas atsakymo neteikia. Tikslas: iškelti kasdienį paaiškinimą („iš parduotuvės“) į kalbą, kad modelis turėtų ką griauti.
+2. **Ekranas, spėjimas.** Ekrane dešinėje guli popierius, į kairę — du tušti langeliai. Klausimas: „Kur prasideda popieriaus kelias?“ Trys mygtukai: Miške / Parduotuvėje / Gamykloje. Spėjimas įrašomas ir lieka matomas visą laiką. Tikslas: įsipareigoti nuostatai, kol modelis jos nepaneigė.
+3. **Ekranas, grandinė atgal.** Atsiranda pirmas klausimas: „Iš ko padarytas popierius?“ Trys kortelės: mediena / lapai / smėlis. Teisinga kortelė atsiranda kairėje, tarp jos ir lapo nutįsta rodyklė. Tada antras klausimas: „Iš ko atsirado mediena?“ (ąžuolas / pieštukas / smėlis). Netinkama kortelė lieka langelyje su brūkšniuotu rėmeliu ir trūkusia rodykle, o `api.note` pasako, kokia savybė nesutampa. Tikslas: pamatyti, kad grandinė gali **nenueiti iki gamtos**, ir kodėl.
+4. **Simbolis.** Kai popieriaus grandinė baigiasi, kairiausia kortelė apibrėžiama rėmeliu ir gauna žodį „GAMTA“, o `api.readout` sako: „Popierius prasideda miške.“ Mygtukas „Peržiūrėk kelią“ veda per grandinę iš kairės į dešinę po vieną žingsnį, be laikmačio, kiekvieną kartą tardamas vieną sakinį („Ąžuolas auga miške.“ → „Iš medienos daromas popierius.“ → „Popierius atvežamas į parduotuvę.“). Vaikas perskaito užrašą ir pasako, kas pasikeitė kiekviename žingsnyje. Tikslas: grandinė tampa užrašu, o ne paveikslėliu, ir parduotuvė atsiduria gale.
+5. **Perkėlimas.** Antras daiktas — stiklinė. Prieš statant: „Ar stiklinės kelias irgi baigsis gamtoje?“ (Taip / Ne). Spėjimas lyginamas su grandinės galu: „Tu sakei taip. Gamta yra ir smėlis.“ Grandinė: stiklinė → stiklas → smėlis. Tada ekrane lieka abi grandinės kaip dvi eilutės, o to paties klausimo atvejai be modelio sprendžiami užduotyse: knyga (miškas), plastikinis butelis (nafta).
+
+**Privalomas spėjimo žingsnis prieš pirmą pasirinkimą.** Du spėjimai, abu palyginami su įvykiu (LL-15). Pirmasis — vieta (miške / parduotuvėje / gamykloje), antrasis — ar antro daikto kelias irgi baigsis gamtoje (taip / ne). Kol vaikas nepasirinko pirmojo spėjimo, šaltinio kortelės neaktyvios; jų `aria-label` sako „Pirma pasirink spėjimą“. Be spėjimo modelis virsta kortelių rinkimu bandymų būdu: vaikas baksto tol, kol grandinė sueina, ir nuostatos nepastebi — tas pats pavojus kaip M-01–M-08 (`foundations/sujungti-dydziai.md`).
+
+**Simuliacijos specifikacija.** Komponentas `daikto-grandine`, failas `assets/js/sims/pasaulis.js` (jis jau importuoja `art.js`, o `scripts/check_art.py:31` LEGACY sąraše yra tik `matematika.js`). Grandinė yra **duomenys**, o ne trys atskiri ekranai: komponentas eina per `objects[].steps[]`, todėl trečias daiktas pridedamas konfigūracija, be kodo pakeitimų. `config`:
+
+```json
+{ "cards": {
+    "popierius": { "name": "popierius", "icon": "popierius" },
+    "mediena":   { "name": "mediena",   "icon": "mediena" },
+    "lapai":     { "name": "lapai",     "icon": "lapai" },
+    "smelis":    { "name": "smėlis",    "icon": "smelis" },
+    "azuolas":   { "name": "ąžuolas",   "icon": "azuolas" },
+    "piestukas": { "name": "pieštukas", "icon": "piestukas" },
+    "stikline":  { "name": "stiklinė",  "icon": "stikline" },
+    "stiklas":   { "name": "stiklas",   "icon": "stiklas" },
+    "nafta":     { "name": "nafta",     "icon": "nafta" } },
+  "objects": [
+    { "id": "popierius",
+      "predict": { "say": "predict", "options": [
+        { "id": "miske", "label": "Miške", "say": "compare_miske" },
+        { "id": "parduotuveje", "label": "Parduotuvėje", "say": "compare_parduotuve" },
+        { "id": "gamykloje", "label": "Gamykloje", "say": "compare_gamykla" } ] },
+      "steps": [
+        { "card": "mediena", "ask": "ask_mediena",
+          "options": ["mediena", "lapai", "smelis"],
+          "no": { "lapai": "Lapai ploni ir žali. Popierius baltas ir sausas.",
+                  "smelis": "Smėlis birus. Popierius lankstosi ir plyšta." } },
+        { "card": "azuolas", "ask": "ask_azuolas", "end": "done1",
+          "options": ["azuolas", "piestukas", "smelis"],
+          "no": { "piestukas": "Pieštukas daromas iš medienos, ne atvirkščiai.",
+                  "smelis": "Smėlis neturi kamieno ir žievės." } } ],
+      "replay": ["replay_azuolas", "replay_mediena", "replay_parduotuve"] },
+    { "id": "stikline",
+      "predict": { "say": "ask2", "options": [
+        { "id": "taip", "label": "Taip", "say": "compare_taip" },
+        { "id": "ne", "label": "Ne", "say": "compare_ne" } ] },
+      "steps": [
+        { "card": "stiklas", "ask": "ask_stiklas",
+          "options": ["stiklas", "mediena", "smelis"],
+          "no": { "mediena": "Stiklinė permatoma. Mediena nepermatoma.",
+                  "smelis": "Smėlis birus. Stiklinė kieta ir vientisa." } },
+        { "card": "smelis", "ask": "ask_smelis", "end": "done2",
+          "options": ["smelis", "azuolas", "nafta"],
+          "no": { "azuolas": "Ąžuolas duoda medieną, ne stiklą.",
+                  "nafta": "Nafta tamsi. Stiklas skaidrus." } } ],
+      "replay": ["replay_smelis", "replay_stiklas"] } ],
+  "sentences": {
+    "predict": "Kur prasideda popieriaus kelias? Spėk.",
+    "guessed": "Spėjimas įrašytas. Dabar statyk kelią.",
+    "ask_mediena": "Iš ko padarytas popierius?",
+    "ask_azuolas": "Iš ko atsirado mediena?",
+    "ask_stiklas": "Iš ko padaryta stiklinė?",
+    "ask_smelis": "Iš ko atsiranda stiklas?",
+    "wrong": "Grandinė čia nenueina.",
+    "done1": "Popierius prasideda miške.",
+    "compare_miske": "Tu sakei miške. Taip ir yra.",
+    "compare_parduotuve": "Tu sakei parduotuvėje. Grandinė baigėsi miške.",
+    "compare_gamykla": "Tu sakei gamykloje. Grandinė baigėsi miške.",
+    "ask2": "Ar stiklinės kelias irgi baigsis gamtoje?",
+    "done2": "Stiklinė prasideda smėlyje.",
+    "compare_taip": "Tu sakei taip. Gamta yra ir smėlis.",
+    "compare_ne": "Tu sakei ne. Stiklinės kelias baigėsi smėlyje.",
+    "all": "Gamta yra ir miškas, ir smėlis.",
+    "again": "Pradedam iš naujo.",
+    "replay_azuolas": "Ąžuolas auga miške.",
+    "replay_mediena": "Iš medienos daromas popierius.",
+    "replay_parduotuve": "Popierius atvežamas į parduotuvę.",
+    "replay_smelis": "Smėlis kasamas.",
+    "replay_stiklas": "Iš smėlio lydomas stiklas." } }
+```
+
+Dvylika savybių, kurių negalima praleisti (kiekviena atitinka pamoką):
+
+- **Vienas kintamasis:** kurią kortelę vaikas pasirenka dabartiniame žingsnyje. Daiktas keičiamas tik užbaigus grandinę („Kitas daiktas“), todėl du kintamieji niekada neveikia vienu metu. Spėjimas ir „Peržiūrėk kelią“ yra žingsniai, o ne papildomi kintamieji.
+- **Grandinė — konfigūracija, ne kodas:** komponentas tikrina, kad `steps[].options` turi `card` ir kad **kiekviena neteisinga kortelė turi `no` paaiškinimą**. Jei trūksta — `console.error` ir ekrane „Grandinė nesuderinta su kortelėmis.“, o ne tylus bendras sakinys (LL-33). Jei `card` nėra `options` sąraše — ta pati klaida.
+- **Kryptis matoma:** rodyklė visada iš kairės į dešinę (`Ąžuolas → mediena → popierius`), o ne atvirkščiai; todėl „atgal“ yra judėjimas prieš rodyklę, ir tai pasakoma vieną kartą `api.note`, o ne kiekviename žingsnyje.
+- **Netinkama kortelė lieka matoma** brūkšniuotu rėmeliu ir trūkusia rodykle, kol vaikas pasirenka kitą. Ji neišnyksta po laiko ir nėra vadinama klaida: `api.readout` sako „Grandinė čia nenueina.“, `api.note` — kodėl (savybė), `api.speak` — tą patį sakinį.
+- **Grįžtamasis ryšys** — iškart po paspaudimo (≤ 1 kadras). `api.note` niekada nesako „teisingai“ ir niekada ne apie vaiką (T5.1). `api.speak` skaito tik `config.sentences` frazes (LL-42), o `api.note` garsiai neskaitomas.
+- **`api.progress({ correct: true })`** — vieną kartą, kai **abi** grandinės baigtos **ir** antrasis spėjimas palygintas, t. y. tik pasiekus būseną „abi grandinės“ (LL-29). Po pirmos grandinės pažanga nežymima, nors grandinė baigta. „Iš naujo“ pažangos netrina (LL-16).
+- **Išdėstymas 360 px:** scena `viewBox="0 0 328 200"`, `width:100%`, `max-width:328px`. Trys kortelės po 92 × 104 px ir du 26 px tarpai = 328 px (rodyklė telpa į tarpą). Kortelės vidus: 56 px piktograma, 32 px užrašas (dvi eilutės po 16 px), 16 px „GAMTA“ juosta = 104 px. Spėjimo žymė viršuje 0–36 px. Suvestinė (abi grandinės) — dvi eilutės po tris 60 × 36 px korteles su 10 px tarpais = 200 px iš 328 px; eilutės 40 ir 104 px aukštyje.
+- **Valdikliai:** trys šaltinio mygtukai 100 × 72 px + du 8 px tarpai = 316 px iš 328 px; kiekvienas turi piktogramą ir užrašą, `min-height:72px`, `height:auto`, `overflow-wrap:anywhere` (200 % tekste užrašas gali užimti tris eilutes). „Peržiūrėk kelią“ ir „Kitas daiktas“ — 100 % × 56 px, „Iš naujo“ ≥ 96 × 48 px. „Kitas daiktas“ neaktyvus, kol grandinė nebaigta, ir `aria-label` pasako kodėl. Klaviatūra: `Tab`, `Enter`/`Space`, `←`/`→` perjungia variantus, `R` atstato.
+- **Fokusas** (LL-32): po spėjimo — į pirmą šaltinio mygtuką; po teisingo žingsnio — į pirmą kito žingsnio mygtuką; po grandinės pabaigos — į „Peržiūrėk kelią“; paspaudus „Kitas daiktas“ — į pirmą spėjimo mygtuką; kai mygtukas išjungiamas, fokusas niekada nelieka ant jo.
+- **Piktogramos:** viena nauja `art.js` dalis `pictogram(kind, x, y, s)` su devyniomis rūšimis (`popierius`, `mediena`, `lapai`, `smelis`, `azuolas`, `piestukas`, `stikline`, `stiklas`, `nafta`), kuri viduje naudoja jau esančias dalis (`plank`, `tree`, `leaf`, `drops`) ir prideda tris naujas formas: lapas su užlenktu kampu, svarstiklinė su atviru viršumi ir šviesos ruožu, smėlio kauburys iš grūdelių. Kortelės skiriasi **forma**, ne vien spalva (LL-13): popierius — stačiakampis su užlenktu kampu, mediena — lenta su rievėmis, smėlis — kauburys, stiklas — plokštė su įstrižu blizgesiu, stiklinė — taurelė.
+- **Prieinamumas:** scenos SVG `role="img"`, `aria-label` atnaujinamas po kiekvieno veiksmo ir neperpasakoja `readout` žodis į žodį: „Popieriaus grandinė: lapas, mediena, tuščias langelis. Spėjimas: parduotuvėje.“ Netinkama kortelė `aria-label` žymima žodžiu „netinka“, ne vien brūkšniuotu rėmeliu. „GAMTA“ — žodis, ne vien žalia spalva. `readout` turi `aria-live="polite"`.
+- **Jokių laikmačių, ėjimų limito, „game over“.** Netinkamų kortelių skaičius neribojamas ir neskaičiuojamas; grįžimas prie jau atmestos kortelės niekada nelaikomas klaida.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | lapas dešinėje, du tušti langeliai, šaltinio kortelės neaktyvios | „Kur prasideda popieriaus kelias? Spėk.“ | „Pirma spėk, tada rink šaltinį.“ |
+| spėjimas „Parduotuvėje“ | spėjimas kortelėje virš grandinės, trys kortelės aktyvios | „Tu sakei: parduotuvėje. Dabar statyk kelią.“ | „Šis spėjimas liks viršuje iki galo.“ |
+| pirmas žingsnis teisingas | tarp lapo ir medienos rodyklė, kairėje atsidarė antras langelis | „Popierius iš medienos. Iš ko mediena?“ | „Dar vienas žingsnis iki gamtos.“ |
+| netinkama kortelė (lapai) | lapų kortelė langelyje, brūkšniuotas rėmelis, rodyklė trūkusi | „Grandinė čia nenueina.“ | „Lapai ploni ir žali. Popierius baltas ir sausas.“ |
+| popieriaus grandinė baigta | trys kortelės, kairioji su rėmeliu ir žodžiu „GAMTA“ | „Popierius prasideda miške.“ | „Tu sakei: parduotuvėje. Grandinė baigėsi miške.“ |
+| peržiūra, 1–3 žingsnis | paryškinama viena kortelė iš kairės į dešinę | „1. Ąžuolas auga miške.“ / „2. Iš medienos daromas popierius.“ / „3. Popierius atvežamas į parduotuvę.“ | „Žiūrėk, kur yra parduotuvė.“ |
+| stiklinės spėjimas | stiklinė dešinėje, du spėjimo mygtukai | „Ar stiklinės kelias irgi baigsis gamtoje?“ | „Pasirink: taip arba ne.“ |
+| stiklinės grandinė baigta | stiklinė, stiklas, smėlis; smėlis su „GAMTA“ | „Stiklinė prasideda smėlyje.“ | „Tu sakei: taip. Gamta yra ir smėlis.“ |
+| abi grandinės | dvi suvestinės eilutės: popierius ir stiklinė | „Du daiktai, dvi grandinės, abi gamtoje.“ | „Gamta yra ir miškas, ir smėlis.“ |
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Parduotuvėje ant lentynos guli popieriaus lapas. Iš ko jis padarytas?“ — Iš medienos / Iš lapų / Iš smėlio | Iš medienos (0) | „Iš lapų“ — popieriaus lapas painiojamas su medžio lapu (tas pats žodis) | „Medžio lapas žalias ir plonas. Ar popierius toks pat?“ |
+| 2 | taikymas | „Stiklinė padaryta iš stiklo. Iš ko atsiranda stiklas?“ — Iš naftos / Iš medienos / Iš smėlio | Iš smėlio (2) | „Iš naftos“ — plastiko šaltinis priskiriamas stiklui | „Nafta tamsi, mediena turi rieves. Stiklas skaidrus.“ |
+| 3 | perkėlimas | „Knyga padaryta iš popieriaus. Kur prasideda knygos kelias?“ — Parduotuvėje / Spaustuvėje / Miške | Miške (2) | „Spaustuvėje“ — artimiausias matomas žmogaus žingsnis laikomas pradžia; „Parduotuvėje“ — pirmoji nuostata | „Spaustuvė spausdina popierių. Kas popierių padaro?“ |
+| 4 | perkėlimas (`optional: true`) | „Plastikinis butelis padarytas iš plastiko. Kur prasideda jo kelias?“ — Naftoje / Parduotuvėje / Smėlyje | Naftoje (0) | „Smėlyje“ — stiklo šaltinis perkeliamas plastikui; „Parduotuvėje“ — pirmoji nuostata | „Plastikas lankstus ir lengvas. Stiklas kietas, smėlis birus.“ |
+
+Atsakymų indeksai 0 / 2 / 2 / 0 — pasiskirstę, todėl vaikas negali spėti pagal varianto vietą. Kiekviena užuomina pasakyta trumpais sakiniais ir nė viena nekartoja teisingo varianto (`validate_content.py` tai tikrina).
+
+**Refleksija.** „Iš ko atsirado tavo pieštukas? Papasakok kelią iki gamtos.“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — pieštukas → mediena → medis, o ne „iš parduotuvės“.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).** Grandinė rodo tik medžiagos kelią: transportas, sandėliavimas ir pakuotė joje nevaizduojami, nors realiame gyvenime jie yra. Popierius gali būti daromas ir iš perdirbto popieriaus bei šiaudų, stiklas — iš perdirbto stiklo, plastikas — ir iš augalų; modelis rodo dažniausią kelią, o ne vienintelį, ir to neslepia. Modelis taip pat nevaizduoja, **kiek** išteklių ar laiko reikia — tai tausojimo klausimas, kurį ideatorius sąmoningai paliko atskiram moduliui („Kaip tausoti daiktus klasėje?“), nes tai antra sąvoka (T1.2). Grandinės pabaiga yra **vieta** (miškas, smėlis), ne medžiaga: mediena dar nėra gamta, o ąžuolas — gamta. Todėl modelis niekada nenustoja ties „mediena“ ir neteikia jai „GAMTA“ žymos.
+
+**Ką tai reiškia modulio autoriui.** `title` — „Kas sukūrė šį daiktą: kelias iki gamtos“ (39 simboliai iš 42); `subtitle` — „Popierius prasideda miške, o stiklinė — smėlyje“ (47 iš 80); `minutes` — 9; trys `outcomes`: „Nurodau, iš ko padarytas daiktas.“ (33), „Nustatau, kur prasideda daikto kelias gamtoje.“ (46), „Paaiškinu, kodėl parduotuvė yra kelio gale, o ne pradžioje.“ (59); `concept.title` — „Daiktas prasideda gamtoje“ (25 iš 40); `concept.big_idea` — „Popierius prasideda ąžuole, stiklinė — smėlyje. Kiekvienas daiktas turi kelią iki gamtos. Parduotuvė yra to kelio gale, o ne pradžioje.“ (135 iš 240); `concept.steps` — keturi žingsniai iš sekos 1–4 (38–58 simboliai); `concept.example` — „Popieriaus lapas guli parduotuvėje. Jo kelias: ąžuolas, mediena, popierius.“; `teacher.goal` — „Suprasti, kad kiekvienas daiktas prasideda gamtoje. Popierius prasideda ąžuole, o stiklinė — smėlyje. Modelis leidžia vaikui pačiam statyti grandinę atgal. Netinkamas šaltinis grandinės nebaigia.“; `teacher.offline` — trys realūs daiktai ir trys kortelės, dėliojimas prie lapo ir stiklinės, tada kortelių eilė ir kelias balsu; `teacher.misconceptions` — trys nuostatos iš šio skyriaus; `sim` — `{ "component": "daikto-grandine", "config": { … } }` (įrašytas aukščiau). Numeris `21-` laisvas (pasaulio pažinime yra 08–10 ir 16–20). Modulį įrašius, jis turi būti įtrauktas į `content/lt/grade-01/index.json` ir `path.json` (kūrėjo ar dizainerio darbas, ne metodo dalis); siūloma vieta kelyje — po `20-kas-gyvas`: ten vaikas jau atskyrė gyvą nuo negyvo, o čia klausiama, iš ko padarytas negyvas daiktas, ir prieš `02-medziagu-bandymas`, kuris sprendžia tinkamumą, o ne kilmę.
+
+**Ideatoriaus grandinės taisymas.** Pasiūlyme rašoma „ąžuolas → **lenta** → popierius“. Lenta nėra popieriaus žaliava: popierius daromas iš medienos plaušų (celiuliozės), o lenta — išpjauta mediena baldams ir statybai. Todėl modelyje vidurinė kortelė vadinama **mediena**, ne lenta; kitaip modelis mokytų neteisingo tarpinio žingsnio, o vaikas, paklaustas „iš ko padaryta lenta?“, negautų atsakymo grandinėje (LL-34: sąvoka, kurios modelyje nebėra, neturi likti kitur). Antra, pasiūlyme grandinė baigiama „gamta“ kaip bendra sąvoka; modelis reikalauja **konkrečios vietos** (miškas, smėlis), nes „gamta“ 6–7 metų vaikui dažnai reiškia tik mišką — būtent tą nuostatą ir reikia paneigti.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, Gamtos mokslai, 1 klasės ilgalaikio plano pavyzdys — 26.3.1 „Gamtos ištekliai, jų tarša ir tausojimas“ (2 val.), veikla „Kas sukūrė šį daiktą?“ (`sources/pradinio-bp-rekomendacijos-2024.txt:17649–17656`), integracijos lentelė (`:8452–8458`). Anderson, J. L., Ellis, J. P., & Jones, A. M. (2014). Understanding early elementary children's conceptual knowledge of plant structure and function through drawings. *CBE—Life Sciences Education, 13*(3), 375–386. https://doi.org/10.1187/cbe.13-12-0230 (n = 182, K–1; telefono stulpai 11 % / 15 %, popierius 20 % / 13 % — Table 6; „from the telephone company“ ir 89 % / 85 %, 80 % / 87 % — Results). Bjørgen, K., Moe, B., Wold, P.-A., & Melis, C. (2023). Children's knowledge about the origins of food in early childhood education and care institutions (ECEC) in Norway. *Education 3-13, 51*(7), 1118–1129. https://doi.org/10.1080/03004279.2022.2049839 (n = 56, 5–6 m.; pienas 94 %, mėsa 79 %, duona 67 %, miltai 67 %, sūris 30 %, makaronai 30 %, dešra 33 %). Joshi, A., Azuma, A. M., & Feenstra, G. (2008). Do farm-to-school programs make a difference? Findings and future research needs. *Journal of Hunger & Environmental Nutrition, 3*(2–3), 229–246. https://doi.org/10.1080/19320240802244025 (kortelių sekos vertinimas 12 % → 52 % — apžvalgoje cituojamas programos vertinimas, ne šio straipsnio eksperimentas).
+
+**Pastaba dėl wiki.** `research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:82–88` temų lentelėje 26.3.1 nėra, nors ilgalaikiame plane ji yra su 2 valandomis; lentelė pati tai žymi `[PATIKRINTI]`. Tai tyrėjo failas, šiame darbe neliestas. `agents/scope.py` temų sąraše „Gamtos ištekliai“ taip pat dar nerodoma kaip padengta — tai programos derintojo ir tyrėjo darbas, ne metodo.
 
 ## Atviros prielaidos
 

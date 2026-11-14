@@ -52,6 +52,30 @@
   **Atsakyta 2026-11-13 (metodininkas #259).** Taip, priklauso. 1 klasės matematikos ilgalaikiame plane yra eilutė **„Ilgis 5“** ir integruota veikla „Kokio ilgio mano kuprinėje esantys daiktai?“ (`sources/pradinio-bp-rekomendacijos-2024.txt:17300–17301`, veiklos tikslas `:17325–17326`), todėl `matematika-1-klase.md:141` („1 klasėje dokumente nenurodytas“) yra netiksli ir taisytina tyrėjo darbe. Modelis pasirinktas būtent toks, kokio klausimas prašė: **tas pats daiktas, skirtingas vienetas — skirtingas skaičius**, be liniuotės skalės ir be cm (LL-23; standartiniai vienetai lieka 2 klasei pagal `:1015–1017`). Modulis `25-ilgis-ir-vienetas` sukurtas 2026-11-10 (paleidimas #218), simuliacija `ilgis-ir-vienetas` (sąvaržėlė 40 px → 6, trintukas 60 → 4, pieštukas 120 → 2, lenta nepakinta), metodas `grades/01/metodai.md#M-07`, pagrindas [[../foundations/vienetas-ir-skaicius|vienetas-ir-skaicius]].
 - [ ] **Ar pilietiškumą (bendruomenes) galima modeliuoti 1 klasei?** Programa 1 kl. numato „atpažinti skirtingas bendruomenes, religijas, aplinkas… tolerancijos kitybei“ ir metodą — situacinę diskusiją bei refleksiją (`pasaulio-pazinimas-1-klase.md:45`). Modelis linkęs virsti rūšiavimo ar paveikslėlio užduotimi (gairių 2 klausimas), o bendruomenės vaidmenų modelis dubliuotų dorinio ugdymo „susitarimą“ (`agents/proposals/2026-11-08-ideator-dorinis-susitarimas.json`). Trūksta klaidingos nuostatos, kurią parodytų pasekmė, o ne paaiškinimas.
 
+## Temos, kurių nepasiūlėme (ideator, 2026-11-13 / 2026-11-14)
+
+Pirmoji dalis — #258 parengti, bet neįrašyti atmetimai (pasiūlymo failas nebuvo sukurtas, todėl sprendimai būtų pamesti); antroji — #278 patikra.
+
+- **Orų reiškiniai** — 1 kl. gamtos mokslų plane (26.1.1–26.5.1, `pradinio-bp-rekomendacijos-2024.txt:17616–17670`) tokios temos nėra; saugus elgesys žaibuojant, pučiant stipriam vėjui, esant plikledžiui — 2 kl. 27.1.1 (`:17679–17687`), o orų prognozė dokumente tepasirodo kaip lentelės pavyzdys vyresnėms klasėms.
+- **Asmens higiena** — 1 kl. plane nėra; higienos plakatas „Asmens higienos taisyklių sudarymas“ yra 3 kl. 28.1.2 (`:8811–8818`).
+- **Dienos rėžimas** — programa remia (`:1515–1530`, 26.1.2 „taikyti praktinį darbą parengiant savo poilsio ir mokymosi režimą“), bet gairių 2 klausimas krenta: vienintelis garbingas modelis būtų 24 val. „biudžetas“, kuris kartoja `14-pinigai` modelį, o vaiko pačio dienos aprašymas liečia asmens duomenis. Klausimas atviras.
+- **Veiksmų algoritmas (JEI–TAI)** — šaltinis prieštaringas: 1–2 kl. pasiekimų lentelė mini pasirinkimo komandą (`:12279–12291`), o `:962–963` sako, kad su jei–tai mokiniai susipažįsta **2 klasėje** (LL-23).
+- **Šeima ir giminės** — modelis silpnas, o klausimai apie šeimą liečia asmens duomenis.
+- **Emocijos ir jausmai** — padengta `01-dovana-ir-noras` (M-05); dashboard'o žyma „DAR NĖRA“ pasenusi.
+- **Nusiraminimo būdai** — nėra programos temos ir nėra klaidingos nuostatos su matoma pasekme: kvėpavimo tempas yra tempomatis, ne modelis.
+- **Skiemuo / skiemenavimas** — nėra 1–2 kl. lietuvių kalbos pasiekimo (`lietuviu-kalba-1-klase.md:35`), tai jau fiksuoja #12694.
+- **Augalo dalys** — 1 kl. programa prašo tik **atpažinti** dalis („šaknys, stiebas / kamienas, lapai, žiedas, vaisius, sėkla“, `:22766`, `:12437–12438`), o **dalių funkcijos** priskirtos 2 klasei: „27.2.1. Augalai. Nagrinėjamos pagrindinių augalo dalių funkcijos“ (`:35167`). Modelis „nuimk dalį ir pamatyk, kam ji buvo“ būtų 2 klasės sąvoka (LL-23), o etikečių klijavimas neatitinka gairių 2 klausimo → modulio nekuriu.
+- **Energija (26.5.1)** — 1 kl. plane tik demonstracinis bandymas, pasakojimas ir minčių žemėlapis „Mechaninių ir elektrinių daiktų panašumai ir skirtumai“ (`:17665–17670`); sąvoka 6–7 m. vaikui abstrakti, o pats planas interaktyvumo nereikalauja → gairių 2 klausimas krenta.
+- **Žmonių įvairovė (26.2.1)** — planas numato atvejo analizę ir kūrybinę užduotį „Atspėk, kurį draugą apibūdinau“ (`:17632–17635`): tai pokalbio metodas, o draugų apibūdinimas liečia asmens duomenis.
+- **Gyvūnai / augintinis (26.2.2)** — „Kaip rūpinuosi savo augintiniu“ modelis kartotų `09-augalo-gyvenimas` ir `20-kas-gyvas` mechaniką (viena sąlyga → pasekmė, kontrolinis objektas) → gairių 5 klausimas krenta.
+- **Saugaus eismo taisyklės** — 1 kl. plane (26.1.1–26.5.1) nėra; eilutė „Nagrinėjami kelio ženklai; gatvėje“ (`:8157`) yra vyresnių klasių integracijos lentelėje (prieš ją — partizanų istorija, KMI, kalorijos), o šviesoforo pavyzdys `:22801` iliustruoja pasirinkimo komandą, ne saugų eismą. Dashboard'o žyma „iš dalies“ klaidinanti.
+- **Trūkstamas dėsningumų narys** — nereikia naujo modulio: `07-desningumai` jau turi trūkstamą narį grupės viduryje (sim 5-a užduotis, 4-a užduotis). Pastaba `matematika-1-klase.md:103–104` apie „platformoje dar nepanaudotą“ elementą nebegalioja.
+
+### Klausimai tyrėjui (iš tos pačios patikros)
+
+- [ ] **Ar sėklų išbarstymas priklauso 1 klasei?** 1–2 kl. bendrame stulpelyje ciklas baigiamas „vaisių brandinimu ir sėklų išbarstymu“ (`:12437–12439`), o 1 kl. plane (26.2.3, `:17641–17644`) teliko „Nuo sėklos iki sėklos“. Kol neatsakyta, ciklo modulio nekuriu: `09-augalo-gyvenimas` jau duoda seką iki žiedo.
+- [ ] **`pasaulio-pazinimas-1-klase.md:82–88` lentelėje trūksta 26.2.1, 26.2.2, 26.2.4, 26.3.1 ir 26.5.1**, nors 1 kl. plane jie yra (`:17626–17670`). Dėl to dashboard'o žymos rodo temas, kurių 1 kl. programoje nėra (orai, saugus eismas), o tikras spragas (žmonių įvairovė, ištekliai, energija) slepia.
+
 ---
 
 *Įrašyta: 2026-11-03. Šaltinis: sprendimai, kurių negalėjome pagrįsti esama baze.*

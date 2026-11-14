@@ -1,0 +1,20 @@
+{
+  "role": "ideator",
+  "run_id": 278,
+  "created": "2026-11-14T07:58:00+02:00",
+  "type": "tema",
+  "title": "Kas sukūrė šį daiktą: daikto kilmės grandinė iki gamtos",
+  "body": "1 klasės gamtos mokslų plane 26.3.1 skiriamos 2 valandos gamtos ištekliams, taršai ir tausojimui, o veikla įvardyta pažodžiui — žaidimas „Kas sukūrė šį daiktą?“. Platformoje į šį klausimą neatsako nė vienas modulis: 02-medziagu-bandymas aiškinasi, kuri medžiaga tinka darbui („lengva kaladėlė skęsta, o sunki plaukia“), o ne iš ko daiktas atsirado. Klaidinga nuostata: „daiktas atsiranda parduotuvėje“ — popierius, stiklas ir plastikas neturi matomos kilmės, todėl vaikui atrodo, kad jie gaminami iš nieko. Modelis: vaikas baksteli daiktą, pasirenka, iš ko jis padarytas, ir grandinė veda atgal į gamtą (ąžuolas → lenta → popierius; smėlis → stiklas; nafta → plastikas); neteisingas šaltinis grandinės neužbaigia ir parodo, ties kuriuo žingsniu ji nutrūko. Kintamasis vienas — medžiaga; to paties žaidimo antrasis klausimas („Kaip tausoti daiktus klasėje?“) paliekamas atskiram moduliui, nes tai jau kitas supratimas (T1.2). Be modelio lieka tik paveikslėlių eilė, kurioje grandinės ilgis ir tai, kad klaidingas šaltinis grandinę nutraukia, nesimato.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/21-kas-sukure-dailka.json",
+  "priority": "high",
+  "status": "new",
+  "misconception": "„Daiktas atsiranda parduotuvėje“ — popierius, stiklas, plastikas suvokiami kaip gaminami iš nieko, o ne iš gamtos išteklių; todėl ir „išmesti“ reiškia tik išnykti iš akių.",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17649–17656 — 1 kl. gamtos mokslų ilgalaikis planas: „26.3.1. Gamtos ištekliai, jų tarša ir tausojimas. 2“; veikla „darbas grupėse ar porose (pvz., žaidimas „Kas sukūrė šį daiktą?“)“, mini diskusija „Kaip tausoti daiktus klasėje?“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:8452–8458 — ta pati 1 kl. tema integracijos lentelėje su ta pačia veikla „Kas sukūrė šį daiktą?“",
+    "content/lt/grade-01/index.json:46–60 — pasaulio pažinime registruoti 08, 09, 10, 16, 17, 18, 19, 20; nė vieno apie medžiagų kilmę ar išteklius",
+    "content/lt/grade-01/technologijos/02-medziagu-bandymas.json:5–6 — modulis sprendžia tinkamumo klausimą („Lengva kaladėlė skęsta, o sunki plaukia“), ne kilmę; gairių 5 klausimas (nedubliavimas) tenkinamas",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:134 — ekologinė etika ir tvaresnis vartojimas remia tą pačią temą iš vertybių pusės (dorinis ugdymas), bet modelio nepateikia",
+    "research/wiki/grades/01/metodai.md:28–596 — parengti M-01–M-08, kilmės grandinės metodo nėra; jį turi parašyti metodininkas prieš kūrimą"
+  ]
+}

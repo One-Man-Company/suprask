@@ -19,7 +19,7 @@
       "Du taškai atskiria atkarpą. Ji turi du galus. Už taškų likę spinduliai turi po vieną.",
       "Spausk „Pratęsk“ ir ilgink atkarpą. Galų skaičius nesikeis."
     ],
-    "example": "Pieštuko linija baigiasi ten, kur pakeli pieštuką. Tai atkarpa. Tiesė neturi pabaigos: ją galima tęsti toliau."
+    "example": "Pieštuku brėžiu atkarpą: ji baigiasi ten, kur pakeliu pieštuką. Tiesė neturi pabaigos: ją galima tęsti toliau."
   },
   "sim": {
     "component": "taskas-tiese-spindulys-atkarpa",
@@ -44,7 +44,7 @@
         "Tris"
       ],
       "answer": 1,
-      "hint": "Suskaičiuok vietas, kur linija baigiasi.",
+      "hint": "Suskaičiuok vietas, kur atkarpa baigiasi.",
       "why": "Atkarpa baigiasi abiejuose galuose, todėl turi du galus."
     },
     {
@@ -63,10 +63,10 @@
       "options": [
         "Ji neturi galo, eina toliau",
         "Ji labai ilga, bet turi galą",
-        "Pieštukas nubrėžė tik dalį"
+        "Ji baigiasi ties lapo kraštu"
       ],
       "answer": 0,
-      "hint": "Kur baigiasi pieštuko linija, kai braižai per visą lapą?",
+      "hint": "Ar lapo kraštas priklauso tiesei, ar tik tavo brėžiniui?",
       "why": "Tiesė neturi galo: lapo kraštas tik nutraukia brėžinį."
     },
     {
@@ -77,7 +77,7 @@
         "Ne, jis ne ant tiesės"
       ],
       "answer": 2,
-      "hint": "Ar pieštuko taškas palietė liniją?",
+      "hint": "Ar pieštuko taškas palietė tiesę?",
       "why": "Taškas šalia tiesės jai nepriklauso, todėl nedalija."
     },
     {
@@ -97,12 +97,12 @@
   "teacher": {
     "goal": "Suprasti, kad taškas, spindulys, atkarpa ir tiesė skiriasi galų skaičiumi, o ne ilgiu, ir kad taškas dalija tiesę tik tada, kai yra ant jos.",
     "prompt": "Kur baigiasi atkarpa, o kur — tiesė?",
-    "offline": "Duokite vaikui lapą ir pieštuką. Vaikas brėžia liniją nuo vieno lapo krašto iki kito ir suskaičiuoja galus. Tada brėžia liniją, kuri išeina iš lapo — ji galo neturi. Galiausiai du vaikai padeda po tašką ant bendros linijos ir parodo, kuri dalis yra atkarpa, o kurios eina toliau už taškų.",
+    "offline": "Duokite vaikui lapą ir pieštuką. Vaikas brėžia atkarpą nuo vieno lapo krašto iki kito ir suskaičiuoja du galus. Tada brėžia atkarpą iki pat lapo krašto, o jūs priklijuokite prie jo antrą lapą — vaikas tęsia brėžinį. Taip matosi, kad lapo kraštas tik nutraukia brėžinį, o tiesė vis tiek eina toliau. Galiausiai du vaikai padeda po tašką ant bendros tiesės ir parodo, kuri dalis yra atkarpa, o kurios eina toliau už taškų.",
     "misconceptions": [
       "„Tiesė ir atkarpa skiriasi tik ilgiu“ — popieriuje taip atrodo, nes nubrėžtos tiesės galus slepia lapo kraštas. Modelis atkarpą ištempia per visą lapą ir parodo, kad du galai išlieka, o tiesė vis tiek eina toliau.",
       "„Ilgesnė atkarpa jau yra tiesė“ — ilgis nieko nekeičia. Atkarpa gali būti per visą lapą ir vis tiek turi du galus.",
-      "„Taškas visada dalija tiesę“ — taškas, nupieštas šalia, linijai nepriklauso, todėl tiesė lieka vientisa. Modelis tokį tašką palieka šalia ir tiesės nekeičia.",
-      "„Jei galo nematyti, vadinasi, jo nėra“ — lapo kraštas tik nutraukia brėžinį, o ne tiesę. Padeda pieštuko pavyzdys: pakėlus pieštuką linija baigiasi, o tiesė — ne."
+      "„Taškas visada dalija tiesę“ — taškas, nupieštas šalia, tiesei nepriklauso, todėl tiesė lieka vientisa. Modelis tokį tašką palieka šalia ir tiesės nekeičia.",
+      "„Jei galo nematyti, vadinasi, jo nėra“ — lapo kraštas tik nutraukia brėžinį, o ne tiesę. Padeda pieštuko pavyzdys: pakėlus pieštuką atkarpa baigiasi, o tiesė — ne."
     ]
   },
   "sources": [

@@ -1,0 +1,19 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 290,
+  "created": "2026-11-14T19:35:00+02:00",
+  "type": "struktura",
+  "title": "Kortelė ir modulio puslapis gali skelbti skirtingą pavadinimą: index.json laukai nelyginami su moduliu",
+  "body": "Klasės puslapio kortelė `title`, `subtitle` ir `minutes` ima iš `index.json`, o modulio puslapis tuos pačius tris laukus ima iš paties modulio JSON. Tai dvi to paties teiginio kopijos, kurių niekas nesulygina: `validate_content.py:262–265` tikrina tik `id` ir `strand`, o baitų palyginimas (`check_published.py`) lygina failus su gyva svetaine, ne failus tarpusavyje. Šiandien skirtumo nėra — išmatavau visus 39 modulius, 0 nesutapimų, todėl tai latentinis, o ne matomas defektas. Bet jei kas nors pataisys modulio trukmę ar pavadinimą tik modulio faile, vaikas sąraše matys „9 min.“, o atidaręs modulį — „10 min.“, ir nė vieni vartai to nepasakys. Tai ta pati klasė kaip LL-21 (skaičius, kurio niekas neperskaičiuoja), tik ne dokumente, o dviejuose turinio failuose. Siūloma `validate_content.py` lyginti `title`, `subtitle`, `minutes` ir `sim` (indekso eilutėje `sim` yra tekstas, modulyje — `sim.component`) ir nesutapimą laikyti klaida, o ne įspėjimu, nes tai ne stilius, o du skirtingi teiginiai tam pačiam vaikui.",
+  "target": "scripts/validate_content.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/app.js:281–282 — klasės sąrašo kortelė rašo m.title, m.subtitle ir m.minutes iš index.json įrašo",
+    "assets/js/app.js:314–317 — tos pačios kortelės antra forma (mod-row) rašo tuos pačius m.title / m.minutes / m.subtitle",
+    "assets/js/app.js:377–379 — modulio puslapio antraštė rašo mod.title, mod.subtitle ir mod.minutes iš modulio JSON",
+    "scripts/validate_content.py:262–265 — lyginama tik data.id su indekso id ir data.strand su krypties id; title / subtitle / minutes / sim nelyginami",
+    "zondas 2026-11-14 (paleidimas #290): 39 moduliai, 4 laukai × 39 = 156 palyginimai, nesutapimų 0 — defektas latentinis, ne šiandien matomas",
+    "docs/KURINIO-STANDARTAS.md:20–38 — title, subtitle, minutes ir sim yra privalomi modulio laukai, o 7 skyriaus pavyzdyje jie kartojami index.json įraše be jokio ryšio reikalavimo"
+  ]
+}

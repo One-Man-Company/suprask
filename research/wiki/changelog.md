@@ -2,6 +2,18 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-14 (19:32) — Publikavimo patikra #290: repo 39 / paskelbta 39, gyvas kodas = `HEAD`, #286 sąsajos pataisa gyvai
+
+- **Būsena:** `HEAD` = `origin/main` = `0fa0df8`, `git rev-list --left-right --count origin/main...HEAD` → `0 0`, darbinė kopija prieš darbą švari (`git status --porcelain -uall` → 0 eilučių). Gyvas `index.html` neša `?v=0fa0df8e`; `live_version` = `repo_version` = `0fa0df8e`, `unpushed_commits` 0.
+- **`check_published.py`:** repo 39 / paskelbta 39 (`grade-01: repo 39, gyvai 39`); `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `aux_stale` 0, `shell_stale` 0, `shell_unreachable` 0, `path_differs` `[]`, `shell_count` 17, `history_checked` true, `verdict.label` = `sutampa`, `rc=0`.
+- **3 gyvi adresai (sha256, ne tik kodas):** `matematika/25-ilgis-ir-vienetas.json` → `200`, 8 812 B; `lietuviu-kalba/03-sakinio-zodziai.json` → `200`, 5 459 B; `pasaulio-pazinimas/16-vandens-busenos.json` → `200`, 4 932 B — visų trijų gyvas `sha256` lygus `git cat-file blob HEAD:` baitams.
+- **Kas pasikeitė nuo #285 įrašo ir ar pasiekė vaiką:** `d38e8496..0fa0df8` turinio ir `assets/` kataloge pasikeitė tik `assets/js/app.js` (+30/−5) ir `assets/css/main.css` (+12) — #286 „pirma neužbaigta eilutė“; modulio JSON, `index.json`, `path.json`, `grades.json` ir garsas nepakito. Zondas baitais po `?v=` nuėmimo: `index.html`, `app.js`, `registry.js`, `progress.js`, `speech.js`, `main.css`, `art.js`, `daile.js`, `pasaulis.js` — 9/9 sutampa su `HEAD`; gyvas `app.js` turi `aria-current="step"`, gyvas `main.css` — `.mod-row.is-current`.
+- **Priimtas pervadinimas:** `vanished_ids` 1 — `03-sakinio-tvarka` (paskutinį kartą `a2ad497`) su įpėdiniu `03-sakinio-zodziai`, `resolved: true` (`scripts/known_renames.json`, paleidimas #261). Gyvas senas adresas → `404`: sąmoningas pervadinimas, ne regresas. Pasekmė, kuri lieka: žyma vaiko naršyklėje už seno ID tampa našlaite (alias pasiūlymas jau eilėje — `agents/proposals/2026-11-13-publikavimo-agentas-progreso-alias.json`).
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0 klaidų, 0 įspėjimų, `rc=0`; `check_docs_facts.py` → 0/0 (9 kryptys, 39 moduliai, 39 simuliacijos, 169 užduotys, 569 garso tekstai, 1 138 įrašai, 15 agentų); `check_audio.py` → 569 tekstų (5 tiesioginės `api.speak` eilutės), 1 138 įrašų, naudojama 1 138 iš 1 138 mp3.
+- **Naujas radinys (latentinis, ne matomas):** klasės kortelė `title` / `subtitle` / `minutes` ima iš `index.json` (`app.js:281–282`, `:314–317`), o modulio puslapis tuos pačius laukus — iš modulio JSON (`app.js:377–379`); `validate_content.py:262–265` lygina tik `id` ir `strand`. Išmatavau 39 modulius × 4 laukus = 156 palyginimų, nesutapimų 0 — šiandien vaikui nieko nesimato, tad nieko ir netaisiau. Pasiūlymas `agents/proposals/2026-11-14-publikavimo-agentas-index-ir-modulis.json`.
+- **Ankstesnių paleidimų skola:** #288 (`agents/log/publikavimo-agentas-2026-11-14T1603.md`) išmatavo 39/39 ir visą garsą (1 138 × `200`), bet baigėsi `exit 1 → partial` ir changelog eilutės neįrašė. Šis įrašas rodo šiandienos būseną, o ne kartoja #288 skaičių.
+- **Sprendimas:** **sutampa**. Niekas nešalinta, ID nepernumeruoti, `content/**`, `assets/**`, `scripts/**`, `docs/**` neliesti. Ataskaita `agents/log/publikavimo-agentas-2026-11-14T1932.md`.
+
 ## 2026-11-14 (11:48) — Publikavimo patikra #285: repo 39 / paskelbta 39, #284 pataisa gyvai, garsas 1 138/1 138
 
 - **Būsena:** `HEAD` = `origin/main` = `d38e8496`, `git rev-list --count origin/main..HEAD` → 0, darbinė kopija prieš darbą švari (0 eilučių). Gyvas `index.html` neša `?v=d38e8496` — svetainė pastatyta iš šio commit'o.

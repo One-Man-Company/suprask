@@ -1,0 +1,18 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 284,
+  "created": "2026-11-14T11:20:00+02:00",
+  "type": "struktura",
+  "title": "sim.config gyvumo niekas netikrina: 39 komponentai, o taisyklės nėra",
+  "body": "Kritiko pasiūlymas #270 rado, kad 17-judejimas sim.config.words yra negyvas, o šiame darbe paaiškėjo, kad tai buvo paskutinis likęs atvejis: iš 39 simuliacijų komponentų 38 priima config, o nuozulnioji-plokstuma buvo vienintelis su mount({ stage, controls, api }). LL-61 jau buvo užfiksuota 2026-11-08 dėl 16-vandens-busenos ir sutvarkyta tik tame viename komponente, todėl defektas gyvavo 10 dienų kitame tame pačiame faile. Priežastis ta, kad sim.config raktų gyvumą tikrina tik žmogus: validate_content.py tikrina, ar sim.component egzistuoja registre, bet ne, ar komponentas priima config ir skaito jo raktus. Siūloma pridėti statinę taisyklę: jei modulyje yra sim.component su sim.config, to komponento mount() parašas privalo turėti config; jei config yra, o parašo nėra — klaida, ne įspėjimas. Antras variantas (brangesnis) — elgesio zondas check_view.py pusėje: modulio JSON su config pakeičiamas tinkle ir tikrinama, ar bent viena config eilutė atsiranda DOM'e; toks zondas pagautų ir negyvus raktus, ne tik negyvą visą objektą. Šiandien 38/39 komponentų atitinka pirmąją taisyklę, tad ji įsijungtų be triukšmo.",
+  "target": "scripts/validate_content.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:1313 — po šio darbo mount({ stage, controls, api, config }); prieš darbą buvo mount({ stage, controls, api })",
+    "grep -n 'mount({' assets/js/sims/*.js — 39 komponentai, 38 su config (2026-11-14, paleidimas #284)",
+    "research/wiki/guidelines/pamokos.md — LL-61 (2026-11-08, 16-vandens-busenos) ir LL-92 (2026-11-14, 17-judejimas)",
+    "assets/js/sims/pasaulis.js:872–880 — vandensBusenos jau skaito config.words (tas pats failas, tas pats defektas, 6 dienomis anksčiau)",
+    "agents/proposals/2026-11-13-kritikas-judejimas-negyva-konfiguracija.json — defektas įvardytas, bet neįregistruotas vartuose"
+  ]
+}

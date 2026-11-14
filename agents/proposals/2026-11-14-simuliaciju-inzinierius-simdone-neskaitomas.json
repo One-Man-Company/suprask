@@ -1,0 +1,19 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 284,
+  "created": "2026-11-14T11:22:00+02:00",
+  "type": "kritika",
+  "title": "simDone įrašomas, bet jo niekas neskaito: simuliacijos užbaigimas vaikui nieko nereiškia",
+  "body": "progress.js:69–75 turi markSimDone(), kuri įrašo modules[id].simDone = true, o app.js:440 ją kviečia per api.progress(). Patikrinta realiame puslapyje: po lygaus ir nelygaus padalijimo 11-saziningas-dalijimasis ir po dviejų skirtingų plokštumos aukščių 17-judejimas localStorage suprask:progress:v1 turi simDone:true. Tačiau visoje repozitorijoje žodis simDone sutinkamas TIK ten, kur įrašomas: grep -rn simDone → vienintelis kodo atvejis progress.js:72. Pažymėjimo niekas neparodo ir į jį niekas neatsižvelgia: count() ir isDone() skaičiuoja tik solved.length prieš total, o modulio kortelėje rodoma atlikta/ne pagal tą patį isDone(). Tai prieštarauja gairių P2 (simuliacija yra pagrindinė mokymosi vieta): vaikas, kuris išsprendė modelį ir nespėjo atsakyti užduočių, mato tą patį kaip vaikas, kuris nelietė nieko, o mokytojas neturi jokio ženklo, kad modelis įveiktas. Nesiūlau keisti užduočių skaičiavimo (jis sąmoningai griežtas), bet siūlau arba (a) skaičiuoti simDone kaip atskirą, matomą žymą (pvz. „modelis įveiktas“) šalia užduočių, arba (b) jei simDone nereikalingas — pašalinti markSimDone ir api.progress kvietimus, kad dead state neklaidintų. Trečias variantas, kuris atrodo teisingiausias: modulio atlikimu laikyti užduotis ARBA simDone, kai sim yra modulio branduolys (P2), ir tai parodyti mokytojo bloke. Sprendimas yra app.js/progress.js savininkų, ne simuliacijų — todėl tik pasiūlymas su įrodymais.",
+  "target": "assets/js/progress.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/progress.js:69–75 — markSimDone() rašo m.simDone = true",
+    "assets/js/app.js:440 — onProgress: () => progress.markSimDone(mod.id)",
+    "assets/js/registry.js:65 — progress: (payload) => { if (onProgress) onProgress(moduleId, payload); }",
+    "assets/js/progress.js:81–86 — isDone() remiasi tik m.solved ir m.total, simDone neskaito",
+    "grep -rn 'simDone' (visas repo, be .git) → vienintelis kodo atvejis progress.js:72 (kiti — ataskaitos ir wiki)",
+    "Zondas 2026-11-14 (paleidimas #284): 17-judejimas po dviejų aukščių → {\"17-judejimas\":{...,\"simDone\":true}}, o modulio kortelė vis tiek rodo „atlikta“ tik pagal užduotis"
+  ]
+}

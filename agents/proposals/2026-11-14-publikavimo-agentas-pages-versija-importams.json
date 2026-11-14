@@ -1,0 +1,18 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 285,
+  "created": "2026-11-14T11:48:33+02:00",
+  "type": "struktura",
+  "title": "Deploy žalias, nors importas liko be versijos: pages.yml sed neapima viengubų kabučių",
+  "body": "`pages.yml:39–40` prirašo `?v=<sha8>` prie santykinių JS importų, bet raštas atpažįsta tik dvigubas kabutes (`from \"./x.js\"` ir `import(\"./x.js\")`). Tai patikrinau vykdydamas, o ne skaitydamas: nukopijavau failą su penkiais importais ir paleidau tą pačią komandą — viengubų kabučių `from './helper.js'` ir `import('./other.js')` liko be žymos, dvigubų kabučių ir daugiaeiliai `from \"…\"` gavo žymą. Šiandien tai neaktyvu: repo 15 JS failuose yra 0 viengubų kabučių importų, o visi 21 gyvi santykiniai importai turi `?v=` (patikrinta `assets/js/**` gyvai). Bet jei kada nors simuliacijos faile atsiras viengubos kabutės, deploy liks žalias, o vaikas iki ~10 min. matys seną JS — ir nė vienas vartas to nepasakys, nes `check_published.py` lygina failo baitus su `?v=` nuėmimu, o ne tai, ar nuoroda gyvame faile turi versiją. Siūloma po `sed` eilutės pridėti patikrą, kuri grąžina `rc 1`, jei `_site/assets/js` liko bent vienas santykinis importas be `?v=`. Tai ta pati defekto klasė kaip LL-38/LL-39: vartai, kurie nemato to, ką standartas laiko privalomu, o žalias vartas yra blogesnis už jokį.",
+  "target": ".github/workflows/pages.yml",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    ".github/workflows/pages.yml:39–40 — sed raštas `(from \"\\./[^\"]+\\.js)\"` ir `(import\\(\"\\./[^\"]+\\.js)\"\\)`; viengubų kabučių alternatyvos nėra",
+    "Šio paleidimo zondas (ta pati sed komanda ant penkių importų failo): `from './helper.js'` ir `import('./other.js')` liko be `?v=`, `from \"./art.js\"`, daugiaeilis `from \"./registry.js\"` ir `import(\"./speech.js\")` gavo žymą",
+    "Gyvi failai 2026-11-14: 15 `assets/js/**` failų, 21 santykinis importas, 0 be `?v=`; repo tas pats failų sąrašas turi 0 viengubų kabučių importų",
+    "scripts/check_published.py:268–291 — `strip_version()` lygina baitus nuėmęs `?v=`, todėl trūkstama žyma baitų palyginime nepasimato",
+    "research/wiki/guidelines/pamokos.md — LL-38 (vartų slenkstis, nuslinkęs nuo standarto), LL-39 (vartai, kurie nemato standarto reikalaujamo pločio)"
+  ]
+}

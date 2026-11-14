@@ -2,6 +2,18 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-14 (11:48) — Publikavimo patikra #285: repo 39 / paskelbta 39, #284 pataisa gyvai, garsas 1 138/1 138
+
+- **Būsena:** `HEAD` = `origin/main` = `d38e8496`, `git rev-list --count origin/main..HEAD` → 0, darbinė kopija prieš darbą švari (0 eilučių). Gyvas `index.html` neša `?v=d38e8496` — svetainė pastatyta iš šio commit'o.
+- **`check_published.py`:** repo 39 / paskelbta 39 (`grade-01: repo 39, gyvai 39`); `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `aux_stale` 0, `shell_stale` 0, `shell_unreachable` 0, `path_differs` `[]`, `shell_count` 17, `verdict.label` = `sutampa`, `rc=0`.
+- **3 gyvi adresai:** `matematika/25-ilgis-ir-vienetas.json` → `200`, `lietuviu-kalba/01-garsas-ir-raide.json` → `200`, `pasaulio-pazinimas/16-vandens-busenos.json` → `200`.
+- **#284 pasekmė publikuota:** gyvas `17-judejimas.json` sha256 `232b5254…` = `HEAD`; gyvas `pasaulis.js` (nuėmus `?v=`) sha256 `5e82bce7…` = repo, žymė `d38e8496`; `check_view.py --base <gyva> --module 17-judejimas --viewports desktop,phone,small` → 3 patikros, `problems []`, 0 px slinkties, 4/4 užduočių, 8 sim valdiklių, 0 konsolės klaidų.
+- **Garsas, visas sąrašas:** gyvas manifestas 63 974 B, sha `68c786e1…` = repo baitai, 569 raktai → 1 138 unikalių URL; patikrinti visi 1 138 → 12 999–89 486 B, iš viso 32,87 MB. Vienas praėjimas davė `URLError` (`s/bbeebd879e1dff69-ee5937c2.mp3`), pakartojus 3× → `200`; realiai trūkstamų 0. Repo manifestas: ištrintų #284 nebeliko, pridėti visi įtraukti (0 neatitikimų); `check_audio.py` ✔ 569 tekstų / 1 138 įrašų.
+- **Struktūra:** 9 kryptys, `index.json` 39 = 39 failai diske = `path.json` 39 (našlaičių 0 abiem kryptimis), `sim` raktai sutampa, `grades.json` modules 39; baitai 11 741 / 1 339 / 1 126 B — MATCH.
+- **Talpinimo grandinė:** 15 gyvų JS failų, 21 santykinis importas → 0 be `?v=`; repo 0 viengubų kabučių importų. `pages.yml:39–40` `sed` viengubų kabučių neapima — įrodyta paleidus tą pačią komandą ant zondo failo (šiandien latentinė, ne matoma). Pasiūlymas `agents/proposals/2026-11-14-publikavimo-agentas-pages-versija-importams.json` (low).
+- **Uždaryta skola:** #277 (`agents/log/publikavimo-agentas-2026-11-14T0624.md`) išmatavo 39/39 ties `3140e1bc`, bet changelog eilutės neįrašė; šis įrašas rodo šiandienos būseną, o ne kartoja jos skaičius.
+- **Sprendimas:** **sutampa**. Niekas nešalinta, ID nepernumeruoti, `content/**`, `assets/**`, `scripts/**`, `docs/**` neliesti. Ataskaita `agents/log/publikavimo-agentas-2026-11-14T1148.md`.
+
 ## 2026-11-13 (23:06) — Publikavimo patikra #275: 39/39 sutampa, garsas išmatuotas 1 138/1 138, jokių pakeitimų
 
 - **Būsena:** `HEAD` = `origin/main` = `27635c28`, `git rev-list --left-right --count origin/main...HEAD` → `0	0`, darbinė kopija prieš darbą švari (0 eilučių). Gyvas `index.html` neša `?v=27635c28` — svetainė pastatyta iš šio commit'o. Neišstumtų commit'ų: 0.

@@ -215,6 +215,18 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 }
 .step-badge.done { background: color-mix(in srgb, var(--ok) 80%, var(--ink)); }
 
+/* Dabartinė vieta kelyje. Iki #286 klasės sąraše nebuvo nė vieno ženklo, kur
+   vaikas yra: „Tęsk nuo čia“ kortelė viršuje įvardydavo modulį, bet tame pačiame
+   puslapyje esančiame 39 eilučių sąraše tos vietos niekas nežymėjo. Ženklas
+   yra trys kartu (ne vien spalva, T5.5): 2 px oranžinis rėmelis, oranžinis
+   žingsnio numeris ir žyma „tęsk“ (arba „pradėk“, jei nieko neatlikta).
+   Rėmelis pieštas `inset box-shadow`, o ne `border`: 1 px → 2 px kraštas
+   kiekvieną eilutę paaukštintų ir sąrašas „sušoktų“ vos pažymėjus vietą;
+   `outline` čia netinka, nes `:focus-visible` turi tą pačią savybę ir
+   klaviatūros fokusas liktų nematomas (LL-32 šeima). */
+.mod-row.is-current { box-shadow: inset 0 0 0 2px var(--accent), var(--shadow-1); }
+.step-badge.current { background: var(--accent); color: var(--ink); }
+
 /* Klasės puslapio sąrašas eina kelio eile, o kryptis rodoma tik ten, kur ji
    pasikeičia. Taip puslapyje lieka viena tvarka: numeriai 1…19 be šuolių. */
 .path-list { display: grid; gap: .6rem; }

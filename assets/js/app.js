@@ -212,7 +212,10 @@ async function viewGrade(grade) {
       ? ""
       : `<p class="path-strand"><span aria-hidden="true">${esc(s.emoji || "")}</span> ${esc(s.title)}</p>`;
     lastStrand = s.id;
-    return label + moduleRow(s, m, i + 1, seq.length);
+    return label + moduleRow(s, m, i + 1, seq.length, {
+      current: id === nextId,
+      started: doneCount > 0,
+    });
   }).join("");
 
   /* Kryptys lieka kaip atskiras įėjimas (pvz., mokytojui reikia tik
@@ -250,18 +253,35 @@ async function viewGrade(grade) {
 /* Eilutėje — to paties kelio numeris kaip modulio puslapyje („Kitas žingsnis ·
  * N iš 19“). Skaičius yra tas pats abiejuose puslapiuose, todėl vaikas gali
  * atpažinti, kur yra, o ne spėlioti, kuri tvarka galioja.
+ *
+ * Žymos rodomos TIK ten, kur jos ką nors sako (2026-11-14, paleidimas #286):
+ *   „atlikta“ — modulis baigtas (vienintelė busena, kurios vaikas negali
+ *               atpažinti iš nieko kito);
+ *   „tęsk“ / „pradėk“ — VIENA vieta, į kurią veda „Tęsk nuo čia“ kortelė
+ *               viršuje. Anksčiau sąraše buvo 39 vienodos „bandyk“ žymos, t. y.
+ *               žyma ant kiekvienos eilutės, kuri nieko neskiria, ir telefone
+ *               ji kiekvienai eilutei pridėdavo trečią eilutę (matuota
+ *               @390 px: eilutė 153 px → 116 px, sąrašas 7062 → 5614 px).
+ *               Ne žymė, o numeris ir pavadinimas pasako, kad modulis dar
+ *               neatliktas.
  */
-function moduleRow(strand, m, step = 0, stepTotal = 0) {
+function moduleRow(strand, m, step = 0, stepTotal = 0, state = {}) {
   const done = progress.isDone(m.id);
+  const current = !done && state.current === true;
+  const chip = done
+    ? `<span class="chip mint">atlikta</span>`
+    : current
+      ? `<span class="chip">${state.started ? "tęsk" : "pradėk"}</span>`
+      : "";
   return `
-    <a class="card mod-row"
+    <a class="card mod-row${current ? " is-current" : ""}"${current ? ' aria-current="step"' : ""}
        href="#/modulis/${strand.grade || 1}/${strand.id}/${m.id}">
-      ${step ? `<span class="step-badge${done ? " done" : ""}"><span class="sr-only">Žingsnis </span>${step}<span class="sr-only"> iš ${stepTotal}</span></span>` : ""}
+      ${step ? `<span class="step-badge${done ? " done" : ""}${current ? " current" : ""}"><span class="sr-only">Žingsnis </span>${step}<span class="sr-only"> iš ${stepTotal}</span></span>` : ""}
       <span class="mod-row-body">
         <strong>${esc(m.title)}</strong>
         <span class="strand-meta"><span>${esc(m.subtitle || "")}</span> <span class="nowrap">· ${m.minutes || 8} min.</span></span>
       </span>
-      <span class="chip ${done ? "mint" : ""}">${done ? "atlikta" : "bandyk"}</span>
+      ${chip}
       <span class="mod-row-go" aria-hidden="true">›</span>
     </a>`;
 }

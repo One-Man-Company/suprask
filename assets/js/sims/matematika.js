@@ -255,6 +255,15 @@ const figuros = {
     /* SVG figūra: transformacija sukama; kampai žymimi taškais. */
     function shapeSvg(item, { size = null, dots = false, angle = 0, scale = 1 } = {}) {
       const svg = svgEl("svg", { viewBox: "0 0 100 100", "aria-hidden": "true", focusable: "false" });
+      /* Pasukta figūra gali išlįsti už viewBox: trikampio viršūnė (50,8) su
+         stroke-width 5, pasukta 155°, atsiduria x −4,1 / y −2,2, o naršyklės
+         numatytasis `overflow: hidden` ją nukerpa — vaikas mato nupjautą
+         kampą. Matuota #276: @360 px figūra viršija savo 55×55 dėžę L2,3
+         T1,2 R3,2 B3,2 px, @1440 — L9,2 T4,9 R13 B13 px. `overflow: visible`
+         piešia figūrą tokią, kokia ji aprašyta viršūnėmis; susikirtimų su
+         kaimyninėmis dėžėmis 0 (matuota @360 ir @1440), dokumento slinktis
+         nepakito. */
+      svg.style.overflow = "visible";
       if (size) {
         svg.setAttribute("width", String(size));
         svg.setAttribute("height", String(size));

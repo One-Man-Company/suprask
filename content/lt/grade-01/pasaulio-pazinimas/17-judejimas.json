@@ -23,7 +23,13 @@
   "sim": {
     "component": "nuozulnioji-plokstuma",
     "config": {
-      "words": ["Lengvas rutulys", "Sunkus rutulys", "Kartu", "Greičiau", "Lėčiau"]
+      "words": {
+        "light": "Lengvesnis pirmas",
+        "heavy": "Sunkesnis pirmas",
+        "both": "Abu kartu",
+        "faster": "Greičiau",
+        "slower": "Lėčiau"
+      }
     }
   },
   "tasks": [

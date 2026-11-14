@@ -1265,6 +1265,24 @@ const vandensBusenos = {
 const NP_ANGLE = [12, 21, 30];                       // plokštumos kampas laipsniais
 const NP_NAME = ["žema", "vidutinė", "aukšta"];
 const NP_NAME_NOM = ["Žema", "Vidutinė", "Aukšta"];
+/* Vaikui rodomi ir tariami žodžiai ateina iš modulio `sim.config.words`
+   (LL-61). Anksčiau komponentas config apskritai neimdavo, o penkis žodžius
+   turėjo įrašytus kietai, nors modulio JSON juos skelbė: pakeitus žodį
+   turinyje pasikeisdavo tik garso įrašai, o ekranas ir balsas likdavo seni.
+   Sutartis su turiniu — skaitomi LYGIAI šie penki raktai:
+     light „Lengvesnis pirmas“, heavy „Sunkesnis pirmas“, both „Abu kartu“,
+     faster „Greičiau“, slower „Lėčiau“.
+   Kiekvienas jų rodomas mygtuke ir tariamas TAS PATS žodis: anksčiau
+   mygtukas klausė „Lengvesnis pirmas“, o balsas sakydavo „Lengvas rutulys“ —
+   vaikas, paspaudęs spėjimą, išgirsdavo kito dalyko pavadinimą.
+   Nežinomi raktai ignoruojami (neteisinga konfigūracija nelūžta). */
+const NP_WORDS = {
+  light: "Lengvesnis pirmas",
+  heavy: "Sunkesnis pirmas",
+  both: "Abu kartu",
+  faster: "Greičiau",
+  slower: "Lėčiau",
+};
 const NP_LEN = 150;                                   // lentos ilgis
 const NP_THICK = 9;                                   // lentos storis
 const NP_R = 10;                                      // rutulio spindulys
@@ -1293,7 +1311,21 @@ function npBallPos(i, level, d) {
 }
 
 const nuozulniojiPlokstuma = {
-  mount({ stage, controls, api }) {
+  mount({ stage, controls, api, config }) {
+    const words = { ...NP_WORDS };
+    const cfgWords = config && typeof config.words === "object" && !Array.isArray(config.words)
+      ? config.words : {};
+    for (const key of Object.keys(NP_WORDS)) {
+      const v = cfgWords[key];
+      if (typeof v === "string" && v.trim()) words[key] = v.trim();
+    }
+    /* Mygtuko užrašas ir balsas yra tas pats žodis, o spėjimo ataskaitoje jis
+       pakartojamas žodžio viduryje — todėl didžioji raidė nuleidžiama tik
+       pirmai raidei, neliečiant „Abu kartu“ vidurio. */
+    const lower1 = (s) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
     let level = 1;              // 0 žema, 1 vidutinė, 2 aukšta
     let guess = null;           // "light" | "heavy" | "both"
     let state = "ready";        // ready | rolling | done
@@ -1325,9 +1357,9 @@ const nuozulniojiPlokstuma = {
         <div role="group" aria-label="Tavo spėjimas">
           <p id="np-guess-label" style="margin:0 0 .3rem;font-weight:800;font-size:.9rem;text-align:center">Tavo spėjimas: kuris atriedės pirmas?</p>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:.4rem">
-            ${guessBtn("np-guess-light", "Lengvesnis pirmas")}
-            ${guessBtn("np-guess-heavy", "Sunkesnis pirmas")}
-            ${guessBtn("np-guess-both", "Abu kartu")}
+            ${guessBtn("np-guess-light", esc(words.light))}
+            ${guessBtn("np-guess-heavy", esc(words.heavy))}
+            ${guessBtn("np-guess-both", esc(words.both))}
           </div>
         </div>
         <div role="group" aria-label="Plokštumos aukštis">
@@ -1451,16 +1483,15 @@ const nuozulniojiPlokstuma = {
       dH = NP_D;
       const first = prevLevel === null;
       if (first) {
-        const said = guess === "light" ? "lengvesnis pirmas"
-          : guess === "heavy" ? "sunkesnis pirmas" : "abu kartu";
+        const said = lower1(words[guess]);
         msg = `Spėjai: ${said}. Įvyko: abu atriedėjo beveik kartu.`;
-        api.speak("Kartu", { rate: .9 });
+        api.speak(words.both, { rate: .9 });
       } else if (level > prevLevel) {
         msg = "Plokštuma aukštesnė: abu rutuliai atriedėjo greičiau.";
-        api.speak("Greičiau", { rate: .9 });
+        api.speak(words.faster, { rate: .9 });
       } else if (level < prevLevel) {
         msg = "Plokštuma žemesnė: abu rutuliai atriedėjo lėčiau.";
-        api.speak("Lėčiau", { rate: .9 });
+        api.speak(words.slower, { rate: .9 });
       } else {
         msg = "Ta pati plokštuma: rutuliai vėl atriedėjo beveik kartu.";
       }
@@ -1538,7 +1569,7 @@ const nuozulniojiPlokstuma = {
         ? "Spėjimas pakeistas. Bandyk su kitu plokštumos aukščiu."
         : "Spėjimas įrašytas. Dabar spausk „Leisk abu“.";
       render();
-      api.speak(v === "light" ? "Lengvas rutulys" : v === "heavy" ? "Sunkus rutulys" : "Kartu", { rate: .9 });
+      api.speak(words[v], { rate: .9 });
     }
 
     q("#np-guess-light").addEventListener("click", () => pickGuess("light"));

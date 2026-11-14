@@ -539,6 +539,10 @@
   "n": "n/de4fcca618546df9-e0d8c979.mp3",
   "s": "s/de4fcca618546df9-f584fb9d.mp3"
  },
+ "Abu kartu": {
+  "n": "n/33b9b9c23825b7b4-3ed6d89a.mp3",
+  "s": "s/33b9b9c23825b7b4-023c3b5f.mp3"
+ },
  "Abu laidai prijungti. Jungiklis atidarytas, todėl kelias nutrūkęs.": {
   "n": "n/8b4bce0166a74e84-30d4895f.mp3",
   "s": "s/8b4bce0166a74e84-73adfb5c.mp3"
@@ -975,10 +979,6 @@
   "n": "n/f7523c580e0248c6-81d5ea90.mp3",
   "s": "s/f7523c580e0248c6-2ee7ff89.mp3"
  },
- "Kartu": {
-  "n": "n/2425fde6a44ff0ec-1a134412.mp3",
-  "s": "s/2425fde6a44ff0ec-be89e5c8.mp3"
- },
  "Karvė": {
   "n": "n/abd086294f9e82f3-fecb1c32.mp3",
   "s": "s/abd086294f9e82f3-ef17559d.mp3"
@@ -1203,9 +1203,9 @@
   "n": "n/fe352e35865e1d09-253da876.mp3",
   "s": "s/fe352e35865e1d09-6278e347.mp3"
  },
- "Lengvas rutulys": {
-  "n": "n/0379335dceaabec9-5d423f9c.mp3",
-  "s": "s/0379335dceaabec9-322b74bd.mp3"
+ "Lengvesnis pirmas": {
+  "n": "n/944a34af81067786-feb719fd.mp3",
+  "s": "s/944a34af81067786-6b54f2f2.mp3"
  },
  "Lenta baigėsi. Du pieštukai.": {
   "n": "n/fa917bbc6ccbe8b9-735e8b34.mp3",
@@ -1615,9 +1615,9 @@
   "n": "n/b5bcf1521dbe8fda-37f6b285.mp3",
   "s": "s/b5bcf1521dbe8fda-76442819.mp3"
  },
- "Sunkus rutulys": {
-  "n": "n/0ab991d7bf12a353-6db070b8.mp3",
-  "s": "s/0ab991d7bf12a353-a10394d6.mp3"
+ "Sunkesnis pirmas": {
+  "n": "n/82ab868b2295f338-3c27274f.mp3",
+  "s": "s/82ab868b2295f338-3fee3cf6.mp3"
  },
  "Suskaičiavai visas figūras. Apskritimų daugiau, nors jie mažesni.": {
   "n": "n/bf35e2dc555cc020-03cd6819.mp3",

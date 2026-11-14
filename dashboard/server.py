@@ -428,7 +428,7 @@ tr:hover td{background:var(--panel2)}
 .status{padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
 .ok{background:rgba(63,191,143,.15);color:var(--ok)}
 .partial{background:rgba(240,180,41,.15);color:var(--warn)}
-.failed,.timeout{background:rgba(242,112,138,.15);color:var(--bad)}
+.failed,.timeout,.infra,.interrupted{background:rgba(242,112,138,.15);color:var(--bad)}
 .running{background:rgba(90,169,230,.18);color:#8cc6f0}
 .skipped,.dry-run{background:var(--panel2);color:var(--muted)}
 button{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:9px;padding:7px 12px;cursor:pointer;font:inherit;min-height:36px}
@@ -571,7 +571,7 @@ function ago(iso){
   return Math.round(h/24) + " d.";
 }
 
-function statusClass(s){ return ["ok","partial","failed","timeout","running","skipped","dry-run"].includes(s) ? s : ""; }
+function statusClass(s){ return ["ok","partial","failed","timeout","infra","interrupted","running","skipped","dry-run"].includes(s) ? s : ""; }
 
 async function loadOverview(){
   const d = await j("/api/overview");

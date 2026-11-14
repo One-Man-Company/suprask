@@ -251,14 +251,21 @@ def main() -> int:
         # sugedusi aplinka, o ne pasiūlymo kaltė. Tokiu atveju pasiūlymas
         # NEPAŽYMIMAS blocked (kitaip jis prarandamas visam laikui) — stabdome
         # visą eilę ir paliekame tai, ką reikia sutvarkyti žmogui/architektui.
+        #
+        # `artifacts` nuo 2026-11-14 nebeskaičiuoja paties paleidimo ataskaitos
+        # (`agents/log/<role>-…md`), todėl ši apsauga pagaliau pasiekiama:
+        # iki tol 5 s „runtime_draining“ gedimas atrodė kaip „paskelbta 1 failų“
+        # ir trys pasiūlymai (#14726, #15045, #15581) dingo į `blocked`.
         duration = int((run_row or {}).get("duration_s") or 0)
         artifacts = (run_row or {}).get("artifacts") or "[]"
         run_status = (run_row or {}).get("status") or "—"
-        if run_row is not None and duration < MIN_ATTEMPT_S and artifacts in ("[]", "", None):
+        no_work = artifacts in ("[]", "", None)
+        if run_row is not None and no_work and (duration < MIN_ATTEMPT_S or run_status == "infra"):
             db.set_proposal_status(int(prop["id"]), "new",
-                                   f"bandymas neįvyko: {run_status} per {duration}s, 0 failų")
-            print(f"   Paleidimas truko {duration}s ir nepakeitė nė vieno failo — "
-                  f"tai ne bandymas. Pasiūlymas lieka new, stabdau eilę.")
+                                   f"bandymas neįvyko: {run_status} per {duration}s, 0 darbo failų")
+            reason = "infrastruktūros gedimas (modelio vartai)" if run_status == "infra" else "nebandymas"
+            print(f"   Paleidimas truko {duration}s ir nepakeitė nė vieno darbo failo — "
+                  f"{reason}. Pasiūlymas lieka new, stabdau eilę.")
             break
 
         if run_status == "published":

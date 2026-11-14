@@ -90,6 +90,56 @@ FAIL_MARKERS = (
     "rate limit",
 )
 
+# Infrastruktūros, o NE turinio gedimas: modelio vartai atsisakė priimti užduotį
+# (`runtime_draining`, `update_paused`), ryšys nutrūko arba provideris prašė
+# palaukti. 2026-11-14 trys tokie paleidimai (#281–#283) truko po 5 s, bet
+# kiekvienas „paskelbė“ savo paties žurnalą (`agents/log/kurejas-…md`) ir taip
+# visam laikui užblokavo tris eilės pasiūlymus (#14726, #15045, #15581).
+# Toks gedimas negali būti verčiamas turinio sprendimu: jo metu modelis net
+# negavo užduoties, todėl pasiūlymas grąžinamas į eilę, o neblokuojamas.
+INFRA_MARKERS = (
+    "runtime_draining",
+    "update_paused",
+    "gateway draining",
+    "couldn't start the model connection",
+    "connection refused",
+    "connection reset",
+    "temporarily unavailable",
+    "http 502",
+    "http 503",
+    "http 504",
+)
+
+# Kiek kartų tas pats pasiūlymas grąžinamas į eilę po infrastruktūros gedimo,
+# kol sustojama. Be ribos eilė suktųsi amžinai, jei vartai neveikia visą dieną.
+INFRA_MAX_ATTEMPTS = 3
+
+# Šio paleidimo ataskaita. Ji nėra DARBAS: bėgiklis ją rašo pats, todėl ji
+# atsiranda ir tada, kai modelis nepradėjo darbo. Kol žurnalas buvo skaičiuojamas
+# kaip pakeistas failas, 5 s gedimas atrodė kaip „paskelbta 1 failų“, o eilės
+# apsauga („0 failų = ne bandymas“) niekada negalėjo suveikti.
+LOG_PREFIX = "agents/log/"
+
+
+def infra_reason(*texts: str) -> str:
+    """Trumpa infrastruktūros gedimo priežastis arba `""`, jei jo nebuvo."""
+    blob = " ".join(t or "" for t in texts).lower()
+    for marker in INFRA_MARKERS:
+        if marker in blob:
+            return marker
+    return ""
+
+
+def work_files(files: list[str]) -> list[str]:
+    """Failai, kurie yra šio paleidimo DARBAS (be jo paties ataskaitos).
+
+    Ataskaita (`agents/log/<role>-<laikas>.md`) rašoma visada, todėl ji negali
+    būti įrodymu, kad kažkas padaryta. Ji vis dar patenka į commit'ą, kai yra
+    ką publikuoti, bet ne į sprendimą „ar paleidimas ką nors nuveikė“.
+    """
+    return [f for f in files if not f.startswith(LOG_PREFIX)]
+
+
 # Vaidmuo → failas, profilis, įrankių rinkinys, limitai, grafikas
 ROLES: dict[str, dict] = {
     "ideator": {
@@ -867,6 +917,31 @@ def mark_implemented(proposal_id: int | None, files: list[str], commit_sha: str)
         return False
 
 
+def reopen_after_infra(proposal_id: int, reason: str) -> tuple[bool, int]:
+    """Grąžina pasiūlymą į eilę po infrastruktūros gedimo.
+
+    `blocked` yra kapinės: eilė blokuotų nebeliečia, o `--retry-blocked` yra
+    rankinis veiksmas, kurio niekas nekviečia. Todėl modelio vartų gedimas
+    (paleidimas be nė vieno darbo failo) negali siųsti pasiūlymo ten — 2026-11-14
+    taip dingo trys eilės įrašai per 20 sekundžių (#14726, #15045, #15581).
+
+    Kartojimasis skaičiuojamas iš pasiūlymo `note`: po `INFRA_MAX_ATTEMPTS`
+    bandymų sustojama ir pasiūlymas blokuojamas, kad neveikiantys vartai
+    neleistų eilei suktis amžinai. Grąžina `(grąžintas į eilę?, bandymo nr.)`.
+    """
+    row = next((r for r in db.proposals(500) if int(r["id"]) == int(proposal_id)), None)
+    note = (row or {}).get("note") or ""
+    found = re.match(r"infrastruktūros klaida (\d+)", note)
+    attempt = (int(found.group(1)) if found else 0) + 1
+    if attempt >= INFRA_MAX_ATTEMPTS:
+        db.set_proposal_status(int(proposal_id), "blocked",
+                               f"infrastruktūros klaida {attempt}: {reason}")
+        return False, attempt
+    db.set_proposal_status(int(proposal_id), "new",
+                           f"infrastruktūros klaida {attempt}: {reason}")
+    return True, attempt
+
+
 def close_proposals(files: list[str], commit_sha: str, implemented_id: int | None = None) -> int:
     """Suderinamumo apvalkalas: grąžina, kiek pasiūlymų uždaryta (0 arba 1)."""
     return 1 if mark_implemented(implemented_id, files, commit_sha) else 0
@@ -1170,6 +1245,16 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
     notes = list(notes or [])
     if not files:
         detail = "Agentas failų nepakeitė — rezultato nėra."
+        if notes:
+            detail += " " + "; ".join(notes)
+        return {"status": "empty", "detail": detail, "sha": "", "validation": ""}
+
+    # Tik savo paties ataskaita pakeitęs paleidimas NĖRA darbas. 2026-11-14
+    # trys 5 s infrastruktūros gedimai taip „paskelbė“ po vieną žurnalą
+    # (commit bf25b86, 622c29e, 0a6be1f — kiekviename po vieną `agents/log/`
+    # failą), o eilė kiekvieną jų palaikė įrodymu ir užblokavo pasiūlymą.
+    if not work_files(files):
+        detail = "Pakeista tik paleidimo ataskaita — darbo rezultato nėra."
         if notes:
             detail += " " + "; ".join(notes)
         return {"status": "empty", "detail": detail, "sha": "", "validation": ""}
@@ -1491,9 +1576,17 @@ def main() -> int:
         watch.stop()
         foreign = watch.roles()
         files, foreign_files, notes = publication_plan(files, args.role, foreign)
+        work = work_files(files)
         if foreign_files or foreign:
             print(f"{args.role}: " + "; ".join(notes))
         db.upsert_proposals(sorted(PROPOSALS.glob("*.json")))
+
+        # Infrastruktūros gedimas atskiriamas nuo turinio gedimo. Kai nėra nė
+        # vieno darbo failo, o modelio vartai atsakė „draining“, modelis
+        # užduoties net negavo — toks paleidimas neturi sudeginti pasiūlymo.
+        infra = infra_reason(out, err) if not work else ""
+        if infra and status in ("failed", "partial", "ok"):
+            status = "infra"
 
         # Paskelbimas — bėgiklio, ne agento, darbas.
         result = publish(args.role, run_id, files, out or args.role,
@@ -1513,13 +1606,18 @@ def main() -> int:
             status = "checked"
 
         if proposal:
+            pid = int(proposal["id"])
             if status == "published":
-                mark_implemented(int(proposal["id"]), files, result["sha"])
+                mark_implemented(pid, files, result["sha"])
+            elif status == "infra":
+                requeued, attempt = reopen_after_infra(pid, infra)
+                print(f"{args.role}: infrastruktūros klaida ({infra}) — pasiūlymas #{pid} "
+                      f"{'grąžintas į eilę' if requeued else 'BLOKUOTAS'} (bandymas {attempt}/{INFRA_MAX_ATTEMPTS})")
             elif status in ("rejected", "conflict", "unpushed", "failed", "timeout"):
-                db.set_proposal_status(int(proposal["id"]), "blocked", f"{status}: {result['detail'][:120]}")
+                db.set_proposal_status(pid, "blocked", f"{status}: {result['detail'][:120]}")
 
         db.finish_run(
-            run_id, status, code, elapsed, str(log_path.relative_to(ROOT)), out, files,
+            run_id, status, code, elapsed, str(log_path.relative_to(ROOT)), out, work,
             commit_sha=result["sha"], validation=result["validation"], detail=result["detail"],
         )
         update_state(args.role, cfg, status, log_path)

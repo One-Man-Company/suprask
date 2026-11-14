@@ -36,18 +36,38 @@ try:
 except Exception:  # noqa: BLE001
     SYSTEM_PREFIXES = ("agents/", "scripts/", "deploy/", "dashboard/", "docs/")
 
-BAD = ("empty", "conflict", "rejected", "timeout", "failed", "skipped", "blocked")
+BAD = ("empty", "conflict", "rejected", "timeout", "failed", "infra", "interrupted",
+       "unpushed", "skipped", "blocked")
+
+# Statusai, kurie NĖRA naudingas darbas. `checked` čia neįtrauktas: patikros
+# vaidmeniui (tikrintojas, publikavimo-agentas…) būtent ataskaita ir yra
+# rezultatas (žr. `ROLES[…]["inspect"]`). Nekūrybiniam vaidmeniui `checked`
+# reiškia tą patį kaip `empty`, todėl jis pridedamas atskirai.
+USELESS = ("empty", "conflict", "rejected", "timeout", "skipped", "failed",
+           "infra", "interrupted", "unpushed", "other")
+
+
+def inspect_roles() -> set[str]:
+    """Vaidmenys, kurių rezultatas yra ataskaita, o ne failų pakeitimas."""
+    try:
+        import run as runner
+    except Exception:  # noqa: BLE001
+        return set()
+    return {r for r, c in runner.ROLES.items() if c.get("inspect")}
 
 
 def runs_summary(days: int) -> tuple[dict, list[dict]]:
     since = (dt.datetime.now() - dt.timedelta(days=days)).isoformat()
     rows = [r for r in db.recent_runs(400) if (r.get("started") or "") >= since]
+    inspectors = inspect_roles()
     per_role: dict[str, dict] = {}
     for r in rows:
         role = r.get("role") or "?"
         cell = per_role.setdefault(role, {
             "runs": 0, "published": 0, "ok": 0, "empty": 0, "conflict": 0,
-            "rejected": 0, "timeout": 0, "skipped": 0, "other": 0, "paused": 0,
+            "rejected": 0, "timeout": 0, "skipped": 0, "failed": 0, "infra": 0,
+            "interrupted": 0, "unpushed": 0, "checked": 0, "partial": 0,
+            "dry-run": 0, "running": 0, "other": 0, "paused": 0,
             "duration_s": 0, "last": None,
         })
         st = (r.get("status") or "other").lower()
@@ -69,11 +89,20 @@ def runs_summary(days: int) -> tuple[dict, list[dict]]:
         if cell["last"] is None or started > (cell["last"].get("started") or ""):
             cell["last"] = {"started": started, "status": st, "summary": (r.get("summary") or "")[:160],
                             "detail": (r.get("detail") or "")[:200]}
-    for cell in per_role.values():
+    for role, cell in per_role.items():
         cell["avg_min"] = round(cell["duration_s"] / max(1, cell["runs"]) / 60, 1)
-        cell["useless_ratio"] = round(
-            sum(cell[k] for k in ("empty", "conflict", "rejected", "timeout", "skipped")) / max(1, cell["runs"]), 2
-        )
+        # `failed` ir `interrupted` anksčiau neįėjo į šią sumą, nors abu yra
+        # prarastas paleidimas: 2026-11-14 kurejas turėjo 124 paleidimus,
+        # 81 paskelbtą ir 43 niekur nematomus, o lentelė skelbė „0 % nenaudingų“.
+        # Skaičiuojame VISKĄ, kas nepagamino darbo, ir parodome atskirai.
+        useless = sum(cell[k] for k in USELESS)
+        if role not in inspectors:
+            useless += cell["checked"]
+        cell["useless"] = useless
+        cell["useless_ratio"] = round(useless / max(1, cell["runs"]), 2)
+        cell["failed_all"] = cell["failed"] + cell["infra"] + cell["interrupted"] + cell["timeout"]
+        cell["other_all"] = (cell["checked"] + cell["ok"] + cell["partial"]
+                             + cell["dry-run"] + cell["running"] + cell["other"])
     return per_role, rows
 
 
@@ -285,10 +314,14 @@ def main() -> int:
     print(f"AGENTŲ SISTEMOS ATASKAITA · {data['generated']} · paskutinės {args.days} d.")
     pause_note = f" (dar {paused_n} pristabdyta — žr. žemiau)" if paused_n else ""
     print(f"\nPaleidimai: {len(rows)}{pause_note}")
-    print(f"{'vaidmuo':<24}{'paleid.':>8}{'publ.':>7}{'tušti':>7}{'konfl.':>7}{'atm.':>6}{'vid.m':>7}{'nenaud.':>9}{'prist.':>7}")
+    print(f"{'vaidmuo':<24}{'paleid.':>8}{'publ.':>7}{'tušti':>7}{'konfl.':>7}{'atm.':>6}"
+          f"{'nepav.':>7}{'kita':>6}{'vid.m':>7}{'nenaud.':>9}{'prist.':>7}")
     for role, c in sorted(per_role.items(), key=lambda kv: -kv[1]["runs"]):
         print(f"{role:<24}{c['runs']:>8}{c['published']:>7}{c['empty']:>7}{c['conflict']:>7}"
-              f"{c['rejected']:>6}{c['avg_min']:>7}{int(c['useless_ratio'] * 100):>8}%{c['paused']:>7}")
+              f"{c['rejected']:>6}{c['failed_all']:>7}{c['other_all']:>6}{c['avg_min']:>7}"
+              f"{int(c['useless_ratio'] * 100):>8}%{c['paused']:>7}")
+    print("  nepav. = failed + infra + interrupted + timeout · kita = checked + ok + partial + dry-run · "
+          "nenaud. skaičiuoja ir failed/interrupted, ir `checked` ne patikros vaidmeniui")
 
     if windows:
         total_h = sum(w["hours"] for w in windows)
@@ -324,7 +357,7 @@ def main() -> int:
 
     # Diagnostika: paskutiniai nepavykę paleidimai kartu su bėgiklio priežastimi.
     # Be šio bloko konfliktų priežastis matydavo tik tas, kuris tą akimirką žiūrėjo į terminalą.
-    broken = ("conflict", "rejected", "unpushed", "failed", "timeout")
+    broken = ("conflict", "rejected", "unpushed", "failed", "timeout", "infra", "interrupted")
     problems = [r for r in rows if (r.get("status") or "") in broken]
     if problems:
         print("\nPaskutinės problemos (bėgiklio žodžiais):")

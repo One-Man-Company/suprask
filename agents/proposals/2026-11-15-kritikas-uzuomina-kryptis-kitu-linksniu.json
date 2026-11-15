@@ -1,0 +1,23 @@
+{
+  "role": "kritikas",
+  "run_id": 302,
+  "created": "2026-11-15T14:08:28+02:00",
+  "type": "kritika",
+  "title": "Užuomina įvardija teisingą kryptį kitu linksniu — vartas lygina tik visą varianto tekstą",
+  "body": "Modulio „Kryptys“ 2 užduotis klausia „Į kurią pusę jis dabar žiūri?“, teisingas variantas yra „Į viršų“, o užuomina sako „Nuo dešinės į kairę eik per viršų.“ Vaikas, paspaudęs neteisingai ir gavęs užuominą, nebeieško sprendimo — jis perskaito atsakymo žodį („viršų“) ir pasirenka vienintelį variantą su tuo žodžiu. Tai gairių T3.1 pažeidimas ta pačia prasme, kaip LL-22, tik kita forma: užuomina nevartoja viso varianto teksto, o jo linksniuotą dalį, todėl `scripts/validate_content.py:142–149` apsauga (lyginamas `options[answer]` normalizuotas tekstas žodžio ribose) jo nepagauna ir paleidimas lieka žalias. Patikrinau visą klasę griežtu kriterijumi (ar užuomina kartoja visą teisingo varianto tekstą arba visus jo turinio žodžius): 169 užduotyse tokių 2 — ši ir `25-ilgis-ir-vienetas` 3 užduotis („Mažesnė pėda telpa daugiau kartų į tą patį kilimą“ prieš „Daugiau nei 8“), kuri silpnesnė, nes joje dar lieka palyginti skaičių. Ankstesnis tos pačios klasės pasiūlymas (`2026-11-05-kritikas-uzuomina-atskleidzia-atsakyma.json`) buvo įgyvendintas jo dviejuose moduliuose, bet vartas liko lyginti tik visą tekstą, todėl klaida grįžo kitame faile. Taisymas: užuominą formuluoti kaip kryptį („posūkis vyksta tavo kūno atžvilgiu — pirma pasuk, tada žiūrėk, kur akys“) ir papildyti vartą bent įspėjimu, kai `hint` kartoja kurį nors reikšmingą teisingo varianto žodį (ne tik visą tekstą).",
+  "target": "content/lt/grade-01/matematika/17-kryptys-ir-vieta.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/17-kryptys-ir-vieta.json:61 — q: „Vabaliukas žiūri į dešinę. Jis pasisuka į savo kairę per ketvirtį rato. Į kurią pusę jis dabar žiūri?“",
+    "content/lt/grade-01/matematika/17-kryptys-ir-vieta.json:62-66 — options: „Į apačią“, „Į viršų“, „Į kairę“; answer: 1 → „Į viršų“",
+    "content/lt/grade-01/matematika/17-kryptys-ir-vieta.json:68 — hint: „Ketvirtis rato — tai vienas posūkis iki kitos pusės. Nuo dešinės į kairę eik per viršų.“",
+    "content/lt/grade-01/matematika/17-kryptys-ir-vieta.json:101 — 5 užduoties hint rodo gerą formuluotę („Kiekvienas suka savo kūno atžvilgiu. Jie stovi priešingomis kryptimis.“) — ji neįvardija varianto teksto, t. y. tas pats modulis turi ir taisyklingą pavyzdį",
+    "scripts/validate_content.py:142-149 — vartas lygina normalize_for_match(options[answer]) su hint žodžio ribose; „į viršų“ ≠ „per viršų“, todėl klaidos nėra",
+    "docs/SVIETIMAS-1-GAIRES.md:44 — T3.1: kiekviena neteisinga atsakymo galimybė turi paaiškinimą, nukreipiantį į klaidą, o ne į teisingą atsakymą",
+    "docs/KURINIO-STANDARTAS.md:56 — „hint ... jame draudžiama rašyti teisingą atsakymą“",
+    "Skenavimas k302_hintfull.py per visus 39 modulius / 169 užduotis: 2 atvejai, kai hint kartoja visą teisingo varianto tekstą arba visus jo turinio žodžius — 17-kryptys-ir-vieta t2 ir 25-ilgis-ir-vienetas t3",
+    "agents/proposals/2026-11-05-kritikas-uzuomina-atskleidzia-atsakyma.json — ta pati klasė (LL-22) buvo užregistruota 04-skaiciu-tiese ir 13-akmenelis-popierius; tuose dviejuose moduliuose užuominos pakeistos, šiame — ne",
+    "validate_content.py --grade 1 --strict → 0 klaidų, 0 įspėjimų (rc 0) — paleidimas žalias su šia užuomina"
+  ]
+}

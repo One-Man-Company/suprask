@@ -1,0 +1,25 @@
+{
+  "role": "kritikas",
+  "run_id": 302,
+  "created": "2026-11-15T14:08:28+02:00",
+  "type": "kritika",
+  "title": "Tikslas pasiekiamas tame kadre, kuriame visi trys skaičiai 0, o tekstas sako „vienas pasikeitė“",
+  "body": "Modulyje „Kas gyvas“ lentelė ir sakinys imami iš dviejų skirtingų būsenos skaičiavimų: `changeOf()` sumuoja savaičių reikšmes (laistyta +1, sausa −1), o `contrast()` tik lygina, ar savaitės skyrėsi. Dviejų savaičių kelyje tie du dalykai nesutampa NIEKADA: jei savaitės vienodos, `contrast()` yra false ir pažanga neįrašoma; jei skiriasi, grynoji suma lygi 0, vadinasi `api.progress()` įrašomas būtent tada, kai visi trys lentelės skaičiai 0, o `api.note` tuo pačiu metu sako „Trys daiktai, vienas pasikeitė“. Išmatavau abi kryptis Playwright/Chromium 390×800: „laistyk → nelaistyk“ → lentelė [pupos daigas 0, akmenukas 0, kamuoliukas 0], lapai rudi ir nuleisti (`#5fbf62` → `#a98f55`, stiebas `#4c8b3a` → `#8d7a55`), t. y. vaizdas pasikeitė, o skaičius sako 0; „nelaistyk → laistyk“ → vaizdas grįžta tiksliai į pradinę būseną (lapų spalvos sutampa su pradinėmis), bet sakinys vis tiek skelbia „vienas pasikeitė“. Abiem atvejais `localStorage` raktas `suprask:progress:v1` gauna `simDone: true`, nors modulis pats (`20-kas-gyvas.json:101`) moko, kad lapų nuleidimas YRA pokytis. Tai ne kosmetika: modulio didžioji idėja yra „gyvybę rodo pokytis laike“, o sėkmės momente vaikas mato tris nulius — t. y. modelis savo pagrindinį teiginį paneigia būtent tame kadre, kurį platforma įsimena kaip įveiktą. Taisymas: skaičių ir sakinį imti iš to paties šaltinio (arba skaičiuoti matomą skirtumą nuo pradinės būsenos, arba sakymą formuluoti iš to paties grynojo pokyčio), o `api.progress` kviesti tik toje būsenoje, kurioje bent vienas skaičius lentelėje nėra 0.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:2350-2352 — changeOf('augalas') = weeks.reduce(+step / −step); dviejų skirtingų savaičių suma visada 0",
+    "assets/js/sims/pasaulis.js:2354 — contrast() = weeks.some(...) — tik lygina savaites, grynojo pokyčio nenaudoja",
+    "assets/js/sims/pasaulis.js:2365 — dry imamas TIK iš paskutinės savaitės (todėl lapų spalva ir nusvyrimas priklauso nuo kitos būsenos nei skaičius)",
+    "assets/js/sims/pasaulis.js:2369 — leafCol: dry ? '#a98f55' : '#5fbf62'",
+    "assets/js/sims/pasaulis.js:2463-2464 — api.readout: „Augalas ${signed(change)}“ — iš grynosios sumos",
+    "assets/js/sims/pasaulis.js:2476 — api.note: kai contrast(), sakoma „Trys daiktai, vienas pasikeitė.“ — iš palyginimo, ne iš sumos",
+    "assets/js/sims/pasaulis.js:2482-2485 — api.progress({correct:true}) kai weeks.length >= 2 && contrast()",
+    "content/lt/grade-01/pasaulio-pazinimas/20-kas-gyvas.json:101 — teacher.misconceptions[1]: „be vandens nuleidžia lapus — abu pokyčiai yra reakcija…“ (skaičius 0 prieštarauja pačiam moduliui)",
+    "docs/KURINIO-STANDARTAS.md:84-89 — api.progress žymima pasiekus simuliacijos mokymosi tikslą, o ne tada, kai sąlyga formaliai įvykdyta",
+    "Zondas k302_kasgyvas.py (Chromium 1248, 390×800, http://127.0.0.1:8741/#/modulis/1/pasaulio-pazinimas/20-kas-gyvas, 0 konsolės klaidų): [week1 WATERED] readout „Viena savaitė. Augalas +1…“, lentelė +1; [week2 DRY] readout „Dvi savaitės. Augalas 0. Akmenukas 0. Kamuoliukas 0.“, lentelė ['pupos daigas 0','akmenukas 0','kamuoliukas 0'], note „Trys daiktai, vienas pasikeitė. Gyvas organizmas keičiasi pats.“, aria-label „…Augalo lapai nuleisti. Po dviejų savaičių augalas 0.“, lapų fill #5fbf62 → #a98f55, stiebo stroke #4c8b3a → #8d7a55",
+    "Zondas k302_kasgyvas_rev.py (ta pati aplinka): seka „nelaistyk → laistyk“ → lentelė visi 0, lapų fill lygūs pradiniams [„#5fbf62“, „#5fbf62“], aria-label „Augalas su lapais. Po dviejų savaičių augalas 0.“, note vis tiek „Trys daiktai, vienas pasikeitė“; localStorage 20-kas-gyvas → {solved: [], total: 4, simDone: true}",
+    "Nė vieni vartai to nepagauna: validate_content.py --grade 1 --strict → 0 klaidų, 0 įspėjimų (rc 0); validate_content.py tikrina JSON laukus, check_view.py — geometriją, check_audio.py — įrašų buvimą, check_art.py — ar scena surinkta iš art.js dalių"
+  ]
+}

@@ -52,18 +52,19 @@ gyvas ir teisingas, vartai žali — nors patys mp3 gali būti nepaskelbti, ir
 vaikas, paspaudęs garsiakalbį, negirdi nieko. Ši sritis liko vienintelė, kurios
 neapėmė nė vieni vartai (#288, #292, #294 kas kartą matavo rankiniu zendu:
 1138/1138, 86 s). Dabar manifestas perskaitomas, kiekvienas įrašas tikrinamas
-HEAD užklausa, o rezultatas įvardijamas skaičiais. Numatytai tikrinamas
-**mėginys** (48 įrašai, tolygiai per visą manifestą), kad 5 kartus per dieną
-einantis publikavimo patikrinimas liktų greitas; `--audio-full` tikrina visus
-1138. Mėginys niekada nepranešamas kaip pilnas: išvestis visada sako
-„patikrinta N iš M (mėginys)“ (LL-37).
+HEAD užklausa, o rezultatas įvardijamas skaičiais. Numatytai tikrinami **visi**
+įrašai: #303 neigiamas zondas parodė, kad 48 įrašų mėginys svetainėje su dviem
+sugedusiais mp3 iš 1138 duoda rc 0 — tyli žalia, nors vaikas girdi nieko.
+`--audio-sample N` paliktas greitam rankiniam bėgimui; jis išvestyje visada
+sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
 
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
     python3 scripts/check_published.py --grade 1     # viena klasė
     python3 scripts/check_published.py --no-bytes    # greita: tik ID ir seka
-    python3 scripts/check_published.py --audio-full  # visi garso įrašai
+    python3 scripts/check_published.py --audio-full  # tas pats kaip numatyta
+    python3 scripts/check_published.py --audio-sample 48   # greitas, aklas
 """
 
 from __future__ import annotations
@@ -123,14 +124,18 @@ HISTORY_LIMIT = 400
 # tikrinamas kiekvienas įrašas.
 AUDIO_MANIFEST = ROOT / "assets" / "audio" / "lt" / "manifest.json"
 AUDIO_URL_PREFIX = "assets/audio/lt/"
-# Numatytasis mėginys: 5 paleidimai per dieną × 1138 užklausų būtų 5690
-# veltui pasikartojančių HEAD užklausų. 48 įrašai tolygiai per visą manifestą
-# pagauna „visas aplankas nepaskelbtas“ ir „naujausi įrašai nepaskelbti“ —
-# būtent tuos du atvejus, dėl kurių ši patikra ir atsirado.
+# Numatytasis režimas — visi įrašai. 48 įrašų mėginys buvo greitas (5,8 s), bet
+# #303 neigiamas zondas parodė, kad jis **aklas**: veidrodis su 2 sugedusiais mp3
+# iš 1138 (vienas 404, vienas 0 B) davė rc 0 ir „visi pasiekiami“. Pavienis
+# trūkstamas failas nepatenka į 48 tolygžius taškus, o būtent pavienis failas ir
+# yra realus atvejis (naujo modulio mp3 nepateko į publikavimą). Pilna patikra
+# trunka 56 s prieš gyvą svetainę ir 1,3 s prieš vietinį veidrodį — pigiau nei
+# vienas modulis be garso. `--audio-sample N` lieka greitam rankiniam bėgimui ir
+# išvestyje visada pasako, kad tai mėginys.
 AUDIO_SAMPLE = 48
 
 
-def audio_paths(sample: int | None = AUDIO_SAMPLE) -> tuple[list[str], int]:
+def audio_paths(sample: int | None = None) -> tuple[list[str], int]:
     """(tikrinimi garso kelių sąrašas, kiek jų iš viso manifeste).
 
     `sample=None` — visi įrašai. Mėginys imamas tolygiai (kas n-tas), ne iš
@@ -181,7 +186,7 @@ def _audio_state(rel: str) -> tuple[str, int]:
     return "unreachable", -1
 
 
-def check_audio(sample: int | None = AUDIO_SAMPLE) -> dict:
+def check_audio(sample: int | None = None) -> dict:
     rels, total = audio_paths(sample)
     if not total:
         return {"total": 0, "checked": 0, "sampled": False,
@@ -659,13 +664,15 @@ def main() -> int:
     ap.add_argument("--grade", type=int, default=0, help="tikrinti vieną klasę")
     ap.add_argument("--no-bytes", action="store_true", help="greita: tik ID ir seka")
     ap.add_argument("--audio-full", action="store_true",
-                    help="tikrinti visus garso įrašus (numatyta: mėginys)")
-    ap.add_argument("--audio-sample", type=int, default=AUDIO_SAMPLE,
-                    help=f"kiek garso įrašų tikrinti (numatyta {AUDIO_SAMPLE})")
+                    help="tikrinti visus garso įrašus (tai yra ir numatytasis režimas)")
+    ap.add_argument("--audio-sample", type=int, default=0,
+                    help="greitas režimas: tikrinti tik N garso įrašų mėginį "
+                         "(mėginys nemato pavienių 404 — tik rankiniam bėgimui)")
     args = ap.parse_args()
 
     grades = [args.grade] if args.grade else None
-    sample = None if args.audio_full else args.audio_sample
+    # Numatytai — visi garso įrašai (#303: mėginys duoda žalią šalia 404 mp3).
+    sample = args.audio_sample if args.audio_sample > 0 and not args.audio_full else None
     data = report(grades, compare_bytes=not args.no_bytes, audio_sample=sample)
 
     if args.json:

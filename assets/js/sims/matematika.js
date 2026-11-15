@@ -263,13 +263,16 @@ const figuros = {
          piešia figūrą tokią, kokia ji aprašyta viršūnėmis; susikirtimų su
          kaimyninėmis dėžėmis 0 (matuota @360 ir @1440), dokumento slinktis
          nepakito. */
-      svg.style.overflow = "visible";
       if (size) {
         svg.setAttribute("width", String(size));
         svg.setAttribute("height", String(size));
       } else {
         svg.style.cssText = "display:block;width:100%;height:100%;max-width:100%";
       }
+      /* `cssText` pakeičia VISĄ inline stilių, tad `overflow` reikia rašyti po jo —
+         priešingu atveju eilutė aukščiau lieka negyva (#293: 9 didžiosios figūros
+         tebebuvo `overflow: hidden`, trikampis vis dar kirpo L9,2 T4,9 R13 B13 px). */
+      svg.style.overflow = "visible";
       const type = TYPES[item.type];
       const g = svgEl("g", {
         transform: `translate(50 50) rotate(${angle}) scale(${scale}) translate(-50 -50)`,

@@ -328,6 +328,26 @@ async function viewStrand(grade, strandId) {
 /* ------------------------------------------------------------------ */
 /*  Modulis                                                            */
 /* ------------------------------------------------------------------ */
+/* Mokytojo bloko eilutė apie simuliacijos tikslą. Tekstas imamas iš tos
+ * pačios būsenos, kurią vaikas mato kaip `.sim-goal` žymą (progress.js),
+ * todėl suaugusiojo ir vaiko tekstai negali pasakyti skirtingo dalyko
+ * (LL-42), o mokytojas pamato, ar modelis įveiktas, jo neliesdamas.
+ */
+function modelStatusText(moduleId) {
+  const saved = progress.get(moduleId);
+  return saved && saved.simDone === true
+    ? "Įveiktas šioje naršyklėje."
+    : "Dar neįveiktas šioje naršyklėje.";
+}
+
+/** Atnaujina mokytojo eilutę be puslapio perkrovimo; rašo tik pasikeitus būsenai (LL-14). */
+function syncTeacherModel(moduleId) {
+  const line = document.getElementById("teacher-model");
+  if (!line) return;
+  const text = modelStatusText(moduleId);
+  if (line.textContent !== text) line.textContent = text;
+}
+
 async function viewModule(grade, strandId, moduleId) {
   const g = await loadGradeIndex(grade);
   const strand = g.strands.find((x) => x.id === strandId);
@@ -424,6 +444,7 @@ async function viewModule(grade, strandId, moduleId) {
           ${Array.isArray(mod.teacher.misconceptions) && mod.teacher.misconceptions.length
             ? `<p><strong>Dažnos klaidos.</strong></p><ul>${mod.teacher.misconceptions.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
         ` : "<p>Papildoma medžiaga ruošiama.</p>"}
+        ${mod.sim ? `<p><strong>Modelis.</strong> <span id="teacher-model">${esc(modelStatusText(mod.id))}</span></p>` : ""}
         ${Array.isArray(mod.sources) && mod.sources.length ? `<p><strong>Šaltiniai.</strong> ${mod.sources.map((x) => esc(x)).join("; ")}</p>` : ""}
         ${Array.isArray(mod.svietimas1) && mod.svietimas1.length ? `<p><strong>Švietimas #1 sąsaja.</strong> ${mod.svietimas1.map((x) => esc(x)).join(", ")}</p>` : ""}
       </div>
@@ -457,7 +478,10 @@ function mountSim(mod) {
     readout,
     note,
     moduleId: mod.id,
-    onProgress: () => progress.markSimDone(mod.id),
+    onProgress: () => {
+      progress.markSimDone(mod.id);
+      syncTeacherModel(mod.id);
+    },
   });
 
   try {

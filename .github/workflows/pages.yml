@@ -36,8 +36,21 @@ jobs:
           SHA="${GITHUB_SHA:0:8}"
           sed -i "s|href=\"./assets/css/main.css\"|href=\"./assets/css/main.css?v=$SHA\"|" _site/index.html
           sed -i "s|src=\"./assets/js/app.js\"|src=\"./assets/js/app.js?v=$SHA\"|" _site/index.html
+          # Kabutė sugriebiama kaip atskira grupė ir grąžinama ta pati (\2),
+          # todėl raštas tinka ir `from './x.js'`, ir `from "./x.js"`,
+          # ir `import('./x.js')`. Anksčiau buvo ieškoma tik dvigubų kabučių,
+          # todėl viengubos likdavo be žymos (LL-38: vartai nemato standarto).
           find _site/assets/js -name "*.js" -print0 | xargs -0 sed -i -E \
-            "s|(from \"\./[^\"]+\.js)\"|\1?v=$SHA\"|g; s|(import\(\"\./[^\"]+\.js)\"\)|\1?v=$SHA\")|g"
+            "s#(from )(['\"])(\./[^'\"]+\.js)\2#\1\2\3?v=$SHA\2#g; s#(import\()(['\"])(\./[^'\"]+\.js)\2#\1\2\3?v=$SHA\2#g"
+          # Vartai: jei bent vienas santykinis importas liko be žymos, publikavimas
+          # stabdomas. Kitaip deploy būtų žalias, o vaikas iki ~10 min. matytų seną
+          # JS — ir nė viena patikra to nepasakytų.
+          leftover=$(grep -rnE "(from|import\()[[:space:]]*['\"\`]\./[^'\"\`]*\.js['\"\`]" _site/assets/js --include="*.js" || true)
+          if [ -n "$leftover" ]; then
+            echo "::error::Santykinis importas be ?v= — naršyklė ims seną failą:"
+            echo "$leftover"
+            exit 1
+          fi
           echo "versija: $SHA"; grep -o "main.css?v=[a-f0-9]*" _site/index.html | head -1
 
       - uses: actions/configure-pages@v5

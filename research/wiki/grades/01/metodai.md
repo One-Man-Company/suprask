@@ -673,7 +673,7 @@ Joshi, Azuma ir Feenstra (2008) apžvalgoje aprašytas programos vertinimas, kur
       "replay": ["replay_smelis", "replay_stiklas"] } ],
   "sentences": {
     "predict": "Kur prasideda popieriaus kelias? Spėk.",
-    "guessed": "Spėjimas įrašytas. Dabar statyk kelią.",
+    "guessReadout": "Tu sakei: {label}. Dabar statyk kelią.",
     "ask_mediena": "Iš ko padarytas popierius?",
     "ask_azuolas": "Iš ko atsirado mediena?",
     "ask_stiklas": "Iš ko padaryta stiklinė?",
@@ -696,13 +696,14 @@ Joshi, Azuma ir Feenstra (2008) apžvalgoje aprašytas programos vertinimas, kur
     "replay_stiklas": "Iš smėlio lydomas stiklas." } }
 ```
 
-Dvylika savybių, kurių negalima praleisti (kiekviena atitinka pamoką):
+Trylika savybių, kurių negalima praleisti (kiekviena atitinka pamoką):
 
 - **Vienas kintamasis:** kurią kortelę vaikas pasirenka dabartiniame žingsnyje. Daiktas keičiamas tik užbaigus grandinę („Kitas daiktas“), todėl du kintamieji niekada neveikia vienu metu. Spėjimas ir „Peržiūrėk kelią“ yra žingsniai, o ne papildomi kintamieji.
 - **Grandinė — konfigūracija, ne kodas:** komponentas tikrina, kad `steps[].options` turi `card` ir kad **kiekviena neteisinga kortelė turi `no` paaiškinimą**. Jei trūksta — `console.error` ir ekrane „Grandinė nesuderinta su kortelėmis.“, o ne tylus bendras sakinys (LL-33). Jei `card` nėra `options` sąraše — ta pati klaida.
 - **Kryptis matoma:** rodyklė visada iš kairės į dešinę (`Ąžuolas → mediena → popierius`), o ne atvirkščiai; todėl „atgal“ yra judėjimas prieš rodyklę, ir tai pasakoma vieną kartą `api.note`, o ne kiekviename žingsnyje.
 - **Netinkama kortelė lieka matoma** brūkšniuotu rėmeliu ir trūkusia rodykle, kol vaikas pasirenka kitą. Ji neišnyksta po laiko ir nėra vadinama klaida: `api.readout` sako „Grandinė čia nenueina.“, `api.note` — kodėl (savybė), `api.speak` — tą patį sakinį.
 - **Grįžtamasis ryšys** — iškart po paspaudimo (≤ 1 kadras). `api.note` niekada nesako „teisingai“ ir niekada ne apie vaiką (T5.1). `api.speak` skaito tik `config.sentences` frazes (LL-42), o `api.note` garsiai neskaitomas.
+- **Vienas tekstų šaltinis:** spėjimo skelbimas statomas iš vienos frazės su vieta reikšmei — `sentences.guessReadout` su `{label}`, o ne iš kodo suklijuoto sakinio ir atskiros `sentences.guessed` eilutės. Kiekvienas `sentences` raktas privalo būti ištartas bent vienoje būsenoje; jei raktas liko neištartas arba frazėje trūksta `{label}`, komponentas rašo `console.error` ir rodo „Grandinė nesuderinta su tekstais.“ (LL-33 — vienas šaltinis, ne dvi tiesos).
 - **`api.progress({ correct: true })`** — vieną kartą, kai **abi** grandinės baigtos **ir** antrasis spėjimas palygintas, t. y. tik pasiekus būseną „abi grandinės“ (LL-29). Po pirmos grandinės pažanga nežymima, nors grandinė baigta. „Iš naujo“ pažangos netrina (LL-16).
 - **Išdėstymas 360 px:** scena `viewBox="0 0 328 200"`, `width:100%`, `max-width:328px`. Trys kortelės po 92 × 104 px ir du 26 px tarpai = 328 px (rodyklė telpa į tarpą). Kortelės vidus: 56 px piktograma, 32 px užrašas (dvi eilutės po 16 px), 16 px „GAMTA“ juosta = 104 px. Spėjimo žymė viršuje 0–36 px. Suvestinė (abi grandinės) — dvi eilutės po tris 60 × 36 px korteles su 10 px tarpais = 200 px iš 328 px; eilutės 40 ir 104 px aukštyje.
 - **Valdikliai:** trys šaltinio mygtukai 100 × 72 px + du 8 px tarpai = 316 px iš 328 px; kiekvienas turi piktogramą ir užrašą, `min-height:72px`, `height:auto`, `overflow-wrap:anywhere` (200 % tekste užrašas gali užimti tris eilutes). „Peržiūrėk kelią“ ir „Kitas daiktas“ — 100 % × 56 px, „Iš naujo“ ≥ 96 × 48 px. „Kitas daiktas“ neaktyvus, kol grandinė nebaigta, ir `aria-label` pasako kodėl. Klaviatūra: `Tab`, `Enter`/`Space`, `←`/`→` perjungia variantus, `R` atstato.
@@ -727,10 +728,10 @@ Dvylika savybių, kurių negalima praleisti (kiekviena atitinka pamoką):
 
 | # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
 |---|---|---|---|---|---|
-| 1 | atpažinimas | „Parduotuvėje ant lentynos guli popieriaus lapas. Iš ko jis padarytas?“ — Iš medienos / Iš lapų / Iš smėlio | Iš medienos (0) | „Iš lapų“ — popieriaus lapas painiojamas su medžio lapu (tas pats žodis) | „Medžio lapas žalias ir plonas. Ar popierius toks pat?“ |
-| 2 | taikymas | „Stiklinė padaryta iš stiklo. Iš ko atsiranda stiklas?“ — Iš naftos / Iš medienos / Iš smėlio | Iš smėlio (2) | „Iš naftos“ — plastiko šaltinis priskiriamas stiklui | „Nafta tamsi, mediena turi rieves. Stiklas skaidrus.“ |
+| 1 | atpažinimas | „Parduotuvėje ant lentynos guli popieriaus lapas. Iš kur atsiranda popierius?“ — Iš medienos / Iš lapų / Iš smėlio | Iš medienos (0) | „Iš lapų“ — popieriaus lapas painiojamas su medžio lapu (tas pats žodis) | „Medžio lapas žalias ir plonas. Ar popierius toks pat?“ |
+| 2 | taikymas | „Stiklinė padaryta iš stiklo. Iš kur atsiranda stiklas?“ — Iš naftos / Iš medienos / Iš smėlio | Iš smėlio (2) | „Iš naftos“ — plastiko šaltinis priskiriamas stiklui | „Tu galvoji apie plastiką. Stiklas ir plastikas skiriasi.“ |
 | 3 | perkėlimas | „Knyga padaryta iš popieriaus. Kur prasideda knygos kelias?“ — Parduotuvėje / Spaustuvėje / Miške | Miške (2) | „Spaustuvėje“ — artimiausias matomas žmogaus žingsnis laikomas pradžia; „Parduotuvėje“ — pirmoji nuostata | „Spaustuvė spausdina popierių. Kas popierių padaro?“ |
-| 4 | perkėlimas (`optional: true`) | „Plastikinis butelis padarytas iš plastiko. Kur prasideda jo kelias?“ — Naftoje / Parduotuvėje / Smėlyje | Naftoje (0) | „Smėlyje“ — stiklo šaltinis perkeliamas plastikui; „Parduotuvėje“ — pirmoji nuostata | „Plastikas lankstus ir lengvas. Stiklas kietas, smėlis birus.“ |
+| 4 | perkėlimas (`optional: true`) | „Plastikinis butelis padarytas iš plastiko. Kur prasideda jo kelias?“ — Naftoje / Parduotuvėje / Smėlyje | Naftoje (0) | „Smėlyje“ — stiklo šaltinis perkeliamas plastikui; „Parduotuvėje“ — pirmoji nuostata | „Tu galvoji apie stiklą. Butelis lankstus, o stiklas kietas.“ |
 
 Atsakymų indeksai 0 / 2 / 2 / 0 — pasiskirstę, todėl vaikas negali spėti pagal varianto vietą. Kiekviena užuomina pasakyta trumpais sakiniais ir nė viena nekartoja teisingo varianto (`validate_content.py` tai tikrina).
 

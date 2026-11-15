@@ -46,11 +46,24 @@ svetainės failai lyginami **nuėmus `?v=`**, o pati versija perskaitoma ir
 palyginama su `git HEAD` — kitu atveju įrankis klaidingai skelbtų „pasenęs
 kodas“ po kiekvieno publikavimo.
 
+2026-11-15 (paleidimas #301): tikrinami ir **garso failai**, ne tik manifestas.
+Iki šiol lygintas tik `assets/audio/lt/manifest.json` baitais: jei manifestas
+gyvas ir teisingas, vartai žali — nors patys mp3 gali būti nepaskelbti, ir
+vaikas, paspaudęs garsiakalbį, negirdi nieko. Ši sritis liko vienintelė, kurios
+neapėmė nė vieni vartai (#288, #292, #294 kas kartą matavo rankiniu zendu:
+1138/1138, 86 s). Dabar manifestas perskaitomas, kiekvienas įrašas tikrinamas
+HEAD užklausa, o rezultatas įvardijamas skaičiais. Numatytai tikrinamas
+**mėginys** (48 įrašai, tolygiai per visą manifestą), kad 5 kartus per dieną
+einantis publikavimo patikrinimas liktų greitas; `--audio-full` tikrina visus
+1138. Mėginys niekada nepranešamas kaip pilnas: išvestis visada sako
+„patikrinta N iš M (mėginys)“ (LL-37).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
     python3 scripts/check_published.py --grade 1     # viena klasė
     python3 scripts/check_published.py --no-bytes    # greita: tik ID ir seka
+    python3 scripts/check_published.py --audio-full  # visi garso įrašai
 """
 
 from __future__ import annotations
@@ -64,6 +77,7 @@ import re
 import subprocess
 import sys
 import time
+import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
@@ -101,6 +115,92 @@ VERSION_PARAM = re.compile(r"\?v=[0-9a-f]{6,40}")
 # vartus amžinai raudonus, o amžinai raudoni vartai — tas pats kaip jokių (LL-37).
 RENAMES = ROOT / "scripts" / "known_renames.json"
 HISTORY_LIMIT = 400
+
+# Garsas. Manifestas jau lyginamas kaip `AUX_FILES` įrašas, bet baitų lygybė
+# sako tik tiek, kad sąrašas gyvas — ne kad failai, į kuriuos jis rodo, yra
+# svetainėje. Vaikas, paspaudęs garsiakalbį, gauna 404 ir nieko negirdi, o
+# visi vartai žali (#288, #292, #294). Todėl manifestas perskaitomas ir
+# tikrinamas kiekvienas įrašas.
+AUDIO_MANIFEST = ROOT / "assets" / "audio" / "lt" / "manifest.json"
+AUDIO_URL_PREFIX = "assets/audio/lt/"
+# Numatytasis mėginys: 5 paleidimai per dieną × 1138 užklausų būtų 5690
+# veltui pasikartojančių HEAD užklausų. 48 įrašai tolygiai per visą manifestą
+# pagauna „visas aplankas nepaskelbtas“ ir „naujausi įrašai nepaskelbti“ —
+# būtent tuos du atvejus, dėl kurių ši patikra ir atsirado.
+AUDIO_SAMPLE = 48
+
+
+def audio_paths(sample: int | None = AUDIO_SAMPLE) -> tuple[list[str], int]:
+    """(tikrinimi garso kelių sąrašas, kiek jų iš viso manifeste).
+
+    `sample=None` — visi įrašai. Mėginys imamas tolygiai (kas n-tas), ne iš
+    pradžios: pirmi įrašai yra seniausi ir paskelbti seniausiai, tad pradžios
+    mėginys sistemingai nematytų naujausio modulio garso (LL-37).
+    """
+    try:
+        data = json.loads(AUDIO_MANIFEST.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return [], 0
+    paths: list[str] = []
+    for value in data.values():
+        if isinstance(value, dict):
+            paths += [str(p) for p in value.values() if p]
+        elif isinstance(value, str) and value:
+            paths.append(value)
+    paths.sort()
+    total = len(paths)
+    if sample is None or sample <= 0 or total <= sample:
+        return paths, total
+    step = total / sample
+    picked = [paths[min(total - 1, int(i * step))] for i in range(sample)]
+    return list(dict.fromkeys(picked)), total
+
+
+def _audio_state(rel: str) -> tuple[str, int]:
+    """("ok"|"missing"|"empty"|"unreachable", baitai). HEAD, ne GET: turinys
+    čia neįdomus — įdomu, ar failas yra ir ar jis ne tuščias."""
+    url = AUDIO_URL_PREFIX + rel
+    for attempt in (0, 1):
+        try:
+            req = urllib.request.Request(LIVE_ROOT + url, headers=UA, method="HEAD")
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                size = int(resp.headers.get("Content-Length") or 0)
+                return ("ok" if size > 0 else "empty"), size
+        except urllib.error.HTTPError as exc:
+            if exc.code in (404, 410):
+                return "missing", -1
+            if attempt == 0:
+                time.sleep(1.5)  # LL-76: kraštas po deploymento būna mišrus
+                continue
+            return "unreachable", -1
+        except Exception:  # noqa: BLE001
+            if attempt == 0:
+                time.sleep(1.5)
+                continue
+            return "unreachable", -1
+    return "unreachable", -1
+
+
+def check_audio(sample: int | None = AUDIO_SAMPLE) -> dict:
+    rels, total = audio_paths(sample)
+    if not total:
+        return {"total": 0, "checked": 0, "sampled": False,
+                "missing": [], "empty": [], "unreachable": [],
+                "note": "manifestas neperskaitytas — garso patikra neįvyko"}
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        results = list(pool.map(lambda rel: (rel, _audio_state(rel)), rels))
+    missing = [rel for rel, (state, _) in results if state == "missing"]
+    empty = [rel for rel, (state, _) in results if state == "empty"]
+    unreachable = [rel for rel, (state, _) in results if state == "unreachable"]
+    return {
+        "total": total,
+        "checked": len(rels),
+        "sampled": len(rels) < total,
+        "missing": missing,
+        "empty": empty,
+        "unreachable": unreachable,
+        "note": "",
+    }
 
 
 
@@ -431,7 +531,8 @@ def last_commit() -> str:
         return ""
 
 
-def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
+def report(grades: list[int] | None = None, compare_bytes: bool = True,
+           audio_sample: int | None = AUDIO_SAMPLE) -> dict:
     grades = grades or live_grades()
     per_grade = [check_grade(g, compare_bytes) for g in grades]
 
@@ -459,6 +560,14 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
         "live_version": "", "repo_version": "",
     }
 
+    # Garsas: manifestas lyginamas aukščiau, bet failai — ne. Be šios dalies
+    # „sutampa“ galėjo reikšti „manifestas teisingas, o mp3 svetainėje nėra“.
+    audio = check_audio(None if not compare_bytes else audio_sample) if compare_bytes else {
+        "total": 0, "checked": 0, "sampled": False,
+        "missing": [], "empty": [], "unreachable": [],
+        "note": "garso patikra praleista (--no-bytes)",
+    }
+
     out = {
         "grades": per_grade,
         "live_grades": grades,
@@ -474,6 +583,7 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True) -> dict:
         "stale": merge("stale"),
         "stale_unknown": merge("stale_unknown"),
         "aux_stale": aux_stale,
+        "audio": audio,
         "shell_stale": shell["shell_stale"],
         "shell_unreachable": shell["shell_unreachable"],
         "shell_count": shell["shell_count"],
@@ -526,6 +636,13 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(data['shell_stale'])} pasenęs kodas")
     if data.get("shell_unreachable"):
         reasons.append(f"{len(data['shell_unreachable'])} nepasiekiamas kodas")
+    audio = data.get("audio") or {}
+    if audio.get("missing"):
+        reasons.append(f"{len(audio['missing'])} trūksta garso failo")
+    if audio.get("empty"):
+        reasons.append(f"{len(audio['empty'])} tuščias garso failas")
+    if audio.get("unreachable"):
+        reasons.append(f"{len(audio['unreachable'])} nepasiekiamas garso failas")
     if data.get("unpushed_commits"):
         reasons.append(f"{data['unpushed_commits']} neišsiųstas commit")
     return {"ok": not reasons, "reasons": reasons,
@@ -541,10 +658,15 @@ def main() -> int:
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--grade", type=int, default=0, help="tikrinti vieną klasę")
     ap.add_argument("--no-bytes", action="store_true", help="greita: tik ID ir seka")
+    ap.add_argument("--audio-full", action="store_true",
+                    help="tikrinti visus garso įrašus (numatyta: mėginys)")
+    ap.add_argument("--audio-sample", type=int, default=AUDIO_SAMPLE,
+                    help=f"kiek garso įrašų tikrinti (numatyta {AUDIO_SAMPLE})")
     args = ap.parse_args()
 
     grades = [args.grade] if args.grade else None
-    data = report(grades, compare_bytes=not args.no_bytes)
+    sample = None if args.audio_full else args.audio_sample
+    data = report(grades, compare_bytes=not args.no_bytes, audio_sample=sample)
 
     if args.json:
         print(json.dumps(data, ensure_ascii=False))
@@ -598,6 +720,20 @@ def main() -> int:
     if data.get("shell_unreachable"):
         print(f"NEPASIEKIAMI svetainės kodo failai ({len(data['shell_unreachable'])}): "
               f"{', '.join(data['shell_unreachable'])}")
+    audio = data.get("audio") or {}
+    if audio.get("total"):
+        kind = "mėginys" if audio.get("sampled") else "visi"
+        line = f"Garsas: patikrinta {audio['checked']} iš {audio['total']} ({kind})"
+        bad = len(audio.get("missing", [])) + len(audio.get("empty", [])) + len(audio.get("unreachable", []))
+        print(line + (f" — TRŪKSTA {bad}" if bad else " — visi pasiekiami"))
+        for key, label in (("missing", "nėra svetainėje"), ("empty", "tuščias"),
+                           ("unreachable", "nepasiektas")):
+            for rel in audio.get(key, [])[:10]:
+                print(f"  - {rel} — {label}")
+        if audio.get("sampled"):
+            print("  (mėginys tolygus per visą manifestą; pilna patikra: --audio-full)")
+    elif audio.get("note"):
+        print(f"Garsas: {audio['note']}")
     if data["unpushed_commits"]:
         print(f"Neišstumta commit'ų: {data['unpushed_commits']}")
     if not problems(data):

@@ -384,6 +384,23 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 }
 .sim-note { text-align: center; color: var(--ink-soft); font-size: var(--fs-s); min-height: 1.4rem; }
 
+/* Simuliacijos tikslo žyma. Elementą `.sim-goal` sukuria progress.js tada, kai
+   `simDone` tikrai yra, o tekstą ima iš tos pačios būsenos — čia tik išvaizda.
+   Žyma sako, ką vaikas padarė ir ką daryti toliau (T5.1), todėl ji rami: be
+   balų, be apdovanojimų. Spalva niekada nėra vienintelis informacijos nešėjas
+   (T5.5) — sakinys pasako viską ir be jos; tekstas `var(--ink)` ant švelnaus
+   mėtų fono išlieka įskaitomas ir šviesioje, ir tamsioje temoje.
+   Plotis ne `fit-content`, o `max-width`: kitaip ties 200 % tekstu paminkštinimas
+   atimdavo trečdalį eilutės pločio ir žodžiai skildo po vieną (matuota @360/32:
+   241 px dėžė, 176 px tekstui, 7 eilutės). */
+.sim-goal {
+  margin: 1rem auto 0; max-width: 30rem; padding: .55rem .8rem;
+  border: 2px solid color-mix(in srgb, var(--mint) 45%, var(--line));
+  border-radius: var(--r-m);
+  background: color-mix(in srgb, var(--mint) 16%, var(--paper-2));
+  color: var(--ink); font-size: var(--fs-m); font-weight: 700; text-align: center;
+}
+
 .task { border: 2px solid var(--line); border-radius: var(--r-m); padding: 1rem 1.2rem; background: var(--paper-2); }
 /* 1–2 klasei užduoties tekstas turi būti skaitomas be pastangų; telefone
    bazinis dydis buvo ~16 px — per mažas 6–7 metų vaikui. */

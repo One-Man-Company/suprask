@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 297,
+  "created": "2026-11-15T09:12:00+02:00",
+  "type": "struktura",
+  "title": "Mokytojo blokas nepasako, ar modelis įveiktas: simDone lieka nematomas suaugusiajam",
+  "body": "Paleidimas #297 įgyvendino #16339: simDone dabar skaitomas ir rodomas vaikui kaip .sim-goal žyma modulio puslapyje (progress.js). Liko antras to paties pasiūlymo trečiasis variantas: mokytojas neturi jokio ženklo, kad modelis įveiktas, nes blokas „Mokytojui ir tėvams“ surenkamas app.js:417–430 ir rodo tik teacher.*, sources ir svietimas1 laukus. Žymą ten galima parodyti be naujo turinio lauko: app.js turi tik vieną skaitytoją, o būsena jau yra (progress.get(mod.id).simDone). Siūlau app.js savininkui bloke pridėti vieną sakinį, pvz. „Modelis įveiktas šioje naršyklėje“ / „Modelis dar neįveiktas“, imamą per tą pačią būseną, ir nerašyti to į modulio JSON — tai ne turinys, o pažanga. Antra, atskirai verta apsispręsti dėl klasės sąrašo: #286 dizaineris matuotai pašalino požymius iš modulio eilutės (telefone trečia eilutė, sąrašas 7062 → 5614 px), todėl antro žetono grąžinimas atšauktų tą matavimą; jei žymos sąraše reikia, ji turi būti toje pačioje eilutėje kaip numeris arba „atlikta“, o ne nauja eilutė.",
+  "target": "assets/js/app.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/app.js:417–430 — blokas „Mokytojui ir tėvams“ rodo tik teacher.*, sources, svietimas1; jokio progress.* skaitymo",
+    "assets/js/progress.js (po #297) — syncMark()/showMark(): simDone skaitomas ir rodomas kaip .sim-goal vaikui, bet tik modulio puslapio sim kortelėje",
+    "assets/js/app.js:315 — krypties kortelėje „atlikta“ rodoma pagal progress.isDone() (užduotys), simDone neskaitomas",
+    "assets/js/app.js:271–275 — modulio eilutės žetonas „atlikta“ tas pats; #286 dizainerio matavimas: eilutė @390 153 → 116 px, sąrašas 7062 → 5614 px po perteklinių žetonų pašalinimo",
+    "docs/SVIETIMAS-1-GAIRES.md:48 (T3.5) — pažanga matoma vaikui paprastai (atlikta / ne) ir suaugusiajam be asmeninių duomenų"
+  ]
+}

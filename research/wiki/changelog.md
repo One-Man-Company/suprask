@@ -2,7 +2,19 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-15 (16:20) — Publikavimo patikra #303: repo 39 / paskelbta 39, garsas 1 138/1 138, garso vartų aklumas išmatuotas ir užtaisytas
+
+- **Būsena:** `HEAD` = `origin/main` = `d746acd2`, `git rev-list --left-right --count origin/main...HEAD` → `0 0`. Gyva svetainė neša `?v=d746acd2`; `live_version` = `repo_version` = `d746acd2`, `unpushed_commits` 0. Po šio paleidimo darbinėje kopijoje liko trys neįtraukti `scripts/check_published.py` pakeitimai (žr. žemiau) — juos komituoja bėgiklis.
+- **`check_published.py` (numatytasis režimas, 58,6 s, rc 0):** repo 39 / paskelbta 39 (`grade-01: repo 39, gyvai 39`); `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `aux_stale` 0, `shell_stale` 0, `shell_unreachable` 0, `path_differs` `[]`, `shell_count` 17, `Garsas: patikrinta 1138 iš 1138 (visi) — visi pasiekiami`, `verdict.label` = `sutampa`.
+- **3 gyvi adresai:** `matematika/25-ilgis-ir-vienetas.json` → `200`, 8 812 B; `lietuviu-kalba/01-garsas-ir-raide.json` → `200`, 5 044 B; `pasaulio-pazinimas/16-vandens-busenos.json` → `200`, 4 932 B.
+- **Užtaisytas #301 skolos punktas — garso patikros neigiamas zondas (LL-10 klasė):** veidrodis `scratch/mirror303` (kietosios nuorodos, originalai nepalytėti) su dviem defektais: `n/02effa582a419044-fec7949a.mp3` pašalintas → `404`, `s/be57b4e2c30221c2-f31333be.mp3` sutrumpintas iki 0 B → `200`, size 0. `--audio-full`: rc 1, `TRŪKSTA 2`, abu įvardyti teisingai (`nėra svetainėje`, `tuščias`). Tai pirmas įrodytas neigiamas atvejis po #301.
+- **Naujas defektas, kurį parodė tas pats zondas:** numatytasis 48 įrašų mėginys prieš tą patį veidrodį davė **rc 0** ir „visi pasiekiami“ — pavienis 404 į 48 tolygžius taškus nepatenka (48/1138 = 4,2 %). Taisymas `scripts/check_published.py`: numatytasis režimas — visi įrašai, `--audio-sample N` lieka greitas rankinis režimas ir išvestyje sako „mėginys“, `--audio-full` paliktas kaip sinonimas, `report()` / `check_audio()` / `audio_paths()` numatytieji → `None` (ne 48). Po taisymo (A) veidrodis numatytuoju režimu → rc 1, (B) `--audio-sample 48` → rc 0 su įvardyta riba, (C) gyva svetainė → 1138/1138, rc 0. Pamoka `research/wiki/guidelines/pamokos.md` → LL-96.
+- **Vartai:** `validate_content.py --grade 1 --strict` → 0 klaidų, 0 įspėjimų, rc 0; `check_docs_facts.py` → 0/0 (9 kryptys, 39 moduliai, 39 sim, 169 užduotys, 569 garso tekstai, 1 138 įrašai, 15 agentų); `check_lessons.py` → 95 įrašai su 4 laukais (prieš LL-96 įrašymą).
+- **Sprendimas:** **sutampa**. Turinys, simuliacijos, CSS, `docs/`, `AGENTS.md` neliesti; niekas nešalinta, joks ID nepernumeruotas.
+- **Ankstesnių paleidimų skola:** #294 ir #301 changelog eilučių neįrašė (jų ataskaitos tai įvardija kaip likutį) — šis įrašas rodo šiandienos būseną, o ne kartoja jų skaičius.
+
 ## 2026-11-14 (19:32) — Publikavimo patikra #290: repo 39 / paskelbta 39, gyvas kodas = `HEAD`, #286 sąsajos pataisa gyvai
+
 
 - **Būsena:** `HEAD` = `origin/main` = `0fa0df8`, `git rev-list --left-right --count origin/main...HEAD` → `0 0`, darbinė kopija prieš darbą švari (`git status --porcelain -uall` → 0 eilučių). Gyvas `index.html` neša `?v=0fa0df8e`; `live_version` = `repo_version` = `0fa0df8e`, `unpushed_commits` 0.
 - **`check_published.py`:** repo 39 / paskelbta 39 (`grade-01: repo 39, gyvai 39`); `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `stale_unknown` 0, `aux_stale` 0, `shell_stale` 0, `shell_unreachable` 0, `path_differs` `[]`, `shell_count` 17, `history_checked` true, `verdict.label` = `sutampa`, `rc=0`.

@@ -537,7 +537,7 @@ def last_commit() -> str:
 
 
 def report(grades: list[int] | None = None, compare_bytes: bool = True,
-           audio_sample: int | None = AUDIO_SAMPLE) -> dict:
+           audio_sample: int | None = None) -> dict:
     grades = grades or live_grades()
     per_grade = [check_grade(g, compare_bytes) for g in grades]
 
@@ -666,8 +666,9 @@ def main() -> int:
     ap.add_argument("--audio-full", action="store_true",
                     help="tikrinti visus garso įrašus (tai yra ir numatytasis režimas)")
     ap.add_argument("--audio-sample", type=int, default=0,
-                    help="greitas režimas: tikrinti tik N garso įrašų mėginį "
-                         "(mėginys nemato pavienių 404 — tik rankiniam bėgimui)")
+                    help=f"greitas režimas: tikrinti tik N garso įrašų mėginį "
+                         f"(pvz. --audio-sample {AUDIO_SAMPLE}; toks mėginys nemato "
+                         f"pavienių 404 — tik rankiniam bėgimui)")
     args = ap.parse_args()
 
     grades = [args.grade] if args.grade else None
@@ -738,7 +739,7 @@ def main() -> int:
             for rel in audio.get(key, [])[:10]:
                 print(f"  - {rel} — {label}")
         if audio.get("sampled"):
-            print("  (mėginys tolygus per visą manifestą; pilna patikra: --audio-full)")
+            print("  (mėginys, ne visa apimtis — numatytasis režimas tikrina visus įrašus)")
     elif audio.get("note"):
         print(f"Garsas: {audio['note']}")
     if data["unpushed_commits"]:

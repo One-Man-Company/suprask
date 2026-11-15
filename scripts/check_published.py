@@ -58,6 +58,15 @@ sugedusiais mp3 iš 1138 duoda rc 0 — tyli žalia, nors vaikas girdi nieko.
 `--audio-sample N` paliktas greitam rankiniam bėgimui; jis išvestyje visada
 sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
 
+2026-11-15 (paleidimas #308): dvi tylios žalios uždarytos.
+  - `404.html` įtrauktas į `SHELL_GLOBS`: jį naršyklė realiai įkelia (tai
+    puslapis, kurį vaikas pamato radęs neteisingą adresą ar nepaskelbtą
+    modulį), o `pages.yml` jį kopijuoja į svetainę. Veidrodis su 563 B → 594 B
+    failu anksčiau davė rc 0 ir „sutampa“; dabar — `PASENĘS KODAS: 404.html`.
+  - `unpushed()` grąžina ir tai, ar patikra įvyko. Git klaida (šviežias klonas
+    be `origin/main`) anksčiau virsdavo „0 neišsiųstų“; dabar `verdict()` sako
+    „neišsiųstų commit'ų patikra neįvyko“ ir rc lieka 1.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -103,6 +112,12 @@ AUX_FILES = [
 # anksčiau likdavo nematomas — visi modulių baitai sutapdavo (LL-83).
 SHELL_GLOBS = [
     ("index.html", None),
+    # `404.html` irgi įkeliamas naršyklės: tai puslapis, kurį vaikas pamato,
+    # kai modulio adresas neteisingas arba failas nepaskelbtas. Jis kopijuojamas
+    # į svetainę (`pages.yml`: `cp index.html 404.html _site/`), bet nebuvo nė
+    # viename varte — #306 paliko tai atviru, #308 įrodė zondą: veidrodis su
+    # 563 B → 594 B `404.html` davė rc 0 ir „sutampa“, nors gyvas failas kitas.
+    ("404.html", None),
     ("assets/js", "*.js"),
     ("assets/css", "*.css"),
 ]
@@ -517,14 +532,26 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     return out
 
 
-def unpushed() -> list[str]:
+def unpushed() -> tuple[list[str], bool]:
+    """(commit'ai, kurių nėra `origin/main`, ar patikra įvyko).
+
+    Anksčiau bet kokia git klaida (`origin/main` dar nenuskaitytas, veidrodis be
+    remote, sulūžęs indeksas) virsdavo tuščiu sąrašu — t. y. „0 neišsiųstų“ ir
+    žaliu „sutampa“. 2026-11-15 (#308) šviežias repo be `origin/main`: tikras
+    `git rev-list` grąžino rc 128 ir tuščią stdout, o įrankis pranešė 0. Tai ta
+    pati LL-37/LL-10 šeima: skaičius, kuris atrodo išmatuotas, bet nėra.
+    Antrasis reikšmės narys eina į `verdict()`, kad „nepatikrinta“ būtų
+    pasakyta žodžiais, o ne tylėtų.
+    """
     try:
-        out = subprocess.run(
+        proc = subprocess.run(
             ["git", "rev-list", "origin/main..HEAD"], cwd=ROOT, capture_output=True, text=True, timeout=30
-        ).stdout.split()
-        return [c for c in out if c]
+        )
     except Exception:  # noqa: BLE001
-        return []
+        return [], False
+    if proc.returncode != 0:
+        return [], False
+    return [c for c in proc.stdout.split() if c], True
 
 
 def last_commit() -> str:
@@ -573,6 +600,10 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "note": "garso patikra praleista (--no-bytes)",
     }
 
+    # Neišsiųsti commit'ai. `unpushed()` grąžina ir tai, ar patikra įvyko:
+    # git klaida anksčiau atrodė kaip „0 neišsiųstų“ (žr. funkcijos docstring).
+    unpushed_list, unpushed_ok = unpushed()
+
     out = {
         "grades": per_grade,
         "live_grades": grades,
@@ -595,7 +626,8 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "live_version": shell["live_version"],
         "repo_version": shell["repo_version"],
         "path_differs": [g["grade"] for g in per_grade if g.get("path_differs")],
-        "unpushed_commits": len(unpushed()),
+        "unpushed_commits": len(unpushed_list),
+        "unpushed_checked": unpushed_ok,
         "last_commit": last_commit(),
         "live_error": "; ".join(live_errors),
     }
@@ -648,7 +680,9 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(audio['empty'])} tuščias garso failas")
     if audio.get("unreachable"):
         reasons.append(f"{len(audio['unreachable'])} nepasiekiamas garso failas")
-    if data.get("unpushed_commits"):
+    if not data.get("unpushed_checked", True):
+        reasons.append("neišsiųstų commit'ų patikra neįvyko")
+    elif data.get("unpushed_commits"):
         reasons.append(f"{data['unpushed_commits']} neišsiųstas commit")
     return {"ok": not reasons, "reasons": reasons,
             "label": "sutampa" if not reasons else reasons[0]}
@@ -744,6 +778,9 @@ def main() -> int:
         print(f"Garsas: {audio['note']}")
     if data["unpushed_commits"]:
         print(f"Neišstumta commit'ų: {data['unpushed_commits']}")
+    if not data.get("unpushed_checked", True):
+        print("Neišstumtų commit'ų patikra NEĮVYKO — git negalėjo palyginti su origin/main "
+              "(tai ne „0“, o nežinoma; patikrink `git fetch`).")
     if not problems(data):
         print(f"✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai, "
               f"svetainės kodas {data.get('shell_count', 0)} failų"

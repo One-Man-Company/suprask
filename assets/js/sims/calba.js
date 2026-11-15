@@ -100,62 +100,194 @@ const garsoRaides = {
 
 /* ------------------------------------------------------------------ */
 /* 2. Skiemenų jungimas                                                */
+/*                                                                     */
+/* Modelis: tarpas tarp skiemenų yra PAUZĖ, o ne žodžio dalis. Vaikas   */
+/* pats perskaito skiemenis iš kairės į dešinę; kai perskaito paskutinį,*/
+/* plytelės suartėja, pauzės ženklai dingsta ir vietoje jų atsiranda    */
+/* vienas žodis. Taip taisoma modulio `teacher.misconceptions` pirma    */
+/* nuostata — „skaitant skiemenimis daroma pauzė, todėl žodis lieka     */
+/* nesuprastas“.                                                     */
+/*                                                                     */
+/* Kodėl ne mygtukas „Skaityk kartu“: jungimą sukelia pats skaitymas.  */
+/* Ankstesnė versija leido vaikui spausti vieną mygtuką ir stebėti      */
+/* animaciją — tai demonstracija, ne modelis (foundations: „simuliacija */
+/* leidžia nuspręsti, kas nutiks“). Mygtukas liko tik tam, kad būtų     */
+/* galima pakartoti tą patį žodį.                                       */
+/*                                                                     */
+/* Tekstai: kiekvienas sakinys rašomas vienoje vietoje (LL-42), o      */
+/* žodžiai ir skiemenys imami tik iš `config.words` (LL-61/LL-92).      */
 /* ------------------------------------------------------------------ */
+const SK_KIEKIS = ["", "vienas skiemuo", "du skiemenys", "trys skiemenys", "keturi skiemenys", "penki skiemenys"];
+const skKiekis = (n) => SK_KIEKIS[n] || `${n} skiemenų`;
+const skCap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+const skJunginys = (syl) =>
+  syl.length === 1 ? `„${syl[0]}“`
+    : syl.slice(0, -1).map((s) => `„${s}“`).join(", ") + ` ir „${syl[syl.length - 1]}“`;
+
 const skiemenuJungimas = {
   mount({ stage, controls, api, config }) {
-    const words = config.words || [];
-    let w = 0;
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const words = (Array.isArray(config.words) ? config.words : [])
+      .filter((it) => it && typeof it.word === "string" && Array.isArray(it.syllables) && it.syllables.length > 0)
+      .map((it) => ({ word: it.word, syllables: it.syllables.map(String) }));
+
+    if (!words.length) {
+      stage.innerHTML = `<p class="sim-note" style="margin:0">Žodžių sąrašo nėra.</p>`;
+      controls.innerHTML = "";
+      api.readout("Žodžių sąrašo nėra.");
+      api.note("");
+      return () => {};
+    }
+
+    const reduced = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
     const timers = [];
+    const later = (fn, ms) => { const id = setTimeout(fn, ms); timers.push(id); return id; };
+    const stopTimers = () => { while (timers.length) clearTimeout(timers.pop()); };
+
+    let w = 0;          // kuris žodis
+    let step = 0;       // kiek skiemenų perskaityta iš eilės
+    let joined = false; // ar žodis jau sujungtas
+    let reported = false;
 
     stage.innerHTML = `
-      <div style="text-align:center">
-        <div id="sj-tiles" style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;min-height:5rem;align-items:center"></div>
-        <p class="sim-note" id="sj-hint">Spausk po vieną skiemenį, paskui — „Skaityk kartu“.</p>
+      <div style="text-align:center;max-width:34rem;margin:0 auto">
+        <div id="sj-strip" style="display:flex;flex-wrap:wrap;gap:.9rem;row-gap:.6rem;justify-content:center;align-items:center;min-height:5rem"></div>
+        <p id="sj-word" style="min-height:2.6rem;margin:.4rem 0 0;font-family:var(--font-head);font-weight:900;font-size:clamp(1.6rem,7vw,2.2rem)"></p>
+        <p id="sj-caption" class="sim-note" style="margin:.2rem 0 0"></p>
       </div>`;
     controls.innerHTML = `
-      <button class="btn" id="sj-join">Skaityk kartu</button>
-      <button class="btn secondary" id="sj-next">Kitas žodis →</button>`;
-    const tilesEl = stage.querySelector("#sj-tiles");
-    const hintEl = stage.querySelector("#sj-hint");
+      <button class="btn secondary" id="sj-again" type="button">Skaityk iš naujo</button>`;
 
-    function draw() {
-      const item = words[w % words.length];
-      tilesEl.innerHTML = item.syllables.map((s) => `
-        <button class="btn secondary" data-syl="${s}" style="font-size:1.8rem;font-weight:900;padding:1rem 1.4rem">${s}</button>`).join("");
-      tilesEl.querySelectorAll("[data-syl]").forEach((b) => {
-        b.addEventListener("click", () => {
-          api.speak(b.dataset.syl, { rate: .75 });
-          b.style.borderColor = "var(--accent)";
-          setTimeout(() => { b.style.borderColor = ""; }, 500);
-        });
-      });
-      api.readout("Skiemenys");
-      hintEl.textContent = "Spausk po vieną skiemenį, paskui — „Skaityk kartu“.";
+    const stripEl = stage.querySelector("#sj-strip");
+    const wordEl = stage.querySelector("#sj-word");
+    const captionEl = stage.querySelector("#sj-caption");
+    let nextBtn = null;
+
+    const item = () => words[w];
+
+    function setNext(label, handler) {
+      if (!label) {
+        if (nextBtn) { nextBtn.remove(); nextBtn = null; }
+        return;
+      }
+      if (!nextBtn) {
+        nextBtn = document.createElement("button");
+        nextBtn.type = "button";
+        nextBtn.className = "btn";
+        nextBtn.id = "sj-next";
+        controls.appendChild(nextBtn);
+      }
+      nextBtn.textContent = label;
+      nextBtn.onclick = handler;
+    }
+
+    function paint() {
+      const it = item();
+      step = 0;
+      joined = false;
+      // Tarpas tarp plytelių yra matuojamas, o ne dekoratyvus: jis rodo pauzę.
+      stripEl.style.transition = "none";
+      stripEl.style.gap = ".9rem";
+      stripEl.innerHTML = it.syllables.map((s, i) => `
+        ${i ? `<span class="sj-pause" aria-hidden="true" style="width:2px;height:2.2rem;border-left:2px dashed var(--line)"></span>` : ""}
+        <button class="btn secondary" type="button" data-i="${i}" aria-label="Skiemenis ${esc(s)}"
+          style="position:relative;min-height:48px;padding:.7rem 1.2rem;font-size:clamp(1.4rem,6vw,1.9rem);font-weight:900">
+          ${esc(s)}<span aria-hidden="true" data-num
+            style="position:absolute;top:.15rem;right:.4rem;font-size:clamp(.75rem,2.6vw,.95rem);color:var(--ink-faint)"></span>
+        </button>`).join("");
+      stripEl.querySelectorAll("[data-i]").forEach((b) => b.addEventListener("click", () => tap(Number(b.dataset.i))));
+      wordEl.textContent = "";
+      captionEl.textContent = "Tarpai tarp plytelių — pauzės.";
+      setNext(null);
+      api.readout(it.syllables.length === 1
+        ? `Žodis ${w + 1} iš ${words.length}. Vienas skiemuo jau yra žodis. Spausk jį.`
+        : `Žodis ${w + 1} iš ${words.length}. ${skCap(skKiekis(it.syllables.length))}, vienas žodis. Spausk pirmą skiemenį.`);
       api.note("");
     }
 
-    controls.querySelector("#sj-join").addEventListener("click", () => {
-      const item = words[w % words.length];
-      tilesEl.querySelectorAll("[data-syl]").forEach((b, idx) => {
-        timers.push(setTimeout(() => {
-          b.style.background = "var(--sun)";
-          b.style.borderColor = "var(--ink)";
-        }, idx * 380));
-      });
-      timers.push(setTimeout(() => {
-        api.speak(item.word, { rate: .85 });
-        api.readout(item.word);
-        hintEl.textContent = "Dabar pasakyk visą žodį be pauzių — kaip suaugęs.";
-      }, item.syllables.length * 380 + 120));
-    });
+    function tap(i) {
+      const it = item();
+      const btn = stripEl.querySelector(`[data-i="${i}"]`);
+      if (!btn) return;
 
-    controls.querySelector("#sj-next").addEventListener("click", () => {
+      if (joined) { api.speak(it.syllables[i], { rate: .8 }); return; }
+      if (i < step) {
+        api.speak(it.syllables[i], { rate: .8 });
+        api.note("Šį skiemenį jau perskaitei. Skaityk toliau.");
+        return;
+      }
+      if (i > step) {
+        api.note(`Skaityk iš kairės į dešinę: dabar „${it.syllables[step]}“.`);
+        return;
+      }
+
+      api.speak(it.syllables[i], { rate: .8 });
+      btn.dataset.read = "1";
+      btn.style.borderColor = "var(--ok)";
+      btn.querySelector("[data-num]").textContent = String(step + 1);
+      btn.setAttribute("aria-label", `Skiemenis ${it.syllables[i]}, ${step + 1}`);
+      step += 1;
+      const left = it.syllables.length - step;
+      if (left > 0) {
+        api.note("");
+        api.readout(`Perskaitei „${it.syllables[i]}“. Liko ${skKiekis(left)}.`);
+      } else {
+        joinWord();
+      }
+    }
+
+    function joinWord() {
+      const it = item();
+      const last = w === words.length - 1;
+      joined = true;
+      stripEl.querySelectorAll(".sj-pause").forEach((p) => { p.style.display = "none"; });
+      if (!reduced) stripEl.style.transition = "gap 420ms ease";
+      stripEl.style.gap = ".12rem";
+      wordEl.textContent = it.word;
+      captionEl.textContent = "Pauzių nebėra: skiemenys susilieja į vieną žodį.";
+      later(() => api.speak(it.word, { rate: .85 }), reduced ? 0 : 430);
+      api.note("Tarpas buvo pauzė. Be pauzės skiemenys susilieja į žodį.");
+      setNext(last ? "Nuo pradžių" : "Kitas žodis →", last ? restart : nextWord);
+      api.readout(`${skJunginys(it.syllables)} — ${it.word}. ${last ? "Perskaitei visus žodžius." : "Vienas žodis."}`);
+      if (last && !reported) {
+        reported = true;
+        api.progress({ words: words.length });
+      }
+      if (nextBtn && stage.contains(document.activeElement)) nextBtn.focus({ preventScroll: true });
+    }
+
+    function focusFirst() {
+      const b = stripEl.querySelector("[data-i]");
+      if (b) b.focus({ preventScroll: true });
+    }
+
+    function nextWord() {
+      stopTimers();
+      const hadFocus = nextBtn && nextBtn === document.activeElement;
       w += 1;
-      draw();
+      if (w >= words.length) w = 0;
+      paint();
+      // LL-32: pašalintas mygtukas negrąžina fokuso į dokumento pradžią.
+      if (hadFocus) focusFirst();
+    }
+
+    function restart() {
+      stopTimers();
+      const hadFocus = nextBtn && nextBtn === document.activeElement;
+      w = 0;
+      paint();
+      if (hadFocus) focusFirst();
+    }
+
+    controls.querySelector("#sj-again").addEventListener("click", () => {
+      stopTimers();
+      paint();
+      api.note("Tas pats žodis iš naujo.");
+      focusFirst();
     });
 
-    draw();
-    return () => timers.forEach(clearTimeout);
+    paint();
+    return () => { stopTimers(); };
   },
 };
 

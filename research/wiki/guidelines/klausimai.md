@@ -13,7 +13,8 @@
 - [ ] **Ar tempimas (drag) ar bakstelėjimas (tap) geriau 1–2 klasei?** Šiuo metu visur naudojamas bakstelėjimas — ar tai riboja?
 - [ ] **Kiek klaidų toleruoti prieš parodant sprendimą?** Dabartinė tvarka: užuomina → modelio žingsnis → niekada neparodome atsakymo. Ar tai neper daug?
 - [ ] **Keturios garso savybės (trukmė, aukštumas, garsumas, tembras) — vienas modulis ar keturi?** Gairės draudžia daugiau nei vieną naują sąvoką, o padalijus gaunasi keturi beveik identiški moduliai. Kol neatsakyta, garso savybių tema lieka ne kuriama (ideator, paleidimas #2). Paleidimas #128 pasiūlė trečią variantą — vienas modulis apie vieną ašį, aukštumą, su dokumentuota painiava „aukštas = garsus“ (`agents/proposals/2026-11-08-ideator-garso-aukstis.json`); klausimas lieka atviras, kol metodininkas ar žmogus nepatvirtina tokios aprėpties.
-- [ ] **Kaip ekrane perteikti masę, kai programa prašo ją „pajausti“?** 1 kl. matematikos programa („Masė“, `matematika-1-klase.md:128`) sako „mokomasi **pajausti**, kokių daiktų masę tinka/netinka apibūdinti kilogramu“. Ekranas negali duoti svorio pojūčio, o „spėti ir tikrinti“ be jo virsta spėlionėmis apie paveikslėlius. Kol neatsakyta, masės modulis ne kuriamas (ideator, paleidimas #4).
+- [x] **Kaip ekrane perteikti masę, kai programa prašo ją „pajausti“?** 1 kl. matematikos programa („Masė“, `matematika-1-klase.md:139`) sako „mokomasi **pajausti**, kokių daiktų masę tinka/netinka apibūdinti kilogramu“. Ekranas negali duoti svorio pojūčio, o „spėti ir tikrinti“ be jo virsta spėlionėmis apie paveikslėlius. Kol neatsakyta, masės modulis ne kuriamas (ideator, paleidimas #4).
+  **Atsakyta 2026-11-16 (ideator #312).** „Pajausti“ nereiškia rankos pojūčio ekrane: tas pats programos dokumentas `sources/pradinio-bp-rekomendacijos-2024.txt:1010–1014` „mato jausmą“ apibūdina kaip gebėjimą žinoti, kokiais vienetais apibūdinami aplinkos dydžiai ir kokie prietaisai tam naudojami, o metodą — „spėti ir tikrinti“: įvertinti „iš akies“, tada išmatuoti prietaisu ir aptarti rezultatą. Masės tema `:33783–33784` tą patį kartoja: kilogramas, tinkamumas vienetui, prietaisai. Todėl modeliui užtenka trijų dalių — vienodų matmenų, bet skirtingo turinio daiktų, svarstyklių su svarsčiu ir spėjimo prieš matavimą; rankos pojūtis lieka veiklai be ekrano (T8.3, teacher.offline). Gramai, tonos ir vienetų sąryšiai lieka 2 klasei (`:1015–1017`). Pasiūlymas: `agents/proposals/2026-11-16-ideator-mase-ir-kilogramas.json`.
 
 ## Technologijos (1 klasė)
 
@@ -22,7 +23,8 @@
 
 ## Pasaulio pažinimas (1 klasė)
 
-- [ ] **Ar augalų grupių moduliui (medžiai / krūmai / žolės) būtina vietinė realių nuotraukų biblioteka?** `pasaulio-pazinimas-1-klase.md:140` prašo atpažinti rūšis „su realiomis nuotraukomis“, o platforma neturi nei vieno nuotraukų rinkinio ir negali kviesti išorinių resursų (AGENTS.md taisyklė 3). Kol neatsakyta, grupavimo modulis ne kuriamas: pieštos iliustracijos parodytų požymį (vienas kamienas / keli stiebai / žolinis stiebas), bet ne rūšį, o būtent rūšies atpažinimo programa prašo. Klaidinga nuostata, kurią modelis griautų („krūmas — mažas medis“), lieka nefiksuota (ideator, paleidimas #16).
+- [x] **Ar augalų grupių moduliui (medžiai / krūmai / žolės) būtina vietinė realių nuotraukų biblioteka?** `pasaulio-pazinimas-1-klase.md:140` prašo atpažinti rūšis „su realiomis nuotraukomis“, o platforma neturi nei vieno nuotraukų rinkinio ir negali kviesti išorinių resursų (AGENTS.md taisyklė 3). Kol neatsakyta, grupavimo modulis ne kuriamas: pieštos iliustracijos parodytų požymį (vienas kamienas / keli stiebai / žolinis stiebas), bet ne rūšį, o būtent rūšies atpažinimo programa prašo. Klaidinga nuostata, kurią modelis griautų („krūmas — mažas medis“), lieka nefiksuota (ideator, paleidimas #16).
+  **Atsakyta 2026-11-16 (ideator #312).** 26.2.3 (`sources/pradinio-bp-rekomendacijos-2024.txt:35165–35166`) turi du gebėjimus: (1) „skirti medžius, krūmus ir žoles“ ir (2) „atpažinti artimiausius aplinkos medžius (klevą, ąžuolą, beržą, eglę, pušį ir 3–4 kitus)“; nuotraukų reikia **antram**, o pirmas yra požymio klausimas (kamienas, stiebai, žolinis stiebas) ir jį galima modeliuoti pieštais augalais. Todėl siūlomas modulis sąmoningai nevartoja rūšių vardų, o antras gebėjimas lieka tam, kam jį skyrė ir pati programa — tiriamajai veiklai ir ekskursijai į mokyklos kiemą, parką ar mišką (`:17641`, „Tyrimas „Medžių lapų tyrimas““ `:17643`), su tikrais lapais (T8.3). Modulio `teacher.goal` ir `teacher.offline` privalo tą ribą pasakyti žodžiais, o modulio užduotys negali prašyti įvardyti rūšies. Pasiūlymas: `agents/proposals/2026-11-16-ideator-medziai-krumai-zoles.json`.
 
 ## Gyvenimo įgūdžiai (1 klasė)
 
@@ -75,6 +77,13 @@ Pirmoji dalis — #258 parengti, bet neįrašyti atmetimai (pasiūlymo failas ne
 
 - [ ] **Ar sėklų išbarstymas priklauso 1 klasei?** 1–2 kl. bendrame stulpelyje ciklas baigiamas „vaisių brandinimu ir sėklų išbarstymu“ (`:12437–12439`), o 1 kl. plane (26.2.3, `:17641–17644`) teliko „Nuo sėklos iki sėklos“. Kol neatsakyta, ciklo modulio nekuriu: `09-augalo-gyvenimas` jau duoda seką iki žiedo.
 - [ ] **`pasaulio-pazinimas-1-klase.md:82–88` lentelėje trūksta 26.2.1, 26.2.2, 26.2.4, 26.3.1 ir 26.5.1**, nors 1 kl. plane jie yra (`:17626–17670`). Dėl to dashboard'o žymos rodo temas, kurių 1 kl. programoje nėra (orai, saugus eismas), o tikras spragas (žmonių įvairovė, ištekliai, energija) slepia.
+
+## Temos, kurių nepasiūlėme (ideator, 2026-11-16)
+
+- **Muzikos tembras ir trukmė** — jau atviras klausimas apie keturias garso savybes (`klausimai.md:15`); atskiras modulis dubliuotų `01-garso-aukstis` ir `02-ritmas-ir-perkusija`, o be to klausimo sprendimo jo kurti negalima.
+- **Drabužių ir avalynės priežiūra (23.3)** — programa temą numato (`research/wiki/curriculum/1-klases-temų-žemėlapis.md:76`), bet vienintelis garbingas modelis yra seka „išskalbk → išdžiovink → išlygink“, kuri kartoja `24-komandu-seka` mechaniką, o klaidingos nuostatos su matoma pasekme neturi (gairių 3 klausimas krenta).
+- **Virtualumo etika** — 1 kl. etikos tema numato draugiško elgesio internete taisykles; tai taisyklių sąrašas, kurį geriau pasako mokytojas, o modelis virstų „pasirink, kas draugiška“ testu be pasekmės.
+- **Skaičius ir skaitmuo** — šiame sąraše buvo atmesta 2026-11-15 („dubliuoja 19-simto-skaiciu-lentele“), bet patikrinus modulius tai netiesa: `19` moko lentelės krypčių, `05-desimtukas` — dešimtuko sandaros, o skaitmens vietos niekas nestato. Programa skaičiaus ir skaitmens sąvokas įvardija tiesiogiai (`sources/pradinio-bp-rekomendacijos-2024.txt:33739–33740`), todėl 2026-11-16 ji **pasiūlyta**: `agents/proposals/2026-11-16-ideator-skacius-ir-skaitmuo.json`.
 
 ---
 

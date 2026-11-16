@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 312,
+  "created": "2026-11-16T07:46:39+02:00",
+  "type": "tema",
+  "title": "Skaičius ir skaitmuo: 13 ir 31 — tie patys skaitmenys, skirtingi skaičiai",
+  "body": "1 klasės matematikos programa prašo susieti objektų skaičių su skaičiumi ir aptarti skaičiaus bei skaitmens sąvokas; metų pabaigos reikalavimas — skirti skaičių ir skaitmenį, perskaityti ir užrašyti skaičius iki 100 skaitmenimis. Platformoje šios temos nėra: `05-desimtukas` aiškina dešimtuką kaip dvi eiles po penkis, o `19-simto-skaiciu-lentele` — lentelės kryptis, tad dviejų skaitmenų sandara niekur nestatoma. Siūlau modelį, kuriame vaikas sudeda skaičių iš dešimties kubelių ir atskirų kubelių, o paskui sukeičia tuos pačius skaitmenis vietomis (13 → 31) ir pamato, kad kiekis pasikeitė, nors skaitmenys tie patys. Antra pora — 19 ir 21: skaitmuo 9 didesnis už 1, o skaičius mažesnis. Klaidinga nuostata: „skaitmuo ir skaičius yra tas pats“ ir jos pasekmė „kuris skaitmuo didesnis, tas skaičius didesnis“. Paveikslėlis parodytų vieną užrašą; modelis leidžia tą patį skaitmenį perkelti į kitą vietą ir pamatyti, kad jis reiškia ką kita. Sudėties ir atimties sąmoningai neimama — modulyje lieka viena sąvoka: skaitmens reikšmė priklauso nuo vietos.",
+  "target": "content/lt/grade-01/matematika/27-skaicius-ir-skaitmuo.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33739–33740 („1 klasė. Skaičiai nuo 0 iki 100. Mokomasi skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus, susieti objektų skaičių su skaičiumi. Aptariamos skaičiaus ir skaitmens sąvokos“)",
+    "research/wiki/curriculum/matematika-1-klase.md:40 (1 kl. rezultatas „Skiria sąvokas skaičius ir skaitmuo“), :158 (1-oko metų pabaigos reikalavimas „Skiria skaičių ir skaitmenį; perskaito ir užrašo skaičius iki 100 skaitmenimis“)",
+    "content/lt/grade-01/index.json:27–42 (16 matematikos modulių — nė vieno, kuris statytų dviejų skaitmenų sandarą ar lygintų skaičių su skaitmeniu)",
+    "content/lt/grade-01/matematika/05-desimtukas.json:15 (dešimtukas apibrėžtas kaip „dvi eilės po penkis langelius“ — kita sąvoka: kiekis dešimtuke, ne skaitmens vieta)",
+    "content/lt/grade-01/index.json:36 (19-simto-skaiciu-lentele — „į dešinę skaičius padidėja vienu, o žemyn padidėja dešimčia“: lentelės kryptys, ne skaitmens reikšmė)"
+  ]
+}

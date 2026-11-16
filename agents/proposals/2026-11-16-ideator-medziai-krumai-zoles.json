@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 312,
+  "created": "2026-11-16T07:46:39+02:00",
+  "type": "tema",
+  "title": "Medžiai, krūmai, žolės: grupę rodo kamienas, o ne aukštis",
+  "body": "1 klasės pasaulio pažinimo programa (26.2.3) prašo mokytis skirti medžius, krūmus ir žoles, o metų pabaigos reikalavimas tą patį kartoja. Platformoje šios temos nėra: visuose 39 moduliuose žodžių „krūmas“, „žolė“ ir „kamienas“ nėra nė vieno. Siūlau modelį su dviem nepriklausomais dydžiais — aukščiu ir kamienų skaičiumi: vaikas keičia abu ir mato, kad grupę lemia ne aukštis, o stiebas. Pora „30 cm ąžuoliukas“ ir „aukšta alyva“ parodo, kad mažas medis lieka medis, o aukštas augalas su keliais stiebais — krūmas. Klaidinga nuostata: „krūmas yra mažas medis, o žolė — bet kas žalias ir žemas“. Paveikslėlis parodytų vieną augalą ir neatsakytų, kas lėmė grupę; modelis laiko lapus tuos pačius ir keičia tik kamieną. Rūšių vardų sąmoningai nevartoju: rūšių atpažinimui reikia realių nuotraukų (`klausimai.md:25`), kurių platforma neturi, todėl klevas, ąžuolas, beržas, eglė ir pušis lieka mokytojo ekskursijai su tikrais lapais (T8.3).",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/22-medziai-krumai-zoles.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:35165–35166 („26.2.3. Augalai. Mokomasi skirti medžius, krūmus ir žoles, atpažinti artimiausius aplinkos medžius (klevą, ąžuolą, beržą, eglę, pušį ir 3−4 kitus iš savo aplinkos)“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17641 (1 klasės metų planas: „26.2.3. Augalai. 4 Tiriamoji veikla, ekskursijos į mokyklos kiemą, miesto parką ar mišką“), :17643 („Tyrimas „Medžių lapų tyrimas““)",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:124 (1-oko metų pabaigos reikalavimas: „Skiria medžius, krūmus ir žoles“), :140 (gairė „Augalų atpažinimas — su realiomis nuotraukomis, o ne iliustracijomis: BP prašo atpažinti rūšis „iš savo aplinkos““)",
+    "content/lt/grade-01/index.json:52–59 (aštuoni pasaulio pažinimo moduliai: metų laikai, augalo gyvenimas, gyvūnų grupės, vandens būsenos, judėjimas, kuprinė, dūmai, kas gyvas — nė vieno apie augalų grupes)",
+    "content/lt/grade-01 — paieška „krūm|žol[ėe]|kamien“ visuose 39 moduliuose: 0 atvejų (2026-11-16)",
+    "research/wiki/guidelines/klausimai.md:25 (atviras klausimas apie realių nuotraukų poreikį; atsakytas šiame paleidime)"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 312,
+  "created": "2026-11-16T07:46:39+02:00",
+  "type": "tema",
+  "title": "Masė: vienodo dydžio dėžutės sveria skirtingai",
+  "body": "1 klasės matematikos programoje yra tema „Masė, laikas“ (5 val.), o programos tekstas masę aprašo taip: susipažįstama su kilogramu ir praktiškai mokomasi pajausti, kurių daiktų masę tinka apibūdinti šiuo vienetu ir kokie prietaisai tam naudojami. Programos rengėjai „pajausti“ aiškina kaip „mato jausmą“: spėti iš akies, tada išmatuoti skirtu prietaisu ir aptarti rezultatą su mokytoju. Ekrane tai įmanoma be rankos pojūčio — dvi vienodo dydžio dėžutės (putos ir smėlio), svarstyklės su kilogramo svarsčiu ir vaiko spėjimas prieš kiekvieną matavimą. Platformoje masės modulio nėra: „kilogram“ ir „masė“ modulių JSON failuose nepasirodo nė karto. Klaidinga nuostata: „didesnis daiktas sunkesnis“ — vienodo dydžio, bet skirtingo turinio dėžutės ją paneigia per vieną bandymą, o programa tą patį pateikia vadovėlio užduotimi („Rankinės yra vienodo dydžio, tačiau jų masė skirtinga“). Gramai, tonos ir vienetų sąryšiai sąmoningai neįtraukti — juos programa skiria 2 klasei.",
+  "target": "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33783–33784 („1 klasė. Masė, laikas. Susipažįstama su pagrindiniu masės matavimo vienetu kilogramu (kg). Atliekant įvairias praktines užduotis, mokomasi pajausti, kokių artimoje aplinkoje esančių daiktų masę tinka/netinka apibūdinti šiuo matavimo vienetu, kokie prietaisai gali būti tam naudojami“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1010–1014 („Pagrindinis dėmesys sutelkiamas… į „mato jausmo“ ugdymą… Rekomenduojama atlikti įvairių praktinių užduočių, kuriose taikomas metodas „spėti ir tikrinti“, mokoma įvertinti dydžio didumą „iš akies“, o tada išmatuoti tam skirtu prietaisu“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17299 (1 klasės metų planas: „Masė, laikas 5“), :33801–33804 (vadovėlio užduotis „Rankinės yra vienodo dydžio, tačiau jų masė skirtinga“)",
+    "research/wiki/curriculum/matematika-1-klase.md:139 (masės tema su citata apie „pajausti“), :167 (1-oko metų pabaigos reikalavimas „Naudoja kg masės matavimui“)",
+    "content/lt/grade-01/index.json:27–42 (16 matematikos modulių — nė vieno apie masę; „kilogram|masė“ modulių JSON failuose 0 atvejų)",
+    "research/wiki/guidelines/klausimai.md:16 (atviras klausimas „Kaip ekrane perteikti masę, kai programa prašo ją pajausti?“; atsakytas šiame paleidime)"
+  ]
+}

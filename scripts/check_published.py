@@ -680,7 +680,12 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(audio['empty'])} tuščias garso failas")
     if audio.get("unreachable"):
         reasons.append(f"{len(audio['unreachable'])} nepasiekiamas garso failas")
-    if not data.get("unpushed_checked", True):
+    # Numatytasis `False`, ne `True`: nežinoma būsena neturi atrodyti kaip
+    # išmatuotas nulis. `check()` visada įrašo raktą, tad šis kelias liečia tik
+    # svetimus dict'us (senas snapshot'as, rankinis zondas) — jiems saugiau
+    # pasakyti „nepatikrinta“ negu „0 neišsiųstų“ (#310 zondas: `verdict({})`
+    # anksčiau grąžino žalią „sutampa“).
+    if not data.get("unpushed_checked", False):
         reasons.append("neišsiųstų commit'ų patikra neįvyko")
     elif data.get("unpushed_commits"):
         reasons.append(f"{data['unpushed_commits']} neišsiųstas commit")
@@ -778,7 +783,7 @@ def main() -> int:
         print(f"Garsas: {audio['note']}")
     if data["unpushed_commits"]:
         print(f"Neišstumta commit'ų: {data['unpushed_commits']}")
-    if not data.get("unpushed_checked", True):
+    if not data.get("unpushed_checked", False):
         print("Neišstumtų commit'ų patikra NEĮVYKO — git negalėjo palyginti su origin/main "
               "(tai ne „0“, o nežinoma; patikrink `git fetch`).")
     if not problems(data):

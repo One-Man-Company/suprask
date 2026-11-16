@@ -1,0 +1,23 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 318,
+  "created": "2026-11-16T15:15:00+02:00",
+  "type": "atitiktis",
+  "title": "Gyvūnų grupės: modulis moko 4 klasės 29.1.1, o 1 klasėje 26.2.2 yra augintinis ir tvartas",
+  "body": "1 klasės 26.2.2 „Gyvūnai“ dokumente aprašytas augintiniu ir tvartu: projektas „Mano augintinis“, „Kas gyvena tvarte“, minčių lietus „Kaip rūpinuosi savo augintiniu“ ir diskusija „Kodėl augintiniai atsiranda gyvūnų prieglaudose?“ (sources/pradinio-bp-rekomendacijos-2024.txt:8419–8426; ilgalaikis planas :17636–17640). Modulis 10-gyvunu-grupes moko ko kito — trijų stuburinių grupių pagal dangą ir kvėpavimą (outcomes :9–11, steps :17–19, užduotys :29–72), o būtent šis turinys yra 4 klasės tema 29.1.1 „Organizmų grupės“: „Mokomasi palyginti ir sugretinti išorinius požymius bei elgseną, būdingą šioms pagrindinėms gyvųjų organizmų klasėms: vabzdžiams, paukščiams, žinduoliams, žuvims, ropliams“ (:9167–9171, skyrius po „4 klasė“ :9027; taip pat :9032–9039). Modulio antrasis šaltinis „Pasaulio pažinimo programa: gyvūnų grupės ir jų požymiai“ remiasi iki 2022 m. buvusiu dalyku, o pirmasis „gyvūnų įvairovė 1–2 kl.“ nepatikrinamas: frazės „gyvūnų įvairovė“ dokumente nėra nė karto (grep, 2026-11-16), o 1–2 kl. stulpelyje gyvūnai minimi tik kaip stebėjimo ir gyvenimo ciklo objektai (:12629–12632). Siūlau (a) išimti modulį iš 1 klasės index.json ir path.json bei perkelti į 4 klasės eilę, kai ji bus atidaryta; simuliacija `gyvunu-grupes` tada tarnautų 4 klasei. Jei 26.2.2 vis dėlto norima modulio 1 klasėje, sprendimą turi priimti metodininkas: vienintelė programos veikla, kuri nekartoja platformos mechanikos, yra rūšiavimas „naminiai / laukiniai“ pagal „Kas gyvena tvarte“ — augintinio priežiūrą `research/wiki/guidelines/klausimai.md:72` jau atmetė kaip 09/20 kartojimą. Nepriklausomai nuo sprendimo, 3 užduoties užuomina „Pagalvok, kuo dengtas paukštis — ne kailis, ne žvynai“ (:58) atmeta du iš trijų variantų ir taip perskaito atsakymą (LL-22), todėl turi būti perrašyta.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:8419–8426 — 26.2.2 „Gyvūnai“: „Mano augintinis“, „Kas gyvena tvarte“, „Kodėl augintiniai atsiranda gyvūnų prieglaudose?“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17636–17640 — 1 klasės ilgalaikis planas: 26.2.2 „Gyvūnai“, 2 val.",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:9027 — skyriaus žyma „4 klasė“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:9032–9039 — 4 kl. 29.1.1 „Organizmų grupės“: plakatas „Organizmų klasių požymiai“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:9167–9171 — „Mokomasi palyginti ir sugretinti išorinius požymius bei elgseną, būdingą … vabzdžiams, paukščiams, žinduoliams, žuvims, ropliams“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:12629–12632 — 1–2 kl. bendra nuostata: stebėti augalų ir gyvūnų augimą, gyvenimo ciklą, atskirti gyvus organizmus nuo negyvų",
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:9–11, :17–19, :29–72 — modulio rezultatai, žingsniai ir užduotys (grupės pagal dangą ir kvėpavimą)",
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:58 — užuomina „ne kailis, ne žvynai“ atmeta du variantus (LL-22)",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md §2.5 — modulio verdiktas „neatitinka“ su tomis pačiomis eilutėmis",
+    "research/wiki/guidelines/klausimai.md:72 — augintinio priežiūros modelio atmetimas dėl mechanikos kartojimo"
+  ]
+}

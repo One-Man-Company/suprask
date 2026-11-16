@@ -1,0 +1,22 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 318,
+  "created": "2026-11-16T15:16:00+02:00",
+  "type": "atitiktis",
+  "title": "Augalo gyvenimas: ciklas baigiamas žiedu, nors dokumentas eina bent iki vaisiaus",
+  "body": "Trečia modulio užduotis klausia „Kaip augalas kinta nuo sėklos iki žiedo?“ (content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:52) ir teisingu laiko variantą „Sėkla → daigas → augalas su lapais → žiedas“ (:56), nors paties modulio concept.steps[2] (:19) sako „jis žydi ir vėl brandina sėklas“. Dokumento 1 klasės ciklas nėra toks trumpas: „dygimas, augimas, vaisių brandinimas“ (sources/pradinio-bp-rekomendacijos-2024.txt:39950–39951) ir „dygimas, augimas ir vystymasis, dauginimasis ir sėklų išbarstymas“ (:35411–35412), o 1–2 kl. bendrame stulpelyje — „vaisių brandinimas ir sėklų išbarstymas“ (:12437–12440). Todėl užduotis moko ciklo, kuris trumpesnis už bet kurią dokumento formuluotę, ir prieštarauja savo paties žingsniui — LL-33 šeima (paaiškinimas įrašytas pagal pirmą pavyzdį). Antra: pirmoji užduotis „Kiek sąlygų reikia augalui, kad jis augtų?“ (:30) tikrina modulio paties sąrašo ilgį (trys), o ne supratimą naujoje situacijoje (T2.2); pats sąlygų aiškinimas 1–2 klasei leistinas (:12431–12433), todėl modulio branduolio keisti nereikia — keistinas klausimas. Trečia: sources (:87–88) remiasi „Pasaulio pažinimo programa“, t. y. iki 2022 m. buvusiu dalyku, ir nenurodo nei temos kodo 26.2.3, nei eilutės (T2.1). Siūlau: 3 užduoties teisingą variantą pratęsti iki vaisiaus su sėklomis, 1 užduotį pakeisti perkėlimo klausimu apie tą patį reiškinį kitame augale (ne apie sąlygų skaičių), o sources perrašyti nurodant 26.2.3 ir eilutes :39950–39951 bei :35411–35412. Garso pergeneruoti nereikia: sim.config tuščias, kintantys laukai nebuvo tariami.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:39950–39951 — „1 klasė. Augalai… gyvenimo ciklas (dygimas, augimas, vaisių brandinimas)“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:35411–35412 — „dygimas, augimas ir vystymasis, dauginimasis ir sėklų išbarstymas“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:12437–12440 — 1–2 kl. stulpelis: ciklas su vaisių brandinimu ir sėklų išbarstymu",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:12431–12433 — 1–2 kl. gebėjimas: „paaiškinti, kokių sąlygų reikia, kad vyktų reiškinys“",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:19 — modulio žingsnis „jis žydi ir vėl brandina sėklas“",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:52–56 — 3 užduotis ir jos teisingas variantas, besibaigiantis žiedu",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:30 — 1 užduotis „Kiek sąlygų reikia augalui…“ (sąrašo ilgio klausimas)",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:87–88 — sources be temos kodo ir be eilučių, antrasis — ikiprograminis „Pasaulio pažinimas“",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md §2.3, §2.5 — trys ciklo formuluotės ir modulio verdiktas"
+  ]
+}

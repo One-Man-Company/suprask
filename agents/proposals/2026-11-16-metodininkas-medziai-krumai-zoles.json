@@ -1,0 +1,23 @@
+{
+  "role": "metodininkas",
+  "run_id": 313,
+  "created": "2026-11-16T08:10:00+02:00",
+  "type": "metodas",
+  "title": "M-10 — Medžiai, krūmai, žolės: grupę rodo stiebas, o ne aukštis",
+  "body": "Metodas ideatoriaus temai #19399 (26.2.3 „Augalai“). Viena didelė idėja: augalo grupę pasako stiebas — medis turi vieną sumedėjusį kamieną, krūmas kelis stiebus nuo žemės, žolė minkštą stiebą; aukštis apie grupę nieko nesako. Modelis laiko vieną augalą ir leidžia vaikui keisti tik jo aukštį: ąžuoliukas auginamas nuo 0,3 m iki 3 m, o etiketė „medis“ nejuda; alyva auginama iki 2,5 m, o etiketė lieka „krūmas“. Taip gaunamos abi priešingos poros, kurių viena be kitos neįtikina. Du privalomi spėjimai („Ar ąžuoliukas jau medis?“ ir „Ar alyva bus medis?“) palyginami su įvykiu, o ne vadinami klaida. Grupė išvedama iš stiebų skaičiaus ir kietumo, o ne įrašoma konfigūracijoje; aukščio juosta (0–300 cm, 1 px/cm) yra vienintelis dydžio nešėjas, nes trijų augalų negalima parodyti vienu masteliu ir įskaitomai. Užduotys: atpažinimas (kuris krūmas), taikymas (2,5 m alyva), perkėlimas (žiema be lapų), praplėtimas (30 cm ąžuoliukas ir 2 m alyva). Klaidinga nuostata „krūmas yra mažas medis“ fiksuota Gatt ir kt. (2007) ir Tull (1992); Tull taip pat rodo, kad liaudies kategorijos remiasi prototipu, todėl modelis savo taisyklės nepateikia kaip gamtos apibrėžimo ir ribas įvardija. Pilna specifikacija — research/wiki/grades/01/metodai.md, M-10 skyrius; bendresnė įžvalga — research/wiki/foundations/pozymis-ir-dydis.md.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/22-medziai-krumai-zoles.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md — M-10 skyrius (seka, simuliacijos būsenos, 4 užduotys, modelio ribos)",
+    "research/wiki/foundations/pozymis-ir-dydis.md — bendresnė įžvalga: kategorija pagal požymį, o ne pagal dydį",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:35165–35166 — 26.2.3 „Augalai“ (skirti medžius, krūmus ir žoles)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17641–17643 — 1 klasės planas: 4 val. tiriamoji veikla, ekskursija, „Medžių lapų tyrimas“",
+    "Gatt, S., Tunnicliffe, S. D., Borg, K., & Lautier, K. (2007). Young Maltese children's ideas about plants. Journal of Biological Education, 41(3), 117–122. https://doi.org/10.1080/00219266.2007.9656080",
+    "Tull, D. (1992). Social constructivism: Botanical classification schemes of elementary school children (ERIC ED357968). https://eric.ed.gov/?id=ED357968",
+    "Tunnicliffe, S. D., & Reiss, M. J. (2000). Building a model of the environment: how do children see plants? Journal of Biological Education, 34(4), 172–177. https://doi.org/10.1080/00219266.2000.9655714",
+    "content/lt/grade-01 — paieška „krūm|žol[ėe]|kamien“ visuose 39 moduliuose: 0 atvejų (2026-11-16)",
+    "assets/js/sims/pasaulis.js:2563–2572 — SIMS sąrašas, į kurį pridedamas „augalu-grupes“; art.js:177 stem, :231 tree, :283 grass, :131 soil",
+    "agents/proposals/2026-11-16-ideator-medziai-krumai-zoles.json — šaltinio pasiūlymas #19399"
+  ]
+}

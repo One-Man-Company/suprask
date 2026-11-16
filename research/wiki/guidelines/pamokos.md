@@ -693,6 +693,13 @@ Naują pamoką **prideda** tas, kas rado defektą; senos netrinamos ir neperraš
 - **Taisyklė:** vartų **numatytasis** režimas turi pagauti tą defektą, dėl kurio vartai sukurti; mėginys leidžiamas tik kaip sąmoningai pasirinktas greitas režimas, ir tada išvestis turi sakyti, kad tai mėginys (LL-37). Jei mėginys negali pagauti pavienio defekto, jis neturi būti numatytasis. Spartos argumentas skaičiuojamas nuo pilnos patikros laiko, o ne nuo mėginio laiko.
 - **Patikra:** trys bėgimai per tą patį `main()` kelią: (A) veidrodis su 2 sugedusiais mp3, numatytasis režimas → `TRŪKSTA 2`, rc 1; (B) tas pats veidrodis, `--audio-sample 48` → „mėginys, ne visa apimtis“, rc 0 (žinoma riba, įvardyta išvestyje); (C) gyva svetainė, numatytasis režimas → `1138 iš 1138 (visi) — visi pasiekiami`, rc 0, 58,6 s, `verdict` = `sutampa`, versija `d746acd2` = `HEAD`. Prieš taisymą tas pats (A) davė rc 0.
 
+## LL-97 — Klausimo žodynas, kuris atmeta taisyklingą klausimą, ir tekstas, kuris dėl to prastėja
+
+- **Simptomas:** `check_language.py` rašo `neaiškus klausimas — nėra klausiamojo/veiksmo žodžio` užduočiai „Žiemą medis ir krūmas neturi lapų. **Pagal ką** juos atskirsi?“, nors klausimas vienareikšmis ir atsakymo variantai prasideda „Pagal…“. Ankstesnis paleidimas tą patį gavo su „**Iš ko** atsiranda stiklas?“ (`agents/log/metodininkas-2026-11-15T0820.md`): abu kartus autorius pataisė **gerą sakinį**, o ne įrankį.
+- **Priežastis:** `check_language.py:266–271` klausiamuosius žodžius tikrina fiksuotu sąrašu (`kiek\w*|kur\w*|kaip\w*|kodėl|kuo|kada|į\s+ką|apie\s+ką|…|kas|ar`). Sąraše yra „į ką“ ir „apie ką“, bet nėra „pagal ką“, „iš ko“, „su kuo“ — tad taisyklingos konstrukcijos, kurių pirmokui reikia („Pagal ką atskirsi?“), patenka į įspėjimą. Kadangi įspėjimas atrodo kaip trūkumas, autorius renkasi silpnesnį sakinį vien tam, kad vartai būtų žali — ir vaikas gauna ne tokį tikslų klausimą.
+- **Taisyklė:** kai vartai atmeta taisyklingą formuluotę, pirmiausia tikrinama, ar formuluotė tikrai netaisyklinga; jei taisyklinga — taisomas **įrankis** (sąrašas papildomas žodžių grupėmis „pagal ką“, „iš ko“, „su kuo“, „už ką“), o ne prastesnis tekstas. Jei įrankio keisti šiame darbe negalima, sprendimas įvardijamas sąmoningu („sakinys pakeistas, žodyno spraga užrašyta“), o ne tyliu.
+- **Patikra:** prieš keičiant sakinį — paleisti `check_language.check_module` ant to paties juodraščio dviem variantais (originalus ir pakeistas) ir palyginti, ar pasikeitė tik įspėjimas, o ne prasmė; po sąrašo papildymo — tie patys du variantai turi būti be įspėjimų, o esami 39 moduliai — be naujų įspėjimų (`python3 scripts/check_language.py --grade 1`).
+
 
 
 

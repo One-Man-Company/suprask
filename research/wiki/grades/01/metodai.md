@@ -747,6 +747,121 @@ Atsakymų indeksai 0 / 2 / 2 / 0 — pasiskirstę, todėl vaikas negali spėti p
 
 **Pastaba dėl wiki.** `research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:82–88` temų lentelėje 26.3.1 nėra, nors ilgalaikiame plane ji yra su 2 valandomis; lentelė pati tai žymi `[PATIKRINTI]`. Tai tyrėjo failas, šiame darbe neliestas. `agents/scope.py` temų sąraše „Gamtos ištekliai“ taip pat dar nerodoma kaip padengta — tai programos derintojo ir tyrėjo darbas, ne metodo.
 
+### M-10 — Medžiai, krūmai, žolės: grupę rodo stiebas, o ne aukštis
+
+**Data:** 2026-11-16 · **Tema:** `agents/proposals/2026-11-16-ideator-medziai-krumai-zoles.json` (#19399) · **Tikslas:** `content/lt/grade-01/pasaulio-pazinimas/22-medziai-krumai-zoles.json` · **Šaltinis:** [[../../foundations/pozymis-ir-dydis|pozymis-ir-dydis]]
+
+**Viena didelė idėja.** Augalo grupę pasako jo stiebas: medis turi vieną sumedėjusį kamieną, krūmas — kelis sumedėjusius stiebus nuo žemės, žolė — minkštą stiebą. Aukštis apie grupę nieko nesako: mažas ąžuoliukas jau yra medis, o aukšta alyva tebėra krūmas.
+
+**Ką sako programa.** 1 klasės gamtos mokslų programoje 26.2.3 formuluotė yra pažodinė: „Mokomasi skirti medžius, krūmus ir žoles, atpažinti artimiausius aplinkos medžius (klevą, ąžuolą, beržą, eglę, pušį ir 3−4 kitus iš savo aplinkos)“ (`sources/pradinio-bp-rekomendacijos-2024.txt:35165–35166`). Ilgalaikiame plane tai 4 valandos tiriamosios veiklos — ekskursija į mokyklos kiemą, parką ar mišką, tyrimas „Medžių lapų tyrimas“ (`:17641–17643`), o metų pabaigos reikalavimas tą patį kartoja: „Skiria medžius, krūmus ir žoles“ (`research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:124`). Platformoje šios temos nėra: paieška „krūm|žol[ėe]|kamien“ visuose 39 moduliuose duoda **0 atvejų** (patikrinta 2026-11-16), o artimiausias modulis `09-augalo-gyvenimas` kalba apie tai, ko augalui reikia, ne apie grupes.
+
+**Kodėl modelis, o ne paveikslėlis.** Paveikslėlyje augalas turi vieną aukštį, todėl jis negali parodyti to, kas ir yra sąvoka: kad aukštis grupės nekeičia. Net du paveikslai greta to neįrodo — vaikas neturi būdo patikrinti, ar antrame paveiksle augalas tas pats. Modelyje augalas lieka tas pats (jo stiebas neperpiešiamas), keičiasi tik vienas skaičius — aukštis, o grupės etiketė nejuda nė karto. Tada vaikas pereina prie antro augalo ir pamato priešingą porą: aukštesnis augalas, o grupė „žemesnė“. Tai kontrolinis bandymas, kurio paveikslėlis negali duoti, ir jis atliekamas vienu paspaudimu.
+
+**Ką rodo tyrimai.**
+
+Gatt, Tunnicliffe, Borg ir Lautier (2007) individualiai kalbino 50 Maltos vaikų (25 — antri ikimokyklinio ugdymo metai, 4 m.; 25 — pirmi privalomojo ugdymo metai, 5 m.) apie augalus. Vaikų sąvoka pasirodė siaura: „augalas“ jiems reiškė **mažą** augalą su **plonu stiebu**, lapais ir žiedu. Medžiai, kaktusai ir dilgėlės į „augalo“ kategoriją nepateko. Tai tiksli tos nuostatos formuluotė, kurią turi griauti modelis: grupę lemia ne stiebo sandara, o **įprastas mažo augalo pavyzdys**.
+
+Tull (1992) ištyrė devynis šeštos klasės vaikus (11–12 m.) JAV ir klausė, kaip jie skiria medį nuo krūmo. Vaikų kriterijai buvo formos ir dydžio: „A bush is smaller (than a tree), more in a round shape with more leaves“, „Adults are usually taller than bushes. Trees are usually taller than adults“, „If it was a tree, you could definitely see the trunk“. Autoriaus išvada: vaikų kategorijos nesutampa su botanikų, bet sutampa su **liaudies** kategorijomis, o jose aukštis yra vienas iš požymių (per Tull cituojamas Brown, 1984: *tree* — dideli sumedėję augalai, *bush* — „intermediate height“). Tai svarbu dviem būdais: ji patvirtina, kad aukštis yra realus vaiko kriterijus, ir įspėja, kad jis nėra vien vaiko išmislas — ta pati logika gyva ir suaugusiųjų kalboje. Todėl modelis savo taisyklės nepateikia kaip „vienintelės tiesos apie gamtą“ (žr. „Modelio ribos“).
+
+Tunnicliffe ir Reiss (2000) pateikė 5, 8, 10 ir 14 metų mokiniams šešis augalų pavyzdžius ir klausė, kas jie tokie. Visų amžiaus grupių mokiniai augalus įvardijo ir aiškino daugiausia pagal **anatominius** požymius, o su amžiumi prisidėjo buveinės požymiai. Išvada modeliui: vaikas jau žiūri į augalo sandarą, tad nereikia jo mokyti „žiūrėti į augalą“ — reikia, kad apibrėžiamasis požymis (stiebų skaičius ir kietumas) būtų **ryškesnis už aukštį**, kitaip jis rinksis tai, kas labiau krinta į akis.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Krūmas yra mažas medis.“** Tai ta pati prototipo taisyklė, kurią fiksuoja Gatt ir kt. (2007) ir Tull (1992). Paneigiama alyva: ji užauginama iki 2,5 m — aukštesnė už mažą ąžuoliuką, — o grupės etiketė lieka „krūmas“, nes stiebai buvo ir lieka keli. Jei grupę lemtų aukštis, etiketė būtų pasikeitusi.
+2. **„Žolė yra bet kas žema ir žalia.“** Paneigiama ąžuoliuku: 0,3 m aukščio daigas turi vieną sumedėjusį kamieną, todėl jis medis. Žema ir žalia yra ir jis.
+3. **„Aukštis yra geras požymis, nes jį galima pamatuoti.“** Modelis tyčia duoda aukščiui atskirą matuoklį — juostą su padalomis, nes skaičius turi būti matomas sąžiningai (`foundations/dydis-ir-skaicius.md` analogija). Bet ta juosta niekada neliečia etiketės: ji ilgėja, o grupė nejuda. Paneigiama ne tekstu, o tuo, kad vienintelis kintantis matmuo prie etiketės neprisijungia.
+4. **„Grupę rodo lapai ar žiedas.“** Šios nuostatos modelis ekrane nepaneigia ir to neslepia: lapai ir žiedai yra nepastovus požymis (Dougherty 1979 ir Tull 1992 jį vadina *unstable criteria* — žiedas nukrinta, lapai iškrinta). Ji sprendžiama trečia užduotimi apie žiemą ir mokytojo veikla, o ne simuliacija.
+
+**Tikslas sąmoningai kuklus.** Modulis nemoko atpažinti rūšių: programos gairė tam reikalauja realių nuotraukų, o ne iliustracijų (`research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:140`), todėl klevas, beržas, eglė ir pušis lieka mokytojo ekskursijai su tikrais lapais (T8.3 — veikla be ekrano). Modulis siekia vieno įgūdžio: **pažiūrėti, kiek stiebų kyla iš žemės ir ar jie kieti**, ir tuo pasitikrinti, kai aukštis klaidina.
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas).**
+
+1. **Kiemas, trys augalai rankoje.** Mokytojas sustabdo klasę prie medžio, krūmo ir žolės. Vaikai lietimo tvarka atsako į du klausimus: kiek stiebų kyla iš žemės ir ar stiebas kietas. Tikslas: grupės požymis pajuntamas pirštais, o ne įsimenamas iš paveikslėlio. Mokytojas nepasako, kuris augalas „tikrasis“ medis, ir neklausia, kuris aukščiausias.
+2. **Ekranas, ąžuoliukas.** Ekrane ąžuoliukas, po juo — 0,3 m žyma ir aukščio juosta. Prieš pirmą judesį spėjimas: „Ąžuoliukas 30 cm. Ar jis jau medis?“ (Taip / Ne). Vaikas augina jį iki 3 m. Etiketė „medis“ lieka, o `api.note` sako: „Tu sakei: taip. Jis liko medis.“ Tikslas: pamatyti, kad aukštis pasikeitė keliolika kartų, o grupė — nulis kartų.
+3. **Ekranas, alyva.** Antras augalas, antras spėjimas: „Alyva aukštesnė už mažą ąžuoliuką. Ar ji bus medis?“ Vaikas augina alyvą iki 2,5 m — ji aukštesnė už mažą ąžuoliuką, bet etiketė „krūmas“. `api.note`: „Tu sakei: taip. Alyva liko krūmas.“ Tikslas: paneigti pirmą nuostatą priešinga pora, o ne tuo pačiu pavyzdžiu.
+4. **Simbolis, trys kortelės.** Trečias augalas — kiaulpienė (0,25 m, vienas minkštas stiebas). Tada po scena atsiranda trys kortelės su išsaugotais aukščiais: „ąžuoliukas 0,3 m · medis“, „alyva 2,5 m · krūmas“, „kiaulpienė 0,25 m · žolė“ ir vienas sakinys: „Grupę rodo stiebas, ne aukštis.“ Vaikas jį perskaito ir pasako, kuri kortelė jam buvo netikėčiausia. Tikslas: taisyklę įvardyti žodžiu, kai ji jau matyta tris kartus.
+5. **Perkėlimas.** Tos pačios taisyklės atvejai be modelio: sode 30 cm ąžuoliukas ir 2 m alyva (kuris medis?); žiema be lapų (pagal ką skirti?); mokyklos kieme aukštas lazdynas. Tikslas: atpažinti, kad požymis lieka ir tada, kai aukštis ar lapai klaidina.
+
+**Privalomas spėjimo žingsnis prieš pirmą auginimą ir prieš antrą augalą.** Du spėjimai, abu palyginami su įvykiu (LL-15). Spėjimas niekada nevadinamas klaida ir niekada neištrinamas: jis lieka matomas viršuje, o `api.note` tik palygina. Be jo modelis virsta auginimo žaislu: vaikas spaudžia „+“ tol, kol juosta prisipildo, ir sąryšio nepastebi — tas pats pavojus kaip M-01–M-09 (`foundations/sujungti-dydziai.md`). Atsakymo variantų spėjime yra tik du (Taip / Ne), nes spėjimas turi būti apie **vieną** pasikeitimą, o ne apie grupę.
+
+**Simuliacijos specifikacija.** Komponentas `augalu-grupes`, failas `assets/js/sims/pasaulis.js` (jis jau importuoja `art.js`, o `scripts/check_art.py:31–33` LEGACY sąraše yra tik `matematika.js`). Registracija: `SIMS` sąraše (`assets/js/sims/pasaulis.js:2563–2572`) pridedama eilutė `"augalu-grupes": augaluGrupes,`. `config`:
+
+```json
+{ "plants": [
+    { "id": "azuoliukas", "name": "ąžuoliukas", "stems": 1, "woody": true,
+      "height": { "start": 30, "min": 30, "max": 300, "step": 10 } },
+    { "id": "alyva",     "name": "alyva",     "stems": 3, "woody": true,
+      "height": { "start": 120, "min": 40, "max": 250, "step": 10 } },
+    { "id": "kiaulpiene", "name": "kiaulpienė", "stems": 1, "woody": false,
+      "height": { "start": 25, "min": 10, "max": 40, "step": 5 } } ],
+  "groups": {
+    "medis":  { "name": "medis",  "plural": "medžiai" },
+    "krūmas": { "name": "krūmas", "plural": "krūmai" },
+    "žolė":   { "name": "žolė",   "plural": "žolės" } },
+  "heightBar": { "maxCm": 300, "tickCm": 50 },
+  "sentences": { "start": "…", "guess": "…", "grow": "…", "one": "…", "few": "…",
+                 "soft": "…", "all": "…", "rule": "…", "again": "…",
+                 "compareMedis": "…", "compareNeMedis": "…",
+                 "compareAlyvaTaip": "…", "compareAlyvaNe": "…" } }
+```
+
+**Grupė išvedama, o ne įrašyta.** `config.plants[]` sąmoningai neturi `group` laukelio: etiketė apskaičiuojama `groupOf(p) = p.woody ? (p.stems === 1 ? "medis" : "krūmas") : "žolė"`. Jei `stems` nėra sveikas teigiamas skaičius arba `woody` nėra loginis, komponentas rašo `console.error` ir rodo „Augalai nesuderinti su grupėmis.“, o ne tyliai praleidžia. Tai ta pati taisyklė kaip M-07 (`kiekis = board.px / unit.px`) ir M-09 (grandinė — duomenys): modelio teiginys turi būti išvestas iš tų pačių duomenų, kuriuos mato vaikas.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | ąžuoliukas, juosta ties 0,3 m, spėjimo mygtukai aktyvūs, „+“ neaktyvus | „Ąžuoliukas 30 cm. Ar jis jau medis?“ | „Pirma spėk, tada augink.“ |
+| spėjimas | spėjimas kortelėje virš scenos, „+“ aktyvus | „Tu sakei: taip. Dabar keisk aukštį.“ | „Spėjimas liks viršuje iki galo.“ |
+| ąžuoliukas 1,5 m | juosta ilgesnė, kamienas vienas, etiketė „medis“ | „Ąžuoliukas 1,5 m. Tai medis.“ | „Aukštis didesnis, o stiebas tas pats.“ |
+| ąžuoliukas 3 m | juosta iki galo, etiketė ta pati | „Ąžuoliukas 3 m. Tai medis.“ | „Tu sakei: taip. Jis liko medis.“ |
+| alyva, spėjimas dar nepasirinktas | alyva, trys stiebai nuo žemės, 1,2 m | „Alyva aukštesnė už mažą ąžuoliuką. Ar ji bus medis?“ | „Pasirink: taip arba ne.“ |
+| alyva 2,5 m | juosta ilgesnė už mažo ąžuoliuko, etiketė „krūmas“ | „Alyva 2,5 m. Tai krūmas.“ | „Tu sakei: taip. Alyva liko krūmas.“ |
+| kiaulpienė 0,25 m | vienas minkštas stiebas, žiedas | „Kiaulpienė 25 cm. Tai žolė.“ | „Minkštas stiebas, todėl žolė.“ |
+| visi trys auginti | trys kortelės su aukščiais ir grupėmis | „Trys augalai, trys grupės.“ | „Grupę rodo stiebas, ne aukštis.“ |
+| „Iš naujo“ | pradinė būsena, spėjimai neištrinti, augalų aukščiai atstatyti | „Pradedam iš naujo.“ | „Gali bandyti dar kartą.“ |
+
+Dešimt savybių, kurių negalima praleisti (kiekviena atitinka pamoką):
+
+- **Vienas kintamasis:** `height` — dabartinio augalo aukštis centimetrais. Augalo pasirinkimas yra žingsnis, o ne antras kintamasis: keičiant augalą aukštis nekeičiamas tuo pačiu metu, o kiekvienas augalas **atsimena savo paskutinį aukštį** (grįžus atgal būsena grąžinama ta pati, o ne `start` — LL-16 atmaina).
+- **Augalas neperpiešiamas keičiant aukštį:** stiebas, lapai ir žiedas įterpiami vieną kartą `mount()`, o keičiant aukštį keičiasi tik juostos ilgis, skaičius ir (kai pasiekiama riba) mygtukų būsena. `getBBox()` visų trijų augalų piešinių nesikeičia nė vienu tašku.
+- **Aukščio juosta:** 0–300 cm, 1 px už centimetrą (300 px), žymos kas 50 cm, užrašas visada su vienetu („0,3 m“, „1,2 m“, „2,5 m“). Juosta yra vienintelis dydžio nešėjas — žr. modelio ribas.
+- **Grupės etiketė** — žodis po augalu („medis“ / „krūmas“ / „žolė“), ne spalva; ji nekinta nė vienoje aukščio būsenoje.
+- **Skirtumas be spalvos:** stiebų skaičius matomas kaip trys atskiros linijos nuo žemės; kietumas — storio ir tiesumo skirtumas (`art.stem` su `droop:true` žolei) ir žodis `readout`. Spalva (ruda / žalia) yra papildoma, o ne vienintelė: Tull (1992) pastebi, kad vaikai kietumą dažnai skaito būtent iš stiebo spalvos, todėl modelis niekada nepalieka spalvos vienos.
+- **Išdėstymas 360 px:** scena `viewBox="0 0 328 240"`, `width:100%`, `max-width:328px`; gruntas — `art.soil(0, 186, 328, 54, "ag-soil")`; augalo piešinys 110 px aukščio nuo `baseY = 186`; juosta x = 14–314, y = 196–212; trys augalų mygtukai 100 × 56 px + du 8 px tarpai = 316 px; „+“ ir „−“ po 156 × 56 px; „Iš naujo“ 328 × 48 px. Jokio horizontalaus slinkimo.
+- **Įėjimai ir klaviatūra:** `Tab` tarp augalų ir „+“/„−“, `Enter`/`Space` aktyvuoja, `←`/`→` perjungia augalus, `↑`/`↓` keičia aukštį, `R` atstato. Visi taikiniai ≥ 48 px, visi turi `aria-label` („Alyva, 1,2 metro, krūmas. Padidink aukštį.“).
+- **Fokusas** (LL-32): po spėjimo — į „+“; pasiekus maksimumą — „+“ tampa neaktyvus, o fokusas persikelia į „−“ arba į kitą augalą; kai atsiranda kortelės — į pirmą kortelę, ne į neaktyvų mygtuką.
+- **Grįžtamasis ryšys** — iškart po paspaudimo (≤ 1 kadras). `readout` įvardija būseną (aukštis + grupė), `api.note` sako **kodėl**, niekada „teisingai“ ir niekada apie vaiką (T5.1). `api.progress({ correct: true })` — vieną kartą, kai **visi trys** augalai bent kartą pasiekti savo maksimumą ir pasirodė kortelės, o ne po pirmo augalo (LL-29). „Iš naujo“ pažangos netrina (LL-16).
+- **Garsas** — trylika frazių `config.sentences` (LL-42), visos trumpesnės nei 10 žodžių; `guess` naudoja vieną šabloną su `{label}` ir kiekvienas spėjimo variantas turi savo `compare*` frazę, kad nebūtų dviejų tiesų apie tą patį sakinį (LL-33). `api.note` garsiai neskaitomas. Generuojant — abu variantai (`n`, `s`); `scripts/check_audio.py` manifestas privalo matyti visas trylika.
+- **Jokių laikmačių, ėjimų limito, „game over“.** Augalas neauga laiku: „+“ yra vienas žingsnis, o ne laukimas. `prefers-reduced-motion` — juosta šokinėja, o ne slenka tolygiai.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Sode auga ąžuoliukas, alyva ir kiaulpienė. Kuris jų yra krūmas?“ — Ąžuoliukas / Alyva / Kiaulpienė | Alyva (1) | „Ąžuoliukas“ — mažiausias augalas laikomas krūmu | „Pažiūrėk, kiek stiebų kyla iš žemės.“ |
+| 2 | taikymas | „Alyva išaugo 2,5 metro. Kuri grupė jai tinka?“ — Medžiai / Krūmai / Žolės | Krūmai (1) | „Medžiai“ — aukštis priimamas kaip grupės požymis | „Aukštis čia neklaidina. Pažiūrėk į stiebus.“ |
+| 3 | perkėlimas | „Žiemą medis ir krūmas neturi lapų. Kaip juos atskirsi?“ — Pagal kamieną ir stiebų skaičių / Pagal augalo aukštį / Pagal lapų spalvą | Pagal kamieną… (0) | „Pagal augalo aukštį“ — lapų nebuvimas nieko nekeičia, o aukštis lieka vieninteliu matomu dydžiu | „Lapų žiemą nėra. Kas augale lieka visą laiką?“ |
+| 4 | perkėlimas (`optional: true`) | „30 cm ąžuoliukas ir 2 m alyva. Kuris yra medis?“ — Ąžuoliukas / Alyva / Abu augalai | Ąžuoliukas (0) | „Alyva“ — aukštesnis augalas laikomas medžiu; „Abu augalai“ — abu sumedėję, tad abu medžiai | „Mažas augalas ne visada būna žolė.“ |
+
+Atsakymų indeksai 1 / 1 / 0 / 0 — ne visi tame pačiame indekse, o pirmas ir antras sąmoningai skiriasi nuo trečio ir ketvirto (`validate_content.py` tikrina pasiskirstymą). Kiekviena užuomina nukreipia į klaidą ir nė viena nekartoja teisingo varianto žodžių.
+
+**Refleksija.** „Kaip paaiškintum, kodėl aukšta alyva yra krūmas?“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — kad stiebai keli ir jie sumedėję, o aukštis apie tai nieko nesako.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Piešinys schemiškas.** Visi trys augalai piešiami vienodo 110 px aukščio, nors tikras jų aukštis skiriasi iki šimto kartų. Tai ne aplaidumas: 3 m medis ir 20 cm žolė tame pačiame 180 px aukščio kadre negali būti vienodo mastelio ir įskaitomi abu. Todėl aukštį neša **juosta ir skaičius su vienetu**, o ne piešinio dydis. Modelis tai sako vienu sakiniu, o ne slepia.
+2. **Praktinė taisyklė, ne gamtos apibrėžimas.** Botanikoje skiriamoji linija yra sumedėjęs ar žolinis stiebas, o medis nuo krūmo skiriasi tuo, ar stiebas vienas. Bet Tull (1992), remdamasis Kempton (1981) ir Rosch bei Mervis (1975), rodo, kad liaudies kategorijos remiasi **prototipu**, ne būtinomis ir pakankamomis sąlygomis, ir kad „medis“ negali būti apibrėžtas vien „mediena ir vienu aukštu kamienu“. Todėl gyvenime pasitaiko augalų, kurie lieka tarp grupių: nupjautas ąžuolas iš kelmo išleidžia kelis stiebus, kai kurios rūšys natūraliai auga keliastiebės. Modelis tokių atvejų nevaizduoja ir neslepia — jie aptariami mokytojo bloke.
+3. **Kasdienė kalba aukštį vartoja.** Suaugusieji 30 cm ąžuoliuką gali pavadinti „daigeliu“, o 2 m alyvą — „medeliu“, ir tai nėra klaida, o kitas žodynas. Modelis neigia ne kasdienę kalbą, o **sprendimą pagal aukštį ten, kur grupė turi būti nustatyta pagal stiebą**. Todėl užduotys klausia „kuri grupė“, o ne „ar taip sakoma“.
+4. **Žolė ≠ veja.** Programos terminas „žolės“ reiškia žolinius augalus (kiaulpienė, dobilas), o ne veją. Tai pasakoma mokytojo bloke, nes žodis kasdienėje kalboje turi antrą reikšmę.
+5. **Rūšių atpažinimas ne šio modelio dalis.** Klevas, ąžuolas, beržas, eglė ir pušis reikalauja realių lapų ar nuotraukų (`pasaulio-pazinimas-1-klase.md:140`), todėl modelis vartoja tik tris augalus, kurių grupė akivaizdi, ir nepretenduoja mokyti rūšių.
+
+**Ką tai reiškia modulio autoriui.** `title` — „Medžiai, krūmai, žolės: grupę rodo stiebas“ (42 simboliai iš 42); `subtitle` — „Aukštis klaidina: grupę pasako stiebas“ (38 iš 80); `minutes` — 9; trys `outcomes`: „Skiriu medį, krūmą ir žolę pagal stiebą.“, „Paaiškinu, kodėl aukštas augalas gali būti krūmas.“, „Pasakau, kiek stiebų kyla iš žemės.“; `concept.title` — „Grupę rodo stiebas“ (18 iš 40); `concept.big_idea` — „Medis turi vieną sumedėjusį kamieną. Krūmas turi kelis stiebus nuo žemės. Žolės stiebas minkštas. Aukštis apie grupę nieko nesako.“ (130 iš 240); `concept.steps` — keturi žingsniai iš sekos 2–4; `concept.example` — „Kieme auga mažas ąžuoliukas ir aukšta alyva. Mažesnis augalas yra medis.“; `teacher.goal` — „Suprasti, kad augalo grupę rodo stiebas, o ne aukštis. Modelis laiko vieną augalą ir keičia tik aukštį, todėl grupės etiketė nejuda.“; `teacher.prompt` — „Kodėl mažas ąžuoliukas yra medis, o aukšta alyva – krūmas?“; `teacher.offline` — „Kieme vaikai liečia tris augalus: medžio kamieną, krūmo stiebus ir žolės stiebą. Kiekvienas pasako, kiek stiebų kyla iš žemės ir ar stiebas kietas.“; `teacher.misconceptions` — keturios nuostatos iš šio skyriaus (ketvirtoji įrašoma kaip modelio riba, ne kaip klaida); `sim` — `{ "component": "augalu-grupes", "config": { … } }`. Numeris `22-` laisvas (pasaulio pažinime užimti 08, 09, 10, 16, 17, 18, 19, 20; `21-` rezervuotas M-09 pasiūlymui `21-kas-sukure-daikta`, kurio `index.json` dar neturi). Modulį įrašius, jis turi būti įtrauktas į `content/lt/grade-01/index.json` ir `path.json` (kūrėjo arba dizainerio darbas, ne metodo dalis); siūloma vieta kelyje — po `20-kas-gyvas`: ten vaikas jau atskyrė gyvą nuo negyvo, o čia klausiama, kokia tvarka tie gyvieji augalai skirstomi.
+
+**Patikra tikru įrankiu (2026-11-16).** Šio metodo specifikacija surašyta kaip juodraštinis modulis ir paleisti abu vartai: `validate_content.check_module` → **0 klaidų, 0 įspėjimų** (su sąlyga, kad `augalu-grupes` įrašytas registre — kol komponento nėra, validatorius teisingai meta „simuliacija neegzistuoja registre“), `check_language.check_module` → **0 klaidų, 0 įspėjimų, 0 pastabų**. Lauko ilgiai perskaičiuoti, ne apskaičiuoti mintyse: title 42, subtitle 38, concept.title 18, big_idea 130. Vienintelis pataisymas per zondą: klausimas „Pagal ką juos atskirsi?“ davė `neaiškus klausimas`, nes `check_language.py` klausiamųjų žodžių sąraše neturi „pagal ką“; sakinys pakeistas į „Kaip juos atskirsi?“ (prasmė ta pati), o žodyno spraga įrašyta kaip pamoka LL-97, o ne tylėta.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, Gamtos mokslai — 26.2.3 „Augalai“ (`sources/pradinio-bp-rekomendacijos-2024.txt:35165–35166`), 1 klasės ilgalaikis planas (`:17641–17643`). Gatt, S., Tunnicliffe, S. D., Borg, K., & Lautier, K. (2007). Young Maltese children's ideas about plants. *Journal of Biological Education, 41*(3), 117–122. https://doi.org/10.1080/00219266.2007.9656080 · Tunnicliffe, S. D., & Reiss, M. J. (2000). Building a model of the environment: how do children see plants? *Journal of Biological Education, 34*(4), 172–177. https://doi.org/10.1080/00219266.2000.9655714 · Tull, D. (1992). *Social constructivism: Botanical classification schemes of elementary school children* (AERA 1992; ERIC ED357968). https://eric.ed.gov/?id=ED357968
+
+**Pastaba dėl pasiūlymo.** Ideatorius siūlė **du nepriklausomus dydžius** — aukštį ir kamienų skaičių — ir leisti vaikui keisti abu. Metodas to atsisako dėl vieno kintamojo taisyklės (`foundations/kognityvine-apkrova.md`): du slankikliai tame pačiame kadre 6–7 m. vaikui reiškia, kad niekada neaišku, kuris iš jų ką paveikė. Palyginimas neprarastas: trys augalai turi fiksuotą stiebų skaičių, o aukštį vaikas keičia pats, todėl priešingos poros (mažas medis, aukštas krūmas) gaunamos vienu kintamuoju. Antra, pasiūlyme užduotis su „Abu augalai“ buvo teisinga; čia ji tapo **klaidingu variantu**, nes abu augalai sumedėję, o grupę skiria stiebų skaičius — tai ta pati nuostata, kurią fiksuoja Gatt ir kt. (2007) ir Tull (1992), ir ji turi būti atpažįstama kaip klaida, o ne apeinama (LL-18).
+
 ## Atviros prielaidos
 
 

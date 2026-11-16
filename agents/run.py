@@ -261,7 +261,11 @@ PRIVALOMA TVARKA
 2. Perskaityk savo vaidmens failą (įtrauktas žemiau), agents/state.json ir agents/proposals/.
 3. Dirbk TIK savo vaidmens ribose. Nekeisk kitų vaidmenų failų, nekeisk AGENTS.md.
 4. NENAUDOK mokamų paslaugų, CDN, išorinių API. Niekur nerašyk asmens duomenų.
-5. Baigęs įrašyk ataskaitą į agents/log/ ir atnaujink agents/state.json.
+5. Tavo rezultatas — FAILAS repo, ne ataskaita. Paleidimo ataskaitą į `agents/log/` ir
+   `agents/state.json` eilutę `roles.<vaidmuo>` rašo bėgiklis, todėl tau jų rašyti nereikia
+   (vaidmens faile prašomi kiti `state.json` blokai — tavo). Jei baigiasi žingsniai ar kvota,
+   PIRMIAU įrašyk savo darbo failą (pasiūlymą, modulį, taisymą, changelog įrašą), o ne ataskaitą:
+   paleidimas, kuriame pakeista tik ataskaita, laikomas tuščiu ir jo rezultatas neskelbiamas.
 
 PROJEKTO KATALOGAS: {root}
 ŠIANDIEN: {today}
@@ -1204,12 +1208,17 @@ NOISE_RE = re.compile(r'(^\s*[{}]|": |^\+|^@@|^diff |^\+\+\+|^---)')
 
 
 def summary_line(text: str, limit: int = 90) -> str:
-    """Pirmoji prasminga atsakymo eilutė — commit'o žinutei.
+    """Pirmoji prasminga atsakymo eilutė — žinutės KŪNUI, ne antraštei.
 
     Hermes TUI rašo į stdout ir rėmelį, ir įrankių išklotines, todėl anksčiau
     commit'o žinutė būdavo „│ assets/js/app.js“, o git istorija — neįskaitoma:
     pagal ją neįmanoma pasakyti, ką paleidimas pakeitė. Imame pirmą eilutę,
     kuri turi bent tris žodžius ir nėra išklotinės fragmentas.
+
+    2026-11-16 paaiškėjo, kad šio filtro nepakanka antraštei: „import json,
+    glob, os“ ir „\"\"\"#319 zondas A …“ yra trys žodžiai be išklotinės ženklų,
+    tad patekdavo į `git log` (LL-47, #5190). Todėl antraštė imama iš pakeistų
+    failų (`commit_subject`), o šis tekstas lieka kūne kaip agento teiginys.
     """
     for line in (text or "").splitlines():
         clean = BOX_RE.sub("", ANSI_RE.sub("", line)).strip()
@@ -1220,6 +1229,41 @@ def summary_line(text: str, limit: int = 90) -> str:
             continue
         return clean[:limit]
     return ""
+
+
+def commit_subject(role: str, run_id: int, work: list[str], limit: int = 100) -> str:
+    """Commit'o antraštė iš TIKRAI pakeistų failų.
+
+    Failų sąrašas yra vienintelis dalykas, apie kurį `git` žino, kad pasikeitė;
+    modelio pirmoji eilutė gali būti kodo fragmentas arba šaltinio citata
+    (`[ideator] #312: sources/pradinio-bp-rekomendacijos-2024.txt:35165–35166`).
+    Antraštė turi atsakyti į „kas pasikeitė“, o „kodėl“ lieka kūne.
+    """
+    if not work:
+        return f"[{role}] #{run_id}"
+    core = work[0] if len(work) == 1 else f"{len(work)} failai — " + ", ".join(work)
+    subject = f"[{role}] #{run_id}: {core}"
+    if len(subject) > limit:
+        subject = subject[: limit - 1].rstrip(" ,—-") + "…"
+    return subject
+
+
+def commit_message(role: str, run_id: int, files: list[str], summary: str,
+                   notes: list[str] | None = None) -> str:
+    """Pilna commit'o žinutė: antraštė iš failų, kūne — kas ir kodėl."""
+    work = [f for f in files if not f.startswith(LOG_PREFIX)] or files
+    listed = ", ".join(files[:12]) + (" …" if len(files) > 12 else "")
+    claim = summary_line(summary)
+    msg = (f"{commit_subject(role, run_id, work)}\n\n"
+           f"Kas: {len(files)} failų — {listed}\n")
+    if claim:
+        msg += f"Kodėl (agento teiginys, nepatikrintas): {claim}\n"
+    msg += "Paskelbta automatiškai po validacijos."
+    if notes:
+        # Autorystės pastaba – commit'o žinutėje, nes `git log` yra vienintelis
+        # audito pėdsakas, kuris išlieka po to, kai `detail` pasensta (LL-49).
+        msg += "\n\n" + "\n".join(f"- {n}" for n in notes)
+    return msg
 
 
 def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True,
@@ -1286,12 +1330,9 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
     branch = f"agent/{role}-{dt.date.today().isoformat()}"
     git("checkout", "-B", branch)
 
-    first_line = summary_line(summary) or role
-    msg = f"[{role}] #{run_id}: {first_line}\n\nPaskelbta automatiškai po validacijos."
-    if notes:
-        # Autorystės pastaba – commit'o žinutėje, nes `git log` yra vienintelis
-        # audito pėdsakas, kuris išlieka po to, kai `detail` pasensta (LL-49).
-        msg += "\n\n" + "\n".join(f"- {n}" for n in notes)
+    # Antraštė — iš pakeistų failų, ne iš modelio pirmos eilutės. Modelio
+    # teiginys lieka kūne kaip „kodėl (nepatikrintas)“ (LL-47, #5190).
+    msg = commit_message(role, run_id, files, summary, notes)
 
     # Komituojame TIK šio paleidimo failus: `git add -A` kartą įtraukė ir
     # žmogaus nebaigtus pakeitimus į agento commit'ą. Ištrinti failai irgi yra

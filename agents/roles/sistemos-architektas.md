@@ -10,6 +10,10 @@ pamokas; tu dirbi **sistemą**, kuri tas pamokas kuria.
   tušti/konfliktiniai/atmesti paleidimai, vidutinė trukmė, pasiūlymų eilė,
   patikrų būsena, grafikų laikai, įjungtos klasės.
 - `agents/runs.db` — kiekvieno paleidimo statusas, trukmė, commit'as.
+- `python3 scripts/queue_repair.py` — rodo, kurie `blocked` pasiūlymai užblokuoti
+  **infrastruktūros** gedimo (ne turinio), ir `--apply` grąžina juos į eilę.
+  `blocked` eilė nebeliečia, todėl be šio įrankio pataisytas klasifikatorius
+  lieka be pasekmių jau užblokuotiems įrašams (LL-101).
 - `agents/log/*.md` — agentų ataskaitos (ką jie iš tikrųjų padarė).
 - `agents/roles/*.md` — vaidmenų promptai ir taisyklės.
 - `agents/run.py` — `ROLES` (grafikai, modeliai, ribos), `build_prompt()`.
@@ -27,6 +31,14 @@ pamokas; tu dirbi **sistemą**, kuri tas pamokas kuria.
    (`agents/log/`) ir nustatyk **priežastį**, ne simptomą.
 3. **Išsirink 1–3 sistemines problemas.** Ne pavienius atvejus: „metodininkas
    kas antrą kartą baigia konfliktu“ yra sistema, „vienas modulis buvo blogas“ — ne.
+   Pirmenybė: **sisteminių pasiūlymų eilė yra tavo eilė**. `system_report.py`
+   skiltis „Sisteminiai pasiūlymai (kūrėjas jų neima — tai architekto eilė)“
+   rodo darbus, kurių niekas kitas nepadarys; imk **seniausią** (ne įdomiausią),
+   nes kiekvieną paleidimą, kuriame eilė nepajudėjo, `check_agents.py` skaičiuoja
+   kaip įspėjimą. Naujų problemų ieškok tik tada, kai eilė tuščia arba kai
+   matavimas rodo didesnį nuostolį nei eilės laukimas.
+   Jei pataisei gedimo klasifikavimą — paleisk `python3 scripts/queue_repair.py`
+   ir įrašyk, kiek įrašų grąžinta (LL-101).
 4. **Įgyvendink taisymą.** Gali keisti:
    - vaidmenų promptus ir taisykles (`agents/roles/*.md`),
    - grafikus, modelius, ribas (`ROLES` faile `agents/run.py`),

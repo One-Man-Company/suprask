@@ -1,0 +1,21 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 319,
+  "created": "2026-11-16T16:10:00+02:00",
+  "type": "struktura",
+  "title": "Garso manifestas tikrinamas abiem kryptimis — refs - disk yra nematoma",
+  "body": "`scripts/check_audio.py` manifestą tikrina tik viena kryptimi: `missing` ciklas (eil. 69–78) eina per `generate_audio.collect()` tekstus, t. y. per tai, kas šiandien kalbama. Manifesto įrašas, kurio tekstas nebekalbamas, o failo nėra, nepatenka nė į vieną patikrą — `ok` (eil. 105) skaičiuojamas tik iš `missing` ir `wrong_engine`. Atvirkštinė kryptis `disk - refs` (našlaitis) skaičiuojama, bet `refs - disk` (įrašas be failo) ne. 2026-11-16 #316 būtent taip ir atsitiko: manifeste du įrašai, kurių mp3 niekur nebuvo; `check_audio.py` rašė „✔ Garsas pilnas … naudojama 1140 iš 1138 mp3“ ir grąžino rc 0, o `check_published.py` tuo pačiu metu buvo raudonas. Kad defektas kartotųsi, reikia nemokamo, lokalaus pataisymo: `missing_files = sorted(refs - disk)` įtraukiamas į `ok` ir į žinutę kartu su tekstu, kuriam tas failas priklauso (atvirkštinis manifestas tekstas → variantas → kelias), o `referenced != on_disk` iš informacijos (eil. 155–159) tampa klaida. Tai neliečia turinio, manifestas šiandien švarus (refs 1138 = disk 1138), todėl pataisymas nieko nekeičia vaikui, tik užkerta tą pačią tylią žalią. Zondas, kuriuo tai patvirtinta, yra `scratch/p319_ll100.py`: laikina kopija su vienu papildomu įrašu (failai neegzistuoja, tekstas nekalbamas) → `ok=True`, `referenced=1140`, `on_disk=1138`, `missing=0`. Šis įrankis ne mano failas (`scripts/`), todėl teikiamas pasiūlymas, o ne pakeitimas.",
+  "target": "scripts/check_audio.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "scripts/check_audio.py:69-78 (missing ciklas eina tik per generate_audio.collect() tekstus)",
+    "scripts/check_audio.py:102-113 (ok = not missing and not wrong_engine; refs - disk neįtrauktas)",
+    "scripts/check_audio.py:155-159 („naudojama 1140 iš 1138“ spausdinama kaip informacija)",
+    "scripts/check_published.py:204-223 (vartai tą patį manifestą traktuoja kaip klaidą — du įrankiai nesutaria)",
+    "agents/log/simuliaciju-inzinierius-2026-11-16T1103.md:174 (defektas užfiksuotas pirmą kartą)",
+    "assets/audio/lt/manifest.json (2026-11-16 #316: du įrašai be failų, pašalinti šiame darbe)",
+    "scratch/p319_ll100.py (zondas: ok=True esant referenced=1140, on_disk=1138)",
+    "research/wiki/guidelines/pamokos.md LL-100"
+  ]
+}

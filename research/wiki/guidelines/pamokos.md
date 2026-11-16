@@ -700,6 +700,27 @@ Naują pamoką **prideda** tas, kas rado defektą; senos netrinamos ir neperraš
 - **Taisyklė:** kai vartai atmeta taisyklingą formuluotę, pirmiausia tikrinama, ar formuluotė tikrai netaisyklinga; jei taisyklinga — taisomas **įrankis** (sąrašas papildomas žodžių grupėmis „pagal ką“, „iš ko“, „su kuo“, „už ką“), o ne prastesnis tekstas. Jei įrankio keisti šiame darbe negalima, sprendimas įvardijamas sąmoningu („sakinys pakeistas, žodyno spraga užrašyta“), o ne tyliu.
 - **Patikra:** prieš keičiant sakinį — paleisti `check_language.check_module` ant to paties juodraščio dviem variantais (originalus ir pakeistas) ir palyginti, ar pasikeitė tik įspėjimas, o ne prasmė; po sąrašo papildymo — tie patys du variantai turi būti be įspėjimų, o esami 39 moduliai — be naujų įspėjimų (`python3 scripts/check_language.py --grade 1`).
 
+## LL-98 — Failas, įtrauktas į vartus, bet neparodytas nė vienu neigiamu zendu
+
+- **Simptomas:** `scripts/check_published.py` `SHELL_GLOBS` turi `404.html` nuo #308, o komentaras teigia, kad veidrodis su 563 B → 594 B failu „davė `PASENĘS KODAS: 404.html`“. #316 tam sukūrė veidrodį `scratch/m316` ir jį **pastatė**, bet nepakeitė `404.html` ir nepaleido patikros — tad šiame repo variante teiginys rėmėsi ankstesnio paleidimo aprašymu, ne išmatuotu rc.
+- **Priežastis:** vartų failų sąrašas buvo papildytas, o įrodymas atliktas kitoje vietoje (ar apskritai ne tame pačiame medyje); patikros scriptas liko `build` būsenoje. Dviguba apsauga (failas sąraše + ankstesnis zondas kitame repo variante) atrodė kaip viena apsauga.
+- **Taisyklė:** kiekvienas **naujas** elementas tikrinamų failų sąraše (`SHELL_GLOBS`, `AUX_FILES`, garso manifestas) turi būti įrodytas neigiamu zendu tame pačiame darbe ir tame pačiame medyje: bazinis rc 0 → pakeičiamas **tik tas** failas → rc 1, kuriame failas įvardytas vardu → atstatyta → vėl rc 0. Komentaras, kuris cituoja praeities matavimą, nėra patikra.
+- **Patikra:** 2026-11-16 (#319): `shell_files()` = 18, `404.html` jame yra; veidrodis `scratch/m316` + `http.server 8977` + `SUPRASK_LIVE_ROOT`: nepakeistas → rc 0 „sutampa (… svetainės kodas 18 failų)“; `404.html` 563 B → 586 B → rc 1 `PASENĘS KODAS — naršyklė vykdo kitą failą (1): 404.html: repo 563 B, gyvai 586 B`; atstatytas → rc 0. Zondas: `scratch/p319_ll98.py baseline|mutate|after|back`.
+
+## LL-99 — Grąžinama reikšmė, kuri išsprendžia dvi skirtingas būsenas į vieną
+
+- **Simptomas:** `check_published.unpushed()` grąžino tik sąrašą, tad tuščias sąrašas reiškė ir „0 neišsiųstų commit'ų“, ir „git negalėjo palyginti su `origin/main`“. Šviežiame klone be remote `git rev-list origin/main..HEAD` grąžina rc 128 ir tuščią stdout — vartai rašydavo žalią „sutampa“, o `verdict({})` iš viso grąžindavo `ok=True`.
+- **Priežastis:** nežinoma būsena neturėjo savo ženklo. Kai funkcija turi vieną grąžinamą reikšmę, klaidos atvejį tenka užrašyti ta pačia reikšme kaip sėkmės atvejį (tuščias sąrašas, nulis, `False`), ir vartai negali atskirti „išmatuota 0“ nuo „nematė“.
+- **Taisyklė:** jei matavimas gali neįvykti, funkcija grąžina **porą** (reikšmė, ar patikra įvyko) arba trijų būsenų objektą, o sprendimo funkcija (`verdict`) nežinomą būseną paverčia priežastimi žodžiais ir rc 1. Numatytasis nežinomos būsenos sprendimas — **ne** žalias (`data.get("x_checked", False)`, ne `True`).
+- **Patikra:** 2026-11-16 (#319) laikinas repo be remote (`scratch/p319_ll99.py`): `git rev-list origin/main..HEAD` → rc 128, stdout `''`; `unpushed()` → `([], False)`; `verdict({})` → `ok=False`, priežastis „neišsiųstų commit'ų patikra neįvyko“; `verdict({"unpushed_checked": False, ...})` → `ok=False`; po `git update-ref refs/remotes/origin/main HEAD` → `([], True)` ir `ok=True`; po naujo commit'o → 1 hash ir rc 1.
+
+## LL-100 — Manifestas, kurio įrašas tikrinamas tik viena kryptimi
+
+- **Simptomas:** #316 manifeste buvo 2 įrašai, kurių mp3 failų nebuvo niekur (nei diske, nei svetainėje), o `check_audio.py` rašė `✔ Garsas pilnas: … naudojama 1140 iš 1138 mp3` ir grąžino rc 0. Vartai (`check_published.py`) tą pačią dieną buvo raudoni — du įrankiai apie tą patį failą sakė priešingai.
+- **Priežastis:** `check_audio.py:69–78` `missing` ciklas eina per `generate_audio.collect()` tekstus, t. y. per tai, kas **šiandien kalbama**. Manifesto įrašas, kurio tekstas nebekalbamas, nepatenka nė į vieną patikrą, o `ok` (`:105`) skaičiuojamas tik iš `missing` ir `wrong_engine`. Skaičius „naudojama 1140 iš 1138“ buvo atspausdintas kaip informacija (`:155–159`), ne kaip klaida.
+- **Taisyklė:** failų sąrašas (manifestas) tikrinamas **abiem kryptimis** ir žalias tik tada, kai abi aibės lygios: `disk - refs` (našlaitis, failas be įrašo) ir `refs - disk` (įrašas be failo, nepriklausomai nuo to, ar tekstas šiandien kalbamas). `referenced != on_disk` yra klaida, o ne įspėjimas.
+- **Patikra:** 2026-11-16 (#319, `scratch/p319_ll100.py`): tikras manifestas — 569 tekstų, refs 1138, disk 1138, `refs - disk` 0, `disk - refs` 0, `check()` ok=True; laikina kopija su vienu papildomu įrašu, kurio failų nėra ir kurio tekstas nekalbamas (`collect()` jo neturi) — `check()` vis tiek `ok=True`, `referenced` 1140, `on_disk` 1138, `missing` 0, `orphans` 0. Rekomendacija — pasiūlymas `agents/proposals/2026-11-16-publikavimo-agentas-garsas-abiem-kryptim.md`.
+
 
 
 

@@ -171,6 +171,18 @@ INFRA_MAX_ATTEMPTS = 3
 # apsauga („0 failų = ne bandymas“) niekada negalėjo suveikti.
 LOG_PREFIX = "agents/log/"
 
+# Ataskaitos dydžio riba (#4455). Iki šios datos ataskaita buvo VISAS modelio
+# stdout su įrankių išklotinėmis: 2026-11-08 — 139 failai / 2,9 MB, 2026-11-17 —
+# 399 failai / 8,0 MB (mediana 14 KB, didžiausias 83 KB). Kadangi ataskaitos
+# patenka į git (#484), jų dydis yra repo dydis, o GitHub Pages publikuoja repo.
+# Nuo čia rašoma pradžia ir pabaiga, o vidurys (įrankių išklotinės) lieka
+# `agents/work/<vaidmuo>/<paleidimas>/ataskaita-visa.md` — katalogas ignoruojamas.
+# Riba NIEKADA neturi būti tyli (LL-37): žymė pasako, kiek simbolių praleista ir
+# kur yra visas tekstas.
+REPORT_HEAD = 6000
+REPORT_TAIL = 12000
+REPORT_MAX = REPORT_HEAD + REPORT_TAIL
+
 
 def infra_reason(*texts: str) -> str:
     """Trumpa infrastruktūros gedimo priežastis arba `""`, jei jo nebuvo."""
@@ -189,6 +201,51 @@ def work_files(files: list[str]) -> list[str]:
     ką publikuoti, bet ne į sprendimą „ar paleidimas ką nors nuveikė“.
     """
     return [f for f in files if not f.startswith(LOG_PREFIX)]
+
+
+def cap_report(text: str, full_path: Path) -> str:
+    """Apriboja ataskaitos dydį, bet praleidimą pasako žodžiais (#4455, LL-37).
+
+    Grąžina pradžią ir pabaigą su žyme, kurioje yra praleistų simbolių skaičius
+    ir visas tekstas. Pabaiga svarbiausia: ten agento išvados ir matavimai, dėl
+    kurių ataskaita apskritai egzistuoja; vidurys paprastai yra įrankių
+    išklotinės, kurias galima perskaityti `agents/work/` kopijoje.
+    """
+    if len(text) <= REPORT_MAX or not text.strip():
+        return text
+    full_path.parent.mkdir(parents=True, exist_ok=True)
+    full_path.write_text(text, encoding="utf-8")
+    omitted = len(text) - REPORT_HEAD - REPORT_TAIL
+    try:
+        where = str(full_path.relative_to(ROOT))
+    except ValueError:
+        where = str(full_path)
+    marker = (
+        f"\n\n… PRALEISTA {omitted} SIMBOLIŲ IŠ {len(text)} (įrankių išklotinės) — "
+        f"visa ataskaita: {where} (katalogas `agents/work/` į repo neįtraukiamas)\n\n"
+    )
+    return text[:REPORT_HEAD] + marker + text[-REPORT_TAIL:]
+
+
+def resolve_status(pre_status: str, publish_status: str) -> str:
+    """Galutinis paleidimo statusas: paskelbtas darbas sveria daugiau (LL-10).
+
+    `pre_status` — modelio išėjimo kodas ir `FAIL_MARKERS`; `publish_status` —
+    bėgiklio sprendimas po validacijos. Taisyklė viena: jei failai PASKELBTI,
+    paleidimas negali būti `failed`, kad ir ką modelis atsakė išėjimo kodu.
+    Priešingu atveju neigiamas atsakymas nepakeičiamas: `published` be failų
+    neįmanomas, o `rejected`/`conflict` lieka tokie, kokie yra.
+
+    Kodėl funkcija, o ne eilutė `main()` viduje: 2026-11-17 paaiškėjo, kad
+    `#291` paskelbė 5 failus ir vis tiek buvo įrašytas `failed`, o jo
+    pasiūlymas — `blocked`. Tokios taisyklės negalima tikrinti kitaip, kaip
+    ištraukus ją į vieną vietą su lentele.
+    """
+    if publish_status == "published":
+        return "published"
+    if pre_status in ("ok", "partial"):
+        return publish_status
+    return pre_status
 
 
 # Vaidmuo → failas, profilis, įrankių rinkinys, limitai, grafikas
@@ -1653,13 +1710,22 @@ def main() -> int:
 
         elapsed = int((dt.datetime.now() - started).total_seconds())
 
+        # Ataskaita rašoma su riba (#4455), o visas tekstas lieka `agents/work/`.
+        # Statuso eilutė čia yra PIRMINĖ: ją nustato modelio išėjimas ir
+        # `FAIL_MARKERS`, o galutinį sprendimą (ar failai paskelbti) priima
+        # `publish()` po to, kai šis failas jau įtrauktas į commit'ą. Todėl
+        # eilutė taip ir vadinasi — kitaip ataskaitoje likdavo „exit: 1 → failed“
+        # paleidimui, kuris iš tikrųjų paskelbė darbą (#291), ir tai buvo
+        # skaitoma kaip galutinis verdiktas.
+        report = cap_report(out or "", work / "ataskaita-visa.md")
         log_path.write_text(
             f"# {args.role} — {stamp}\n\n"
             f"- paleidimas: #{run_id} ({args.trigger})\n"
             f"- trukmė: {elapsed}s\n"
-            f"- exit: {code} → {status}\n"
+            f"- modelio išėjimas: {code} (pirminis statusas: {status})\n"
+            f"- galutinis sprendimas: `agents/runs.db` laukas `status` ir `detail`\n"
             f"- modelis: hermes:{used_profile}\n\n"
-            f"## Ataskaita\n\n{out or '(tuščia)'}\n\n"
+            f"## Ataskaita\n\n{report or '(tuščia)'}\n\n"
             + (f"## klaidos\n\n```\n{err[-2000:]}\n```\n" if err else ""),
             encoding="utf-8",
         )
@@ -1684,8 +1750,15 @@ def main() -> int:
         result = publish(args.role, run_id, files, out or args.role,
                          implemented_id=int(proposal["id"]) if proposal else None,
                          foreign_roles=foreign, notes=notes)
-        if status in ("ok", "partial"):
-            status = result["status"]
+        # LL-10 vienu lygmeniu aukščiau: paleidimo rezultatas yra PASKELBTI
+        # failai, o ne modelio išėjimo kodas. `hermes` one-shot dažnai išeina su
+        # 1 po pilno atsakymo (todėl `partial`), o modelis, palikęs paskutinius
+        # žingsnius ataskaitai, išeina su klaida po to, kai darbas jau padarytas.
+        # Iki 2026-11-17 toks paleidimas buvo įrašomas `failed`, nors commit'as
+        # egzistavo: #291 „Paskelbta 5 failų“ → `failed`, o jo pasiūlymas —
+        # `blocked`. Statistika tokius skaičiavo kaip nenaudingus (architektas
+        # 28 %, kūrėjas 31 %), o eilė neteko įrašų. Taisyklė — `resolve_status()`.
+        status = resolve_status(status, result["status"])
         # Patikros vaidmenys (tikrintojas, publikavimo-agentas, kuratorius,
         # sveikatos inspektorius) iš esmės failų nekeičia — jų rezultatas yra
         # ataskaita. „empty“ klaidingai atrodydavo kaip „nieko nepadarė“, todėl

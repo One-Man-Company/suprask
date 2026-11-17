@@ -28,6 +28,27 @@ REQUIRED = ("file", "profile", "toolsets", "cadence", "on_calendar",
             "max_turns", "budget", "timeout", "description")
 UNITS = ROOT / "deploy" / "systemd"
 
+# Nuo šios datos `agents/run.py` rašo ataskaitą su riba (`REPORT_MAX`, #4455).
+# Ankstesni failai gali būti dideli — jie yra istorija, ne regresija, todėl
+# dydžio vartas juos skaičiuoja, bet nekaltina. Data imama iš FAILO VARDO
+# (`<vaidmuo>-2026-11-17T2029.md`), o NE iš `mtime`: šviežiai nuklonuotame
+# repo ar `git worktree` visų failų `mtime` yra šiandien, todėl zondas
+# izoliuotame worktree 2026-11-17 parodė 31 KB istorinę ataskaitą kaip naują
+# pažeidimą ir nulaužė publikavimą (LL-102).
+REPORT_CAP_DATE = dt.date(2026, 11, 17)
+_REPORT_STAMP = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
+
+
+def report_date(path: pathlib.Path) -> dt.date | None:
+    """Ataskaitos data iš failo vardo; `None`, jei varde datos nėra."""
+    found = _REPORT_STAMP.search(path.name)
+    if not found:
+        return None
+    try:
+        return dt.date.fromisoformat(found.group(0))
+    except ValueError:
+        return None
+
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -133,6 +154,33 @@ def main() -> int:
                         % last.get("id"))
     except Exception:  # noqa: BLE001
         pass
+
+    # Ataskaitų dydis (#4455): bėgiklis riboja rašomą ataskaitą
+    # (`agents/run.py` — REPORT_MAX), o šis vartas neleidžia grįžti prie
+    # neriboto `stdout`. Iki 2026-11-17 ataskaita buvo visas modelio tekstas:
+    # 399 failai / 8,0 MB per 10 dienų (mediana 14 KB, didžiausias 83 KB), o
+    # ataskaitos patenka į git ir į GitHub Pages publikavimą. Istorinės
+    # ataskaitos netrinamos — jos yra audito pėdsakas, todėl didelės failai
+    # tik išvardijami; klaida laikoma tik tai, kas parašyta PO ribos įvedimo.
+    try:
+        cap = int(getattr(runner, "REPORT_MAX", 0))
+        logs = sorted((ROOT / "agents" / "log").glob("*.md"))
+        dated = [(report_date(p), p) for p in logs]
+        legacy = [p for d, p in dated if d is None or d < REPORT_CAP_DATE]
+        huge = [p for d, p in dated
+                if d is not None and d >= REPORT_CAP_DATE
+                and cap and p.stat().st_size > cap + 4096]
+        for p in huge:
+            problems.append(f"{p.relative_to(ROOT)}: {p.stat().st_size // 1024} KB — "
+                            f"viršija bėgiklio ribą ({cap // 1024} KB); ataskaita turi būti "
+                            "rašoma per `cap_report()`")
+        total = sum(p.stat().st_size for p in logs)
+        if not args.json:
+            base = f"Ataskaitos: {len(logs)} failų, {total // 1024} KB"
+            print(base + (f"; {len(legacy)} - istorinės be ribos" if legacy else "")
+                  + (f" (riba {cap // 1024} KB nuo {REPORT_CAP_DATE})" if cap else ""))
+    except Exception as exc:  # noqa: BLE001
+        warnings.append(f"ataskaitų dydžio patikra praleista: {exc}")
 
     # Sisteminiai pasiūlymai neturi savininko eilėje: kūrėjas jų sąmoningai
     # neima, o architektas paleidžiamas kartą per dieną. 2026-11-09 tokių buvo

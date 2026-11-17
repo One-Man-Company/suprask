@@ -154,7 +154,15 @@ def run_one(proposal_id: int) -> tuple[str, str, dict | None]:
     ]
     proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     out = (proc.stdout or "").strip().splitlines()
-    line = out[-1] if out else (proc.stderr or "").strip()[-200:]
+    err = (proc.stderr or "").strip()
+    line = out[-1] if out else err[-200:]
+    # Lūžusio paleidimo priežastis yra stderr (traceback), o anksčiau būdavo
+    # spausdinama tik paskutinė STDOUT eilutė — todėl 2026-11-16 lūžis žurnale
+    # liko be jokios priežasties, tik su „…line 1483, in main“. Dabar nesėkmės
+    # atveju parodome ir stderr uodegą.
+    if proc.returncode != 0 and err:
+        tail = " / ".join(err.splitlines()[-6:])[-700:]
+        line = f"{line} ⟵ {tail}" if line and line not in tail else tail
 
     # Tikrasis statusas — iš DB, ne iš teksto.
     try:

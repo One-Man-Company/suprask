@@ -28,6 +28,7 @@ import sys
 import tempfile
 import threading
 import time
+import traceback
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -52,6 +53,56 @@ def role_lock_file(role: str) -> Path:
     tas pats vaidmuo, o git operacijos serializuojamos atskiru GIT_LOCK.
     """
     return AGENTS / f".run.{role}.lock"
+
+
+#: Paleidimas, kurį šis procesas atidarė ir dar neuždarė.  Bet kokia lūžis
+#: anksčiau palikdavo eilutę `running` amžiams — 2026-11-16 paleidimas #314 taip
+#: „dirbo“ parą ir dashboard'as rodė agentą, kurio seniai nebuvo.  `__main__`
+#: žemiau uždar įrašą prieš bet kokį išėjimą.
+ACTIVE_RUN_ID: int | None = None
+
+
+def begin_run(role: str, trigger: str, model: str, note: str = "") -> int:
+    """`db.start_run`, bet įsimenamas, kad lūžis jį uždarų (žr. aukščiau)."""
+    global ACTIVE_RUN_ID
+    ACTIVE_RUN_ID = db.start_run(role, trigger, model, note)
+    return ACTIVE_RUN_ID
+
+
+def abandon_active_run(exc: BaseException) -> int | None:
+    """Uždaro paleidimą, kurį lūžis būtų palikęs `running`.
+
+    Niekada neliečia jau uždaryto įrašo: įprastas kelias pats išsikviečia
+    `finish_run`, o ši funkcija tik užtikrina, kad lūžio atveju neliktų
+    amžinai „veikiančios“ eilutės.  Grąžina uždarą `run_id` arba `None`.
+    """
+    global ACTIVE_RUN_ID
+    run_id, ACTIVE_RUN_ID = ACTIVE_RUN_ID, None
+    if not run_id:
+        return None
+    try:
+        rows = [r for r in db.recent_runs(200) if int(r["id"]) == int(run_id)]
+    except Exception:  # noqa: BLE001 — niekada negriaunam išėjimo dėl to
+        return None
+    row = rows[0] if rows else None
+    if not row or (row.get("status") or "") != "running":
+        return None
+    try:
+        started = dt.datetime.fromisoformat(
+            (row.get("started") or "").replace(" ", "T")[:19])
+        elapsed = max(0, int((dt.datetime.now() - started).total_seconds()))
+    except (TypeError, ValueError):
+        elapsed = 0
+    reason = f"{type(exc).__name__}: {exc}".strip() or type(exc).__name__
+    try:
+        db.finish_run(
+            int(run_id), "interrupted", 70, elapsed, "",
+            f"Paleidėjas lūžo: {reason}"[:4000],
+            detail=reason[:500],
+        )
+    except Exception:  # noqa: BLE001
+        return None
+    return int(run_id)
 
 
 @contextmanager
@@ -1480,7 +1531,7 @@ def main() -> int:
                 return 0
             time.sleep(10)
 
-    run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", args.note)
+    run_id = begin_run(args.role, args.trigger, f"hermes:{cfg['profile']}", args.note)
 
     if args.publish_only:
         files = changed_list()
@@ -1690,4 +1741,14 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except SystemExit:
+        raise
+    except BaseException as exc:  # noqa: BLE001 — lūžis turi užsidaryti, ne pakibti
+        traceback.print_exc()
+        closed = abandon_active_run(exc)
+        if closed:
+            print(f"run #{closed}: pažymėtas interrupted (paleidėjas lūžo)",
+                  file=sys.stderr)
+        sys.exit(70)

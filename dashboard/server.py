@@ -148,13 +148,99 @@ def run_now(role: str) -> tuple[bool, str]:
         return False, str(exc)
 
 
+#: Kiek laiko įrašas gali būti `running`, kol procesas dar nespėjo pasirodyti
+#: `/proc`.  Paleidimas eilutę kuria jau laikydamas užraktą, todėl tarpas labai
+#: trumpas; už jį jaunesnis įrašas niekada nelaikomas lavonu.
+STALE_RUN_GRACE_S = 90
+
+
+def live_run_roles() -> set[str]:
+    """Vaidmenys, kurių `agents/run.py <role>` procesas šiuo metu gyvas.
+
+    Tai vienintelis požymis, kurio nereikia „zondavimo“: `/proc/locks` šiame
+    hoste `flock` įrašų nerodo, o `flock(LOCK_NB)` zondas užrakintų bendrą
+    užraktą sekundės daliai ir galėtų priversti agentą praleisti savo
+    paleidimą (būtent dėl to `agents/run.py` ir turi atsarginį kelią).
+    """
+    try:
+        known = set(db_roles())
+    except Exception:  # noqa: BLE001 — be sąrašo imame pirmą ne vėliavėlę
+        known = set()
+    roles: set[str] = set()
+    for entry in pathlib.Path("/proc").iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            raw = (entry / "cmdline").read_bytes()
+        except OSError:
+            continue
+        args = [part.decode("utf-8", "replace") for part in raw.split(b"\0") if part]
+        idx = next((i for i, a in enumerate(args) if a.endswith("agents/run.py")), None)
+        if idx is None:
+            continue
+        # Vaidmuo gali būti ne pirmas argumentas (`run.py --dry-run kurejas`),
+        # o vėliavėlės reikšmė („--proposal 5“) vaidmeniu neturi tapti.
+        rest = [a for a in args[idx + 1:] if not a.startswith("-")]
+        # Kai vaidmuo neatpažintas, imame pirmą ne vėliavėlę: geriau palikti
+        # eilutę atvirą, nei uždaryti gyvą paleidimą.
+        match = next((a for a in rest if a in known), None) or (rest[0] if rest else None)
+        if match:
+            roles.add(match)
+    return roles
+
+
+def reconcile_running() -> list[int]:
+    """Uždaro „running“ eilutes, kurių proceso nebėra.
+
+    Paleidėjas dabar pats užsidaro lūžio atveju (`agents/run.py`), bet SIGKILL,
+    OOM ar maitinimo nutrūkimas nepalieka jam šanso. Todėl panelė pati
+    susitvarko: įrašas, kurio vaidmens proceso nebėra, pažymimas `interrupted`,
+    o ne rodomas kaip amžinai dirbantis agentas.
+    """
+    import datetime as dt
+    fixed: list[int] = []
+    try:
+        rows = db.recent_runs(60)
+    except Exception:  # noqa: BLE001
+
+        return fixed
+    pending = [r for r in rows if (r.get("status") or "") == "running"]
+    if not pending:
+        return fixed
+    alive = live_run_roles()
+    for r in pending:
+        role = r.get("role") or ""
+        if role in alive:
+            continue
+        started = (r.get("started") or "").replace(" ", "T")[:19]
+        try:
+            age = (dt.datetime.now() - dt.datetime.fromisoformat(started)).total_seconds()
+        except (TypeError, ValueError):
+            age = None
+        if age is not None and age < STALE_RUN_GRACE_S:
+            continue          # procesas dar gali nespėti pasirodyti
+        try:
+            db.finish_run(
+                int(r["id"]), "interrupted", None, int(age or 0), "",
+                "Paleidimo procesas nebeveikia (nutrūko be užbaigimo) — eilutė uždaryta automatiškai.",
+                detail="reconciled: no live agents/run.py process",
+            )
+            fixed.append(int(r["id"]))
+        except Exception:  # noqa: BLE001
+            continue
+    if fixed:
+        print(f"[dashboard] uždaryti pasenę paleidimai: {fixed}", file=sys.stderr, flush=True)
+    return fixed
+
+
 def running_now() -> list[dict]:
     """Paleidimai, kurie DB žymimi „running“, su kiek laiko jau dirba.
 
-    Tai gali būti ir pasenę įrašai (procesas žuvo), todėl amžius rodomas
-    atvirai — žmogus mato, ar tai tikrai vyksta, ar tik neuždaryta eilutė.
+    Prieš atsakydama panelė susitvarko pasenusias eilutes, todėl „running“
+    reiškia tikrą procesą, o ne neuždarytą įrašą.
     """
     import datetime as dt
+    reconcile_running()
     out = []
     for r in db.recent_runs(60):
         if (r.get("status") or "") != "running":

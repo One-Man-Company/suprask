@@ -27,6 +27,7 @@ import secrets
 import string
 import subprocess
 import sys
+import threading
 import time
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -50,6 +51,40 @@ except ImportError:  # dashboard neturi kristi dėl trūkstamo pagalbinio moduli
     )
 import garsas  # noqa: E402
 import check_published  # noqa: E402
+
+#: Gyvas publikavimo palyginimas nulupa kiekvieną svetainės failą per tinklą ir
+#: šiame hoste užtrunka ~35 s. Atsakymo laukimas blokavo VISĄ dashboard'ą:
+#: puslapis šios kortelės laukia prieš piešdamas ką nors kita, todėl vienas lėtas
+#: patikrinimas įšaldydavo pauzės būseną, paleidimų sąrašą ir mygtukus
+#: (2026-11-17 „viskas rodoma kaip sustabdyta“). Todėl atsakome paskutiniu
+#: matavimu, o naują darome fone.
+PUBLISH_TTL_S = 60
+_PUBLISH: dict = {"at": 0.0, "data": None, "busy": False}
+_PUBLISH_LOCK = threading.Lock()
+
+
+def _refresh_publish() -> None:
+    try:
+        data = check_published.report()
+    except Exception as exc:  # noqa: BLE001 — kortelė rodo klaidą, ne krenta
+        data = {"error": str(exc)}
+    _PUBLISH["data"] = data
+    _PUBLISH["at"] = time.time()
+    _PUBLISH["busy"] = False
+
+
+def publish_snapshot() -> dict:
+    """Paskutinis publikavimo matavimas; foninis atnaujinimas, niekada blokavimas."""
+    data = _PUBLISH["data"]
+    if data is not None and time.time() - float(_PUBLISH["at"]) < PUBLISH_TTL_S:
+        return data
+    with _PUBLISH_LOCK:
+        start = not _PUBLISH["busy"]
+        if start:
+            _PUBLISH["busy"] = True
+    if start:
+        threading.Thread(target=_refresh_publish, name="publish-check", daemon=True).start()
+    return data if data is not None else {"pending": True}
 
 HOST = os.environ.get("SUPRASK_DASH_HOST", "100.118.226.11")
 PORT = int(os.environ.get("SUPRASK_DASH_PORT", "9410"))
@@ -379,16 +414,9 @@ class Handler(BaseHTTPRequestHandler):
                 "prompt": prompt,
             })
         if path == "/api/publish-status":
-            now = time.time()
-            cached = getattr(self.server, "_publish_cache", None)
-            if cached and now - cached[0] < 60:
-                return self._json(cached[1])
-            try:
-                data = check_published.report()
-            except Exception as exc:  # noqa: BLE001
-                data = {"error": str(exc)}
-            self.server._publish_cache = (now, data)
-            return self._json(data)
+            # Niekada nelaukiame gyvo palyginimo (jis trunka ~35 s): atsakome
+            # paskutiniu matavimu, o naują renkame fone.
+            return self._json(publish_snapshot())
         if path == "/garsas":
             return self._send(200, garsas.HTML.encode("utf-8"))
         if path == "/api/audio":
@@ -799,6 +827,8 @@ const setText = (sel, v) => { const e = $(sel); if (e) e.textContent = v; };
 async function loadPublish(){
   try {
     const p = await j("/api/publish-status");
+    // Foninis matavimas dar renkamas: rodome būseną, o ne klaidą.
+    if (p.pending) { setText("#pubBig", "tikrinama…"); setText("#pubNote", ""); return; }
     if (p.error) { setText("#pubBig",  "klaida"); setText("#pubNote",  String(p.error).slice(0,60)); return; }
     const drift = (p.missing_on_live||[]).length;
     const risky = (p.hidden_locally||[]).length;
@@ -927,13 +957,16 @@ async function saveGrade(el){
 async function loadAll(){
   try {
     await loadOverview();
-    // loadOverview() perpiešia #stats ir publikavimo kortelė vėl tuščia,
-    // todėl reikšmės turi būti įrašomos PO jo — ir kiekvieną kartą, ne tik
-    // įkėlus puslapį (anksčiau po 15 s kortelė ištuštėdavo).
-    await loadPublish();
-    await Promise.all([loadRuns(), loadProposals(), loadGrades(), loadJournal(), loadPause()]);
-    $("#updated").textContent = "atnaujinta " + new Date().toLocaleTimeString("lt-LT");
-  } catch(e){ $("#updated").textContent = "klaida: " + e.message; }
+  } catch(e){ $("#updated").textContent = "klaida: " + e.message; return; }
+  // loadOverview() perpiešia #stats ir publikavimo kortelė vėl tuščia, todėl
+  // kortelės pildomos PO jo.  Bet kiekviena — NEPRIKLAUSOMAI: anksčiau
+  // nuoseklus `await loadPublish()` laukimas (gyvas palyginimas trunka ~35 s)
+  // užšaldydavo pauzės būseną, paleidimų sąrašą ir mygtukus — puslapis atrodė
+  // „viskas sustabdyta“, nors serveris dirbo (2026-11-17).
+  await Promise.allSettled([
+    loadPublish(), loadRuns(), loadProposals(), loadGrades(), loadJournal(), loadPause(),
+  ]);
+  $("#updated").textContent = "atnaujinta " + new Date().toLocaleTimeString("lt-LT");
 }
 
 $("#pauseBtn").onclick = setPause;

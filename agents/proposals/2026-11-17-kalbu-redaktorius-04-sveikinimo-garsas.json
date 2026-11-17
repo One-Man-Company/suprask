@@ -1,0 +1,15 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 0,
+  "created": "2026-11-17T21:15:19",
+  "type": "ux",
+  "title": "04-kaip-zmones-sveikinasi: kai kurie garso įrašai taria veiksmą, o ne pasveikinimą",
+  "body": "Simuliacija kiekvienam žmogui groja jo „label“ tekstą. Kai žmogus linkteli, label yra „Linktelėjo“ – vaikas girdi žodį „Linktelėjo“, o ne pasveikinimą. Tai gali painioti: modulis moko, kaip žmonės sveikinasi, o ne kaip vadinasi veiksmas. Siūloma: atskirti „label“ (ką vaikas mato) nuo „say“ (ką vaikas girdi). Linktelėjimo atveju galėtų girdėti tylos garsą arba „Linktelėjo“ – bet tuomet reikėtų paaiškinti, kad tai ne žodinis sveikinimas. Geriausia – pridėti „say“ lauką.",
+  "target": "content/lt/grade-01/lietuviu-kalba/04-kaip-zmones-sveikinasi.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/04-kaip-zmones-sveikinasi.json:51-60",
+    "assets/js/sims/calba.js:616 (api.speak(person.label))"
+  ]
+}

@@ -305,10 +305,10 @@ ROLES: dict[str, dict] = {
         "description": "Sujungia patvirtintus PR, atnaujina changelog ir publikavimą",
     },
     "kalbu-redaktorius": {
-        "file": "roles/kalbu-redaktorius.md", "profile": "deepseek41flash", "toolsets": "terminal,file",
+        "file": "roles/kalbu-redaktorius.md", "profile": "education41-gemini", "toolsets": "terminal,file",
         "max_turns": 30, "budget": 1200, "timeout": 1800,
         "cadence": "antradieniais, penktadieniais", "on_calendar": "Tue,Fri *-*-* 13:10:00",
-        "description": "Kalbos ir UX redaktorius: formuluočių vienareikšmiškumas + ką vaikas mato desktop/planšetėje/telefone su Brave skydais",
+        "description": "Kalbos ir UX redaktorius: formuluočių vienareikšmiškumas + ką vaikas mato desktop/planšetėje/telefone su Brave skydais (Gemini 4 Hydrogen; atsarginis — DeepSeek 4.1 Flash)",
             # Ne vienas modulis per paleidimą, o eilė: ji ima tik tuos modulius,
         # kurių failas nepakitęs nuo paskutinės peržiūros (žr. kalbu_queue.py).
         "queue": {"command": "scripts/kalbu_queue.py", "max_items": 4, "max_minutes": 240},

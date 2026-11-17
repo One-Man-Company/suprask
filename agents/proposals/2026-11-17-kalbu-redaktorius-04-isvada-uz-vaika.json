@@ -1,0 +1,17 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 0,
+  "created": "2026-11-17T21:15:19",
+  "type": "ux",
+  "title": "04-kaip-zmones-sveikinasi: simuliacija pati padaro išvadą, kuri prieštarauja modulio idėjai",
+  "body": "Modulio idėja: „vienas pastebėjimas dar nėra išvada“. Tačiau simuliacija po pirmo žmogaus rodo „Visi sveikinasi žodžiu.“ – būtent tą klaidingą išvadą, kurią modulis turi paneigti. Vaikas neprivalo daryti išvados pats; jis tik spaudžia „Sekantis žmogus“ ir stebi, kaip tekstas keičiasi. Tai demonstracija, ne tyrimas. Siūloma: (a) po vieno pastebėjimo rodyti „Kol kas žinai tik apie vieną žmogų“, o ne „Visi…“; (b) reikalauti, kad vaikas pats pasirinktų išvadą iš variantų, o simuliacija patikrintų, ar ji atitinka duomenis; (c) „Visi sutikti žmonės…“ vietoje „Visi…“.",
+  "target": "assets/js/sims/calba.js",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/calba.js:544-552 (conclusion())",
+    "assets/js/sims/calba.js:580-590 (finish())",
+    "Gyvas zondas: po 1 žmogaus rodoma „Visi sveikinasi žodžiu.“",
+    "docs/SVIETIMAS-1-GAIRES.md P2: veiksmas prieš paaiškinimą"
+  ]
+}

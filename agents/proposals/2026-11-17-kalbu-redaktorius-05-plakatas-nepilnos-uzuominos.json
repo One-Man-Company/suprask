@@ -1,0 +1,15 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 0,
+  "created": "2026-11-17T21:15:19",
+  "type": "ux",
+  "title": "05-plakatas-ir-informacija: pusė neteisingų pasirinkimų neturi savo paaiškinimo",
+  "body": "Simuliacijos klausimai turi „miss“ žemėlapį, bet jis padengia tik dalį plakato dalių. Pvz., į klausimą „Kiek atšvaitų turi berniukas?“ paspaudus „Užrašas apie dviratį“ arba „Užrašas apie gatvę“, rodoma bendra frazė „Ši plakato dalis į klausimą neatsako“, o ne konkretus paaiškinimas, kodėl būtent ši dalis netinka. Tai susilpnina mokymąsi: vaikas negauna grįžtamojo ryšio apie savo klaidą. Siūloma: kiekvienam klausimui pridėti „miss“ įrašus visoms kitoms zonoms (bent jau toms, kurios yra matomos tame pačiame ekrane).",
+  "target": "content/lt/grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json:62-96",
+    "Gyvas zondas: Q2 paspaudus uzrasas-dviratis → bendra frazė, ne konkretus paaiškinimas"
+  ]
+}

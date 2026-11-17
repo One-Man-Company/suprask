@@ -131,3 +131,15 @@ Sunkumas: **rimta** = vaikas supranta klaidingai ar nebegali skaityti; **vidutin
 - **`check_view.py`** (local server, Brave skydų blokada `BRAVE_INIT`, desktop/tablet/phone): **prieš = po** — `checked` 3, `problems` [], `notes` [], exit 0; `overflow` 0/0/0, `smallCount` 0, `tasksVisible` 4/4, `clipped` [], `simVisibleControls` 4, `loading`/`fatal` false, console/page errors 0; `minTaskFont` 21.44 / 21.44 / 19.14 px (tekstai trumpesni, geometrija nepakito).
 - **DOM zondas** (`probe149_dom.py`, scratch, Chromium 1440 px, `.venv` Playwright, `google-chrome`, Brave skydų blokada): RESULT OK — 7 nauji teiginiai matomi (`subtitle`, `big_idea` ×2, `outcomes[0]` — jie yra suglaustame `<details>` „Ką suprasi", `app.js:392–394`, todėl zonde imamas `textContent`, ne `innerText`; `concept.example`, `concept.steps[3]`, `tasks[2].q`), 5 seni neberendinami (`neprapuola`, `aprasoj`, `nubyra`, `Šildomas`, `vėsdamas`), sim readout gyvas („Vandens lygis 5 iš 5 · dangtis nuimtas"), 4 užduotys, 3 outcomes, 0 console/page klaidų.
 - **Likę atviri:** `sim.config.words` negyvas (niekur neskaitomas) → pasiūlymas `2026-11-08-kalbu-redaktorius-sim-config-zodziai-mirus.json` (LL-61); sim pastabos „virs" → pasiūlymas `2026-11-08-kalbu-redaktorius-sim-virs-lašais.json`; `steps[1]` „Jo nematome" palikta (audit modelis #6 — priimtina bendrinė pastaboja); `check_language.py` nežodžių/dalyvių nemata — įrankio riba, atviras #5827 (`outcomes` vartai) ir LL-52/LL-53 šeima.
+
+
+## 2026-11-17 — lietuvių kalbos modulių auditas (5 moduliai)
+
+Naujas auditas: `research/wiki/guidelines/lietuviu-kalba-auditas-2026-11-17.md`.
+
+Rasta **5 rimti, 5 vidutiniai, 4 smulkūs** radiniai. Visi 5 moduliai praeina `validate_content.py` ir `check_view.py`, bet turi turinio ir pedagoginių defektų. Visi pateikti `agents/proposals/2026-11-17-kalbu-redaktorius-*.json`:
+
+- 01-garsas-ir-raide: užduotis be paveikslėlio (R1); neįmanomas pabaigos klausimas (R2); „Niekou“ (V1).
+- 02-skiemenu-jungimas: „mokykla“ skaidoma mo-kyk-la, o turi būti mo-ky-kla (R3).
+- 04-kaip-zmones-sveikinasi: simuliacija pati padaro išvadą „Visi…“ po vieno žmogaus (R4/R5); garso įrašas taria veiksmą (V4).
+- 05-plakatas-ir-informacija: pusė neteisingų pasirinkimų neturi savo paaiškinimo (V5).

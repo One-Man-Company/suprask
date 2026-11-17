@@ -91,7 +91,7 @@ Platformą nuolat vysto penkiolika agentų (`agents/`), veikiančių ciklu **ie�
 | `tikrintojas` | validuoja turinį ir sąsają |
 | `sveikatos-inspektorius` | tikrina gyvą svetainę |
 | `kuratorius` | savaitės suvestinė ir prioritetai |
-| `kalbu-redaktorius` | tikrina užduočių formuluotes (vienareikšmiškumas, sakinio ilgis) |
+| `kalbu-redaktorius` | tikrina užduočių formuluotes (vienareikšmiškumas, sakinio ilgis) — Gemini 4 Hydrogen, atsarginis DeepSeek 4.1 Flash |
 | `sistemos-architektas` | matuoja agentų darbą, taiso sistemines problemas ir grafikus |
 | `publikavimo-agentas` | užtikrina, kad sukurtas turinys būtų paskelbtas |
 

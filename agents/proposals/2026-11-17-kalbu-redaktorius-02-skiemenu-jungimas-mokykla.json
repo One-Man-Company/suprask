@@ -1,0 +1,16 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 0,
+  "created": "2026-11-17T21:15:19",
+  "type": "ux",
+  "title": "02-skiemenu-jungimas: „mokykla“ skaidoma netaisyklingai (mo-kyk-la)",
+  "body": "Simuliacijos žodyne „mokykla“ išskaidyta į „mo“, „kyk“, „la“. Pagal lietuvių kalbos skiemenavimo taisykles dviejų priebalsių junginys su sonantu (kl) eina prie kito balsio, todėl teisinga: „mo-ky-kla“. Vaikas, girdėdamas „kyk“ kaip atskirą skiemenį, išmoksta klaidingo skiemenavimo – o tai yra pagrindinis šio modulio tikslas. Siūloma: pakeisti „mokykla“ skaidymą į [\"mo\", \"ky\", \"kla\"]. Patikrinti ir kitus žodžius („obuolys“ = o-buo-lys – teisinga; „pilis“ = pi-lis – teisinga).",
+  "target": "content/lt/grade-01/lietuviu-kalba/02-skiemenu-jungimas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/02-skiemenu-jungimas.json:64-70",
+    "Lietuvių kalbos pratybų skiemenavimo taisyklės: sonantas + priebalsis prieš balsį eina į tą patį skiemenį",
+    "Vaikas girdi „kyk“ kaip atskirą skiemenį – tai klaidingas modelis"
+  ]
+}

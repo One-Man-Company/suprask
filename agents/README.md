@@ -30,7 +30,7 @@ programos derintojas I/IV 15:00 · inspektorius Thu 06:50 · kuratorius Sun 18:0
 | `programos-derintojas` | deepseek41flash | atitiktis programai | atitikties pasiūlymai |
 | `leidejas` | deepseek41flash | PR sujungimas | sujungti PR |
 | `publikavimo-agentas` | deepseek41flash | sukurtas turinys pasiekia `main` ir svetainę | išstumti commit'ai |
-| `kalbu-redaktorius` | deepseek41flash | formuluočių vienareikšmiškumas, ką vaikas mato ekrane | pataisyti moduliai |
+| `kalbu-redaktorius` | education41-gemini (atsarginis deepseek41flash) | formuluočių vienareikšmiškumas, ką vaikas mato ekrane | pataisyti moduliai |
 | `sistemos-architektas` | deepseekpro | agentų sistemos matavimas ir taisymas | pakeisti vaidmenys, grafikai, skriptai |
 | `sveikatos-inspektorius` | deepseek41flash | gyvos svetainės patikra | ataskaita |
 | `kuratorius` | deepseek41flash | savaitės suvestinė | suvestinė |

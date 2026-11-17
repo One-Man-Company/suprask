@@ -1,0 +1,16 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 0,
+  "created": "2026-11-17T21:15:19",
+  "type": "ux",
+  "title": "01-garsas-ir-raide: užduotis prašo paveikslėlio, o rodomi tik žodžiai",
+  "body": "Užduotis nr. 1 klausia „Kuris paveikslėlis prasideda ta pačia raide kaip „medis“?“, bet visi trys variantai yra tik žodžiai (mama, žuvis, obuolys) be jokio paveikslo ar emoji. 6–7 metų vaikas, dar neskaitantis sklandžiai, negali atsakyti į klausimą apie paveikslėlį, kurio nėra. Tai prieštarauja ir modulio idėjai (garsas vs raidė), ir pirmos klasės programos reikalavimui naudoti vaizdą. Siūloma: kiekvieną variantą papildyti emoji arba SVG iliustracija (pvz., 👩 mama, 🐟 žuvis, 🍎 obuolys) ir formuluotę keisti į „Kuris žodis prasideda ta pačia raide kaip „medis“?“, jei paveikslėlių nebus. Geriausia – abu: paveikslėlis + žodis.",
+  "target": "content/lt/grade-01/lietuviu-kalba/01-garsas-ir-raide.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/01-garsas-ir-raide.json:98-107",
+    "Gyvas DOM zondas: .choice innerHTML = 'mama', jokio <img> ar emoji",
+    "docs/KURINIO-STANDARTAS.md §3: užduotis turi tikrinti supratimą, ne spėjimą"
+  ]
+}

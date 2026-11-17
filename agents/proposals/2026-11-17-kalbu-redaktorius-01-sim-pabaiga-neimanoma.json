@@ -1,0 +1,16 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 0,
+  "created": "2026-11-17T21:15:19",
+  "type": "ux",
+  "title": "01-garsas-ir-raide: pabaigos klausimas apie du žodžius su ta pačia raide yra neįmanomas",
+  "body": "Baigęs simuliaciją vaikas mato tekstą „Dabar pasakyk: kurie du žodžiai prasideda ta pačia raide?“. Tačiau visi 6 simuliacijos žodžiai prasideda skirtingomis raidėmis (K, S, M, O, Ž, N) – nė viena pora nesutampa. Vaikas ieško atsakymo, kurio nėra, ir taip praranda pasitikėjimą užduotimi. Siūloma: arba pakeisti pabaigos klausimą į „Kurį žodį įsiminei geriausiai?“, arba į simuliacijos sąrašą įtraukti bent vieną porą žodžių su ta pačia pradžios raide (pvz., „medis“ ir „mama“) ir klausti apie juos.",
+  "target": "content/lt/grade-01/lietuviu-kalba/01-garsas-ir-raide.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/01-garsas-ir-raide.json:26-93",
+    "assets/js/sims/calba.js:76-80 (finish())",
+    "Tikrinta gyvai: 6 žodžiai, 6 skirtingos raidės"
+  ]
+}

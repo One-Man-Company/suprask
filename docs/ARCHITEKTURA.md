@@ -89,7 +89,7 @@ Agentai gyvena `agents/` kataloge ir paleidžiami `systemd --user` timeriais per
 | `leidejas` | kasdien 16:30 | sujungia patikrintus PR, atnaujina changelog | sujungti PR |
 | `sveikatos-inspektorius` | ketvirtadienis 06:50 | tikrina gyvą svetainę ir našumą | ataskaita, issue |
 | `kuratorius` | sekmadienis 18:00 | savaitės suvestinė ir prioritetai | suvestinė |
-| `kalbu-redaktorius` | II, V 13:10 | tikrina užduočių formuluotes: vienareikšmiškumas, žodžių ir sakinio ilgis | PR |
+| `kalbu-redaktorius` | II, V 13:10 (Gemini 4 Hydrogen; atsarginis DeepSeek 4.1 Flash) | tikrina užduočių formuluotes: vienareikšmiškumas, žodžių ir sakinio ilgis | PR |
 | `sistemos-architektas` | kasdien 20:20 | matuoja agentų darbą, taiso sistemines problemas, keičia grafikus ir promptus | PR, ataskaita |
 | `publikavimo-agentas` | kasdien 5 kartus (06:20, 11:40, 16:00, 19:30, 23:00) | užtikrina, kad sukurtas turinys būtų paskelbtas ir neprarastų ankstesnių modulių | publikavimas |
 

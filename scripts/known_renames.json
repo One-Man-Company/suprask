@@ -1,5 +1,5 @@
 {
-  "note": "Priimti (peržiūrėti, ne spėjami) modulių pervadinimai. Įrašas čia reiškia: senas ID dingo sąmoningai, naujas ID yra jo įpėdinis ir dabartiniame index.json egzistuoja. Tai NE atleidimas nuo pasekmės: vaiko localStorage žyma už seną ID lieka našlaitė, kol progress.js neturi alias mechanizmo (žr. agents/proposals/). Įrašo be įpėdinio rašyti negalima — dingęs ID be įpėdinio yra regresija, kurią check_published.py turi rodyti raudonai.",
+  "note": "Priimti (peržiūrėti, ne spėjami) modulių pervadinimai. Įrašas čia reiškia: senas ID dingo sąmoningai, naujas ID yra jo įpėdinis ir dabartiniame index.json egzistuoja. Tai NE alias duomenys: naršyklė šio failo neskaito. Žymą perkelia assets/js/progress.js (migrate(), žemėlapis iš registry.js renameMap()), o šaltinis jai — index.json laukas renamed_from tame pačiame įraše (KURINIO-STANDARTAS §7.1). Abu šaltiniai turi sutapti: jei įrašas yra čia, bet index.json neturi renamed_from, vaiko žyma lieka našlaite — ir scripts/check_published.py tai rodo kaip rc 1, o ne kaip „alias mechanizmo nėra“ (pataisyta #356; iki tol šis sakinys teigė, kad mechanizmo nėra, nors jis jau veikė). Įrašo be įpėdinio rašyti negalima — dingęs ID be įpėdinio yra regresija, kurią check_published.py turi rodyti raudonai.",
   "renames": [
     {
       "grade": 1,

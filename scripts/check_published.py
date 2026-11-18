@@ -67,6 +67,18 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
     be `origin/main`) anksčiau virsdavo „0 neišsiųstų“; dabar `verdict()` sako
     „neišsiųstų commit'ų patikra neįvyko“ ir rc lieka 1.
 
+2026-11-18 (paleidimas #356): priimtas pervadinimas nebelaikomas „be alias“.
+  Pranešimas kiekvienam `vanished_ids` įrašui kietai rašė „alias mechanizmo
+  nėra, žr. agents/proposals/“, nors `assets/js/progress.js:50–120` jį turi,
+  `assets/js/registry.js:52–67` duoda žemėlapį, o `index.json` jau turi
+  `renamed_from` (KURINIO-STANDARTAS §7.1). Tai buvo teiginys apie vaiko
+  pažangą, kurio niekas neperskaičiavo (LL-21 / LL-34), ir jis kartojo darbą,
+  kuris jau padarytas. Dabar `renamed_from_map()` skaito būtent klasės
+  `index.json` (tą failą, kurį naršyklė ir įkelia), o pranešimas sako, ką
+  rado: „žyma perkeliama“ arba „DĖMESIO: žyma liktų našlaite“. Pervadinimas,
+  kuris yra `known_renames.json`, bet neturi `renamed_from` indekse, dabar
+  daro ir rc 1 (`verdict()`: „pervadintas ID be alias“).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -241,6 +253,41 @@ def known_renames() -> dict[tuple[int, str], str]:
     return out
 
 
+def renamed_from_map(grade: int) -> dict[str, str]:
+    """Senas ID → dabartinis, kaip jį mato **naršyklė** (klasės `index.json`).
+
+    Tai ne tas pats failas kaip `known_renames.json`. `known_renames.json` yra
+    vartų duomenys, kurių naršyklė neskaito; žymą perkelia `progress.js`
+    (`renameMap()` → `registry.js`, `migrate()`), o šaltinis jai — `renamed_from`
+    klasės indekse (KURINIO-STANDARTAS §7.1). Todėl įrankis, norėdamas pasakyti,
+    ar vaiko žyma bus perkelta, turi skaityti būtent indeksą.
+
+    Kodėl atsirado (#356): iki tol pranešimas kiekvienam priimtam pervadinimui
+    kietai rašė „alias mechanizmo nėra, žr. agents/proposals/“. Mechanizmas jau
+    buvo įdiegtas (`assets/js/progress.js:50–120`, `assets/js/registry.js:52–67`)
+    ir aprašytas standarte, o `index.json` jau turėjo `renamed_from` — vartai
+    kartojo pasenusį teiginį, o ne jį perskaičiavo (LL-21, LL-34). Pasekmė ne
+    kosmetinė: pagal tokią eilutę agentas kas kartą siūlytų darbą, kuris jau
+    padarytas, o skaitytojas manytų, kad vaiko pažanga prarasta.
+
+    Grąžinama tuščia, jei indekso perskaityti nepavyksta — tada pranešama
+    „nepatikrinta“, o ne „nėra“ (LL-37).
+    """
+    path = CONTENT / grade_dir(grade) / "index.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    out: dict[str, str] = {}
+    for strand in data.get("strands", []):
+        for mod in strand.get("modules", []):
+            new_id = mod.get("id")
+            for old in mod.get("renamed_from") or []:
+                if isinstance(old, str) and old and new_id and old != new_id:
+                    out[old] = new_id
+    return out
+
+
 def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
     """Visi ID, kada nors buvę klasės `index.json`, pastaba ir ar patikra įvyko.
 
@@ -290,21 +337,32 @@ def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
 
 
 def vanished(grade: int, current_ids: list[str]) -> dict:
-    """Dingę ID su įpėdiniu, jei pervadinimas priimtas ir užregistruotas."""
+    """Dingę ID su įpėdiniu, jei pervadinimas priimtas ir užregistruotas.
+
+    Kiekvienam įrašui pridedama ir tai, ar žymą **realiai** perkelia naršyklė:
+    `alias` — kur veda `index.json` `renamed_from` (tuščia, jei nėra), o
+    `alias_ok` — ar tas pats įpėdinis, kaip `known_renames.json`. Be šių laukų
+    vartai neturėdavo kuo pagrįsti teiginio apie vaiko pažangą ir rašė kietai
+    įrašytą tekstą (#356, LL-21).
+    """
     hist, note, checked = historical_ids(grade)
     known = known_renames()
+    browser = renamed_from_map(grade)
     cur = set(current_ids)
     items: list[dict] = []
     for mid, rev in sorted(hist.items()):
         if mid in cur:
             continue
         successor = known.get((grade, mid), "")
+        alias = browser.get(mid, "")
         items.append({
             "grade": grade,
             "id": mid,
             "last_rev": rev,
             "successor": successor,
             "resolved": bool(successor) and successor in cur,
+            "alias": alias,
+            "alias_ok": bool(successor) and alias == successor,
         })
     return {"items": items, "note": note, "checked": checked}
 
@@ -659,6 +717,14 @@ def verdict(data: dict) -> dict:
     unexplained = [v for v in data.get("vanished_ids", []) if not v.get("resolved")]
     if unexplained:
         reasons.append(f"{len(unexplained)} dingęs ID (pažanga liko be modulio)")
+    # Pervadinimas, kurio naršyklė neperkelia: `known_renames.json` sako
+    # „įpėdinis yra“, o `index.json` `renamed_from` neturi — žyma liktų
+    # našlaite. Tai ne tas pats kaip „mechanizmo nėra“ (#356), todėl
+    # tikrinama kiekvieno įrašo duomenimis, o ne prielaida.
+    orphan = [v for v in data.get("vanished_ids", [])
+              if v.get("resolved") and not v.get("alias_ok")]
+    if orphan:
+        reasons.append(f"{len(orphan)} pervadintas ID be alias (žyma liktų našlaite)")
     if data.get("history_unchecked"):
         reasons.append("dingusių ID patikra neįvyko")
     if data.get("stale"):
@@ -746,9 +812,19 @@ def main() -> int:
     if accepted:
         print(f"Pervadinti ID, priimta ir užregistruota ({len(accepted)}):")
         for v in accepted:
-            print(f"  - grade-{v['grade']:02d} {v['id']} → {v['successor']} "
-                  f"(registruota; žyma už seno ID vaiko naršyklėje LIEKA — "
-                  f"alias mechanizmo nėra, žr. agents/proposals/)")
+            succ = v["successor"]
+            if v.get("alias_ok"):
+                # Teiginys apie vaiko pažangą — iš duomenų, ne iš atminties:
+                # `index.json` `renamed_from` + `progress.js` migracija (LL-21).
+                state = (f"žyma perkeliama — index.json „{succ}“ turi "
+                         f"renamed_from, progress.js migruoja")
+            elif v.get("alias"):
+                state = (f"DĖMESIO: žyma NEBUS perkelta — index.json rodo į "
+                         f"„{v['alias']}“, o known_renames.json — į „{succ}“")
+            else:
+                state = (f"DĖMESIO: žyma liktų našlaite — index.json įraše "
+                         f"„{succ}“ nėra renamed_from")
+            print(f"  - grade-{v['grade']:02d} {v['id']} → {succ} ({state})")
     if data.get("history_note"):
         print(f"Dingusių ID patikros riba: {data['history_note']}")
     if data["path_differs"]:

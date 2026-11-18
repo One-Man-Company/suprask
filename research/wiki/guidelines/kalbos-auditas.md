@@ -141,5 +141,5 @@ Rasta **5 rimti, 5 vidutiniai, 4 smulkūs** radiniai. Visi 5 moduliai praeina `v
 
 - 01-garsas-ir-raide: užduotis be paveikslėlio (R1); neįmanomas pabaigos klausimas (R2); „Niekou“ (V1).
 - 02-skiemenu-jungimas: „mokykla“ skaidoma mo-kyk-la, o turi būti mo-ky-kla (R3).
-- 04-kaip-zmones-sveikinasi: simuliacija pati padaro išvadą „Visi…“ po vieno žmogaus (R4/R5); garso įrašas taria veiksmą (V4).
+- 04-kaip-zmones-sveikinasi: simuliacija pati padaro išvadą „Visi…“ po vieno žmogaus (R4/R5) — užtaisyta #352; garso įrašas taria veiksmą (V4) — užtaisyta #363.
 - 05-plakatas-ir-informacija: pusė neteisingų pasirinkimų neturi savo paaiškinimo (V5).

@@ -531,6 +531,27 @@ const kaipZmonesSveikinasi = {
     const people = Array.isArray(config.people) ? config.people : [];
     const ORDINALS = ["Pirmas", "Antras", "Trečias", "Ketvirtas", "Penktas", "Šeštas", "Septintas", "Aštuntas"];
 
+    /* Kortelė rodo `label`, o balsas taria `say` (V4, #20857). Anksčiau abu
+       buvo vienas laukas, todėl vaikas, pamatęs linktelėjimą, girdėdavo
+       žodį „Linktelėjo“ — veiksmo pavadinimą vietoj pasveikinimo. Trys
+       atvejai, ir jie sąmoningai skiriasi:
+         `say` eilutė   → žmogus taip pasakė (žodinis sveikinimas);
+         `say: ""`      → žmogus nieko nesakė: tyla, o kortelėje parašoma,
+                          kad sveikinimasis buvo be žodžių (tyla be
+                          paaiškinimo atrodytų kaip sugedęs garsas, LL-04);
+         `say` nėra     → tardomas `label` (sena sutartis, kad modulis be
+                          `say` nekartotų to paties teksto dviejuose laukuose).
+       Todėl tikrinama, ar savybė YRA, o ne ar reikšmė „netuščia“:
+       `person.say || person.label` tylą pakeistų atgal į veiksmo pavadinimą. */
+    const quietText = String(config.quiet ?? "").trim();
+
+    function spokenText(person, group) {
+      if (Object.prototype.hasOwnProperty.call(person, "say")) {
+        return typeof person.say === "string" ? person.say.trim() : "";
+      }
+      return String(person.label || group.label || "").trim();
+    }
+
     if (!groups.length || !people.length) {
       stage.innerHTML = `<p class="error-box">Tyrimo duomenų nėra.</p>`;
       return null;
@@ -672,6 +693,7 @@ const kaipZmonesSveikinasi = {
         <div style="display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .6rem;border:2px dashed var(--line);border-radius:var(--r-m);background:var(--paper)">
           <div id="kz-emoji" aria-hidden="true" style="font-size:clamp(2.4rem,11vw,3.4rem);line-height:1">🏫</div>
           <div id="kz-said" style="font-family:var(--font-head);font-weight:900;font-size:clamp(1.06rem,4vw,1.3rem);text-align:center;overflow-wrap:anywhere">Dar nieko</div>
+          <div id="kz-quiet" aria-live="off" hidden style="font-size:clamp(.95rem,3.4vw,1.06rem);font-weight:800;color:var(--ink-soft);text-align:center;overflow-wrap:anywhere"></div>
           <div id="kz-who" style="font-size:var(--fs-s);color:var(--ink-soft);text-align:center">Spausk „Sekantis žmogus“</div>
         </div>
         <div style="display:grid;gap:.4rem;margin-top:.8rem">${barsMarkup()}</div>
@@ -689,6 +711,7 @@ const kaipZmonesSveikinasi = {
 
     const emojiEl = stage.querySelector("#kz-emoji");
     const saidEl = stage.querySelector("#kz-said");
+    const quietEl = stage.querySelector("#kz-quiet");
     const whoEl = stage.querySelector("#kz-who");
     const totalEl = stage.querySelector("#kz-total");
     const knownEl = stage.querySelector("#kz-known");
@@ -828,6 +851,8 @@ const kaipZmonesSveikinasi = {
       first = null;
       emojiEl.textContent = "🏫";
       saidEl.textContent = "Dar nieko";
+      quietEl.hidden = true;
+      quietEl.textContent = "";
       whoEl.textContent = "Spausk „Sekantis žmogus“";
       verdictEl.textContent = "";
       api.readout("Tyrimas pradėtas iš naujo.");
@@ -844,10 +869,18 @@ const kaipZmonesSveikinasi = {
       counts[group.id] += 1;
       emojiEl.textContent = group.emoji || "";
       saidEl.textContent = person.label || group.label;
+      /* Tyla — ne „nieko“, o įvardytas pastebėjimas (LL-04): kortelė pasako,
+         kad šis žmogus sveikinosi be žodžių, o ne palieka vaiką manyti, kad
+         garsas sugedo. */
+      const said = spokenText(person, group);
+      quietEl.hidden = said !== "";
+      quietEl.textContent = said !== "" ? "" : quietText;
       whoEl.textContent = `${ORDINALS[seen - 1] || seen} sutiktas žmogus`;
-      api.speak(person.label || group.label);
+      if (said) api.speak(said);
       render();
-      api.readout(`${seen} iš ${people.length} žmonių`);
+      api.readout(said
+        ? `${seen} iš ${people.length} žmonių`
+        : `${quietText || "Nieko nesakė"}. ${seen} iš ${people.length} žmonių`);
       /* Duomenys pasikeitė — todėl vaiko pasirinkimas tikrinamas iš naujo,
          o ne laikomas galiojančiu (LL-17). */
       if (pick) {

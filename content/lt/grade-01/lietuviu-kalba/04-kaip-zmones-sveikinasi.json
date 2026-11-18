@@ -51,14 +51,15 @@
         }
       ],
       "tie": "Dvi grupės yra lygios.",
+      "quiet": "Nieko nesakė",
       "people": [
         { "label": "Labas!", "group": "zodis" },
         { "label": "Labas!", "group": "zodis" },
-        { "label": "Linktelėjo", "group": "linkt" },
+        { "label": "Linktelėjo", "group": "linkt", "say": "" },
         { "label": "Labas rytas!", "group": "zodis" },
-        { "label": "Mostelėjo", "group": "mostas" },
+        { "label": "Mostelėjo", "group": "mostas", "say": "" },
         { "label": "Labas!", "group": "zodis" },
-        { "label": "Linktelėjo", "group": "linkt" },
+        { "label": "Linktelėjo", "group": "linkt", "say": "" },
         { "label": "Sveiki!", "group": "zodis" }
       ]
     }
@@ -118,7 +119,8 @@
     "misconceptions": [
       "Vaikas vieną ryškų atvejį laiko taisykle: pamatęs, kad žmogus linktelėjo, sako „visi linkteli“.",
       "Vaikas pirmą išvadą laiko galutine ir neleidžia jos pakeisti naujiems pastebėjimams.",
-      "Vaikas skaičiuoja tik tuos atvejus, kurie patvirtina jo nuomonę, o kitus praleidžia."
+      "Vaikas skaičiuoja tik tuos atvejus, kurie patvirtina jo nuomonę, o kitus praleidžia.",
+      "Vaikas sveikinimąsi supranta vien kaip žodį: tylos, kai žmogus linkteli, nepriskiria jokiai grupei — simuliacijos kortelė tokį atvejį įvardija „Nieko nesakė“."
     ]
   },
   "sources": [

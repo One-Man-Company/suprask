@@ -118,6 +118,7 @@ Viskas teisinga. Užduotis gera, atsakymas „Du“, hintas „Suplok: sau-lė. 
   1. Po vieno pastebėjimo rodyti „Kol kas žinai tik apie vieną žmogų. Nepadaryk išvados apie visus.“
   2. „Visi sutikti žmonės…“ vietoje „Visi…“ (nes „visi“ gali reikšti visus pasaulio žmones).
   3. Reikalauti, kad vaikas pats pasirinktų išvadą iš variantų (pvz., „Visi…“, „Daugiausia…“, „Dar neaišku“), o simuliacija patikrintų, ar ji atitinka duomenis.
+- **Užtaisyta #352:** po pirmo žmogaus simuliacija nebesako jokios išvados — rodo „Kol kas žinai tik apie vieną žmogų“, o teiginius renkasi vaikas (žr. R5 ir `pamokos.md` LL-109).
 
 ### R5. „Mano išvada“ mygtukas neveikia taip, kaip atrodo (RIMTA)
 
@@ -125,12 +126,14 @@ Viskas teisinga. Užduotis gera, atsakymas „Du“, hintas „Suplok: sau-lė. 
 - **Kas vyksta:** vaikas spaudžia „Mano išvada“, ir simuliacija įrašo **automatiškai sugeneruotą** išvadą kaip vaiko išvadą. Vaikas nieko neparašo ir nepasirenka.
 - **Kodėl tai rimta:** tai klaidinantis grįžtamasis ryšys. Vaikas mano, kad padarė išvadą, o iš tikrųjų ją padarė simuliacija.
 - **Ką keisti:** „Mano išvada“ turėtų atidaryti pasirinkimų sąrašą („Visi…“, „Daugiausia…“, „Dar neaišku“) ir leisti vaikui pasirinkti. Tik tada simuliacija palygintų su duomenimis.
+- **Užtaisyta #352 (2026-11-18, pasiūlymas #20856):** simuliacija perrašyta pagal LL-109 — ji nebesako išvados, o vaikas pasirenka teiginį iš 2–4 variantų, kurie skiriasi apimtimi (visi žmonės / sutikti žmonės / daugiausia sutiktų); teisingas apskaičiuojamas iš lentelės po kiekvieno pastebėjimo, pažanga žymima tik tada, kai pastebėti visi žmonės ir dabartinė išvada teisinga. Žr. `research/wiki/guidelines/pamokos.md` LL-109.
 
 ### V4. Garso įrašas taria veiksmą, o ne pasveikinimą (VIDUTINĖ)
 
 - **Failas:** `content/lt/grade-01/lietuviu-kalba/04-kaip-zmones-sveikinasi.json:51-60`; `calba.js:616`
 - **Kas vyksta:** kai žmogus linkteli, `label` yra „Linktelėjo“, ir simuliacija groja „Linktelėjo“. Vaikas girdi veiksmo pavadinimą, o ne pasveikinimą.
 - **Ką keisti:** atskirti `label` (ką vaikas mato) nuo `say` (ką vaikas girdi). Linktelėjimo atveju galėtų groti tylos garsą arba „Linktelėjo“ su paaiškinimu, kad tai ne žodinis sveikinimas.
+- **Užtaisyta #363 (2026-11-18, pasiūlymas #20857):** simuliacija skaito `people[].say`, o ne `people[].label`. Kai žmogus linkteli ar mosteli, `say: ""` — balsas netylėdamas nutyli sąmoningai, o kortelėje parašoma „Nieko nesakė“ (`sim.config.quiet`), kad tyla nebūtų palaikyta sugedusiu garsu; skaitymo eilutė (aria-live) tą patį pasako neregiams. Žodiniai sveikinimai (`Labas!`, `Labas rytas!`, `Sveiki!`) tariami kaip iki šiol — jų `say` nerašomas, nes sutampa su `label`. Zondas 390 ir 360 px (`probe_20857.py`, manifestas be veiksmo pavadinimų + balsų stub'as) — **88/88**: nė vieno tarimo bandymo ties 3, 5 ir 7 žmogumi, tylos paaiškinimas matomas, skaitymo eilutė „Nieko nesakė. 3 iš 8 žmonių“; sena eilė — **70/88** (senoji versija ties tais trim žmonėmis bandė tarti „Linktelėjo“/„Mostelėjo“ ir vaikui rodė „Garsas neįsijungė“).
 
 ### S4. Pirmos išvados rodymas (SMRULKI)
 

@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 363,
+  "created": "2026-11-18T13:06:38+02:00",
+  "type": "struktura",
+  "title": "Simuliacijų sutartis turi įvardyti label/say atskyrimą: regimasis ir girdimasis kanalas yra du laukai",
+  "body": "`docs/KURINIO-STANDARTAS.md` §4 aprašo simuliacijos API (`api.speak`, `api.readout`, `api.note`, `api.progress`) ir `sim.config` perdavimą, bet ne sako, kad vaiko matomas tekstas ir tariamas tekstas turi būti atskiri laukai. Todėl simuliacijų autoriai juos sulieja, o defektas tampa matomas tik tada, kai modelis pirmą kartą turi ne žodinį atvejį: modulyje `04-kaip-zmones-sveikinasi` `people[].label` ėjo ir į kortelę, ir į `api.speak`, todėl vaikas, pamatęs linktelėjimą, girdėdavo veiksmo pavadinimą. Kadangi standartas to nereikalauja, kiekvienas naujas simuliacijos autorius gali pakartoti tą pačią klaidą, o vartai jos nepagauna: `validate_content.py` netikrina garso prasmės, o `check_audio.py` tikrina tik tai, ar tekstas turi mp3. Siūloma §4 papildyti viena pastraipa: jei simuliacija turi ir regimą, ir girdimą kanalą, jie aprašomi atskirais `sim.config` laukais, sąmoninga tyla žymima tuščia eilute (ne lauko nebuvimu) ir niekada nepaliekama be paaiškinimo vaikui. Tai normatyvinė taisyklė, todėl ji priklauso dokumentui, o ne vieno failo komentarui.",
+  "target": "docs/KURINIO-STANDARTAS.md",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/calba.js:532-553 (nauja label/say sutartis ir `spokenText`)",
+    "content/lt/grade-01/lietuviu-kalba/04-kaip-zmones-sveikinasi.json:53-64 (`quiet`, `people[].say`)",
+    "research/wiki/guidelines/pamokos.md LL-116 (defektas ir patikra)",
+    "docs/KURINIO-STANDARTAS.md §4 (simuliacijos sutartis — laukų atskyrimo nėra)"
+  ]
+}

@@ -8,7 +8,7 @@
   "outcomes": [
     "Skiriu garsą nuo raidės ir paaiškinu skirtumą savais žodžiais.",
     "Išgirstu pirmą žodžio garsą ir pasakau, kokia raidė jį žymi.",
-    "Randu kelis žodžius, prasidedančius ta pačia raide."
+    "Randu kelis žodžius su ta pačia pirmąja raide."
   ],
   "concept": {
     "title": "Vienas dalykas — du veidai",
@@ -95,15 +95,15 @@
   },
   "tasks": [
     {
-      "q": "Kuris paveikslėlis prasideda ta pačia raide kaip „medis“?",
+      "q": "Kurio paveikslėlio vardas prasideda ta pačia raide kaip 🌳 medis?",
       "options": [
-        "mama",
-        "žuvis",
-        "obuolys"
+        "👩 mama",
+        "🐟 žuvis",
+        "🍎 obuolys"
       ],
       "answer": 0,
-      "hint": "Pasakyk abu žodžius garsiai ir klausykis pirmo garso.",
-      "why": "„Medis“ ir „mama“ prasideda garsu m."
+      "hint": "Pasakyk garsiai „medis“ ir paskui kiekvieną vardą po paveikslėliu. Klausykis pirmo garso.",
+      "why": "„Medis“ ir „mama“ prasideda tuo pačiu garsu m."
     },
     {
       "q": "Kuo raidė skiriasi nuo garso?",

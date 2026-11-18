@@ -1,0 +1,19 @@
+{
+  "role": "kurejas",
+  "run_id": 347,
+  "created": "2026-11-18T10:20:00+02:00",
+  "type": "struktura",
+  "title": "Įgyvendintas metodas lieka eilėje: kūrėjas kviečiamas statyti tą patį modulį antrą kartą",
+  "body": "Paleidimas #347 gavo pasiūlymą #19519 (M-10, tikslas content/lt/grade-01/pasaulio-pazinimas/22-medziai-krumai-zoles.json), nors tą patį modulį jau sukūrė #346 (commit 4b411ea), o ideatoriaus tema #19399 pažymėta done. Modulis vietoje ir visi vartai žali, tad vienintelis šio paleidimo trūkumas buvo tai, kad eilė to paties paprašė antrą kartą. Priežastis: metodo pasiūlymo būseną new keičia tik dvi vietos — scripts/kurejas_queue.py triage() (104–110 eil.) prieš eilės darbą ir agents/run.py mark_implemented() po publikavimo, o pastaroji reikalauja, kad tame pačiame commit'e būtų pakeistas tikslo failas. Kai paleidimas kviečiamas tiesiogiai su --proposal (dashboard ar rankinis paleidimas), triage() nevykdoma; kai darbas jau padarytas, commit'e tikslo failo nėra, todėl mark_implemented() negrąžina nieko, o eilės fallback (279–286 eil.) tokią būseną vadina blocked („paskelbta, bet tikslas nepakeistas“) — ir pasiūlymas lieka pakibusioje būsenoje. Siūloma: (1) prieš bet kurį kūrėjo paleidimą, ne tik eilės main(), tikrinti „ar tikslas jau sukurtas po pasiūlymo datos“ ir tokį metodą žymėti obsolete su commit'o nuoroda; (2) blocked fallback atskirti nuo „jau įgyvendinta“ — pastaroji nėra peržiūros atvejis. Tai ne kosmetika: be šios taisyklės kūrėjas, kuris nenori daryti žalos, turi rinktis tarp dublikato (pažeidžia gairių 4 klausimą „nedubliavimas“) ir tuščio paleidimo, o eilė abiem atvejais lieka tokia pati.",
+  "target": "scripts/kurejas_queue.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "agents/runs.db: proposals #19519 (role metodininkas, type metodas, status new, created 2026-11-16T08:10:00+02:00) ir #19399 (role ideator, status done, note „įgyvendinta commit 4b411ea“)",
+    "agents/runs.db: runs #346 (status published, commit 4b411ea, detail „Paskelbta 39 failų, uždaryti 1 pasiūlymai“) ir #347 (trigger queue, tas pats tikslas)",
+    "research/wiki/grades/01/metodai.md:865 — „Įgyvendinta 2026-11-18 (#346, pasiūlymas #19399)“: modulis ir komponentas augalu-grupes jau atitinka M-10",
+    "scripts/kurejas_queue.py:104–110 (triage metodui: obsolete, kai tikslas sukurtas po pasiūlymo) ir 279–286 (fallback: paskelbta, bet tikslas nepakeistas → blocked)",
+    "agents/run.py:1000–1029 (mark_implemented reikalauja pakeisto tikslo failo tame pačiame commit'e)",
+    "Patikra 2026-11-18 importuojant scripts/kurejas_queue: _module_added_at(...) = 1794989063, _method_already_used('2026-11-16T08:10:00+02:00', …) = True — triage šį pasiūlymą pažymėtų obsolete, bet nebuvo iškviesta"
+  ]
+}

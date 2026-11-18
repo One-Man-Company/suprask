@@ -3065,6 +3065,11 @@ const augaluGrupes = {
 
     const heights = plants.map((p) => p.height.start);
     const guesses = plants.map(() => null);   // "taip" | "ne" | null
+    /* Ar šiam augalui jau pasakytas `sentences.grow` sakinys. Be šios žymos
+       konfigūracijos frazė „Aukštis didesnis, o stiebas tas pats.“ būtų
+       sugeneruota garso įrašuose ir niekada netariama — vaikas girdėtų tik
+       skaičių, o ne tai, kas tame skaičiuje svarbu (LL-104). */
+    const grownSaid = plants.map(() => false);
     let current = 0;
     let spoken = "";
     let reported = false;                      // api.progress — vieną kartą
@@ -3247,7 +3252,7 @@ const augaluGrupes = {
           font-weight:700;text-align:center;color:var(--ink-soft)">Ką parodė modelis?</p>`
           + plants.map((pl, i) => {
             const stemWord = pl.stems === 1 ? (pl.woody ? "kamienas" : "stiebas") : "stiebai";
-            return `<div style="min-width:0;border:2px solid var(--line);border-radius:var(--r-s);
+            return `<div data-card tabindex="-1" style="min-width:0;border:2px solid var(--line);border-radius:var(--r-s);
             background:var(--paper-2);padding:.3rem .2rem;text-align:center">
               <span style="display:block;font-size:.8rem;line-height:1.15;font-weight:700;color:var(--ink-soft);overflow-wrap:anywhere">${pl.name}</span>
               <strong style="display:block;font-size:1.05rem;line-height:1.2">${fmt(heights[i])}</strong>
@@ -3263,7 +3268,14 @@ const augaluGrupes = {
          išjungto „+“, jis keliamas į korteles, o ne į `body`. */
       if (grownAll && !cardsShown) {
         cardsShown = true;
-        if (plusHadFocus || document.activeElement === document.body) cards.focus();
+        const firstCard = cards.querySelector("[data-card]");
+        /* Fokusas keliamas į pirmą kortelę, kai jis yra ant aukščio mygtukų ar
+           nukritęs į `body`. Pasiekus maksimumą `+` išsijungia, o `render()`
+           fokusą perkelia į `−` (LL-32), todėl vien `plusHadFocus` čia
+           neužtenka: kortelės atsiranda tame pačiame kadre ir liktų nepastebėtos
+           klaviatūros naudotojui (M-10, 831 eil.). */
+        const ae = document.activeElement;
+        if (ae === plus || ae === minus || ae === document.body) (firstCard || cards).focus();
       }
 
       let end = "";
@@ -3293,6 +3305,13 @@ const augaluGrupes = {
       } else if (needGuess && spoken !== `ask-${p.id}`) {
         spoken = `ask-${p.id}`;
         api.speak(ask, { rate: 0.9 });
+      } else if (!needGuess && !atMax && h > p.height.start && !grownSaid[current]) {
+        /* Pirmas aukščio pokytis — vienintelė vieta, kur modelis gali pasakyti
+           patį sąryšį: skaičius keičiasi, stiebas ne. Toliau nebekartojama,
+           kad kiekvienas paspaudimas netaptų paskaita (LL-14, T5.4). */
+        grownSaid[current] = true;
+        spoken = `grow-${p.id}`;
+        if (S.grow) api.speak(S.grow, { rate: 0.9 });
       } else if (!needGuess && atMax && spoken !== `max-${p.id}`) {
         spoken = `max-${p.id}`;
         const trait = { medis: S.one, krūmas: S.few, žolė: S.soft }[group];
@@ -3330,6 +3349,7 @@ const augaluGrupes = {
       plants.forEach((p, i) => {
         heights[i] = p.height.start;
         guesses[i] = null;
+        grownSaid[i] = false;
       });
       current = 0;
       spoken = "";

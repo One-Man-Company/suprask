@@ -745,6 +745,13 @@ Naują pamoką **prideda** tas, kas rado defektą; senos netrinamos ir neperraš
 - **Taisyklė:** konfigūracijos raktas niekada nepatenka į `api.readout`, `api.speak` ar `textContent`. Jei reikia ir rakto (garso žymai, fokuso būsenai), saugoma **pora** (raktas, tekstas) arba sukuriama `textOf(key)` funkcija, o ne raktas, kuris „paskui pavirs tekstu“. Simuliacijos, kurios tekstus ima iš `config.sentences`, privalo turėti vieną vietą, kuri verčia raktą į tekstą, ir nė vienos vietos, kuri raktą rodo.
 - **Patikra:** `scratch/probe_agr.py` (390 ir 360 px, 37 patikros kiekvienam pločiui): su senąja eilute — **72/74**, krenta būtent „pradžia: readout klausia apie ąžuoliuką `'start'`“ abiejuose pločiuose; pataisius (`askOf` saugo `S[key]`) — **74/74 OK**, 0 konsolės klaidų. Zondas taip pat tikrina, kad spėjimas būtų palygintas su įvykiu, kad etiketė nekistų nė viename aukštyje ir kad `simDone` atsirastų tik pasiekus visus tris maksimumus.
 
+## LL-104 — Sakinys konfigūracijoje, kurio modelis niekada netaria
+
+- **Simptomas:** 2026-11-18 (#347) modulyje `22-medziai-krumai-zoles` frazė `sentences.grow` („Aukštis didesnis, o stiebas tas pats.“) turėjo abu garso įrašus ir manifestas rodė „naudojama 1220 iš 1220 mp3“, o vaikas, pirmą kartą paspaudęs „+“, išgirsdavo tik skaičių. Būtent tas sakinys yra vienintelis, kuris tame momente įvardija sąryšį (skaičius keičiasi, stiebas ne), tad tyla krito į svarbiausią akimirką.
+- **Priežastis:** `api.note` tekstai simuliacijoje buvo įrašyti tiesiai kode, o konfigūracijos frazė liko nenaudojama. `check_audio.py` matuoja **buvimą** (ar tekstui yra du įrašai), ne **pasiekiamumą** (ar kodas tą raktą kur nors ima), todėl 1220/1220 atrodė kaip pilnumo įrodymas. Tai veidrodinė LL-34 pusė: ten sąvoka buvo išimta iš modulio, bet liko simuliacijos tekste; čia tekstas yra modulyje ir garse, bet ne simuliacijos kelyje.
+- **Taisyklė:** kiekvienas `config.sentences` raktas turi būti pasiekiamas iš kodo bent vienu keliu, o kiekviena garso frazė turi turėti momentą, kuriame ji tariama. Jei frazė skirta sąryšiui įvardyti, ji tariama **tada**, kai sąryšys pirmą kartą įvyksta (vieną kartą, ne kas kadrą), o ne niekada. Simuliacijos, kurios tekstus laiko konfigūracijoje, neturi savo ruožtu dubliuoti tų pačių sakinių kietai įrašytuose `api.note` tekstuose.
+- **Patikra:** `scratch/probe_grow347.py` (390 px, 7 patikros) uždeda `HTMLMediaElement.play` ir `speechSynthesis.speak` pėdsaką ir tikrina tris dalykus: po spėjimo kažkas pasakoma, **pirmas** „+“ paleidžia įrašą, **antras** „+“ to paties sakinio nebekartoja. Su sena eile — 5/6 (tyla po pirmo „+“), pataisius — **7/7**; elgsenos zondas `probe_agr347.py` — **44/44**, `check_audio.py` ir toliau 1220/1220 (įrašai nepersigeneruoti, tik pradėti naudoti).
+
 
 
 

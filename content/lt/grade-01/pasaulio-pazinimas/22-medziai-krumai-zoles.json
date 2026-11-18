@@ -108,6 +108,17 @@
       "why": "Kamienas ir stiebai lieka ir žiemą, o lapai iškrinta."
     },
     {
+      "q": "Mokyklos kieme auga aukštas lazdynas. Iš žemės kyla keli stiebai. Kuri tai grupė?",
+      "options": [
+        "Medžiai",
+        "Žolės",
+        "Krūmai"
+      ],
+      "answer": 2,
+      "hint": "Aukštis neklaidina. Suskaičiuok stiebus nuo žemės.",
+      "why": "Keli stiebai nuo žemės, todėl lazdynas yra krūmas."
+    },
+    {
       "q": "30 cm ąžuoliukas ir 2 m alyva. Kuris yra medis?",
       "options": [
         "Ąžuoliukas",

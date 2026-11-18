@@ -1,0 +1,146 @@
+{
+  "id": "22-medziai-krumai-zoles",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Medžiai, krūmai, žolės: grupę rodo stiebas",
+  "subtitle": "Aukštis klaidina: grupę pasako stiebas",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu medį, krūmą ir žolę pagal stiebą.",
+    "Paaiškinu, kodėl aukštas augalas gali būti krūmas.",
+    "Pasakau, kiek stiebų kyla iš žemės."
+  ],
+  "concept": {
+    "title": "Grupę rodo stiebas",
+    "big_idea": "Medis turi vieną sumedėjusį kamieną. Krūmas turi kelis stiebus nuo žemės. Žolės stiebas minkštas. Aukštis apie grupę nieko nesako.",
+    "steps": [
+      "Spėk, ar mažas ąžuoliukas jau medis.",
+      "Augink jį ir žiūrėk, ar grupė keičiasi.",
+      "Tada augink alyvą ir vėl spėk.",
+      "Palygink tris augalus pagal stiebą."
+    ],
+    "example": "Kieme auga mažas ąžuoliukas ir aukšta alyva. Mažesnis augalas yra medis."
+  },
+  "sim": {
+    "component": "augalu-grupes",
+    "config": {
+      "plants": [
+        {
+          "id": "azuoliukas",
+          "name": "ąžuoliukas",
+          "stems": 1,
+          "woody": true,
+          "height": { "start": 30, "min": 30, "max": 300, "step": 30 },
+          "say": { "taip": "medis_taip", "ne": "medis_ne" }
+        },
+        {
+          "id": "alyva",
+          "name": "alyva",
+          "stems": 3,
+          "woody": true,
+          "height": { "start": 120, "min": 40, "max": 250, "step": 30 },
+          "say": { "taip": "alyva_taip", "ne": "alyva_ne" }
+        },
+        {
+          "id": "kiaulpiene",
+          "name": "kiaulpienė",
+          "stems": 1,
+          "woody": false,
+          "height": { "start": 25, "min": 10, "max": 40, "step": 5 }
+        }
+      ],
+      "groups": {
+        "medis": { "name": "medis", "plural": "medžiai" },
+        "krūmas": { "name": "krūmas", "plural": "krūmai" },
+        "žolė": { "name": "žolė", "plural": "žolės" }
+      },
+      "heightBar": { "maxCm": 300, "tickCm": 50 },
+      "sentences": {
+        "start": "Ąžuoliukas 30 centimetrų. Ar jis jau medis?",
+        "ask2": "Alyva 1,2 metro. Ar ji bus medis?",
+        "guess": "Spėjimas užrašytas. Dabar keisk aukštį.",
+        "grow": "Aukštis didesnis, o stiebas tas pats.",
+        "one": "Vienas kamienas, todėl medis.",
+        "few": "Keli stiebai nuo žemės, todėl krūmas.",
+        "soft": "Minkštas stiebas, todėl žolė.",
+        "all": "Trys augalai, trys grupės.",
+        "rule": "Grupę rodo stiebas, ne aukštis.",
+        "again": "Pradedam iš naujo.",
+        "medis_taip": "Tu sakei taip. Jis liko medis.",
+        "medis_ne": "Tu sakei ne. Jis vis tiek medis.",
+        "alyva_taip": "Tu sakei taip. Alyva liko krūmas.",
+        "alyva_ne": "Tu sakei ne. Ir alyva liko krūmas."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Sode auga ąžuoliukas, alyva ir kiaulpienė. Kuris jų yra krūmas?",
+      "options": [
+        "Ąžuoliukas",
+        "Alyva",
+        "Kiaulpienė"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, kiek stiebų kyla iš žemės.",
+      "why": "Alyva turi kelis stiebus nuo žemės, todėl ji krūmas."
+    },
+    {
+      "q": "Alyva išaugo 2,5 metro. Kuri grupė jai tinka?",
+      "options": [
+        "Medžiai",
+        "Krūmai",
+        "Žolės"
+      ],
+      "answer": 1,
+      "hint": "Aukštis čia neklaidina. Pažiūrėk į stiebus.",
+      "why": "Alyvos stiebai keli, todėl ji priklauso krūmams."
+    },
+    {
+      "q": "Žiemą medis ir krūmas neturi lapų. Kaip juos atskirsi?",
+      "options": [
+        "Pagal kamieną ir stiebų skaičių",
+        "Pagal augalo aukštį",
+        "Pagal lapų spalvą"
+      ],
+      "answer": 0,
+      "hint": "Lapų žiemą nėra. Kas augale lieka visą laiką?",
+      "why": "Kamienas ir stiebai lieka ir žiemą, o lapai iškrinta."
+    },
+    {
+      "q": "30 cm ąžuoliukas ir 2 m alyva. Kuris yra medis?",
+      "options": [
+        "Ąžuoliukas",
+        "Alyva",
+        "Abu augalai"
+      ],
+      "answer": 0,
+      "hint": "Mažas augalas ne visada būna žolė.",
+      "why": "Ąžuoliukas turi vieną kamieną, nors ir mažas.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip paaiškintum, kodėl aukšta alyva yra krūmas?",
+  "teacher": {
+    "goal": "Suprasti, kad augalo grupę rodo stiebas, o ne aukštis. Modelis keičia tik aukštį, o grupės etiketė nejuda.",
+    "prompt": "Kodėl mažas ąžuoliukas yra medis, o aukšta alyva – krūmas?",
+    "offline": "Kieme vaikai liečia tris augalus: medžio kamieną, krūmo stiebus ir žolės stiebą. Kiekvienas pasako, kiek stiebų kyla iš žemės ir ar stiebas kietas. Mokytojas neklausia, kuris augalas aukščiausias.",
+    "misconceptions": [
+      "„Krūmas yra mažas medis.“ Modelis augina alyvą iki 2,5 m, o etiketė lieka „krūmas“, nes stiebai keli.",
+      "„Žolė yra bet kas žema ir žalia.“ 30 cm ąžuoliukas turi vieną sumedėjusį kamieną, todėl jis medis, nors ir žemas.",
+      "„Grupę rodo lapai ar žiedas.“ Lapai iškrinta, žiedas nukrinta. Tai sprendžia trečia užduotis apie žiemą ir veikla be ekrano.",
+      "„Aukštis yra geras požymis, nes jį galima pamatuoti.“ Juosta ilgėja, bet grupės etiketė prie jos neprisijungia. Tai modelio riba, ne klaida."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Gamtos mokslai, 26.2.3 „Augalai“ — mokomasi skirti medžius, krūmus ir žoles, atpažinti artimiausius aplinkos medžius (klevą, ąžuolą, beržą, eglę, pušį). 1 klasės plane — 4 val. tiriamoji veikla, ekskursija į mokyklos kiemą, parką ar mišką.",
+    "Gatt, S., Tunnicliffe, S. D., Borg, K., & Lautier, K. (2007). Young Maltese children's ideas about plants. Journal of Biological Education, 41(3), 117–122. https://doi.org/10.1080/00219266.2007.9656080",
+    "Tull, D. (1992). Social constructivism: Botanical classification schemes of elementary school children (ERIC ED357968). https://eric.ed.gov/?id=ED357968",
+    "Tunnicliffe, S. D., & Reiss, M. J. (2000). Building a model of the environment: how do children see plants? Journal of Biological Education, 34(4), 172–177. https://doi.org/10.1080/00219266.2000.9655714"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (grupę rodo stiebas, ne aukštis) rodoma vienu kintamuoju.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (žiemą be lapų, 30 cm ąžuoliukas), o ne įsimintą sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas palyginamas su tuo, kas įvyko, modelis nebaudžia ir leidžia bandyti dar kartą."
+  ]
+}

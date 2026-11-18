@@ -862,6 +862,14 @@ Atsakymų indeksai 1 / 1 / 0 / 0 — ne visi tame pačiame indekse, o pirmas ir 
 
 **Pastaba dėl pasiūlymo.** Ideatorius siūlė **du nepriklausomus dydžius** — aukštį ir kamienų skaičių — ir leisti vaikui keisti abu. Metodas to atsisako dėl vieno kintamojo taisyklės (`foundations/kognityvine-apkrova.md`): du slankikliai tame pačiame kadre 6–7 m. vaikui reiškia, kad niekada neaišku, kuris iš jų ką paveikė. Palyginimas neprarastas: trys augalai turi fiksuotą stiebų skaičių, o aukštį vaikas keičia pats, todėl priešingos poros (mažas medis, aukštas krūmas) gaunamos vienu kintamuoju. Antra, pasiūlyme užduotis su „Abu augalai“ buvo teisinga; čia ji tapo **klaidingu variantu**, nes abu augalai sumedėję, o grupę skiria stiebų skaičius — tai ta pati nuostata, kurią fiksuoja Gatt ir kt. (2007) ir Tull (1992), ir ji turi būti atpažįstama kaip klaida, o ne apeinama (LL-18).
 
+**Įgyvendinta 2026-11-18 (#346, pasiūlymas #19399).** Modulis `22-medziai-krumai-zoles` ir komponentas `augalu-grupes` (`assets/js/sims/pasaulis.js`) atitinka M-10 seką, bet trys sprendimai sąmoningai kitokie, ir kiekvienas turi priežastį:
+
+1. **Žingsnis 30 cm, ne 10.** Su 10 cm žingsniu ąžuoliukas nuo 0,3 m iki 3 m auga 27 paspaudimus, alyva — 13; 6–7 m. vaikui tai tampa mygtuko spaudymo pratimu, o ne bandymu (T3.3, T1.4). Su 30 cm (ąžuoliukas 9, alyva 5, kiaulpienė 3 paspaudimai) lieka ir tarpinė 1,5 m būsena, ir abi metodo poros (0,3 m medis, 2,5 m krūmas). Skaičiai 1,5 m ir 2,5 m pasiekiami be apvalinimo.
+2. **Spėjimas — ne raktas, o tekstas.** `askOf` saugo `S["start"]` / `S["ask2"]` **tekstą**; pirmoji versija saugojo raktą, ir readout vaikui rodė „start“, o balsas būtų taręs tą patį raktą. Defektą pagavo naršyklės zondas (72/74), ne vartai — įrašyta kaip LL-103.
+3. **`config.plants[].say` — papildomas laukas.** Metodo konfigūracija neturėjo vietos, kur augalas nurodo savo palyginimo frazę, todėl `say: { taip, ne }` saugo `sentences` raktus. Be jo palyginimas „tu sakei / liko“ būtų buvęs hardcodintas pagal indeksą. Grupė ir toliau **neįrašyta** — `groupOf(p)` išveda ją iš `stems` ir `woody`, o komponentas tikrina, kad kiekviena išvesta grupė egzistuotų `config.groups` (kitaip `console.error` ir „Augalai nesuderinti su grupėmis.“).
+
+Elgsenos zondas (`scratch/probe_agr.py`, Chromium 390×800 ir 360×780, 37 patikros pločiui): **74/74 OK**, 0 konsolės klaidų. Matuota: ąžuoliukas 0,3 → 3 m (9 žingsniai, etiketė „medis“ visą laiką), alyva 1,2 → 2,5 m (5 žingsniai, etiketė „krūmas“), kiaulpienė 25 → 40 cm („žolė“), kortelės su trimis aukščiais ir trimis grupėmis, `simDone` atsiranda tik po trečio augalo maksimumo, „Iš naujo“ atstato aukščius ir netrina pažangos, klaviatūra (↑, →) veikia, 360 px — 0 horizontalios slinkties.
+
 ### M-11 — Garso trukmė: vieną garsą tempi, kitas nutrūksta
 
 **Data:** 2026-11-18 · **Tema:** `agents/proposals/2026-11-18-ideator-garso-trukme.json` (#21375) · **Tikslas:** `content/lt/grade-01/lietuviu-kalba/06-garso-trukme.json`

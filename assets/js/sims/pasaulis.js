@@ -3000,6 +3000,370 @@ const daiktoGrandine = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 10. Augalų grupės — „Medžiai, krūmai, žolės“                        */
+/* ------------------------------------------------------------------ */
+/* Vienas kintamasis — pasirinkto augalo aukštis centimetrais. Grupė    */
+/* išvedama iš stiebų skaičiaus ir kietumo (`groupOf`), o ne įrašyta     */
+/* konfigūracijoje: etiketė privalo būti toks pat teiginys kaip stiebai */
+/* paveiksle. Keičiant aukštį augalas neperpiešiamas — ilgėja tik juosta */
+/* ir keičiasi skaičius, todėl vaikas mato, kad grupė nejuda (M-10).    */
+const AG_BAR_X = 14;
+const AG_BAR_W = 300;                 // 300 cm × 1 px/cm
+const AG_BAR_Y = 228;
+const AG_BAR_H = 16;
+const AG_BAR_MAX = 300;               // juostos riba, cm
+
+const augaluGrupes = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const plants = Array.isArray(config.plants) ? config.plants : [];
+    const groups = config.groups || {
+      medis: { name: "medis", plural: "medžiai" },
+      krūmas: { name: "krūmas", plural: "krūmai" },
+      žolė: { name: "žolė", plural: "žolės" },
+    };
+    const barCfg = config.heightBar || {};
+    const barMax = Number(barCfg.maxCm) > 0 ? Number(barCfg.maxCm) : AG_BAR_MAX;
+    const tickCm = Number(barCfg.tickCm) > 0 ? Number(barCfg.tickCm) : 50;
+
+    /* Grupė — išvedamas dydis: iš tų pačių `stems` ir `woody`, iš kurių
+       piešiamas augalas. Konfigūracijoje `group` laukelio sąmoningai nėra. */
+    const groupOf = (p) => (!p.woody ? "žolė" : p.stems === 1 ? "medis" : "krūmas");
+
+    const valid = plants.length >= 2 && plants.every((p) => p
+      && typeof p.id === "string" && p.id
+      && typeof p.name === "string" && p.name
+      && Number.isInteger(p.stems) && p.stems > 0
+      && typeof p.woody === "boolean"
+      && p.height
+      && Number.isFinite(p.height.start) && Number.isFinite(p.height.min)
+      && Number.isFinite(p.height.max) && Number.isFinite(p.height.step)
+      && p.height.step > 0 && p.height.max <= barMax
+      && p.height.min <= p.height.start && p.height.start <= p.height.max
+      && groups[groupOf(p)]);
+
+    if (!valid) {
+      console.error("augalu-grupes: augalas be id/name/stems/woody/height arba nežinoma grupė.");
+      stage.innerHTML = '<p class="sim-note" style="text-align:center">Augalai nesuderinti su grupėmis.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    /* Spėjimas prašomas dviejų pirmųjų sumedėjusių augalų: klausimas „ar tai
+       medis?“ prasmingas tik tada, kai augalas turi kamieną. Klausimo tekstas
+       imamas iš `sentences` (`start`, `ask2`) — saugomas TEKSTAS, ne raktas,
+       kitaip į ekraną ir į balsą patektų raktas „start“ (LL-103). */
+    const askKeys = ["start", "ask2"];
+    let woodySeen = 0;
+    const askOf = plants.map((p) => {
+      if (!p.woody) return null;
+      const key = askKeys[woodySeen];
+      woodySeen += 1;
+      return key && S[key] ? S[key] : null;
+    });
+
+    const heights = plants.map((p) => p.height.start);
+    const guesses = plants.map(() => null);   // "taip" | "ne" | null
+    let current = 0;
+    let spoken = "";
+    let reported = false;                      // api.progress — vieną kartą
+    let cardsShown = false;
+
+    const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+    const gname = (i) => groups[groupOf(plants[i])].name;
+    /* Ilgis visada su vienetu: iki metro — centimetrais, toliau — metrais
+       su kableliu, kaip rašoma lietuviškai. */
+    const fmt = (cm) => {
+      const v = Math.round(cm);
+      if (v < 100) return `${v} cm`;
+      const m = Math.floor(v / 100);
+      const rest = v % 100;
+      if (rest === 0) return `${m} m`;
+      return `${m},${rest % 10 === 0 ? rest / 10 : String(rest).padStart(2, "0")} m`;
+    };
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:24rem;margin:0 auto">
+        <svg id="agr-scene" viewBox="0 0 328 272" width="100%" role="img" aria-label=""></svg>
+        <p class="sim-note" style="font-size:.78rem;text-align:center;line-height:1.3">
+          Visi trys augalai nupiešti vienodo dydžio. Aukštį rodo juosta ir skaičius.</p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.5rem;width:100%;max-width:34rem;margin:0 auto">
+        <div id="agr-plant" role="group" aria-label="Pasirink augalą"
+             style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem">
+          ${plants.map((p, i) => `<button class="btn secondary" data-plant="${i}" aria-pressed="false"
+             style="min-width:0;min-height:56px;padding:.3rem .15rem;font-size:.85rem;line-height:1.15">${p.name}</button>`).join("")}
+        </div>
+        <div id="agr-guess" role="group" aria-label="Spėjimas"
+             style="display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem">
+          <button class="btn secondary" data-guess="taip" aria-pressed="false"
+                  style="min-width:0;min-height:56px;padding:.3rem .2rem;font-size:.95rem">Taip</button>
+          <button class="btn secondary" data-guess="ne" aria-pressed="false"
+                  style="min-width:0;min-height:56px;padding:.3rem .2rem;font-size:.95rem">Ne</button>
+        </div>
+        <p id="agr-said" style="display:none;margin:0;font-size:.9rem;font-weight:700;text-align:center"></p>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem">
+          <button class="btn secondary" id="agr-minus" aria-label="Žemesnis augalas"
+                  style="min-width:0;min-height:56px;font-size:1.3rem;line-height:1">−</button>
+          <button class="btn secondary" id="agr-plus" aria-label="Aukštesnis augalas"
+                  style="min-width:0;min-height:56px;font-size:1.3rem;line-height:1">+</button>
+        </div>
+        <div id="agr-cards" tabindex="-1"
+             style="display:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem;outline:none"></div>
+        <p id="agr-end" role="status" aria-live="polite"
+           style="margin:0;font-size:.9rem;line-height:1.35;font-weight:700;text-align:center"></p>
+        <button class="btn ghost" id="agr-reset" style="min-height:48px;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
+    const svg = stage.querySelector("#agr-scene");
+    const q = (sel) => controls.querySelector(sel);
+    const plantButtons = [...controls.querySelectorAll("[data-plant]")];
+    const guessButtons = [...controls.querySelectorAll("[data-guess]")];
+
+    const paint = (btn, on) => {
+      btn.style.background = on ? "var(--ink)" : "var(--paper-2)";
+      btn.style.color = on ? "var(--paper)" : "var(--ink)";
+      btn.style.borderColor = on ? "var(--ink)" : "var(--line)";
+    };
+
+    /* Augalas piešiamas iš art.js dalių. Jo aukštis scenoje nekinta nė vienu
+       tašku: aukštį neša juosta ir skaičius (žr. modelio ribą po scena). */
+    function plantArt(p, x, baseY) {
+      if (!p.woody) {
+        return art.grass(x - 20, baseY, 1) + art.grass(x + 16, baseY, 1.05)
+          + art.leaf(x - 8, baseY - 6, 13, -1, true, "#5fbf62")
+          + art.leaf(x + 8, baseY - 6, 13, 1, true, "#5fbf62")
+          + art.stem(x, baseY, 80, 3.4, "#4c8b3a", true)
+          + art.flower(x + 14, baseY - 80, 1);
+      }
+      if (p.stems === 1) return art.tree(x, baseY, 1.25, "vasara");
+      const offs = p.stems === 2 ? [-15, 15] : [-27, 0, 27];
+      return offs.map((off) => {
+        const h = 96 - Math.abs(off) * 0.35;
+        const dir = off === 0 ? 1 : Math.sign(off);
+        return art.stem(x + off, baseY, h, 5.6, "#7a5a3f", false)
+          + art.leaf(x + off, baseY - h * 0.68, 13, -dir, false, "#59b95a")
+          + art.leaf(x + off + dir * 6, baseY - h * 0.86, 11, dir, false, "#63b45b")
+          + art.flower(x + off + dir * 4, baseY - h, 0.95);
+      }).join("");
+    }
+
+    function scene() {
+      const p = plants[current];
+      const h = heights[current];
+      const g = groups[groupOf(p)];
+      const fill = Math.max(0, Math.min(1, h / barMax)) * AG_BAR_W;
+      const mx = AG_BAR_X + fill;
+
+      const ticks = [];
+      const nums = [];
+      for (let cm = 0; cm <= barMax; cm += tickCm) {
+        const x = AG_BAR_X + (cm / barMax) * AG_BAR_W;
+        ticks.push(`<line x1="${x.toFixed(1)}" y1="${AG_BAR_Y + AG_BAR_H}" x2="${x.toFixed(1)}"`
+          + ` y2="${AG_BAR_Y + AG_BAR_H + 6}" stroke="#8b8172" stroke-width="1.6"/>`);
+        if (cm % 100 === 0) {
+          const anchor = cm === 0 ? "start" : cm >= barMax ? "end" : "middle";
+          nums.push(`<text x="${x.toFixed(1)}" y="${AG_BAR_Y + AG_BAR_H + 18}" text-anchor="${anchor}"
+            font-family="system-ui, sans-serif" font-size="10" fill="#6a6153">${cm === 0 ? "0" : `${cm / 100} m`}</text>`);
+        }
+      }
+
+      svg.innerHTML = `
+        ${art.defs("agr")}
+        ${art.soil(0, 150, 328, 34, "agr")}
+        ${plantArt(p, 164, 150)}
+        <text x="164" y="212" text-anchor="middle" font-family="system-ui, sans-serif"
+              font-size="21" font-weight="800" fill="#3a342b">${g.name} · ${fmt(h)}</text>
+        <rect x="${AG_BAR_X}" y="${AG_BAR_Y}" width="${AG_BAR_W}" height="${AG_BAR_H}" rx="8" fill="#e3dbcb"/>
+        <rect x="${AG_BAR_X}" y="${AG_BAR_Y}" width="${fill.toFixed(1)}" height="${AG_BAR_H}" rx="8" fill="#6f9a5f"/>
+        ${ticks.join("")}${nums.join("")}
+        <circle cx="${mx.toFixed(1)}" cy="${AG_BAR_Y + AG_BAR_H / 2}" r="7" fill="#3a342b" stroke="#fff" stroke-width="2"/>`;
+
+      svg.setAttribute("aria-label",
+        `${cap(p.name)}, ${fmt(h)}. Tai ${g.name}. Stiebų iš žemės: ${p.stems}. `
+        + `Aukščio juosta rodo ${fmt(h)} iš ${fmt(barMax)}.`);
+    }
+
+    function render() {
+      scene();
+      const p = plants[current];
+      const h = heights[current];
+      const ask = askOf[current];
+      const needGuess = Boolean(ask) && !guesses[current];
+      const atMin = h <= p.height.min;
+      const atMax = h >= p.height.max;
+
+      for (const btn of plantButtons) {
+        const i = Number(btn.dataset.plant);
+        const on = i === current;
+        paint(btn, on);
+        btn.setAttribute("aria-pressed", String(on));
+        btn.setAttribute("aria-label",
+          `${plants[i].name}, ${fmt(heights[i])}, ${gname(i)}`);
+      }
+
+      q("#agr-guess").style.display = ask ? "grid" : "none";
+      for (const btn of guessButtons) {
+        const value = btn.dataset.guess;
+        const on = guesses[current] === value;
+        paint(btn, on);
+        btn.setAttribute("aria-pressed", String(on));
+        btn.disabled = !ask || Boolean(guesses[current]);
+        btn.setAttribute("aria-label", !ask
+          ? "Šiam augalui spėjimas nereikia."
+          : guesses[current] ? "Spėjimas jau užrašytas."
+            : `Spėju: ${value}`);
+      }
+
+      const said = q("#agr-said");
+      said.style.display = guesses[current] ? "block" : "none";
+      said.textContent = guesses[current] ? `Tu sakei: ${guesses[current]}.` : "";
+
+      const minus = q("#agr-minus");
+      const plus = q("#agr-plus");
+      const plusHadFocus = document.activeElement === plus;
+      minus.disabled = atMin || needGuess;
+      plus.disabled = atMax || needGuess;
+      minus.setAttribute("aria-label", needGuess
+        ? "Pirma pasirink spėjimą."
+        : atMin ? "Žemesnio augalo nebegalima." : `Žemesnis: ${fmt(Math.max(p.height.min, h - p.height.step))}`);
+      plus.setAttribute("aria-label", needGuess
+        ? "Pirma pasirink spėjimą."
+        : atMax ? "Aukštesnio augalo nebegalima." : `Aukštesnis: ${fmt(Math.min(p.height.max, h + p.height.step))}`);
+      /* Išjungtas valdiklis, ant kurio stovėjo fokusas, numetamas į `body`, ir
+         klaviatūros naudotojas nebeturi kur eiti (LL-32). Todėl fokusas
+         perkeliamas į vienintelį likusį veiksmą. */
+      if (plusHadFocus && plus.disabled) (minus.disabled ? q("#agr-reset") : minus).focus();
+
+      const grownAll = plants.every((pl, i) => heights[i] > pl.height.start);
+      const allMax = plants.every((pl, i) => heights[i] >= pl.height.max);
+      const cards = q("#agr-cards");
+      if (grownAll) {
+        cards.style.display = "grid";
+        cards.innerHTML = `<p style="grid-column:1/-1;margin:0;font-size:.78rem;line-height:1.2;
+          font-weight:700;text-align:center;color:var(--ink-soft)">Ką parodė modelis?</p>`
+          + plants.map((pl, i) => {
+            const stemWord = pl.stems === 1 ? (pl.woody ? "kamienas" : "stiebas") : "stiebai";
+            return `<div style="min-width:0;border:2px solid var(--line);border-radius:var(--r-s);
+            background:var(--paper-2);padding:.3rem .2rem;text-align:center">
+              <span style="display:block;font-size:.8rem;line-height:1.15;font-weight:700;color:var(--ink-soft);overflow-wrap:anywhere">${pl.name}</span>
+              <strong style="display:block;font-size:1.05rem;line-height:1.2">${fmt(heights[i])}</strong>
+              <span style="display:block;font-size:.85rem;font-weight:700">${gname(i)}</span>
+              <span style="display:block;font-size:.75rem;color:var(--ink-soft)">${pl.stems} ${stemWord}</span>
+            </div>`;
+          }).join("");
+      } else {
+        cards.style.display = "none";
+        cards.innerHTML = "";
+      }
+      /* Kortelės atsiranda tik augalus paauginus; jei fokusas ką tik liko ant
+         išjungto „+“, jis keliamas į korteles, o ne į `body`. */
+      if (grownAll && !cardsShown) {
+        cardsShown = true;
+        if (plusHadFocus || document.activeElement === document.body) cards.focus();
+      }
+
+      let end = "";
+      if (needGuess) end = "Pirma spėk, ar tai medis.";
+      else if (allMax) end = "Visi trys pasiekė savo aukštį. Grupė ta pati.";
+      else if (grownAll) end = "Palygink tris korteles su skaičiais.";
+      else if (h === p.height.start) end = "Pasirink augalą arba keisk jo aukštį.";
+      else end = `Aukštis ${fmt(h)}. Grupė ta pati.`;
+      q("#agr-end").textContent = end;
+
+      api.readout(needGuess ? ask : `${cap(p.name)} ${fmt(h)}. Tai ${gname(current)}.`);
+
+      let note;
+      if (needGuess) note = "Pirma spėk, tada augink.";
+      else if (allMax) note = "Grupę rodo stiebas, ne aukštis.";
+      else if (atMax && guesses[current]) note = `Tu sakei: ${guesses[current]}. Tai vis tiek ${gname(current)}.`;
+      else if (h !== p.height.start) note = "Aukštis didesnis, o stiebas tas pats.";
+      else note = "Keisk aukštį ir žiūrėk į stiebą.";
+      api.note(note);
+
+      const group = groupOf(p);
+      if (allMax && !reported) {
+        reported = true;
+        spoken = "rule";
+        api.progress({ correct: true });
+        if (S.rule) api.speak(S.rule, { rate: 0.9 });
+      } else if (needGuess && spoken !== `ask-${p.id}`) {
+        spoken = `ask-${p.id}`;
+        api.speak(ask, { rate: 0.9 });
+      } else if (!needGuess && atMax && spoken !== `max-${p.id}`) {
+        spoken = `max-${p.id}`;
+        const trait = { medis: S.one, krūmas: S.few, žolė: S.soft }[group];
+        const cmpKey = p.say ? p.say[guesses[current]] : null;
+        const line = (cmpKey && S[cmpKey]) || trait;
+        if (line) api.speak(line, { rate: 0.9 });
+      }
+    }
+
+    function setPlant(i) {
+      if (i === current || i < 0 || i >= plants.length) return;
+      current = i;
+      render();
+    }
+
+    function changeHeight(delta) {
+      const p = plants[current];
+      if (askOf[current] && !guesses[current]) return;
+      const next = Math.max(p.height.min, Math.min(p.height.max, heights[current] + delta));
+      if (next === heights[current]) return;
+      heights[current] = next;
+      render();
+    }
+
+    function chooseGuess(value) {
+      if (!askOf[current] || guesses[current]) return;
+      guesses[current] = value;
+      if (S.guess) api.speak(S.guess, { rate: 0.9 });
+      spoken = `guess-${plants[current].id}`;
+      render();
+      if (!q("#agr-plus").disabled) q("#agr-plus").focus();
+    }
+
+    function reset() {
+      plants.forEach((p, i) => {
+        heights[i] = p.height.start;
+        guesses[i] = null;
+      });
+      current = 0;
+      spoken = "";
+      cardsShown = false;
+      if (S.again) api.speak(S.again, { rate: 0.9 });
+      render();
+    }
+
+    for (const btn of plantButtons) btn.addEventListener("click", () => setPlant(Number(btn.dataset.plant)));
+    for (const btn of guessButtons) btn.addEventListener("click", () => chooseGuess(btn.dataset.guess));
+    q("#agr-minus").addEventListener("click", () => changeHeight(-plants[current].height.step));
+    q("#agr-plus").addEventListener("click", () => changeHeight(plants[current].height.step));
+    q("#agr-reset").addEventListener("click", reset);
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const idx = plantButtons.indexOf(document.activeElement);
+      if (idx >= 0 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+        e.preventDefault();
+        const to = (idx + (e.key === "ArrowRight" ? 1 : plants.length - 1)) % plants.length;
+        setPlant(to);
+        plantButtons[to].focus();
+        return;
+      }
+      if (e.key === "ArrowUp") { e.preventDefault(); changeHeight(plants[current].height.step); }
+      if (e.key === "ArrowDown") { e.preventDefault(); changeHeight(-plants[current].height.step); }
+      if (e.key === "r" || e.key === "R") { e.preventDefault(); reset(); }
+    });
+
+    render();
+    return null;
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
@@ -3010,4 +3374,5 @@ export const SIMS = {
   "dumai-ir-isejimas": dumaiIrIsejimas,
   "kas-gyvas": kasGyvas,
   "daikto-grandine": daiktoGrandine,
+  "augalu-grupes": augaluGrupes,
 };

@@ -555,6 +555,10 @@
   "n": "n/6238c64e4347c0e7-d64863b7.mp3",
   "s": "s/6238c64e4347c0e7-fcfde44f.mp3"
  },
+ "Alyva 1,2 metro. Ar ji bus medis?": {
+  "n": "n/75327b43f1f0c46f-f37b3925.mp3",
+  "s": "s/75327b43f1f0c46f-58e55a0c.mp3"
+ },
  "Antis": {
   "n": "n/335b43e664368642-a91fdbc2.mp3",
   "s": "s/335b43e664368642-e15bb75d.mp3"
@@ -606,6 +610,10 @@
  "Aukštas garsas": {
   "n": "n/8418d5512290620e-59ee1030.mp3",
   "s": "s/8418d5512290620e-aca02e56.mp3"
+ },
+ "Aukštis didesnis, o stiebas tas pats.": {
+  "n": "n/e093aabca5cb1746-59d9c68e.mp3",
+  "s": "s/e093aabca5cb1746-35bdb704.mp3"
  },
  "Aukštyn": {
   "n": "n/a8cde679c07458f8-fb79f724.mp3",
@@ -947,6 +955,10 @@
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
   "s": "s/60d89cb04b7054d4-58e113db.mp3"
  },
+ "Grupę rodo stiebas, ne aukštis.": {
+  "n": "n/3ecb1976c1883ee5-e0a2ec1f.mp3",
+  "s": "s/3ecb1976c1883ee5-1d620fac.mp3"
+ },
  "Gyvas organizmas keičiasi pats.": {
   "n": "n/3b7d70d5ad3f7025-e518050a.mp3",
   "s": "s/3b7d70d5ad3f7025-e2b6db98.mp3"
@@ -1054,6 +1066,10 @@
  "Katė geria pieną": {
   "n": "n/84b87a10530b2560-6bfb479a.mp3",
   "s": "s/84b87a10530b2560-f5445df1.mp3"
+ },
+ "Keli stiebai nuo žemės, todėl krūmas.": {
+  "n": "n/9b337ffbd084d72a-1e96eb0b.mp3",
+  "s": "s/9b337ffbd084d72a-303dddbc.mp3"
  },
  "Kelias vientisas. Lemputė šviečia.": {
   "n": "n/27ecfa7c917cb682-2d586633.mp3",
@@ -1290,6 +1306,10 @@
  "Metalas dugne.": {
   "n": "n/2285765af1dbe56e-bc832664.mp3",
   "s": "s/2285765af1dbe56e-10f0e8c4.mp3"
+ },
+ "Minkštas stiebas, todėl žolė.": {
+  "n": "n/742f77b07ca6cc45-8261ca87.mp3",
+  "s": "s/742f77b07ca6cc45-cfe999e4.mp3"
  },
  "Miške": {
   "n": "n/605dae53843db1a4-76ec9741.mp3",
@@ -1647,6 +1667,10 @@
   "n": "n/3237c9dcda911865-e3649eb8.mp3",
   "s": "s/3237c9dcda911865-e9ef8cd4.mp3"
  },
+ "Spėjimas užrašytas. Dabar keisk aukštį.": {
+  "n": "n/700bd3e769105a0e-7b28c95f.mp3",
+  "s": "s/700bd3e769105a0e-0f93c70f.mp3"
+ },
  "Spėjimas užrašytas. Dabar pasirink vandenį.": {
   "n": "n/124584c5355fcdcc-56ecbc6f.mp3",
   "s": "s/124584c5355fcdcc-5f5e9c43.mp3"
@@ -1791,6 +1815,10 @@
   "n": "n/5649faf6bb1d075e-0574fb55.mp3",
   "s": "s/5649faf6bb1d075e-83e5f559.mp3"
  },
+ "Trys augalai, trys grupės.": {
+  "n": "n/2fcf03dd0d2711a7-762b96e1.mp3",
+  "s": "s/2fcf03dd0d2711a7-393fb1a2.mp3"
+ },
  "Trys daiktai, vienas pasikeitė.": {
   "n": "n/19477f386ec2e893-df5dac84.mp3",
   "s": "s/19477f386ec2e893-78d346f8.mp3"
@@ -1859,6 +1887,14 @@
   "n": "n/72e571a9650fa707-46969485.mp3",
   "s": "s/72e571a9650fa707-e739b396.mp3"
  },
+ "Tu sakei ne. Ir alyva liko krūmas.": {
+  "n": "n/d834fdd19ef020de-09d47e61.mp3",
+  "s": "s/d834fdd19ef020de-2ca16a53.mp3"
+ },
+ "Tu sakei ne. Jis vis tiek medis.": {
+  "n": "n/6565dfc0c9396fdd-bd7147e6.mp3",
+  "s": "s/6565dfc0c9396fdd-6ef81829.mp3"
+ },
  "Tu sakei ne. Stiklinės kelias baigėsi smėlyje.": {
   "n": "n/9dffc5c3ec505701-a9beff01.mp3",
   "s": "s/9dffc5c3ec505701-234a9594.mp3"
@@ -1867,9 +1903,17 @@
   "n": "n/3d4333b4b9a00222-66ca3212.mp3",
   "s": "s/3d4333b4b9a00222-fff67fd8.mp3"
  },
+ "Tu sakei taip. Alyva liko krūmas.": {
+  "n": "n/64f48b1872450726-9adb0590.mp3",
+  "s": "s/64f48b1872450726-7a5a36e7.mp3"
+ },
  "Tu sakei taip. Gamta yra ir smėlis.": {
   "n": "n/f6b5dfd0173f42b7-cab6af53.mp3",
   "s": "s/f6b5dfd0173f42b7-65bb8374.mp3"
+ },
+ "Tu sakei taip. Jis liko medis.": {
+  "n": "n/9e00e82d24b0ed9c-e646a8c6.mp3",
+  "s": "s/9e00e82d24b0ed9c-00591c57.mp3"
  },
  "Tyla": {
   "n": "n/170ba9b291bd200a-0c170880.mp3",
@@ -1962,6 +2006,10 @@
  "Vienas banknotas atstojo kelias monetas.": {
   "n": "n/6c9af7476a67ef8e-d77aaffc.mp3",
   "s": "s/6c9af7476a67ef8e-9cef0004.mp3"
+ },
+ "Vienas kamienas, todėl medis.": {
+  "n": "n/330d940dd22db73f-8d103bf3.mp3",
+  "s": "s/330d940dd22db73f-bd8be029.mp3"
  },
  "Vienas petys laiko visą kuprinės svorį.": {
   "n": "n/ee6c6227d0f68c5e-eca930d9.mp3",
@@ -2242,6 +2290,10 @@
  "Ąžuolas auga miške.": {
   "n": "n/619f5a2a48f3b42f-de4d31f4.mp3",
   "s": "s/619f5a2a48f3b42f-002ef7f6.mp3"
+ },
+ "Ąžuoliukas 30 centimetrų. Ar jis jau medis?": {
+  "n": "n/c8080fa7358a4e94-b44beccb.mp3",
+  "s": "s/c8080fa7358a4e94-0acc6045.mp3"
  },
  "ą": {
   "n": "n/1ddca08050786f81-ec3382cf.mp3",

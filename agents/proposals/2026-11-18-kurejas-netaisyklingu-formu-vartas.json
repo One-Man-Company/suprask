@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 362,
+  "created": "2026-11-18T12:53:20+02:00",
+  "type": "struktura",
+  "title": "check_language.py nepažįsta netaisyklingų formų: dar 3 vietos gyvena turinyje",
+  "body": "Pasiūlymas #20852 parodė, kad netaisyklinga forma gali gyventi turinyje dešimt dienų, nes jos nepažįsta joks vartas: validate_content.py tikrina schemą, check_language.py — sakinio ir žodžio ilgį, dviprasmišką „arba“ ir įvardį pradžioje. 2026-11-08 auditas (radinys #27) užrašė „Niekou“, o tekstas liko faile iki šio paleidimo; pataisius jį, toje pačioje audito lentelėje liko trys tos pačios šeimos vietos: „Pakėlei / nelietei“ (content/lt/grade-01/muzika/01-garso-aukstis.json, tasks[0].q), „tu dalijai“ (content/lt/grade-01/zaidimu-teorija/11-saziningas-dalijimasis.json, tasks[1].options[0]) ir „jaustumeisi“ (ten pat, tasks[1].hint). Siūloma į check_language.py įdėti nedidelį netaisyklingų formų sąrašą (žodis → taisyklinga forma → paaiškinimas) ir tikrinti jį visuose vaikui rodomuose laukuose; radus — grąžinti klaidą, o ne įspėjimą, nes tai ne stilius, o nežodis, kurio vaikas negali perskaityti prasmės. Sąrašas sąmoningai mažas ir rankomis prižiūrimas: jis gaudo pasikartojančias formas, o ne bando taisyti lietuvių kalbą automatiškai. Tai scripts/ failas, todėl darbas priklauso tikrintojo vaidmeniui, ne kūrėjui.",
+  "target": "scripts/check_language.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/guidelines/kalbos-auditas.md:51 (radinys #27, užtaisyta #362)",
+    "research/wiki/guidelines/kalbos-auditas.md:70 („Neegzistuojančios veiksmažodžio formos — jokie įrankis nepažįsta“)",
+    "content/lt/grade-01/muzika/01-garso-aukstis.json (tasks[0].q „Pakėlei … nelietei“)",
+    "content/lt/grade-01/zaidimu-teorija/11-saziningas-dalijimasis.json (tasks[1].options[0] „tu dalijai“, tasks[1].hint „jaustumeisi“)",
+    "research/wiki/guidelines/pamokos.md LL-115 (radinys, kuris pasensta savo paties lentelėje)"
+  ]
+}

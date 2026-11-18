@@ -48,7 +48,7 @@ Sunkumas: **rimta** = vaikas supranta klaidingai ar nebegali skaityti; **vidutin
 | 24 | 09-augalo-gyvenimas | tasks[2].hint (eil. 59) | „kai pasėji" — neteisinga forma (2 asm.: pasėjai) | „Kas atsitinka pirmiausia, kai pasėjai?" | vidutinė |
 | 25 | 11-saziningas-dalijimasis | tasks[1].opt[0] (eil. 42) | „tu dalijai" — neteisinga forma (refleksyvinė „dalijaisi" arba „padalinai") | „Sąžininga, nes tu padalinai." | vidutinė |
 | 26 | 11-saziningas-dalijimasis | tasks[1].hint (eil. 47) | „jaustumeisi" — neegzistuoja tokia forma (1 dgs. sąlyginė: jaustumės) | „Kaip jaustumės, jei tau liktų 2?" | vidutinė |
-| 27 | 01-garsas-ir-raide | tasks[1].opt[0] (eil. 111) | „Niekou" — rašyba (niekuo) | „Niekuo — tai tas pats." | vidutinė |
+| 27 | 01-garsas-ir-raide | tasks[1].opt[0] (eil. 111 → 122) | „Niekou" — rašyba (niekuo) | „Niekuo — tai tas pats." | vidutinė · **užtaisyta #362** |
 | 28 | 23-piktograma-ir-stulpelis | tasks[2].q (eil. 59) | „Už mėlyną spalvą gavo 6 balsus" — trūksta veikėjo; lėtas skaitytojas neranda, kas gavo | „Už mėlyną spalvą buvo 6 balsai." | vidutinė |
 | 29 | 18-taskas-tiese-spindulys-atkarpa | tasks[3].opt[1] (eil. 76) | „Taip, bet tik pusiau" — be prasmės šioje situacijoje (taškas negali dalinti pusiau) | „Taip, jei jis būtų ant tiesės." | vidutinė |
 | 30 | 13-akmenelis-popierius | outcomes[0], outcomes[2] | 10 žodžių, bet 3 sunkūs žodžiai eilutėje (variantai lygūs, laimėjimas, atsitiktinumas) | „Paaiškinu, kodėl laimėjimas priklauso nuo atsitiktinumo." (8 ž.) | vidutinė |

@@ -48,9 +48,10 @@ Iš 5 modulių **visi 5** turi bent vieną rimtą arba vidutinį trūkumą. Bend
 
 ### V1. „Niekou“ — netaisyklinga rašyba (VIDUTINĖ)
 
-- **Failas:** `01-garsas-ir-raide.json:111`
+- **Failas:** `01-garsas-ir-raide.json:122` (`tasks[1].options[0]`; audito metu eilutė buvo 111 — failas per tą laiką išaugo R1 taisymu)
 - **Tekstas:** „Niekou — tai tas pats“
 - **Ką keisti:** „Niekuo — tai tas pats“. Šis radinys jau buvo užfiksuotas 2026-11-08 audite (#27), bet tekstas vis dar yra faile.
+- **Užtaisyta #362 (2026-11-18, pasiūlymas #20852):** variantas dabar skaitomas „Niekuo — tai tas pats“. Zondas 390 ir 360 px (`probe_20852.py`) — 24/24: puslapyje nėra „Niekou“, variantas telpa (0 nusikirpimo), 48 px aukščio, po klaidos rodoma užuomina „Pagalvok, ką darai su ausimis, o ką su akimis.“, po teisingo — „Teisingai! Garsas yra tai, ką girdime…“.
 
 ### S1. Užduoties Nr. 2 formuluotė „Niekou“ (SMRULKI)
 

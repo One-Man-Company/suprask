@@ -269,6 +269,24 @@ export const art = {
         ${blob(0, -76, 18, "#e9a13a")}${blob(-24, -44, 10, "#c96a1c")}${blob(24, -46, 10, "#c96a1c")}
         ${blob(-6, -70, 7, "#f3b552", 0.9)}`;
     }
+    /* Spygliuotis (eglė). Skirtingai nuo lapuočio, jo išvaizda NEpriklauso
+       nuo sezono — būtent todėl jis reikalingas metų laikų scenai: lapuotis
+       numeta lapus, o eglė lieka žalia (LL-28 — modelis be prieštaraujančio
+       pavyzdžio moko apibendrinimo, kurio gamta nepateisina). Trys
+       sluoksniai, kurių apatinis kraštas kiek nusviręs, kad siluetas
+       nebūtų plokščias trikampis. */
+    if (season === "egle") {
+      const tier = (half, top, bottom, col) => `<path d="M${x} ${baseY - top * s}`
+        + ` L ${x + half * s} ${baseY - bottom * s}`
+        + ` Q ${x} ${baseY - (bottom - 7) * s} ${x - half * s} ${baseY - bottom * s} Z"`
+        + ` fill="${col}"/>`;
+      return `<path d="M${x - 3 * s} ${baseY} h ${6 * s} v ${-24 * s} h ${-6 * s} z" fill="${P.woodDark}"/>
+        ${tier(24, 58, 20, "#35723f")}
+        ${tier(19, 76, 42, "#3c7d45")}
+        ${tier(14, 94, 64, "#35723f")}
+        ${tier(8, 110, 84, "#3c7d45")}`;
+    }
+
     // ruduo-krenta: lapai jau krenta
     return `${trunk}${branches}
       ${blob(-16, -58, 12, "#e08a2e")}${blob(16, -60, 13, "#d9791f")}${blob(0, -74, 13, "#e9a13a")}

@@ -23,9 +23,9 @@ const svgEl = (tag, attrs = {}) => {
    būtent ji, o ne sezono vardas, nustato medžio išvaizdą. */
 const MENUO = [
   { n: "Sausis", acc: "sausį", s: "Žiema", dm: 475, alt: 12, lapai: 0, sniegas: true, pauksciai: false,
-    note: "Mažai šviesos. Medis ilsisi, daug paukščių išskrido." },
+    note: "Mažai šviesos. Lapuotis ilsisi, o eglė žalia." },
   { n: "Vasaris", acc: "vasarį", s: "Žiema", dm: 575, alt: 20, lapai: 0, sniegas: true, pauksciai: false,
-    note: "Diena jau ilgėja, bet žiema dar laikosi." },
+    note: "Diena jau ilgėja, bet žiema dar laikosi. Eglė žalia." },
   { n: "Kovas", acc: "kovą", s: "Pavasaris", dm: 705, alt: 30, lapai: 1, sniegas: false, pauksciai: true,
     note: "Paukščiai grįžta, ant medžio sprogsta pumpurai." },
   { n: "Balandis", acc: "balandį", s: "Pavasaris", dm: 845, alt: 43, lapai: 1, sniegas: false, pauksciai: true,
@@ -45,7 +45,7 @@ const MENUO = [
   { n: "Lapkritis", acc: "lapkritį", s: "Ruduo", dm: 500, alt: 15, lapai: 4, sniegas: false, pauksciai: false,
     note: "Šviesos vis mažiau. Medis beveik be lapų." },
   { n: "Gruodis", acc: "gruodį", s: "Žiema", dm: 435, alt: 11, lapai: 0, sniegas: true, pauksciai: false,
-    note: "Trumpiausia diena. Sniegas, medis ilsisi." },
+    note: "Trumpiausia diena. Lapuotis ilsisi, eglė žalia." },
 ];
 
 /* Lapų stadija → art.js medžio variantas ir žodis ekrano skaitytuvui.
@@ -53,12 +53,21 @@ const MENUO = [
    rodė tą patį pilną vainiką, nors užrašas sako „beveik be lapų“ (LL-13),
    o gegužę — žiedus, nors užrašas sako „jau su lapais“. */
 const MEDIS = [
-  { art: "ziema", zodis: "be lapų" },
-  { art: "pavasaris", zodis: "pumpurai" },
-  { art: "vasara", zodis: "žali lapai" },
-  { art: "ruduo", zodis: "geltoni lapai" },
-  { art: "ruduo-krenta", zodis: "krinta paskutiniai lapai" },
+  { art: "ziema", teiginys: "Lapuotis be lapų" },
+  { art: "pavasaris", teiginys: "Lapuotyje pumpurai" },
+  { art: "vasara", teiginys: "Lapuotis žalias" },
+  { art: "ruduo", teiginys: "Lapuotis geltonas" },
+  { art: "ruduo-krenta", teiginys: "Lapuotyje krinta paskutiniai lapai" },
 ];
+
+/* Antrasis medis modeliui reikalingas ne kaip puošmena, o kaip
+   prieštaraujantis pavyzdys (LL-28): vienintelis lapuotis žiemą lieka be
+   lapų, ir be eglės vaikas iš modelio išmoktų, kad „žiemą visi medžiai
+   be lapų“. Eglė yra vienintelis objektas, kuris per metus NESIKEIČIA —
+   todėl ji ir parodo, kad pasikeitimas priklauso nuo medžio rūšies, o ne
+   nuo metų laiko vieno. Programa 1–2 kl. prašo atpažinti lapuotį ir
+   spygliuotį (Pradinio ugdymo BP rekomendacijos 2024, gamtos mokslai). */
+const EGLE = { art: "egle", teiginys: "eglė žalia" };
 
 const metuLaikai = {
   mount({ stage, controls, api }) {
@@ -71,7 +80,7 @@ const metuLaikai = {
     stage.innerHTML = `
       <div style="width:100%;max-width:26rem;margin:0 auto">
         <svg id="ml-scene" viewBox="0 0 360 300" role="img" aria-label="Metų laikų modelis"></svg>
-        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.25rem .5rem;margin:.7rem 0 .3rem">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:.1rem .5rem;margin:.7rem 0 .3rem">
           <strong id="ml-hours" style="font-family:var(--font-head);font-size:1.1rem"></strong>
           <span id="ml-dir" style="font-weight:700;font-size:.9rem"></span>
         </div>
@@ -84,6 +93,9 @@ const metuLaikai = {
           <span style="position:absolute;left:30.2%;transform:translateX(-50%)">gruodis</span>
           <span style="position:absolute;left:72.6%;transform:translateX(-50%)">birželis</span>
         </div>
+        <p id="ml-pair" style="margin:.6rem 0 0;font-size:1rem;font-weight:800;line-height:1.25;text-align:center">
+          Lapuotis keičiasi, eglė žaliuoja visus metus.
+        </p>
         <p class="sim-note" style="font-size:.8rem;text-align:center">Tai supaprastintas modelis: tikras oras kasdien būna įvairus.</p>
       </div>`;
 
@@ -152,14 +164,14 @@ const metuLaikai = {
         <rect x="0" y="205" width="360" height="16" fill="${PAL.band}"/>
         ${art.grass(16, 209, 1, seasonKey === "ziema" ? "#bcd4de" : "#5aa552")}
         ${art.grass(296, 208, 0.95, seasonKey === "ziema" ? "#bcd4de" : "#5aa552")}
-        ${art.grass(330, 210, 0.8, seasonKey === "ziema" ? "#bcd4de" : "#5aa552")}
         ${snow}
         ${art.tree(58, 209, 1.4, medis.art)}
+        ${art.tree(322, 209, 1.05, EGLE.art)}
         <text x="20" y="40" font-family="system-ui" font-size="22" font-weight="800" fill="#3a342b">${d.n}</text>
         <text x="20" y="62" font-family="system-ui" font-size="15" font-weight="600" fill="#5f574d">${d.s}</text>`;
 
       svg.setAttribute("aria-label",
-        `Metų laikų modelis: ${d.n}, ${d.s.toLowerCase()}, medis ${medis.zodis}, šviesu ${hm(d.dm)}`);
+        `Metų laikų modelis: ${d.n}, ${d.s.toLowerCase()}. ${medis.teiginys}, ${EGLE.teiginys}. Šviesu ${hm(d.dm)}`);
 
       mname.textContent = d.n;
       range.value = String(i + 1);
@@ -175,7 +187,7 @@ const metuLaikai = {
       barEl.setAttribute("aria-label",
         `Dienos ilgis ${hm(d.dm)} iš 24 valandų; trumpiausia diena gruodį, ilgiausia birželį`);
 
-      api.readout(`${d.n} — ${d.s.toLowerCase()}. Šviesu ${hm(d.dm)}`);
+      api.readout(`${d.n} — ${d.s.toLowerCase()}. ${medis.teiginys}, ${EGLE.teiginys}. Šviesu ${hm(d.dm)}`);
       api.note(d.note);
       if (d.s !== lastSeason) {
         lastSeason = d.s;

@@ -862,6 +862,107 @@ Atsakymų indeksai 1 / 1 / 0 / 0 — ne visi tame pačiame indekse, o pirmas ir 
 
 **Pastaba dėl pasiūlymo.** Ideatorius siūlė **du nepriklausomus dydžius** — aukštį ir kamienų skaičių — ir leisti vaikui keisti abu. Metodas to atsisako dėl vieno kintamojo taisyklės (`foundations/kognityvine-apkrova.md`): du slankikliai tame pačiame kadre 6–7 m. vaikui reiškia, kad niekada neaišku, kuris iš jų ką paveikė. Palyginimas neprarastas: trys augalai turi fiksuotą stiebų skaičių, o aukštį vaikas keičia pats, todėl priešingos poros (mažas medis, aukštas krūmas) gaunamos vienu kintamuoju. Antra, pasiūlyme užduotis su „Abu augalai“ buvo teisinga; čia ji tapo **klaidingu variantu**, nes abu augalai sumedėję, o grupę skiria stiebų skaičius — tai ta pati nuostata, kurią fiksuoja Gatt ir kt. (2007) ir Tull (1992), ir ji turi būti atpažįstama kaip klaida, o ne apeinama (LL-18).
 
+### M-11 — Garso trukmė: vieną garsą tempi, kitas nutrūksta
+
+**Data:** 2026-11-18 · **Tema:** `agents/proposals/2026-11-18-ideator-garso-trukme.json` (#21375) · **Tikslas:** `content/lt/grade-01/lietuviu-kalba/06-garso-trukme.json`
+
+**Viena didelė idėja.** Vieną garsą gali tempti ilgai, pavyzdžiui s-s-s. Kito negali: k nutrūksta iš karto, kad ir kiek laikytum. Trukmė priklauso nuo to, kaip garsas daromas ore, o ne nuo raidės dydžio, vietos ar vardo.
+
+**Ką sako programa.** 1 klasės lietuvių kalbos pasiekimas D.1.3.1 formuluojamas taip: „Naudodamasis pagalbine medžiaga, skiria balsius, priebalsius (nevartojant terminų), taisyklingai juos taria“ (`sources/pradinio-bp-rekomendacijos-2024.txt:39749–39752`); ilgalaikiame plane tas pats gebėjimas įvardytas „Žinos lietuvių kalbos garsinę sandarą: balsius, priebalsius, dvibalsius“ (`:14497–14500`). D.1.3.2–D.1.3.4 (dvibalsiai, balsių ilgumas, grupavimas) yra aukštesni lygiai ir į modulį neimami. Platformoje šio gebėjimo nestato nė vienas modulis: `01-garsas-ir-raide` sprendžia garsą ir raidę, `02-skiemenu-jungimas` — skiemenis ir skiemenų ribą, `03-sakinio-zodziai` — žodžius sakinyje. Garsų skyrimo kaip atskiro modelio nėra nė viename iš 39 modulių (patikrinta 2026-11-18: lietuvių kalboje 5 moduliai, 01–05).
+
+**Kodėl modelis, o ne paveikslėlis.** Trukmė yra laike, o paveikslėlis yra vienu metu. Dvi raidės greta („s“ ir „k“) nieko nesako apie tai, ar garsą galima tempti: raidės skiriasi tik forma, o skirtumas, kurį vaikas turi išgirsti, yra ore. Paveikslėlyje galima parodyti tik pasekmę (ilga ir trumpa juosta), bet ne priežastį. Modelis duoda priežastį: vaikas laiko mygtuką, o juosta pildosi arba ne — ir tai priklauso nuo garso, o ne nuo jo pastangų. Būtent tai yra netikėta: vaikas laiko ilgiau, o niekas nepasikeičia. To jokia iliustracija neparodo, nes iliustracija neturi vaiko rankos.
+
+**Ką rodo tyrimai.**
+
+Ehri, Nunes, Willows, Schuster, Yaghoub-Zadeh ir Shanahan (2001), apibendrinę Nacionalinės skaitymo komisijos 52 tyrimus, rodo, kad fonologinio sąmoningumo mokymas turi teigiamą poveikį skaitymo įgūdžiui, ir kad poveikis didesnis tada, kai vaikas su garsais **dirba** (skiria, jungia, išima), o ne tik klausosi paaiškinimo. Tai pagrindžia P2 (veiksmas prieš paaiškinimą) ir tai, kad modelis turi reikalauti vaiko veiksmo, o ne rodyti filmuką.
+
+Liberman, Shankweiler, Fischer ir Carter (1974) parodė, kad 4–6 m. vaikams skiemens skyrimas sekasi gerokai lengviau negu garso (fonemos) skyrimas, o pastarasis net šešiamečiams kelia didelių sunkumų. Išvada metodui: garsas neturi būti prašomas „iš ausies“ vienas — reikia išorinės atsparos, kuri laikytų garsą ilgiau, negu jis skamba kalboje. Šiame metode ta atspara yra juosta ir vaiko paties balsas.
+
+Stahl ir Murray (1994) parodė, kad fonologinis sąmoningumas nėra vienas įgūdis: užduotys skiriasi pagal kalbinį vienetą (skiemuo, pradžia–rimas, garsas), ir būtent garsų lygmuo yra sunkiausias. Todėl modulyje nėra nei skiemenų skaičiavimo, nei dvibalsių: jie jau turi savo modulius ir tame pačiame kadre sudarytų antrą sunkumo šuolį (`foundations/kognityvine-apkrova.md`).
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Jei garsą galiu pasakyti, galiu jį ir ištempti.“** Paneigiama pačiu modeliu: vaikas laiko „k“ ilgiau už „s“, o juosta vis tiek sustoja po pirmo langelio. Skirtumas matomas kaip tas pats veiksmas su skirtingu rezultatu.
+2. **„Tempiasi tik balsiai.“** Tai antra, tylesnė nuostata, kuri atsiranda iškart po pirmos. Modelis turi priešpavyzdžių: s, š, m tęsiasi, nors jos nėra balsiai. Todėl dvi eilės nėra „balsiai / priebalsiai“ — jos yra „tempiasi / nutrūksta“, ir ši skirtis vaikui pasakoma tik tiek, kiek reikia (D.1.3.1 — be terminų).
+3. **„Ilgesnis užrašas reiškia ilgesnį garsą.“** Raidės vardas („es“, „ka“) yra ilgesnis už patį garsą, o raidės dydis nieko nesako. Modelis niekada netaria raidės vardo, o juostos ilgį sieja su garsu, ne su plytelės užrašu.
+4. **„Jei garsas kartojasi, jis tęsiasi.“** k-k-k skamba ilgai, bet tai keli atskiri garsai. Modelio juosta tokį bandymą rodo kaip kelis langelius su tarpais, o ne kaip vieną ištisinę liniją (LL-28 — priešpavyzdys tame pačiame kadre).
+
+**Ko modulis sąmoningai nemoko.** Terminai „balsis“ ir „priebalsis“ vaikui nevartojami — to reikalauja pati programos formuluotė („nevartojant terminų“). Jie lieka `teacher.goal` ir `teacher.misconceptions`, kad mokytojas žinotų, prie ko veda šis modelis. Modulis taip pat nemoko balsių ilgumo (D.1.3.3) ir dvibalsių (D.1.3.2–D.1.3.4).
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas).**
+
+1. **Popieriaus juostelė prie lūpų.** Vaikas laiko siaurą popieriaus juostelę prieš lūpas ir sako s-s-s, tada k-k-k. Juostelė plazda tolygiai arba tik trūkteli. Tikslas: skirtumą pajusti oru, o ne išgirsti iš mokytojo. Mokytojas neįvardija grupių ir nepasako, kuris garsas „ilgas“.
+2. **Ekranas, garsas ir juosta.** Vaikas pasirenka plytelę ir laiko didelį mygtuką. Juosta pildosi langeliais tol, kol laikoma — bet tik tiek, kiek leidžia garsas. Prieš pirmą bandymą spėjimas: „Ar juosta prisipildys iki galo?“ (Taip / Ne). Tikslas: pamatyti, kad rezultatas priklauso nuo garso, o ne nuo laikymo trukmės.
+3. **Antras garsas iš kitos grupės.** Vaikas būtinai bando bent po vieną garsą iš abiejų grupių; po antro bandymo abi juostos lieka ekrane viena virš kitos. `api.note`: „Abi laikei vienodai. Juostos skiriasi.“ Tikslas: palyginimas vienu metu, o ne iš atminties.
+4. **Simbolis, dvi eilės.** Atsiranda dvi dėžės („Ilgas garsas“ / „Trumpas garsas“), o plytelės neša savo juostas. Vaikas padeda visas aštuonias, tada spaudžia „Palygink“. Tikslas: taisyklę pasakyti savais žodžiais, kai ji jau matyta aštuonis kartus.
+5. **Perkėlimas.** Tie patys garsai žodžio pradžioje: sssaulė, mmmama, k-k-katė. Vaikas tempia pirmą garsą ir pasako, ar pavyksta. Tikslas: ta pati savybė toje vietoje, kur ji bus naudojama skaitant — žodžio pradžioje.
+
+**Privalomas spėjimo žingsnis prieš pirmą bandymą.** Vienas spėjimas apie **vieną** pasekmę (juosta pilna / ne), palyginamas su įvykiu (LL-15). Spėjimas niekada nevadinamas klaida ir lieka matomas virš juostos. Be jo modelis virsta judesiu: vaikas laiko mygtuką ir žiūri, kaip kažkas pildosi, o sąryšio su garsu nepastebi.
+
+**Simuliacijos specifikacija.** Komponentas `garso-juosta`, failas `assets/js/sims/calba.js` (jis jau importuoja `art.js`, o `scripts/check_art.py` LEGACY sąraše yra tik `matematika.js`). Registracija: `SIMS` bloke (`assets/js/sims/calba.js:911–915`) pridedama eilutė `"garso-juosta": garsoJuosta,`. `config`:
+
+```json
+{ "sounds": [
+    { "label": "a", "stretch": true },  { "label": "s", "stretch": true },
+    { "label": "š", "stretch": true },  { "label": "m", "stretch": true },
+    { "label": "k", "stretch": false }, { "label": "p", "stretch": false },
+    { "label": "t", "stretch": false }, { "label": "b", "stretch": false } ],
+  "sentences": { "start": "…", "hold": "…", "long": "…", "short": "…",
+                 "gap": "…", "sort": "…", "compare": "…" } }
+```
+
+**Juostos ilgis išvedamas, o ne įrašytas.** `config.sounds[]` sąmoningai neturi `cells` laukelio: `cells(sound) = sound.stretch ? 8 : 1`. Jei `stretch` nėra loginis arba `label` tuščias, komponentas rašo `console.error` ir rodo „Garsai nesuderinti.“, o ne tyliai praleidžia plytelę. Tai ta pati taisyklė kaip M-07 (`kiekis = board.px / unit.px`) ir M-10 (`groupOf(p)`): teiginys ekrane turi būti išvestas iš tų pačių duomenų, kuriuos mato vaikas.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | 8 plytelės, tuščia juosta, mygtukas „Tark ir laikyk“, spėjimas | „Pasirink garsą.“ | „Pirmiausia pasirink vieną garsą.“ |
+| tęsiamas, laikoma | juosta pildosi langeliais | „Laikai. Garsas teka.“ | „Tark sss ir nepaliauk.“ |
+| tęsiamas, paleista | 8 langeliai, ištisinė linija | „Juosta pilna. Garsas vienas.“ | „Šį garsą gali tempti kiek nori.“ |
+| nutrūkstantis, laikoma | 1 langelis ir tuščia vieta, po juo trūkinė linija | „Juosta sustojo.“ | „Laikai ilgiau, o garsas nesitęsia.“ |
+| nutrūkstantis, paleista | 1 langelis, po juo pauzės žymė | „Vienas trumpas garsas.“ | „Girdi k, o ne kyyy.“ |
+| rūšiavimas | dvi dėžės, plytelės su savo juostomis | „Padėk plyteles į dvi eiles.“ | „Sprendk pagal savo juostas.“ |
+| palyginimas | plytelė ne savo eilėje pažymėta žodžiu | „Dvi plytelės ne toje eilėje.“ | „Pažiūrėk į jų juostas.“ |
+| „Iš naujo“ | juostos išlieka, eilės tuščios | „Pradedam iš naujo.“ | „Bandyk dar kartą.“ |
+
+Septynios savybės, kurių negalima praleisti:
+
+- **Vienas kintamasis:** `sound` — kuris garsas bandomas. Laikymo trukmė **nėra** kintamasis, kuris ką nors lemia: tai ir yra modelio teiginys. Vaikas gali laikyti ilgiau, o juosta nepasikeis.
+- **Juosta yra laiko ašis, ne slankiklis:** 8 langeliai po 37 px, 300 px pločio, 40 px aukščio. Langeliai pildosi kas 200 ms; tai vienintelis laikmatis komponente. Jis matuoja **vaiko paspaudimą**, o ne vaiką: nėra atgalinio skaičiavimo, ėjimų limito, „per lėtai“ pranešimo.
+- **Išdėstymas 360 px:** scena `viewBox="0 0 328 320"`, `max-width:328px`; plytelės 4 × 64 px su trimis 8 px tarpais (280 px); juosta 300 px, x = 14; mygtukas „Tark ir laikyk“ 328 × 56 px; dvi dėžės po 156 × 72 px; „Palygink“ 328 × 48 px. Jokio horizontalaus slinkimo; teksto 200 % atveju juosta ir plytelės lieka tos pačios, tik didėja užrašai (`min-width:0` ant tėvų).
+- **Įėjimai ir klaviatūra:** `Tab` tarp plytelių ir mygtuko, `Enter`/`Space` (nuspaustas) = laikymas, `←`/`→` perjungia plyteles, `R` atstato. Vienas trumpas bakstelėjimas atlieka tą patį bandymą iki galo — vaikui, kuriam sunku laikyti; tai tas pats modelis, ne švelnesnis režimas.
+- **Fokusas** (LL-32): paleidus mygtuką fokusas lieka jame ir `readout` pasikeičia; pasirinkus plytelę fokusas eina į laikymo mygtuką, o ne į neaktyvų elementą; pasirodžius dėžėms — į pirmą nepadėtą plytelę.
+- **Grįžtamasis ryšys** — `readout` po paleidimo, `api.note` sako **kodėl**, niekada „teisingai“ ir niekada apie vaiką (T5.1). `api.progress({ correct: true })` — vieną kartą, kai po „Palygink“ abiejose eilėse nėra nė vienos ne vietoje esančios plytelės; ne po pirmo bandymo ir ne po pirmos teisingos plytelės (LL-29, LL-17 — tikrinama dabartinė būsena, ne praeitis). „Iš naujo“ pažangos netrina (LL-16).
+- **Garsas:** tariamos tik instrukcijos (`config.sentences`, 7 frazės × 2 įrašai). **Pavieniai garsai netariami** — sąmoningai: sintezatorius „s“ perskaitytų kaip raidės vardą „es“ (t. y. būtent tą klaidą, kurią modulis griauna), o ištempto priebalsio ilgio valdyti negalima. Garsą taria vaikas; modelis matuoja jo paspaudimą, o `api.note` prašo paklausyti savęs. Visos septynios frazės trumpesnės nei 10 žodžių ir turi vieną šaltinį (LL-42, LL-33).
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Kurį garsą gali tempti ilgai?“ — k / a / p | a (1) | „k“ — pirmas plytelėje, nes modelis rodė jį pirmą | „Ištark garsą ir laikyk, kol baigsis oras.“ |
+| 2 | taikymas | „Kas girdisi, kai ilgai tempi garsą „k“?“ — „kyyy“ — jis pridėjo balsį / „kkkk“ be pauzės / Tylą | „kyyy“ (0) | „kkkk“ — kartojimas laikomas tęsimu | „Pasakyk „k“ ilgai ir paklausyk, kas girdisi po jo.“ |
+| 3 | perkėlimas | „Kuris žodis prasideda garsu, kurį galima tempti?“ — katė / mama / tėtis | mama (1) | „katė“ — pirmas žodis sąraše; „tėtis“ — painiojamas su „mama“ pagal ilgį | „Ištark pirmą garsą ir pabandyk jį pratęsti.“ |
+| 4 | perkėlimas (`optional: true`) | „Kurie du garsai elgiasi vienodai?“ — š ir s / š ir t / t ir p | š ir s (0) | „t ir p“ — abu priebalsiai, todėl laikomi vienodais | „Abu išbandyk su popieriaus juostele.“ |
+
+Atsakymų indeksai 1 / 0 / 1 / 0 — pirmas ir trečias nesutampa su antru ir ketvirtu (`validate_content.py` tikrina pasiskirstymą). Nė viena užuomina nekartoja teisingo varianto žodžių ir nė viena nepasako atsakymo.
+
+**Refleksija.** „Kurį garsą tavo varde gali tempti ilgai? Pasakyk jį.“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — vaikas randa savo vardo garsą ir jį ištempia. Tai patikrinimas be ekrano ir be balo.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Modelis negirdi vaiko.** Juosta sustoja pagal garso savybę, o ne pagal tai, ką vaikas iš tikrųjų ištarė. Jei vaikas tyliai sako „k“ ir juosta vis tiek trumpa, modelis „teisus“ dėl garso, bet ne dėl to bandymo. Todėl `api.note` visada prašo paklausyti savęs, o mokytojo bloke tai įvardyta kaip modelio riba, ne kaip klaida.
+2. **„Tempiasi“ yra praktinis bandymas, ne apibrėžimas.** Balsiai ir dalis priebalsių (m, n, l, r, s, š, z, ž, v, f, ch, h) tęsiasi; sprogstamieji (k, p, t, b, d, g) — ne. Tai nėra tas pats kaip „balsis / priebalsis“, ir modulyje tos dvi poros nėra tapatinamos. Mokytojui tai pasakoma atskirai, vaikui — ne.
+3. **Skardumas nerodomas.** b, d, g turi balso virpėjimą, kurį galima pajusti gerklėje, bet oro srautas vis tiek sustabdomas. Modelis rodo tik oro srautą, todėl skardumas aptariamas mokytojo bloke, o ne ekrane.
+4. **Afrikatos paliktos nuošalyje.** c ir č yra sudėtiniai garsai (sprogstamasis + trintis), todėl į `config` neįtraukti: jie nei „tempiasi“, nei „nutrūksta“ taip paprastai, kaip rodo modelis.
+5. **Raidės vardas — ne šio modelio dalis.** „es“ ir „ka“ yra raidžių vardai; skirtumą tarp garso ir raidės sprendžia `01-garsas-ir-raide`. Šis modulis sąmoningai netaria nė vieno raidės vardo, kad nesudarytų antro klausimo tame pačiame kadre.
+
+**Ką tai reiškia modulio autoriui.** `title` — „Ilgas garsas ir trumpas garsas“ (30 simbolių iš 42); `subtitle` — „Vienus garsus tempi ilgai, kiti nutrūksta iš karto“ (50 iš 80); `minutes` — 9; trys `outcomes`: „Išbandau garsą balsu ir pasakau, ar jį galima tempti.“ (53), „Skiriu garsus, kurie tęsiasi, nuo tų, kurie nutrūksta.“ (54), „Paaiškinu, kodėl „k“ tempti nepavyksta.“ (39); `concept.title` — „Garsas turi trukmę“ (18 iš 40); `concept.big_idea` — „Vieną garsą gali tempti ilgai, pavyzdžiui s. Kito negali: k nutrūksta. Trukmę lemia tai, kaip garsas daromas.“ (109 iš 240); `concept.steps` — keturi žingsniai; `concept.example` — „Žodyje „saulė“ pirmas garsas s: sssaulė. Žodyje „katė“ pirmas garsas k, jis nutrūksta.“; `sim` — `{ "component": "garso-juosta", "config": { … } }`. Numeris `06-` lietuvių kalboje laisvas (užimti 01–05). Modulį įrašius, jis turi būti įtrauktas į `content/lt/grade-01/index.json` ir `path.json` (kūrėjo arba dizainerio darbas, ne metodo dalis); siūloma vieta kelyje — **po `02-skiemenu-jungimas`**, nors failo numeris 06: ten vaikas jau skiria skiemenį, o čia atsiranda atskiras garsas skiemens viduje. `path.json` eilė neprivalo sutapti su numeriais.
+
+**Patikra tikru įrankiu (2026-11-18).** Metodo specifikacija surašyta kaip juodraštinis modulis ir paleisti abu vartai: `validate_content.check_module` → **0 klaidų, 0 įspėjimų** (su sąlyga, kad `garso-juosta` įrašytas registre — kol komponento nėra, validatorius pagrįstai meta „simuliacija neegzistuoja registre“) ir `check_language.check_module` → **0 klaidų, 0 įspėjimų, 0 pastabų**. Ilgiai perskaičiuoti skriptu, ne mintyse: title 30, subtitle 50, concept.title 18, big_idea 109, žingsnių 52/42/41/44 simboliai (8/6/6/7 žodžiai). Zondas pagavo du realius dalykus, abu pataisyti: (1) `title` „Garsas tęsiasi arba nutrūksta“ davė `dviprasmybė: „arba“` — pakeista į „Ilgas garsas ir trumpas garsas“; (2) klausimas „Ką jis išgirsta?“ davė `neaiškus klausimas`, nes `check_language.py` klausiamųjų žodžių sąraše neturi „ką“ (ta pati LL-97 šeima) — sakinys performuluotas į „Kas girdisi, kai ilgai tempi garsą „k“?“, o ne tekstas suplokštintas.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, lietuvių kalba — D.1.3.1 (`sources/pradinio-bp-rekomendacijos-2024.txt:39749–39752`), 1 klasės ilgalaikis planas (`:14497–14500`). Ehri, L. C., Nunes, S. R., Willows, D. M., Schuster, B. V., Yaghoub-Zadeh, Z., & Shanahan, T. (2001). Phonemic awareness instruction helps children learn to read: Evidence from the National Reading Panel's meta-analysis. *Reading Research Quarterly, 36*(3), 250–287. https://doi.org/10.1598/RRQ.36.3.2 · Liberman, I. Y., Shankweiler, D., Fischer, F. W., & Carter, B. (1974). Explicit syllable and phoneme segmentation in the young child. *Journal of Experimental Child Psychology, 18*(2), 201–212. https://doi.org/10.1016/0022-0965(74)90101-5 · Stahl, S. A., & Murray, B. A. (1994). Defining phonological awareness and its relationship to early reading. *Journal of Educational Psychology, 86*(2), 221–234. https://doi.org/10.1037/0022-0663.86.2.221
+
+**Pastaba dėl pasiūlymo.** Ideatorius siūlė, kad vaikas „paspaudžia garsą žodyje ir laiko — vieno garso juosta pildosi tol, kol garsas skamba, kito sustoja per akimirką“. Metodas tą patį veiksmą palieka, bet **juostą sieja su garso savybe, o ne su tikru garso ilgiu ekrane**: platformos garsas yra iš anksto įrašyti mp3, o sintezatorius nepagamina valdomo ilgio pavienio priebalsio, todėl „kol garsas skamba“ būtų netiesa (LL-14, LL-15). Antra, pasiūlyme rūšiavimas buvo atskiras žingsnis po bandymo; čia jis lieka, bet tikrinamas **vienu kartu po visų plytelių** („Palygink“), o ne po kiekvienos — kitaip modelis tampa vertintoju, o ne įrankiu. Trečia, pasiūlymas prašė „dviejų eilių pagal spėjimą“; eilės lieka, bet jų pavadinimai yra „Ilgas garsas“ ir „Trumpas garsas“, o ne „balsiai“ ir „priebalsiai“, nes D.1.3.1 reikalauja skirti be terminų, o s ir m yra priebalsiai, kurie tęsiasi.
+
 ## Atviros prielaidos
 
 

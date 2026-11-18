@@ -17,6 +17,7 @@
 | [[pozymis-ir-dydis]] | kategorija pagal požymį, o ne pagal dydį; prototipas ir liaudies kategorijos | dydis keičiamas atskirai, požymis matomas ir pastovus; abi priešingos poros; ribos įvardijamos |
 | [[kryptis-ir-ziurovo-pozicija]] | kairė/dešinė kaip kūno, o ne kambario savybė; įsisavinimo tvarka | seka: savo kūnas → veikėjas žiūri ta pačia kryptimi → žiūri į vaiką; žymė sukasi su kūnu |
 | [[forma-ir-spalva]] | forma kaip tapatybė, spalva kaip įspūdis; spalvos prisirišimas prie daikto | forma fiksuojama mechaniškai, keičiamas tik užpildas; grįžimas į ankstesnę spalvą kaip kontrolė |
+| [[garsas-ir-laikas]] | laike vykstanti savybė neturi formos; fonologinis sąmoningumas ir garsų lygmens sunkumas | trukmė rodoma laiko ašimi, ne dydžiu; pavienis garsas netariamas sintezatoriumi; savybė, o ne pastanga |
 | [[jausmas-ir-noras]] | jausmo priežastis yra noras, o noro nesimato; emocijų komponentai | įvykis fiksuotas, noras keičiamas; antras veikėjas kaip kontrolė; nieko neklausiama apie vaiko jausmus |
 | [[ivertinimas-ir-growth-mindset]] | grįžtamasis ryšys, augimo mąstysena ir jos ribos | `hint` + `why` privalomi, jokių balų |
 

@@ -1,0 +1,24 @@
+{
+  "role": "metodininkas",
+  "run_id": 342,
+  "created": "2026-11-18T08:28:12+02:00",
+  "type": "metodas",
+  "title": "M-11 — Garso trukmė: vieną garsą tempi, kitas nutrūksta",
+  "body": "Metodas temai „garsų skyrimas be terminų“ (D.1.3.1), kurios platformoje nestato nė vienas modulis. Vaikas laiko popieriaus juostelę prie lūpų ir sako sss, paskui kkk: juostelė plazda tolygiai arba tik trūkteli. Tada ekrane ta pati taisyklė — jis pasirenka plytelę ir laiko vieną didelį mygtuką, o garso juosta pildosi tik tiek, kiek leidžia garsas: „s“ užpildo visus aštuonis langelius, „k“ sustoja po pirmo, kad ir kiek laikytum. Prieš pirmą bandymą – vienas spėjimas („Ar juosta prisipildys iki galo?“), po dviejų skirtingų garsų – dviejų juostų palyginimas vienu metu, tada rūšiavimas į dvi eiles ir „Palygink“. Modelis sąmoningai netaria pavienių garsų (sintezatorius „s“ perskaitytų kaip raidės vardą „es“), todėl garsą taria vaikas, o juosta matuoja jo paspaudimą – ir tai pasakyta kaip modelio riba. Pasiūlymas atmeta ideatoriaus „juosta pildosi tol, kol garsas skamba“: platformos garsas yra iš anksto įrašyti mp3, o valdomo ilgio pavienio priebalsio jie nepagamina. Vietoje to rūšiavimas tikrinamas vienu kartu po visų plytelių, o eilės vadinamos „Ilgas garsas“ / „Trumpas garsas“, ne „balsiai“ / „priebalsiai“, nes s ir m yra priebalsiai, kurie tęsiasi.",
+  "target": "content/lt/grade-01/lietuviu-kalba/06-garso-trukme.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md — M-11 (2026-11-18): seka, simuliacijos būsenos, 4 užduotys, modelio ribos",
+    "agents/proposals/2026-11-18-ideator-garso-trukme.json (#21375, tema/high, ideator #341)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:39749–39752 (D.1.3.1: „skiria balsius, priebalsius (nevartojant terminų), taisyklingai juos taria“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:14497–14500 (1 klasės planas: „Žinos lietuvių kalbos garsinę sandarą: balsius, priebalsius, dvibalsius“)",
+    "content/lt/grade-01/lietuviu-kalba/01-garsas-ir-raide.json (garso ir raidės skirtumas, ne garsų skyrimas)",
+    "content/lt/grade-01/lietuviu-kalba/02-skiemenu-jungimas.json (skiemuo, ne atskiras garsas; balsiai minimi tik kaip pastaba :129)",
+    "research/wiki/foundations/garsas-ir-laikas.md — naujas fundamentų įrašas (nematoma savybė, laiko ašis, kūnas kaip matuoklis)",
+    "research/wiki/guidelines/pilotai.md — P-021 (hipotezė, 4 matavimo kriterijai, 3 atsarginiai sprendimai)",
+    "Ehri, L. C., Nunes, S. R., Willows, D. M., Schuster, B. V., Yaghoub-Zadeh, Z., & Shanahan, T. (2001). Phonemic awareness instruction helps children learn to read. Reading Research Quarterly, 36(3), 250–287. https://doi.org/10.1598/RRQ.36.3.2",
+    "Liberman, I. Y., Shankweiler, D., Fischer, F. W., & Carter, B. (1974). Explicit syllable and phoneme segmentation in the young child. Journal of Experimental Child Psychology, 18(2), 201–212. https://doi.org/10.1016/0022-0965(74)90101-5",
+    "Stahl, S. A., & Murray, B. A. (1994). Defining phonological awareness and its relationship to early reading. Journal of Educational Psychology, 86(2), 221–234. https://doi.org/10.1037/0022-0663.86.2.221"
+  ]
+}

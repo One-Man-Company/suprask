@@ -2,92 +2,154 @@
   "id": "10-gyvunu-grupes",
   "grade": 1,
   "strand": "pasaulio-pazinimas",
-  "title": "Gyvūnų grupės",
-  "subtitle": "Žinduoliai, paukščiai, žuvys",
+  "title": "Kas gyvena tvarte?",
+  "subtitle": "Naminis ar laukinis — tai pasako maistas, o ne vieta",
   "minutes": 9,
   "outcomes": [
-    "Skiriu tris gyvūnų grupes pagal požymius.",
-    "Paaiškinu, kuo gyvūnai dengti ir kuo kvėpuoja.",
-    "Sugrupuoju gyvūnus pagal bendrą požymį."
+    "Skiriu naminius ir laukinius pagal tai, kas duoda maistą.",
+    "Paaiškinu, kodėl gyvūnas prie namo gali būti laukinis.",
+    "Pasakau, ko augintiniui reikia iš žmogaus."
   ],
   "concept": {
-    "title": "Grupuojame pagal požymius",
-    "big_idea": "Gyvūnus galima grupuoti pagal tai, kuo jie dengti. Dar pagal tai, kaip kvėpuoja ir kur gyvena. Tai padeda pastebėti tvarką gamtoje.",
+    "title": "Kas duoda maistą?",
+    "big_idea": "Naminis gyvūnas maistą ir pastogę gauna iš žmogaus. Laukinis susiranda pats. Todėl grupę pasako ne vieta, o tai, kas juo rūpinasi.",
     "steps": [
-      "Žinduoliai turi kailį arba plaukus, maitina jauniklius pienu.",
-      "Paukščiai turi plunksnas, deda kiaušinius, dauguma skraido.",
-      "Žuvys gyvena vandenyje, kvėpuoja žiaunomis, turi žvynus."
+      "Pasirink gyvūną ir pažiūrėk, kur jis gyvena.",
+      "Atsakyk, kas jam duoda maistą: žmogus ar jis pats.",
+      "Paspausk „Žiema“ ir palygink, kas lieka, o kas išeina."
     ],
-    "example": "Šuo turi kailį ir žinda pieną — žinduolis. Antis turi plunksnas ir deda kiaušinius — paukštis. Ešerys turi žvynus ir žiaunas — žuvis."
+    "example": "Karvė gyvena tvarte, o šieną jai duoda ūkininkas. Gandras suka lizdą ant tvarto stogo, bet varles gaudo pats. Žiemą jis išskrenda."
   },
   "sim": {
     "component": "gyvunu-grupes",
-    "config": {}
+    "config": {
+      "bins": [
+        { "id": "naminis", "label": "Maistą duoda žmogus", "group": "naminiai", "emoji": "🧺" },
+        { "id": "laukinis", "label": "Maistą susiranda pats", "group": "laukiniai", "emoji": "🌿" }
+      ],
+      "animals": [
+        {
+          "label": "Karvė", "emoji": "🐄", "place": "tvarte", "bin": "naminis",
+          "trait": "žmogus atneša šieno ir ją melžia",
+          "winter": "Lieka tvarte. Šieną atneša žmogus."
+        },
+        {
+          "label": "Katė", "emoji": "🐈", "place": "kieme po namu", "bin": "naminis",
+          "trait": "žmogus jai pila pieno",
+          "winter": "Lieka prie namo. Pieną duoda žmogus."
+        },
+        {
+          "label": "Višta", "emoji": "🐔", "place": "vištidėje", "bin": "naminis",
+          "trait": "žmogus duoda grūdų",
+          "winter": "Lieka vištidėje. Grūdus duoda žmogus."
+        },
+        {
+          "label": "Gandras", "emoji": "🐦", "place": "ant tvarto stogo", "bin": "laukinis",
+          "trait": "varles gaudo pats",
+          "winter": "Išskrenda į šiltus kraštus. Varlių po ledu neranda."
+        },
+        {
+          "label": "Lapė", "emoji": "🦊", "place": "lauke už kiemo", "bin": "laukinis",
+          "trait": "maisto ieško pati",
+          "winter": "Ateina arčiau kiemo. Maisto ieško pati."
+        },
+        {
+          "label": "Ežys", "emoji": "🦔", "place": "sode po lapais", "bin": "laukinis",
+          "trait": "vabzdžius gaudo pats",
+          "winter": "Įminga ir miega iki pavasario."
+        }
+      ],
+      "sentences": {
+        "start": "Pasirink gyvūną. Kas jam duoda maistą?",
+        "ask": "Kas jam duoda maistą?",
+        "wrong": "Pažiūrėk ne į vietą, o į tai, kas duoda maistą.",
+        "lock": "Pirma sudėk visus gyvūnus. Tada „Žiema“ parodys, kas pasikeis.",
+        "done": "Visi gyvūnai savo vietose.",
+        "rule": "Grupę parodo maistas, o ne vieta.",
+        "winter": "Žiema. Pažiūrėk, kas lieka, o kas išeina.",
+        "summer": "Vasara. Grįžk prie gyvūnų.",
+        "winterNote": "Vieta pasikeitė, o grupė liko ta pati. Karvė vis dar naminė, o gandras — laukinis."
+      }
+    }
   },
   "tasks": [
     {
-      "q": "Kuris gyvūnas yra žinduolis?",
+      "q": "Gandras susisuko lizdą ant tvarto stogo. Kuris gyvūnas yra naminis?",
       "options": [
-        "Karvė",
-        "Varnas",
-        "Karosas"
-      ],
-      "answer": 0,
-      "hint": "Kuris maitina jauniklius pienu?",
-      "why": "Karvė maitina veršiuką pienu — tai žinduolis."
-    },
-    {
-      "q": "Kuo kvėpuoja žuvys?",
-      "options": [
-        "Plaučiais",
-        "Žiaunomis",
-        "Oda"
+        "Gandras, nes jis gyvena prie tvarto",
+        "Karvė, nes jai maistą duoda žmogus",
+        "Abu, nes jie gyvena viename kieme"
       ],
       "answer": 1,
-      "hint": "Jos gyvena vandenyje — kuo jos ima deguonį iš vandens?",
-      "why": "Žuvys kvėpuoja žiaunomis."
+      "hint": "Pažiūrėk ne į vietą, o į tai, kas duoda maistą.",
+      "why": "Karvei maistą duoda žmogus, o gandras varles gaudo pats."
     },
     {
-      "q": "Kuris požymis būdingas paukščiams?",
+      "q": "Katinas miega kieme po namu. Žmogus jam pila pieno. Katinas yra…",
       "options": [
-        "Žvynai",
-        "Kailis",
-        "Plunksnos"
+        "Laukinis, nes gyvena lauke",
+        "Naminis, nes jis moka gaudyti peles",
+        "Naminis, nes juo rūpinasi žmogus"
       ],
       "answer": 2,
-      "hint": "Pagalvok, kuo dengtas paukštis — ne kailis, ne žvynai.",
-      "why": "Paukščiai padengti plunksnomis."
+      "hint": "Kodėl tas žmogus neša jam pieną?",
+      "why": "Katinui maistą duoda žmogus, todėl jis naminis, nors miega lauke."
     },
     {
-      "q": "Kuris gyvūnas yra paukštis, nors neskraido?",
+      "q": "Lapė atbėgo į kiemą pažiūrėti vištų. Ar ji dabar naminė?",
       "options": [
-        "Pingvinas",
-        "Varnas",
-        "Lapė"
+        "Taip, nes ji atbėgo į kiemą",
+        "Ne, ji pati susiranda maistą",
+        "Taip, nes ji gyvena prie namo"
+      ],
+      "answer": 1,
+      "hint": "Ar kas nors lapės neša maisto?",
+      "why": "Lapė maisto ieško pati, todėl ji laukinė. Kiemas to nekeičia."
+    },
+    {
+      "q": "Žiemą karvė lieka tvarte, o gandras išskrenda. Kodėl?",
+      "options": [
+        "Karvė nemoka skraidyti",
+        "Gandras labiau bijo šalčio",
+        "Karvei maistą duoda žmogus, o gandrui — niekas"
+      ],
+      "answer": 2,
+      "hint": "Kas žiemą atneša šieno, o kas turi skristi jo ieškoti?",
+      "why": "Naminį gyvūną žmogus šeria ir žiemą. Laukinis maisto ieško pats."
+    },
+    {
+      "q": "Šuo ilgai gyveno prieglaudoje, o paskui rado naujus namus. Kas jam pasikeitė?",
+      "options": [
+        "Atsirado žmogus, kuris duoda maisto ir rūpinasi",
+        "Jis tapo laukiniu",
+        "Jis išmoko pats susirasti maisto"
       ],
       "answer": 0,
-      "hint": "Ne visi paukščiai skraido.",
-      "why": "Pingvinas turi plunksnas ir deda kiaušinius — jis paukštis.",
+      "hint": "Ko šuniui labiausiai trūko, kol jis laukė naujų namų?",
+      "why": "Naminiam gyvūnui reikia žmogaus, kuris duoda maisto ir pastogę.",
       "optional": true
     }
   ],
-  "reflect": "Kokį gyvūną matai kieme dažniausiai? Kuriai grupei jis priklauso ir kodėl?",
+  "reflect": "Kokį gyvūną matai savo kieme? Kas jam duoda maistą?",
   "teacher": {
-    "goal": "Klasifikavimo įgūdis pagal aiškius požymius, o ne pagal išvaizdos įspūdį.",
-    "prompt": "Pagal ką žinai, kad tai paukštis, o ne žinduolis?",
-    "offline": "Padarykite tris dėžutes su užrašais ir surūšiuokite žaislinius gyvūnus. Aptarkite kiekvieną sprendimą.",
+    "goal": "Sąvoką „naminis“ sieti su žmogaus duodamu maistu ir pastoge, o ne su vieta prie namo. Vaikas mokosi atsispirti klaidai „kur kieme, tas naminis“.",
+    "prompt": "Kas duoda maistą katei, kuri miega kieme, ir kas — gandrui ant tvarto stogo?",
+    "offline": "Ant dviejų lapų užrašykite „Maistą duoda žmogus“ ir „Maistą susiranda pats“. Iškirpkite korteles su gyvūnais, kuriuos vaikai matė kieme ar tvarte. Kiekvieną kortelę dėkite ant lapo ir garsiai pasakykite, kas tam gyvūnui duoda maisto. Paskui apžiūrėkite kiemą ir suraskite vieną gyvūną, kuris gyvena prie namo, bet maisto susiranda pats.",
     "misconceptions": [
-      "Šikšnosparnis priskiriamas paukščiams, nes skraido — jis žinduolis.",
-      "Delfinas laikomas žuvimi, nes gyvena vandenyje — jis žinduolis.",
-      "Pingvinas laikomas žuvimi arba „ne paukščiu“, nes neskraido."
+      "„Kas gyvena tvarte ar kieme, tas naminis.“ Gandras suka lizdą ant tvarto stogo, bet maistą susiranda pats.",
+      "„Kas gyvena lauke, tas laukinis.“ Katė, kuriai žmogus duoda pieno, lieka naminė.",
+      "„Laukinis reiškia piktas arba pavojingas.“ Modelyje lapė tik ieško maisto; laukinis reiškia „pats susiranda“, o ne „puola“.",
+      "„Jei gyvūnas naminis, jis pats maisto nesusiranda.“ Višta lesa žolę, bet be žmogaus grūdų ir vištidės šalčiausią žiemą neišgyventų."
     ]
   },
   "sources": [
-    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Gamtos mokslai“, gyvūnų įvairovė 1–2 kl.",
-    "Pasaulio pažinimo programa: gyvūnų grupės ir jų požymiai."
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Gamtos mokslai, 1 klasė — 26.2.2 „Gyvūnai“ (2 val.): projektas „Mano augintinis“, veikla „Kas gyvena tvarte“, diskusija „Kodėl augintiniai atsiranda gyvūnų prieglaudose?“ (sources/pradinio-bp-rekomendacijos-2024.txt:8419–8426).",
+    "Ten pat, 1 klasės ilgalaikis planas — 26.2.2 „Gyvūnai“, 2 val. (sources/pradinio-bp-rekomendacijos-2024.txt:17636–17640).",
+    "Ten pat, 4 klasė, 29.1.1 „Organizmų grupės“ — stuburinių klasių palyginimas pagal išorinius požymius (sources/pradinio-bp-rekomendacijos-2024.txt:9167–9171). Šiame modulyje šis turinys sąmoningai nenaudojamas (LL-23)."
   ],
   "svietimas1": [
-    "1 žingsnis — gylis: trys grupės nagrinėjamos per tuos pačius požymius (danga, kvėpavimas)",
-    "3 žingsnis — pagalba: kiekvienas priskyrimas iškart paaiškinamas požymiu"
+    "1 žingsnis — viena sąvoka: grupę rodo maistas, o ne vieta; modelis turi vieną kriterijų ir šešis gyvūnus.",
+    "2 žingsnis — vertinamas perkėlimas: gandras ant tvarto stogo, katė kieme, lapė kieme, šuo iš prieglaudos.",
+    "3 žingsnis — pagalba laiku: klaida nebaudžiama, užuomina nukreipia nuo vietos prie maisto, o „Žiema“ parodo pasekmę."
   ]
 }

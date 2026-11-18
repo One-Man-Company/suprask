@@ -155,7 +155,7 @@ Patikrinti visi 8 `content/lt/grade-01/pasaulio-pazinimas/` moduliai. Šaltinis 
 |---|---|---|---|
 | `08-metu-laikai` | keturi metų laikai ir jų požymiai | 10 temų sąraše nėra; sezonai — 1–2 kl. komunikavimo pavyzdys (:12194–12199), 3–4 kl. muzikos projektas (:15339–15342) | **iš dalies**: kontekstas, ne tema; 1 rezultatas — sąrašas (T1.6); šaltiniai be kodo ir be eilučių (T2.1) |
 | `09-augalo-gyvenimas` | sąlygos (vanduo, šviesa, šiluma) ir ciklas iki žiedo | 26.2.3 (:39950–39951, :35411–35412) | **iš dalies**: ciklas nukirptas ties žiedu, nors paties modulio žingsnis (:19) sako „brandina sėklas“; sąlygų klausimas leistinas 1–2 kl. (:12431–12433) |
-| `10-gyvunu-grupes` | trys stuburinių grupės pagal dangą ir kvėpavimą | 4 kl. 29.1.1 (:9027, :9032, :9167–9171); 1 kl. 26.2.2 — augintinis ir tvartas (:8419–8426) | **neatitinka**: 4 klasės turinys 1 klasėje; šaltinyje frazės „gyvūnų įvairovė“ nėra (0 kartų) |
+| `10-gyvunu-grupes` | naminiai ir laukiniai gyvūnai: grupę pasako, kas duoda maistą, o ne vieta | 1 kl. 26.2.2 (:8419–8426, :17636–17640) | **atitinka** (pataisyta 2026-11-18, #348: anksčiau mokė 4 kl. 29.1.1) |
 | `16-vandens-busenos` | garavimas ir lašai | 26.3.2 (:1547–1552) | **iš dalies**: kietosios būsenos formos (snaigė, šerkšnas, ledas) ir šaldymo kryptis neįtraukta |
 | `17-judejimas` | greitį lemia plokštumos aukštis | 26.4.1 (:1557–1565, :35219–35229) | **atitinka**; pastaba: „svoris greičio nekeičia“ — modulio prielaida, ne programos tekstas |
 | `18-kuprine-ir-kuno-dalys` | svorį laiko ta vieta, kur kuprinė remiasi | 26.1.2 (:1516–1527) | **atitinka** |
@@ -170,7 +170,7 @@ Patikrinti visi 8 `content/lt/grade-01/pasaulio-pazinimas/` moduliai. Šaltinis 
 | 26.3.1 **gamtos ištekliai, tarša, tausojimas** | modulio nėra; pasiūlymas `2026-11-14-ideator-kas-sukure-dailka.json` (target 21) |
 | 26.2.1 **žmonių įvairovė** | modulio nėra; atmesta `guidelines/klausimai.md:71` (asmens duomenys) |
 | 26.5.1 **energijos reikia visiems** | atskiro modulio nėra; atmesta `guidelines/klausimai.md:70` (gairių 2 klausimas) |
-| 26.2.2 **naminiai ir laukiniai gyvūnai** | modulio nėra; `10-gyvunu-grupes` moko 4 kl. turinio (žr. §2.5) |
+| 26.2.2 **naminiai ir laukiniai gyvūnai** | padengta `10-gyvunu-grupes` (perrašytas 2026-11-18, #348: kriterijus — kas duoda maistą, ne vieta) |
 | 26.1.1 **traumų prevencija** | yra tik gaisro dalis (`19`); traumų temos nėra |
 | 26.1.2 **dienos režimas, mityba** | yra tik kuprinės dalis (`18`); režimo ir mitybos nėra |
 

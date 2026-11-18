@@ -563,254 +563,231 @@ const augaloGyvenimas = {
 };
 
 /* ------------------------------------------------------------------ */
-/* 3. Gyvūnų grupės                                                    */
+/* 3. Naminiai ir laukiniai gyvūnai — kas duoda maistą                 */
 /* ------------------------------------------------------------------ */
-/* Grupė nustatoma pagal tuos pačius tris požymius (danga, kvėpavimas,
-   jauniklių auginimas). Gyvūnų tvarka fiksuota ir sąmoningai permaišyta
-   taip, kad gretimi gyvūnai priklausytų skirtingoms grupėms. Anksčiau
-   sąrašas buvo maišomas `sort(() => Math.random() - 0.5)`: tas pats
-   veiksmas duodavo skirtingą rezultatą (mokytojas negalėjo pakartoti),
-   maišymas nebuvo tolygus, o kartais visi vienos grupės gyvūnai
-   atsidurdavo greta — tada užduotis virsdavo „kopijuok kaimyną“.
-
-   Kodėl `cover` ir `coverAcc`: pasiūlymas #42. Dėžėje buvo tik žodis
-   „Žinduoliai“ ir 12 px paaiškinimas — vaikas, dar nesklandžiai skaitantis,
-   turėjo perskaityti tris tokius užrašus per bandymą, o gairių T5.5 reikalauja,
-   kad tekstas nebūtų vienintelis informacijos nešėjas. Dabar dėžėje yra
-   dangos piktograma (plaukai / plunksnos / žvynai) ir dangos žodis didesniu
-   šriftu; `coverAcc` vartomas grįžtamajame ryšyje („Karvė turi plaukus“),
-   nes „turi“ tinka visoms giminėms, o „dengtas/dengta“ — ne. */
-const GYVUNU_GRUPES = [
-  { id: "zinduoliai", label: "Žinduoliai", cover: "plaukai", coverAcc: "plaukus", icon: "plaukai",
-    say: "Turi plaukus. Maitina jauniklius pienu." },
-  { id: "pauksciai", label: "Paukščiai", cover: "plunksnos", coverAcc: "plunksnas", icon: "plunksnos",
-    say: "Turi plunksnas. Deda kiaušinius." },
-  { id: "zuvis", label: "Žuvys", cover: "žvynai", coverAcc: "žvynus", icon: "zvynai",
-    say: "Turi žvynus. Kvėpuoja žiaunomis." },
-];
-
-/* `pozymis` — antrasis požymis (kvėpavimas arba jaunikliai), o ne danga:
-   dangą simuliacija įvardija iš grupės, todėl „Varnas turi plunksnas ir
-   turi plunksnas“ nebegalimas. */
-const GYVUNAI = [
-  { emoji: "🐄", name: "Karvė", g: "zinduoliai", pozymis: "maitina veršiuką pienu" },
-  { emoji: "🐦", name: "Varnas", g: "pauksciai", pozymis: "deda kiaušinius" },
-  { emoji: "🐟", name: "Ešerys", g: "zuvis", pozymis: "kvėpuoja žiaunomis" },
-  { emoji: "🦊", name: "Lapė", g: "zinduoliai", pozymis: "maitina jauniklius pienu" },
-  { emoji: "🦆", name: "Antis", g: "pauksciai", pozymis: "deda kiaušinius" },
-  { emoji: "🐠", name: "Karosas", g: "zuvis", pozymis: "kvėpuoja žiaunomis" },
-  { emoji: "🐇", name: "Kiškis", g: "zinduoliai", pozymis: "maitina jauniklius pienu" },
-  { emoji: "🦉", name: "Pelėda", g: "pauksciai", pozymis: "deda kiaušinius" },
-  { emoji: "🦈", name: "Ryklys", g: "zuvis", pozymis: "kvėpuoja žiaunomis" },
-];
-
-
-/* Klaidinantis gyvūnas (pasiūlymas #727). Devyni akivaizdūs gyvūnai modelį
-   tik patvirtina, bet negriauna nė vienos modulio įvardytos klaidingos
-   nuostatos (10-gyvunu-grupes.json:79–83). Delfinas gyvena vandenyje ir
-   plaukia kaip žuvis — todėl jį norisi dėti į žuvų dėžę. Jis parodomas TIK
-   tada, kai devyni gyvūnai jau sudėti: tada tai perkėlimas (T2.2), o ne dar
-   vienas pavyzdys. Jis neįskaitomas į api.progress — praplėtimas neturi
-   tapti sąlyga užbaigti (T1.3).
-
-   Užuominos skirtingos pagal dėžę, į kurią vaikas įdėjo: jos kartoja
-   vaiko pastebėjimą („plaukia kaip žuvis“, „gyvena vandenyje“) ir klausia
-   apie požymį. Teisingas atsakymas neįvardijamas (LL-22, T3.1). */
-const KLAIDINANTIS_GYVUNAS = {
-  emoji: "🐬", name: "Delfinas", g: "zinduoliai", pozymis: "maitina jauniklius pienu",
-  extra: true,
-  reveal: "Visi devyni gyvūnai savo grupėse! Dar vienas: delfinas. Kur jis?",
-  /* „beveik be plaukų“ — sąmoningai: dėžėje dabar yra plaukų piktograma, o
-     delfinas yra vienintelis gyvūnas, kuriam ji netinka. Jei apie tai
-     nutylėtume, vaikas liktų su nauja klaidinga nuostata „visi žinduoliai
-     plaukuoti“ (LL-28: modelyje turi būti prieštaraujantis pavyzdys). */
-  right: "Delfinas turi lygią odą, beveik be plaukų. Bet jis maitina jauniklius pienu. Todėl jis žinduolis.",
-  note: "Delfinas neturi žiaunų. Jis kvėpuoja plaučiais. Todėl jis žinduolis, o ne žuvis.",
-  hintZuvis: "Delfinas plaukia kaip žuvis, bet žiaunų neturi. Kuo jis kvėpuoja?",
-  hintPauksciai: "Delfinas neturi plunksnų. Bet jis gyvena vandenyje. Kuo jis kvėpuoja?",
-  step: "Prisimink: delfino jauniklis geria pieną. Ką tai pasako apie grupę?",
-};
-
+/* Modulis (1 kl. 26.2.2 „Kas gyvena tvarte“) moko VIENO kriterijaus:
+   grupę pasako tai, kas gyvūnui duoda maistą, o ne vieta, kur jis
+   laikosi. Todėl dėžės yra ne „tvartas / laukas“ — tokia schema pačią
+   klaidą įtvirtintų — o „Maistą duoda žmogus“ ir „Maistą susiranda
+   pats“. Kiekviena grupė turi po klaidinantį atvejį:
+     gandras — lizdas ant tvarto stogo, bet laukinis;
+     katė — miega kieme, bet naminė;
+     lapė — ateina į kiemą, bet laukinė.
+   Grupės žodis („naminiai“ / „laukiniai“) pasirodo tik po pirmo
+   teisingo priskyrimo: jis išvedamas, o ne duotas iš anksto.
+   „Žiema“ yra vienintelis parametras: ji keičia VIETĄ, o grupė lieka
+   ta pati — todėl vaikas pamato, kad vieta nėra kriterijus. Iki visų
+   priskyrimų mygtukas neįjungtas, bet lieka fokusuojamas ir pasako, ko
+   laukia (LL-04, LL-32), o ne tyliai neveikia.
+   Visi tekstai — iš `sim.config` (LL-61, LL-103, LL-104): kode nėra nė
+   vieno įrašyto gyvūno vardo ar sakinio, kurio vaikas negirdėtų. */
 const gyvunuGrupes = {
-  mount({ stage, controls, api }) {
-    const groups = GYVUNU_GRUPES;
-    // Papildomas gyvūnas gyvena tame pačiame sąraše (kad priskyrimo logika
-    // būtų ta pati), bet `visible` jį paslepia iki devynių priskyrimų —
-    // kitaip jis taptų dešimtuoju „eiliniu“ gyvūnu ir prarastų perkėlimo
-    // prasmę.
-    const animals = [
-      ...GYVUNAI.map((a) => ({ ...a, done: false, visible: true })),
-      { ...KLAIDINANTIS_GYVUNAS, done: false, visible: false, tries: 0 },
-    ];
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const bins = Array.isArray(config.bins) ? config.bins : [];
+    const animalsCfg = Array.isArray(config.animals) ? config.animals : [];
 
+    const knownBin = (id) => bins.some((b) => b.id === id);
+    const valid = bins.length === 2
+      && bins.every((b) => b && b.id && b.label && b.group && b.emoji)
+      && animalsCfg.length >= 3
+      && animalsCfg.every((a) => a && a.label && a.emoji && a.place && a.trait
+        && a.winter && knownBin(a.bin));
+
+    if (!valid) {
+      console.error("gyvunu-grupes: gyvūnas be label/emoji/place/trait/winter/bin arba nežinoma dėžė.");
+      stage.innerHTML = '<p class="sim-note" style="text-align:center">Gyvūnai nesuderinti su dėžėmis.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const animals = animalsCfg.map((a) => ({ ...a, done: false }));
+    const placed = Object.fromEntries(bins.map((b) => [b.id, 0]));
     let selected = null;
-    let challenge = false;   // ar papildomas gyvūnas jau parodytas
-    let reported = false;    // ar api.progress jau iškviestas (LL-17)
-    const placed = { zinduoliai: 0, pauksciai: 0, zuvis: 0 };
+    let reported = false;   // api.progress — vieną kartą, įveikus visus (LL-17)
+    let winter = false;
     const timers = new Set();
-    const left = () => animals.filter((a) => !a.done && a.visible).length;
+    const binOf = (id) => bins.find((b) => b.id === id);
+    const left = () => animals.filter((a) => !a.done).length;
+    const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
 
     stage.innerHTML = `
-      <div style="width:100%;max-width:46rem">
-        <div id="gg-tray" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;padding:.6rem;border-radius:var(--r-m);background:color-mix(in srgb, var(--mint) 10%, var(--paper))"></div>
-        <div id="gg-bins" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,5.5rem),1fr));gap:.5rem;margin-top:1rem"></div>
+      <div style="width:100%;max-width:34rem;margin:0 auto">
+        <div id="gg-tray" role="group" aria-label="Gyvūnai"
+             style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;padding:.6rem;border-radius:var(--r-m);background:color-mix(in srgb, var(--mint) 10%, var(--paper))"></div>
+        <div id="gg-bins" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin-top:.8rem"></div>
+        <div id="gg-winter" style="display:none;margin-top:.8rem;padding:.6rem .7rem;border-radius:var(--r-m);background:var(--paper-2);border:2px solid var(--line)"></div>
         <p class="sim-note" id="gg-msg" tabindex="-1"></p>
       </div>`;
-    controls.innerHTML = `<button class="btn ghost" id="gg-reset">Iš naujo</button>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.45rem;width:100%;max-width:34rem;margin:0 auto">
+        <button class="btn secondary" id="gg-winter-btn" aria-pressed="false"
+                aria-disabled="true" aria-describedby="gg-winter-hint"
+                style="min-height:52px;font-size:.95rem">Žiema</button>
+        <p id="gg-winter-hint" style="margin:0;font-size:.8rem;line-height:1.3;text-align:center;color:var(--ink-soft)"></p>
+        <button class="btn ghost" id="gg-reset" style="min-height:48px;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
     // Pastaba yra už scenos ribų, todėl „Iš naujo“ jos neišvalo — be šios
-    // eilutės po perkrovimo liktų sakinys apie delfiną, nors lentelėje vėl
-    // devyni gyvūnai (LL-16: būsena, kuri grįžta atgal per perkrovimą).
+    // eilutės po perkrovimo liktų sakinys apie žiemą (LL-16).
     api.note("");
     const trayEl = stage.querySelector("#gg-tray");
     const binsEl = stage.querySelector("#gg-bins");
+    const winterEl = stage.querySelector("#gg-winter");
     const msg = stage.querySelector("#gg-msg");
+    const winterBtn = controls.querySelector("#gg-winter-btn");
+    const winterHint = controls.querySelector("#gg-winter-hint");
 
+    /* Kortelė rodo ir vietą („ant tvarto stogo“), ir vardą: vietą vaikas
+       turi matyti, kad galėtų ja remtis ir suklysti, o paskui pastebėti,
+       kad ji grupės nepasako. Vardas rašomas, ne tik `aria-label`
+       (pasiūlymas #42): 6–7 m. vaikui reikia žodžio, kurį jis gali
+       pasakyti ir surasti kitame puslapyje. */
     function drawTray() {
       trayEl.innerHTML = "";
       animals.forEach((a) => {
-        if (a.done || !a.visible) return;
-        const on = selected === a.name;
-        // Papildomas gyvūnas pažymėtas brūkšniu ir žodžiu — ne vien spalva
-        // (T5.5): vaikas turi matyti, kad tai ne dešimtas eilinis gyvūnas.
-        const border = on ? "3px solid var(--ink)"
-          : (a.extra ? "3px dashed var(--ink-faint)" : "3px solid transparent");
+        if (a.done) return;
+        const on = selected === a.label;
         const b = document.createElement("button");
         b.type = "button";
-        b.setAttribute("aria-label", a.extra
-          ? `${a.name}. Papildomas gyvūnas. Pasirink.`
-          : `${a.name}. Pasirink.`);
+        b.setAttribute("aria-label", `${a.label}. Gyvena ${a.place}. Pasirink.`);
         b.setAttribute("aria-pressed", String(on));
-        // Vardas matomas, ne tik `.sr-only` (pasiūlymas #42): 6–7 m. vaikas
-        // emoji atpažįsta, bet jam reikia ir žodžio, kad pats galėtų jį
-        // pasakyti bei surasti tą patį gyvūną kitame puslapyje.
-        b.style.cssText = `display:grid;place-items:center;gap:1px;border:${border};`
-          + "background:transparent;border-radius:14px;padding:4px 6px;cursor:pointer;"
-          + "font:inherit;color:inherit;min-width:72px;min-height:72px";
+        b.style.cssText = "display:grid;justify-items:center;gap:1px;cursor:pointer;"
+          + "background:transparent;border-radius:14px;padding:5px 6px;font:inherit;color:inherit;"
+          + `min-width:84px;min-height:88px;border:3px solid ${on ? "var(--ink)" : "transparent"}`;
         b.innerHTML = `<span aria-hidden="true" style="font-size:1.9rem;line-height:1.05">${a.emoji}</span>`
-          + (a.extra ? `<span aria-hidden="true" style="font-size:.7rem;line-height:1.1;font-weight:700;color:var(--ink-soft)">papildomas</span>` : "")
-          + `<span aria-hidden="true" style="font-size:.9rem;line-height:1.1;font-weight:700;text-align:center">${a.name}</span>`;
+          + `<span aria-hidden="true" style="font-size:.92rem;line-height:1.1;font-weight:800;text-align:center">${a.label}</span>`
+          + `<span aria-hidden="true" style="font-size:.72rem;line-height:1.15;text-align:center;color:var(--ink-soft)">${a.place}</span>`;
         b.addEventListener("click", () => {
-          selected = a.name;
+          selected = a.label;
           drawTray();
-          api.readout(`Pasirinkai: ${a.name}. Į kurią grupę dėti?`);
-          api.speak(a.name, { rate: .9 });
-          // Klaviatūra nesustoja ties perkurtu sąrašu: sekantis žingsnis — grupė.
-          binsEl.querySelector("button[data-g]").focus();
+          api.readout(`${a.label}. ${S.ask}`);
+          api.speak(a.label, { rate: .9 });
+          // Klaviatūra nesustoja ties perkurtu sąrašu: sekantis žingsnis — dėžė.
+          binsEl.querySelector("button[data-bin]").focus();
         });
         trayEl.appendChild(b);
       });
     }
 
-    // Ekrane gyvūnai rodomi paveikslėliais, todėl kiekvienos grupės mygtuko
-    // pavadinimas keičiamas tekstu: grupė, kiek įdėta ir pagal ką atpažinti.
+    /* Dėžės pavadinimas yra klausimas („kas duoda maistą?“), o grupės
+       žodis pasirodo tik tada, kai jau yra bent vienas priskyrimas:
+       kitaip vaikas žymėtų pagal iš anksto duotą etiketę, ne pagal
+       modelį. */
     function paintBins() {
-      binsEl.querySelectorAll("button[data-g]").forEach((bin) => {
-        const g = groups.find((x) => x.id === bin.dataset.g);
-        bin.setAttribute("aria-label",
-          `${g.label}. Įdėta ${placed[g.id]}. ${g.say}`);
+      binsEl.querySelectorAll("button[data-bin]").forEach((bin) => {
+        const b = binOf(bin.dataset.bin);
+        const n = placed[b.id];
+        const g = bin.querySelector(".group");
+        g.textContent = n ? b.group : "";
+        g.style.display = n ? "block" : "none";
+        bin.setAttribute("aria-label", n
+          ? `${b.label}. ${b.group}: ${n}.`
+          : `${b.label}. Dar nieko neįdėta.`);
       });
     }
 
-    groups.forEach((g) => {
+    bins.forEach((b) => {
       const bin = document.createElement("button");
       bin.type = "button";
-      bin.dataset.g = g.id;
-      bin.style.cssText = "display:grid;justify-items:center;gap:.15rem;min-width:0;" +
-        "padding:.5rem .15rem;border:3px dashed var(--line);border-radius:var(--r-m);" +
-        "background:var(--paper-2);cursor:pointer;font:inherit;color:inherit;min-height:9rem";
-      // Piktograma + dangos žodis (pasiūlymas #42). Anksčiau vienintelis
-      // informacijos nešėjas buvo 12 px `.72rem` paaiškinimas, kurį vaikas
-      // turėjo perskaityti tris kartus per bandymą (T5.5, interaktyvumo
-      // principas 6). Dabar požymis matomas kaip paveikslėlis ir kaip žodis,
-      // o tekstas liko tik `aria-label` (ekrano skaitytuvui).
-      // 0,9 rem — didžiausias dydis, kuris @360 px telpa į 3 stulpelių dėžę
-      // (išmatuota: „Žinduoliai“ 80,5 px, turima 81,6 px). Mažesnis už 12 px
-      // nebegrįžtama: tai buvo pasiūlymo priežastis.
+      bin.dataset.bin = b.id;
+      bin.style.cssText = "display:grid;justify-items:center;gap:.2rem;min-width:0;"
+        + "padding:.55rem .3rem;border:3px dashed var(--line);border-radius:var(--r-m);"
+        + "background:var(--paper-2);cursor:pointer;font:inherit;color:inherit;min-height:9.5rem";
       bin.innerHTML =
-        `<svg viewBox="0 0 40 40" aria-hidden="true" focusable="false" `
-        + `style="width:38px;height:38px;display:block">${art.cover(g.icon, 20, 20, 1)}</svg>`
-        + `<strong style="font-size:.9rem;line-height:1.1;text-align:center;font-family:var(--font-head)">${g.label}</strong>`
-        + `<span style="font-size:.85rem;line-height:1.1;font-weight:700;text-align:center;color:var(--ink-soft)">${g.cover}</span>`
-        + `<span class="items" aria-hidden="true" style="display:flex;gap:2px;flex-wrap:wrap;justify-content:center;min-height:1.2rem;font-size:1.05rem"></span>`;
-
+        `<span aria-hidden="true" style="font-size:1.6rem;line-height:1.1">${b.emoji}</span>`
+        + `<strong style="font-size:.92rem;line-height:1.15;text-align:center;font-family:var(--font-head)">${b.label}</strong>`
+        + `<span class="group" style="display:none;font-size:.8rem;line-height:1.15;font-weight:700;text-align:center;color:var(--ink-soft)"></span>`
+        + `<span class="items" aria-hidden="true" style="display:flex;gap:2px;flex-wrap:wrap;justify-content:center;min-height:1.6rem;font-size:1.15rem;line-height:1.1"></span>`;
 
       const holder = bin.querySelector(".items");
       bin.addEventListener("click", () => {
-        if (!selected) { msg.textContent = "Pirma pasirink gyvūną."; api.readout("Pirma pasirink gyvūną."); return; }
-        const a = animals.find((x) => x.name === selected && !x.done);
+        if (!selected) {
+          msg.textContent = S.ask || "Pirma pasirink gyvūną.";
+          api.readout(msg.textContent);
+          return;
+        }
+        const a = animals.find((x) => x.label === selected && !x.done);
         if (!a) return;
-        if (a.g === g.id) {
+
+        if (a.bin === b.id) {
           a.done = true;
-          placed[g.id] += 1;
+          placed[b.id] += 1;
           const mark = document.createElement("span");
           mark.textContent = a.emoji;
           mark.setAttribute("aria-hidden", "true");
           holder.appendChild(mark);
           selected = null;
 
-          /* Papildomas gyvūnas: jokio skaičiaus, jokio api.progress — tik
-             požymis ir priežastis, kodėl vieta vandenyje neklaidina. */
-          if (a.extra) {
-            drawTray();
-            paintBins();
-            msg.textContent = a.right;
-            api.readout("Delfinas priklauso žinduoliams. Grupę rodo požymiai, o ne vieta.");
-            api.note(a.note);
-            msg.focus();
-            return;
-          }
-
-          const baseLeft = animals.filter((x) => !x.done && !x.extra).length;
-          if (baseLeft === 0 && !challenge) {
-            challenge = true;
-            const extra = animals.find((x) => x.extra);
-            extra.visible = true;
-            drawTray();
-            paintBins();
-            msg.textContent = extra.reveal;
-            api.readout(`Visos grupės pilnos: žinduoliai ${placed.zinduoliai}, paukščiai ${placed.pauksciai}, žuvys ${placed.zuvis}. Dar vienas gyvūnas: delfinas.`);
-            // Rezultatas — devyni gyvūnai grupėse. Papildomas gyvūnas jo
-            // nebeatšaukia ir negrąžina atgal (LL-17).
+          if (left() === 0) {
+            // Sėkmės sąlyga — dabartinė būsena (visi priskyrimai), ne
+            // prisiminimas, kad kažkas kadaise buvo įdėta (LL-17).
             if (!reported) { reported = true; api.progress({ correct: true }); }
-            const next = trayEl.querySelector("button");
-            if (next) next.focus();
+            winterBtn.setAttribute("aria-disabled", "false");
+            winterHint.textContent = "Paspausk „Žiema“ ir pažiūrėk, kas pasikeis.";
+            api.note(S.rule);
+            drawTray();
+            paintBins();
+            msg.textContent = `${S.done} ${S.rule}`;
+            api.readout(`${S.done} ${S.rule}`);
+            winterBtn.focus();
             return;
           }
 
           drawTray();
           paintBins();
-          // Grįžtamasis ryšys pradedamas požymiu, o ne grupės vardu
-          // (pasiūlymas #42): vaikas, kuris dar neskaito „žinduoliams“,
-          // išgirsta ir pamato tą patį pastebėjimą, kuriuo rėmėsi.
-          msg.textContent = `Teisingai. ${a.name} turi ${g.coverAcc} ir ${a.pozymis}.`;
-          api.readout(`Teisingai. ${a.name} turi ${g.coverAcc}. Liko ${left()}.`);
-          // Grįžtama prie gyvūnų: kitas priskyrimas prasideda nuo pasirinkimo.
+          msg.textContent = `${cap(a.label)}: ${a.trait}.`;
+          api.readout(`Teisingai. ${a.label} — ${b.group}. Liko ${left()}.`);
           const next = trayEl.querySelector("button");
           if (next) next.focus();
         } else {
           bin.classList.add("wiggle");
           const t = setTimeout(() => { bin.classList.remove("wiggle"); timers.delete(t); }, 450);
           timers.add(t);
-
-          if (a.extra) {
-            a.tries += 1;
-            // Pirma užuomina kartoja vaiko pastebėjimą ir klausia apie požymį,
-            // antra — modelio žingsnis (T3.2). Atsakymas neįvardijamas (LL-22).
-            msg.textContent = a.tries === 1
-              ? (g.id === "zuvis" ? a.hintZuvis : a.hintPauksciai)
-              : a.step;
-            api.readout(`Delfinas liko lentelėje. Liko ${left()}.`);
-            return;
-          }
-
-          // Užuomina nurodo į matomą požymį, ne į perskaitytą grupės vardą:
-          // dėžių piktogramos yra tai, ką vaikas gali palyginti iš karto.
-          msg.textContent = "Ne ši grupė. Kuo šis gyvūnas dengtas? Palygink su dėžių paveikslėliais.";
-
-          api.readout(`Ne ši grupė. ${a.name} liko lentelėje. Liko ${left()}.`);
+          // Užuomina kartoja TAI, KĄ VAIKAS Mato kortelėje (vietą), ir
+          // klausia apie kriterijų. Atsakymas neįvardijamas (LL-22).
+          msg.textContent = `${cap(a.label)} gyvena ${a.place}. ${S.wrong}`;
+          api.readout(`Ne šitaip. ${a.label} liko lentelėje. Liko ${left()}.`);
         }
       });
       binsEl.appendChild(bin);
+    });
+
+    function paintWinter() {
+      winterEl.innerHTML = "";
+      if (!winter) { winterEl.style.display = "none"; return; }
+      winterEl.style.display = "block";
+      // Sąrašas rodo KIEKVIENĄ gyvūną atskirai: viena bendra taisyklė
+      // „naminiai lieka“ būtų neteisinga (lapė žiemą ateina arčiau
+      // kiemo), o vaikui reikia matyti būtent tą prieštaraujantį atvejį.
+      const items = animals.map((a) => `<li style="margin:.15rem 0">`
+        + `<span aria-hidden="true">${a.emoji}</span> <strong>${a.label}</strong> — ${a.winter}</li>`).join("");
+      winterEl.innerHTML = `<p style="margin:0 0 .35rem;font-size:.9rem;font-weight:800">❄ Žiemą</p>`
+        + `<ul style="margin:0;padding-left:1.1rem;font-size:.9rem;line-height:1.35">${items}</ul>`;
+    }
+
+    winterBtn.addEventListener("click", () => {
+      if (!reported) {
+        msg.textContent = S.lock;
+        api.readout(S.lock);
+        return;
+      }
+      winter = !winter;
+      winterBtn.setAttribute("aria-pressed", String(winter));
+      winterBtn.textContent = winter ? "Vasara" : "Žiema";
+      paintWinter();
+      if (winter) {
+        api.readout(S.winter);
+        api.speak(S.winter);
+        api.note(S.winterNote);
+        msg.textContent = S.winterNote;
+      } else {
+        api.readout(S.summer);
+        api.speak(S.summer);
+        api.note(S.rule);
+        msg.textContent = S.rule;
+      }
     });
 
     controls.querySelector("#gg-reset").addEventListener("click", () => {
@@ -818,11 +795,14 @@ const gyvunuGrupes = {
       timers.clear();
       stage.innerHTML = "";
       controls.innerHTML = "";
-      gyvunuGrupes.mount({ stage, controls, api });
+      gyvunuGrupes.mount({ stage, controls, api, config });
     });
+
     drawTray();
     paintBins();
-    api.readout(`Rūšiuok gyvūnus. Liko ${left()}.`);
+    paintWinter();
+    winterHint.textContent = "Paaiškės, kai visi gyvūnai bus savo vietose.";
+    api.readout(S.start || `Sudėk gyvūnus. Liko ${left()}.`);
     return () => { timers.forEach(clearTimeout); timers.clear(); };
   },
 };

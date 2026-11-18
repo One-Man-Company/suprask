@@ -899,6 +899,10 @@
   "n": "n/6d27ce5b4ffa8b9a-cd9ef39e.mp3",
   "s": "s/6d27ce5b4ffa8b9a-115ae524.mp3"
  },
+ "Ežys": {
+  "n": "n/8a709effc2143140-5ded1826.mp3",
+  "s": "s/8a709effc2143140-92bd6f9d.mp3"
+ },
  "F": {
   "n": "n/f67ab10ad4e4c531-5661c2ef.mp3",
   "s": "s/f67ab10ad4e4c531-55d97451.mp3"
@@ -918,6 +922,10 @@
  "Gamykloje": {
   "n": "n/3853654d01c731b9-099d1706.mp3",
   "s": "s/3853654d01c731b9-4495ab60.mp3"
+ },
+ "Gandras": {
+  "n": "n/24761e03e8dddd5e-2e851785.mp3",
+  "s": "s/24761e03e8dddd5e-7fb9a8eb.mp3"
  },
  "Garas": {
   "n": "n/a5c481c3f32ee5e4-7e4f2324.mp3",
@@ -954,6 +962,10 @@
  "Greičiau": {
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
   "s": "s/60d89cb04b7054d4-58e113db.mp3"
+ },
+ "Grupę parodo maistas, o ne vieta.": {
+  "n": "n/87fad9ed599afa28-f0c56435.mp3",
+  "s": "s/87fad9ed599afa28-176fead1.mp3"
  },
  "Grupę rodo stiebas, ne aukštis.": {
   "n": "n/3ecb1976c1883ee5-e0a2ec1f.mp3",
@@ -1043,6 +1055,10 @@
   "n": "n/304a8cc0a125d425-6272726a.mp3",
   "s": "s/304a8cc0a125d425-5bb83eec.mp3"
  },
+ "Kas jam duoda maistą?": {
+  "n": "n/321b34b9907971fe-24d33db1.mp3",
+  "s": "s/321b34b9907971fe-73613a46.mp3"
+ },
  "Kas pasikeis, kai pakeisi korteles: pulsas ar ritmas?": {
   "n": "n/d9b40529fa3121c9-772cc6da.mp3",
   "s": "s/d9b40529fa3121c9-04a356d4.mp3"
@@ -1062,6 +1078,10 @@
  "Kas žaidžia?": {
   "n": "n/9eb4558529b2e878-e0f81a83.mp3",
   "s": "s/9eb4558529b2e878-3d47c07e.mp3"
+ },
+ "Katė": {
+  "n": "n/7b398e085664430c-868e9634.mp3",
+  "s": "s/7b398e085664430c-0f654fa7.mp3"
  },
  "Katė geria pieną": {
   "n": "n/84b87a10530b2560-6bfb479a.mp3",
@@ -1295,6 +1315,14 @@
   "n": "n/08f271887ce94707-c064f849.mp3",
   "s": "s/08f271887ce94707-4c32a3d0.mp3"
  },
+ "Maistą duoda žmogus": {
+  "n": "n/7ba84418484e027c-f1c7481b.mp3",
+  "s": "s/7ba84418484e027c-42161ac8.mp3"
+ },
+ "Maistą susiranda pats": {
+  "n": "n/9ab19ec14d02bcc2-390d207c.mp3",
+  "s": "s/9ab19ec14d02bcc2-61eb293c.mp3"
+ },
  "Mažas metalas dugne.": {
   "n": "n/343c8f5bfbe1f97c-565e1b9a.mp3",
   "s": "s/343c8f5bfbe1f97c-567eb694.mp3"
@@ -1387,6 +1415,10 @@
   "n": "n/e4ff17609ce48006-064c37ee.mp3",
   "s": "s/e4ff17609ce48006-c893f127.mp3"
  },
+ "Pasirink gyvūną. Kas jam duoda maistą?": {
+  "n": "n/fe78452fdcc0fe98-7e85e9d4.mp3",
+  "s": "s/fe78452fdcc0fe98-9602c9f7.mp3"
+ },
  "Pasirink kitus skaičius ir pabandyk vėl.": {
   "n": "n/27b8c325e7898242-7b0be7c4.mp3",
   "s": "s/27b8c325e7898242-fcef8d60.mp3"
@@ -1402,6 +1434,10 @@
  "Pavasaris": {
   "n": "n/db02146074f1d85b-9d9ed007.mp3",
   "s": "s/db02146074f1d85b-d53c7eaf.mp3"
+ },
+ "Pažiūrėk ne į vietą, o į tai, kas duoda maistą.": {
+  "n": "n/3b31730d5e058355-7031232c.mp3",
+  "s": "s/3b31730d5e058355-273c7590.mp3"
  },
  "Pelėda": {
   "n": "n/9f5897c7a3b79e29-125b8a6f.mp3",
@@ -1442,6 +1478,10 @@
  "Pirma spėk, tada matuok.": {
   "n": "n/ac090d01c5a41fa1-7058ffff.mp3",
   "s": "s/ac090d01c5a41fa1-06420e77.mp3"
+ },
+ "Pirma sudėk visus gyvūnus. Tada „Žiema“ parodys, kas pasikeis.": {
+  "n": "n/cc284e4b29ed01a8-d4c4c59d.mp3",
+  "s": "s/cc284e4b29ed01a8-b67b2009.mp3"
  },
  "Pirma sustabdyk, tada keisk.": {
   "n": "n/8d98eca84da1aa3c-a1e1f182.mp3",
@@ -1983,6 +2023,10 @@
   "n": "n/bd912f6f1cb9f2ac-617674ef.mp3",
   "s": "s/bd912f6f1cb9f2ac-ee42fdd7.mp3"
  },
+ "Vasara. Grįžk prie gyvūnų.": {
+  "n": "n/b1f38dc98b8a43cc-7d4984ec.mp3",
+  "s": "s/b1f38dc98b8a43cc-e2dc74b7.mp3"
+ },
  "Vidurnaktis yra tarp 23 ir 1 valandos. Apie jį kalbėsime kitą kartą.": {
   "n": "n/da789db797cb676d-9499359a.mp3",
   "s": "s/da789db797cb676d-9b5a9b59.mp3"
@@ -2031,9 +2075,17 @@
   "n": "n/003868e611555a1e-a0b8966d.mp3",
   "s": "s/003868e611555a1e-47869961.mp3"
  },
+ "Vieta pasikeitė, o grupė liko ta pati. Karvė vis dar naminė, o gandras — laukinis.": {
+  "n": "n/35f699915a731df8-4c14acdf.mp3",
+  "s": "s/35f699915a731df8-7b1f0f81.mp3"
+ },
  "Viršutinis laidas yra. Apatinio nėra, todėl kelias neužsidaro.": {
   "n": "n/4523bd23cb838fb1-fe805551.mp3",
   "s": "s/4523bd23cb838fb1-4726d579.mp3"
+ },
+ "Visi gyvūnai savo vietose.": {
+  "n": "n/6974ab76ffadda8b-a818f62e.mp3",
+  "s": "s/6974ab76ffadda8b-76d8804d.mp3"
  },
  "Visi taikiniai pasiekti!": {
   "n": "n/ba4855f4b9f8191c-f13f6eda.mp3",
@@ -2046,6 +2098,10 @@
  "Visos trys vandenyje. Medis plaukia, akmuo ir metalas dugne.": {
   "n": "n/f42e2afc12600ac5-8c9803ce.mp3",
   "s": "s/f42e2afc12600ac5-090caee8.mp3"
+ },
+ "Višta": {
+  "n": "n/27921aa62149b214-3ae929ce.mp3",
+  "s": "s/27921aa62149b214-e930e68c.mp3"
  },
  "Vėl geltona. Paveikslas toks pat.": {
   "n": "n/c399364d54a18b91-e0af107e.mp3",
@@ -2406,6 +2462,10 @@
  "Žiema": {
   "n": "n/8c0846000ca22d18-ba6f7baa.mp3",
   "s": "s/8c0846000ca22d18-48ef6887.mp3"
+ },
+ "Žiema. Pažiūrėk, kas lieka, o kas išeina.": {
+  "n": "n/cbc37c5adddc2d8e-ce43f981.mp3",
+  "s": "s/cbc37c5adddc2d8e-a1964894.mp3"
  },
  "Žinduoliai": {
   "n": "n/ddf119334452b7c6-973e39a3.mp3",

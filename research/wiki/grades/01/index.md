@@ -33,7 +33,7 @@ atnaujinta: 2026-11-09
 |---|---|---|
 | Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Kas? Ką veikia? · Kaip žmonės sveikinasi · Plakatas: kur ieškoti atsakymo | 5 — gyva |
 | Matematika | Skaičių tiesė · Dešimtukas · Figūros aplink mus · Dėsningumai · Pinigai: vertė yra skaičius · Laikas: vienas ratas, vienas žingsnis · Lygybė: abi pusės sveria tiek pat · Kryptys: kairė priklauso nuo žiūrovo · Taškas, tiesė, spindulys, atkarpa · Šimto lentelė: žemyn reiškia dešimt · Laikas: 2 val. ir 14:00 — tas pats laikas · Erdvinės figūros · Sudėtis per dešimtį · Piktograma ir stulpelis · Komandų seka: viena klaida pakreipia kelią | 15 — gyva |
-| Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Gyvūnų grupės · Kur dingsta vanduo · Nuožulnioji plokštuma: kas lemia greitį · Kuprinė: tas pats svoris, kita vieta | 6 — gyva |
+| Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Kas gyvena tvarte? · Kur dingsta vanduo · Nuožulnioji plokštuma: kas lemia greitį · Kuprinė: tas pats svoris, kita vieta | 6 — gyva |
 | Muzika | Aukštas garsas ne visada garsus | 1 — gyva |
 | Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius | 3 — gyva |
 | Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas | 2 — gyva |

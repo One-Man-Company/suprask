@@ -65,7 +65,7 @@
     "Į kairę"
    ],
    "answer": 1,
-   "hint": "Ketvirtis rato — tai vienas posūkis iki kitos pusės. Nuo dešinės į kairę eik per viršų.",
+   "hint": "Atsistok kaip jis ir sukis į savo kairę. Pažiūrėk, kur nukrypo jo akys.",
    "why": "Vabaliukas pasisuka į savo kairę. Po ketvirčio rato jis žiūri į viršų."
   },
   {
@@ -98,7 +98,7 @@
     "Ne, vienas atsisuko atgal"
    ],
    "answer": 1,
-   "hint": "Kiekvienas suka savo kūno atžvilgiu. Jie stovi priešingomis kryptimis.",
+   "hint": "Kiekvienas suka savo kūno atžvilgiu. Pažiūrėk, kur nukrypsta kiekvieno kairė.",
    "why": "Jie stovi priešingai, todėl jų kairės rodo į priešingas puses.",
    "optional": true
   }

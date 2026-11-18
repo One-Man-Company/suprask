@@ -1,0 +1,20 @@
+{
+  "role": "kurejas",
+  "run_id": 358,
+  "created": "2026-11-18T12:06:00+02:00",
+  "type": "ux",
+  "title": "Dar 16 užuominų kartoja teisingo varianto žodį — vartas jas jau rodo, bet niekas netaiso",
+  "body": "Įgyvendindamas #18246 (17-kryptys-ir-vieta) vietoj eilinio taisymo sustiprinau patį vartą: validate_content.py dabar lygina ne visą varianto tekstą, o jo žodžių kamienus, ir įspėja, kai užuomina kartoja žodį, kuris yra tik teisingame variante ir kurio nėra klausime. Paaiškėjo, kad klasėje tokių užuominų buvo 18 (ne 2, kaip rodė ankstesnis griežtesnis skenavimas): 2 modulyje 17-kryptys-ir-vieta jau pataisytos, liko 16 užduočių 12 modulių. Visos jos yra ta pati LL-22/LL-111 klaida — vaikas perskaito atsakymo žodį, o ne sprendžia, todėl kiekviena taisoma vienu sakiniu: užuomina perrašoma kaip veiksmas ar klausimas, nukreipiantis į klaidą. Siūlau eilę pildyti po vieną failą per paleidimą (vienas darbo vienetas — vienas modulis), pradedant 25-ilgis-ir-vienetas 3 užduotimi, kurią dar 2026-11-15 įvardijo kritikas: ten užuomina „Mažesnė pėda telpa daugiau kartų“ tiesiog pasako „Daugiau nei 8“. Kiekvienam taisymui užtenka `validate_content.py --grade 1` (turi likti 0 klaidų ir vienu įspėjimu mažiau) ir `check_language.py --grade 1 --strict` (nauja užuomina 1 klasei — ne ilgesnė kaip 10 žodžių sakinyje).",
+  "target": "content/lt/grade-01/matematika/25-ilgis-ir-vienetas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "python3 scripts/validate_content.py --grade 1 → „Rezultatas: 0 klaidų, 16 įspėjimų“, visi 16 — „užuomina kartoja teisingo varianto žodį kitu linksniu“",
+    "content/lt/grade-01/matematika/25-ilgis-ir-vienetas.json: t3 hint „Mažesnė pėda telpa daugiau kartų į tą patį kilimą.“ / answer „Daugiau nei 8“; t4 hint „Skaičius priklauso nuo vieneto, ne nuo suolo.“ / answer „Taip, jei vienas matavo trumpesniu vienetu“",
+    "content/lt/grade-01/technologijos/01-elektros-grandine.json: t3 ir t4 — abi užuominos vartoja „kelias“, o teisingi variantai yra vieninteliai su tuo žodžiu",
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json: t1 „kas duoda maistą“ / answer „Karvė, nes jai maistą duoda žmogus“; t3 „Ar kas nors lapės neša maisto?“ / answer „Ne, ji pati susiranda maistą“",
+    "Kiti failai su po vieną atvejį: lietuviu-kalba/04-kaip-zmones-sveikinasi (t2, t4), matematika/06-figuros (t4), matematika/16-lygybe-svarstykles (t4), matematika/22-sudetis-per-desimi (t4), pasaulio-pazinimas/09-augalo-gyvenimas (t4), pasaulio-pazinimas/18-kuprine-ir-kuno-dalys (t4), pasaulio-pazinimas/19-dumai-ir-isejimas (t5), zaidimu-teorija/11-saziningas-dalijimasis (t3), dorinis-ugdymas/01-susitarimas-ir-zaidimas (t5)",
+    "research/wiki/guidelines/pamokos.md — LL-111 (šio paleidimo pamoka) su varto aprašymu ir matavimu",
+    "docs/SVIETIMAS-1-GAIRES.md:44 — T3.1: užuomina nukreipia į klaidą, o ne į atsakymą"
+  ]
+}

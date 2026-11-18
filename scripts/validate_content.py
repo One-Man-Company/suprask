@@ -209,6 +209,41 @@ def normalize_for_match(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def _significant_words(text: str) -> list[str]:
+    """Turininiai žodžiai, kuriuos užuomina galėtų perskaityti vietoj vaiko."""
+    return [w for w in re.findall(r"[a-ząčęėįšųūž0-9]+", normalize_for_match(text)) if len(w) >= 5]
+
+
+def _word_stem(word: str) -> str:
+    """Kamienas be galūnės: penkių raidžių žodis duoda keturias, ilgesnis — dviem mažiau."""
+    return word[: max(4, len(word) - 2)]
+
+
+def hint_leaks_option(options: list, answer: int, hint: str, question: str) -> list[str]:
+    """Užuominos žodžiai, kurie išduoda būtent teisingą variantą (LL-22, LL-111, #18246).
+
+    Vartas lygina ne visą varianto tekstą (tai jau daro klaida aukščiau), o atskirus
+    žodžius kitu linksniu: „Į viršų“ ir „eik per viršų“ yra tas pats atsakymas vaikui.
+    Kad įspėjimas nešauktų be reikalo, žodis skaitomas išdaviku tik tada, kai jis
+    vartojamas **viename** variante (jei jį turi keli variantai, jis varianto
+    nepasirenka) ir jo nėra klausime (ką klausimas pasakė, to užuomina nebeišduoda).
+    """
+    hint_n = normalize_for_match(hint)
+    question_n = normalize_for_match(question)
+    leaks = []
+    for word in _significant_words(options[answer]):
+        stem = _word_stem(word)
+        pattern = rf"(?<!\w){re.escape(stem)}\w*"
+        if not re.search(pattern, hint_n):
+            continue
+        if re.search(pattern, question_n):
+            continue
+        if any(re.search(pattern, normalize_for_match(other)) for i, other in enumerate(options) if i != answer):
+            continue
+        leaks.append(word)
+    return leaks
+
+
 def check_module(path: Path, data: dict, rep: Report, sims: set[str], grades_meta: dict) -> None:
     rel = path.relative_to(ROOT)
     for field in REQUIRED_MODULE:
@@ -279,11 +314,18 @@ def check_module(path: Path, data: dict, rep: Report, sims: set[str], grades_met
         hint_norm = normalize_for_match(t.get("hint", ""))
         if isinstance(ans, int) and 0 <= ans < len(opts):
             correct = normalize_for_match(opts[ans])
+            leaked = hint_leaks_option(opts, ans, t.get("hint", ""), t.get("q", ""))
             if len(correct) >= 2 and re.search(rf"(?<!\w){re.escape(correct)}(?!\w)", hint_norm):
                 rep.err(
                     f"{rel}: {i} užduoties užuomina pasako teisingą atsakymą („{opts[ans]}“) — "
                     "nukreipk į klaidą, ne į atsakymą (gairės T3.1)"
                 )
+            elif leaked:
+                rep.warn(
+                    f"{rel}: {i} užduoties užuomina kartoja teisingo varianto žodį kitu linksniu "
+                    f"(„{leaked[0]}“ iš „{opts[ans]}“) — vaikas perskaito atsakymą, o ne sprendžia (LL-22)"
+                )
+
         if t.get("optional"):
             transfer = True
         q = str(t.get("q", "")).lower()

@@ -2274,7 +2274,14 @@ const dumaiIrIsejimas = {
    kontrolinis objektas: `pushBall()` keičia TIK jo `cx`, o lentelėje jo
    skaičius lieka 0, nes `changeOf()` jam grąžina 0 — tai užtikrina kodas,
    o ne teksto pažadas (LL-28: be prieštaraujančio pavyzdžio modelis tik
-   patvirtintų klaidingą nuostatą „gyva tai, kas juda“). */
+   patvirtintų klaidingą nuostatą „gyva tai, kas juda“).
+
+   Skaičius lentelėje yra KIEK KARTŲ daiktas pasikeitė, o ne aukščio suma.
+   Suma dviejų priešingų savaičių kelyje visada grąžindavo 0, tad lentelė
+   sakydavo „nepakito“ būtent tame kadre, kuriame paveikslas keitėsi, o
+   `api.progress()` įsirašydavo su trimis nuliais (LL-95). Dabar skaičiai,
+   sakinys ir `api.progress()` imami iš to paties `weeks` masyvo: 0 reiškia
+   „nepakito nė karto“ ir daugiau nieko. */
 const KG_PAD = 8;                 // viena padala scenoje = 8 px
 const KG_STEM_BASE = 40;          // pradinis stiebo aukštis
 const KG_BALL_REST = 246;
@@ -2294,11 +2301,11 @@ const kasGyvas = {
     const growthPx = Number(config.growthPx) > 0 ? Number(config.growthPx) : KG_PAD;
     const step = growthPx / KG_PAD;          // padalos per savaitę
 
-    /* Skaičius lentelėje išvedamas, o ne įrašytas: jei `growthPx` nesidalija
-       iš padalos, piešinys ir lentelė pradėtų rodyti skirtingus dalykus.
-       Tylus apvalinimas būtų neteisingas modelis, todėl klaida sakoma. */
+    /* Stiebas auga pikseliais, o `step` (padalos per savaitę) lieka lapų
+       dydžiui. Jei `growthPx` iš padalos nesidalija, lapo dydis apvalinamas —
+       apie tai sakoma garsiai, o ne tylima. */
     if (!Number.isInteger(step)) {
-      console.error(`kas-gyvas: growthPx=${growthPx} nesidalija iš ${KG_PAD} — lentelė apvalinama.`);
+      console.error(`kas-gyvas: growthPx=${growthPx} nesidalija iš ${KG_PAD} — lapų dydis apvalinamas.`);
     }
 
     const nameOf = (id) => (objects.find((o) => o.id === id) || {}).name || id;
@@ -2347,10 +2354,27 @@ const kasGyvas = {
     const q = (sel) => controls.querySelector(sel);
     const guessButtons = [...controls.querySelectorAll("[data-guess]")];
 
-    const changeOf = (id) => (id === "augalas"
-      ? weeks.reduce((sum, wet) => sum + (wet ? step : -step), 0)
-      : 0);
-    const signed = (v) => (v > 0 ? `+${v}` : v < 0 ? `−${Math.abs(v)}` : "0");
+    /* Vienas šaltinis visiems trims dalykams — lentelės skaičiui, sakiniui ir
+       scenai: kiek kartų kiekvienas daiktas matomai pakito. Laistyta savaitė
+       augalą paaugina — kiekviena atskirai, todėl skaičiuojama kiekviena.
+       Sausa savaitė nuleidžia lapus, bet tik pirmoji sauso tarpsnio savaitė:
+       antra sausa savaitė jau nuleistų lapų nebekeicia, tad ir
+       nepriskaičiuojama (kitaip skaičius teigtų pokytį, kurio paveiksle
+       nebuvo). Akmenukas ir kamuoliukas nepakinta nė karto, net kai
+       kamuoliukas nurieda: judėjimas nėra pokytis šiame modelyje. */
+    const wetWeeks = () => weeks.filter(Boolean).length;
+    const dryBlocks = () => {
+      let n = 0;
+      weeks.forEach((wet, i) => { if (!wet && (i === 0 || weeks[i - 1])) n += 1; });
+      return n;
+    };
+    const changeOf = (id) => (id === "augalas" ? wetWeeks() + dryBlocks() : 0);
+    const kartai = (n) => `${n} ${n === 1 ? "kartą" : "kartus"}`;
+    const changeLine = () => objects.map((o) => (changeOf(o.id)
+      ? `${o.name} keitėsi ${kartai(changeOf(o.id))}`
+      : `${o.name} nepakito`)).join(", ");
+    const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+    const anyChange = () => objects.some((o) => changeOf(o.id) > 0);
     const contrast = () => weeks.some((w, i) => weeks.slice(i + 1).some((x) => x !== w));
 
     const paint = (btn, on) => {
@@ -2360,10 +2384,10 @@ const kasGyvas = {
     };
 
     function scene() {
-      const change = changeOf("augalas");
-      const h = Math.max(24, Math.min(84, KG_STEM_BASE + change * KG_PAD));
+      const grown = wetWeeks();
+      const h = Math.max(24, Math.min(84, KG_STEM_BASE + grown * growthPx));
       const dry = weeks.length > 0 && weeks[weeks.length - 1] === false;
-      const leafS = Math.max(8, Math.min(13, 10 + change));
+      const leafS = Math.max(8, Math.min(13, 10 + grown * step));
       const ballX = ballMoved ? KG_BALL_MOVED : KG_BALL_REST;
       const stemCol = dry ? "#8d7a55" : "#4c8b3a";
       const leafCol = dry ? "#a98f55" : "#5fbf62";
@@ -2386,14 +2410,13 @@ const kasGyvas = {
         + `${dry ? "Augalo lapai nuleisti." : "Augalas su lapais."}`
         + (weeks.length
           ? ` Po ${weeks.length === 1 ? "vienos savaitės" : weeks.length === 2 ? "dviejų savaičių" : "trijų savaičių"}`
-            + ` augalas ${signed(change)}.`
+            + ` ${changeLine()}.`
           : ""));
     }
 
     function render() {
       scene();
 
-      const change = changeOf("augalas");
       const ended = weeks.length >= KG_MAX_WEEKS;
 
       for (const btn of guessButtons) {
@@ -2439,10 +2462,12 @@ const kasGyvas = {
       const table = q("#kg-table");
       if (weeks.length) {
         table.style.display = "grid";
-        table.innerHTML = objects.map((o) => `<div style="min-width:0;border:2px solid var(--line);
+        table.innerHTML = `<p style="grid-column:1/-1;margin:0;font-size:.8rem;line-height:1.2;
+          font-weight:700;text-align:center;color:var(--ink-soft)">Kiek kartų keitėsi?</p>`
+          + objects.map((o) => `<div style="min-width:0;border:2px solid var(--line);
           border-radius:var(--r-s);background:var(--paper-2);padding:.25rem .2rem;text-align:center">
           <span style="display:block;font-size:.875rem;line-height:1.15;font-weight:700;color:var(--ink-soft);overflow-wrap:anywhere">${o.name}</span>
-          <strong style="display:block;font-size:1.15rem;line-height:1.25">${signed(changeOf(o.id))}</strong>
+          <strong style="display:block;font-size:1.15rem;line-height:1.25">${changeOf(o.id)}</strong>
         </div>`).join("");
       } else {
         table.style.display = "none";
@@ -2453,7 +2478,7 @@ const kasGyvas = {
       if (!guess) end = "Pirma spėk, tada spausk „Po savaitės“.";
       else if (!weeks.length) end = "Spėjimas užrašytas. Pasirink vandenį ir spausk „Po savaitės“.";
       else if (weeks.length === 1) end = "Viena savaitė. Ar kas nors pasikeitė?";
-      else if (contrast()) end = "Dvi savaitės. Palygink tris skaičius.";
+      else if (contrast()) end = `${weeks.length === 2 ? "Dvi savaitės" : "Trys savaitės"}. Palygink tris skaičius.`;
       else if (!ended) end = "Savaitės buvo vienodos. Pabandyk dar vieną kitaip.";
       else end = "Modelis baigėsi. Paspausk „Iš naujo“.";
       q("#kg-end").textContent = end;
@@ -2461,25 +2486,32 @@ const kasGyvas = {
       const weekWord = weeks.length === 1 ? "Viena savaitė"
         : weeks.length === 2 ? "Dvi savaitės" : "Trys savaitės";
       api.readout(weeks.length
-        ? `${weekWord}. Augalas ${signed(change)}. Akmenukas 0. Kamuoliukas 0.`
+        ? `${weekWord}. ${cap(changeLine())}.`
         : (guess ? `Tu sakei: ${nameOf(guess)}. Dabar pasirink vandenį.`
           : "Kuris daiktas per savaitę pasikeis? Spėk."));
 
+      /* Sakinys imamas iš tų pačių skaičių, kuriuos vaikas mato lentelėje:
+         jei lentelėje visi 0, apie pokytį nekalbama (LL-95). */
+      const changed = anyChange();
       let note;
       if (!guess) note = "Pirma spėk, tada laistyk.";
-      else if (!weeks.length) note = "Pasirink, ar šią savaitę laistysi.";
       else if (flash) note = flash;
+      else if (!weeks.length) note = "Pasirink, ar šią savaitę laistysi.";
       else if (weeks.length === 1) {
         note = guess === "augalas"
           ? "Tu sakei augalas. Taip ir įvyko."
           : "Tu sakei kitaip. Pasikeitė augalas.";
-      } else if (contrast()) note = `${S.table || "Trys daiktai, vienas pasikeitė."} ${S.done || "Gyvas organizmas keičiasi pats."}`;
-      else if (!ended) note = "Savaitės buvo vienodos. Pakeisk vandenį ir pamatysi kitą kryptį.";
-      else note = "Kamuoliukas juda, bet lentelėje jo pokytis 0.";
+      } else if (contrast() && changed) {
+        note = `${S.table || "Trys daiktai, vienas pasikeitė."} ${S.done || "Gyvas organizmas keičiasi pats."}`;
+      } else if (contrast()) {
+        note = "Lentelėje nuliai, nors augalas keitėsi. Sakyk mokytojui: skaičiai nesutampa su paveikslu.";
+        console.error("kas-gyvas: savaitės skyrėsi, bet visi lentelės skaičiai 0 — LL-95 defektas grįžo.");
+      } else if (!ended) note = "Savaitės buvo vienodos. Pakeisk vandenį ir pamatysi kitą kryptį.";
+      else note = "Kamuoliukas juda, bet jo skaičius 0. Paspausk „Iš naujo“ ir pabandyk kitą vandenį.";
       api.note(note);
 
       const speechKey = weeks.length ? `w${weeks.length}-${weeks[weeks.length - 1] ? "wet" : "dry"}` : "";
-      if (!reported && weeks.length >= 2 && contrast()) {
+      if (!reported && weeks.length >= 2 && contrast() && changed) {
         reported = true;
         spoken = speechKey;
         api.progress({ correct: true });

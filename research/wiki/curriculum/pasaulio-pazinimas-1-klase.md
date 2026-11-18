@@ -154,7 +154,7 @@ Patikrinti visi 8 `content/lt/grade-01/pasaulio-pazinimas/` moduliai. Šaltinis 
 | Modulis | Ką moko | Programos vieta | Verdiktas |
 |---|---|---|---|
 | `08-metu-laikai` | keturi metų laikai ir jų požymiai | 10 temų sąraše nėra; sezonai — 1–2 kl. komunikavimo pavyzdys (:12194–12199), 3–4 kl. muzikos projektas (:15339–15342) | **iš dalies**: kontekstas, ne tema; 1 rezultatas — sąrašas (T1.6); šaltiniai be kodo ir be eilučių (T2.1) |
-| `09-augalo-gyvenimas` | sąlygos (vanduo, šviesa, šiluma) ir ciklas iki žiedo | 26.2.3 (:39950–39951, :35411–35412) | **iš dalies**: ciklas nukirptas ties žiedu, nors paties modulio žingsnis (:19) sako „brandina sėklas“; sąlygų klausimas leistinas 1–2 kl. (:12431–12433) |
+| `09-augalo-gyvenimas` | sąlygos (vanduo, šviesa, šiluma) ir ciklas iki vaisiaus su sėklomis | 26.2.3 (:35165–35166, :39950–39951, :35411–35412) | **atitinka** (pataisyta 2026-11-18, #19996: ciklas pratęstas iki vaisiaus, pirmoji užduotis perkelta į obelį, šaltiniai su kodu ir eilutėmis; sąlygų klausimas liko kaip 1–2 kl. gebėjimas :12431–12433) |
 | `10-gyvunu-grupes` | naminiai ir laukiniai gyvūnai: grupę pasako, kas duoda maistą, o ne vieta | 1 kl. 26.2.2 (:8419–8426, :17636–17640) | **atitinka** (pataisyta 2026-11-18, #348: anksčiau mokė 4 kl. 29.1.1) |
 | `16-vandens-busenos` | garavimas ir lašai | 26.3.2 (:1547–1552) | **iš dalies**: kietosios būsenos formos (snaigė, šerkšnas, ledas) ir šaldymo kryptis neįtraukta |
 | `17-judejimas` | greitį lemia plokštumos aukštis | 26.4.1 (:1557–1565, :35219–35229) | **atitinka**; pastaba: „svoris greičio nekeičia“ — modulio prielaida, ne programos tekstas |

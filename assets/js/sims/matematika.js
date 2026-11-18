@@ -3626,6 +3626,226 @@ const komanduSeka = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 14. Skaičius ir skaitmuo: vietą keičia, ką skaitmuo reiškia        */
+/*                                                                    */
+/* Modelis: dešimtys — strypeliai po dešimt kubelių, vienetai —       */
+/* atskiri kubeliai. Vaikas stato dviženklį skaičių ir sukeičia       */
+/* skaitmenis vietomis. Paveikslėlyje kiekis pasikeičia, nors         */
+/* skaitmenys tie patys — būtent tai griovė nuostatą „skaitmuo ir      */
+/* skaičius yra tas pats“. Sudėties ir atimties sąmoningai nėra:      */
+/* modulyje lieka viena sąvoka — pirmas skaitmuo skaičiuoja dešimtis, */
+/* antras — vienetus. Dešimtys prasideda nuo vienos, kad nereikėtų    */
+/* aiškinti nulio priekyje („05“): tai atskira sąvoka, ne šio modelio  */
+/* dalis, todėl nulis vienetuose sukeitimą paaiškina, o ne apeina.    */
+/* ------------------------------------------------------------------ */
+const SKS_DEF = {
+  start: "Pasirink, kiek dešimčių ir kiek vienetų.",
+  askSwap: "Paspausk „Sukeisti skaitmenis“ ir pažiūrėk, kas pasikeis.",
+  swapped: "Skaitmenys tie patys, o skaičius kitas.",
+  same: "Skaitmenys vienodi, todėl skaičius nesikeičia.",
+  again: "Pakeisk skaičių ir sukeisk dar kartą.",
+  reset: "Pradedam iš naujo.",
+  zeroOnes: "Kai vienetų nulis, sukeitus priekyje atsidurtų nulis. Nulio priekyje nerašome — pakeisk vienetus.",
+  tensFloor: "Mažiau negu viena dešimtis — tada skaičius būtų vienaženklis.",
+  tensCeil: "Skaitmenų yra dešimt: nuo 0 iki 9. Didesnio skaitmens nėra.",
+  onesFloor: "Mažiau negu nulis vienetų nebūna.",
+  onesCeil: "Dešimt vienetų jau būtų nauja dešimtis.",
+};
+
+const SKS_LBL = {
+  groupTens: "Dešimtys",
+  groupOnes: "Vienetai",
+  less: "viena mažiau",
+  more: "viena daugiau",
+  swap: "Sukeisti skaitmenis",
+  reset: "Iš naujo",
+  tensPlace: "dešimtys",
+  onesPlace: "vienetai",
+  was: "Prieš sukeitimą buvo",
+  rodsAria: "Dešimčių strypeliai, kiekvienas po dešimt kubelių",
+  onesAria: "Vienetų kubeliai",
+};
+
+/* Skaičiuojama žodžiais: vienas vienetas, dvi dešimtys, penkios dešimtys. */
+const SKS_TENS = ["", "viena dešimtis", "dvi dešimtys", "trys dešimtys", "keturios dešimtys",
+  "penkios dešimtys", "šešios dešimtys", "septynios dešimtys", "aštuonios dešimtys", "devynios dešimtys"];
+const SKS_ONES = ["nė vieno vieneto", "vienas vienetas", "du vienetai", "trys vienetai", "keturi vienetai",
+  "penki vienetai", "šeši vienetai", "septyni vienetai", "aštuoni vienetai", "devyni vienetai"];
+
+const skaiciusIrSkaitmuo = {
+  mount({ stage, controls, api, config }) {
+    const L = { ...SKS_LBL, ...(config.labels || {}) };
+    const S = { ...SKS_DEF, ...(config.sentences || {}) };
+    const startCfg = config.start || {};
+    const whole = (v, lo, hi, fallback) => {
+      const n = Number(v);
+      return Number.isInteger(n) && n >= lo && n <= hi ? n : fallback;
+    };
+    const START_T = whole(startCfg.tens, 1, 9, 1);
+    const START_O = whole(startCfg.ones, 0, 9, 3);
+
+    let tens = START_T;
+    let ones = START_O;
+    let reported = false;
+
+    /* Kubelio matmuo rišamas prie scenos pločio (cqw), o ne prie šaknies
+       šrifto: prie 200 % teksto kubelis neturi išstumti scenos iš kortelės.
+       360 px ekrane --u = 14 px, 9 strypeliai ir 9 kubeliai telpa į 217 px. */
+    stage.innerHTML = `
+      <div id="sk-wrap" style="container-type:inline-size;width:100%;max-width:34rem;margin:0 auto;box-sizing:border-box;--u:clamp(14px,3.8cqw,24px)">
+        <div style="display:flex;justify-content:center;align-items:flex-end;gap:.7rem">
+          <div style="text-align:center">
+            <div id="sk-t" style="width:2.7rem;min-height:2.9rem;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);border-radius:14px;background:var(--paper-2);font-family:var(--font-head);font-weight:900;font-size:2.1rem;line-height:1;font-variant-numeric:tabular-nums">1</div>
+            <div style="font-size:.78rem;font-weight:800;margin-top:.15rem">${L.tensPlace}</div>
+          </div>
+          <div style="text-align:center">
+            <div id="sk-o" style="width:2.7rem;min-height:2.9rem;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);border-radius:14px;background:var(--paper-2);font-family:var(--font-head);font-weight:900;font-size:2.1rem;line-height:1;font-variant-numeric:tabular-nums">3</div>
+            <div style="font-size:.78rem;font-weight:800;margin-top:.15rem">${L.onesPlace}</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;align-items:flex-end;gap:calc(var(--u) * 1.2);margin-top:.7rem;padding:.55rem;border-radius:var(--r-m);background:color-mix(in srgb, var(--sky) 10%, var(--paper));box-sizing:border-box">
+          <div style="text-align:center;min-width:0">
+            <div id="sk-rods" role="img" style="display:flex;align-items:flex-end;justify-content:center;flex-wrap:wrap;gap:calc(var(--u) * .3);min-height:calc(var(--u) * 4.2)"></div>
+            <div style="font-size:.75rem;font-weight:800;margin-top:.2rem">${L.tensPlace}</div>
+          </div>
+          <div style="text-align:center;min-width:0">
+            <div id="sk-ones" role="img" style="display:grid;grid-template-columns:repeat(3,var(--u));gap:calc(var(--u) * .3);justify-content:center;align-content:end;min-height:calc(var(--u) * 4.2)"></div>
+            <div style="font-size:.75rem;font-weight:800;margin-top:.2rem">${L.onesPlace}</div>
+          </div>
+        </div>
+        <p class="sim-note" id="sk-count" style="margin:.45rem 0 0;text-align:center;min-height:1.3rem;font-weight:700"></p>
+        <p class="sim-note" id="sk-was" style="margin:.1rem 0 0;text-align:center;min-height:1.2rem"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div role="group" aria-label="${L.groupTens}"
+           style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;align-items:center">
+        <span style="width:100%;text-align:center;font-weight:800;font-size:.95rem">${L.groupTens}</span>
+        <button type="button" class="btn secondary" data-place="tens" data-step="-1"
+                aria-label="${L.groupTens}, ${L.less}" style="min-height:48px;min-width:48px">−</button>
+        <button type="button" class="btn secondary" data-place="tens" data-step="1"
+                aria-label="${L.groupTens}, ${L.more}" style="min-height:48px;min-width:48px">+</button>
+      </div>
+      <div role="group" aria-label="${L.groupOnes}"
+           style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;align-items:center">
+        <span style="width:100%;text-align:center;font-weight:800;font-size:.95rem">${L.groupOnes}</span>
+        <button type="button" class="btn secondary" data-place="ones" data-step="-1"
+                aria-label="${L.groupOnes}, ${L.less}" style="min-height:48px;min-width:48px">−</button>
+        <button type="button" class="btn secondary" data-place="ones" data-step="1"
+                aria-label="${L.groupOnes}, ${L.more}" style="min-height:48px;min-width:48px">+</button>
+      </div>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;width:100%">
+        <button type="button" class="btn" id="sk-swap" style="min-height:48px">${L.swap}</button>
+        <button type="button" class="btn ghost" id="sk-reset" style="min-height:48px">${L.reset}</button>
+      </div>`;
+
+    const tEl = stage.querySelector("#sk-t");
+    const oEl = stage.querySelector("#sk-o");
+    const rodsEl = stage.querySelector("#sk-rods");
+    const onesEl = stage.querySelector("#sk-ones");
+    const countEl = stage.querySelector("#sk-count");
+    const wasEl = stage.querySelector("#sk-was");
+
+    /* Strypelis — dešimt atskirų kubelių vienoje juostoje. Segmentai
+       brėžiami, o ne rašomas skaičius 10: vaikas turi matyti, kad
+       dešimtis yra dešimt vienetų, o ne vienas didelis kubas (LL-13). */
+    const rodHtml = () => {
+      let segs = "";
+      for (let i = 0; i < 10; i += 1) {
+        segs += `<span style="display:block;border-radius:1.5px;background:#f6c86e;`
+          + `border:1px solid #b9863a;box-sizing:border-box"></span>`;
+      }
+      return `<div aria-hidden="true" style="width:var(--u);height:calc(var(--u) * 4.2);`
+        + `display:grid;grid-template-rows:repeat(10,minmax(0,1fr));gap:1px">${segs}</div>`;
+    };
+
+    const cubeHtml = () => `<span aria-hidden="true" style="display:block;width:var(--u);height:var(--u);`
+      + `border-radius:3px;background:#f6c86e;border:1px solid #b9863a;box-sizing:border-box"></span>`;
+
+    const num = () => `${tens}${ones}`;
+
+    function paint() {
+      tEl.textContent = String(tens);
+      oEl.textContent = String(ones);
+      rodsEl.innerHTML = Array.from({ length: tens }, rodHtml).join("");
+      onesEl.innerHTML = Array.from({ length: ones }, cubeHtml).join("");
+      rodsEl.setAttribute("aria-label", `${L.rodsAria}: ${tens}`);
+      onesEl.setAttribute("aria-label", `${L.onesAria}: ${ones}`);
+      countEl.textContent = `${SKS_TENS[tens]} ir ${SKS_ONES[ones]}.`;
+      api.readout(`${num()} — ${SKS_TENS[tens]} ir ${SKS_ONES[ones]}.`);
+    }
+
+    function step(place, delta) {
+      const isTens = place === "tens";
+      const cur = isTens ? tens : ones;
+      const next = cur + delta;
+      if (next < (isTens ? 1 : 0)) {
+        api.note(isTens ? S.tensFloor : S.onesFloor);
+        api.speak(isTens ? S.tensFloor : S.onesFloor);
+        return;
+      }
+      if (next > 9) {
+        api.note(isTens ? S.tensCeil : S.onesCeil);
+        api.speak(isTens ? S.tensCeil : S.onesCeil);
+        return;
+      }
+      if (isTens) tens = next; else ones = next;
+      wasEl.textContent = "";
+      paint();
+      api.note(`Dabar ${num()}. ${S.askSwap}`);
+      api.speak(`${tens}${ones}`);
+    }
+
+    function swap() {
+      if (ones === 0) {
+        /* Nulis vienetuose sukeitus atsidurtų priekyje: „03“ nerašomas.
+           Pasakoma, ką daryti, o ne tyliai nieko neįvyksta (LL-04). */
+        api.note(S.zeroOnes);
+        api.speak(S.zeroOnes);
+        return;
+      }
+      if (tens === ones) {
+        wasEl.textContent = "";
+        api.note(S.same);
+        api.speak(S.same);
+        return;
+      }
+      const before = num();
+      tens = Number(before[1]);
+      ones = Number(before[0]);
+      paint();
+      wasEl.textContent = `${L.was} ${before}.`;
+      api.note(`${S.swapped} ${S.again}`);
+      api.speak(S.swapped);
+      if (!reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    function reset() {
+      tens = START_T;
+      ones = START_O;
+      wasEl.textContent = "";
+      paint();
+      api.note(S.reset);
+      api.speak(S.reset);
+    }
+
+    controls.querySelectorAll("[data-place]").forEach((btn) => {
+      btn.addEventListener("click", () => step(btn.dataset.place, Number(btn.dataset.step)));
+    });
+    controls.querySelector("#sk-swap").addEventListener("click", swap);
+    controls.querySelector("#sk-reset").addEventListener("click", reset);
+
+    paint();
+    api.note(S.start);
+    api.speak(S.start);
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
@@ -3641,4 +3861,5 @@ export const SIMS = {
   "sudetis-per-desimti": sudetisPerDesimti,
   "simto-lentele": simtoLentele,
   "komandu-seka": komanduSeka,
+  "skaicius-ir-skaitmuo": skaiciusIrSkaitmuo,
 };

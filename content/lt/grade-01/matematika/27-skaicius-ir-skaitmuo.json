@@ -1,0 +1,138 @@
+{
+  "id": "27-skaicius-ir-skaitmuo",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Skaičius ir skaitmuo: 13 ir 31",
+  "subtitle": "Tie patys skaitmenys gali reikšti skirtingą kiekį",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu skaitmenį nuo skaičiaus: skaitmuo yra ženklas, o skaičius — kiekis.",
+    "Paaiškinu, kodėl 13 ir 31 yra skirtingi skaičiai.",
+    "Pasakau, ką dviženkliame skaičiuje skaičiuoja pirmas ir antras skaitmuo."
+  ],
+  "concept": {
+    "title": "Vieta keičia skaitmens reikšmę",
+    "big_idea": "Skaitmuo yra ženklas: 0, 1, 2 … 9. Skaičių sudaro skaitmenys. Dviženkliame skaičiuje pirmas skaitmuo skaičiuoja dešimtis, antras — vienetus. Todėl 13 ir 31 turi tuos pačius skaitmenis, o kiekis skiriasi.",
+    "steps": [
+      "Skaitmuo yra vienas ženklas. Skaičius pasako, kiek ko yra.",
+      "13 — viena dešimtis ir trys vienetai.",
+      "31 — trys dešimtys ir vienas vienetas.",
+      "Sukeisk skaitmenis ir pažiūrėk, kas pasikeitė."
+    ],
+    "example": "Ant klasės durų parašyta 13. Jei skaitmenis sukeistum, durų numeris būtų 31."
+  },
+  "sim": {
+    "component": "skaicius-ir-skaitmuo",
+    "config": {
+      "start": { "tens": 1, "ones": 3 },
+      "labels": {
+        "groupTens": "Dešimtys",
+        "groupOnes": "Vienetai",
+        "less": "viena mažiau",
+        "more": "viena daugiau",
+        "swap": "Sukeisti skaitmenis",
+        "reset": "Iš naujo",
+        "tensPlace": "dešimtys",
+        "onesPlace": "vienetai",
+        "was": "Prieš sukeitimą buvo",
+        "rodsAria": "Dešimčių strypeliai, kiekvienas po dešimt kubelių",
+        "onesAria": "Vienetų kubeliai"
+      },
+      "sentences": {
+        "start": "Pasirink, kiek dešimčių ir kiek vienetų.",
+        "askSwap": "Paspausk „Sukeisti skaitmenis“ ir pažiūrėk, kas pasikeis.",
+        "swapped": "Skaitmenys tie patys, o skaičius kitas.",
+        "same": "Skaitmenys vienodi, todėl skaičius nesikeičia.",
+        "again": "Pakeisk skaičių ir sukeisk dar kartą.",
+        "reset": "Pradedam iš naujo.",
+        "zeroOnes": "Kai vienetų nulis, sukeitus priekyje atsidurtų nulis. Nulio priekyje nerašome — pakeisk vienetus.",
+        "tensFloor": "Mažiau negu viena dešimtis — tada skaičius būtų vienaženklis.",
+        "tensCeil": "Skaitmenų yra dešimt: nuo 0 iki 9. Didesnio skaitmens nėra.",
+        "onesFloor": "Mažiau negu nulis vienetų nebūna.",
+        "onesCeil": "Dešimt vienetų jau būtų nauja dešimtis."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Simuliacijoje parašyta 13. Sukeisk skaitmenis vietomis. Kuris skaičius dabar parašytas?",
+      "options": [
+        "31",
+        "13",
+        "4"
+      ],
+      "answer": 0,
+      "hint": "Pirmas skaitmuo skaičiuoja dešimtis. Kuris skaitmuo atsidūrė priekyje?",
+      "why": "3 dabar skaičiuoja dešimtis, o 1 — vienetus, todėl skaičius 31."
+    },
+    {
+      "q": "Skaičiuje 25 kiek dešimčių?",
+      "options": [
+        "5",
+        "2",
+        "20"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk į simuliacijos paveikslą: dešimtys — strypeliai, vienetai — atskiri kubeliai.",
+      "why": "Pirmas skaitmuo 2 reiškia dvi dešimtis, o antras skaitmuo 5 — penkis vienetus."
+    },
+    {
+      "q": "Kuris skaičius turi 4 dešimtis ir nė vieno vieneto?",
+      "options": [
+        "4",
+        "14",
+        "40"
+      ],
+      "answer": 2,
+      "hint": "Kai atskirų kubelių nėra, antras skaitmuo rašomas nuliu.",
+      "why": "Keturios dešimtys ir nė vieno vieneto — tai 40."
+    },
+    {
+      "q": "Rokas mano, kad 19 daugiau už 21. Jis lygina skaitmenis 9 ir 1. Ką atsakytum ir kodėl?",
+      "options": [
+        "„Taip: devyni didesni už vieną, todėl 19 didesnis“",
+        "„Ne: 19 turi vieną dešimtį, o 21 — dvi, todėl 21 didesnis“",
+        "„Ne: 19 ir 21 yra lygūs“"
+      ],
+      "answer": 1,
+      "hint": "Sudėliok abu skaičius iš strypelių ir palygink.",
+      "why": "Skaitmuo 9 skaičiuoja vienetus, o 1 — dešimtį. Viena dešimtis mažiau už dvi, todėl 21 didesnis."
+    },
+    {
+      "q": "Kortelėje parašyta 70. Kiek šiame skaičiuje yra skaitmenų?",
+      "options": [
+        "Du",
+        "Septyni",
+        "Vienas"
+      ],
+      "answer": 0,
+      "hint": "Skaitmuo yra vienas ženklas. Suskaičiuok ženklus kortelėje.",
+      "why": "Skaičių 70 sudaro du skaitmenys: 7 ir 0.",
+      "optional": true
+    }
+  ],
+  "reflect": "Iš skaitmenų 2 ir 5 sudėk du skaičius. Kuris didesnis?",
+  "teacher": {
+    "goal": "Suprasti, kad skaitmuo yra ženklas, o skaičius — kiekis, ir kad dviženkliame skaičiuje pirmas skaitmuo skaičiuoja dešimtis, antras — vienetus. Modelis keičia tik skaitmenų vietą (13 → 31) ir tuo pačiu metu keičia kubelių kiekį, todėl priežastis matoma, o ne išvedama iš taisyklės.",
+    "prompt": "Kodėl 13 ir 31 yra skirtingi skaičiai, jei skaitmenys tie patys?",
+    "offline": "Suriškite dešimt pagaliukų į ryšulėlį — tai viena dešimtis. Duokite vaikui kelis ryšulėlius ir atskirų pagaliukų. Paprašykite sudėlioti 13: vienas ryšulėlis ir trys pagaliukai. Tada sukeiskite ryšulėlius ir pagaliukus vietomis: trys ryšulėliai ir vienas pagaliukas — 31. Paklauskite, ar pagaliukų padaugėjo. Pabaigoje suraskite namo ar buto numerį, kuriame yra du skaitmenys, ir paklauskite, ką reiškia pirmas skaitmuo.",
+    "misconceptions": [
+      "„Skaitmuo ir skaičius yra tas pats“ — modelyje sukeitus 13 skaitmenis pasikeičia kubelių kiekis, o skaitmenų lieka du. Skaitmuo yra ženklas, skaičius — kiekis.",
+      "„Kuo didesnis skaitmuo, tuo didesnis skaičius“ — 19 ir 21: skaitmuo 9 didesnis už 1, o skaičius mažesnis. Modelis rodo dešimčių strypelius, ne skaitmenų dydį.",
+      "„13 yra 1 ir 3“ — vaikas skaitmenis skaito atskirai ir sudeda 1 + 3. Paveiksle 1 reiškia dešimt kubelių, o ne vieną.",
+      "„05“ su nuliu priekyje — modelis leidžia dešimtis tik nuo 1, o nulis vienetuose sukeitimo neleidžia ir paaiškina kodėl. Nulio priekyje rašymas yra atskira tema, ne šio modulio branduolys."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), matematikos programa 1 klasei: „Skaičiai nuo 0 iki 100. Mokomasi skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus, susieti objektų skaičių su skaičiumi. Aptariamos skaičiaus ir skaitmens sąvokos“, sources/pradinio-bp-rekomendacijos-2024.txt:33739–33740.",
+    "NŠA (2024), ten pat, 1 klasės metų pabaigos reikalavimas — skirti skaičių ir skaitmenį, perskaityti ir užrašyti skaičius iki 100 skaitmenimis; research/wiki/curriculum/matematika-1-klase.md:40 ir :158.",
+    "Matematikos bendroji programa (2022), „Skaičiai ir skaičiavimai“: 1 klasėje skaičiai iki 100, jų skaitymas ir rašymas skaitmenimis, skaičių palyginimas.",
+    "research/wiki/curriculum/matematika-1-klase.md §8 — „Jokių abstrakčių simbolių be vaizdo“: BP reikalauja modelių (pagaliukai, kvadratėliai), todėl skaitmens vieta rodoma strypeliais ir kubeliais, o ne vien užrašu."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (skaitmens reikšmė priklauso nuo vietos). Sudėtis, atimtis ir skaičiavimas iki 100 sąmoningai neimami — jie turi savo modulius.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (25, 40, 19 ir 21, 70), o ne atkartoja 13 ir 31 pavyzdį.",
+    "3 žingsnis — pagalba laiku: kiekviena užduotis turi užuominą, nukreipiančią į vietos klaidą, o ne į atsakymą; yra praplėtimo užduotis; jokių laikmačių.",
+    "P2 / T2.3 / T5.5: vaikas pirmiausia keičia skaitmenis ir stebi kiekį, o paaiškinimas ateina po veiksmo; grįžtamasis ryšys apie veiksmą („Skaitmenys tie patys, o skaičius kitas“), ne apie vaiką."
+  ]
+}

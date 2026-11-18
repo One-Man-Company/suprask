@@ -723,6 +723,10 @@
   "n": "n/ac529f0194e54324-86711536.mp3",
   "s": "s/ac529f0194e54324-4aa52161.mp3"
  },
+ "Dešimt vienetų jau būtų nauja dešimtis.": {
+  "n": "n/d42996a8ce2bee1e-f49a3b09.mp3",
+  "s": "s/d42996a8ce2bee1e-c505704b.mp3"
+ },
  "Dešimt. Puiku!": {
   "n": "n/84869c7b0017a54b-da490e30.mp3",
   "s": "s/84869c7b0017a54b-68760a29.mp3"
@@ -1063,6 +1067,10 @@
   "n": "n/86be9a55762d316a-5317057b.mp3",
   "s": "s/86be9a55762d316a-9982aa77.mp3"
  },
+ "Kai vienetų nulis, sukeitus priekyje atsidurtų nulis. Nulio priekyje nerašome — pakeisk vienetus.": {
+  "n": "n/de6158f28323879e-d3f30971.mp3",
+  "s": "s/de6158f28323879e-5cd616a3.mp3"
+ },
  "Kairė sunkesnė.": {
   "n": "n/d668000feecfe009-475c2f25.mp3",
   "s": "s/d668000feecfe009-fa0d8f0b.mp3"
@@ -1367,6 +1375,14 @@
   "n": "n/343c8f5bfbe1f97c-565e1b9a.mp3",
   "s": "s/343c8f5bfbe1f97c-567eb694.mp3"
  },
+ "Mažiau negu nulis vienetų nebūna.": {
+  "n": "n/0d5f71e17a45c92e-a6c0c71a.mp3",
+  "s": "s/0d5f71e17a45c92e-173996ae.mp3"
+ },
+ "Mažiau negu viena dešimtis — tada skaičius būtų vienaženklis.": {
+  "n": "n/962f057eecf421c6-01157fd8.mp3",
+  "s": "s/962f057eecf421c6-2f9ddfc2.mp3"
+ },
  "Medis plaukia.": {
   "n": "n/77d4cb61d83a42bc-6ba967c4.mp3",
   "s": "s/77d4cb61d83a42bc-a490a0d5.mp3"
@@ -1435,6 +1451,10 @@
   "n": "n/0a366828d6cd748e-4d206f84.mp3",
   "s": "s/0a366828d6cd748e-3c08866e.mp3"
  },
+ "Pakeisk skaičių ir sukeisk dar kartą.": {
+  "n": "n/afd53e5853d818d5-72cb903b.mp3",
+  "s": "s/afd53e5853d818d5-4563efe7.mp3"
+ },
  "Paklausyk": {
   "n": "n/1d2879731afda59e-1da7dc51.mp3",
   "s": "s/1d2879731afda59e-63030624.mp3"
@@ -1475,9 +1495,17 @@
   "n": "n/27b8c325e7898242-7b0be7c4.mp3",
   "s": "s/27b8c325e7898242-fcef8d60.mp3"
  },
+ "Pasirink, kiek dešimčių ir kiek vienetų.": {
+  "n": "n/9d8add673b29f792-5c13bff8.mp3",
+  "s": "s/9d8add673b29f792-00bd4241.mp3"
+ },
  "Pasitikrink": {
   "n": "n/216bd6e5bd7d6af6-85fde14e.mp3",
   "s": "s/216bd6e5bd7d6af6-ea33c7a1.mp3"
+ },
+ "Paspausk „Sukeisti skaitmenis“ ir pažiūrėk, kas pasikeis.": {
+  "n": "n/8cc2b47f43882360-f95f7f72.mp3",
+  "s": "s/8cc2b47f43882360-01f9dc04.mp3"
  },
  "Paukščiai": {
   "n": "n/162823dad7e1d13f-50a376d7.mp3",
@@ -1730,6 +1758,18 @@
  "Septyni ir šeši yra trylika.": {
   "n": "n/a2cd3c8462e58aed-7e4d2ded.mp3",
   "s": "s/a2cd3c8462e58aed-f06879d2.mp3"
+ },
+ "Skaitmenys tie patys, o skaičius kitas.": {
+  "n": "n/1412022ef462b730-13e3ddbd.mp3",
+  "s": "s/1412022ef462b730-8aa3e79b.mp3"
+ },
+ "Skaitmenys vienodi, todėl skaičius nesikeičia.": {
+  "n": "n/646d3404d4d93d5f-25f76019.mp3",
+  "s": "s/646d3404d4d93d5f-7bacc237.mp3"
+ },
+ "Skaitmenų yra dešimt: nuo 0 iki 9. Didesnio skaitmens nėra.": {
+  "n": "n/b3e8482c6595b180-00af055f.mp3",
+  "s": "s/b3e8482c6595b180-4e0a563b.mp3"
  },
  "Skaityk kartu": {
   "n": "n/b6c14d77fa5c0a82-984de7a3.mp3",

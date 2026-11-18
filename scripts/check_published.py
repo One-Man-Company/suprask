@@ -440,28 +440,40 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def compare(local_path: pathlib.Path, url_rel: str) -> tuple[bool, int, int]:
-    """(ar gyvas failas baitais lygus repo failui, repo baitai, gyvi baitai).
+def compare(local_path: pathlib.Path, url_rel: str) -> tuple[str, int, int]:
+    """(būsena, repo baitai, gyvi baitai).
 
-    -1 gyvuose reiškia „nepasiektas“, 0 — „repo failo nėra“.
+    Būsena: `"ok"` | `"differs"` | `"absent"` | `"unreachable"`.
+
+    Baitų reikšmės: `-1` reiškia **neišmatuota**, ne 0. Tai svarbu, nes 0 baitų
+    yra tikras matavimas (tuščias failas), o trūkstamas failas neturi jokio
+    dydžio. Iki #370 abu atvejai rašė 0, todėl pranešimas apie failą, kurio
+    repo nėra, skambėjo kaip matavimas: „repo 0 B, gyvai 0 B“ — nors gyvo failo
+    dydis nebuvo matuotas net vieną kartą (`fetch()` net nebuvo iškviestas, nes
+    funkcija grįždavo anksčiau). Vaikas tokiu atveju nematė nieko, o vartai
+    pranešdavo „pasenęs turinys“, t. y. siūlė perkrauti publikavimą vietoj
+    pataisyti indeksą (LL-21, LL-37).
     """
     if not local_path.exists():
-        return False, 0, 0
+        # Gyvo failo dydis čia sąmoningai nematuojamas: be repo pusės lyginti
+        # nėra su kuo, o užklausa tikėtųsi atsakymo apie failą, kurio klausimas
+        # dar neaiškus. Grąžinama „nėra“, o ne „0 baitų“.
+        return "absent", -1, -1
     local = local_path.read_bytes()
     live = fetch(LIVE_ROOT + url_rel)
     if live is None:
-        return False, len(local), -1
+        return "unreachable", len(local), -1
     if sha(live) != sha(local):
         # LL-76: pirmomis sekundėmis po deploymento kraštas gali būti mišrus.
         time.sleep(1.5)
         live = fetch(LIVE_ROOT + url_rel)
         if live is None:
-            return False, len(local), -1
-    return sha(live) == sha(local), len(local), len(live)
+            return "unreachable", len(local), -1
+    return ("ok" if sha(live) == sha(local) else "differs"), len(local), len(live)
 
 
-def same_bytes(rel: str) -> tuple[bool, int, int]:
-    """(ar gyvas failas baitais lygus repo failui, repo baitai, gyvi baitai)."""
+def same_bytes(rel: str) -> tuple[str, int, int]:
+    """(būsena, repo baitai, gyvi baitai) — žr. `compare()`."""
     return compare(CONTENT / rel, "content/lt/" + rel)
 
 
@@ -597,6 +609,8 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
 
     stale: list[dict] = []
     stale_unknown: list[str] = []
+    missing_in_repo: list[dict] = []
+    unmeasured: list[str] = []
     if compare_bytes:
         # Modulys, kurio ID gyvame `index.json` nėra, jau įvardytas kaip
         # NESKELBTA — jo baitų skirtumas nieko neprideda, o pranešime atrodytų
@@ -607,26 +621,50 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
         todo = [(mid, files[mid]) for mid in local_ids if mid in files and mid not in missing]
         with ThreadPoolExecutor(max_workers=8) as pool:
             results = list(pool.map(lambda pair: (pair[0], pair[1], same_bytes(*pair[1:])), todo))
-        for mid, rel, (ok, local_size, live_size) in results:
-            if not ok:
-                if live_size < 0:
-                    stale_unknown.append(mid)
-                else:
-                    stale.append({"id": mid, "file": rel, "repo_bytes": local_size,
-                                  "live_bytes": live_size})
+        for mid, rel, (state, local_size, live_size) in results:
+            if state == "ok":
+                continue
+            if state == "absent":
+                # Indeksas rodo į failą, kurio repo nėra (#370). Tai ne
+                # „pasenęs turinys“ ir ne „nepasiekiamas“: publikavimas čia
+                # nieko nepakeis, kol indeksas netaisytas. Vaidmens taisyklė
+                # šį atvejį vadina lūžusiu indeksu ir reikalauja jį įvardyti
+                # atskirai, o ne sumaišyti su publikavimo defektais.
+                missing_in_repo.append({"id": mid, "file": rel, "grade": grade})
+            elif state == "unreachable":
+                stale_unknown.append(mid)
+            elif live_size < 0 or local_size < 0:
+                # Būsena „differs“, bet vienas dydis neišmatuotas — tokio
+                # derinio būti neturėtų; jei atsiranda, sakome tai žodžiais,
+                # o ne spausdiname -1 kaip baitus (LL-37).
+                unmeasured.append(mid)
+            else:
+                stale.append({"id": mid, "file": rel, "repo_bytes": local_size,
+                              "live_bytes": live_size})
     out["stale"] = stale
     out["stale_unknown"] = stale_unknown
+    out["missing_in_repo"] = missing_in_repo
+    if unmeasured:
+        out["stale_unmeasured"] = unmeasured
 
     # LL-78: klasės indeksas ir seka skaitomi prieš modulį, todėl jų baitai
-    # lyginami atskirai — kitaip „ID yra“ dar nereiškia „svetainė rodo tą patį“.
+    # lyginami atskirai — kitaip „ID yra“ nereiškia „svetainė rodo tą patį“.
     aux_stale: list[dict] = []
+    aux_absent: list[dict] = []
     if compare_bytes:
         for name in ("index.json", "path.json"):
             url_rel = f"content/lt/{gd}/{name}"
-            ok, local_size, live_size = compare(CONTENT / gd / name, url_rel)
-            if not ok:
-                aux_stale.append({"file": url_rel, "repo_bytes": local_size, "live_bytes": live_size})
+            state, local_size, live_size = compare(CONTENT / gd / name, url_rel)
+            if state == "ok":
+                continue
+            item = {"file": url_rel, "state": state,
+                    "repo_bytes": local_size, "live_bytes": live_size}
+            if state == "absent":
+                aux_absent.append(item)
+            else:
+                aux_stale.append(item)
     out["aux_stale"] = aux_stale
+    out["aux_absent"] = aux_absent
     return out
 
 

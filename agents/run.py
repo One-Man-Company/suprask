@@ -374,6 +374,10 @@ PRIVALOMA TVARKA
    (vaidmens faile prašomi kiti `state.json` blokai — tavo). Jei baigiasi žingsniai ar kvota,
    PIRMIAU įrašyk savo darbo failą (pasiūlymą, modulį, taisymą, changelog įrašą), o ne ataskaitą:
    paleidimas, kuriame pakeista tik ataskaita, laikomas tuščiu ir jo rezultatas neskelbiamas.
+6. Jei šiame paleidime įgyvendinai pasiūlymą iš eilės, pirmoje ataskaitos eilutėje parašyk
+   `ĮGYVENDINTA: #<nr>` (kelis — `#<nr>, #<nr>`). Bėgiklis uždaro TIK tuos numerius, kurių
+   tikslo failas tikrai pakeistas šiame commit'e. Be šios eilutės įgyvendintas pasiūlymas
+   lieka eilėje ir tą patį darbą kitas paleidimas gauna antrą kartą.
 
 PROJEKTO KATALOGAS: {root}
 ŠIANDIEN: {today}
@@ -939,8 +943,19 @@ def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool,
     return ok, "\n".join(report)
 
 
-def revert(files: list[str]) -> None:
-    """Atmeta agento pakeitimus (kad blogas turinys nepatektų į repo)."""
+def revert(files: list[str]) -> str:
+    """Atmeta agento pakeitimus (kad blogas turinys nepatektų į repo).
+
+    Grąžina pastabą, kur atsidūrė NETRACKINTI dalis, arba `""`.
+
+    Ataskaitos (`agents/log/…`) NEKELIAMOS: bėgiklis jau įrašė jos kelią į
+    `runs.db` (`log_path`) ir `agents/state.json`. 2026-11-17 paleidimas #337
+    dirbo 571 s, bet `log_path` rodė į neegzistuojantį failą, nes jo paties
+    ataskaita buvo nukelta į `agents/work/_reverted/`: atmesto paleidimo
+    audito pėdsakas dingo būtent tada, kai jo labiausiai reikia. Ataskaita yra
+    ne agento darbas (`work_files()`), o bėgiklio įrašas, todėl ji lieka
+    vietoje ir patenka į kitą `[sistema]` likučio commit'ą.
+    """
     tracked = [f for f in files if git("ls-files", "--error-unmatch", f).returncode == 0]
     for i in range(0, len(tracked), 400):
         git("checkout", "--", *tracked[i:i + 400])
@@ -948,21 +963,30 @@ def revert(files: list[str]) -> None:
     # nebuvo git'e — taip dingo `agents/pause.py` (žmogaus kurtas failas) po
     # atmesto paleidimo. Dabar jie perkeliami į agents/work/<run>/reverted/.
     untracked = [f for f in files if f not in tracked]
-    if untracked:
-        # run_id išvedamas iš katalogo, kurį kvietėjas jau turi; čia naudojam
-        # laiko žymą, kad niekas nebūtų prarasta net be konteksto.
-        rescue = ROOT / "agents" / "work" / "_reverted" / dt.datetime.now().strftime("%Y%m%dT%H%M%S")
-        for f in untracked:
-            if f.startswith(("agents/log/", "agents/work/")):
-                continue
-            target = ROOT / f
-            try:
-                if target.is_file():
-                    dest = rescue / f
-                    dest.parent.mkdir(parents=True, exist_ok=True)
-                    target.replace(dest)
-            except OSError:
-                pass
+    if not untracked:
+        return ""
+    rescue = ROOT / "agents" / "work" / "_reverted" / dt.datetime.now().strftime("%Y%m%dT%H%M%S")
+    moved = 0
+    for f in untracked:
+        if f.startswith(("agents/log/", "agents/work/")):
+            continue
+        target = ROOT / f
+        try:
+            if target.is_file():
+                dest = rescue / f
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                target.replace(dest)
+                moved += 1
+        except OSError:
+            pass
+    if not moved:
+        return ""
+    try:
+        where = str(rescue.relative_to(ROOT))
+    except ValueError:
+        where = str(rescue)
+    return (f"{moved} neįtrauktų failų perkelti į {where} "
+            "(atmesti, bet nesunaikinti — darbas nemokamas, kartoti brangu)")
 
 
 def target_paths(target: str) -> list[str]:
@@ -1054,9 +1078,64 @@ def reopen_after_infra(proposal_id: int, reason: str) -> tuple[bool, int]:
     return True, attempt
 
 
-def close_proposals(files: list[str], commit_sha: str, implemented_id: int | None = None) -> int:
-    """Suderinamumo apvalkalas: grąžina, kiek pasiūlymų uždaryta (0 arba 1)."""
-    return 1 if mark_implemented(implemented_id, files, commit_sha) else 0
+def declared_proposals(text: str) -> list[int]:
+    """Pasiūlymų numeriai, kuriuos modelis PATS pasakė įgyvendinęs.
+
+    Eilutė `ĮGYVENDINTA: #4455` yra vienintelis būdas uždaryti eilės įrašą
+    vaidmeniui, kuris paleidžiamas grafiku, o ne eilės režimu su `--proposal`
+    (`sistemos-architektas`, `simuliaciju-inzinierius`, `dizaineris`).
+    Iki 2026-11-18 toks paleidimas `implemented_id` neturėjo, tad
+    `mark_implemented()` grąžindavo `False`, ir įgyvendintas darbas likdavo
+    `new`: #4455 buvo įgyvendintas (commit f662b27 — `cap_report`,
+    `REPORT_MAX`, `check_agents.py` vartai), o eilėje kabėjo 10 dienų ir
+    kiekvieną kartą buvo duodamas tam pačiam vaidmeniui iš naujo (#22168),
+    o `check_agents.py` kiekvieną paleidimą skelbė įspėjimą apie 8 laukiančius
+    sisteminius pasiūlymus.
+
+    #486 draudžia uždaryti pasiūlymą vien todėl, kad pakeistas jo tikslo
+    failas — todėl čia reikalaujama, kad modelis numerį PASAKYTŲ, o
+    `mark_implemented()` dar patikrina, ar tas failas tikrai pakeistas šiame
+    commit'e. Deklaracija be pakeitimo neuždaroma, o pakeitimas be deklaracijos
+    taip pat — abu įrodymai privalomi.
+    """
+    found: list[int] = []
+    for line in (text or "").splitlines():
+        clean = BOX_RE.sub("", ANSI_RE.sub("", line)).strip()
+        clean = LEAD_MARKUP_RE.sub("", clean)
+        m = DECLARED_RE.match(clean)
+        if not m:
+            continue
+        for sharp, bare in re.findall(r"#(\d{1,6})|(\d{4,6})", m.group(1)):
+            pid = int(sharp or bare)
+            if pid not in found:
+                found.append(pid)
+    return found[:3]
+
+
+def close_proposals(files: list[str], commit_sha: str, implemented_id: int | None = None,
+                    declared: list[int] | None = None) -> list[int]:
+    """Uždaro įgyvendintus pasiūlymus. Grąžina TIKRAI uždarytų numerių sąrašą.
+
+    `--proposal` režime numeris yra eilės sprendimas; grafiku paleistam vaidmeniui
+    jį pasako pats modelis (`declared_proposals`). Visais atvejais numerį dar
+    turi patvirtinti `mark_implemented()` — tikslo failas privalo būti pakeistas.
+    Jau uždaryti ar blokuoti įrašai neliečiami: deklaracija negali perrašyti
+    žmogaus sprendimo.
+    """
+    ids = ([implemented_id] if implemented_id else [])
+    ids += [d for d in (declared or []) if d not in ids]
+    closed: list[int] = []
+    for pid in ids:
+        if pid != implemented_id:
+            try:
+                row = next((r for r in db.proposals(500) if int(r["id"]) == int(pid)), None)
+            except Exception:  # noqa: BLE001
+                continue
+            if not row or (row.get("status") or "") != "new":
+                continue
+        if mark_implemented(pid, files, commit_sha):
+            closed.append(int(pid))
+    return closed
 
 
 def _union_markdown(path: Path) -> None:
@@ -1313,6 +1392,14 @@ ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
 BOX_RE = re.compile(r"^[\s│┃┆┊╎╏|┌┐└┘├┤┬┴┼─━═╭╮╰╯▏▕]+")
 # Eilutės, kurios yra įrankio išklotinė, o ne agento išvada.
 NOISE_RE = re.compile(r'(^\s*[{}]|": |^\+|^@@|^diff |^\+\+\+|^---)')
+# Įrankių išklotinės, kurias Hermes TUI atspausdina į stdout. 2026-11-18 commit'o
+# 939a510 žinutė buvo „Kodėl (agento teiginys, nepatikrintas): įrankio išklotinė 1:
+# content/lt/grade-01/... | @@ -1,5 +1,5 @@ | +eilutė“ — `NOISE_RE` šio atvejo
+# nepagauna, nes `@@` eilutėje yra viduryje, o ne pradžioje (LL-47 šeima).
+TOOL_ECHO_RE = re.compile(r"^\s*įrankio išklotin|\\|\s*@@\s|\|\s*\+\w", re.I)
+DECLARED_RE = re.compile(r"^įgyvendinta[s]?\s*:\s*(.+)$", re.I)
+LEAD_MARKUP_RE = re.compile(r"^[\s*_>•\-–—]+")
+
 
 
 def summary_line(text: str, limit: int = 90) -> str:
@@ -1333,7 +1420,7 @@ def summary_line(text: str, limit: int = 90) -> str:
         clean = clean.lstrip("#>*-+ ").strip()
         if len(clean) < 12 or len(clean.split()) < 3:
             continue
-        if NOISE_RE.search(line) or NOISE_RE.search(clean):
+        if NOISE_RE.search(line) or NOISE_RE.search(clean) or TOOL_ECHO_RE.search(line):
             continue
         return clean[:limit]
     return ""
@@ -1376,15 +1463,15 @@ def commit_message(role: str, run_id: int, files: list[str], summary: str,
 
 def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True,
             implemented_id: int | None = None, foreign_roles: list[str] | None = None,
-            notes: list[str] | None = None) -> dict:
+            notes: list[str] | None = None, declared: list[int] | None = None) -> dict:
     with git_lock():
         return _publish(role, run_id, files, summary, allow_revert, implemented_id,
-                        foreign_roles or [], notes or [])
+                        foreign_roles or [], notes or [], declared or [])
 
 
 def _publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True,
              implemented_id: int | None = None, foreign_roles: list[str] | None = None,
-             notes: list[str] | None = None) -> dict:
+             notes: list[str] | None = None, declared: list[int] | None = None) -> dict:
     """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą.
 
     `foreign_roles` — kiti vaidmenys, kurie ėjo per tą patį laiką (LL-49).
@@ -1413,16 +1500,21 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
 
     protected = [f for f in files if f in PROTECTED]
     if protected:
-        revert(files)
-        return {"status": "rejected", "detail": f"Liečia apsaugotą failą: {', '.join(protected)}", "sha": "", "validation": ""}
+        note = revert(files)
+        detail = f"Liečia apsaugotą failą: {', '.join(protected)}"
+        if note:
+            detail += f". {note}"
+        return {"status": "rejected", "detail": detail, "sha": "", "validation": ""}
 
     ok, validation = run_checks(files)
     if not ok:
         # `--publish-only` neturi ko atsukti: ten pakeitimai galėjo būti padaryti
         # žmogaus, ne agento. Todėl rankiniu atveju tik pranešame, o neatmetame.
         if allow_revert and not foreign:
-            revert(files)
+            note = revert(files)
             detail = "Validacija nepraėjo — pakeitimai atmesti."
+            if note:
+                detail += f" {note}."
         elif allow_revert:
             detail = (
                 "Validacija nepraėjo — pakeitimai PALIKTI darbinėje kopijoje, nes per "
@@ -1488,7 +1580,7 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
     # Lokalus `main` turi sekti paskutinį paskelbtą commit'ą. Be to `git push
     # origin main` (rankinis ar iš kito vaidmens) atsimušė kaip non-fast-forward.
     git("branch", "-f", "main", "HEAD")
-    closed = close_proposals(files, sha, implemented_id)
+    closed = close_proposals(files, sha, implemented_id, declared)
 
     # Skaičiuojame tai, kas TIKRAI pateko, o ne tai, ką prašėme. Anksčiau
     # `detail` rodė `len(files)`, nors komituota būdavo mažiau (LL-37, LL-21).
@@ -1501,7 +1593,7 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
     if left:
         detail += f", {len(left)} liko nešvarūs ({', '.join(left[:2])})"
     if closed:
-        detail += f", uždaryti {closed} pasiūlymai"
+        detail += f", uždaryta {', '.join(f'#{i}' for i in closed)}"
     if notes:
         detail += "; " + "; ".join(notes)
     return {"status": "published", "detail": detail, "sha": sha, "validation": validation}
@@ -1749,7 +1841,8 @@ def main() -> int:
         # Paskelbimas — bėgiklio, ne agento, darbas.
         result = publish(args.role, run_id, files, out or args.role,
                          implemented_id=int(proposal["id"]) if proposal else None,
-                         foreign_roles=foreign, notes=notes)
+                         foreign_roles=foreign, notes=notes,
+                         declared=declared_proposals(out or ""))
         # LL-10 vienu lygmeniu aukščiau: paleidimo rezultatas yra PASKELBTI
         # failai, o ne modelio išėjimo kodas. `hermes` one-shot dažnai išeina su
         # 1 po pilno atsakymo (todėl `partial`), o modelis, palikęs paskutinius

@@ -1,0 +1,100 @@
+{
+  "id": "06-garso-trukme",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Garsas, kurį gali tempti",
+  "subtitle": "Kodėl sss tęsiasi, o k sustoja po pirmo garso",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu garsus, kuriuos galiu tempti, nuo garsų, kurie nutrūksta.",
+    "Ištempęs garsą, pasakau, kas girdisi po jo.",
+    "Randu žodyje pirmą garsą ir pasakau, ar jį galima tempti."
+  ],
+  "concept": {
+    "title": "Ilgas garsas ir trumpas garsas",
+    "big_idea": "Vieną garsą gali tempti ilgai: sss, mmm, ššš. Kitas nutrūksta iš karto: k, p, t. Trukmė priklauso nuo to, kaip garsą darai. Ne nuo raidės dydžio ar vardo.",
+    "steps": [
+      "Ištark sss ir laikyk, kol baigsis oras. Tada ištark k. Pajusk, kuris garsas nutrūksta.",
+      "Laikyk mygtuką ilgiau — juosta vis tiek sustos.",
+      "Raidės vardas „ka“ ilgas, o garsas k trumpas. Klausykis garso, ne vardo."
+    ],
+    "example": "Sakyk „sssaulė“: pirmą garsą gali tempti. Sakyk „k-k-katė“: pirmas garsas tik trūkteli."
+  },
+  "sim": {
+    "component": "garso-juosta",
+    "config": {
+      "sounds": [
+        { "sound": "a", "stretch": true },
+        { "sound": "s", "stretch": true },
+        { "sound": "š", "stretch": true },
+        { "sound": "m", "stretch": true },
+        { "sound": "k", "stretch": false },
+        { "sound": "p", "stretch": false },
+        { "sound": "t", "stretch": false },
+        { "sound": "b", "stretch": false }
+      ],
+      "sentences": {
+        "start": "Pasirink garsą ir laikyk mygtuką.",
+        "ask": "Ar juosta prisipildys iki galo?",
+        "hold": "Tark garsą ir laikyk, kol pildosi juosta.",
+        "full": "Juosta pilna. Šį garsą gali tempti.",
+        "stop": "Juosta sustojo. Garsas nesitęsia.",
+        "sort": "Padėk plyteles į dvi eiles: ilgas garsas ir trumpas garsas."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Kurį garsą gali tempti ilgai?",
+      "options": ["k", "a", "p"],
+      "answer": 1,
+      "hint": "Ištark garsą ir laikyk, kol baigsis oras.",
+      "why": "a gali tempti: aaa. k ir p nutrūksta iš karto."
+    },
+    {
+      "q": "Kai ilgai tempi garsą „k“, kas girdisi?",
+      "options": [
+        "„kyyy“ — po k pasigirsta dar vienas garsas",
+        "„kkkk“ — tas pats garsas, tik ilgesnis",
+        "Tyliai, nieko nesigirdi"
+      ],
+      "answer": 0,
+      "hint": "Pasakyk „k“ ilgai ir paklausyk, kas girdisi po jo.",
+      "why": "k tempti negalima: jį pratęsus pasigirsta dar vienas garsas."
+    },
+    {
+      "q": "Kuris žodis prasideda garsu, kurį galima tempti?",
+      "options": ["katė", "mama", "tėtis"],
+      "answer": 1,
+      "hint": "Ištark pirmą garsą ir pabandyk jį pratęsti.",
+      "why": "„Mama“ prasideda garsu m, o mmm gali tempti."
+    },
+    {
+      "q": "Kurie du garsai elgiasi vienodai?",
+      "options": ["š ir s", "š ir t", "t ir p"],
+      "answer": 0,
+      "hint": "Abu išbandyk su popieriaus juostele.",
+      "why": "š ir s abu tęsiasi, nors raidės skiriasi.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kurį garsą gali tempti ilgiausiai? Pasakyk jį ir du žodžius, kurie juo prasideda.",
+  "teacher": {
+    "goal": "Skirti balsius ir priebalsius be terminų (D.1.3.1): pajusti, kad vieni garsai tęsiasi, kiti nutrūksta, ir kad tai priklauso nuo garso, o ne nuo raidės.",
+    "prompt": "Kurį garsą gali tempti, o kuris nutrūksta? Parodyk savo balsu.",
+    "offline": "Duok vaikui siaurą popieriaus juostelę. Tegul laiko prieš lūpas ir sako sss, paskui k. Juostelė plazda tolygiai arba tik trūkteli. Tada tegul sudėlioja aštuonias korteles su raidėmis į dvi krūvas pagal tai, ką jautė juostelė.",
+    "misconceptions": [
+      "„Jei garsą galiu pasakyti, galiu jį ir ištempti.“ Vaikas tempia k ir išgirsta „kyy“ — pats prideda balsį, kurio žodyje nebuvo.",
+      "„Tempiasi tik balsiai.“ s, š, m ir n tęsiasi, nors tai priebalsiai; todėl eilės modulyje vadinamos „ilgas“ ir „trumpas“, ne „balsis“ ir „priebalsis“.",
+      "Raidės vardas („es“, „ka“) yra ilgesnis už patį garsą, todėl vaikui atrodo, kad ilgesnis užrašas reiškia ilgesnį garsą."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), skyrius „Lietuvių kalba ir literatūra“, pasiekimas D.1.3.1.",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), pasiekimų sritis D — kalbos pažinimas."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (garsą galima tempti arba ne), o ne visa garsų klasifikacija",
+    "3 žingsnis — pažanga ir pagalba laiku: spėjimas palyginamas su tuo, kas įvyko, ir klaida paaiškinama juosta, ne atsakymu"
+  ]
+}

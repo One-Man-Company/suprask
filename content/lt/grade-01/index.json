@@ -14,7 +14,8 @@
         { "id": "02-skiemenu-jungimas", "title": "Skiemenų jungimas", "subtitle": "Kaip du skiemenys tampa žodžiu", "file": "grade-01/lietuviu-kalba/02-skiemenu-jungimas.json", "minutes": 8, "sim": "skiemenu-jungimas" },
         { "id": "03-sakinio-zodziai", "title": "Kas? Ką veikia?", "subtitle": "Sakinio žodį randi pagal klausimą", "file": "grade-01/lietuviu-kalba/03-sakinio-zodziai.json", "minutes": 10, "sim": "sakinio-zodziai", "renamed_from": ["03-sakinio-tvarka"] },
         { "id": "04-kaip-zmones-sveikinasi", "title": "Kaip žmonės sveikinasi", "subtitle": "Vienas pastebėjimas dar nėra išvada", "file": "grade-01/lietuviu-kalba/04-kaip-zmones-sveikinasi.json", "minutes": 9, "sim": "kaip-zmones-sveikinasi" },
-        { "id": "05-plakatas-ir-informacija", "title": "Plakatas: kur ieškoti atsakymo", "subtitle": "Atsakymo ieškok ir užraše, ir piešinyje", "file": "grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json", "minutes": 9, "sim": "plakatas-ir-informacija" }
+        { "id": "05-plakatas-ir-informacija", "title": "Plakatas: kur ieškoti atsakymo", "subtitle": "Atsakymo ieškok ir užraše, ir piešinyje", "file": "grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json", "minutes": 9, "sim": "plakatas-ir-informacija" },
+        { "id": "06-garso-trukme", "title": "Garsas, kurį gali tempti", "subtitle": "Kodėl sss tęsiasi, o k sustoja po pirmo garso", "file": "grade-01/lietuviu-kalba/06-garso-trukme.json", "minutes": 9, "sim": "garso-juosta" }
       ]
     },
     {

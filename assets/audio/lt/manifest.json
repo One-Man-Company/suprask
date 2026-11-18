@@ -583,6 +583,10 @@
   "n": "n/9038b62647cab700-944feae6.mp3",
   "s": "s/9038b62647cab700-96eb6de0.mp3"
  },
+ "Ar juosta prisipildys iki galo?": {
+  "n": "n/5212d4cbe604c73b-b078b154.mp3",
+  "s": "s/5212d4cbe604c73b-2ed08176.mp3"
+ },
  "Ar stiklinės kelias irgi baigsis gamtoje?": {
   "n": "n/1bb5ec81e8be2b76-8239b08a.mp3",
   "s": "s/1bb5ec81e8be2b76-ee6d5cf1.mp3"
@@ -1015,6 +1019,14 @@
   "n": "n/26c7dabd254a2784-d431e77b.mp3",
   "s": "s/26c7dabd254a2784-ab191d0f.mp3"
  },
+ "Juosta pilna. Šį garsą gali tempti.": {
+  "n": "n/860d84e6e8b491e5-906f8e15.mp3",
+  "s": "s/860d84e6e8b491e5-d3c9dbad.mp3"
+ },
+ "Juosta sustojo. Garsas nesitęsia.": {
+  "n": "n/9a1c8bec3db4ece2-7521b047.mp3",
+  "s": "s/9a1c8bec3db4ece2-f2ce3ec4.mp3"
+ },
  "Jį pastūmei tu. Pats jis nejuda ir neauga.": {
   "n": "n/4a3400f703cd9805-2c10057b.mp3",
   "s": "s/4a3400f703cd9805-fbe33dd2.mp3"
@@ -1383,6 +1395,10 @@
   "n": "n/d2be6484e53549b5-663b34f1.mp3",
   "s": "s/d2be6484e53549b5-3202bbe0.mp3"
  },
+ "Padėk plyteles į dvi eiles: ilgas garsas ir trumpas garsas.": {
+  "n": "n/42b40a7aafe456c5-7d476d59.mp3",
+  "s": "s/42b40a7aafe456c5-8944593c.mp3"
+ },
  "Pagalvok ir pasakyk": {
   "n": "n/7d0a64f2091b33af-346fa946.mp3",
   "s": "s/7d0a64f2091b33af-7f4b6ce9.mp3"
@@ -1414,6 +1430,10 @@
  "Pasiekei lapą.": {
   "n": "n/e4ff17609ce48006-064c37ee.mp3",
   "s": "s/e4ff17609ce48006-c893f127.mp3"
+ },
+ "Pasirink garsą ir laikyk mygtuką.": {
+  "n": "n/0517de8ed8e434c4-71bc4e75.mp3",
+  "s": "s/0517de8ed8e434c4-5aad99b6.mp3"
  },
  "Pasirink gyvūną. Kas jam duoda maistą?": {
   "n": "n/fe78452fdcc0fe98-7e85e9d4.mp3",
@@ -1814,6 +1834,10 @@
  "Tam": {
   "n": "n/085baa1d3c064c31-23510c12.mp3",
   "s": "s/085baa1d3c064c31-6022b5d4.mp3"
+ },
+ "Tark garsą ir laikyk, kol pildosi juosta.": {
+  "n": "n/f9715849f99731a8-84705dfe.mp3",
+  "s": "s/f9715849f99731a8-b5253218.mp3"
  },
  "Tarp taškų atkarpa su dviem galais. Tiesė neturi galo.": {
   "n": "n/c095a5efbdb25987-f3759fe9.mp3",

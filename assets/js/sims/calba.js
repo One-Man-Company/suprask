@@ -1128,10 +1128,419 @@ const plakatasIrInformacija = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 6. Garso trukmė: vieną garsą gali tempti, kitas nutrūksta           */
+/* ------------------------------------------------------------------ */
+/* Modelis: vienintelis keičiamas dalykas — GARSAS, o ne laikymo
+   trukmė. Vaikas gali spausti ilgiau, bet trumpo garso juosta sustoja
+   po pirmo langelio: būtent tai ir yra modelio teiginys, kurio
+   nepaneigia jokia iliustracija (gairės P2).
+   Juostos ilgis išvedamas iš `sounds[].stretch` (8 arba 1), o ne iš
+   atskiro `cells` lauko: ekrane esantis teiginys turi būti
+   perskaičiuojamas iš tų pačių duomenų, kuriuos mato vaikas (LL-21).
+   Pavieniai garsai sąmoningai NETARIAMI: sintezatorius „s“ perskaitytų
+   kaip raidės vardą „es“ — būtent tą klaidą, kurią modelis griauna.
+   Garsą taria vaikas, o juosta matuoja jo paspaudimą; tai pasakyta
+   `api.note`, kad modelio riba nebūtų nutylėta.
+   Spėjimas (LL-15) yra vienas, prieš pirmą bandymą, ir lieka ekrane
+   kaip įrašas „Tu spėjai… Įvyko…“, niekada nevadinamas klaida. */
+
+const GJ_CELLS = 8;
+const GJ_TICK = 200;
+
+const garsoJuosta = {
+  mount({ stage, controls, api, config }) {
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const raw = Array.isArray(config.sounds) ? config.sounds : [];
+    const sounds = raw.map((s) => ({ sound: String((s && s.sound) ?? "").trim(), stretch: Boolean(s && s.stretch === true) }));
+    const invalid = raw.length < 4 || raw.some((s) => !s || typeof s.sound !== "string" || !s.sound.trim() || typeof s.stretch !== "boolean");
+    const S = config.sentences && typeof config.sentences === "object" ? config.sentences : {};
+    const REQUIRED = ["start", "ask", "hold", "full", "stop", "sort"];
+    const missing = REQUIRED.filter((k) => !String(S[k] ?? "").trim());
+
+    if (invalid || missing.length) {
+      console.error("[garso-juosta] reikia bent 4 garsų su „sound“ ir „stretch“ bei tekstų:", REQUIRED.join(", "), config);
+      stage.innerHTML = `<p class="error-box">Garsų duomenys nesuderinti.</p>`;
+      controls.innerHTML = "";
+      api.readout("Garsų duomenys nesuderinti.");
+      api.note("");
+      return () => {};
+    }
+
+    const reduced = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const spoken = new Set();
+    let fillTimer = null;
+    let holding = false;
+    let picked = -1;              // kuri plytelė pasirinkta
+    let guess = "";               // vaiko spėjimas, ne modelio išvada
+    let guessDone = false;
+    const tried = new Map();      // plytelė → kiek langelių prisipildė
+    let sortOn = false;           // ar jau galima dėlioti į dvi eiles
+    const placement = new Map();  // plytelė → "long" | "short"
+    const marked = new Set();     // po „Palygink“ ne savo eilėje
+    let reported = false;
+
+    function say(key) {
+      const text = String(S[key] ?? "").trim();
+      if (!text || spoken.has(key)) return;
+      spoken.add(key);
+      api.speak(text, { rate: .85 });
+    }
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:32rem;margin:0 auto">
+        <div id="gj-tiles" role="group" aria-label="Garsų plytelės"
+          style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;min-height:4rem"></div>
+        <div style="margin-top:.7rem;padding:.55rem .7rem;border:2px dashed var(--line);border-radius:var(--r-s);background:var(--paper)">
+          <p style="margin:0;font-size:clamp(.98rem,3.6vw,1.1rem);font-weight:800">Ar juosta prisipildys iki galo?</p>
+          <div id="gj-guess" style="display:flex;gap:.5rem;margin-top:.4rem;flex-wrap:wrap">
+            <button class="btn secondary" type="button" data-guess="taip" aria-pressed="false" style="min-height:48px;min-width:5rem">Taip</button>
+            <button class="btn secondary" type="button" data-guess="ne" aria-pressed="false" style="min-height:48px;min-width:5rem">Ne</button>
+          </div>
+          <p id="gj-trace" role="status" style="margin:.35rem 0 0;font-size:clamp(.94rem,3.4vw,1.05rem);min-height:1.3rem"></p>
+        </div>
+        <div style="margin-top:.85rem">
+          <div id="gj-bar" aria-hidden="true"
+            style="display:grid;grid-template-columns:repeat(${GJ_CELLS},minmax(0,1fr));gap:2px;height:40px"></div>
+          <p id="gj-under" style="margin:.3rem 0 0;font-size:var(--fs-s);color:var(--ink-soft);min-height:1.2rem"></p>
+        </div>
+        <div id="gj-compare" hidden style="margin-top:.9rem"></div>
+        <div id="gj-sort" hidden style="margin-top:.9rem"></div>
+      </div>`;
+    controls.innerHTML = `
+      <button class="btn" id="gj-hold" type="button" style="min-height:56px">Tark ir laikyk</button>
+      <button class="btn secondary" id="gj-reset" type="button" style="min-height:48px">Iš naujo</button>`;
+
+    const barEl = stage.querySelector("#gj-bar");
+    const underEl = stage.querySelector("#gj-under");
+    const traceEl = stage.querySelector("#gj-trace");
+    const tilesEl = stage.querySelector("#gj-tiles");
+    const sortEl = stage.querySelector("#gj-sort");
+    const compareEl = stage.querySelector("#gj-compare");
+    const holdBtn = controls.querySelector("#gj-hold");
+    const cells = [];
+    for (let k = 0; k < GJ_CELLS; k += 1) {
+      const c = document.createElement("span");
+      c.style.cssText = "display:block;border-radius:4px;background:var(--line)" + (reduced ? "" : ";transition:background 120ms linear");
+      barEl.appendChild(c);
+      cells.push(c);
+    }
+
+    function fill(n) {
+      cells.forEach((c, i) => { c.style.background = i < n ? "var(--accent)" : "var(--line)"; });
+    }
+
+    function miniMarkup(i) {
+      const n = tried.get(i) || 0;
+      const inner = Array.from({ length: GJ_CELLS }, (_, k) =>
+        `<span style="display:block;border-radius:1px;background:${k < n ? "var(--accent)" : "var(--line)"}"></span>`).join("");
+      return `<span data-mini="${i}" aria-hidden="true"
+        style="display:grid;grid-template-columns:repeat(${GJ_CELLS},minmax(0,1fr));gap:1px;width:3.2rem;height:.45rem;margin-top:.2rem">${inner}</span>`;
+    }
+
+    function paintMini(i, n) {
+      const host = stage.querySelector(`[data-mini="${i}"]`);
+      if (!host) return;
+      [...host.children].forEach((c, k) => { c.style.background = k < n ? "var(--accent)" : "var(--line)"; });
+    }
+
+    /* Plytelė: raidė ir vaiko paties išmatuota juosta. Nematavus juosta
+       tuščia — tai ne užuomina, o sąžiningas „dar nežinau“. */
+    function tileMarkup(i, where) {
+      const s = sounds[i];
+      const inner = where === "box"
+        ? `<button class="btn secondary" type="button" data-out="${i}" aria-pressed="false"
+             aria-label="Plytelė ${esc(s.sound)}, grąžinti į sąrašą"
+             style="min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.05rem;padding:.3rem .45rem">
+             <span style="font-family:var(--font-head);font-weight:900;font-size:clamp(1.1rem,4.4vw,1.4rem);line-height:1">${esc(s.sound)}</span>
+             ${miniMarkup(i)}
+             ${marked.has(i) ? `<span style="font-size:.6rem;line-height:1.1;color:var(--ink-soft)">ne čia</span>` : ""}
+           </button>`
+        : `<button class="btn secondary" type="button" data-tile="${i}" aria-pressed="false"
+             aria-label="Garsas ${esc(s.sound)}"
+             style="min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;padding:.3rem">
+             <span style="font-family:var(--font-head);font-weight:900;font-size:clamp(1.15rem,4.6vw,1.5rem);line-height:1">${esc(s.sound)}</span>
+             ${miniMarkup(i)}
+           </button>`;
+      return inner;
+    }
+
+    function applyPick() {
+      stage.querySelectorAll("[data-tile], [data-out]").forEach((b) => {
+        const i = Number(b.dataset.tile ?? b.dataset.out);
+        const on = i === picked;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--accent)" : "";
+      });
+    }
+
+    function renderTiles() {
+      const ids = sounds.map((_, i) => i).filter((i) => !placement.has(i));
+      tilesEl.innerHTML = ids.map((i) => tileMarkup(i, "row")).join("");
+      tilesEl.querySelectorAll("[data-tile]").forEach((b) => {
+        b.addEventListener("click", () => pick(Number(b.dataset.tile)));
+      });
+      applyPick();
+    }
+
+    function renderBoxes() {
+      if (!sortOn) return;
+      [["long", "#gj-long"], ["short", "#gj-short"]].forEach(([grp, sel]) => {
+        const host = stage.querySelector(sel);
+        if (!host) return;
+        const ids = sounds.map((_, i) => i).filter((i) => placement.get(i) === grp);
+        host.innerHTML = ids.length
+          ? ids.map((i) => tileMarkup(i, "box")).join("")
+          : `<span style="font-size:var(--fs-s);color:var(--ink-soft)">tuščia</span>`;
+        host.querySelectorAll("[data-out]").forEach((b) => {
+          b.addEventListener("click", () => removeChip(Number(b.dataset.out)));
+        });
+      });
+      applyPick();
+    }
+
+    function clearVerdict() {
+      const v = stage.querySelector("#gj-verdict");
+      if (v) v.textContent = "";
+    }
+
+    function pick(i) {
+      picked = i;
+      applyPick();
+      if (!sortOn) holdBtn.focus({ preventScroll: true });
+      api.readout(sortOn ? `Plytelė ${sounds[i].sound}. Spausk eilę.` : `Garsas ${sounds[i].sound}. Laikyk mygtuką.`);
+      api.note(sortOn
+        ? "Pasirinkta plytelė. Spausk eilę, į kurią ją dedi."
+        : "Laikyk „Tark ir laikyk“ ir tark garsą balsu. Juosta matuoja tavo paspaudimą.");
+      if (!guessDone) say("ask");
+    }
+
+    function removeChip(i) {
+      placement.delete(i);
+      marked.clear();
+      clearVerdict();
+      renderTiles();
+      renderBoxes();
+      const back = tilesEl.querySelector(`[data-tile="${i}"]`);
+      if (back) back.focus({ preventScroll: true });
+      api.readout(`Plytelė ${sounds[i].sound} grįžo į sąrašą.`);
+    }
+
+    function plural(n) {
+      if (n === 1) return "Viena plytelė";
+      if (n % 10 >= 2 && n % 10 <= 9 && !(n % 100 >= 11 && n % 100 <= 19)) return `${n} plytelės`;
+      return `${n} plytelių`;
+    }
+
+    function settleGuess(wasLong) {
+      if (guessDone) return;
+      guessDone = true;
+      const row = stage.querySelector("#gj-guess");
+      if (row) row.remove();
+      traceEl.textContent = guess
+        ? `Tu spėjai: ${guess}. Įvyko: ${wasLong ? "juosta pilna" : "juosta sustojo"}.`
+        : `Nespėjai. Įvyko: ${wasLong ? "juosta pilna" : "juosta sustojo"}.`;
+    }
+
+    function startTrial() {
+      if (holding) return;
+      if (picked < 0) {
+        api.readout("Pasirink garsą.");
+        api.note("Pirmiausia pasirink plytelę, tada laikyk mygtuką.");
+        return;
+      }
+      holding = true;
+      fill(0);
+      underEl.textContent = "";
+      api.readout("Laikai. Garsas teka.");
+      say("hold");
+      const target = sounds[picked].stretch ? GJ_CELLS : 1;
+      let n = 0;
+      const finish = () => {
+        holding = false;
+        if (fillTimer) { clearTimeout(fillTimer); fillTimer = null; }
+        tried.set(picked, n);
+        paintMini(picked, n);
+        const wasLong = n > 1;
+        underEl.textContent = wasLong
+          ? `${n} langeliai be tarpų — vienas garsas.`
+          : "Vienas langelis, paskui tarpas — garsas nutrūko.";
+        api.readout(wasLong ? "Juosta pilna. Garsas vienas." : "Juosta sustojo. Garsas nesitęsia.");
+        api.note(wasLong
+          ? "Laikei ir juosta pildėsi iki galo. Šį garsą gali tempti kiek nori."
+          : "Laikei ilgiau, o juosta neilgėja. Garsas baigėsi iškart. Garsą tariai tu, o juosta matuoja tavo paspaudimą.");
+        say(wasLong ? "full" : "stop");
+        settleGuess(wasLong);
+        const hasLong = sounds.some((s, i) => s.stretch && tried.has(i));
+        const hasShort = sounds.some((s, i) => !s.stretch && tried.has(i));
+        if (!sortOn && hasLong && hasShort) {
+          sortOn = true;
+          showCompare();
+          buildSort();
+          say("sort");
+          api.note(wasLong
+            ? "Šį garsą gali tempti, todėl juosta pilna. Kito garso juosta liko viena — palygink abi."
+            : "Laikei ilgiau, o juosta neilgėjo. Abi juostos skiriasi — palygink jas.");
+        }
+      };
+      const step = () => {
+        n += 1;
+        fill(n);
+        if (n >= target) { finish(); return; }
+        fillTimer = setTimeout(step, GJ_TICK);
+      };
+      if (reduced) { n = target; fill(n); finish(); return; }
+      step();
+    }
+
+    function compareRow(i, label) {
+      if (i === undefined) return "";
+      const n = tried.get(i) || 0;
+      const inner = Array.from({ length: GJ_CELLS }, (_, k) =>
+        `<span style="display:block;border-radius:2px;background:${k < n ? "var(--accent)" : "var(--line)"}"></span>`).join("");
+      return `
+        <div style="margin-top:.4rem">
+          <p style="margin:0 0 .2rem;font-size:clamp(.94rem,3.4vw,1.04rem);font-weight:800">${label}: „${esc(sounds[i].sound)}“</p>
+          <div aria-hidden="true" style="display:grid;grid-template-columns:repeat(${GJ_CELLS},minmax(0,1fr));gap:2px;height:18px">${inner}</div>
+        </div>`;
+    }
+
+    function showCompare() {
+      const ids = [...tried.keys()];
+      const longIdx = ids.filter((i) => sounds[i].stretch).pop();
+      const shortIdx = ids.filter((i) => !sounds[i].stretch).pop();
+      compareEl.hidden = false;
+      compareEl.innerHTML = `
+        <p style="margin:0;font-size:clamp(.95rem,3.4vw,1.06rem);font-weight:800">Abi juostas matei vienu metu.</p>
+        ${compareRow(longIdx, "Ilgas garsas")}
+        ${compareRow(shortIdx, "Trumpas garsas")}
+        <p style="margin:.4rem 0 0;font-size:var(--fs-s);color:var(--ink-soft)">Abi laikei vienodai. Juostos skiriasi.</p>`;
+    }
+
+    function buildSort() {
+      sortEl.hidden = false;
+      sortEl.innerHTML = `
+        <p style="margin:0 0 .2rem;font-family:var(--font-head);font-weight:900;font-size:clamp(1rem,3.6vw,1.15rem)">Padėk plyteles į dvi eiles.</p>
+        <p style="margin:0 0 .5rem;font-size:clamp(.94rem,3.4vw,1.04rem);color:var(--ink-soft)">Pasirink plytelę, tada spausk eilę.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+          <div>
+            <button class="btn secondary" type="button" data-box="long"
+              aria-label="Dėti pasirinktą plytelę į eilę Ilgas garsas"
+              style="width:100%;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem">
+              Ilgas garsas<span style="font-size:.72rem;font-weight:600;color:var(--ink-soft)">dėti čia</span>
+            </button>
+            <div id="gj-long" role="group" aria-label="Eilė Ilgas garsas"
+              style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem;min-height:2rem"></div>
+          </div>
+          <div>
+            <button class="btn secondary" type="button" data-box="short"
+              aria-label="Dėti pasirinktą plytelę į eilę Trumpas garsas"
+              style="width:100%;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem">
+              Trumpas garsas<span style="font-size:.72rem;font-weight:600;color:var(--ink-soft)">dėti čia</span>
+            </button>
+            <div id="gj-short" role="group" aria-label="Eilė Trumpas garsas"
+              style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem;min-height:2rem"></div>
+          </div>
+        </div>
+        <button class="btn" type="button" id="gj-check" style="width:100%;min-height:48px;margin-top:.7rem">Palygink</button>
+        <p id="gj-verdict" role="status" style="margin:.5rem 0 0;font-size:clamp(.95rem,3.4vw,1.06rem);min-height:2.4rem"></p>`;
+      sortEl.querySelectorAll("[data-box]").forEach((b) => {
+        b.addEventListener("click", () => place(b.dataset.box));
+      });
+      sortEl.querySelector("#gj-check").addEventListener("click", compare);
+      renderBoxes();
+    }
+
+    function place(grp) {
+      if (picked < 0) {
+        api.readout("Pirmiausia pasirink plytelę.");
+        api.note("Pasirink plytelę iš viršaus, tada spausk eilę.");
+        return;
+      }
+      placement.set(picked, grp);
+      marked.clear();
+      clearVerdict();
+      renderTiles();
+      renderBoxes();
+      api.readout(`Plytelė ${sounds[picked].sound} — eilėje „${grp === "long" ? "Ilgas garsas" : "Trumpas garsas"}“.`);
+      api.note("Jei persigalvojai, spausk plytelę eilėje — ji grįš į sąrašą.");
+    }
+
+    function compare() {
+      const unplaced = sounds.map((_, i) => i).filter((i) => !placement.has(i));
+      const verdict = stage.querySelector("#gj-verdict");
+      if (unplaced.length) {
+        api.readout(`Sąraše dar liko ${unplaced.length}.`);
+        if (verdict) verdict.textContent = `Dar ne visos plytelės eilėse: liko ${unplaced.length}.`;
+        api.note("Padėk visas plyteles, tada spausk „Palygink“.");
+        return;
+      }
+      const wrong = sounds.map((_, i) => i).filter((i) => placement.get(i) !== (sounds[i].stretch ? "long" : "short"));
+      marked.clear();
+      wrong.forEach((i) => marked.add(i));
+      renderBoxes();
+      if (wrong.length) {
+        api.readout(`${plural(wrong.length)} ne savo eilėje.`);
+        if (verdict) verdict.textContent = `Ne savo eilėje: ${wrong.map((i) => `„${sounds[i].sound}“`).join(", ")}. Pažiūrėk į jų juostas.`;
+        api.note("Plytelė su ilga juosta eina į „Ilgas garsas“, su vienu langeliu — į „Trumpas garsas“.");
+        return;
+      }
+      api.readout("Tinka. Visos plytelės savo eilėse.");
+      if (verdict) verdict.textContent = "Tinka: visos plytelės savo eilėse.";
+      api.note("Vieni garsai tęsiasi, kiti nutrūksta iškart. Tai priklauso nuo garso, o ne nuo raidės formos.");
+      if (!reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    stage.querySelectorAll("[data-guess]").forEach((b) => {
+      b.addEventListener("click", () => {
+        if (picked < 0) {
+          api.readout("Pasirink garsą.");
+          api.note("Pirmiausia pasirink plytelę, tada spėk.");
+          return;
+        }
+        if (guessDone) return;
+        guess = b.dataset.guess === "taip" ? "taip, bus pilna" : "ne, sustos";
+        stage.querySelectorAll("[data-guess]").forEach((x) => {
+          x.setAttribute("aria-pressed", x === b ? "true" : "false");
+        });
+        api.readout(`Spėjai: ${guess}. Dabar laikyk mygtuką.`);
+        api.note("Spėjimas nėra atsakymas — palyginsi jį su tuo, kas įvyks.");
+      });
+    });
+
+    holdBtn.addEventListener("click", startTrial);
+    controls.querySelector("#gj-reset").addEventListener("click", () => {
+      placement.clear();
+      marked.clear();
+      clearVerdict();
+      renderTiles();
+      renderBoxes();
+      const first = tilesEl.querySelector("[data-tile]");
+      if (first) first.focus({ preventScroll: true });
+      api.readout("Pradedam iš naujo. Juostos išlieka.");
+      api.note("Tavo juostos liko, o eilės tuščios. Bandyk dar kartą.");
+    });
+
+    fill(0);
+    renderTiles();
+    api.readout("Pasirink garsą.");
+    api.note("Pirmiausia pasirink plytelę. Tada laikyk „Tark ir laikyk“ ir tark garsą balsu.");
+    say("start");
+
+    return () => {
+      if (fillTimer) { clearTimeout(fillTimer); fillTimer = null; }
+    };
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
   "sakinio-zodziai": sakinioZodziai,
   "kaip-zmones-sveikinasi": kaipZmonesSveikinasi,
   "plakatas-ir-informacija": plakatasIrInformacija,
+  "garso-juosta": garsoJuosta,
 };

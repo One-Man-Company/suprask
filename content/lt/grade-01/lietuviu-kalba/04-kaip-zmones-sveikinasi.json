@@ -29,25 +29,28 @@
           "id": "zodis",
           "label": "Žodžiu",
           "emoji": "💬",
-          "single": "Visi sveikinasi žodžiu.",
-          "many": "Daugiausia sveikinasi žodžiu."
+          "all": "Visi žmonės prie mokyklos sveikinasi žodžiu.",
+          "seen": "Visi sutikti žmonės sveikinasi žodžiu.",
+          "most": "Daugiausia sutiktų žmonių sveikinasi žodžiu."
         },
         {
           "id": "mostas",
           "label": "Mostelėjo",
           "emoji": "👋",
-          "single": "Visi mostelėjo.",
-          "many": "Daugiausia mostelėjo."
+          "all": "Visi žmonės prie mokyklos mosteli.",
+          "seen": "Visi sutikti žmonės mosteli.",
+          "most": "Daugiausia sutiktų žmonių mosteli."
         },
         {
           "id": "linkt",
           "label": "Linktelėjo",
           "emoji": "🙂",
-          "single": "Visi linktelėjo.",
-          "many": "Daugiausia linktelėjo."
+          "all": "Visi žmonės prie mokyklos linkteli.",
+          "seen": "Visi sutikti žmonės linkteli.",
+          "most": "Daugiausia sutiktų žmonių linkteli."
         }
       ],
-      "tie": "Daugiausia — po lygiai.",
+      "tie": "Dvi grupės yra lygios.",
       "people": [
         { "label": "Labas!", "group": "zodis" },
         { "label": "Labas!", "group": "zodis" },

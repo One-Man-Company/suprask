@@ -509,15 +509,25 @@ const sakinioZodziai = {
 /* ------------------------------------------------------------------ */
 /* 4. Kalbos vartojimo tyrimas: „Kaip žmonės sveikinasi?“              */
 /* ------------------------------------------------------------------ */
-/* Modelis: vienintelis kintamasis — pastebėjimų skaičius, o išvada
-   apskaičiuojama iš sukauptų duomenų. Todėl išvada keičiasi tik tada,
-   kai pasikeičia pastebėjimai, o ne atskirai įrašyta teksto eilute.
+/* Modelis: du kintamieji — pastebėjimų skaičius ir vaiko PASIRINKTA
+   išvada. Simuliacija pati išvados nerašo (#20856, auditas R4/R5): ji
+   pasako tik, ką vaikas kol kas žino („Kol kas žinai tik apie vieną
+   žmogų“), o tris galimus teiginius vaikas pasirenka pats.
+   Teiginiai skiriasi TIK apimtimi, o teisingas apskaičiuojamas iš
+   lentelės kiekvieną akimirką:
+     all  — „Visi žmonės…“  — nepagrįsta: sutikti žmonės nėra visi žmonės;
+     seen — „Visi sutikti…“ — teisinga, kol visi sutiktieji vienodi;
+     most — „Daugiausia…“   — teisinga, kai sutiktieji sveikinasi įvairiai.
+   Todėl nėra spėjimo, kurį modelis pameta (LL-15), ir nėra klaidingo
+   varianto, kuris gyvenime teisingas (LL-18): kiekvienas netinkamas
+   teiginys prieštarauja LENTELĖS duomenims, ne vaiko nuomonei.
    Žmonių eilė fiksuota sąmoningai (jokio Math.random): tas pats tyrimas
    visada atkuriamas, o trečias žmogus tyčia sveikinasi kitaip — be
    prieštaraujančio atvejo modelis neįrodytų, kad pirma išvada netinka. */
 const kaipZmonesSveikinasi = {
   mount({ stage, controls, api, config }) {
-    const groups = Array.isArray(config.groups) ? config.groups : [];
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const groups = (Array.isArray(config.groups) ? config.groups : []).filter((g) => g && g.id);
     const people = Array.isArray(config.people) ? config.people : [];
     const ORDINALS = ["Pirmas", "Antras", "Trečias", "Ketvirtas", "Penktas", "Šeštas", "Septintas", "Aštuntas"];
 
@@ -526,12 +536,124 @@ const kaipZmonesSveikinasi = {
       return null;
     }
 
+    /* Trys galimos išvados kiekvienai grupei. Jos skiriasi TIK apimtimi,
+       todėl vaikui nereikia sugalvoti sakinio — reikia pasirinkti, kiek
+       duomenų leidžia pasakyti. Tekstai imami iš `sim.config` (LL-61). */
+    const STATEMENTS = {};
+    groups.forEach((g) => {
+      STATEMENTS[g.id] = {
+        all: String(g.all ?? "").trim(),
+        seen: String(g.seen ?? "").trim(),
+        most: String(g.most ?? "").trim(),
+      };
+    });
+    const textsReady = groups.every((g) => STATEMENTS[g.id].all && STATEMENTS[g.id].seen && STATEMENTS[g.id].most);
+
     const counts = {};
     groups.forEach((g) => { counts[g.id] = 0; });
 
-    let seen = 0;        // vienintelis modelio kintamasis
-    let first = null;    // pirma vaiko užrašyta išvada { text, at }
+    let seen = 0;        // vienintelis modelio kintamasis: pastebėjimų skaičius
+    let pick = "";       // vaiko PASIRINKTA išvada, ne simuliacijos sukurta
+    let first = null;    // pirma teisinga vaiko išvada { text, at }
+    let currentOptions = [];
     let reported = false;
+
+    /* „apie 1 žmogų“, „apie 2 žmones“, „apie 11 žmonių“ — lietuviškas
+       skaičiuotinis, kad tekstas nevirstų „1 žmones“. */
+    function zmones(n) {
+      const d = n % 10;
+      const h = n % 100;
+      if (d === 1 && h !== 11) return `${n} žmogų`;
+      if (d >= 2 && d <= 9 && !(h >= 11 && h <= 19)) return `${n} žmones`;
+      return `${n} žmonių`;
+    }
+
+    /* „po 1 pastebėjimo“, „po 3 pastebėjimų“ (auditas S4). */
+    function po(n) {
+      return n % 10 === 1 && n % 100 !== 11 ? `po ${n} pastebėjimo` : `po ${n} pastebėjimų`;
+    }
+
+    function total() {
+      return groups.reduce((sum, g) => sum + counts[g.id], 0);
+    }
+
+    function summary() {
+      return groups.map((g) => `${g.label} — ${counts[g.id]}`).join(" · ");
+    }
+
+    function activeGroups() {
+      return groups.filter((g) => counts[g.id] > 0);
+    }
+
+    function topGroups() {
+      const best = groups.reduce((m, g) => Math.max(m, counts[g.id]), 0);
+      return groups.filter((g) => counts[g.id] === best);
+    }
+
+    /* Teisinga išvada — ne tekstas iš sąrašo, o skaičiavimas iš duomenų:
+       kol sutiktieji vienodi, galima kalbėti apie visus SUTIKTUS žmones;
+       kai jie sveikinasi įvairiai, belieka palyginti. */
+    function correctKind() {
+      if (!seen || !textsReady) return "";
+      const top = topGroups();
+      if (top.length > 1) return "tie";
+      return activeGroups().length === 1 ? "seen" : "most";
+    }
+
+    function correctText() {
+      const kind = correctKind();
+      if (!kind) return "";
+      if (kind === "tie") return String(config.tie ?? "").trim();
+      return STATEMENTS[topGroups()[0].id][kind];
+    }
+
+    function options() {
+      if (!seen || !textsReady) return [];
+      const top = topGroups();
+      const list = [];
+      const add = (text, kind, gid) => {
+        const t = String(text ?? "").trim();
+        if (!t || list.some((o) => o.text === t)) return;
+        list.push({ text: t, kind, gid });
+      };
+      if (top.length === 1) {
+        const g = top[0];
+        add(STATEMENTS[g.id].all, "all", g.id);
+        add(STATEMENTS[g.id].seen, "seen", g.id);
+        add(STATEMENTS[g.id].most, "most", g.id);
+      } else {
+        add(config.tie, "tie", "");
+        const g = top[0];
+        add(STATEMENTS[g.id].all, "all", g.id);
+        add(STATEMENTS[g.id].seen, "seen", g.id);
+      }
+      /* Be teisingo teiginio pasirinkimo nerodome: geriau jokio pasirinkimo,
+         nei sąrašas, kuriame nė vienas variantas nėra teisingas. */
+      return list.some((o) => o.text === correctText()) ? list : [];
+    }
+
+    function rightText() {
+      const kind = correctKind();
+      if (kind === "most") return `Tinka. Lentelėje: ${summary()}. Tai dažniausias būdas.`;
+      if (kind === "tie") return `Tinka. Dvi grupės lygios: ${summary()}.`;
+      return "Tinka. Visi sutikti žmonės sveikinasi vienodai. Apie kitus dar nežinai.";
+    }
+
+    function wrongText(opt) {
+      if (opt.kind === "all") return `Netinka. Matei ${zmones(seen)}, o ne visus žmones prie mokyklos.`;
+      if (opt.kind === "seen") {
+        return topGroups().length > 1
+          ? `Netinka. Dvi grupės lygios: ${summary()}.`
+          : `Netinka. Lentelėje: ${summary()}. Sutikti žmonės sveikinasi įvairiai.`;
+      }
+      if (opt.kind === "most") {
+        return activeGroups().length <= 1
+          ? "Netinka. Kol kas visi sutikti žmonės sveikinasi vienodai. Ar jau su kuo palyginti?"
+          : `Netinka. Lentelėje: ${summary()}. Palygink, kuri grupė didžiausia.`;
+      }
+      if (opt.kind === "tie") return `Netinka. Viena grupė didžiausia: ${summary()}.`;
+      return "Netinka. Pažiūrėk į lentelę ir palygink skaičius.";
+    }
 
     function barsMarkup() {
       return groups.map((g) => `
@@ -555,22 +677,26 @@ const kaipZmonesSveikinasi = {
         <div style="display:grid;gap:.4rem;margin-top:.8rem">${barsMarkup()}</div>
         <div style="margin-top:.8rem;padding:.6rem .8rem;border-left:4px solid var(--sun);border-radius:var(--r-s);background:var(--paper)">
           <p style="margin:0;font-size:clamp(.98rem,3.6vw,1.1rem)">Pastebėjimų: <strong id="kz-total">0</strong></p>
-          <p style="margin:.25rem 0 0;font-size:clamp(.98rem,3.6vw,1.1rem)">Išvada: <strong id="kz-conc">dar nieko</strong></p>
+          <p id="kz-known" style="margin:.25rem 0 0;font-size:clamp(.98rem,3.6vw,1.1rem);font-weight:800">Kol kas nieko nepastebėjai.</p>
+          <p id="kz-pick" style="margin:.3rem 0 0;font-size:clamp(.95rem,3.4vw,1.06rem);color:var(--ink-soft)"></p>
+          <div id="kz-options" role="group" aria-label="Galimos išvados" style="display:grid;gap:.45rem;margin-top:.5rem"></div>
+          <p id="kz-verdict" role="status" style="margin:.5rem 0 0;font-size:clamp(.95rem,3.4vw,1.06rem);min-height:2.4rem"></p>
           <p id="kz-first" hidden style="margin:.35rem 0 0;font-size:clamp(.95rem,3.4vw,1.06rem);color:var(--ink-soft)"></p>
         </div>
       </div>`;
     controls.innerHTML = `
-      <button class="btn" id="kz-next">Sekantis žmogus</button>
-      <button class="btn secondary" id="kz-say">Mano išvada</button>`;
+      <button class="btn" id="kz-next" type="button">Sekantis žmogus</button>`;
 
     const emojiEl = stage.querySelector("#kz-emoji");
     const saidEl = stage.querySelector("#kz-said");
     const whoEl = stage.querySelector("#kz-who");
     const totalEl = stage.querySelector("#kz-total");
-    const concEl = stage.querySelector("#kz-conc");
+    const knownEl = stage.querySelector("#kz-known");
+    const pickEl = stage.querySelector("#kz-pick");
+    const optionsEl = stage.querySelector("#kz-options");
+    const verdictEl = stage.querySelector("#kz-verdict");
     const firstEl = stage.querySelector("#kz-first");
     const nextEl = controls.querySelector("#kz-next");
-    const sayEl = controls.querySelector("#kz-say");
     const barEls = {};
     const countEls = {};
     groups.forEach((g) => {
@@ -581,71 +707,131 @@ const kaipZmonesSveikinasi = {
     const questionEl = stage.querySelector("#kz-question");
     if (questionEl) questionEl.textContent = config.question || "Kaip žmonės sveikinasi?";
 
-    function total() {
-      return groups.reduce((sum, g) => sum + counts[g.id], 0);
+    /* Ką vaikas kol kas žino — ne išvada apie žmones, o faktas apie
+       pastebėjimus (R4: po vieno žmogaus negali būti „Visi…“). */
+    function knownText() {
+      if (!seen) return "Kol kas nieko nepastebėjai.";
+      if (seen === 1) return "Kol kas žinai tik apie vieną žmogų.";
+      return `Kol kas žinai apie ${zmones(seen)}.`;
     }
 
-    /* Išvada — ne tekstas iš sąrašo, o skaičiavimas iš duomenų.
-       Kol pastebėtas vienas būdas, sakome „visi“; kai atsiranda antras,
-       ta pati funkcija duoda „daugiausia“. Šis pasikeitimas ir yra
-       mokymosi objektas. */
-    function conclusion() {
-      if (!total()) return null;
-      const seenGroups = groups.filter((g) => counts[g.id] > 0);
-      if (seenGroups.length === 1) return seenGroups[0].single;
-      const best = Math.max(...seenGroups.map((g) => counts[g.id]));
-      const top = seenGroups.filter((g) => counts[g.id] === best);
-      if (top.length > 1) return config.tie || "Daugiausia — po lygiai.";
-      return top[0].many;
+    function drawFirst() {
+      firstEl.hidden = !first;
+      firstEl.textContent = first ? `Pirma tavo išvada (${po(first.at)}): „${first.text}“` : "";
+    }
+
+    /* Teiginiai rodomi kiekvieną kartą iš naujo, o tvarka sukama pagal
+       pastebėjimų skaičių: teisingas teiginys nelieka toje pačioje vietoje,
+       todėl jo negalima atspėti pagal padėtį. */
+    function renderOptions() {
+      if (!seen) {
+        currentOptions = [];
+        optionsEl.innerHTML = `<p class="sim-note" style="margin:0">Kol kas nėra iš ko rinktis. Pirma pažiūrėk, kaip sveikinasi vienas žmogus.</p>`;
+        return;
+      }
+      const list = options();
+      if (!list.length) {
+        currentOptions = [];
+        optionsEl.innerHTML = `<p class="sim-note" style="margin:0">Išvadų variantų nėra. Pasakyk savo išvadą žodžiu.</p>`;
+        return;
+      }
+      const shift = seen % list.length;
+      currentOptions = list.slice(shift).concat(list.slice(0, shift));
+      const good = correctText();
+      optionsEl.innerHTML = currentOptions.map((o, i) => {
+        /* Varnelė rodo ne „šį variantą pasirinkai“, o „šis variantas TINKA
+           DABAR“. Pavadinimas pasenus po naujo pastebėjimo, todėl varnelė
+           negali likti ant teiginio, kuris nebegalioja. */
+        const on = pick === o.text;
+        const ok = on && o.text === good;
+        return `
+        <button class="btn secondary" type="button" data-opt="${i}" aria-pressed="${on ? "true" : "false"}"
+          style="display:flex;justify-content:flex-start;align-items:center;gap:.5rem;width:100%;min-height:48px;padding:.6rem .9rem;text-align:left;white-space:normal;overflow-wrap:anywhere;font-size:clamp(.98rem,3.7vw,1.08rem);line-height:1.3">
+          <span data-mark aria-hidden="true" style="flex:0 0 auto;font-weight:900;color:${ok ? "var(--ok)" : "var(--ink-faint)"}">${ok ? "✓" : "•"}</span>
+          <span>${esc(o.text)}</span>
+        </button>`;
+      }).join("");
+      optionsEl.querySelectorAll("[data-opt]").forEach((b) => {
+        b.addEventListener("click", () => choose(Number(b.dataset.opt)));
+      });
+    }
+
+    function markPicked() {
+      const good = correctText();
+      optionsEl.querySelectorAll("[data-opt]").forEach((b) => {
+        const o = currentOptions[Number(b.dataset.opt)];
+        const on = !!o && pick === o.text;
+        const ok = on && o.text === good;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        const mark = b.querySelector("[data-mark]");
+        if (mark) {
+          mark.textContent = ok ? "✓" : "•";
+          mark.style.color = ok ? "var(--ok)" : "var(--ink-faint)";
+        }
+      });
     }
 
     function render() {
       totalEl.textContent = String(total());
-      concEl.textContent = conclusion() || "dar nieko";
+      knownEl.textContent = knownText();
       groups.forEach((g) => {
         if (barEls[g.id]) barEls[g.id].style.width = `${Math.round((counts[g.id] / people.length) * 100)}%`;
         if (countEls[g.id]) countEls[g.id].textContent = String(counts[g.id]);
       });
-      if (first) {
-        firstEl.hidden = false;
-        firstEl.textContent = `Pirma išvada (pastebėjimų: ${first.at}): „${first.text}“`;
-      } else {
-        firstEl.hidden = true;
-        firstEl.textContent = "";
-      }
+      pickEl.textContent = pick ? `Tavo pasirinkimas: „${pick}“` : "Išvados dar nepasirinkai.";
+      renderOptions();
+      drawFirst();
       nextEl.textContent = seen >= people.length ? "Pradėti iš naujo" : "Sekantis žmogus";
     }
 
     /* Sėkmės sąlyga tikrinama iš DABARTINĖS būsenos (§4): visi žmonės
-       pastebėti IR vaiko išvada užrašyta. Ne iš įvykių istorijos. */
+       pastebėti IR dabartinė vaiko išvada atitinka duomenis. Ankstesnė
+       išvada, kuri nebegalioja, pažangos nepadaro (LL-17). */
     function maybeProgress() {
       if (reported) return;
-      if (seen < people.length || !first) return;
+      if (seen < people.length) return;
+      if (!pick || pick !== correctText()) return;
       reported = true;
       api.progress({ correct: true });
     }
 
-    function finish() {
-      const now = conclusion();
-      api.readout("Pastebėjai visus žmones");
-      if (!first) {
-        api.note("Pastebėjai visus. Dabar spausk „Mano išvada“ ir palygink.");
-      } else if (now && now !== first.text) {
-        api.note(`Pirma išvada: „${first.text}“ Dabar: „${now}“`);
+    /* Vaikas pasirenka teiginį — simuliacija tikrina, ar jis remiasi
+       LENTELĖS duomenimis, ir paaiškina, ką rodo skaičiai (T3.1/T3.2). */
+    function choose(i) {
+      const opt = currentOptions[i];
+      if (!opt) return;
+      const ok = opt.text === correctText();
+      pick = opt.text;
+      markPicked();
+      pickEl.textContent = `Tavo pasirinkimas: „${pick}“`;
+      if (ok) {
+        const changed = !!first && first.text !== opt.text;
+        if (!first) first = { text: opt.text, at: seen };
+        verdictEl.textContent = rightText();
+        drawFirst();
+        api.readout("Išvada remiasi duomenimis.");
+        api.note(changed
+          ? `Pirma tavo išvada: „${first.text}“. Dabar: „${opt.text}“. Taip nutinka, kai pamatai daugiau žmonių.`
+          : (seen >= people.length ? "Ši išvada remiasi visais pastebėtais žmonėmis." : "Išvada užrašyta. Stebėk toliau: ar ji išlieka?"));
       } else {
-        api.note("Pirma išvada liko ta pati. Pastebėjimai ją patvirtino.");
+        verdictEl.textContent = wrongText(opt);
+        api.readout("Ši išvada duomenų neatitinka.");
+        api.note("Pažiūrėk į lentelę ir pabandyk kitą teiginį.");
       }
+      maybeProgress();
     }
 
     function reset() {
       seen = 0;
       groups.forEach((g) => { counts[g.id] = 0; });
+      pick = "";
       first = null;
       emojiEl.textContent = "🏫";
       saidEl.textContent = "Dar nieko";
       whoEl.textContent = "Spausk „Sekantis žmogus“";
-      api.readout("");
-      api.note("Pradėk iš naujo. Spausk „Sekantis žmogus“ ir skaičiuok.");
+      verdictEl.textContent = "";
+      api.readout("Tyrimas pradėtas iš naujo.");
+      api.note("Spausk „Sekantis žmogus“ ir skaičiuok.");
       render();
     }
 
@@ -654,47 +840,34 @@ const kaipZmonesSveikinasi = {
       const person = people[seen];
       const group = groups.find((g) => g.id === person.group);
       if (!group) { api.note("Šio žmogaus grupė nerasta."); return; }
-      const beforeText = conclusion();
       seen += 1;
       counts[group.id] += 1;
       emojiEl.textContent = group.emoji || "";
       saidEl.textContent = person.label || group.label;
       whoEl.textContent = `${ORDINALS[seen - 1] || seen} sutiktas žmogus`;
-      api.readout(`${seen} iš ${people.length} žmonių`);
       api.speak(person.label || group.label);
       render();
-      const nowText = conclusion();
+      api.readout(`${seen} iš ${people.length} žmonių`);
+      /* Duomenys pasikeitė — todėl vaiko pasirinkimas tikrinamas iš naujo,
+         o ne laikomas galiojančiu (LL-17). */
+      if (pick) {
+        verdictEl.textContent = pick === correctText()
+          ? rightText()
+          : "Tavo išvada dabar netinka: duomenys pasikeitė.";
+      }
       if (seen === people.length) {
-        finish();
-      } else if (!first) {
-        api.note(seen === 1
-          ? "Pirmas pastebėjimas. Užrašyk savo išvadą — spausk „Mano išvada“."
-          : "Dar vienas pastebėjimas. Ar išvada dar tinka?");
-      } else if (nowText !== beforeText) {
-        /* Apie pasikeitimą sakoma TIK tą kartą, kai jis įvyksta. */
-        api.note("Išvada pasikeitė. Taip nutinka, kai pastebi daugiau žmonių.");
+        api.note("Pastebėjai visus žmones. Pasirink išvadą, kuri remiasi visais pastebėjimais.");
+      } else if (pick) {
+        api.note(pick === correctText() ? "Išvada tebėtinka." : "Duomenys pasikeitė — ar tavo išvada dar tinka?");
       } else {
-        api.note("Stebėk toliau ir skaičiuok.");
+        api.note("Dar vienas pastebėjimas. Ką dabar gali pasakyti?");
       }
-      maybeProgress();
-    });
-
-    sayEl.addEventListener("click", () => {
-      const now = conclusion();
-      if (!now) { api.note("Pirmiausia pastebėk bent vieną žmogų."); return; }
-      if (first) {
-        api.note("Pirma išvada jau užrašyta. Nauji pastebėjimai parodys, ar ji tinka.");
-        return;
-      }
-      first = { text: now, at: seen };
-      render();
-      api.readout(`Išvada: ${now}`);
-      api.note("Išvada užrašyta. Stebėk toliau ir žiūrėk, ar ji išlieka.");
       maybeProgress();
     });
 
     render();
-    api.note("Spausk „Sekantis žmogus“ ir skaičiuok. Išvadą pasakyk, kai nori.");
+    verdictEl.textContent = "";
+    api.note("Spausk „Sekantis žmogus“ ir skaičiuok. Išvadą pasirinksi pats.");
     return null;
   },
 };

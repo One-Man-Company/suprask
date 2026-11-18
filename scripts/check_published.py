@@ -79,6 +79,21 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   kuris yra `known_renames.json`, bet neturi `renamed_from` indekse, dabar
   daro ir rc 1 (`verdict()`: „pervadintas ID be alias“).
 
+2026-11-18 (paleidimas #368): laikina tinklo klaida nebelaikoma „modulio nėra“.
+  Pirmas šio paleidimo `check_published.py` bėgimas davė rc 1 ir
+  „NEPASIEKIAMI gyvi failai (1): 06-figuros“, nors `curl` tą patį adresą tuoj
+  pat atsakė 200 / 4 712 B, o antras bėgimas — 45/45 ir rc 0. Priežastis:
+  `compare()` nutraukdavo po **vienos** nepavykusios užklausos (`fetch()` → None
+  → `live_size -1` → `stale_unknown` → raudona), o `_audio_state()` tą pačią
+  klaidą kartojo. Viena kryptis turėjo kartojimą, kita — ne, tad vartai apie
+  vaiko patirtį skelbė faktą („modulis nepasiekiamas“), kurio po vieno bandymo
+  pasakyti negalima. Dabar `fetch()` 404/410 laiko galutiniu atsakymu, o kitas
+  klaidas kartoja (2 bandymai, 1,5 s pertrauka); pakartojimų skaičius
+  išvedamas, kad tylaus kartojimo nebūtų (LL-37). Neigiamas zondas:
+  `scratch/pub368/zondas_503.py` — veidrodis, kuris pirmą užklausą atsako 503,
+  o antrą 200, anksčiau davė raudoną, dabar žalią; veidrodis, kuris 503 atsako
+  visada, lieka raudonas.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -387,13 +402,38 @@ def local_index(grade: int) -> tuple[dict, dict[str, str]]:
     return data, files
 
 
-def fetch(url: str, timeout: int = 20) -> bytes | None:
-    try:
-        req = urllib.request.Request(url, headers=UA)
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return resp.read()
-    except Exception:  # noqa: BLE001
-        return None
+RETRY_PAUSE = 1.5
+FETCH_ATTEMPTS = 2
+# Kiek užklausų teko kartoti po laikinos klaidos. Skaičius išvedamas, o ne
+# nuslopinamas: tylus kartojimas paslėptų flakuojančią svetainę (LL-37).
+RETRIES = {"count": 0}
+
+
+def fetch(url: str, timeout: int = 20, attempts: int = FETCH_ATTEMPTS) -> bytes | None:
+    """Failo turinys arba `None`. 404/410 — galutinis atsakymas, nekartojama.
+
+    Anksčiau bet kokia klaida (503, ryšio nutrūkimas, timeout) virsdavo `None`
+    po **vieno** bandymo, o `compare()` tokią `None` reikšmę paversdavo
+    `stale_unknown` — t. y. vartai paskelbdavo „modulis nepasiekiamas“ apie
+    failą, kuris svetainėje yra. Paleidimas #368: pirmas bėgimas rc 1 su
+    `06-figuros`, `curl` tas pats adresas → 200 / 4 712 B, antras bėgimas rc 0.
+    Todėl laikinos klaidos kartojamos, o `_audio_state()` ir `_shell_state()`
+    turi tą patį kelią. 404/410 kartojami nėra: tai ne flakas, o atsakymas.
+    """
+    for attempt in range(max(1, attempts)):
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code in (404, 410):
+                return None
+        except Exception:  # noqa: BLE001
+            pass
+        if attempt + 1 < max(1, attempts):
+            RETRIES["count"] += 1
+            time.sleep(RETRY_PAUSE)
+    return None
 
 
 def sha(data: bytes) -> str:
@@ -623,6 +663,7 @@ def last_commit() -> str:
 
 def report(grades: list[int] | None = None, compare_bytes: bool = True,
            audio_sample: int | None = None) -> dict:
+    RETRIES["count"] = 0
     grades = grades or live_grades()
     per_grade = [check_grade(g, compare_bytes) for g in grades]
 
@@ -686,6 +727,7 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "path_differs": [g["grade"] for g in per_grade if g.get("path_differs")],
         "unpushed_commits": len(unpushed_list),
         "unpushed_checked": unpushed_ok,
+        "retried_requests": RETRIES["count"],
         "last_commit": last_commit(),
         "live_error": "; ".join(live_errors),
     }
@@ -800,7 +842,8 @@ def main() -> int:
         for s in data["stale"]:
             print(f"  - {s['id']} ({s['file']}): repo {s['repo_bytes']} B, gyvai {s['live_bytes']} B")
     if data["stale_unknown"]:
-        print(f"NEPASIEKIAMI gyvi failai ({len(data['stale_unknown'])}): {', '.join(data['stale_unknown'])}")
+        print(f"NEPASIEKTA po {FETCH_ATTEMPTS} bandymų ({len(data['stale_unknown'])}): "
+              f"{', '.join(data['stale_unknown'])}")
     if data["not_in_path"]:
         print(f"NĖRA path.json sekoje ({len(data['not_in_path'])}): {', '.join(data['not_in_path'])}")
     accepted = [v for v in data.get("vanished_ids", []) if v.get("resolved")]
@@ -862,6 +905,9 @@ def main() -> int:
     if not data.get("unpushed_checked", False):
         print("Neišstumtų commit'ų patikra NEĮVYKO — git negalėjo palyginti su origin/main "
               "(tai ne „0“, o nežinoma; patikrink `git fetch`).")
+    if data.get("retried_requests"):
+        # Ne klaida, bet svarbu: jei svetainė flakuoja, skaičius auga.
+        print(f"Užklausos, kartotos po laikinos klaidos: {data['retried_requests']}")
     if not problems(data):
         print(f"✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai, "
               f"svetainės kodas {data.get('shell_count', 0)} failų"

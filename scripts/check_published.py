@@ -94,6 +94,22 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   o antrą 200, anksčiau davė raudoną, dabar žalią; veidrodis, kuris 503 atsako
   visada, lieka raudonas.
 
+2026-11-18 (paleidimas #372): #370 palikta pusė darbo užbaigta ir tyli žalia uždaryta.
+  #370 `compare()` perdarė į būsenas (`ok|differs|absent|unreachable`) ir atskyrė
+  „indeksas rodo į failą, kurio repo nėra“ nuo „failas pasenęs“, bet trys
+  vartotojai liko su senu boolean kontraktu. Blogiausias — `report()` AUX_FILES
+  ciklas: `ok, _, _ = compare(...)`; `if not ok:` — o ne tuščia **eilutė**
+  visada teisinga, tad pasenęs `grades.json` / garso `manifest.json` nebūtų
+  parodytas nė karto (tyli žalia). Be to `missing_in_repo`, `aux_absent` ir
+  `stale_unmeasured` buvo surenkami `check_grade()` viduje ir **numetami**
+  `report()` išvestyje, o `verdict()` jų nepažino: zondas
+  (`scratch/pub370/zondas_trukstamas_failas.py`, veidrodis be modulio failo,
+  gyva svetainė jį turi) davė `verdict: sutampa, ok=True`. Dabar visi trys
+  būsenų vartotojai (AUX ciklas, `verdict()`, spausdintuvas) skaito būseną,
+  o trūkstamas repo failas rodomas kaip `LŪŽĘS INDEKSAS` su gyvos pusės
+  matavimu (`head_state()`): ar svetainėje failas yra. Neišmatuotas dydis
+  lieka `-1` ir pranešamas žodžiais, ne kaip „0 B“.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -203,16 +219,20 @@ def audio_paths(sample: int | None = None) -> tuple[list[str], int]:
     return list(dict.fromkeys(picked)), total
 
 
-def _audio_state(rel: str) -> tuple[str, int]:
-    """("ok"|"missing"|"empty"|"unreachable", baitai). HEAD, ne GET: turinys
-    čia neįdomus — įdomu, ar failas yra ir ar jis ne tuščias."""
-    url = AUDIO_URL_PREFIX + rel
+def head_state(url_rel: str) -> tuple[str, int]:
+    """Būsena („ok“, „missing“, „unreachable“) ir baitai. HEAD, ne GET: turinys čia
+    neįdomus — įdomu, ar failas yra svetainėje.
+
+    `missing` reiškia **atsakymą** (404/410), `unreachable` — kad atsakymo
+    negavome nė po dviejų bandymų. Šios dvi būsenos skiriasi: pirmoji yra
+    faktas apie svetainę, antroji — apie ryšį. Sumaišytos jos praneštų
+    „failo nėra“ apie failą, kurio niekas nematė (LL-37).
+    """
     for attempt in (0, 1):
         try:
-            req = urllib.request.Request(LIVE_ROOT + url, headers=UA, method="HEAD")
+            req = urllib.request.Request(LIVE_ROOT + url_rel, headers=UA, method="HEAD")
             with urllib.request.urlopen(req, timeout=20) as resp:
-                size = int(resp.headers.get("Content-Length") or 0)
-                return ("ok" if size > 0 else "empty"), size
+                return "ok", int(resp.headers.get("Content-Length") or 0)
         except urllib.error.HTTPError as exc:
             if exc.code in (404, 410):
                 return "missing", -1
@@ -226,6 +246,14 @@ def _audio_state(rel: str) -> tuple[str, int]:
                 continue
             return "unreachable", -1
     return "unreachable", -1
+
+
+def _audio_state(rel: str) -> tuple[str, int]:
+    """("ok"|"missing"|"empty"|"unreachable", baitai) — žr. `head_state()`."""
+    state, size = head_state(AUDIO_URL_PREFIX + rel)
+    if state == "ok" and size <= 0:
+        return "empty", size
+    return state, size
 
 
 def check_audio(sample: int | None = None) -> dict:
@@ -455,9 +483,15 @@ def compare(local_path: pathlib.Path, url_rel: str) -> tuple[str, int, int]:
     pataisyti indeksą (LL-21, LL-37).
     """
     if not local_path.exists():
-        # Gyvo failo dydis čia sąmoningai nematuojamas: be repo pusės lyginti
-        # nėra su kuo, o užklausa tikėtųsi atsakymo apie failą, kurio klausimas
-        # dar neaiškus. Grąžinama „nėra“, o ne „0 baitų“.
+        # Repo pusės nėra, bet gyva pusė **išmatuojama** ir tai keičia
+        # pranešimą: jei svetainėje failas yra, defektas yra tik indeksas
+        # (repo failą reikia grąžinti), o jei nėra — failo nėra niekur.
+        # #370 klaida buvo priešinga: grįžtant be matavimo pranešime
+        # atsirasdavo „repo 0 B, gyvai 0 B“, nors nė vienas dydis nebuvo
+        # matuotas (LL-21, LL-37).
+        state, live_size = head_state(url_rel)
+        if state == "ok":
+            return "absent", -1, live_size
         return "absent", -1, -1
     local = local_path.read_bytes()
     live = fetch(LIVE_ROOT + url_rel)
@@ -630,7 +664,8 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
                 # nieko nepakeis, kol indeksas netaisytas. Vaidmens taisyklė
                 # šį atvejį vadina lūžusiu indeksu ir reikalauja jį įvardyti
                 # atskirai, o ne sumaišyti su publikavimo defektais.
-                missing_in_repo.append({"id": mid, "file": rel, "grade": grade})
+                missing_in_repo.append({"id": mid, "file": rel, "grade": grade,
+                                        "repo_bytes": local_size, "live_bytes": live_size})
             elif state == "unreachable":
                 stale_unknown.append(mid)
             elif live_size < 0 or local_size < 0:
@@ -708,8 +743,7 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     def merge(key: str) -> list:
         out: list = []
         for g in per_grade:
-            for item in g.get(key, []):
-                out.append(item if isinstance(item, str) else item)
+            out.extend(g.get(key, []))
         return out
 
     live_errors = [f"{grade_dir(g['grade'])}: {g['live_error']}" for g in per_grade if g.get("live_error")]
@@ -717,11 +751,23 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     # Svarbiausias failas, kurio modulio baitų ciklas neapima: garso manifestas.
     # Jo stagnacija reiškia 404 naujo modulio garsui, o visi kiti vartai žali.
     aux_stale = list(merge("aux_stale"))
+    aux_absent = list(merge("aux_absent"))
     if compare_bytes:
         for url_rel, local_path in AUX_FILES:
-            ok, local_size, live_size = compare(local_path, url_rel)
-            if not ok:
-                aux_stale.append({"file": url_rel, "repo_bytes": local_size, "live_bytes": live_size})
+            # Kontraktas yra būsena, ne boolean: `compare()` grąžina
+            # "ok"|"differs"|"absent"|"unreachable". Iki #372 čia buvo
+            # `if not ok:` — o ne tuščia būsena visada teisinga, tad
+            # pasenęs `manifest.json` / `grades.json` būdavo tyliai
+            # nerodomas (tyli žalia, blogiau nei prieš #370 darbą).
+            state, local_size, live_size = compare(local_path, url_rel)
+            if state == "ok":
+                continue
+            item = {"file": url_rel, "state": state,
+                    "repo_bytes": local_size, "live_bytes": live_size}
+            if state == "absent":
+                aux_absent.append(item)
+            else:
+                aux_stale.append(item)
 
     # Svetainės kodas: ką vaikas iš tikrųjų įkelia, o ne tik ką rodo turinio JSON.
     shell = check_shell() if compare_bytes else {
@@ -755,7 +801,10 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "history_unchecked": [g["grade"] for g in per_grade if g.get("history_checked") is False],
         "stale": merge("stale"),
         "stale_unknown": merge("stale_unknown"),
+        "stale_unmeasured": merge("stale_unmeasured"),
+        "missing_in_repo": merge("missing_in_repo"),
         "aux_stale": aux_stale,
+        "aux_absent": aux_absent,
         "audio": audio,
         "shell_stale": shell["shell_stale"],
         "shell_unreachable": shell["shell_unreachable"],
@@ -811,10 +860,18 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(data['stale'])} pasenęs modulis")
     if data.get("stale_unknown"):
         reasons.append(f"{len(data['stale_unknown'])} nepasiekiamas modulis")
+    if data.get("stale_unmeasured"):
+        reasons.append(f"{len(data['stale_unmeasured'])} modulis su neišmatuotu dydžiu")
+    if data.get("missing_in_repo"):
+        # Indeksas rodo į failą, kurio repo nėra. Publikavimas čia nieko
+        # nepakeis — priežastis kitokia, todėl ir eilutė kitokia (LL-21).
+        reasons.append(f"{len(data['missing_in_repo'])} indekso įrašas be failo repo")
     if data.get("path_differs"):
         reasons.append("kelio seka skiriasi")
     if data.get("aux_stale"):
         reasons.append(f"{len(data['aux_stale'])} pasenęs pagrindinis failas")
+    if data.get("aux_absent"):
+        reasons.append(f"{len(data['aux_absent'])} pagrindinis failas be repo kopijos")
     if data.get("shell_stale"):
         reasons.append(f"{len(data['shell_stale'])} pasenęs kodas")
     if data.get("shell_unreachable"):
@@ -882,6 +939,24 @@ def main() -> int:
     if data["stale_unknown"]:
         print(f"NEPASIEKTA po {FETCH_ATTEMPTS} bandymų ({len(data['stale_unknown'])}): "
               f"{', '.join(data['stale_unknown'])}")
+    if data.get("missing_in_repo"):
+        # Atskira eilutė: tai ne publikavimo defektas. Svetainė šio modulio
+        # nerodo todėl, kad repo indeksas rodo į failą, kurio nėra (LL-21).
+        print(f"LŪŽĘS INDEKSAS — įrašas yra, failo repo nėra ({len(data['missing_in_repo'])}):")
+        for item in data["missing_in_repo"]:
+            size = item["live_bytes"]
+            if size > 0:
+                live = f"svetainėje failas yra ({size} B) — dingo repo kopija"
+            elif size == 0:
+                live = "svetainėje failas yra, bet tuščias (0 B)"
+            else:
+                live = "svetainėje jo nėra arba jis nepasiektas (neišmatuota)"
+            print(f"  - {item['id']} ({item['file']}): {live}. Taisyk indeksą, "
+                  f"ne publikavimą.")
+    if data.get("stale_unmeasured"):
+        print(f"NEIŠMATUOTAS DYDIS ({len(data['stale_unmeasured'])}): "
+              f"{', '.join(data['stale_unmeasured'])} — baitų lyginti negalima, "
+              f"tai ne „0 baitų“")
     if data["not_in_path"]:
         print(f"NĖRA path.json sekoje ({len(data['not_in_path'])}): {', '.join(data['not_in_path'])}")
     accepted = [v for v in data.get("vanished_ids", []) if v.get("resolved")]
@@ -915,6 +990,12 @@ def main() -> int:
         for s in data["aux_stale"]:
             live = "nepasiektas" if s["live_bytes"] < 0 else f"gyvai {s['live_bytes']} B"
             print(f"  - {s['file']}: repo {s['repo_bytes']} B, {live}")
+    if data.get("aux_absent"):
+        print(f"PAGRINDINIO FAILO NĖRA REPO ({len(data['aux_absent'])}) — "
+              f"svetainė jį skaito prieš kiekvieną modulį:")
+        for s in data["aux_absent"]:
+            live = "neišmatuota" if s["live_bytes"] < 0 else f"gyvai {s['live_bytes']} B"
+            print(f"  - {s['file']}: repo failo nėra, {live}")
     if data.get("shell_stale"):
         print(f"PASENĘS KODAS — naršyklė vykdo kitą failą ({len(data['shell_stale'])}):")
         for s in data["shell_stale"]:

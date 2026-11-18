@@ -64,6 +64,141 @@ def registered_sims() -> set[str]:
     return ids
 
 
+# --- sim.config gyvumas (LL-61, #14726, #16338) ---------------------------
+# `sim.config` yra vienintelis turinio kelias į simuliacijos žodžius: tą patį
+# tekstą rodo mygtukas ir tą patį taria balsas, o `scripts/generate_audio.py`
+# iš jo surenka garso manifestą. Jei komponentas config neima arba jo rakto
+# neskaito, turinys tampa negyvas: JSON'e pakeistas žodis pakeičia garso
+# įrašą, bet ekrane lieka sena kietai įrašyta eilutė — vaikas mato viena,
+# girdi kita. Būtent taip 10 dienų gyvavo 17-judejimas (LL-61, #14726).
+# Todėl tai klaida, o ne įspėjimas: negyva konfigūracija neša klaidingą
+# informaciją vaikui ir jos niekas nepastebi be šios taisyklės.
+_SIM_BODIES: dict[str, tuple[str, str]] | None = None
+
+
+def _obj_body(src: str, start: int) -> str:
+    """Objekto literalas nuo `const X = {` iki jį uždarančio skliausto."""
+    if start < 0:
+        return ""
+    i = src.find("{", start)
+    if i < 0:
+        return ""
+    depth = 0
+    for j in range(i, len(src)):
+        if src[j] == "{":
+            depth += 1
+        elif src[j] == "}":
+            depth -= 1
+            if depth == 0:
+                return src[i:j + 1]
+    return ""
+
+
+def _mount_params(body: str) -> set[str] | None:
+    """`mount({ ... })` raktų sąrašas. Skliaustai skaičiuojami, nes
+    numatytoji reikšmė (`config = {}`) turi savo skliaustus."""
+    m = re.search(r"mount\s*\(\s*\{", body)
+    if not m:
+        return None
+    start = m.end() - 1
+    depth = 0
+    end = -1
+    for j in range(start, len(body)):
+        if body[j] == "{":
+            depth += 1
+        elif body[j] == "}":
+            depth -= 1
+            if depth == 0:
+                end = j
+                break
+    if end < 0:
+        return None
+    parts, depth, cur = [], 0, ""
+    for ch in body[start + 1:end]:
+        if ch in "{[(":
+            depth += 1
+        elif ch in "}])":
+            depth -= 1
+        if ch == "," and depth == 0:
+            parts.append(cur)
+            cur = ""
+        else:
+            cur += ch
+    parts.append(cur)
+    return {p.split("=", 1)[0].strip() for p in parts if p.split("=", 1)[0].strip()}
+
+
+def sim_component_bodies() -> dict[str, tuple[str, str]]:
+    """SIMS raktas -> (failas, komponento objekto tekstas). Skaitoma kartą."""
+    global _SIM_BODIES
+    if _SIM_BODIES is not None:
+        return _SIM_BODIES
+    bodies: dict[str, tuple[str, str]] = {}
+    for f in sorted(SIMS_DIR.glob("*.js")):
+        src = f.read_text(encoding="utf-8")
+        block = re.search(r"export const SIMS\s*=\s*\{(.*?)\n\};", src, re.S)
+        if not block:
+            continue
+        reg = block.group(1)
+        for key, var in re.findall(r'^\s*"([a-z0-9-]+)"\s*:\s*([A-Za-z_$][\w$]*)', reg, re.M):
+            body = _obj_body(src, src.find(f"const {var} = {{"))
+            if body:
+                bodies[key] = (f.name, body)
+        # Trumpasis registras (`desimtukas,` — matematika.js) leidžia raktą
+        # sutapatinti su to paties vardo konstanta.
+        for key in re.findall(r"^\s*([a-z][a-z0-9-]*)\s*,\s*$", reg, re.M):
+            body = _obj_body(src, src.find(f"const {key} = {{"))
+            if body:
+                bodies[key] = (f.name, body)
+    _SIM_BODIES = bodies
+    return bodies
+
+
+def check_sim_config(rel, comp: str, cfg, rep: Report) -> None:
+    """Tikrina, ar modulio `sim.config` tikrai pasiekia simuliaciją.
+
+    Ribos (sąmoningos): raktas ieškomas komponento kūne kaip žodis, todėl
+    paminėjimas komentare taisyklę apgauna, o rakto reikšmės panaudojimo
+    teisingumo ji nevertina. Ji gaudo visišką negyvumą (config neimamas arba
+    raktas nenaudojamas) — būtent tą atvejį, kai vaikas mato viena, o girdi
+    kita. Elgsenos zondas (kad config eilutė atsirastų DOM'e) liktų
+    check_view.py pusėje.
+    """
+    if not isinstance(cfg, dict):
+        rep.err(
+            f"{rel}: „sim.config“ turi būti objektas, o yra {type(cfg).__name__} — "
+            "komponentas masyvo nepriima ir žodžiai liktų nepanaudoti (#14726)"
+        )
+        return
+    if not cfg:
+        return
+    entry = sim_component_bodies().get(comp)
+    if entry is None:
+        # Jei kūno rasti nepavyko, tyliai nepraeikime (LL-37): pasakome, kad
+        # šio modulio gyvumo patikrinti negalėjome.
+        rep.warn(f"{rel}: nepavyko perskaityti simuliacijos „{comp}“ kūno — sim.config gyvumas nepatikrintas")
+        return
+    fname, body = entry
+    params = _mount_params(body)
+    if not params or "config" not in params:
+        rep.err(
+            f"{rel}: simuliacija „{comp}“ ({fname}) montuojasi be „config“ "
+            f"(mount({', '.join(sorted(params or []))})), todėl modulio raktai "
+            f"({', '.join(map(str, cfg))}) į ekraną ir balsą nepatenka — prijunk config (LL-61)"
+        )
+        return
+    # Komponentas, kuris config skaito bendrai (Object.entries/values/keys),
+    # raktų vardų kode nemini sąmoningai — tada raktų tikrinti negalima.
+    if re.search(r"Object\.(?:entries|values|keys)\(\s*config\b", body):
+        return
+    for key in cfg:
+        if not re.search(rf"\b{re.escape(str(key))}\b", body):
+            rep.err(
+                f"{rel}: „sim.config.{key}“ simuliacija „{comp}“ ({fname}) nenaudoja — "
+                "turinys keistų garso įrašą, bet ne ekraną (#14726)"
+            )
+
+
 def word_count(text: str) -> int:
     return len(re.findall(r"[\wąčęėįšųūžĄČĘĖĮŠŲŪŽ'-]+", text))
 
@@ -117,6 +252,8 @@ def check_module(path: Path, data: dict, rep: Report, sims: set[str], grades_met
         comp = sim.get("component")
         if comp not in sims:
             rep.err(f"{rel}: simuliacija „{comp}“ neegzistuoja registre (yra: {', '.join(sorted(sims))})")
+        elif sim.get("config") is not None:
+            check_sim_config(rel, comp, sim.get("config"), rep)
 
     tasks = data.get("tasks") or []
     if not (3 <= len(tasks) <= 5):

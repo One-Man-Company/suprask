@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 364,
+  "created": "2026-11-18T13:15:53+02:00",
+  "type": "struktura",
+  "title": "validate_content.py netikrina sim.config „zone/miss“ dangos: pusė neteisingų pasirinkimų gali likti be paaiškinimo",
+  "body": "Modulio 05-plakatas-ir-informacija simuliacija turi penkias plakato dalis ir keturis klausimus, bet „miss“ žemėlapis dengė tik 5 iš 16 galimų neteisingų dalių; likusius 11 paspaudimų atsakydavo kode įrašytas bendras sakinys, kurio vaikas nesiejo su savo klaida (šis paleidimas tą ištaisė duomenyse). Kad tai nepasikartotų, reikia mašininės dangos patikros: `validate_content.py` turi skaityti `sim.config.poster.zones[]` ir `sim.config.poster.questions[]` ir kiekvienam klausimui reikalauti `miss` įrašo kiekvienai daliai, išskyrus tą, kuri nurodyta `zone` (ir patikrinti, kad `zone` bei `miss` raktai egzistuoja `zones[]` sąraše). Tai ta pati schema, kai grįžtamasis ryšys priklauso nuo pasirinkto elemento, tad taisyklė formuluojama bendrai: jei `questions[]` turi `zone`, tai `zones[] - {zone}` turi būti `miss` raktų aibė. Patikra neturi reikalauti konkrečių žodžių, tik dangos — todėl ji neprieštarauja mokytojo laisvei formuluoti. Be jos kiekvienas naujas to paties komponento autorius vėl gali pamiršti dalį dalių, o vartai liks žali, nes atsarginis sakinys kode neleidžia niekam užlūžti (LL-117).",
+  "target": "scripts/validate_content.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json:62-110 — po šio paleidimo 16/16 dangos, prieš jį buvo 5/16",
+    "assets/js/sims/calba.js:1084 — atsarginis sakinys `q.miss[zone.id] || …`, dėl kurio trūkstamas įrašas nebuvo matomas",
+    "research/wiki/guidelines/pamokos.md — LL-117 „Žemėlapis, kuris atrodo pilnas“",
+    "Gyvas zondas (390 ir 360 px): HEAD 38 problemos (11 bendra frazė, 22 nėra įrašo), po pataisos 20/20, 0 problemų"
+  ]
+}

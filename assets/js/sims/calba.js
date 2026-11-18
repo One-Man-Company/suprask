@@ -1082,7 +1082,14 @@ const plakatasIrInformacija = {
       }
 
       const miss = (q.miss && q.miss[zone.id]) || "Ši plakato dalis į klausimą neatsako. Ieškok toliau.";
-      api.note(miss);
+      /* Klaidos paaiškinimas turi pasiekti vaiką. `.sim-note` nėra gyvasis
+         srautas — `aria-live` turi tik `#sim-readout`, todėl konkretus
+         paaiškinimas rašomas ir ten. Klausimas lieka matomas plakato
+         viršuje, tad jis nepradingsta. Po jo — ta pati strategija kiekvieną
+         kartą: palygink, apie ką dalis, su tuo, ko klausia klausimas
+         (LL-34: modelio tekstas ir grįžtamasis ryšys sutaria). */
+      api.readout(miss);
+      api.note("Ne ši dalis. Apie ką ji? O ko klausia klausimas?");
       btn.style.boxShadow = "inset 0 0 0 3px var(--sun)";
       timers.push(setTimeout(() => { btn.style.boxShadow = ""; }, 1100));
     }

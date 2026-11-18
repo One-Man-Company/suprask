@@ -16,7 +16,8 @@
     "steps": [
       "Perskaityk klausimą ir pasakyk, ko ieškai.",
       "Peržvelk visą plakatą: užrašus ir piešinius.",
-      "Spausk tą dalį, kuri atsako. Ne spėk, o parodyk vietą."
+      "Spausk tą dalį, kuri atsako. Ne spėk, o parodyk vietą.",
+      "Jei dalis netinka, palygink: apie ką ji? O ko klausia klausimas?"
     ],
     "example": "Mama klausia, kur segėti atšvaitą. Atsakymas parašytas plakate. Kiek atšvaitų turi berniukas? Atsakymas nupieštas."
   },
@@ -66,6 +67,8 @@
             "result": "Užraše parašyta: segėk dešinėje pusėje, kelių aukštyje.",
             "miss": {
               "piesinys-atsvaitas": "Piešinyje matai, kur atšvaitai. Bet pusė čia neįvardyta.",
+              "uzrasas-dviratis": "Šis užrašas sako, kur važiuoti dviračiu. Apie atšvaitą jame nėra.",
+              "piesinys-dviratis": "Piešinyje yra dviratis. Berniuko ir jo atšvaito čia nėra.",
               "uzrasas-gatva": "Šis užrašas kalba apie gatvę, ne apie atšvaitą."
             }
           },
@@ -74,7 +77,10 @@
             "zone": "piesinys-atsvaitas",
             "result": "Piešinyje matai du atšvaitus: vieną prie kojos, kitą ant kuprinės.",
             "miss": {
-              "uzrasas-atsvaitas": "Užraše parašyta, kur segėti. Kiek jų — neparašyta."
+              "uzrasas-atsvaitas": "Užraše parašyta, kur segėti. Kiek jų — neparašyta.",
+              "uzrasas-dviratis": "Šis užrašas sako, kur važiuoti dviračiu. Apie atšvaitus jame nėra.",
+              "piesinys-dviratis": "Piešinyje yra dviratis su žibintu. Berniuko atšvaitų čia nematyti.",
+              "uzrasas-gatva": "Šis užrašas primena nusiimti ausinukus. Apie atšvaitus jame nėra."
             }
           },
           {
@@ -82,7 +88,10 @@
             "zone": "piesinys-dviratis",
             "result": "Piešinyje baltas žibintas yra priekyje, prie vairo.",
             "miss": {
-              "uzrasas-dviratis": "Šis užrašas sako, kur važiuoti. Apie žibintą jame nėra."
+              "uzrasas-atsvaitas": "Užraše kalbama apie atšvaitą ant drabužių. Apie žibintą jame nėra.",
+              "piesinys-atsvaitas": "Piešinyje berniukas su atšvaitais. Dviračio žibinto čia nematyti.",
+              "uzrasas-dviratis": "Šis užrašas sako, kur važiuoti. Apie žibintą jame nėra.",
+              "uzrasas-gatva": "Šis užrašas kalba apie ėjimą per gatvę. Apie žibintą jame nėra."
             }
           },
           {
@@ -90,7 +99,10 @@
             "zone": "uzrasas-gatva",
             "result": "Užraše parašyta: nusiimk ausinukus ir apsidairyk.",
             "miss": {
-              "piesinys-atsvaitas": "Šiame piešinyje berniukas eina keliu. Apie ausinukus nieko nėra."
+              "uzrasas-atsvaitas": "Užraše kalbama apie atšvaitą. Apie ausinukus jame nėra.",
+              "piesinys-atsvaitas": "Piešinyje berniukas su kuprine. Ausinukų čia nematyti.",
+              "uzrasas-dviratis": "Šis užrašas kalba apie važiavimą dviračiu. Apie ausinukus jame nėra.",
+              "piesinys-dviratis": "Piešinyje yra dviratis, o ne pėstysis. Ausinukų čia nėra."
             }
           }
         ]

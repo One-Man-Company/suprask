@@ -51,6 +51,11 @@ const P = {
   snow: "#ffffff",
 };
 
+/* Svarstyklių geometrija — VIENA vieta, iš kurios skaičiuoja ir rėmas, ir
+ * lėkštės padėtis. Jei piešinys ir turinio vieta ėmė atskirus skaičius, dėžutė
+ * pakibtų šalia lėkštės, o sakinys teigtų, kad ji ant jos (LL-03, LL-13). */
+const BALANCE = { half: 104, column: 118, hang: 46, tilt: 0.17, pan: 28 };
+
 export const art = {
   /** Gradientai ir šešėliai. `id` turi būti unikalus puslapyje. */
   defs(id) {
@@ -858,5 +863,136 @@ export const art = {
       </g>`;
     })();
     return `<g transform="translate(${x} ${y}) scale(${s})">${inner}</g>`;
+  },
+
+  /* ------------------------------------------------------------------ */
+  /* Masė (1 klasės matematika): dėžutė ir svarstyklės                   */
+  /*                                                                    */
+  /* Kodėl atskiri metodai: pamokoje dvi dėžutės privalo būti VIENODO     */
+  /* dydžio ir skirtis tik turiniu — kitaip pats paveikslas pasako        */
+  /* atsakymą, o vaikas nebegali atrasti, kad dydis masės nepasako        */
+  /* (LL-13, LL-28). Todėl abi dėžutės piešiamos ta pačia geometrija, o    */
+  /* skiriasi tik turinio tekstūra: putos — balti rutuliukai, smėlis —     */
+  /* smulkūs grūdeliai.                                                   */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Atvira dėžutė su matomu turiniu. `kind`: putos | smelis.
+   * `x` — kairysis kraštas, `baseY` — apačia (dėžutė stovi ant `baseY`),
+   * `s` — kraštinė. Dėžutė atvira iš viršaus, todėl turinys matomas, o ne
+   * parašytas žodžiu: 6–7 m. vaikas smulkių užrašų scenoje neskaito (LL-06).
+   */
+  boxWithContent(kind, x, baseY, s) {
+    const f = (v) => v.toFixed(1);
+    const top = baseY - s;
+    const rim = s * 0.2;
+    const inset = s * 0.08;
+    const span = Math.max(1, s - 2 * inset);
+    const grains = kind === "putos"
+      ? Array.from({ length: 7 }, (_, i) => {
+        const cx = x + inset + ((i * 13) % span);
+        const cy = top + rim * 0.55 + ((i % 3) - 1) * rim * 0.2;
+        return `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(s * (0.055 + (i % 3) * 0.012))}"`
+          + ` fill="#fbfdff" stroke="#c3d2dd" stroke-width="1.1"/>`;
+      }).join("")
+      : Array.from({ length: 24 }, (_, i) => {
+        const cx = x + inset + ((i * 7) % span);
+        const cy = top + rim * 0.5 + (((i * 5) % 9) / 9 - 0.5) * rim * 0.66;
+        return `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(s * 0.017 + (i % 2) * 0.35)}"`
+          + ` fill="${i % 2 ? "#c9a45f" : "#a9863f"}" opacity=".92"/>`;
+      }).join("");
+
+    return `<g>
+      <rect x="${f(x)}" y="${f(top + rim)}" width="${f(s)}" height="${f(s - rim)}" rx="${f(s * 0.06)}"
+            fill="#dcb98d" stroke="#8a6239" stroke-width="2.4"/>
+      <rect x="${f(x)}" y="${f(top + rim)}" width="${f(s)}" height="${f(s * 0.09)}" rx="${f(s * 0.04)}"
+            fill="#c79e6e" opacity=".7"/>
+      <rect x="${f(x + inset)}" y="${f(top)}" width="${f(span)}" height="${f(rim)}" rx="${f(rim * 0.28)}"
+            fill="${kind === "putos" ? "#eef4f8" : "#e2c68a"}" stroke="#8a6239" stroke-width="2"/>
+      ${grains}
+      <line x1="${f(x + span * 0.18 + inset)}" y1="${f(top + rim + s * 0.13)}"
+            x2="${f(x + span * 0.82 + inset)}" y2="${f(top + rim + s * 0.13)}"
+            stroke="#a67c4e" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>
+    </g>`;
+  },
+
+  /**
+   * Svarstis su užrašu. `label` ateina iš turinio („1 kg“), o ne įrašytas
+   * kode: pamokoje svarsčio užrašas YRA matavimo vienetas, todėl jis turi
+   * keistis kartu su modulio JSON (LL-34).
+   * `x` — kairysis kraštas, `baseY` — apačia, `s` — plotis.
+   */
+  weight(x, baseY, s, label = "1 kg") {
+    const f = (v) => v.toFixed(1);
+    const h = s * 0.86;
+    const top = baseY - h;
+    return `<g stroke-linejoin="round">
+      <path d="M${f(x + s * 0.34)} ${f(top)} q 0 ${f(-s * 0.18)} ${f(s * 0.16)} ${f(-s * 0.18)}
+               q ${f(s * 0.16)} 0 ${f(s * 0.16)} ${f(s * 0.18)}"
+            fill="none" stroke="#4f5c68" stroke-width="${f(s * 0.07)}" stroke-linecap="round"/>
+      <path d="M${f(x + s * 0.13)} ${f(top)} H${f(x + s * 0.87)} L${f(x + s)} ${f(baseY)}
+               H${f(x)} Z" fill="#9aa6b2" stroke="#4f5c68" stroke-width="2.4"/>
+      <path d="M${f(x + s * 0.22)} ${f(top + h * 0.16)} H${f(x + s * 0.78)}"
+            stroke="#ffffff" stroke-opacity=".45" stroke-width="${f(s * 0.05)}" stroke-linecap="round"/>
+      <text x="${f(x + s / 2)}" y="${f(baseY - h * 0.3)}" text-anchor="middle"
+            style="font-family:var(--font-head);font-size:${f(s * 0.32)}px;font-weight:800;fill:#16212b">${label}</text>
+    </g>`;
+  },
+
+  /** Svirties galo padėtis. `side`: -1 — kairė, 1 — dešinė.
+   *  `tilt = 1` nuleidžia KAIRĘ: kairio galo `y` didesnis, dešinio — mažesnis. */
+  balanceEnd(cx, baseY, tilt, side) {
+    const a = Math.max(-1, Math.min(1, Number(tilt) || 0)) * BALANCE.tilt;
+    const dir = side < 0 ? -1 : 1;
+    return {
+      x: cx + dir * BALANCE.half * Math.cos(a),
+      y: baseY - BALANCE.column - dir * BALANCE.half * Math.sin(a),
+    };
+  },
+
+  /** Lėkštės viršutinio krašto vidurys — ten, kur statomas turinys.
+   *  Skaičiuojama iš to paties `balanceEnd`, todėl dėžutė stovi ant lėkštės. */
+  balancePan(cx, baseY, tilt, side) {
+    const end = art.balanceEnd(cx, baseY, tilt, side);
+    return { x: end.x, y: end.y + BALANCE.hang };
+  },
+
+  /**
+   * Svarstyklės su dviem lėkštėmis. `tilt` ∈ [-1, 1]: 1 — kairė lėkštė
+   * nusileidusi, -1 — pakilusi, 0 — lygi. Turinys dedamas pagal
+   * `balancePan()` toje pačioje `tilt` reikšmėje, todėl dėžutė tikrai stovi
+   * ant lėkštės, o ne šalia jos.
+   */
+  balance(cx, baseY, tilt) {
+    const f = (v) => v.toFixed(1);
+    const { column, pan } = BALANCE;
+    const left = art.balancePan(cx, baseY, tilt, -1);
+    const right = art.balancePan(cx, baseY, tilt, 1);
+    const leftEnd = art.balanceEnd(cx, baseY, tilt, -1);
+    const rightEnd = art.balanceEnd(cx, baseY, tilt, 1);
+    const pivotY = baseY - column;
+    const bowl = (p, end) => `<g>
+      <path d="M${f(p.x - pan)} ${f(p.y)} Q ${f(p.x)} ${f(p.y + pan * 0.62)} ${f(p.x + pan)} ${f(p.y)}"
+            fill="#c8d2dc" stroke="#5d6b78" stroke-width="2.2" stroke-linejoin="round"/>
+      <line x1="${f(p.x - pan)}" y1="${f(p.y)}" x2="${f(p.x + pan)}" y2="${f(p.y)}"
+            stroke="#5d6b78" stroke-width="2.6" stroke-linecap="round"/>
+      <line x1="${f(p.x - pan * 0.86)}" y1="${f(p.y)}" x2="${f(end.x)}" y2="${f(end.y)}"
+            stroke="#5d6b78" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
+      <line x1="${f(p.x + pan * 0.86)}" y1="${f(p.y)}" x2="${f(end.x)}" y2="${f(end.y)}"
+            stroke="#5d6b78" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
+    </g>`;
+    return `<g>
+      ${bowl(left, leftEnd)}
+      ${bowl(right, rightEnd)}
+      <line x1="${f(leftEnd.x)}" y1="${f(leftEnd.y)}" x2="${f(rightEnd.x)}" y2="${f(rightEnd.y)}"
+            stroke="#5d6b78" stroke-width="5" stroke-linecap="round"/>
+      <rect x="${f(cx - 6)}" y="${f(pivotY)}" width="12" height="${f(baseY - pivotY)}" rx="4"
+            fill="#9aa6b2" stroke="#4f5c68" stroke-width="2"/>
+      <rect x="${f(cx - 2.5)}" y="${f(pivotY + 6)}" width="5" height="${f(baseY - pivotY - 12)}" rx="2.5"
+            fill="#ffffff" opacity=".38"/>
+      <path d="M${f(cx - 46)} ${f(baseY)} H${f(cx + 46)} L${f(cx + 38)} ${f(baseY - 12)} H${f(cx - 38)} Z"
+            fill="#b07b4a" stroke="#8a5c33" stroke-width="2.4" stroke-linejoin="round"/>
+      <circle cx="${f(cx)}" cy="${f(pivotY)}" r="6" fill="#4f5c68"/>
+    </g>`;
   },
 };

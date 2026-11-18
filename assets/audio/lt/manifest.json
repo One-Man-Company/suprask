@@ -11,6 +11,10 @@
   "n": "n/943330be7cbe9ada-5f667423.mp3",
   "s": "s/943330be7cbe9ada-5d6bc5b4.mp3"
  },
+ "1 kg": {
+  "n": "n/dbf6c4777afdd2fa-fe9dc9c0.mp3",
+  "s": "s/dbf6c4777afdd2fa-3602aa3e.mp3"
+ },
  "1 valanda": {
   "n": "n/e355ed5db7aebce2-48a6a293.mp3",
   "s": "s/e355ed5db7aebce2-9ad33d95.mp3"
@@ -535,6 +539,14 @@
   "n": "n/559aead08264d579-a5632da0.mp3",
   "s": "s/559aead08264d579-dc96ebef.mp3"
  },
+ "Abi dėžutės vienodo dydžio, o masė skirtinga.": {
+  "n": "n/551ca17eb02a9efe-8dee55bf.mp3",
+  "s": "s/551ca17eb02a9efe-0fdde3d6.mp3"
+ },
+ "Abi dėžutės vienodo dydžio. Pirma spėk, tada pasverk.": {
+  "n": "n/48b202aea644a696-29d22a00.mp3",
+  "s": "s/48b202aea644a696-c995af14.mp3"
+ },
  "Abi pusės lygios.": {
   "n": "n/de4fcca618546df9-e0d8c979.mp3",
   "s": "s/de4fcca618546df9-f584fb9d.mp3"
@@ -582,6 +594,10 @@
  "Ar bokštas bus baigtas? Pirma spėk, tada statyk.": {
   "n": "n/9038b62647cab700-944feae6.mp3",
   "s": "s/9038b62647cab700-96eb6de0.mp3"
+ },
+ "Ar dėžutė sunkesnė už kilogramą?": {
+  "n": "n/5e86ce3efa0a5592-2e04ef7d.mp3",
+  "s": "s/5e86ce3efa0a5592-36fde2ff.mp3"
  },
  "Ar juosta prisipildys iki galo?": {
   "n": "n/5212d4cbe604c73b-b078b154.mp3",
@@ -871,6 +887,10 @@
   "n": "n/908e68faac5b6eb7-3654cdc9.mp3",
   "s": "s/908e68faac5b6eb7-43667770.mp3"
  },
+ "Dydis masės nepasako. Masę parodė svarstyklės.": {
+  "n": "n/3976dd6dfed8b434-3f0ea5fb.mp3",
+  "s": "s/3976dd6dfed8b434-dc7f4a37.mp3"
+ },
  "Dėk toliau, kol lenta baigsis.": {
   "n": "n/9e26240796099d8e-b5dc13a4.mp3",
   "s": "s/9e26240796099d8e-451c8d54.mp3"
@@ -878,6 +898,14 @@
  "Dėlionė": {
   "n": "n/02effa582a419044-fec7949a.mp3",
   "s": "s/02effa582a419044-71714946.mp3"
+ },
+ "Dėžutė nusileido. Ji sunkesnė už kilogramą.": {
+  "n": "n/3ccc9e7f4b97d0b7-a74bdbd3.mp3",
+  "s": "s/3ccc9e7f4b97d0b7-eace884d.mp3"
+ },
+ "Dėžutė pakilo. Ji lengvesnė už kilogramą.": {
+  "n": "n/351fa4bf48a066a2-33ce1747.mp3",
+  "s": "s/351fa4bf48a066a2-0b491221.mp3"
  },
  "Dėžutė uždaryta. Ko nori Rėjus?": {
   "n": "n/fdbffaed2b3dcb3a-e2e6471c.mp3",
@@ -1431,6 +1459,10 @@
   "n": "n/e4ff17609ce48006-064c37ee.mp3",
   "s": "s/e4ff17609ce48006-c893f127.mp3"
  },
+ "Pasirink dėžutę, tada spėk.": {
+  "n": "n/46fc1f119b037d5c-e1d0409f.mp3",
+  "s": "s/46fc1f119b037d5c-dfa25c4e.mp3"
+ },
  "Pasirink garsą ir laikyk mygtuką.": {
   "n": "n/0517de8ed8e434c4-71bc4e75.mp3",
   "s": "s/0517de8ed8e434c4-5aad99b6.mp3"
@@ -1498,6 +1530,10 @@
  "Pirma spėk, tada matuok.": {
   "n": "n/ac090d01c5a41fa1-7058ffff.mp3",
   "s": "s/ac090d01c5a41fa1-06420e77.mp3"
+ },
+ "Pirma spėk. Tada dėk ant svarstyklių.": {
+  "n": "n/99bab1d18f71938b-bf127f46.mp3",
+  "s": "s/99bab1d18f71938b-20a6908b.mp3"
  },
  "Pirma sudėk visus gyvūnus. Tada „Žiema“ parodys, kas pasikeis.": {
   "n": "n/cc284e4b29ed01a8-d4c4c59d.mp3",
@@ -1723,6 +1759,10 @@
   "n": "n/050db6f27be6c9b7-ccf54bb1.mp3",
   "s": "s/050db6f27be6c9b7-3887037c.mp3"
  },
+ "Spausk „Pasverti“.": {
+  "n": "n/18e6efb4759d8904-d4e91800.mp3",
+  "s": "s/18e6efb4759d8904-9825fbc1.mp3"
+ },
  "Spėjai kitaip. Rodyklės liko vietoje, keitėsi tik užrašas.": {
   "n": "n/3237c9dcda911865-e3649eb8.mp3",
   "s": "s/3237c9dcda911865-e9ef8cd4.mp3"
@@ -1943,6 +1983,10 @@
   "n": "n/3bba49f106e27c8c-af485198.mp3",
   "s": "s/3bba49f106e27c8c-f2a2c167.mp3"
  },
+ "Tu sakei kitaip. Taip parodė svarstyklės.": {
+  "n": "n/5a89eb6b309ab603-babcabfe.mp3",
+  "s": "s/5a89eb6b309ab603-e90e8e89.mp3"
+ },
  "Tu sakei mažiau. Gavosi mažiau: keturi trintukai.": {
   "n": "n/bf74e66fcf175dce-a10f18e3.mp3",
   "s": "s/bf74e66fcf175dce-a3f05722.mp3"
@@ -1978,6 +2022,22 @@
  "Tu sakei taip. Jis liko medis.": {
   "n": "n/9e00e82d24b0ed9c-e646a8c6.mp3",
   "s": "s/9e00e82d24b0ed9c-00591c57.mp3"
+ },
+ "Tu sakei, kad lengvesnė. Dabar pasverk.": {
+  "n": "n/3119ef4af3a0be83-e209274e.mp3",
+  "s": "s/3119ef4af3a0be83-949b606d.mp3"
+ },
+ "Tu sakei, kad sunkesnė. Dabar pasverk.": {
+  "n": "n/043eb145d38c5ca8-fc1c499c.mp3",
+  "s": "s/043eb145d38c5ca8-e5e26ac3.mp3"
+ },
+ "Tu spėjai kitaip. Masę parodė svarstyklės, ne dydis.": {
+  "n": "n/2f42f4c14351d2c7-db99a444.mp3",
+  "s": "s/2f42f4c14351d2c7-cdb6ea05.mp3"
+ },
+ "Tu taip ir sakei.": {
+  "n": "n/b7ff6d050e8d9d9d-00d5e0fd.mp3",
+  "s": "s/b7ff6d050e8d9d9d-4b9b9542.mp3"
  },
  "Tyla": {
   "n": "n/170ba9b291bd200a-0c170880.mp3",
@@ -2426,6 +2486,10 @@
  "Šešios sąvaržėlės": {
   "n": "n/0b02554737373e75-76eaee8e.mp3",
   "s": "s/0b02554737373e75-734a0814.mp3"
+ },
+ "Ši dėžutė jau pasverta. Pasirink kitą.": {
+  "n": "n/71197fbe692b362e-6c8c2c01.mp3",
+  "s": "s/71197fbe692b362e-9308edb7.mp3"
  },
  "Ši seka veda ne prie vėliavos. Viena komanda klaidinga.": {
   "n": "n/6d6f88831dc26d38-c2d34fc3.mp3",

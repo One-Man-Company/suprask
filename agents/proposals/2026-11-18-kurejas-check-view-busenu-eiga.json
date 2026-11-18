@@ -1,0 +1,16 @@
+{
+  "role": "kurejas",
+  "run_id": 359,
+  "created": "2026-11-18T12:25:00+02:00",
+  "type": "struktura",
+  "title": "check_view.py tikrina tik pradinę scenos būseną",
+  "body": "Kuriant 26-mase-ir-kilogramas paaiškėjo, kad pirmoji simuliacijos būsena gali prieštarauti modeliui, nors visi vartai žali: pradžioje lygi sija su 1 kg svarstžiu vienoje lėkštėje reiškė „lygu“, nors palyginimo dar nebuvo (pamoka LL-112). check_view.py atidaro modulį, pamatuoja išdėstymą ir baigia darbą — jis niekada nepaspaudžia nė vieno simuliacijos valdiklio, todėl scenos būsenos po pirmo veiksmo, grįžimo prie jau matuoto daikto ir „Iš naujo“ lieka nepatikrintos. Siūloma pridėti neprivalomą `--walk` režimą, kuris kiekvienai simuliacijai atlieka fiksuotą veiksmų seką (pirmas matavimas, antras daiktas, atstatymas) ir kiekvienoje būsenoje matuoja tą patį kaip dabar: slinktį, mažus taikinius, ar visi scenos elementai telpa į viewBox, ar `aria-label` ne tuščias, ar nėra konsolės klaidų. Tai negrąžintų prasmės (ją vis tiek turi tikrinti žmogus arba zondas), bet pagautų geometrinius lūžimus, kurie šiandien matomi tik rankiniu zondavimu, o CI — niekada.",
+  "target": "scripts/check_view.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/guidelines/pamokos.md — LL-112 (pradinė scena, kuri jau rodo rezultatą; defektas rastas tik rankiniu zondavimu)",
+    "scripts/check_view.py:198–240 — check_route() įkelia puslapį, pamatuoja ir grąžina rezultatą nepaspaudęs nė vieno #sim-controls valdiklio",
+    "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json — simuliacijos būsenos: nepasverta / lengvesnė / sunkesnė / abi pasvertos / iš naujo"
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "id": "26-mase-ir-kilogramas",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Masė: vienodo dydžio dėžutės",
+  "subtitle": "Vienodo dydžio dėžutės sveria skirtingai — masę parodo svarstyklės",
+  "minutes": 9,
+  "outcomes": [
+    "Palyginu dėžutę su kilogramu ir pasakau, ar ji sunkesnė.",
+    "Paaiškinu, kodėl vienodo dydžio dėžutės gali būti skirtingos masės.",
+    "Nusprendžiu, kurių daiktų masę tinka pasakyti kilogramais."
+  ],
+  "concept": {
+    "title": "Masę parodo svarstyklės, ne dydis",
+    "big_idea": "Dvi dėžutės vienodo dydžio, o viena sunkesnė. Dydis masės nepasako. Masę parodo svarstyklės, o matuojame kilogramais.",
+    "steps": [
+      "Ant vienos lėkštės dėžutė, ant kitos stovi 1 kg svarstis.",
+      "Pirma spėk: sunkesnė ar lengvesnė už kilogramą?",
+      "Nusileidusi lėkštė sunkesnė, pakilusi — lengvesnė.",
+      "Abi dėžutės vienodo dydžio, o jų masė skirtinga."
+    ],
+    "example": "Namie viena dėžutė su popieriumi, kita su konservais. Abi vienodo dydžio, o konservų dėžutę pakelti sunkiau."
+  },
+  "sim": {
+    "component": "dezute-ir-kilogramas",
+    "config": {
+      "reference": { "label": "1 kg" },
+      "boxes": [
+        { "id": "putos", "name": "Putų dėžutė", "kind": "putos", "vs": "maziau" },
+        { "id": "smelis", "name": "Smėlio dėžutė", "kind": "smelis", "vs": "daugiau" }
+      ],
+      "labels": {
+        "groupBox": "Pasirink dėžutę",
+        "groupGuess": "Spėk, ar dėžutė sunkesnė už 1 kg",
+        "guessHeavier": "Sunkesnė už 1 kg",
+        "guessLighter": "Lengvesnė už 1 kg",
+        "weigh": "Pasverti",
+        "reset": "Iš naujo",
+        "resHeavier": "sunkesnė už 1 kg",
+        "resLighter": "lengvesnė už 1 kg",
+        "ariaHeavier": "Dėžutė sunkesnė už",
+        "ariaLighter": "Dėžutė lengvesnė už",
+        "ariaEmpty": "Dėžutė dar nepasverta.",
+        "mismatch": "Dėžutės nesuderintos su svarstyklėmis."
+      },
+      "sentences": {
+        "start": "Abi dėžutės vienodo dydžio. Pirma spėk, tada pasverk.",
+        "startNote": "Pasirink dėžutę, tada spėk.",
+        "askGuess": "Ar dėžutė sunkesnė už kilogramą?",
+        "askGuessNote": "Pirma spėk. Tada dėk ant svarstyklių.",
+        "guessedHeavier": "Tu sakei, kad sunkesnė. Dabar pasverk.",
+        "guessedLighter": "Tu sakei, kad lengvesnė. Dabar pasverk.",
+        "weighNote": "Spausk „Pasverti“.",
+        "weighedHeavier": "Dėžutė nusileido. Ji sunkesnė už kilogramą.",
+        "weighedLighter": "Dėžutė pakilo. Ji lengvesnė už kilogramą.",
+        "agree": "Tu taip ir sakei.",
+        "disagree": "Tu sakei kitaip. Taip parodė svarstyklės.",
+        "alreadyWeighed": "Ši dėžutė jau pasverta. Pasirink kitą.",
+        "allDone": "Abi dėžutės vienodo dydžio, o masė skirtinga.",
+        "allNoteAgree": "Dydis masės nepasako. Masę parodė svarstyklės.",
+        "allNoteDisagree": "Tu spėjai kitaip. Masę parodė svarstyklės, ne dydis.",
+        "reset": "Pradedam iš naujo. Pirma spėk."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Putų dėžutė stovi kairėje lėkštėje, 1 kg svarstis — dešinėje. Kairė lėkštė pakilo. Ar putų dėžutė sunkesnė už 1 kg?",
+      "options": [
+        "Taip, sunkesnė už 1 kg",
+        "Ne, lengvesnė už 1 kg",
+        "Ne, ji sveria lygiai 1 kg"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, kuri lėkštė žemiau. Sunkesnė lėkštė visada leidžiasi.",
+      "why": "Lėkštė su dėžute pakilo, todėl dėžutė lengvesnė už 1 kg."
+    },
+    {
+      "q": "Dvi rankinės vienodo dydžio. Vienoje yra tušti indeliai, kitoje — konservų skardinės. Kuri sunkesnė?",
+      "options": [
+        "Ta, kurioje konservai",
+        "Ta, kurioje tušti indeliai",
+        "Abi vienodos, nes vienodo dydžio"
+      ],
+      "answer": 0,
+      "hint": "Dydis nepasako. Pagalvok, kas rankinės viduje.",
+      "why": "Masę lemia tai, kas viduje. Konservų skardinės sunkesnės už tuščius indelius."
+    },
+    {
+      "q": "Kurių daiktų masę patogu pasakyti kilogramais?",
+      "options": [
+        "Sagos, sąvaržėlės, lapo",
+        "Vandens lašo, plunksnos, adatos",
+        "Miltų pakelio, kuprinės, kūdikio"
+      ],
+      "answer": 2,
+      "hint": "Sagos ir plunksna telpa į kišenę. Kurie daiktai sunkūs kaip kelios knygos?",
+      "why": "Kilogramais patogu matuoti sunkesnius daiktus: miltų pakelį, kuprinę, kūdikį."
+    },
+    {
+      "q": "Rokas sako, kad didelis kamuolys sunkesnis už mažą akmenuką. Ar jis teisus?",
+      "options": [
+        "Taip, didesnis daiktas visada sunkesnis",
+        "Ne, kamuolys gali būti lengvesnis už mažą akmenį",
+        "Ne, akmenukas visada lengvesnis"
+      ],
+      "answer": 1,
+      "hint": "Prisimink putų dėžutę: ji didelė, o lengva.",
+      "why": "Dydis masės nepasako. Pripūstas kamuolys gali būti lengvesnis už mažą akmenį.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kodėl dvi vienodo dydžio dėžutės sveria skirtingai? Pasakyk savais žodžiais.",
+  "teacher": {
+    "goal": "Suprasti, kad masės nepasako dydis: vienodo dydžio daiktai gali būti skirtingos masės, o palyginti padeda kilogramas. Modelis laiko svarstyklės ir 1 kg svarstį tuos pačius ir keičia tik dėžutę, todėl priežastis matoma, o ne išvedama iš skaičių.",
+    "prompt": "Kodėl viena dėžutė lengvesnė, jei abi vienodo dydžio?",
+    "offline": "Įdėkite į dvi vienodo dydžio dėžutes skirtingą turinį: į vieną vatos ar putų, į kitą smėlio ar akmenukų. Vaikas pirma pasako, kuri sunkesnė, tada abi pakelia ranka. Po to palyginkite su 1 kg miltų ar cukraus pakeliu: kuri dėžutė sunkesnė už kilogramą? Pabaigoje paklauskite, ar dydis padėjo atspėti.",
+    "misconceptions": [
+      "„Didesnis daiktas sunkesnis“ — ekrane abi dėžutės vienodo dydžio, o viena lengvesnė už 1 kg, kita sunkesnė. Paveikslėlyje to nematyti, todėl reikia sverti.",
+      "„Vienodo dydžio reiškia vienodą masę“ — abiejų dėžučių rezultatai lieka po scena vienoje eilutėje, todėl skirtumas matomas ir po kelių veiksmų.",
+      "„Svarstyklės pasako tikslią masę“ — modelis rodo tik palyginimą su 1 kg: lengvesnė ar sunkesnė. Tiksli masė gramais yra 2 klasės turinys, todėl tai modelio riba, o ne klaida.",
+      "„Kilogramu matuojama viską“ — programa prašo atskirti, kurių daiktų masę tinka apibūdinti kilogramu; sagai ir plunksnai reikia smulkesnio vieneto, kuris bus mokomas vėliau."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), matematikos programa 1 klasei, „Masė, laikas“: „Susipažįstama su pagrindiniu masės matavimo vienetu kilogramu (kg). Atliekant įvairias praktines užduotis, mokomasi pajausti, kokių artimoje aplinkoje esančių daiktų masę tinka/netinka apibūdinti šiuo matavimo vienetu, kokie prietaisai gali būti tam naudojami“, sources/pradinio-bp-rekomendacijos-2024.txt:33783–33784.",
+    "NŠA (2024), ten pat, sources/pradinio-bp-rekomendacijos-2024.txt:1010–1014 — „mato jausmo“ ugdymas ir metodas „spėti ir tikrinti“: pirmiausia vertinama „iš akies“, paskui matuojama skirtu prietaisu ir rezultatas aptariamas su mokytoju.",
+    "NŠA (2024), ten pat, sources/pradinio-bp-rekomendacijos-2024.txt:17299 — 1 klasės metų planas: temai „Masė, laikas“ skiriamos 5 pamokos.",
+    "NŠA (2024), ten pat, sources/pradinio-bp-rekomendacijos-2024.txt:33801–33806 — vadovėlio užduotis „Rankinės yra vienodo dydžio, tačiau jų masė skirtinga“ ir palyginimas „Mažiau negu 1 kg / Daugiau negu 1 kg“.",
+    "Chouinard, P. A., Matheson, K. G., Royals, K. A., Landry, O., Buckingham, G., Saccone, E. J., & Hocking, D. R. (2019). The development of the size–weight illusion in children coincides with the development of nonverbal cognition rather than motor skills. Journal of Experimental Child Psychology, 184, 48–64. https://www.sciencedirect.com/science/article/pii/S0022096518307045 — dydžio ir svorio iliuzija nustatyta ir vaikams, todėl išvaizda tikrai klaidina ir pasikliauti ja negalima.",
+    "Buckingham, G. (2014). Getting a grip on heaviness perception: a review of weight illusions and their probable causes. Experimental Brain Research, 232(6), 1623–1629. https://doi.org/10.1007/s00221-014-3926-9 — numatomas svoris (iš dydžio, medžiagos, formos) keičia pajuntamą svorį, todėl „iš akies“ spėjimas yra natūralus, bet nepakankamas.",
+    "Metodas M-07 — research/wiki/grades/01/metodai.md (spėjimo prieš matavimą seka, taikyta ilgio moduliui ir pakartota čia)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (dydis masės nepasako), o gramai, tona ir vienetų sąryšiai sąmoningai neįtraukti — tai 2 klasės turinys.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo tos pačios taisyklės naujoje situacijoje (rankinės, miltų pakelis, kamuolys), o ne atkartoti modulio sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas prieš kiekvieną matavimą palyginamas su rezultatu ir niekada nevadinamas klaida, kiekviena užduotis turi užuominą, yra praplėtimo užduotis.",
+    "P2 / T2.3 / T5.5: veiksmas prieš paaiškinimą, grįžtamasis ryšys apie veiksmą („Taip parodė svarstyklės“), rezultatas rodomas ir žodžiu, o ne vien lėkštės pakrypimu."
+  ]
+}

@@ -800,7 +800,293 @@ const ilgisIrVienetas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Masė ir kilogramas — dėžutė prieš 1 kg svarstį (1 klasė)             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Modelis: dvi VIENODO dydžio dėžutės (putos ir smėlis) sveriamos tose
+ * pačiose svarstyklėse prieš 1 kg svarstį. Svarstyklės ir svarstis nejuda —
+ * keičiasi tik dėžutė ant lėkštės, todėl kiekvieną kartą matomas tas pats
+ * klausimas („sunkesnė ar lengvesnė už kilogramą?“), o atsakymas kitas.
+ * Tai ir yra sąvoka, kurios neparodo nei tekstas, nei paveikslėlis: dydis
+ * masės nepasako.
+ *
+ * Ko modelis NEDARO: nerašo tikslios masės gramais. Programa 1 klasei
+ * prašo „pajausti, kurių daiktų masę tinka apibūdinti kilogramu“, o
+ * gramai ir vienetų sąryšiai priskirti 2 klasei
+ * (`sources/pradinio-bp-rekomendacijos-2024.txt:1015–1017`). Todėl
+ * palyginimas su 1 kg svarstžiu ir yra visas modelis — dvi baigtys:
+ * lengvesnė ar sunkesnė.
+ *
+ * Spėjimas prieš kiekvieną matavimą (LL-15): spėjimas lieka matomas
+ * mygtuke iki galo ir po matavimo tik palyginamas, niekada nevadinamas
+ * klaida. Be jo modelis virstų mygtuko spaudimu, o ne sprendimu.
+ */
+const MS_CX = 150;        // svarstyklių stulpas
+const MS_BASE = 196;      // stalviršiaus linija (svarstyklių pagrindas)
+const MS_BOX = 42;        // dėžutės kraštinė
+const MS_WEIGHT = 40;     // svarsčio plotis
+const MS_VB_W = 300;
+const MS_VB_H = 212;
+
+const msEsc = (text) => String(text).replace(/[&<>"]/g, (c) => (
+  { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]
+));
+
+const dezuteIrKilogramas = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const line = (key) => (typeof S[key] === "string" ? S[key] : "");
+    const label = (key, fallback) => (typeof L[key] === "string" && L[key] ? L[key] : fallback);
+    const tell = (text) => { if (text) api.speak(text); };
+    const reference = config.reference && typeof config.reference.label === "string"
+      ? config.reference.label
+      : "1 kg";
+
+    /* Dėžutė be `vs` arba su kitu žodžiu modelio neturi: svarstyklės
+       nepajudėtų, o sakinys teigtų rezultatą. Todėl tai klaida, o ne
+       tyliai praleista dėžutė (LL-03, LL-37). */
+    const raw = Array.isArray(config.boxes) ? config.boxes : [];
+    const boxes = raw.filter((b) => b
+      && typeof b.id === "string"
+      && typeof b.name === "string"
+      && (b.vs === "daugiau" || b.vs === "maziau"));
+    if (boxes.length !== raw.length || boxes.length < 2) {
+      console.error("dezute-ir-kilogramas: dėžutės nesuderintos su svarstyklėmis", raw);
+      stage.innerHTML = '<p class="sim-note" style="margin:0"></p>';
+      stage.firstElementChild.textContent = label("mismatch", "Dėžutės nesuderintos su svarstyklėmis.");
+      api.readout(label("mismatch", "Dėžutės nesuderintos su svarstyklėmis."));
+      return () => {};
+    }
+
+    const boxById = (id) => boxes.find((b) => b.id === id) || boxes[0];
+    const resultText = (vs) => (vs === "daugiau"
+      ? label("resHeavier", "sunkesnė už 1 kg")
+      : label("resLighter", "lengvesnė už 1 kg"));
+
+    stage.innerHTML = `
+      <div id="ms-wrap" style="width:100%;max-width:23rem;margin:0 auto;box-sizing:border-box;min-width:0">
+        <svg id="ms-svg" viewBox="0 0 ${MS_VB_W} ${MS_VB_H}" width="100%" role="img"
+             style="display:block;width:100%;height:auto"></svg>
+        <p id="ms-records" class="sim-note" style="margin:.4rem 0 0"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:.5rem;width:100%;min-width:0">
+        <div id="ms-boxes" role="group" aria-label="${msEsc(label("groupBox", "Pasirink dėžutę"))}"
+             style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem"></div>
+        <div id="ms-guess" role="group" aria-label="${msEsc(label("groupGuess", "Spėk, kokia dėžutė"))}"
+             style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem">
+          <button class="btn secondary" type="button" data-guess="daugiau" aria-pressed="false"
+                  style="min-height:48px;padding:.4rem .3rem;font-size:.9rem;line-height:1.15;overflow-wrap:anywhere">${msEsc(label("guessHeavier", "Sunkesnė už 1 kg"))}</button>
+          <button class="btn secondary" type="button" data-guess="maziau" aria-pressed="false"
+                  style="min-height:48px;padding:.4rem .3rem;font-size:.9rem;line-height:1.15;overflow-wrap:anywhere">${msEsc(label("guessLighter", "Lengvesnė už 1 kg"))}</button>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;min-width:0">
+          <button class="btn" type="button" id="ms-weigh" style="min-height:48px;flex:1 1 9rem">${msEsc(label("weigh", "Pasverti"))}</button>
+          <button class="btn ghost" type="button" id="ms-reset" style="min-height:48px">${msEsc(label("reset", "Iš naujo"))}</button>
+        </div>
+      </div>`;
+
+    const svg = stage.querySelector("#ms-svg");
+    const recordsEl = stage.querySelector("#ms-records");
+    const boxesEl = controls.querySelector("#ms-boxes");
+    const guessEl = controls.querySelector("#ms-guess");
+    const weighBtn = controls.querySelector("#ms-weigh");
+    const resetBtn = controls.querySelector("#ms-reset");
+
+    /* Dėžutės mygtukai: ta pati dėžutė kaip scenoje, tik mažesnė, todėl
+       vaikas atpažįsta, kurią pasirinko, ir neskaito vardo vienintelio. */
+    boxesEl.innerHTML = boxes.map((b) => `
+      <button class="btn secondary" type="button" data-box="${msEsc(b.id)}" aria-pressed="false"
+              aria-label="${msEsc(b.name)}"
+              style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;padding:.4rem .3rem;min-height:56px;box-sizing:border-box">
+        <svg viewBox="0 0 36 36" width="34" height="34" aria-hidden="true" focusable="false">
+          ${art.boxWithContent(b.kind === "putos" ? "putos" : "smelis", 3, 33, 30)}
+        </svg>
+        <span style="font-size:.85rem;line-height:1.15;font-weight:800;text-align:center;overflow-wrap:anywhere">${msEsc(b.name)}</span>
+        <span class="ms-seen" style="font-size:.8rem;line-height:1.15;color:var(--ink-soft);font-weight:700;min-height:1.15em;overflow-wrap:anywhere"></span>
+      </button>`).join("");
+
+    const guessBtns = [...guessEl.querySelectorAll("[data-guess]")];
+
+    let state = {
+      box: boxes[0].id,
+      guesses: new Map(),   // dėžutė → „daugiau“ | „maziau“
+      weighed: new Map(),  // dėžutė → tikrasis „daugiau“ | „maziau“
+      reported: false,
+    };
+
+    const markOne = (btn, on) => {
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.style.borderColor = on ? "var(--accent)" : "var(--line)";
+      btn.style.background = on
+        ? "color-mix(in srgb, var(--accent) 14%, var(--paper-2))"
+        : "var(--paper-2)";
+      btn.style.boxShadow = on ? "inset 0 0 0 2px var(--accent)" : "0 3px 0 var(--line)";
+    };
+
+    function paint() {
+      const b = boxById(state.box);
+      const measured = state.weighed.get(b.id);
+      const tilt = measured === "daugiau" ? 1 : measured === "maziau" ? -1 : 0;
+      const boxPan = art.balancePan(MS_CX, MS_BASE, tilt, -1);
+      const kgPan = art.balancePan(MS_CX, MS_BASE, tilt, 1);
+
+      const parts = [
+        art.plank(0, 208, MS_VB_W, 12),
+        art.balance(MS_CX, MS_BASE, tilt),
+      ];
+      /* Kol dėžutė nepasverta, abi lėkštės tuščios, o 1 kg svarstis stovi ant
+         stalo. Tai vienintelė garbinga būsena: lygi sija su svarstžiu vienoje
+         lėkštėje reikštų „lygu“, nors palyginimo dar nebuvo (LL-13 — piešinys
+         negali prieštarauti modeliui). */
+      if (measured) {
+        parts.push(art.boxWithContent(b.kind === "putos" ? "putos" : "smelis",
+          boxPan.x - MS_BOX / 2, boxPan.y, MS_BOX));
+        parts.push(art.weight(kgPan.x - MS_WEIGHT / 2, kgPan.y, MS_WEIGHT, reference));
+      } else {
+        parts.push(art.weight(MS_CX + 76, MS_BASE, MS_WEIGHT, reference));
+      }
+      svg.innerHTML = parts.join("");
+
+      const tiltText = measured === "daugiau"
+        ? label("ariaHeavier", "Dėžutė sunkesnė už")
+        : measured === "maziau" ? label("ariaLighter", "Dėžutė lengvesnė už") : label("ariaEmpty", "Dėžutė dar nepasverta.");
+      svg.setAttribute("aria-label", `${b.name}. ${tiltText} ${reference}.`.replace(/\s+/g, " ").trim());
+    }
+
+    function showRecords() {
+      const done = boxes.filter((b) => state.weighed.has(b.id));
+      recordsEl.textContent = done.length
+        ? done.map((b) => `${b.name} — ${resultText(state.weighed.get(b.id))}`).join(" · ")
+        : "";
+    }
+
+    function mark() {
+      boxes.forEach((b) => {
+        const btn = boxesEl.querySelector(`[data-box="${b.id}"]`);
+        if (!btn) return;
+        markOne(btn, b.id === state.box);
+        const seen = state.weighed.get(b.id);
+        const sub = btn.querySelector(".ms-seen");
+        if (sub) sub.textContent = seen ? resultText(seen) : "";
+        btn.setAttribute("aria-label", seen ? `${b.name}. ${resultText(seen)}.` : b.name);
+      });
+      const guess = state.guesses.get(state.box);
+      guessBtns.forEach((btn) => markOne(btn, btn.dataset.guess === guess));
+    }
+
+    function sync() {
+      paint();
+      mark();
+      showRecords();
+    }
+
+    function selectBox(id) {
+      const b = boxById(id);
+      state.box = b.id;
+      sync();
+      const measured = state.weighed.get(b.id);
+      if (measured) {
+        api.readout(`${b.name}. ${resultText(measured)}.`);
+        api.note(state.guesses.get(b.id) === measured ? line("agree") : line("disagree"));
+        return;
+      }
+      api.readout(`${b.name}. ${line("askGuess")}`.trim());
+      api.note(line("askGuessNote"));
+      tell(line("askGuess"));
+    }
+
+    function chooseGuess(kind) {
+      const vs = kind === "daugiau" ? "daugiau" : "maziau";
+      if (state.weighed.has(state.box)) {
+        api.note(line("alreadyWeighed"));
+        return;
+      }
+      state.guesses.set(state.box, vs);
+      sync();
+      api.readout(vs === "daugiau" ? line("guessedHeavier") : line("guessedLighter"));
+      api.note(line("weighNote"));
+      tell(vs === "daugiau" ? line("guessedHeavier") : line("guessedLighter"));
+    }
+
+    function weigh() {
+      const b = boxById(state.box);
+      const guess = state.guesses.get(b.id);
+      if (!guess) {
+        api.readout(line("askGuess"));
+        api.note(line("askGuessNote"));
+        tell(line("askGuess"));
+        const first = guessEl.querySelector("[data-guess]");
+        if (first) first.focus();
+        return;
+      }
+
+      const wasWeighed = state.weighed.has(b.id);
+      state.weighed.set(b.id, b.vs);
+      sync();
+
+      const shown = b.vs === "daugiau" ? line("weighedHeavier") : line("weighedLighter");
+      const done = boxes.every((x) => state.weighed.has(x.id));
+
+      if (done) {
+        api.readout(`${shown} ${line("allDone")}`.trim());
+        api.note(guess === b.vs ? line("allNoteAgree") : line("allNoteDisagree"));
+        tell(shown);
+        if (!state.reported) {
+          state.reported = true;
+          // Tikslas pasiektas DABAR: abi dėžutės pasvertos, o ne pirmas spėjimas.
+          api.progress({ correct: true });
+        }
+        resetBtn.focus();
+        return;
+      }
+
+      api.readout(shown);
+      api.note(wasWeighed ? line("alreadyWeighed") : (guess === b.vs ? line("agree") : line("disagree")));
+      tell(shown);
+      const next = boxes.find((x) => !state.weighed.has(x.id));
+      if (next) {
+        const btn = boxesEl.querySelector(`[data-box="${next.id}"]`);
+        if (btn) btn.focus();
+      }
+    }
+
+    function resetAll() {
+      state = { box: boxes[0].id, guesses: new Map(), weighed: new Map(), reported: false };
+      sync();
+      api.readout(line("reset"));
+      api.note(line("askGuessNote"));
+      tell(line("reset"));
+      const first = guessEl.querySelector("[data-guess]");
+      if (first) first.focus();
+    }
+
+    boxesEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-box]");
+      if (btn) selectBox(btn.dataset.box);
+    });
+    guessEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-guess]");
+      if (btn) chooseGuess(btn.dataset.guess);
+    });
+    weighBtn.addEventListener("click", weigh);
+    resetBtn.addEventListener("click", resetAll);
+
+    sync();
+    api.readout(line("start"));
+    api.note(line("startNote"));
+    tell(line("start"));
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "erdvines-figuros": erdvinesFiguros,
   "ilgis-ir-vienetas": ilgisIrVienetas,
+  "dezute-ir-kilogramas": dezuteIrKilogramas,
 };

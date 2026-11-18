@@ -138,12 +138,36 @@ Naudojama tik mokymuisi. Pažymiai nerašomi, lygiai nėra rodomi kaip „įvert
       "modules": [
         { "id": "04-skaiciu-tiese", "title": "Skaičių tiesė", "subtitle": "…",
           "file": "grade-01/matematika/04-skaiciu-tiese.json",
-          "minutes": 9, "sim": "skaiciu-tiese" }
+          "minutes": 9, "sim": "skaiciu-tiese" },
+        { "id": "03-sakinio-zodziai", "title": "Kas? Ką veikia?", "subtitle": "…",
+          "file": "grade-01/lietuviu-kalba/03-sakinio-zodziai.json",
+          "minutes": 10, "sim": "sakinio-zodziai",
+          "renamed_from": ["03-sakinio-tvarka"] }
       ]
     }
   ]
 }
 ```
+
+### 7.1. `renamed_from` — pervadinimo pėdsakas
+
+Pažanga saugoma `localStorage` pagal modulio `id`. Kai modulis pervadinamas,
+vaiko žyma lieka po senu raktu, o modulis atsiverčia kaip neatliktas — vaikas
+praranda savo darbą ir negali suprasti, kodėl (gairės T3.5, T3.6). Todėl
+modulio įrašas gali turėti neprivalomą lauką `renamed_from` — senų ID sąrašą.
+
+- Rašomas **tik** tada, kai įpėdinis moko tos pačios programos pasiekimų srities
+  ir to paties dalyko temos. Jei vietoj senojo modulio pradedama kita tema —
+  tai naujas modulis, o ne pervadinimas, ir `renamed_from` nerašomas.
+- Senas ID negali likti gyvas (nei `index.json`, nei `path.json`, nei
+  `index.json` kitos klasės įraše), negali būti kartojamas ir negali sudaryti
+  ciklo. Grandinė A→B→C leidžiama ir naršyklė ją išsprendžia iki galo.
+- Įrašas `scripts/known_renames.json` (vartų duomenys) ir `renamed_from`
+  (svetainės duomenys) turi sutapti: `validate_content.py` tikrina abi puses,
+  kad pervadinimas negalėtų likti „žalias vartuose, bet našlaitis naršyklėje“.
+- Naršyklė (`assets/js/progress.js`) perkelia žymą vieną kartą: senas raktas
+  išnyksta, o įrašai sujungiami (didesnis apsilankymų skaičius, indeksų
+  sąjunga). Indeksai, kurių užduočių nebeliko, nesiskaito.
 
 ## 8. Patikra
 
@@ -153,7 +177,7 @@ python3 scripts/validate_content.py --grade 1   # viena klasė
 python3 scripts/validate_content.py --strict    # įspėjimai kaip klaidos
 ```
 
-Validatorius tikrina: JSON validumą, privalomus laukus, ID unikalumą, nuorodų į failus egzistavimą, simuliacijos registravimą, užduočių skaičių, `hint`/`why` buvimą, atsakymų pasiskirstymą, teksto ilgį, diakritiką, draudžiamus žodžius.
+Validatorius tikrina: JSON validumą, privalomus laukus, ID unikalumą, nuorodų į failus egzistavimą, simuliacijos registravimą, užduočių skaičių, `hint`/`why` buvimą, atsakymų pasiskirstymą, teksto ilgį, diakritiką, draudžiamus žodžius, `renamed_from` vienareikšmiškumą (§7.1) ir jo sutapimą su `scripts/known_renames.json`.
 
 ## 9. Naujos klasės pridėjimas
 

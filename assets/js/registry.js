@@ -8,11 +8,19 @@ export const BASE = "./content/lt/";
 
 const cache = new Map();
 
+/* Tie patys failai, bet jau išspręsti. `cache` laiko pažadus (tinka `await`),
+ * o `loaded` — JSON objektus, kurių reikia sinchroniniam skaitymui: pažangos
+ * modulis internete negali laukti (`progress.js` → `renameMap`).
+ */
+const loaded = new Map();
+
 async function getJSON(path) {
   if (cache.has(path)) return cache.get(path);
   const p = fetch(BASE + path, { cache: "no-cache" }).then(async (r) => {
     if (!r.ok) throw new Error(`Nepavyko įkelti ${path} (${r.status})`);
-    return r.json();
+    const data = await r.json();
+    loaded.set(path, data);
+    return data;
   });
   cache.set(path, p);
   return p;
@@ -29,6 +37,33 @@ export async function loadPath(grade) {
   } catch {
     return null;
   }
+}
+
+/**
+ * Senas modulio ID → dabartinis, iš visų jau įkeltų `index.json` įrašų, kurie
+ * turi `renamed_from` (KURINIO-STANDARTAS §7).
+ *
+ * Sinchroninis, nes `progress.js` skaito pažangą sinchroniškai. Indeksą
+ * puslapis įsikelia prieš bet kurį pažangos skaitymą (`app.js` laukia
+ * `loadGradeIndex`), todėl žemėlapis tuo metu jau pilnas. Kol indeksas
+ * neįkeltas, grąžinamas tuščias žemėlapis — tada nieko nekeičiama ir
+ * neprarandama.
+ */
+export function renameMap() {
+  const map = new Map();
+  for (const doc of loaded.values()) {
+    if (!doc || !Array.isArray(doc.strands)) continue;
+    for (const strand of doc.strands) {
+      const modules = strand && Array.isArray(strand.modules) ? strand.modules : [];
+      for (const m of modules) {
+        if (!m || !m.id || !Array.isArray(m.renamed_from)) continue;
+        for (const old of m.renamed_from) {
+          if (typeof old === "string" && old && old !== m.id) map.set(old, m.id);
+        }
+      }
+    }
+  }
+  return map;
 }
 
 /* ---------- simuliacijų registras ---------- */

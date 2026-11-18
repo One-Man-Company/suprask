@@ -228,6 +228,23 @@ def main() -> int:
 
     total_modules = 0
     live_grades = [g for g, m in meta_by_grade.items() if m.get("status") == "live"]
+
+    # Visi platformos modulių ID su klase. Reikia `renamed_from` patikrai:
+    # senas ID negali likti gyvas NEI kitoje klasėje, kitaip naršyklė perkeltų
+    # vienos klasės žymą į kitos klasės modulį.
+    global_ids: dict[str, int] = {}
+    for idx_path in sorted(CONTENT.glob("grade-*/index.json")):
+        try:
+            idx_doc = json.loads(idx_path.read_text(encoding="utf-8"))
+            idx_grade = int(idx_doc.get("grade"))
+        except (json.JSONDecodeError, TypeError, ValueError):
+            continue
+        for strand in idx_doc.get("strands", []):
+            for entry in strand.get("modules", []) or []:
+                mid = entry.get("id")
+                if isinstance(mid, str):
+                    global_ids.setdefault(mid, idx_grade)
+
     for grade in (live_grades if args.grade is None else [args.grade]):
         index_path = CONTENT / f"grade-{grade:02d}" / "index.json"
         if not index_path.exists():
@@ -240,6 +257,7 @@ def main() -> int:
             continue
 
         seen_ids: set[str] = set()
+        renames: list[tuple[str, list[str]]] = []
         for strand in index.get("strands", []):
             for key in ("id", "title", "emoji", "modules"):
                 if not strand.get(key):
@@ -250,6 +268,31 @@ def main() -> int:
                 if mid in seen_ids:
                     rep.err(f"{index_path.relative_to(ROOT)}: pasikartojantis modulio ID „{mid}“")
                 seen_ids.add(mid)
+                rf = m.get("renamed_from")
+                if rf is not None:
+                    if not isinstance(rf, list) or not rf:
+                        rep.err(
+                            f"{index_path.relative_to(ROOT)}: „{mid}“ laukas „renamed_from“ "
+                            "turi būti netuščias senų ID sąrašas"
+                        )
+                    else:
+                        for old in rf:
+                            if not isinstance(old, str) or not re.fullmatch(r"\d{2}-[a-z0-9-]+", old):
+                                rep.err(
+                                    f"{index_path.relative_to(ROOT)}: „{mid}“ renamed_from "
+                                    f"turi NN-slug formato ID (dabar {old!r})"
+                                )
+                            elif old == mid:
+                                rep.err(
+                                    f"{index_path.relative_to(ROOT)}: „{mid}“ renamed_from "
+                                    "nurodo patį save — senas ID turi būti kitas"
+                                )
+                        if len({str(x) for x in rf}) != len(rf):
+                            rep.err(
+                                f"{index_path.relative_to(ROOT)}: „{mid}“ renamed_from "
+                                "kartoja tą patį seną ID"
+                            )
+                        renames.append((mid, [x for x in rf if isinstance(x, str)]))
                 mod_path = CONTENT / str(m.get("file", ""))
                 if not mod_path.exists():
                     rep.err(f"{index_path.relative_to(ROOT)}: modulio failas nerastas: {m.get('file')}")
@@ -264,6 +307,68 @@ def main() -> int:
                 if data.get("strand") != strand.get("id"):
                     rep.err(f"{mod_path.relative_to(ROOT)}: „strand“ nesutampa su katalogo kryptimi")
                 check_module(mod_path, data, rep, sims, meta_by_grade)
+
+        # `renamed_from` yra ne komentaras, o duomenys, kuriuos skaito naršyklė
+        # (`assets/js/progress.js` → `renameMap`). Todėl jis turi būti
+        # vienareikšmis: senas ID negyvas, grandinė baigtinė, o įrašas
+        # `scripts/known_renames.json` negali likti be atitikmens čia — kitaip
+        # vartai žali, o vaiko žyma vis tiek prarandama (LL-89 šeima).
+        alias: dict[str, str] = {}
+        for mid, olds in renames:
+            for old in olds:
+                if old in global_ids and global_ids[old] != grade:
+                    rep.err(
+                        f"{index_path.relative_to(ROOT)}: „{mid}“ renamed_from nurodo „{old}“, "
+                        f"kuris vis dar gyvas {global_ids[old]} klasėje — žyma nukeliautų ne į tą modulį"
+                    )
+                elif old in seen_ids:
+                    rep.err(
+                        f"{index_path.relative_to(ROOT)}: „{mid}“ renamed_from nurodo „{old}“, "
+                        "bet toks modulis vis dar gyvas — senas ID turi būti nebegyvas"
+                    )
+                if old in alias and alias[old] != mid:
+                    rep.err(
+                        f"{index_path.relative_to(ROOT)}: senas ID „{old}“ priskirtas dviem "
+                        "moduliams — nežinia, kur kelti vaiko žymą"
+                    )
+                else:
+                    alias[old] = mid
+        for mid, _ in renames:
+            chain = {mid}
+            cur = mid
+            while cur in alias:
+                if cur in chain:
+                    rep.err(
+                        f"{index_path.relative_to(ROOT)}: renamed_from grandinė uždara "
+                        f"(ciklas ties „{cur}“) — pažangos migracija negalėtų baigtis"
+                    )
+                    break
+                chain.add(cur)
+                cur = alias[cur]
+
+        renames_file = ROOT / "scripts" / "known_renames.json"
+        if renames_file.exists():
+            try:
+                known = json.loads(renames_file.read_text(encoding="utf-8")).get("renames") or []
+            except json.JSONDecodeError:
+                known = []
+                rep.err(f"{renames_file.relative_to(ROOT)}: neteisingas JSON")
+            declared = {old for _, olds in renames for old in olds}
+            for r in known:
+                if not isinstance(r, dict) or r.get("grade") != grade:
+                    continue
+                old, new = r.get("from"), r.get("to")
+                if old and old not in declared:
+                    rep.err(
+                        f"{index_path.relative_to(ROOT)}: „{old}“ registruotas "
+                        f"{renames_file.relative_to(ROOT)}, bet nė vienas modulis neturi "
+                        f"renamed_from su šiuo ID — naršyklė seno ID nepažįsta, vaiko žyma liktų našlaite"
+                    )
+                if new and new not in seen_ids:
+                    rep.err(
+                        f"{renames_file.relative_to(ROOT)}: „{old}“ įpėdinis „{new}“ "
+                        "klasės indekse neegzistuoja"
+                    )
 
         # rekomenduojamas kelias (path.json) — neprivalomas, bet jei yra, turi būti nuoseklus
         path_file = index_path.parent / "path.json"

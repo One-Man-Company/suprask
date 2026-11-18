@@ -704,7 +704,323 @@ const medziaguBandymas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Lankstymas ir karpiniai: vienas kirpimas, kelios skylės             */
+/*                                                                     */
+/* Kodėl toks modelis: 23.3.1 sritis praktinę veiklą įvardija          */
+/* tiesiogiai („popieriaus plastikos gaminiai: karpiniai,              */
+/* lankstiniai“), todėl ekrane kartojama ta pati veikla: lankstymas,    */
+/* sluoksnių skaičiavimas, vienas kirpimas ir atvėrimas. Vaikas spėja   */
+/* skylių skaičių PIRMA, o rezultatą pamato tik atvėręs lapą — taip     */
+/* spėjimas nepametamas (LL-15), o klaida netampa nuosprendžiu (P3).    */
+/* Simetrija ir jos ašis sąmoningai nemokoma: tai 2 klasės matematikos  */
+/* tema (LL-23), todėl kriterijus — sluoksnių ir skylių skaičius.       */
+/* Empson & Turner (2006) rodo, kad lankstymo uždaviniuose vaikai      */
+/* spėja dalių skaičių, o produktyviausia yra dvigubinimo idėja.        */
+/* ------------------------------------------------------------------ */
+
+const LK_STYLE_ID = "cc-lankstymo-style";
+
+const LK_CSS = `
+.lk-wrap { display: flex; flex-direction: column; align-items: center; gap: .4rem; width: 100%; }
+.lk-paper-box {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 178px; padding: .3rem 0;
+}
+.lk-paper {
+  position: relative;
+  box-sizing: border-box;
+  width: 240px; height: 168px;
+  border: 2px solid #cbbda3;
+  border-radius: 3px;
+  background: linear-gradient(158deg, #fffdf6 0%, #f5edda 100%);
+  box-shadow: 0 5px 0 #e4d9c2, 0 10px 16px rgba(64, 48, 20, .16);
+  transition: width .22s ease, height .22s ease;
+}
+.lk-paper[data-fold="1"], .lk-paper[data-fold="2"] { width: 120px; }
+.lk-paper[data-fold="2"] { height: 84px; }
+.lk-crease { position: absolute; border: 0; }
+.lk-crease.v { top: 0; bottom: 0; left: 50%; border-left: 2px dashed #d3c4a6; }
+.lk-crease.h { left: 0; right: 0; top: 50%; border-top: 2px dashed #d3c4a6; }
+.lk-hole {
+  position: absolute;
+  width: 22px; height: 22px; margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  background: #d9cdb4;
+  box-shadow: inset 0 2px 5px rgba(64, 48, 20, .5);
+}
+.lk-mark {
+  position: absolute; left: 50%; top: 50%;
+  width: 30px; height: 30px; margin: -15px 0 0 -15px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px dashed var(--accent); border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  font-size: 15px; line-height: 1;
+}
+.lk-edge { display: flex; flex-direction: column; align-items: center; gap: .2rem; }
+.lk-edge[hidden] { display: none; }
+.lk-cap { margin: 0; font-size: .8rem; font-weight: 800; color: var(--ink-soft); }
+.lk-strips { display: flex; flex-direction: column; gap: 2px; width: 124px; }
+.lk-strip {
+  height: 7px; border: 1px solid #cbbda3; border-radius: 2px;
+  background: linear-gradient(#fffdf6, #e8ddc6);
+}
+.lk-badge {
+  margin: 0; padding: .2rem .7rem;
+  border: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, var(--paper-2));
+  font-size: .85rem; font-weight: 800; color: var(--ink);
+}
+.lk-badge[hidden] { display: none; }
+.lk-row, .lk-guess { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; width: 100%; }
+.lk-row[hidden], .lk-guess[hidden] { display: none; }
+.lk-row .btn { min-height: 48px; }
+.lk-guess button { min-width: 56px; min-height: 56px; padding: 0 .4rem; font-size: 1.35rem; font-weight: 900; }
+.lk-guess button[aria-pressed="true"] { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .lk-paper { transition: none; } }
+`;
+
+const LK_SAY = {
+  pradzia: "Vienas lapas. Perlenk jį pusiau.",
+  "perlenkta-1": "Lapas perlenktas pusiau. Perlenk dar kartą.",
+  spek: "Spėk, kiek skylių bus, kai atversi lapą.",
+  spejimas: "Spėjimas įrašytas. Įkerpk vieną skylę.",
+  ikirpta: "Vienas kirpimas per visus sluoksnius.",
+  "atverta-2": "Atvėrei lapą. Dvi skylės.",
+  "atverta-4": "Atvėrei lapą. Keturios skylės.",
+  "antra-dalis": "Naujas lapas. Perlenk jį du kartus.",
+  "is-naujo": "Pradedam iš naujo. Vienas lapas.",
+};
+
+/* Skylės (mot. g.) ir sluoksniai (vyr. g.) — skirtingos formos, todėl
+   atskiros lentelės: „radai keturias“, bet „kirto keturis“. */
+const LK_HOLE_NOM = ["viena", "dvi", "trys", "keturios"];
+const LK_HOLE_ACC = ["vieną", "dvi", "tris", "keturias"];
+const LK_LAYER_ACC = ["vieną", "du", "tris", "keturis"];
+
+/* Kur atsiranda skylės atvėrus lapą. Kirpimas visada yra sulenkto lapo
+   viduryje, toli nuo klosčių, todėl skylių skaičius lygus sluoksnių
+   skaičiui. Koordinatės — atversto lapo procentai. */
+const LK_HOLES = {
+  1: [[25, 50], [75, 50]],
+  2: [[25, 25], [75, 25], [25, 75], [75, 75]],
+};
+
+function ensureLkStyle() {
+  if (document.getElementById(LK_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = LK_STYLE_ID;
+  style.textContent = LK_CSS;
+  document.head.appendChild(style);
+}
+
+const lankstymasIrKarpiniai = {
+  mount({ stage, controls, api, config }) {
+    ensureLkStyle();
+
+    const say = config.sentences || {};
+    const line = (key) => say[key] || LK_SAY[key] || "";
+    const holeName = (n) => `${LK_HOLE_NOM[n - 1]} ${n === 1 ? "skylė" : "skylės"}`;
+
+    // 1 dalis — viena klostė (du sluoksniai). 2 dalis — dvi klostės (keturi).
+    let phase = 1;
+    let folds = 0;
+    let cut = false;
+    let open = false;
+    let guess = 0;
+    let reported = false;
+
+    const maxFolds = () => (phase === 1 ? 1 : 2);
+    const holeCount = () => (folds === 2 ? 4 : 2);
+
+    stage.innerHTML = `
+      <div class="lk-wrap">
+        <div class="lk-paper-box">
+          <div class="lk-paper" id="lk-paper" data-fold="0" role="img"></div>
+        </div>
+        <p class="lk-badge" id="lk-badge" hidden></p>
+        <div class="lk-edge" id="lk-edge">
+          <p class="lk-cap">Sulenkto lapo kraštas</p>
+          <div class="lk-strips" id="lk-strips"></div>
+        </div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div class="lk-row"><button type="button" class="btn" id="lk-fold">Perlenk pusiau</button></div>
+      <div class="lk-guess" id="lk-guess" hidden></div>
+      <div class="lk-row">
+        <button type="button" class="btn secondary" id="lk-cut" hidden>Įkerpk skylę</button>
+        <button type="button" class="btn secondary" id="lk-open" hidden>Atverk lapą</button>
+        <button type="button" class="btn ghost" id="lk-next" hidden>Kitas lapas</button>
+        <button type="button" class="btn ghost" id="lk-reset">Iš naujo</button>
+      </div>`;
+
+    const paper = stage.querySelector("#lk-paper");
+    const edge = stage.querySelector("#lk-edge");
+    const strips = stage.querySelector("#lk-strips");
+    const badge = stage.querySelector("#lk-badge");
+    const foldBtn = controls.querySelector("#lk-fold");
+    const cutBtn = controls.querySelector("#lk-cut");
+    const openBtn = controls.querySelector("#lk-open");
+    const nextBtn = controls.querySelector("#lk-next");
+    const guessBox = controls.querySelector("#lk-guess");
+
+    // Spėjimas renkamas mygtukais, o ne žodžiu: 1 klasėje skaičius vaikas
+    // atpažįsta greičiau, o ekrano skaitytuvas gauna pilną sakinį.
+    guessBox.innerHTML = [1, 2, 3, 4]
+      .map((n) => `<button type="button" class="btn ghost" data-guess="${n}" aria-pressed="false">${n}</button>`)
+      .join("");
+    const guessBtns = [...guessBox.querySelectorAll("button")];
+    guessBtns.forEach((btn, i) => btn.setAttribute("aria-label", `Spėju, bus ${holeName(i + 1)}.`));
+
+    function paint() {
+      paper.dataset.fold = String(open ? 0 : folds);
+
+      const holes = [];
+      if (open) {
+        LK_HOLES[folds === 2 ? 2 : 1].forEach(([x, y]) => {
+          holes.push(`<span class="lk-hole" style="left:${x}%;top:${y}%"></span>`);
+        });
+      } else if (cut) {
+        holes.push(`<span class="lk-hole" style="left:50%;top:50%"></span>`);
+      }
+      const creases = open && folds > 0
+        ? `<span class="lk-crease v"></span>${folds === 2 ? `<span class="lk-crease h"></span>` : ""}`
+        : "";
+      // Žirklės rodo TIKSLIĄ būsimos skylės vietą — tą pačią, kurioje atsiras
+      // skylė, todėl žymeklis neužkloja to, ką žymi (LL-24).
+      const mark = !cut && !open ? `<span class="lk-mark" aria-hidden="true">✂</span>` : "";
+      paper.innerHTML = creases + holes.join("") + mark;
+
+      paper.setAttribute(
+        "aria-label",
+        open
+          ? `Atvertas lapas. Skylių ${LK_HOLE_NOM[holeCount() - 1]}.`
+          : folds === 0
+            ? "Vienas lapas. Žirklės rodo, kur bus skylė."
+            : `Sulenktas lapas. ${folds === 1 ? "Viena klostė" : "Dvi klostės"}.`
+              + (cut ? " Skylė jau įkirpta." : " Žirklės rodo, kur bus skylė."),
+      );
+
+      // Sluoksnių juostelės — lapo kraštas iš šono. Jos lieka tol, kol lapas
+      // sulenktas: būtent ten vaikas skaičiuoja ir pamato dvigubėjimą.
+      edge.hidden = open;
+      strips.innerHTML = Array.from({ length: Math.pow(2, folds) }, () => `<span class="lk-strip"></span>`).join("");
+
+      guessBtns.forEach((btn, i) => btn.setAttribute("aria-pressed", String(guess === i + 1)));
+      badge.hidden = !(open && guess > 0);
+      if (!badge.hidden) {
+        badge.textContent = `Spėjai ${LK_HOLE_ACC[guess - 1]} · radai ${LK_HOLE_ACC[holeCount() - 1]}`;
+        badge.setAttribute(
+          "aria-label",
+          `Tavo spėjimas: ${holeName(guess)}. Radai: ${holeName(holeCount())}.`,
+        );
+      }
+
+      foldBtn.hidden = open || folds >= maxFolds();
+      guessBox.hidden = open || cut || folds < maxFolds();
+      cutBtn.hidden = open || cut || guess === 0;
+      openBtn.hidden = open || !cut;
+      nextBtn.hidden = !(open && phase === 1);
+    }
+
+    function fold() {
+      if (open || folds >= maxFolds()) return;
+      folds += 1;
+      const more = folds < maxFolds();
+      paint();
+      if (more) {
+        api.readout(line("perlenkta-1"));
+        api.speak(line("perlenkta-1"));
+        api.note("Perlenk dar kartą pusiau.");
+        return;
+      }
+      api.readout(line("spek"));
+      api.speak(line("spek"));
+      api.note("Suskaičiuok sluoksnius krašte. Tada spausk savo spėjimą.");
+    }
+
+    function pickGuess(n) {
+      guess = n;
+      paint();
+      api.readout(`Spėji: ${holeName(n)}.`);
+      api.speak(line("spejimas"));
+      api.note("Dabar spausk „Įkerpk skylę“.");
+      cutBtn.focus();
+    }
+
+    function cutHole() {
+      if (cut || open) return;
+      cut = true;
+      paint();
+      api.readout(line("ikirpta"));
+      api.speak(line("ikirpta"));
+      api.note("Dabar spausk „Atverk lapą“ ir skaičiuok.");
+      openBtn.focus();
+    }
+
+    function unfold() {
+      if (!cut || open) return;
+      open = true;
+      paint();
+      const n = holeCount();
+      const key = n === 4 ? "atverta-4" : "atverta-2";
+      api.readout(`${line(key)} Spėjai ${LK_HOLE_ACC[guess - 1]}.`);
+      api.speak(line(key));
+      api.note(guess === n
+        ? `Sutapo. Vienas kirpimas kirto ${LK_LAYER_ACC[n - 1]} sluoksnius.`
+        : `Spėjai ${LK_HOLE_ACC[guess - 1]}, o radai ${LK_HOLE_ACC[n - 1]}. Lankstymas dvigubina sluoksnius.`);
+      // Pažanga žymima tik įveikus antrą dalį — pirmoji yra pasiruošimas (LL-29).
+      if (phase === 2 && !reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    function next() {
+      phase = 2;
+      folds = 0;
+      cut = false;
+      open = false;
+      guess = 0;
+      paint();
+      api.readout(line("antra-dalis"));
+      api.speak(line("antra-dalis"));
+      api.note("Spausk „Perlenk pusiau“ du kartus.");
+    }
+
+    function reset() {
+      phase = 1;
+      folds = 0;
+      cut = false;
+      open = false;
+      guess = 0;
+      paint();
+      api.readout(line("is-naujo"));
+      api.speak(line("is-naujo"));
+      api.note("Spausk „Perlenk pusiau“.");
+    }
+
+    foldBtn.addEventListener("click", fold);
+    guessBtns.forEach((btn, i) => btn.addEventListener("click", () => pickGuess(i + 1)));
+    cutBtn.addEventListener("click", cutHole);
+    openBtn.addEventListener("click", unfold);
+    nextBtn.addEventListener("click", next);
+    controls.querySelector("#lk-reset").addEventListener("click", reset);
+
+    paint();
+    // Pirmas ekrano tekstas kviečia veikti, o balsas įsijungia tik po pirmo
+    // vaiko prisilietimo (kaip ir kitose technologijų simuliacijose).
+    api.readout(line("pradzia"));
+    api.note("Spausk „Perlenk pusiau“.");
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "elektros-grandine": elektrosGrandine,
   "medziagu-bandymas": medziaguBandymas,
+  "lankstymas-ir-karpiniai": lankstymasIrKarpiniai,
 };

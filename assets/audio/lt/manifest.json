@@ -615,6 +615,14 @@
   "n": "n/850358511b12a071-dbb36792.mp3",
   "s": "s/850358511b12a071-5964052b.mp3"
  },
+ "Atvėrei lapą. Dvi skylės.": {
+  "n": "n/c27de2ae6887a54a-7aba1594.mp3",
+  "s": "s/c27de2ae6887a54a-0683d306.mp3"
+ },
+ "Atvėrei lapą. Keturios skylės.": {
+  "n": "n/65dc70d3619e6b68-384c019b.mp3",
+  "s": "s/65dc70d3619e6b68-bc774712.mp3"
+ },
  "Augalas paaugo. Kiti du nepakito.": {
   "n": "n/c233c5fdbd319065-83103cae.mp3",
   "s": "s/c233c5fdbd319065-f3a955f5.mp3"
@@ -1319,6 +1327,10 @@
   "n": "n/782dbd829e6e7ce2-9a5c8b14.mp3",
   "s": "s/782dbd829e6e7ce2-2905bff5.mp3"
  },
+ "Lapas perlenktas pusiau. Perlenk dar kartą.": {
+  "n": "n/255123887f79d358-9b6a40b1.mp3",
+  "s": "s/255123887f79d358-81e61873.mp3"
+ },
  "Lapė": {
   "n": "n/554e0a133245fe50-2ceabdf8.mp3",
   "s": "s/554e0a133245fe50-57f62bf8.mp3"
@@ -1410,6 +1422,10 @@
  "N": {
   "n": "n/8ce86a6ae65d3692-84095ad0.mp3",
   "s": "s/8ce86a6ae65d3692-081e4fe1.mp3"
+ },
+ "Naujas lapas. Perlenk jį du kartus.": {
+  "n": "n/426b063e55abbc05-4bb40f1f.mp3",
+  "s": "s/426b063e55abbc05-07ae48c4.mp3"
  },
  "Naujas vienetas. Matuok iš naujo.": {
   "n": "n/6deac8e8dd8e0386-dbb49464.mp3",
@@ -1618,6 +1634,10 @@
  "Pradedam iš naujo. Trys vienodo dydžio kaladėlės.": {
   "n": "n/5b1b1cb7703dc981-0d5edcfe.mp3",
   "s": "s/5b1b1cb7703dc981-e06bba54.mp3"
+ },
+ "Pradedam iš naujo. Vienas lapas.": {
+  "n": "n/2189b66512ac0f1f-6ae070e1.mp3",
+  "s": "s/2189b66512ac0f1f-47f3c433.mp3"
  },
  "Pradedam. Prijunk laidus ir pažiūrėk, ar lemputė šviečia.": {
   "n": "n/cbe1d27c52bcf99c-cbd96c13.mp3",
@@ -1830,6 +1850,14 @@
  "Spėjimas įrašytas. Spausk „Nuleisk į vandenį“.": {
   "n": "n/237272ffa0e70314-8dc07c48.mp3",
   "s": "s/237272ffa0e70314-23d00f9c.mp3"
+ },
+ "Spėjimas įrašytas. Įkerpk vieną skylę.": {
+  "n": "n/56d006ecc3abcb62-e6b40008.mp3",
+  "s": "s/56d006ecc3abcb62-657bb79b.mp3"
+ },
+ "Spėk, kiek skylių bus, kai atversi lapą.": {
+  "n": "n/a92d81806c612f44-c23f37e9.mp3",
+  "s": "s/a92d81806c612f44-08b9809d.mp3"
  },
  "Stačiakampis gretasienis iš priekio atrodo kaip stačiakampis.": {
   "n": "n/249316b838df9485-1a259bf6.mp3",
@@ -2178,6 +2206,14 @@
  "Vienas kamienas, todėl medis.": {
   "n": "n/330d940dd22db73f-8d103bf3.mp3",
   "s": "s/330d940dd22db73f-bd8be029.mp3"
+ },
+ "Vienas kirpimas per visus sluoksnius.": {
+  "n": "n/740cf9068941efc6-27296a7d.mp3",
+  "s": "s/740cf9068941efc6-1f5f2793.mp3"
+ },
+ "Vienas lapas. Perlenk jį pusiau.": {
+  "n": "n/137124f99ec1f1ba-f47056df.mp3",
+  "s": "s/137124f99ec1f1ba-edabb656.mp3"
  },
  "Vienas petys laiko visą kuprinės svorį.": {
   "n": "n/ee6c6227d0f68c5e-eca930d9.mp3",

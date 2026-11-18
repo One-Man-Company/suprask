@@ -1,0 +1,120 @@
+{
+  "id": "03-lankstymas-ir-karpiniai",
+  "grade": 1,
+  "strand": "technologijos",
+  "title": "Vienas kirpimas — kelios skylės",
+  "subtitle": "Perlenktas lapas turi kelis sluoksnius",
+  "minutes": 9,
+  "outcomes": [
+    "Perlenkiu lapą ir suskaičiuoju sluoksnius.",
+    "Paaiškinu, kodėl vienas kirpimas palieka kelias skyles."
+  ],
+  "concept": {
+    "title": "Kiek sluoksnių, tiek skylių",
+    "big_idea": "Perlenktas lapas turi kelis sluoksnius. Vienas kirpimas perkerpa juos visus. Atvėrus lapą atsiranda kelios skylės.",
+    "steps": [
+      "Perlenk lapą pusiau ir pažiūrėk į lapo kraštą.",
+      "Suskaičiuok sluoksnius. Po pirmos klostės jų du.",
+      "Perlenk dar kartą. Dabar sluoksnių keturi.",
+      "Įkerpk vieną skylę ir atverk lapą. Skylių tiek, kiek sluoksnių."
+    ],
+    "example": "Girliandoje vienas kirpimas padaro kelias skyles."
+  },
+  "sim": {
+    "component": "lankstymas-ir-karpiniai",
+    "config": {
+      "sentences": {
+        "pradzia": "Vienas lapas. Perlenk jį pusiau.",
+        "perlenkta-1": "Lapas perlenktas pusiau. Perlenk dar kartą.",
+        "spek": "Spėk, kiek skylių bus, kai atversi lapą.",
+        "spejimas": "Spėjimas įrašytas. Įkerpk vieną skylę.",
+        "ikirpta": "Vienas kirpimas per visus sluoksnius.",
+        "atverta-2": "Atvėrei lapą. Dvi skylės.",
+        "atverta-4": "Atvėrei lapą. Keturios skylės.",
+        "antra-dalis": "Naujas lapas. Perlenk jį du kartus.",
+        "is-naujo": "Pradedam iš naujo. Vienas lapas."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Lapą perlenkei vieną kartą. Kiek sluoksnių laikai rankoje?",
+      "options": [
+        "Vieną",
+        "Du",
+        "Tris"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, ką rodė lapo kraštas.",
+      "why": "Viena klostė padalija lapą į du sluoksnius."
+    },
+    {
+      "q": "Lapą perlenkei du kartus. Kiek sluoksnių dabar?",
+      "options": [
+        "Tris",
+        "Keturis",
+        "Du"
+      ],
+      "answer": 1,
+      "hint": "Antroji klostė sulenkia abu pirmuosius sluoksnius.",
+      "why": "Kiekviena klostė dvigubina sluoksnius, todėl jų keturi."
+    },
+    {
+      "q": "Vieną skylę įkerpei per keturis sluoksnius. Kiek skylių bus atvėrus lapą?",
+      "options": [
+        "Vieną",
+        "Dvi",
+        "Keturias"
+      ],
+      "answer": 2,
+      "hint": "Suskaičiuok, kiek sluoksnių buvo po žirklėmis.",
+      "why": "Kiekvienas sluoksnis gauna savo skylę."
+    },
+    {
+      "q": "Rūta įkerpė vieną skylę. Atvėrusi lapą ji rado dvi skyles. Kiek buvo sluoksnių?",
+      "options": [
+        "Du",
+        "Tris",
+        "Keturis"
+      ],
+      "answer": 0,
+      "hint": "Skylių skaičius atitinka sluoksnių skaičių.",
+      "why": "Dvi skylės reiškia du sluoksnius po žirklėmis."
+    },
+    {
+      "q": "Kodėl vienas kirpimas palieka kelias skyles?",
+      "options": [
+        "Žirklės perkerta viską vienu kartu",
+        "Popierius sutrūkinėja nuo lankstymo",
+        "Skylė savaime padaugėja atverčiant"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, ką matė lapo kraštas prieš kirpimą.",
+      "why": "Vienas kirpimas eina per visus sulenkto lapo sluoksnius.",
+      "optional": true
+    }
+  ],
+  "reflect": "Ką pasakytum draugui apie savo lapą ir skyles?",
+  "teacher": {
+    "goal": "Suprasti, kad lankstymas dvigubina sluoksnius, o vienas kirpimas per sulenktą lapą palieka tiek skylių, kiek buvo sluoksnių. Modelis leidžia pirma spėti, paskui įkirpti ir tik atvėrus lapą pamatyti rezultatą: antroje dalyje po dviejų klosčių vaikas laukia trijų dalių, o randa keturias. Simetrija ir simetrijos ašis sąmoningai nemokoma — tai 2 klasės matematikos tema, todėl modulio kriterijus yra sluoksnių ir skylių skaičius (1–4, 1 klasės ribose), o veidrodinis dvynys lieka stebėjimu.",
+    "prompt": "Kiek sluoksnių buvo po žirklėmis? Kodėl skylių tiek pat?",
+    "offline": "Duokite vaikui lapą. Paprašykite perlenkti pusiau ir suskaičiuoti sluoksnius, tada perlenkti dar kartą ir vėl suskaičiuoti. Tegul vaikas pirma pasako, kiek bus skylių, tada įkerpkite vieną skylutę (geriausia – skylių perforatoriumi) toli nuo klosčių ir atverkite lapą. Skaičiuokite balsu: vienas, du, trys, keturi. Antras bandymas: tą pačią skylę įkerpkite TIKSLIAI ant klostės — tada dvi skylės susijungia į vieną didelę, ir tai gera proga pasakyti, kad skaičius priklauso ir nuo kirpimo vietos.",
+    "misconceptions": [
+      "„Vienas kirpimas — viena skylė.“ Modelis atveria lapą ir parodo kelias skyles toje pačioje vietoje, o paaiškinimas remiasi sluoksnių skaičiumi, ne atmintimi.",
+      "„Kiekviena klostė prideda vieną sluoksnį.“ Po dviejų klosčių lapo kraštas rodo keturis sluoksnius, ne tris: antroji klostė sulenkia ir abu pirmus sluoksnius.",
+      "„Skylės atsiranda tik ten, kur palietė žirklės, ir tik po vieną.“ Atvėrus lapą skylės išsidėsto abiejose pusėse, nes kiekvienas sluoksnis buvo perkirstas toje pačioje vietoje.",
+      "„Kad būtų kelios skylės, reikia karpyti kelis kartus.“ Vieno kirpimo pakanka, jei lapas buvo sulenktas: žirklės kerta visus sluoksnius iš karto."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Technologijos“, 23.3.1: artimiausioje aplinkoje esančių daiktų medžiagiškumas ir praktinės veiklos („popieriaus plastikos gaminiai: karpiniai, lankstiniai“) 1–2 klasėje.",
+    "Technologijų bendroji programa (2022), 23.3.1 „Konstrukcinės medžiagos aplinkus“: praktinės veiklos su popieriumi ir jų metu aptariamos fizinės medžiagų savybės.",
+    "Empson, S. B., & Turner, E. (2006). The emergence of multiplicative thinking in children's solutions to paper folding tasks. The Journal of Mathematical Behavior, 25(1), 46–56. https://doi.org/10.1016/j.jmathb.2005.11.001 — vaikai jau nuo 4 metų spontaniškai dalija pusiau, o lankstymo uždaviniuose spėja, kiek dalių atsiras po kelių klosčių; produktyviausia yra dvigubinimo idėja, todėl modelyje skaičiuojami sluoksniai ir skylės (1, 2, 4), o ne simetrijos ašis."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (lankstymas dvigubina sluoksnius, todėl vienas kirpimas palieka kelias skyles). Simetrija, ašis ir veidrodis neįtraukti — tai 2 klasės tema.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (atvirkštinis uždavinys „dvi skylės — kiek sluoksnių“), o ne įsimintą formuluotę.",
+    "3 žingsnis — pagalba laiku: spėjimas įrašomas prieš kirpimą ir parodomas greta rezultato, klaida nebaudžiama, yra praplėtimo užduotis.",
+    "5 žingsnis — pozityvi aplinka: grįžtamasis ryšys kalba apie veiksmą („spėjai tris, o radai keturias“), ne apie vaiką."
+  ]
+}

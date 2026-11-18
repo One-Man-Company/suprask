@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 341,
+  "created": "2026-11-18T07:49:45+02:00",
+  "type": "tema",
+  "title": "Vienas kirpimas — kelios skylės",
+  "body": "Technologijų programos 1–2 klasei 23.3.1 sritis kaip vieną praktinių veiklų įvardija popieriaus plastiką — karpinius ir lankstinius (`:2103–2111`), o platformoje šios temos nėra: paieška „lankst|karpin|klost“ visuose 39 moduliuose duoda 0 atvejų, o `02-medziagu-bandymas` liečia tik plaukimą ir medžiagos tinkamumą. Siūlau modelį, kuriame vaikas pats perlenkia lapą, suskaičiuoja sluoksnius, tada įkerpa vieną vietą ir atverčia lapą. Klaidinga nuostata: „vienas kirpimas — viena skylė“ (ir „viena klostė prideda vieną dalį“) — po dviejų klosčių vaikas laukia trijų dalių, o gauna keturias, ir vienas kirpimas palieka keturias skyles. Modelis prideda tai, ko neprideda paveikslėlis: sluoksnių skaičių galima numatyti prieš veiksmą ir pasitikrinti po jo, o rezultatas matomas tik atvertus lapą; spėjimas įrašomas ir parodomas greta rezultato, kad modelis jo nepamestų. Simetrijos ir simetrijos ašies sąmoningai nemokoma — tai 2 klasės matematikos tema (`:1023`), todėl modulio kriterijus yra sluoksnių ir skylių skaičius (skaičiavimas iki 8, 1 klasės ribose), o veidrodinis dvynys lieka stebėjimu, ne sąvoka. Paleidimas #179 šią temą atmetė kaip „simetrijos ašį“; šiame variante ašies ir veidrodžio nėra, todėl atmetimas netaikomas — tai ta pati medžiaga, kita idėja.",
+  "target": "content/lt/grade-01/technologijos/03-lankstymas-ir-karpiniai.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2068 (lentelės antraštė „1-2 klasės“ — 23.3.1 priskirta būtent šiam koncentrui)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2103–2111 (23.3.1: „Atliekamos praktinės veiklos (pvz. popieriaus plastikos gaminiai: karpiniai, lankstiniai), kurių metu aptariamos konstrukcinių medžiagų… fizinės savybės“)",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:63 (23.3 sritis 1–2 kl.: „popieriaus plastika (karpiniai, lankstiniai)“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1023 („2 klasėje tema – simetriškų ašies atžvilgiu figūrų nagrinėjimas“ — todėl simetrija modulyje nemokoma, LL-23)",
+    "content/lt/grade-01/index.json:92–93 (technologijose 2 moduliai: elektros grandinė ir medžiagų bandymas; lankstymo nėra), paieška „lankst|karpin|klostė|perlenk“ kataloge content/lt/grade-01 → 0 atvejų",
+    "agents/proposals/2026-11-14-ideator-kas-sukure-dailka.json (26.3.1 ištekliai — atskira tema su atskiru tikslu, su šiuo pasiūlymu nesikerta)"
+  ]
+}

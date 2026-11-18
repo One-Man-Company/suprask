@@ -85,6 +85,20 @@ Pirmoji dalis — #258 parengti, bet neįrašyti atmetimai (pasiūlymo failas ne
 - **Virtualumo etika** — 1 kl. etikos tema numato draugiško elgesio internete taisykles; tai taisyklių sąrašas, kurį geriau pasako mokytojas, o modelis virstų „pasirink, kas draugiška“ testu be pasekmės.
 - **Skaičius ir skaitmuo** — šiame sąraše buvo atmesta 2026-11-15 („dubliuoja 19-simto-skaiciu-lentele“), bet patikrinus modulius tai netiesa: `19` moko lentelės krypčių, `05-desimtukas` — dešimtuko sandaros, o skaitmens vietos niekas nestato. Programa skaičiaus ir skaitmens sąvokas įvardija tiesiogiai (`sources/pradinio-bp-rekomendacijos-2024.txt:33739–33740`), todėl 2026-11-16 ji **pasiūlyta**: `agents/proposals/2026-11-16-ideator-skacius-ir-skaitmuo.json`.
 
+## Temos, kurių nepasiūlėme (ideator, 2026-11-18)
+
+**Pasiūlyta:** garsų trukmė / garsų skyrimas (`agents/proposals/2026-11-18-ideator-garso-trukme.json`, D.1.3.1) ir popieriaus lankstymas su karpiniais (`agents/proposals/2026-11-18-ideator-lankstymas-ir-karpiniai.json`, 23.3.1).
+
+- **Dailė „Dekoruotos ir erdvinės raidės“** — oficialus 1 kl. pavyzdys (`:2635–2712`) platformoje nepanaudotas, bet abu garbingi modeliai krenta: erdvės ir plokštumos skyrimas kartotų `21-erdvines-figuros` (tas pats daiktas iš skirtingų pusių), o „ta pati raidė kitoje medžiagoje“ — `01-spalva-ir-nuotaika` („ta pati forma, kita spalva“). Gairių 5 klausimas.
+- **Veikėjas (B.2.1.1)** — planuota forma „veikėjo kortelė: kas jis, ką daro, kaip jaučiasi“ (`1-klases-temų-žemėlapis.md:31`) yra žymėjimas, ne modelis: gerai nupieštas paveikslėlis duoda tą patį, o „kaip jaučiasi“ jau sprendžia `01-dovana-ir-noras`. Gairių 2 klausimas.
+- **Naminiai ir laukiniai gyvūnai (26.2.2)** — spraga tikra (`pasaulio-pazinimas-1-klase.md:173`), bet tą patį modulį jau ima `agents/proposals/2026-11-16-programos-derintojas-gyvunu-grupes-4-klase.json` (#19997); antro pasiūlymo tam pačiam tikslui nerašau.
+- **Muzikos trukmė ir tembras** — blokuoja atviras klausimas `:15` (kiek modulių garso savybėms).
+- **Orų reiškiniai, asmens higiena, saugus eismas** — 1 kl. plane jų nėra (`:61–:62`, `:73`); **energija (26.5.1)** — atmesta `:70`; **bendruomenės** — atviras klausimas `:55`.
+
+**Ankstesnis atmetimas panaikintas vienai daliai.** `agents/state.json` `last_ideator_work.rejected` (#179, 2026-11-09) atmetė popieriaus lankstymą dviem argumentais: „modeliuojama ašis dubliuoja `24-komandu-seka`“ ir „simetrija — 2 kl. tema“. Pirmasis netiesa (24 moko komandų tinklelyje, lankstymas neturi nei tinklelio, nei ėjimų), antrasis teisingas ir šiandienos pasiūlyme įvykdytas: ašies ir veidrodžio modulyje nėra, kriterijus — sluoksnių ir skylių skaičius. Todėl tema siūloma iš naujo kitu modeliu, o ne kartojama sena formuluotė.
+
+**Dashboard'o žymos, kurios klaidingos:** „Gyvoji gamta“, „Emocijos ir jausmai“ (padengta `01-dovana-ir-noras`, `:66`), „Kūno dalys“ (26.1.2 dalis `18-kuprine-ir-kuno-dalys`), „Medžiagų savybės“ (`02-medziagu-bandymas`), „Skaičiai iki dvidešimties“ (programa 1 kl. — iki 100, `matematika-1-klase.md:17`).
+
 ---
 
 *Įrašyta: 2026-11-03. Šaltinis: sprendimai, kurių negalėjome pagrįsti esama baze.*

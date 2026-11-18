@@ -1191,7 +1191,7 @@ const garsoJuosta = {
       <div style="width:100%;max-width:32rem;margin:0 auto">
         <div id="gj-tiles" role="group" aria-label="Garsų plytelės"
           style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;min-height:4rem"></div>
-        <div style="margin-top:.7rem;padding:.55rem .7rem;border:2px dashed var(--line);border-radius:var(--r-s);background:var(--paper)">
+        <div id="gj-guesswrap" style="margin-top:.7rem;padding:.55rem .7rem;border:2px dashed var(--line);border-radius:var(--r-s);background:var(--paper)">
           <p style="margin:0;font-size:clamp(.98rem,3.6vw,1.1rem);font-weight:800">Ar juosta prisipildys iki galo?</p>
           <div id="gj-guess" style="display:flex;gap:.5rem;margin-top:.4rem;flex-wrap:wrap">
             <button class="btn secondary" type="button" data-guess="taip" aria-pressed="false" style="min-height:48px;min-width:5rem">Taip</button>
@@ -1347,6 +1347,22 @@ const garsoJuosta = {
       if (picked < 0) {
         api.readout("Pasirink garsą.");
         api.note("Pirmiausia pasirink plytelę, tada laikyk mygtuką.");
+        return;
+      }
+      /* Spėjimas yra metodo žingsnis („prieš pirmą bandymą“), ne dekoracija:
+         be jo P2 seka (veiksmas → paaiškinimas) virsta bandymu be klausimo.
+         Todėl pirmas laikymas neįvyksta tyliai — jis pasako, ko trūksta, ir
+         nukreipia fokusą į spėjimo mygtuką (LL-04: ne užraktas, o paaiškinimas). */
+      if (!guessDone && !guess) {
+        const wrap = stage.querySelector("#gj-guesswrap");
+        const yes = stage.querySelector('[data-guess="taip"]');
+        api.readout("Pirmiausia spėk: ar juosta prisipildys iki galo?");
+        api.note("Spėk „Taip“ arba „Ne“, tada laikyk mygtuką. Spėjimas nėra atsakymas — jį palyginsi su tuo, kas įvyks.");
+        if (wrap) {
+          wrap.style.borderColor = "var(--accent)";
+          setTimeout(() => { wrap.style.borderColor = ""; }, 1400);
+        }
+        if (yes) yes.focus({ preventScroll: true });
         return;
       }
       holding = true;
@@ -1508,6 +1524,9 @@ const garsoJuosta = {
         });
         api.readout(`Spėjai: ${guess}. Dabar laikyk mygtuką.`);
         api.note("Spėjimas nėra atsakymas — palyginsi jį su tuo, kas įvyks.");
+        /* Po spėjimo fokusas grįžta į veiksmą: klaviatūra neturi ieškoti
+           mygtuko iš naujo, o žingsnių seka lieka „spėk → laikyk“. */
+        holdBtn.focus({ preventScroll: true });
       });
     });
 

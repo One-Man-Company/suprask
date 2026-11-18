@@ -18,7 +18,7 @@
       "Laikyk mygtuką ilgiau — juosta vis tiek sustos.",
       "Raidės vardas „ka“ ilgas, o garsas k trumpas. Klausykis garso, ne vardo."
     ],
-    "example": "Sakyk „sssaulė“: pirmą garsą gali tempti. Sakyk „k-k-katė“: pirmas garsas tik trūkteli."
+    "example": "Sakyk „sss“, paskui „saulė“: pirmą garsą gali tempti. Sakyk „k“, paskui „katė“: pirmas garsas tik trūkteli."
   },
   "sim": {
     "component": "garso-juosta",

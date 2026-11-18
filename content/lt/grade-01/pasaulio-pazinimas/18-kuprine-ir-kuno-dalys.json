@@ -78,7 +78,7 @@
         "Nes tada petnešos trumpos"
       ],
       "answer": 1,
-      "hint": "Palygink, kiek pečių laiko svorį.",
+      "hint": "Kur spaudžia, kai petneša eina per vieną petį? O kai per abu?",
       "why": "Du pečiai dalijasi svorį, todėl vienai pusei tenka mažiau.",
       "optional": true
     },

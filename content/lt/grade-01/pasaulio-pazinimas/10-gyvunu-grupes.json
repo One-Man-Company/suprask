@@ -81,7 +81,7 @@
         "Abu, nes jie gyvena viename kieme"
       ],
       "answer": 1,
-      "hint": "Pažiūrėk ne į vietą, o į tai, kas duoda maistą.",
+      "hint": "Kas rūpinasi gyvūnu kasdien: pats gyvūnas ar kas kitas?",
       "why": "Karvei maistą duoda žmogus, o gandras varles gaudo pats."
     },
     {
@@ -103,7 +103,7 @@
         "Taip, nes ji gyvena prie namo"
       ],
       "answer": 1,
-      "hint": "Ar kas nors lapės neša maisto?",
+      "hint": "Kiemas dar ne namai. Iš kur lapė gauna ėdalo?",
       "why": "Lapė maisto ieško pati, todėl ji laukinė. Kiemas to nekeičia."
     },
     {

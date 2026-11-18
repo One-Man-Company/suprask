@@ -83,7 +83,7 @@
         "Paimti 3 iš penkių, gauti dešimt, paskui pridėti 2"
       ],
       "answer": 2,
-      "hint": "Kiek trūksta nuo septynių iki dešimties? Tiek paimk iš penkių.",
+      "hint": "Po vieną reikia daug žingsnių. Ar yra trumpesnis kelias?",
       "why": "Iš penkių paimk 3, dešimtukas prisipildo, lieka 2. 10 + 2 = 12."
     },
     {

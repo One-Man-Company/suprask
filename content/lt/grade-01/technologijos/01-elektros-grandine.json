@@ -66,7 +66,7 @@
         "Lemputė atšalo"
       ],
       "answer": 1,
-      "hint": "Dangtelis laiko bateriją vietoje. Pažiūrėk, ar kelias liko vientisas.",
+      "hint": "Sek laidą nuo baterijos iki lemputės. Kur jis dabar baigiasi?",
       "why": "Dangtelis uždaro kelią, todėl be jo kelias nutrūksta."
     },
     {
@@ -77,7 +77,7 @@
         "Kad laidas turi būti ilgesnis"
       ],
       "answer": 0,
-      "hint": "Pagalvok, kur baigiasi kelias su vienu laidu.",
+      "hint": "Nupiešk, kur eina srovė nuo baterijos. Kur ji sustoja?",
       "why": "Vienas laidas veda į lemputę, antras grąžina kelią į bateriją.",
       "optional": true
     }

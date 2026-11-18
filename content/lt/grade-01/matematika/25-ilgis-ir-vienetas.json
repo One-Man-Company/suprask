@@ -118,7 +118,7 @@
         "Taip pat 8"
       ],
       "answer": 1,
-      "hint": "Mažesnė pėda telpa daugiau kartų į tą patį kilimą.",
+      "hint": "Nueik tą patį kelią mažais, paskui dideliais žingsniais. Skaičiuok žingsnius.",
       "why": "Mažesnis vienetas telpa daugiau kartų. Anūkas gaus daugiau nei 8."
     },
     {
@@ -129,7 +129,7 @@
         "Ne, 9 yra per daug"
       ],
       "answer": 1,
-      "hint": "Skaičius priklauso nuo vieneto, ne nuo suolo.",
+      "hint": "Pažiūrėk, kuo matavo kiekvienas. Ar tie daiktai tokio pat ilgio?",
       "why": "Tas pats suolas turi skirtingus skaičius, kai vienetai skirtingi.",
       "optional": true
     }

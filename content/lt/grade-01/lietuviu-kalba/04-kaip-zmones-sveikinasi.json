@@ -84,7 +84,7 @@
         "Taip, visi sveikinasi žodžiu."
       ],
       "answer": 1,
-      "hint": "Kiek žmonių jau pastebėjai?",
+      "hint": "Kiek kartų matei tą patį sveikinimą? Vieno karto mažai.",
       "why": "Išvada apie kitus remiasi visais pastebėjimais, ne vienu."
     },
     {
@@ -106,7 +106,7 @@
         "Nebeklausti draugų."
       ],
       "answer": 0,
-      "hint": "Vienas atsakymas dar nepasako apie visus.",
+      "hint": "Vienas balsas dar nepasako apie klasę. Kiek balsų reikia?",
       "why": "Tas pats tyrimo kelias tinka ir spalvų klausimui.",
       "optional": true
     }

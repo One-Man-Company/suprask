@@ -77,7 +77,7 @@
         "Ne, nes 4 + 3 = 7"
       ],
       "answer": 0,
-      "hint": "Nelygink pusės su atsakymu. Žiūrėk į abi puses kaip į du kiekius.",
+      "hint": "Suskaičiuok, kiek gauni kairėje ir kiek dešinėje.",
       "why": "Kairėje 7 ir dešinėje 7. Abi pusės lygios, nors skaičiai skirtingi.",
       "optional": true
     }

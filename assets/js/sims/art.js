@@ -746,4 +746,99 @@ export const art = {
     }
     return `<path d="${d} Z" fill="${fill}"${edge}/>`;
   },
+
+  /* ------------------------------------------------------------------ */
+  /* Piktogramos (1 klasės daikto kilmės grandinė)                       */
+  /*                                                                    */
+  /* Kodėl atskiras metodas: grandinės kortelėse vaikas turi atpažinti   */
+  /* DEVYNIAS skirtingas medžiagas be užrašo skaitymo. Kiekviena rūšis   */
+  /* skiriasi FORMA, o ne vien spalva (LL-13): popierius — lapas su       */
+  /* užlenktu kampu, mediena — lentos su rievėmis, smėlis — kauburys iš  */
+  /* grūdelių, ąžuolas — medis, pieštukas — smailėjantis korpusas,        */
+  /* stiklinė — taurelė atviru viršumi, stiklas — plokštė su įstrižu      */
+  /* blizgesiu, nafta — tamsus lašas. Visos pieštos tame pačiame          */
+  /* 40 × 40 lauke, todėl kortelėse jų svoris ir vieta vienodi.           */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Medžiagos ar daikto piktograma 40 × 40 lauke.
+   * kind: popierius | mediena | lapai | smelis | azuolas | piestukas |
+   *       stikline | stiklas | nafta
+   */
+  pictogram(kind, x = 0, y = 0, s = 1) {
+    const inner = (() => {
+      if (kind === "popierius") {
+        return `
+          <path d="M11 5 H26 L31 10 V35 H11 Z" fill="#fdfbf3" stroke="#8a8578" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M26 5 L31 10 H26 Z" fill="#e3ded0" stroke="#8a8578" stroke-width="1.6" stroke-linejoin="round"/>
+          <g stroke="#b9b2a1" stroke-width="1.6" stroke-linecap="round">
+            <line x1="15" y1="17" x2="27" y2="17"/><line x1="15" y1="22" x2="27" y2="22"/>
+            <line x1="15" y1="27" x2="23" y2="27"/>
+          </g>`;
+      }
+      if (kind === "mediena") {
+        return `${art.plank(5, 30, 30, 8)}${art.plank(7, 21, 26, 7)}`;
+      }
+      if (kind === "lapai") {
+        return `<g>
+          ${art.leaf(20, 22, 7.5, -1, false, "#59b95a")}
+          ${art.leaf(20, 30, 7, 1, false, "#4c9a45")}
+          <path d="M20 32 L20 15" stroke="#3f8f3a" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </g>`;
+      }
+      if (kind === "smelis") {
+        /* Kauburys iš grūdelių: forma plati ir žema, o grūdeliai —
+           skirtingo dydžio, todėl smėlis neatrodys kaip lygus akmuo. */
+        const grains = Array.from({ length: 18 }, (_, i) => {
+          const gx = 10 + ((i * 11) % 21);
+          const gy = 33 - ((i * 5) % 9) - (gx > 16 && gx < 25 ? 4 : 0);
+          return `<circle cx="${gx}" cy="${gy}" r="${1.1 + (i % 3) * 0.5}"`
+            + ` fill="${i % 2 ? "#c9a45f" : "#b08d4c"}" opacity=".85"/>`;
+        }).join("");
+        return `<g>
+          <path d="M6 34 Q12 18 20 18 Q28 18 34 34 Z" fill="#e6c684" stroke="#b28b48" stroke-width="2" stroke-linejoin="round"/>
+          ${grains}
+        </g>`;
+      }
+      if (kind === "azuolas") {
+        return `${art.grass(11, 37, 0.9)}${art.grass(28, 37, 0.9)}${art.tree(20, 37, 0.36, "vasara")}`;
+      }
+      if (kind === "piestukas") {
+        return `<g transform="rotate(-38 20 20)">
+          <rect x="14" y="6" width="12" height="22" rx="2" fill="#f2b13c" stroke="#8a6a25" stroke-width="2"/>
+          <polygon points="14,28 26,28 20,37" fill="#f0d9b5" stroke="#8a6a25" stroke-width="2" stroke-linejoin="round"/>
+          <polygon points="17.4,32.6 22.6,32.6 20,37" fill="#3a342b"/>
+          <rect x="14" y="3" width="12" height="4.5" rx="2" fill="#e88b8b" stroke="#8a6a25" stroke-width="1.6"/>
+        </g>`;
+      }
+      if (kind === "stikline") {
+        return `<g>
+          <path d="M12 9 L14.6 32 Q20 35.4 25.4 32 L28 9" fill="#dff0f8" fill-opacity=".55"
+                stroke="#5b7f96" stroke-width="2.2" stroke-linejoin="round"/>
+          <ellipse cx="20" cy="9" rx="8" ry="2.6" fill="#eef8fd" stroke="#5b7f96" stroke-width="2.2"/>
+          <line x1="15.4" y1="14" x2="16.8" y2="28" stroke="#ffffff" stroke-width="2.4"
+                stroke-linecap="round" opacity=".85"/>
+        </g>`;
+      }
+      if (kind === "stiklas") {
+        return `<g transform="rotate(-10 20 20)">
+          <rect x="9" y="9" width="22" height="22" rx="2" fill="#d9edf7" fill-opacity=".8"
+                stroke="#5b7f96" stroke-width="2"/>
+          <line x1="13" y1="28" x2="23" y2="12" stroke="#ffffff" stroke-width="3"
+                stroke-linecap="round" opacity=".9"/>
+          <line x1="18" y1="29" x2="26" y2="17" stroke="#ffffff" stroke-width="2"
+                stroke-linecap="round" opacity=".6"/>
+        </g>`;
+      }
+      /* nafta */
+      return `<g>
+        <path d="M20 5 C24 12 29 17 29 23 A 9 9 0 0 1 11 23 C 11 17 16 12 20 5 Z"
+              fill="#3f3a34" stroke="#2b2723" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M16.6 19.5 A 3.4 4.4 0 0 0 17.4 26" stroke="#6f6559" stroke-width="2"
+              fill="none" stroke-linecap="round" opacity=".9"/>
+        <path d="M9 32 Q20 37 31 32" stroke="#3f3a34" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      </g>`;
+    })();
+    return `<g transform="translate(${x} ${y}) scale(${s})">${inner}</g>`;
+  },
 };

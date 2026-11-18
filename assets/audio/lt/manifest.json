@@ -579,6 +579,10 @@
   "n": "n/9038b62647cab700-944feae6.mp3",
   "s": "s/9038b62647cab700-96eb6de0.mp3"
  },
+ "Ar stiklinės kelias irgi baigsis gamtoje?": {
+  "n": "n/1bb5ec81e8be2b76-8239b08a.mp3",
+  "s": "s/1bb5ec81e8be2b76-ee6d5cf1.mp3"
+ },
  "Atkarpa ilgesnė. Ji vis dar turi du galus.": {
   "n": "n/96cea72c8e4c28bf-ea64f2e5.mp3",
   "s": "s/96cea72c8e4c28bf-b8c26745.mp3"
@@ -899,6 +903,14 @@
   "n": "n/9047d71491bb5f87-9fe2355a.mp3",
   "s": "s/9047d71491bb5f87-ff910e0e.mp3"
  },
+ "Gamta yra ir miškas, ir smėlis.": {
+  "n": "n/3a558ffe7ddd63f4-7a5ad432.mp3",
+  "s": "s/3a558ffe7ddd63f4-7e1a7c63.mp3"
+ },
+ "Gamykloje": {
+  "n": "n/3853654d01c731b9-099d1706.mp3",
+  "s": "s/3853654d01c731b9-4495ab60.mp3"
+ },
  "Garas": {
   "n": "n/a5c481c3f32ee5e4-7e4f2324.mp3",
   "s": "s/a5c481c3f32ee5e4-1ca3e48b.mp3"
@@ -927,6 +939,10 @@
   "n": "n/68b5994a2d8b869e-159b3c97.mp3",
   "s": "s/68b5994a2d8b869e-97f53b18.mp3"
  },
+ "Grandinė čia nenueina.": {
+  "n": "n/ec096faf23873b85-8c8770cb.mp3",
+  "s": "s/ec096faf23873b85-b1414db0.mp3"
+ },
  "Greičiau": {
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
   "s": "s/60d89cb04b7054d4-58e113db.mp3"
@@ -942,6 +958,30 @@
  "I": {
   "n": "n/a83dd0ccbffe39d0-a2e801b9.mp3",
   "s": "s/a83dd0ccbffe39d0-f0ef1ae2.mp3"
+ },
+ "Iš ko atsirado mediena?": {
+  "n": "n/29efeb067f4832ad-32ddf477.mp3",
+  "s": "s/29efeb067f4832ad-4b434683.mp3"
+ },
+ "Iš ko atsiranda stiklas?": {
+  "n": "n/9e60165006948279-94496dcf.mp3",
+  "s": "s/9e60165006948279-245eb87a.mp3"
+ },
+ "Iš ko padaryta stiklinė?": {
+  "n": "n/5c43be036cb0f5d4-99a7f5dd.mp3",
+  "s": "s/5c43be036cb0f5d4-3b834c8e.mp3"
+ },
+ "Iš ko padarytas popierius?": {
+  "n": "n/e9e93ea2c4ee1c3b-5340f159.mp3",
+  "s": "s/e9e93ea2c4ee1c3b-60dd2e11.mp3"
+ },
+ "Iš medienos daromas popierius.": {
+  "n": "n/21f7e2a633262afd-f92e19cc.mp3",
+  "s": "s/21f7e2a633262afd-406dde38.mp3"
+ },
+ "Iš smėlio lydomas stiklas.": {
+  "n": "n/eeb24791c5438b9f-a12346c2.mp3",
+  "s": "s/eeb24791c5438b9f-7f3455d0.mp3"
  },
  "J": {
   "n": "n/6da43b944e494e88-b68b1146.mp3",
@@ -1111,6 +1151,10 @@
   "n": "n/bc954ad9f486b5b9-f11805ed.mp3",
   "s": "s/bc954ad9f486b5b9-14da0a9d.mp3"
  },
+ "Kur prasideda popieriaus kelias? Spėk.": {
+  "n": "n/71c1571ac5af1643-e86e33b3.mp3",
+  "s": "s/71c1571ac5af1643-82f6cca3.mp3"
+ },
  "Kur remsis svoris? Pirma spėk.": {
   "n": "n/571b562406a49d23-a8761906.mp3",
   "s": "s/571b562406a49d23-0094e045.mp3"
@@ -1247,6 +1291,10 @@
   "n": "n/2285765af1dbe56e-bc832664.mp3",
   "s": "s/2285765af1dbe56e-10f0e8c4.mp3"
  },
+ "Miške": {
+  "n": "n/605dae53843db1a4-76ec9741.mp3",
+  "s": "s/605dae53843db1a4-7251f2c7.mp3"
+ },
  "Mostelėjo": {
   "n": "n/8049a7991ecef952-53cd647e.mp3",
   "s": "s/8049a7991ecef952-c148f242.mp3"
@@ -1262,6 +1310,10 @@
  "Naujas vienetas. Matuok iš naujo.": {
   "n": "n/6deac8e8dd8e0386-dbb49464.mp3",
   "s": "s/6deac8e8dd8e0386-99482a3d.mp3"
+ },
+ "Ne": {
+  "n": "n/38cebf4836a918cb-65706811.mp3",
+  "s": "s/38cebf4836a918cb-7211c8dd.mp3"
  },
  "Nė vieno laido. Kelias visai nutrūkęs.": {
   "n": "n/59d8042b3c1fd28c-3f002c4f.mp3",
@@ -1302,6 +1354,10 @@
  "Paliesk komandą, ir ji pasikeis į kitą.": {
   "n": "n/e2c3c41a3f0bb8ee-c7db9c56.mp3",
   "s": "s/e2c3c41a3f0bb8ee-58662b22.mp3"
+ },
+ "Parduotuvėje": {
+  "n": "n/9605a89241aec31a-8ef8a250.mp3",
+  "s": "s/9605a89241aec31a-6849cf85.mp3"
  },
  "Pasakyk, tada matuok.": {
   "n": "n/b090c43c90462b3c-6238cfb7.mp3",
@@ -1382,6 +1438,18 @@
  "Popierius": {
   "n": "n/0c85494fd5f4f32d-96346576.mp3",
   "s": "s/0c85494fd5f4f32d-c02dfdc8.mp3"
+ },
+ "Popierius atvežamas į parduotuvę.": {
+  "n": "n/92a50e22464d6b89-738c8b29.mp3",
+  "s": "s/92a50e22464d6b89-5903acd9.mp3"
+ },
+ "Popierius prasideda miške.": {
+  "n": "n/50b5a307c47a61a8-b96af1f4.mp3",
+  "s": "s/50b5a307c47a61a8-52492e44.mp3"
+ },
+ "Pradedam iš naujo.": {
+  "n": "n/4fa2eb8b0dfdbe22-1ac10d4f.mp3",
+  "s": "s/4fa2eb8b0dfdbe22-bd284fe1.mp3"
  },
  "Pradedam iš naujo. Ciferblatas rodo 2 val. po pietų.": {
   "n": "n/cf50f1166eb90f2e-fe5271b3.mp3",
@@ -1559,6 +1627,10 @@
   "n": "n/f9f4cc8ceeef0aad-656c362a.mp3",
   "s": "s/f9f4cc8ceeef0aad-571d829a.mp3"
  },
+ "Smėlis kasamas.": {
+  "n": "n/1d30d5e6caee2bed-d71b547a.mp3",
+  "s": "s/1d30d5e6caee2bed-1de3ab10.mp3"
+ },
  "Sniegas tirpsta, paukščiai grįžta, medžiai žydi.": {
   "n": "n/c685e0360afa3917-c5f4e703.mp3",
   "s": "s/c685e0360afa3917-04cee785.mp3"
@@ -1587,6 +1659,10 @@
   "n": "n/1aa2b230049497d2-167a73e5.mp3",
   "s": "s/1aa2b230049497d2-a7964439.mp3"
  },
+ "Spėjimas įrašytas. Dabar statyk kelią.": {
+  "n": "n/c26817a306408861-7ba30af5.mp3",
+  "s": "s/c26817a306408861-fa2f1dc5.mp3"
+ },
  "Spėjimas įrašytas. Spausk „Nuleisk į vandenį“.": {
   "n": "n/237272ffa0e70314-8dc07c48.mp3",
   "s": "s/237272ffa0e70314-23d00f9c.mp3"
@@ -1602,6 +1678,14 @@
  "Stačiakampis gretasienis nuo šono irgi atrodo kaip stačiakampis.": {
   "n": "n/8e83fef04200b9f4-f2a4c557.mp3",
   "s": "s/8e83fef04200b9f4-7d2f5fc0.mp3"
+ },
+ "Stiklinė atvežama į parduotuvę.": {
+  "n": "n/a7bdd974d2ad4b20-1bd8b608.mp3",
+  "s": "s/a7bdd974d2ad4b20-8f229138.mp3"
+ },
+ "Stiklinė prasideda smėlyje.": {
+  "n": "n/b8591597a8da9f09-393f1ef1.mp3",
+  "s": "s/b8591597a8da9f09-a167b47d.mp3"
  },
  "Stulpelio aukštis rodo skaičių.": {
   "n": "n/9a2915bce2544c16-cea31696.mp3",
@@ -1658,6 +1742,10 @@
  "Tai tiesė. Ji neturi galų: eina už lapo krašto.": {
   "n": "n/81629f8150ce5420-2d2c7908.mp3",
   "s": "s/81629f8150ce5420-b10f7653.mp3"
+ },
+ "Taip": {
+  "n": "n/24f35faa30bbd472-f19af8db.mp3",
+  "s": "s/24f35faa30bbd472-53e9058b.mp3"
  },
  "Tam": {
   "n": "n/085baa1d3c064c31-23510c12.mp3",
@@ -1759,9 +1847,29 @@
   "n": "n/8cdea8b24d6025d0-b612aaca.mp3",
   "s": "s/8cdea8b24d6025d0-b09e1da1.mp3"
  },
+ "Tu sakei gamykloje. Grandinė baigėsi miške.": {
+  "n": "n/3bba49f106e27c8c-af485198.mp3",
+  "s": "s/3bba49f106e27c8c-f2a2c167.mp3"
+ },
  "Tu sakei mažiau. Gavosi mažiau: keturi trintukai.": {
   "n": "n/bf74e66fcf175dce-a10f18e3.mp3",
   "s": "s/bf74e66fcf175dce-a3f05722.mp3"
+ },
+ "Tu sakei miške. Taip ir yra.": {
+  "n": "n/72e571a9650fa707-46969485.mp3",
+  "s": "s/72e571a9650fa707-e739b396.mp3"
+ },
+ "Tu sakei ne. Stiklinės kelias baigėsi smėlyje.": {
+  "n": "n/9dffc5c3ec505701-a9beff01.mp3",
+  "s": "s/9dffc5c3ec505701-234a9594.mp3"
+ },
+ "Tu sakei parduotuvėje. Grandinė baigėsi miške.": {
+  "n": "n/3d4333b4b9a00222-66ca3212.mp3",
+  "s": "s/3d4333b4b9a00222-fff67fd8.mp3"
+ },
+ "Tu sakei taip. Gamta yra ir smėlis.": {
+  "n": "n/f6b5dfd0173f42b7-cab6af53.mp3",
+  "s": "s/f6b5dfd0173f42b7-65bb8374.mp3"
  },
  "Tyla": {
   "n": "n/170ba9b291bd200a-0c170880.mp3",
@@ -2130,6 +2238,10 @@
  "Ą": {
   "n": "n/53ccee140d0804e0-23ce4dce.mp3",
   "s": "s/53ccee140d0804e0-d45129b9.mp3"
+ },
+ "Ąžuolas auga miške.": {
+  "n": "n/619f5a2a48f3b42f-de4d31f4.mp3",
+  "s": "s/619f5a2a48f3b42f-002ef7f6.mp3"
  },
  "ą": {
   "n": "n/1ddca08050786f81-ec3382cf.mp3",

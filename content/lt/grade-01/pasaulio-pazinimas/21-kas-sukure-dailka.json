@@ -1,0 +1,201 @@
+{
+  "id": "21-kas-sukure-dailka",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Kas sukūrė šį daiktą: kelias iki gamtos",
+  "subtitle": "Popierius prasideda miške, o stiklinė — smėlyje",
+  "minutes": 9,
+  "outcomes": [
+    "Nurodau, iš ko padarytas daiktas.",
+    "Nustatau, kur prasideda daikto kelias gamtoje.",
+    "Paaiškinu, kodėl parduotuvė yra kelio gale, o ne pradžioje."
+  ],
+  "concept": {
+    "title": "Daiktas prasideda gamtoje",
+    "big_idea": "Popierius prasideda ąžuole, stiklinė — smėlyje. Kiekvienas daiktas turi kelią iki gamtos. Parduotuvė yra to kelio gale, o ne pradžioje.",
+    "steps": [
+      "Spėk, kur prasideda popieriaus kelias.",
+      "Rink šaltinį ir statyk grandinę atgal iki gamtos.",
+      "Netinkama kortelė grandinės nepratęsia. Pažiūrėk, kodėl.",
+      "Tada peržiūrėk kelią ir palygink jį su savo spėjimu."
+    ],
+    "example": "Popieriaus lapas guli parduotuvėje. Jo kelias: ąžuolas, mediena, popierius."
+  },
+  "sim": {
+    "component": "daikto-grandine",
+    "config": {
+      "cards": {
+        "popierius": { "name": "popierius", "icon": "popierius" },
+        "mediena": { "name": "mediena", "icon": "mediena" },
+        "lapai": { "name": "lapai", "icon": "lapai" },
+        "smelis": { "name": "smėlis", "icon": "smelis" },
+        "azuolas": { "name": "ąžuolas", "icon": "azuolas" },
+        "piestukas": { "name": "pieštukas", "icon": "piestukas" },
+        "stikline": { "name": "stiklinė", "icon": "stikline" },
+        "stiklas": { "name": "stiklas", "icon": "stiklas" },
+        "nafta": { "name": "nafta", "icon": "nafta" }
+      },
+      "objects": [
+        {
+          "id": "popierius",
+          "predict": {
+            "say": "predict",
+            "options": [
+              { "id": "miske", "label": "Miške", "say": "compare_miske" },
+              { "id": "parduotuveje", "label": "Parduotuvėje", "say": "compare_parduotuve" },
+              { "id": "gamykloje", "label": "Gamykloje", "say": "compare_gamykla" }
+            ]
+          },
+          "steps": [
+            {
+              "card": "mediena",
+              "ask": "ask_mediena",
+              "options": ["mediena", "lapai", "smelis"],
+              "no": {
+                "lapai": "Lapai ploni ir žali. Popierius baltas ir sausas.",
+                "smelis": "Smėlis birus. Popierius lankstosi ir plyšta."
+              }
+            },
+            {
+              "card": "azuolas",
+              "ask": "ask_azuolas",
+              "end": "done1",
+              "options": ["azuolas", "piestukas", "smelis"],
+              "no": {
+                "piestukas": "Pieštukas daromas iš medienos, ne atvirkščiai.",
+                "smelis": "Smėlis neturi kamieno ir žievės."
+              }
+            }
+          ],
+          "replay": ["replay_azuolas", "replay_mediena", "replay_parduotuve"]
+        },
+        {
+          "id": "stikline",
+          "predict": {
+            "say": "ask2",
+            "options": [
+              { "id": "taip", "label": "Taip", "say": "compare_taip" },
+              { "id": "ne", "label": "Ne", "say": "compare_ne" }
+            ]
+          },
+          "steps": [
+            {
+              "card": "stiklas",
+              "ask": "ask_stiklas",
+              "options": ["stiklas", "mediena", "smelis"],
+              "no": {
+                "mediena": "Stiklinė permatoma. Mediena nepermatoma.",
+                "smelis": "Smėlis birus. Stiklinė kieta ir vientisa."
+              }
+            },
+            {
+              "card": "smelis",
+              "ask": "ask_smelis",
+              "end": "done2",
+              "options": ["smelis", "azuolas", "nafta"],
+              "no": {
+                "azuolas": "Ąžuolas duoda medieną, ne stiklą.",
+                "nafta": "Nafta tamsi. Stiklas skaidrus."
+              }
+            }
+          ],
+          "replay": ["replay_smelis", "replay_stiklas", "replay_stikline"]
+        }
+      ],
+      "sentences": {
+        "predict": "Kur prasideda popieriaus kelias? Spėk.",
+        "guessReadout": "Spėjimas įrašytas. Dabar statyk kelią.",
+        "ask_mediena": "Iš ko padarytas popierius?",
+        "ask_azuolas": "Iš ko atsirado mediena?",
+        "ask_stiklas": "Iš ko padaryta stiklinė?",
+        "ask_smelis": "Iš ko atsiranda stiklas?",
+        "wrong": "Grandinė čia nenueina.",
+        "done1": "Popierius prasideda miške.",
+        "compare_miske": "Tu sakei miške. Taip ir yra.",
+        "compare_parduotuve": "Tu sakei parduotuvėje. Grandinė baigėsi miške.",
+        "compare_gamykla": "Tu sakei gamykloje. Grandinė baigėsi miške.",
+        "ask2": "Ar stiklinės kelias irgi baigsis gamtoje?",
+        "done2": "Stiklinė prasideda smėlyje.",
+        "compare_taip": "Tu sakei taip. Gamta yra ir smėlis.",
+        "compare_ne": "Tu sakei ne. Stiklinės kelias baigėsi smėlyje.",
+        "all": "Gamta yra ir miškas, ir smėlis.",
+        "again": "Pradedam iš naujo.",
+        "replay_azuolas": "Ąžuolas auga miške.",
+        "replay_mediena": "Iš medienos daromas popierius.",
+        "replay_parduotuve": "Popierius atvežamas į parduotuvę.",
+        "replay_smelis": "Smėlis kasamas.",
+        "replay_stiklas": "Iš smėlio lydomas stiklas.",
+        "replay_stikline": "Stiklinė atvežama į parduotuvę."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Parduotuvėje ant lentynos guli popieriaus lapas. Iš kur atsiranda popierius?",
+      "options": [
+        "Iš medienos",
+        "Iš lapų",
+        "Iš smėlio"
+      ],
+      "answer": 0,
+      "hint": "Medžio lapas žalias ir plonas. Ar popierius toks pat?",
+      "why": "Popierius daromas iš medienos, o mediena atsiranda iš medžio."
+    },
+    {
+      "q": "Stiklinė padaryta iš stiklo. Iš kur atsiranda stiklas?",
+      "options": [
+        "Iš naftos",
+        "Iš medienos",
+        "Iš smėlio"
+      ],
+      "answer": 2,
+      "hint": "Tu galvoji apie plastiką. Stiklas ir plastikas skiriasi.",
+      "why": "Stiklas lydomas iš smėlio, todėl jo kelias prasideda smėlyje."
+    },
+    {
+      "q": "Knyga padaryta iš popieriaus. Kur prasideda knygos kelias?",
+      "options": [
+        "Parduotuvėje",
+        "Spaustuvėje",
+        "Miške"
+      ],
+      "answer": 2,
+      "hint": "Spaustuvė spausdina popierių. Kas popierių padaro?",
+      "why": "Popierius atsiranda miške, o spaustuvė tik spausdina."
+    },
+    {
+      "q": "Plastikinis butelis padarytas iš plastiko. Kur prasideda jo kelias?",
+      "options": [
+        "Naftoje",
+        "Parduotuvėje",
+        "Smėlyje"
+      ],
+      "answer": 0,
+      "hint": "Tu galvoji apie stiklą. Butelis lankstus, o stiklas kietas.",
+      "why": "Plastikas gaminamas iš naftos, todėl butelio kelias prasideda naftoje.",
+      "optional": true
+    }
+  ],
+  "reflect": "Iš ko atsirado tavo pieštukas? Papasakok kelią iki gamtos.",
+  "teacher": {
+    "goal": "Suprasti, kad kiekvienas daiktas prasideda gamtoje: popierius — ąžuole, o stiklinė — smėlyje. Modelis leidžia vaikui pačiam statyti grandinę atgal, o netinkamas šaltinis grandinės nebaigia.",
+    "prompt": "Iš ko pradeda popierius — ir kodėl parduotuvė nėra pradžia?",
+    "offline": "Padėkite ant stalo popieriaus lapą, medinę liniuotę ir stiklinę, o vaikams duokite tris korteles: ąžuolas, mediena, smėlis. Paprašykite prie lapo padėti tai, iš ko jis atsirado, o prie stiklinės — savo. Vaikai ginčijasi, o mokytojas atsakymo neteikia. Tada korteles sudėkite eilėmis ir kelią pasakykite balsu: ąžuolas → mediena → popierius, smėlis → stiklas → stiklinė. Pabaigoje — mini diskusija „Kaip tausoti daiktus klasėje?“",
+    "misconceptions": [
+      "„Daiktas atsiranda parduotuvėje.“ Modelis to nepaneigia žodžiais: vaikas pats spėja, kur kelias prasideda, o spėjimas lieka matomas virš grandinės ir pabaigoje palyginamas su tuo, kur grandinė baigėsi.",
+      "„Gamta — tai tik miškas.“ Antrasis daiktas yra stiklinė, o jos grandinė baigiasi smėlyje. Jei gamta būtų tik žaluma, stiklinės kelias neturėtų kur baigtis.",
+      "„Gamykla sukuria medžiagą iš nieko.“ Kiekvienas žingsnis turi savo šaltinį, o netinkama kortelė grandinės nepratęsia. Paaiškinimas remiasi savybe: smėlis birus, popierius lankstosi, mediena turi kamieną, smėlis — ne.",
+      "„Modelis parodo visą tikrą kelią.“ Grandinėje nėra transporto, pakuotės ir perdirbimo, o popierius gali būti daromas ir iš perdirbto popieriaus. Tai modelio riba, pasakyta ir vaikui, ir mokytojui."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Gamtos mokslai, 1 klasės ilgalaikis planas — 26.3.1 „Gamtos ištekliai, jų tarša ir tausojimas“ (2 val.); veikla „darbas grupėse ar porose (pvz., žaidimas „Kas sukūrė šį daiktą?“)“ ir mini diskusija „Kaip tausoti daiktus klasėje?“.",
+    "Anderson, J. L., Ellis, J. P., & Jones, A. M. (2014). Understanding early elementary children's conceptual knowledge of plant structure and function through drawings. CBE—Life Sciences Education, 13(3), 375–386. https://doi.org/10.1187/cbe.13-12-0230 — 89 % darželinukų ir 85 % pirmokų nepripažino, kad telefono stulpai daromi iš medžių; 80 % darželinukų ir 87 % pirmokų nesiejo popieriaus su medžiais.",
+    "Bjørgen, K., Moe, B., Wold, P.-A., & Melis, C. (2023). Children's knowledge about the origins of food in early childhood education and care institutions (ECEC) in Norway. Education 3-13, 51(7), 1118–1129. https://doi.org/10.1080/03004279.2022.2049839 — sunkiausia ten, kur tarp žaliavos ir produkto yra keli nematomi žingsniai, todėl modelis kiekvieną žingsnį rodo atskirai."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (daikto kelias prasideda gamtoje), o tausojimas sąmoningai paliktas mokytojo diskusijai, ne moduliui.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (knyga, plastikinis butelis), o ne įsimintą sakinį iš modelio.",
+    "3 žingsnis — pagalba laiku: vaikas pirma spėja, tada stato grandinę; spėjimas palyginamas su grandinės galu, klaida nebaudžiama, o netinkama kortelė paaiškinama savybe."
+  ]
+}

@@ -2560,6 +2560,414 @@ const kasGyvas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 9. Daikto grandinė — „Kas sukūrė šį daiktą?“                        */
+/* ------------------------------------------------------------------ */
+/* Grandinė statoma ATGAL: nuo daikto (dešinėje) link gamtos (kairėje).  */
+/* Vienas kintamasis — šaltinio kortelė dabartiniame žingsnyje.         */
+/* Netinkama kortelė lieka matoma su brūkšniuotu rėmeliu ir trūkusia    */
+/* rodykle, o paaiškinimas remiasi SAVYBE (smėlis birus, popierius       */
+/* lankstosi), ne autoritetu. Grandinė yra konfigūracija: trūkstamas    */
+/* paaiškinimas ar klausimas parodomas žodžiais, o ne tyliai pakeičiamas */
+/* bendru sakiniu (LL-33).                                              */
+const DG_ICON = (kind) => `<svg viewBox="0 0 40 40" width="100%" height="100%"
+  aria-hidden="true" focusable="false">${art.pictogram(kind, 0, 0, 1)}</svg>`;
+
+const DG_ARROW = (ok, broken) => `<svg viewBox="0 0 16 12" width="16" height="12" aria-hidden="true"
+  focusable="false"><line x1="1" y1="6" x2="${broken ? "8" : "12"}" y2="6" stroke="currentColor"
+  stroke-width="2.4" stroke-linecap="round" ${ok || broken ? "" : 'stroke-dasharray="2 3"'}
+  /><polygon points="13,6 8,2.6 8,9.4" fill="currentColor" opacity="${broken ? ".35" : "1"}"/></svg>`;
+
+const daiktoGrandine = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const C = config.cards || {};
+    const objects = (Array.isArray(config.objects) ? config.objects : []).filter(Boolean);
+    const cardOk = (id) => !!C[id] && typeof C[id].name === "string";
+    const nameOf = (id) => (cardOk(id) ? C[id].name : id);
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai. Jei konfigūracija nesuderinta, sakoma
+       žodžiais, o ne tyliai rodomas bendras sakinys (LL-33). --- */
+    const problems = [];
+    if (!objects.length) problems.push("nėra nė vieno daikto");
+    for (const o of objects) {
+      const steps = Array.isArray(o.steps) ? o.steps : [];
+      if (!cardOk(o.id)) problems.push(`daikto „${o.id}“ kortelė neaprašyta`);
+      if (!steps.length) problems.push(`${o.id}: nėra žingsnių`);
+      if (!o.predict || !Array.isArray(o.predict.options) || !o.predict.options.length) {
+        problems.push(`${o.id}: nėra spėjimo`);
+      } else {
+        if (!o.predict.say || !S[o.predict.say]) problems.push(`${o.id}: spėjimo klausimo teksto nėra`);
+        for (const p of o.predict.options) {
+          if (!p || !p.label) problems.push(`${o.id}: spėjimo variantas be užrašo`);
+          else if (!p.say || !S[p.say]) problems.push(`${o.id}: spėjimo varianto „${p.label}“ palyginimo nėra`);
+        }
+      }
+      steps.forEach((st, i) => {
+        const n = i + 1;
+        if (!st || !cardOk(st.card)) problems.push(`${o.id} ${n} žingsnis: kortelė „${st && st.card}“ neaprašyta`);
+        if (!Array.isArray(st.options) || !st.options.includes(st.card)) {
+          problems.push(`${o.id} ${n} žingsnis: teisinga kortelė turi būti tarp variantų`);
+        }
+        for (const opt of (st.options || [])) {
+          if (opt !== st.card && !(st.no && typeof st.no[opt] === "string" && st.no[opt].trim())) {
+            problems.push(`${o.id} ${n} žingsnis: „${opt}“ neturi savo paaiškinimo`);
+          }
+        }
+        if (!st.ask || !S[st.ask]) problems.push(`${o.id} ${n} žingsnis: klausimo teksto nėra`);
+        if (i === steps.length - 1 && (!st.end || !S[st.end])) {
+          problems.push(`${o.id}: paskutinis žingsnis neturi pabaigos sakinio`);
+        }
+      });
+      const replay = Array.isArray(o.replay) ? o.replay : [];
+      if (replay.length !== steps.length + 1) {
+        problems.push(`${o.id}: peržiūros eilučių skaičius nesutampa su grandinės kortelėmis`);
+      }
+      replay.forEach((k) => { if (!S[k]) problems.push(`${o.id}: peržiūros sakinio „${k}“ nėra`); });
+    }
+    if (problems.length) {
+      console.error(`daikto-grandine: ${problems.join("; ")}`);
+      stage.innerHTML = `<p class="error-box">Grandinė nesuderinta su kortelėmis.</p>`;
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const state = {
+      oi: 0,
+      picks: {},        // daikto id → { žingsnio nr.: { card, ok } }
+      pred: {},         // daikto id → spėjimo varianto id
+      msg: null,        // paskutinio veiksmo tekstai: { readout, note }
+      replayI: -1,
+      reported: false,
+    };
+    const finished = new Set();
+
+    const cur = () => objects[state.oi];
+    const picksOf = (id) => (state.picks[id] || (state.picks[id] = {}));
+    const stepNow = () => {
+      const p = picksOf(cur().id);
+      let k = 0;
+      while (p[k] && p[k].ok) k += 1;
+      return k;
+    };
+    const chainDone = () => stepNow() >= cur().steps.length;
+    const predOf = () => cur().predict.options.find((p) => p.id === state.pred[cur().id]) || null;
+
+    /* Kortelės iš kairės į dešinę: paskutinis žingsnis (gamta) … daiktas. */
+    const nodes = () => {
+      const steps = cur().steps;
+      const arr = steps.map((st, i) => ({ card: st.card, step: i })).reverse();
+      arr.push({ card: cur().id, step: null });
+      return arr;
+    };
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:26rem;margin:0 auto">
+        <p id="dg-guess" style="margin:0 0 .45rem;min-height:1.2rem;font-size:.85rem;line-height:1.2;
+           font-weight:800;text-align:center;color:var(--ink-soft)"></p>
+        <div id="dg-chain" role="group" aria-label="Daikto grandinė" style="display:grid;gap:.3rem;align-items:stretch"></div>
+        <div id="dg-summary" style="display:none;margin-top:.7rem"></div>
+        <p style="margin:.7rem 0 0;font-size:.78rem;line-height:1.3;text-align:center;color:var(--ink-soft)">
+          Grandinė rodo tik medžiagos kelią: transportas ir pakuotė joje nevaizduojami.
+        </p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.5rem;width:100%;max-width:34rem;margin:0 auto">
+        <p id="dg-ask" style="margin:0;font-size:.95rem;line-height:1.25;font-weight:800;text-align:center"></p>
+        <div id="dg-predict" role="group" aria-label="Spėjimas" style="display:grid;gap:.35rem"></div>
+        <div id="dg-sources" role="group" aria-label="Šaltinio kortelės" style="display:grid;gap:.35rem"></div>
+        <button type="button" class="btn secondary" id="dg-replay"
+                style="min-height:52px;font-size:.95rem">Peržiūrėk kelią</button>
+        <button type="button" class="btn secondary" id="dg-next"
+                style="min-height:52px;font-size:.95rem">Kitas daiktas</button>
+        <button type="button" class="btn ghost" id="dg-reset"
+                style="min-height:48px;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
+    const q = (sel) => controls.querySelector(sel);
+    const chain = stage.querySelector("#dg-chain");
+    const summary = stage.querySelector("#dg-summary");
+
+    const cardHtml = ({ cardId = null, bad = false, isObject = false, isActive = false, isNature = false }) => {
+      const kind = cardId ? (C[cardId].icon || cardId) : null;
+      const icon = kind
+        ? DG_ICON(kind)
+        : `<span style="font-size:1.5rem;line-height:1;font-weight:800;color:var(--ink-faint)">?</span>`;
+      const label = cardId ? esc(nameOf(cardId)) : "?";
+      const badge = isNature ? "GAMTA" : bad ? "netinka" : "";
+      const border = bad ? "2px dashed var(--ink-faint)"
+        : isActive ? "2px solid var(--ink)" : "2px solid var(--line)";
+      const aria = cardId
+        ? `${nameOf(cardId)}${isNature ? ", gamta" : ""}${bad ? ", netinka" : ""}`
+        : "tuščias langelis";
+      return `<div role="img" aria-label="${esc(aria)}" style="display:grid;justify-items:center;align-content:space-between;
+        gap:.15rem;padding:.3rem .15rem;min-height:104px;border:${border};
+        border-radius:var(--r-s);background:${isObject ? "var(--paper-2)" : "var(--paper)"}">
+        <span style="min-height:.8rem;font-size:.68rem;line-height:1;letter-spacing:.05em;font-weight:800;
+          color:var(--ink-soft)">${badge || "&nbsp;"}</span>
+        <span style="display:block;width:52px;height:52px">${icon}</span>
+        <strong style="font-size:.78rem;line-height:1.05;text-align:center;overflow-wrap:anywhere">${label}</strong>
+      </div>`;
+    };
+
+    function chainHtml() {
+      const ns = nodes();
+      const p = picksOf(cur().id);
+      const step = stepNow();
+      const parts = [];
+      ns.forEach((n, i) => {
+        if (i) {
+          const prev = ns[i - 1];
+          const pick = prev.step == null ? null : p[prev.step];
+          const broken = !!(pick && !pick.ok);
+          const ok = !!(pick && pick.ok);
+          parts.push(`<div style="display:flex;align-items:center;justify-content:center;
+            color:${broken ? "var(--ink-faint)" : "var(--ink-soft)"}">${DG_ARROW(ok, broken)}</div>`);
+        }
+        if (n.step == null) {
+          parts.push(cardHtml({ cardId: n.card, isObject: true }));
+          return;
+        }
+        const pick = p[n.step];
+        if (pick) {
+          parts.push(cardHtml({
+            cardId: pick.card,
+            bad: !pick.ok,
+            isNature: pick.ok && n.step === cur().steps.length - 1,
+          }));
+        } else {
+          parts.push(cardHtml({ isActive: n.step === step }));
+        }
+      });
+      return parts.join("");
+    }
+
+    function summaryHtml() {
+      return objects.filter((o) => finished.has(o.id)).map((o) => {
+        const chainTxt = [...o.steps.map((s) => s.card).reverse(), o.id]
+          .map((id) => `<span style="display:inline-flex;align-items:center;gap:.25rem">
+            <span style="display:block;width:22px;height:22px">${DG_ICON(C[id].icon || id)}</span>
+            <span>${esc(nameOf(id))}</span></span>`).join(`<span aria-hidden="true">→</span>`);
+        return `<div style="display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;padding:.35rem .45rem;
+          border:2px solid var(--line);border-radius:var(--r-s);font-size:.85rem;font-weight:700;min-width:0">${chainTxt}</div>`;
+      }).join("");
+    }
+
+    function render(focusSel) {
+      const ns = nodes();
+      const step = stepNow();
+      const done = chainDone();
+      const pred = predOf();
+
+      const cols = [];
+      ns.forEach((_, i) => { if (i) cols.push("16px"); cols.push("minmax(0,1fr)"); });
+      chain.style.gridTemplateColumns = cols.join(" ");
+      chain.innerHTML = chainHtml();
+
+      const chainTxt = ns.map((n) => {
+        if (n.step == null) return nameOf(n.card);
+        const pick = picksOf(cur().id)[n.step];
+        if (!pick) return n.step === step ? "klausimas" : "tuščias langelis";
+        return `${nameOf(pick.card)}${pick.ok ? "" : " (netinka)"}`;
+      }).join(", ");
+      chain.setAttribute("aria-label",
+        `${cur().predict.say ? S[cur().predict.say] : ""} Grandinė: ${chainTxt}.`
+        + (pred ? ` Spėjimas: ${pred.label}.` : ""));
+
+      const guess = stage.querySelector("#dg-guess");
+      guess.textContent = pred ? `Tu sakei: ${pred.label}` : "Spėjimas dar neįrašytas.";
+
+      const ask = q("#dg-ask");
+      ask.textContent = !pred ? S[cur().predict.say]
+        : done ? S[cur().steps[cur().steps.length - 1].end]
+          : S[cur().steps[step].ask];
+
+      /* Spėjimas */
+      const pg = q("#dg-predict");
+      pg.style.gridTemplateColumns = `repeat(${cur().predict.options.length},minmax(0,1fr))`;
+      pg.innerHTML = cur().predict.options.map((o) => {
+        const on = pred && pred.id === o.id;
+        return `<button type="button" class="btn secondary" data-pred="${esc(o.id)}" aria-pressed="${on ? "true" : "false"}"
+          ${pred ? "disabled" : ""} style="min-width:0;min-height:56px;padding:.35rem .25rem;font-size:.9rem;
+          line-height:1.15;${on ? "background:var(--ink);color:var(--paper);border-color:var(--ink)" : ""}">${esc(o.label)}</button>`;
+      }).join("");
+
+      /* Šaltiniai */
+      const sg = q("#dg-sources");
+      const st = done ? null : cur().steps[step];
+      const opts = st ? st.options : [];
+      sg.style.gridTemplateColumns = `repeat(${Math.max(1, opts.length)},minmax(0,1fr))`;
+      sg.style.display = opts.length ? "grid" : "none";
+      sg.innerHTML = opts.map((id) => {
+        const off = !pred;
+        const pick = picksOf(cur().id)[step];
+        const chosen = pick && pick.card === id;
+        const chosenBad = chosen && !pick.ok;
+        return `<button type="button" class="btn secondary" data-card="${esc(id)}"
+          aria-pressed="${chosen ? "true" : "false"}" ${off ? "disabled" : ""}
+          aria-label="${off ? `Pirma pasirink spėjimą: ${nameOf(id)}` : chosenBad ? `${nameOf(id)}, netinka` : `Rinktis: ${nameOf(id)}`}"
+          style="display:grid;justify-items:center;gap:.2rem;min-width:0;min-height:72px;height:auto;
+          padding:.35rem .2rem;font-size:.85rem;line-height:1.1;overflow-wrap:anywhere;
+          ${chosenBad ? "border:2px dashed var(--ink-faint);" : ""}
+          ${chosen && pick.ok ? "background:var(--ink);color:var(--paper);border-color:var(--ink);" : ""}">
+          <span style="display:block;width:34px;height:34px">${DG_ICON(C[id].icon || id)}</span>
+          <span style="min-width:0">${esc(nameOf(id))}</span>
+        </button>`;
+      }).join("");
+
+      const replayBtn = q("#dg-replay");
+      replayBtn.disabled = !done;
+      replayBtn.setAttribute("aria-label", done
+        ? "Peržiūrėk kelią po vieną žingsnį"
+        : "Peržiūra bus galima, kai grandinė baigsis");
+
+      const nextBtn = q("#dg-next");
+      const last = state.oi >= objects.length - 1;
+      nextBtn.disabled = !done || last;
+      nextBtn.textContent = last ? "Abu daiktai peržiūrėti" : "Kitas daiktas";
+      nextBtn.setAttribute("aria-label", !done
+        ? "Kitas daiktas bus galimas, kai grandinė baigsis"
+        : last ? "Abu daiktai jau peržiūrėti. Paspausk „Iš naujo“." : "Kitas daiktas");
+
+      summary.style.display = finished.size ? "block" : "none";
+      summary.innerHTML = `<div style="display:grid;gap:.35rem">${summaryHtml()}</div>`;
+
+      api.readout((state.msg && state.msg.readout) || ask.textContent);
+      api.note((state.msg && state.msg.note) || "");
+
+      if (focusSel) {
+        const el = q(focusSel);
+        if (el && !el.disabled) el.focus();
+      }
+    }
+
+    const firstSource = () => {
+      const btn = q("#dg-sources button");
+      return btn && !btn.disabled ? "#dg-sources button" : null;
+    };
+
+    function choosePred(id) {
+      const o = cur().predict.options.find((x) => x.id === id);
+      if (!o) return;
+      state.pred[cur().id] = id;
+      state.msg = {
+        readout: S.guessReadout || "Spėjimas įrašytas. Dabar statyk kelią.",
+        note: "Šis spėjimas liks viršuje iki galo.",
+      };
+      render(firstSource());
+    }
+
+    function chooseSource(id) {
+      if (!predOf()) return;
+      const steps = cur().steps;
+      const step = stepNow();
+      if (step >= steps.length) return;
+      const st = steps[step];
+      const ok = id === st.card;
+      picksOf(cur().id)[step] = { card: id, ok };
+      state.replayI = -1;
+
+      if (ok) {
+        if (step + 1 < steps.length) {
+          state.msg = {
+            readout: `${nameOf(id)}. ${S[steps[step + 1].ask]}`,
+            note: "Dar vienas žingsnis iki gamtos.",
+          };
+          api.speak(S[steps[step + 1].ask], { rate: 0.9 });
+          render(firstSource());
+          return;
+        }
+        finished.add(cur().id);
+        const pred = predOf();
+        state.msg = {
+          readout: S[st.end],
+          note: pred ? S[pred.say] : "",
+        };
+        api.speak(pred ? S[pred.say] : S[st.end], { rate: 0.9 });
+        if (finished.size >= objects.length) {
+          state.msg = { readout: S.all, note: S.all };
+          if (!state.reported) {
+            state.reported = true;
+            api.progress({ correct: true });
+          }
+        }
+        render("#dg-replay");
+        return;
+      }
+
+      state.msg = {
+        readout: S.wrong,
+        note: (st.no && st.no[id]) || "",
+      };
+      api.speak(S.wrong, { rate: 0.9 });
+      const btn = [...controls.querySelectorAll("#dg-sources button")].find((b) => b.dataset.card === id);
+      render(btn ? `#dg-sources button[data-card="${id}"]` : firstSource());
+    }
+
+    function nextObject() {
+      if (!chainDone() || state.oi >= objects.length - 1) return;
+      state.oi += 1;
+      state.msg = null;
+      render("#dg-predict button");
+      api.speak(S[cur().predict.say], { rate: 0.9 });
+    }
+
+    function replay() {
+      if (!chainDone()) return;
+      const lines = cur().replay || [];
+      state.replayI = (state.replayI + 1) % lines.length;
+      state.msg = { readout: `${state.replayI + 1}. ${S[lines[state.replayI]]}`, note: "" };
+      api.speak(S[lines[state.replayI]], { rate: 0.9 });
+      render(null);
+      const cards = [...chain.children].filter((el) => el.getAttribute("role") === "img");
+      const el = cards[state.replayI];
+      if (el) el.style.outline = "4px solid var(--sun)";
+    }
+
+    function reset() {
+      state.oi = 0;
+      state.picks = {};
+      state.pred = {};
+      state.msg = { readout: S.again, note: "" };
+      state.replayI = -1;
+      finished.clear();
+      api.speak(S.again, { rate: 0.9 });
+      render("#dg-predict button");
+    }
+
+    controls.addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b) return;
+      if (b.dataset.pred) { choosePred(b.dataset.pred); return; }
+      if (b.dataset.card) { chooseSource(b.dataset.card); return; }
+      if (b.id === "dg-replay") { replay(); return; }
+      if (b.id === "dg-next") { nextObject(); return; }
+      if (b.id === "dg-reset") { reset(); }
+    });
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "r" || e.key === "R") { e.preventDefault(); reset(); return; }
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const group = e.target.closest("#dg-predict, #dg-sources");
+      if (!group) return;
+      const list = [...group.querySelectorAll("button")].filter((b) => !b.disabled);
+      const i = list.indexOf(document.activeElement);
+      if (i < 0) return;
+      e.preventDefault();
+      const to = (i + (e.key === "ArrowRight" ? 1 : list.length - 1)) % list.length;
+      list[to].focus();
+    });
+
+    state.msg = null;
+    render(null);
+    api.speak(S[cur().predict.say], { rate: 0.9 });
+    return null;
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
@@ -2569,4 +2977,5 @@ export const SIMS = {
   "kuprine-ir-svoris": kuprineIrSvoris,
   "dumai-ir-isejimas": dumaiIrIsejimas,
   "kas-gyvas": kasGyvas,
+  "daikto-grandine": daiktoGrandine,
 };

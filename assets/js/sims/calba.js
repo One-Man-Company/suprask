@@ -72,18 +72,66 @@ const garsoRaides = {
       });
     }
 
+    /* Pabaigos ekranas rodo sąrašą to, ką vaikas ką tik įveikė, ir klausimą
+       apie TĄ PATĮ sąrašą. Klausimas nėra įrašytas tekstu: jis
+       apskaičiuojamas iš `config.items`. Ankstesnė versija klausė „kurie du
+       žodžiai prasideda ta pačia raide?“, nors visi šeši žodžiai prasidėjo
+       skirtingomis raidėmis — vaikas ieškojo atsakymo, kurio nebuvo (#20854).
+       Sąrašas ekrane reikalingas ir dėl atminties: 7 žodžių poros vaikas
+       neprisimins, o raidę prie žodžio mato kiekvieną kartą (§T3.2). */
     function finish() {
-      stage.innerHTML = `<div style="text-align:center;padding:1rem">
-        <div style="font-size:4rem">🎉</div>
-        <p style="font-family:var(--font-head);font-weight:900;font-size:1.4rem">Įveikei visas raides!</p>
-        <p class="sim-note">Dabar pasakyk: kurie du žodžiai prasideda ta pačia raide?</p></div>`;
+      const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      const byLetter = new Map();
+      items.forEach((it, idx) => {
+        const letter = String(it.letter ?? "").trim();
+        if (!letter) return;
+        const key = letter.toUpperCase();
+        if (!byLetter.has(key)) byLetter.set(key, []);
+        byLetter.get(key).push(idx);
+      });
+      const pair = [...byLetter.values()].find((list) => list.length > 1) || [];
+
+      stage.innerHTML = `<div style="text-align:center;padding:1rem;max-width:34rem;margin:0 auto">
+        <div style="font-size:4rem" aria-hidden="true">🎉</div>
+        <p style="margin:0;font-family:var(--font-head);font-weight:900;font-size:1.4rem">Įveikei visas raides!</p>
+        <ul style="list-style:none;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;padding:0;margin:.7rem 0 0">
+          ${items.map((it, idx) => `<li id="gr-fin-${idx}" style="display:flex;align-items:center;gap:.35rem;padding:.3rem .65rem;border:2px solid var(--line);border-radius:999px;background:var(--paper)">
+            <span aria-hidden="true">${esc(it.emoji)}</span>
+            <span style="font-weight:800">${esc(it.word)}</span>
+            <span style="font-family:var(--font-head);font-weight:900;color:var(--ink-soft)">${esc(it.letter)}</span>
+          </li>`).join("")}
+        </ul>
+        <p id="gr-fin-q" style="margin:.8rem 0 0;font-family:var(--font-head);font-weight:900;font-size:clamp(1.05rem,4vw,1.25rem)">${
+          pair.length
+            ? "Kurie du žodžiai prasideda ta pačia raide?"
+            : "Kuris žodis tau buvo sunkiausias? Pasakyk jį ir pirmą raidę."
+        }</p>
+        <p class="sim-note" id="gr-fin-a" style="margin:.35rem 0 0;min-height:2.6rem"></p>
+      </div>`;
       api.readout("Visos raidės įveiktos");
       /* Tikslas pasiektas DABAR — visos raidės, o ne viena (§4). */
       if (!reported) {
         reported = true;
         api.progress({ correct: true });
       }
-      controls.innerHTML = `<button class="btn" id="gr-again">Bandyti dar kartą</button>`;
+      controls.innerHTML = `${pair.length ? `<button class="btn secondary" id="gr-pair">Rodyti porą</button>` : ""}<button class="btn" id="gr-again">Bandyti dar kartą</button>`;
+      if (pair.length) {
+        controls.querySelector("#gr-pair").addEventListener("click", () => {
+          const a = items[pair[0]];
+          const b = items[pair[1]];
+          pair.forEach((idx) => {
+            const chip = stage.querySelector(`#gr-fin-${idx}`);
+            if (chip) chip.style.boxShadow = "inset 0 0 0 3px var(--ok)";
+          });
+          const answerEl = stage.querySelector("#gr-fin-a");
+          if (answerEl) answerEl.textContent = `„${a.word}“ ir „${b.word}“ prasideda raide ${a.letter}.`;
+          api.readout(`„${a.word}“ ir „${b.word}“ — raide ${a.letter}`);
+          api.speak(`${a.word}. ${b.word}`);
+          api.note("Ta pati raidė reiškia tą patį pirmą garsą.");
+        });
+      } else {
+        api.note("Sąraše visi žodžiai prasideda skirtingomis raidėmis.");
+      }
       controls.querySelector("#gr-again").addEventListener("click", () => {
         i = 0;
         items = shuffle(items);

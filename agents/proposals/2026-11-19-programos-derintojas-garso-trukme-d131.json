@@ -1,0 +1,19 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 385,
+  "created": "2026-11-19T15:33:00+02:00",
+  "type": "atitiktis",
+  "title": "06-garso-trukme remiasi D.1.3.1, bet modelis skirsto ne balsius ir priebalsius, o garsų trukmę",
+  "body": "Modulio teacher.goal (:83) žada „skirti balsius ir priebalsius be terminų (D.1.3.1)“, o simuliacija skirsto garsus pagal tai, ar juos galima tempti. Tai ne ta pati skirtybė: m, s, š ir n yra priebalsiai, kuriuos tempti galima, ir pats modulis tai pripažįsta teacher.misconceptions[1] (:88 — „s, š, m ir n tęsiasi, nors tai priebalsiai“). Programa 1–2 klasei prašo būtent balsių ir priebalsių skyrimo be terminų: „Naudodamasis pagalbine medžiaga, skiria balsius, priebalsius (nevartojant terminų), taisyklingai juos taria“ (slenkstinis D.1.3 lygis, :39749–:39752). Todėl trys modulio rezultatai (:6–:8 — „Skiriu garsus, kuriuos galiu tempti…“) nepriskiriami jokiam pasiekimų lygiui, o T2.1 reikalauja kiekvieną rezultatą susieti su konkrečiu pasiekimu. Siūloma ne naikinti modelį (jis moko tikros akustinės savybės ir vaikui girdisi), o atskirti du dalykus: (a) perrašyti outcomes ir teacher.goal taip, kad jie sakytų, ką modelis iš tikrųjų moko, ir D.1.3.1 nuorodą išimti, jei ji nepateisinama; (b) D.1.3.1 tikrąja prasme palikti atskiram moduliui, kuriame vaikas su pagalbine medžiaga grupuoja garsus į dvi krūvas pagal balsių skambumą (be terminų), kaip tai daro oficialus 1 kl. veiklos pavyzdys „Kuo raidė skiriasi nuo garso?“ (:374). Antras kelias — pervardyti simuliacijos eiles „balsiai / priebalsiai“ — netinka: tada m, s, š atsidurtų ne ten, kur juos deda pats modelis.",
+  "target": "content/lt/grade-01/lietuviu-kalba/06-garso-trukme.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/06-garso-trukme.json:83 — teacher.goal „Skirti balsius ir priebalsius be terminų (D.1.3.1)“",
+    "content/lt/grade-01/lietuviu-kalba/06-garso-trukme.json:88 — teacher.misconceptions[1] „s, š, m ir n tęsiasi, nors tai priebalsiai; todėl eilės modulyje vadinamos „ilgas“ ir „trumpas“, ne „balsis“ ir „priebalsis““",
+    "content/lt/grade-01/lietuviu-kalba/06-garso-trukme.json:9–11 — outcomes „Skiriu garsus, kuriuos galiu tempti, nuo garsų, kurie nutrūksta“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:39749–39752 — D.1.3.1 (1–2 kl., I lygis): „Naudodamasis pagalbine medžiaga, skiria balsius, priebalsius (nevartojant terminų), taisyklingai juos taria.“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:41150–41172 — 3–4 kl. lentelė rodo, kad D.1.3.1–D.1.3.4 yra to paties pasiekimo lygiai I–IV, ne atskiros temos",
+    "docs/SVIETIMAS-1-GAIRES.md T2.1 — kiekvienas rezultatas susiejamas su konkrečiu oficialios programos pasiekimu"
+  ]
+}

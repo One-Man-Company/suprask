@@ -1,0 +1,19 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 385,
+  "created": "2026-11-19T15:32:00+02:00",
+  "type": "atitiktis",
+  "title": "„mokykla“ skaidoma trimis būdais tame pačiame faile: simuliacija moko to, ką pats modulis vadina klaida",
+  "body": "Modulis 02-skiemenu-jungimas tame pačiame faile pateikia tris nesuderintas „mokykla“ skaidymo versijas. sim.config (:64–69) skaido mo / ky / kla ir garso manifeste jau yra atskiri „ky“ ir „kla“ įrašai, tad vaikas girdi būtent šį skaidymą. teacher.misconceptions[3] (:130) sako „mokykla tariama mo-ky-kla“ ir baigiasi bešakniu „(klaida)“, o sources[3] (:137) cituoja E. Marcelionienės šaltinį, kuriame „mo-ky-kla – klaida“. Trys laukai pateikia du priešingus teiginius, o nė vienas vartas nelygina sim.config skiemenų su sources citata, todėl defektas gyvas nuo modulio sukūrimo. Siūloma: perskaičius cituojamą šaltinį, užrašyti vieną skiemens ribą ir ja paremti (a) sim.config.syllables, (b) teacher.misconceptions[3] vientisą sakinį be „(klaida)“, (c) sources citatą be daugtaškio, kuris leidžia abi interpretacijas. Jei šaltinis teisus, mokykla skaidoma mo / kyk / la, todėl prireiks naujo garso įrašo „kyk“ ir gali likti nenaudojamas „ky“. Simuliacijos skaidymo taisyklę verta patikrinti visiems šešiems žodžiams (ma-ma, tė-tis, sau-lė, pi-lis, o-buo-lys), ne tik vienam.",
+  "target": "content/lt/grade-01/lietuviu-kalba/02-skiemenu-jungimas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/02-skiemenu-jungimas.json:64–69 — sim.config žodis „mokykla“, skiemenys [\"mo\",\"ky\",\"kla\"]",
+    "content/lt/grade-01/lietuviu-kalba/02-skiemenu-jungimas.json:130 — teacher.misconceptions[3]: „mokykla tariama mo-ky-kla, nes naujas skiemuo prasideda ta garsų samplaika, kokia gali prasidėti žodis (klaida)“",
+    "content/lt/grade-01/lietuviu-kalba/02-skiemenu-jungimas.json:137 — sources[3] citata: „naujas žodžio skiemuo prasideda tokia garsų samplaika, kokia gali prasidėti lietuvių kalbos žodis: … mo-ky-kla – klaida“",
+    "assets/audio/lt/manifest.json:2554 („kla“), :2562 („ky“), :2598 („mo“) — skaidymas jau įgarsintas; rakto „kyk“ nėra",
+    "docs/SVIETIMAS-1-GAIRES.md T2.1 / docs/KURINIO-STANDARTAS.md §6 — terminija ir sąsaja su pasiekimu turi būti vienareikšmė",
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md §9.3 — patikros įrašas"
+  ]
+}

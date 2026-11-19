@@ -193,6 +193,47 @@ def infra_reason(*texts: str) -> str:
     return ""
 
 
+# Žymės, kuriomis modelis pats pasako, kad baigėsi ėjimų/ŽINGSNIŲ biudžetas.
+# Tai TREČIA nesėkmės rūšis, kurios iki 2026-11-19 sistema neskirdė nuo
+# „vaidmuo nieko neveikė“: 2026-11-19 matuota `runs.db` — VISI 10 `empty`
+# paleidimų (dizaineris #383, leidejas #369/#320, kritikas #367/#317,
+# ideator #295, sveikatos-inspektorius #375, tikrintojas #373,
+# publikavimo-agentas #338/#336/#306/#294) ataskaitose rašo „baigėsi
+# iteracijų limitas“ / „pasiekiau žingsnių limitą“ — darbas buvo
+# IŠMATUOTAS, bet neįrašytas į failą. Statistika tai vadino tuščiu
+# paleidimu ir siuntė architektą taisyti vaidmens, o ne biudžeto.
+#
+# Sąmoningai NE "budget": `goal_query()` kiekvienam `/goal` paleidimui
+# rašo „20-turn budget“, todėl bendras žodis duotų klaidingą teigiamą
+# kiekvienam kūrėjo paleidimui.
+EXHAUST_MARKERS = (
+    "iteracijų limit",
+    "žingsnių limit",
+    "žingsnių skaiči",
+    "turn limit",
+    "maximum number of turns",
+    "ran out of turns",
+    "reached the turn",
+)
+
+
+def exhausted_reason(*texts: str) -> str:
+    """Ar paleidimas baigėsi dėl ėjimų biudžeto, o ne dėl nieko darbo.
+
+    Grąžina rastą žymę (tuščia eilutė — biudžetas nebuvo kaltas). Ši
+    informacija reikalinga trims vartotojams: `main()` (statusas),
+    `scripts/kurejas_queue.py` (pasiūlymas negali būti blokuojamas dėl
+    biudžeto) ir `scripts/system_report.py` (atskira kolona — kitaip
+    talpos trūkumas atrodo kaip sugedęs vaidmuo).
+    """
+    blob = " ".join(t or "" for t in texts).lower()
+    for marker in EXHAUST_MARKERS:
+        if marker in blob:
+            return marker
+    return ""
+
+
+
 def work_files(files: list[str]) -> list[str]:
     """Failai, kurie yra šio paleidimo DARBAS (be jo paties ataskaitos).
 
@@ -1837,6 +1878,19 @@ def main() -> int:
         infra = infra_reason(out, err) if not work else ""
         if infra and status in ("failed", "partial", "ok"):
             status = "infra"
+
+        # Talpos trūkumas — trečia nesėkmės rūšis (2026-11-19). Vaidmuo dirbo:
+        # matavo, skaitė, darė išvadas, bet baigėsi ėjimai PIRMS failo įrašymo.
+        # Tai nėra „vaidmuo neturi ką veikti“ (nuo to priklauso, ar mažinti
+        # grafiką) ir nėra „pasiūlymas netinkamas“ (nuo to priklauso, ar siųsti
+        # `blocked`). Be šios šakos visi 10 `empty` paleidimų buvo skaitomi kaip
+        # tuščias darbas, o eilė užblokuodavo gerą pasiūlymą.
+        exhaust = exhausted_reason(out, err)
+        if exhaust and not work and status in ("ok", "partial", "empty"):
+            status = "exhausted"
+        # Failai parašyti, bet paskutiniai žingsniai liko nebaigti — darbas yra,
+        # todėl toliau sprendžia publikavimas (`resolve_status`, LL-10), o ne
+        # biudžeto žymė.
 
         # Paskelbimas — bėgiklio, ne agento, darbas.
         result = publish(args.role, run_id, files, out or args.role,

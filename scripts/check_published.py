@@ -141,6 +141,19 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
     pagrindinių failų, svetainės kodo ir 1432 garso įrašų patikros
     nevykdomos, o pranešime pasakoma, kas NETIKRINTA (ne 1451 „nepasiekiama“).
 
+2026-11-19 (paleidimas #386): 404 nebelaikomas ryšio klaida.
+  `fetch()` grąžino `None` ir tada, kai svetainė **atsakė 404**, ir tada, kai
+  ryšio nebuvo, o `compare()` abu paversdavo `"unreachable"`. Pasekmė: modulio
+  failo, kurio svetainėje nėra, atveju įrankis rašė „NEPASIEKTA po 2 bandymų“ —
+  teiginys apie tinklą, kurio nebuvo (404 net nekartojamas), ir patarimas
+  bandyti dar kartą vietoj publikuoti (LL-21, LL-37). Dabar `fetch_answer()`
+  skiria `ok|missing|unreachable`, o `compare()` ir `_shell_state()` turi
+  būseną `"gone"`: repo failas yra, svetainė atsakė 404/410. Ji rodoma
+  atskirai (`SVETAINĖJE NĖRA MODULIO FAILO`, `…PAGRINDINIO FAILO`,
+  `…KODO FAILO`), o `verdict()` turi savo priežastis, nes taisymas kitas —
+  paleisti publikavimą, ne kartoti užklausą. Zondas:
+  `scratch/pub386/probe.py` — prieš pataisymą 3/5 (B krito), po — 5/5.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -1203,6 +1216,13 @@ def main() -> int:
         for s in data["aux_absent"]:
             live = "neišmatuota" if s["live_bytes"] < 0 else f"gyvai {s['live_bytes']} B"
             print(f"  - {s['file']}: repo failo nėra, {live}")
+    if data.get("aux_gone"):
+        # Svetainė atsakė 404: failo ten nėra, nors repo jį turi. Tai
+        # nepasibaigęs publikavimas, o ne „nepasiektas“ (#386).
+        print(f"PAGRINDINIO FAILO NĖRA SVETAINĖJE — svetainė atsakė 404 "
+              f"({len(data['aux_gone'])}):")
+        for s in data["aux_gone"]:
+            print(f"  - {s['file']}: repo {s['repo_bytes']} B, svetainėje failo nėra")
     if data.get("shell_stale"):
         print(f"PASENĘS KODAS — naršyklė vykdo kitą failą ({len(data['shell_stale'])}):")
         for s in data["shell_stale"]:
@@ -1212,6 +1232,10 @@ def main() -> int:
     if data.get("shell_unreachable"):
         print(f"NEPASIEKIAMI svetainės kodo failai ({len(data['shell_unreachable'])}): "
               f"{', '.join(data['shell_unreachable'])}")
+    if data.get("shell_gone"):
+        # 404, ne laikinas gedimas: kodas nepaskelbtas, o ne ryšys nutrūkęs.
+        print(f"SVETAINĖJE NĖRA KODO FAILO — svetainė atsakė 404 "
+              f"({len(data['shell_gone'])}): {', '.join(data['shell_gone'])}")
     audio = data.get("audio") or {}
     if audio.get("total"):
         kind = "mėginys" if audio.get("sampled") else "visi"

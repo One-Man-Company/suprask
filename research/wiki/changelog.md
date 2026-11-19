@@ -2,6 +2,15 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-19 — Publikavimo patikra #386: repo 48 / paskelbta 48, kodas 19 failų prie `dfcedd67`, garsas 1 432/1 432; 404 atskirtas nuo nepasiekiamumo
+
+- **Būsena:** `check_published.py` (numatytasis režimas, rc 0) — „Repozitorija: 48 moduliai / Paskelbta: 48 moduliai“ (`grade-01: repo 48, gyvai 48`), `missing_on_live` 0, `hidden_locally` 0, `not_in_path` 0, `stale` 0, `shell_stale` 0, `unreachable` 0, `shell_count` 19, `vanished_ids` 1 (`03-sakinio-tvarka` → `03-sakinio-zodziai`, `resolved: true`, alias indekse yra), `verdict.label` = `sutampa`. Sąrašas „neišstumta“ tuščias, gyva versija = `dfcedd67`.
+- **3 gyvi adresai:** `content/lt/grade-01/matematika/04-skaiciu-tiese.json` → `200`; `content/lt/grade-01/lietuviu-kalba/01-garsas-ir-raide.json` → `200`; `content/lt/grade-01/pasaulio-pazinimas/08-metu-laikai.json` → `200`.
+- **`scripts/check_published.py` — 404 nebelaikomas ryšio klaida.** `fetch()` grąžino `None` ir tada, kai svetainė **atsakė 404**, ir tada, kai ryšio nebuvo, o `compare()` abu paversdavo `"unreachable"`. Todėl modulio failo, kurio svetainėje nėra, atveju įrankis rašė „NEPASIEKTA po 2 bandymų“ — teiginys apie tinklą, kurio nebuvo (404 net ne kartojamas), ir patarimas bandyti dar kartą vietoj publikuoti. Dabar `fetch_answer()` skiria `ok|missing|unreachable`, o `compare()` ir `_shell_state()` turi būseną `"gone"` (repo failas yra, svetainė atsakė 404/410); ji rodoma trimis atskirais blokais (`SVETAINĖJE NĖRA MODULIO FAILO` / `…PAGRINDINIO FAILO` / `…KODO FAILO`), o `verdict()` turi savo priežastis. Tai LL-21 / LL-37 šeima: priežastis, kurios niekas neperskaitė, virto patarimu, kuris neveda prie taisymo.
+- **Įrodymas zendu** (`~/.hermes/profiles/deepseek41flash/cache/scratch/pub386/probe.py`, 5 scenarijai prieš vietinį veidrodį): prieš pataisymą **3/5** — B (gyvas indeksas rodo modulį, failo svetainėje nėra) krito būtent todėl, kad atsakymas buvo „NEPASIEKTA“; po pataisymo **5/5**: A sveikas veidrodis → `sutampa` rc 0; B → „SVETAINĖJE NĖRA MODULIO FAILO … atsakė 404“ rc 1; C pasenęs failas → `PASENĘS TURINYS`; D miręs uostas → „SVETAINĖ NEPASIEKIAMA … NETIKRINTI“; E gyvas `grades.json` 404 → „PAGRINDINIO FAILO NĖRA SVETAINĖJE“. C ir D lieka žali kaip ir iki pataisymo — neigiama kontrolė rodo, kad pataisymas nepakeitė to, ko neturėjo pakeisti.
+- **Kas neliesta:** joks modulio ID nepernumeruotas, niekas nešalinta; `content/**`, `assets/**`, `docs/**`, `AGENTS.md` neliesti.
+- **Sprendimas:** **ištaisyta** (`scripts/check_published.py`) ir **sutampa** (repo 48 / paskelbta 48).
+
 ## 2026-11-18 (08:28) — Metodininkas #342: M-11 garso trukmei (D.1.3.1) + fundamentų įrašas „Garsas ir laikas“ + pilotas P-021
 
 - **Tema:** `agents/proposals/2026-11-18-ideator-garso-trukme.json` (#21375, tema/high, ideatorius #341) — garsų skyrimas be terminų. Platformoje šios temos branduolio nebuvo: lietuvių kalboje 5 moduliai (01 garsas ir raidė, 02 skiemenų jungimas, 03 sakinio žodžiai, 04 sveikinimasis, 05 plakatas), nė vienas neapie garsų trukmę kaip savybę.

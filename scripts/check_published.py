@@ -154,6 +154,20 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   paleisti publikavimą, ne kartoti užklausą. Zondas:
   `scratch/pub386/probe.py` — prieš pataisymą 3/5 (B krito), po — 5/5.
 
+2026-11-19 (paleidimas #388): ta pati 404 klaida liko vienu lygiu aukščiau.
+  #386 sutvarkė modulio failą ir svetainės kodą, bet **klasės** `index.json`
+  ir `path.json` tebebuvo skaitomi senuoju `fetch()` kontraktu: 404 virsdavo
+  `None`, `live_error` — „gyvas grade-01/index.json nepasiekiamas“, o
+  `verdict()` — „gyva svetainė nepasiekiama“. Tai būdavo pranešama kartu su
+  garso eilute, kuri ėjo per **tą pačią** svetainę ir rado visus 1432 įrašus,
+  tad pranešimas prieštaravo pats sau ir siuntė taisyti tinklo vietoj
+  publikavimo (LL-21, LL-120). Realus atvejis: klasė įjungta `grades.json`
+  (`status: live`), o jos katalogas dar nepaskelbtas. Dabar `check_grade()`
+  naudoja `fetch_answer()`, rašo `live_gone`, o `verdict()` turi priežastį
+  „klasės failo nėra svetainėje (404)“. Zondas:
+  `scratch/pub388/probe_f.py` — prieš pataisymą `verdict.label` =
+  „gyva svetainė nepasiekiama“, po — „klasės failo nėra svetainėje“.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -699,7 +713,7 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     # `verdict()` iš to darė „gyva svetainė nepasiekiama“: veidrodis be
     # `grade-01/index.json` skelbė klaidą apie svetainę, nors svetainė sveika
     # (LL-21 — teiginys apie priežastį, kurios niekas neperskaitė).
-    out: dict = {"grade": grade, "live_error": "", "repo_error": ""}
+    out: dict = {"grade": grade, "live_error": "", "repo_error": "", "live_gone": []}
 
     try:
         data, files = local_index(grade)
@@ -711,8 +725,19 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     live_ids: list[str] = []
     live_seq: list[str] = []
     live_index_ok = False
+    # Klasės indeksas ir `path.json` skaitomi prieš bet kurį modulį, tad jų
+    # 404 yra atskiras faktas, ne ryšio klaida: tai nepaskelbta klasė
+    # (`grades.json` jau sako `live`, o katalogas dar ne svetainėje). Iki #388
+    # `fetch()` grąžindavo `None` abiem atvejais, o `verdict()` iš to darė
+    # „gyva svetainė nepasiekiama“ — tame pačiame pranešime, kuriame garso
+    # patikra ėjo per tą pačią svetainę ir rado viską (LL-21, LL-120 vienu
+    # lygiu aukščiau: priežastis, kurios niekas neperskaitė).
     for name in ("index.json", "path.json"):
-        blob = fetch(f"{LIVE_ROOT}content/lt/{gd}/{name}")
+        status, blob = fetch_answer(f"{LIVE_ROOT}content/lt/{gd}/{name}")
+        if status == "missing":
+            # 404 — atsakymas, ne gedimas: failo svetainėje nėra.
+            out["live_gone"].append(f"{gd}/{name}")
+            break
         if blob is None:
             out["live_error"] = out["live_error"] or f"gyvas {gd}/{name} nepasiekiamas"
             break
@@ -968,6 +993,7 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "stale_unknown": merge("stale_unknown"),
         "stale_unmeasured": merge("stale_unmeasured"),
         "live_missing": merge("live_missing"),
+        "live_gone": merge("live_gone"),
         "missing_in_repo": merge("missing_in_repo"),
         "aux_stale": aux_stale,
         "aux_absent": aux_absent,
@@ -1020,10 +1046,19 @@ def verdict(data: dict) -> dict:
         reasons.append("repo indekso nepavyko perskaityti")
     if data.get("live_error"):
         reasons.append("gyva svetainė nepasiekiama")
+    # Klasės indekso 404: svetainė atsako, bet klasės katalogo joje nėra.
+    # Atskira priežastis, nes taisymas kitas — publikuoti, o ne kartoti
+    # užklausą. Iki #388 šis atvejis virsdavo „gyva svetainė nepasiekiama“,
+    # nors tame pačiame pranešime garso patikra ėjo per tą pačią svetainę
+    # (LL-21, LL-120 vienu lygiu aukščiau).
+    if data.get("live_gone"):
+        reasons.append(f"klasės failo nėra svetainėje (404): {', '.join(data['live_gone'])}")
     # `published` be perskaityto gyvo indekso yra nulis vietoj matavimo. Jei
     # dėl kokios nors priežasties `live_error` liko tuščias, skaičius vis tiek
-    # neturi atrodyti išmatuotas (#382).
-    if data.get("published_measured") is False and not data.get("live_error"):
+    # neturi atrodyti išmatuotas (#382). Kai indekso svetainėje nėra, priežastis
+    # jau įvardyta aukščiau, tad kartoti „neišmatuota“ nereikia.
+    if (data.get("published_measured") is False and not data.get("live_error")
+            and not data.get("live_gone")):
         reasons.append("paskelbtų modulių skaičius neišmatuotas")
     if data.get("missing_on_live"):
         reasons.append(f"{len(data['missing_on_live'])} neskelbta")
@@ -1121,6 +1156,10 @@ def main() -> int:
     print(f"Repozitorija: {data['local']} moduliai")
     if data.get("published_measured", True):
         print(f"Paskelbta:    {data['published']} moduliai")
+    elif data.get("live_gone"):
+        # 404 yra atsakymas: klasės katalogo svetainėje nėra. Ne „neperskaityta“.
+        print(f"Paskelbta:    neišmatuota — svetainėje nėra "
+              f"{', '.join(data['live_gone'])} (404)")
     else:
         # Ne „0 modulių“: tiek pat tiesos būtų sakyti „0“ ir „48“, nes gyvo
         # indekso niekas neperskaitė (#382, LL-37).
@@ -1140,6 +1179,13 @@ def main() -> int:
         print("  Taisyk repo failą — publikavimas čia nieko nepakeis.")
     if data["live_error"]:
         print(f"Gyvos svetainės klaida: {data['live_error']}")
+    if data.get("live_gone"):
+        # Ne „svetainė nepasiekiama“: svetainė atsakė 404, tad trūksta
+        # publikavimo, o ne ryšio. Svetainės klaida šiame bėgime tuščia, o
+        # garso patikra ėjo per tą pačią svetainę (#388, LL-120).
+        print(f"SVETAINĖJE NĖRA KLASĖS FAILO — svetainė atsakė 404 "
+              f"({len(data['live_gone'])}): {', '.join(data['live_gone'])}")
+        print("  Publikuok klasę — kiti adresai svetainėje atsakė, tad tai ne ryšio gedimas.")
     if data["missing_on_live"]:
         print(f"NESKELBTA ({len(data['missing_on_live'])}): {', '.join(data['missing_on_live'])}")
     if data["hidden_locally"]:

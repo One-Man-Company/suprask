@@ -611,6 +611,10 @@
   "n": "n/1bb5ec81e8be2b76-8239b08a.mp3",
   "s": "s/1bb5ec81e8be2b76-ee6d5cf1.mp3"
  },
+ "Atiduosiu kitam": {
+  "n": "n/2ea09df3be307a0a-70965cd5.mp3",
+  "s": "s/2ea09df3be307a0a-9f0f22e6.mp3"
+ },
  "Atkarpa ilgesnė. Ji vis dar turi du galus.": {
   "n": "n/96cea72c8e4c28bf-ea64f2e5.mp3",
   "s": "s/96cea72c8e4c28bf-b8c26745.mp3"
@@ -698,6 +702,18 @@
  "Bokštas nebaigtas. Visiems trūksta vieno stulpo.": {
   "n": "n/8897cc3a91841130-977dd4f4.mp3",
   "s": "s/8897cc3a91841130-57174ec3.mp3"
+ },
+ "Butelis atiteko draugui. Krūva nepaaugo.": {
+  "n": "n/a8f5e059f6b5bca3-e6399089.mp3",
+  "s": "s/a8f5e059f6b5bca3-1a0a0f93.mp3"
+ },
+ "Butelis guli krūvoje. Krūva paaugo vienu daiktu.": {
+  "n": "n/3b08e0b8d4ec0d05-db9886e5.mp3",
+  "s": "s/3b08e0b8d4ec0d05-d1c79806.mp3"
+ },
+ "Butelis pripiltas vandens. Krūva nepaaugo.": {
+  "n": "n/ce49f0e8ebff971b-e9ed0171.mp3",
+  "s": "s/ce49f0e8ebff971b-ba1c9493.mp3"
  },
  "C": {
   "n": "n/6b23c0d5f35d1b11-9538f709.mp3",
@@ -935,6 +951,14 @@
   "n": "n/f0a72c1f3aba1e56-ef6e0845.mp3",
   "s": "s/f0a72c1f3aba1e56-c34f31fc.mp3"
  },
+ "Dėžutė atiteko draugui. Krūva nepaaugo.": {
+  "n": "n/99c87872adc3f12f-b812dd25.mp3",
+  "s": "s/99c87872adc3f12f-c51462ac.mp3"
+ },
+ "Dėžutė guli krūvoje. Krūva paaugo vienu daiktu.": {
+  "n": "n/9873ce37b2284d05-2038e144.mp3",
+  "s": "s/9873ce37b2284d05-e410cf9e.mp3"
+ },
  "Dėžutė nusileido. Ji sunkesnė už kilogramą.": {
   "n": "n/3ccc9e7f4b97d0b7-a74bdbd3.mp3",
   "s": "s/3ccc9e7f4b97d0b7-eace884d.mp3"
@@ -946,6 +970,10 @@
  "Dėžutė uždaryta. Ko nori Rėjus?": {
   "n": "n/fdbffaed2b3dcb3a-e2e6471c.mp3",
   "s": "s/fdbffaed2b3dcb3a-274a249b.mp3"
+ },
+ "Dėžutė vėl naudojama. Krūva nepaaugo.": {
+  "n": "n/6c15da95a112277e-439b5458.mp3",
+  "s": "s/6c15da95a112277e-1dc04d50.mp3"
  },
  "Dūmai leidžiasi. Prie grindų dar oras.": {
   "n": "n/423818fec9d5a505-5fc9bdcb.mp3",
@@ -1079,6 +1107,10 @@
   "n": "n/eeb24791c5438b9f-a12346c2.mp3",
   "s": "s/eeb24791c5438b9f-7f3455d0.mp3"
  },
+ "Išmesiu": {
+  "n": "n/fbb720fdb8de8edc-3605f717.mp3",
+  "s": "s/fbb720fdb8de8edc-74ffc54e.mp3"
+ },
  "J": {
   "n": "n/6da43b944e494e88-b68b1146.mp3",
   "s": "s/6da43b944e494e88-339234f6.mp3"
@@ -1086,6 +1118,14 @@
  "Jaunas augalas": {
   "n": "n/26c7dabd254a2784-d431e77b.mp3",
   "s": "s/26c7dabd254a2784-ab191d0f.mp3"
+ },
+ "Jis dingsta": {
+  "n": "n/51eca8bbd91b2624-93873b6f.mp3",
+  "s": "s/51eca8bbd91b2624-9091eca3.mp3"
+ },
+ "Jis lieka krūvoje": {
+  "n": "n/48e7b0e7cfd34581-04d05a96.mp3",
+  "s": "s/48e7b0e7cfd34581-c9ab2cb3.mp3"
  },
  "Juosta pilna. Šį garsą gali tempti.": {
   "n": "n/860d84e6e8b491e5-906f8e15.mp3",
@@ -1102,6 +1142,10 @@
  "K": {
   "n": "n/86be9a55762d316a-5317057b.mp3",
   "s": "s/86be9a55762d316a-9982aa77.mp3"
+ },
+ "Kai daiktas išmetamas, kas jam nutinka?": {
+  "n": "n/718146207842687a-cad84ccf.mp3",
+  "s": "s/718146207842687a-1eafb285.mp3"
  },
  "Kai vienetų nulis, sukeitus priekyje atsidurtų nulis. Nulio priekyje nerašome — pakeisk vienetus.": {
   "n": "n/de6158f28323879e-d3f30971.mp3",
@@ -1315,6 +1359,10 @@
   "n": "n/2604dbae09165b63-51fa9a25.mp3",
   "s": "s/2604dbae09165b63-f89814b5.mp3"
  },
+ "Ką darysi su šiuo daiktu?": {
+  "n": "n/73af747a8f52a274-4058a487.mp3",
+  "s": "s/73af747a8f52a274-0b079706.mp3"
+ },
  "Ką nusiimti prieš einant per gatvę?": {
   "n": "n/2b495d4a7d0785ec-a22eedd1.mp3",
   "s": "s/2b495d4a7d0785ec-ec3697f1.mp3"
@@ -1375,6 +1423,14 @@
   "n": "n/782dbd829e6e7ce2-9a5c8b14.mp3",
   "s": "s/782dbd829e6e7ce2-2905bff5.mp3"
  },
+ "Lapas atiteko draugui. Krūva nepaaugo.": {
+  "n": "n/d30fd2071ffa29d3-e21255a4.mp3",
+  "s": "s/d30fd2071ffa29d3-d7d38f39.mp3"
+ },
+ "Lapas guli krūvoje. Krūva paaugo vienu daiktu.": {
+  "n": "n/c239df8fa444d565-c74c832a.mp3",
+  "s": "s/c239df8fa444d565-350df1f0.mp3"
+ },
  "Lapas perlenktas pusiau. Perlenk dar kartą.": {
   "n": "n/255123887f79d358-9b6a40b1.mp3",
   "s": "s/255123887f79d358-81e61873.mp3"
@@ -1406,6 +1462,18 @@
  "Lenta baigėsi. Šešios sąvaržėlės.": {
   "n": "n/ddba4fc539a8eb99-87701608.mp3",
   "s": "s/ddba4fc539a8eb99-48f9bd31.mp3"
+ },
+ "Liniuotė atiteko draugui. Krūva nepaaugo.": {
+  "n": "n/4535d8423729c74d-8c50c925.mp3",
+  "s": "s/4535d8423729c74d-7ac0c44e.mp3"
+ },
+ "Liniuotė guli krūvoje. Krūva paaugo vienu daiktu.": {
+  "n": "n/0988def4ed7eb2a3-84929a73.mp3",
+  "s": "s/0988def4ed7eb2a3-9caf10f2.mp3"
+ },
+ "Liniuotė liko ant lentynos. Krūva nepaaugo.": {
+  "n": "n/badbba474c892c6a-459e027c.mp3",
+  "s": "s/badbba474c892c6a-9d3a2f65.mp3"
  },
  "Linktelėjo": {
   "n": "n/86fa18d5636f9dc4-99eb23ab.mp3",
@@ -1470,6 +1538,10 @@
  "N": {
   "n": "n/8ce86a6ae65d3692-84095ad0.mp3",
   "s": "s/8ce86a6ae65d3692-081e4fe1.mp3"
+ },
+ "Naudosiu dar": {
+  "n": "n/6fff13367b0e28e1-fa0b75b5.mp3",
+  "s": "s/6fff13367b0e28e1-3e71feb8.mp3"
  },
  "Naujas lapas. Perlenk jį du kartus.": {
   "n": "n/426b063e55abbc05-4bb40f1f.mp3",
@@ -1627,6 +1699,18 @@
   "n": "n/b8e0d102388d6cca-9cef34b6.mp3",
   "s": "s/b8e0d102388d6cca-41832f93.mp3"
  },
+ "Pieštukas atiteko draugui. Krūva nepaaugo.": {
+  "n": "n/aa0581e0aff9e965-4c73c6d1.mp3",
+  "s": "s/aa0581e0aff9e965-03be9e56.mp3"
+ },
+ "Pieštukas guli krūvoje. Krūva paaugo vienu daiktu.": {
+  "n": "n/c62ee5854bd5e6a2-b1a14bfc.mp3",
+  "s": "s/c62ee5854bd5e6a2-cbe8fc82.mp3"
+ },
+ "Pieštukas liko ant lentynos. Krūva nepaaugo.": {
+  "n": "n/c42348608b4a3c39-d887802c.mp3",
+  "s": "s/c42348608b4a3c39-60e2d759.mp3"
+ },
  "Piktogramoje viena figūra atstoja vieną ženklą.": {
   "n": "n/5d96fcfd61dd4993-3ee99065.mp3",
   "s": "s/5d96fcfd61dd4993-7bbcbd8f.mp3"
@@ -1666,6 +1750,10 @@
  "Po pietų tas pats laikas turi antrą vardą.": {
   "n": "n/802a0444994b8bf4-ff20e94c.mp3",
   "s": "s/802a0444994b8bf4-3c355d3f.mp3"
+ },
+ "Popieriaus lapas liko ant lentynos. Krūva nepaaugo.": {
+  "n": "n/8b213f020619d3e6-fb54b24a.mp3",
+  "s": "s/8b213f020619d3e6-1af0a067.mp3"
  },
  "Popierius": {
   "n": "n/0c85494fd5f4f32d-96346576.mp3",
@@ -1910,6 +1998,10 @@
  "Spėjimas įrašytas. Dabar perjunk 24 valandų sistemą.": {
   "n": "n/c58ee21a4e528a1f-615ea451.mp3",
   "s": "s/c58ee21a4e528a1f-797c81e7.mp3"
+ },
+ "Spėjimas įrašytas. Dabar rink veiksmą.": {
+  "n": "n/98d838a1c27b5462-c718afd8.mp3",
+  "s": "s/98d838a1c27b5462-6e97ead9.mp3"
  },
  "Spėjimas įrašytas. Dabar spausk Žemyn.": {
   "n": "n/1aa2b230049497d2-167a73e5.mp3",
@@ -2179,6 +2271,14 @@
   "n": "n/9e00e82d24b0ed9c-e646a8c6.mp3",
   "s": "s/9e00e82d24b0ed9c-00591c57.mp3"
  },
+ "Tu sakei, kad daiktas dingsta. Jis guli krūvoje.": {
+  "n": "n/2dea6b1ac56433fd-ec9919e8.mp3",
+  "s": "s/2dea6b1ac56433fd-c925921f.mp3"
+ },
+ "Tu sakei, kad daiktas lieka krūvoje. Taip ir yra.": {
+  "n": "n/350c8d9100b79045-2ddf0144.mp3",
+  "s": "s/350c8d9100b79045-85dea136.mp3"
+ },
  "Tu sakei, kad lengvesnė. Dabar pasverk.": {
   "n": "n/3119ef4af3a0be83-e209274e.mp3",
   "s": "s/3119ef4af3a0be83-949b606d.mp3"
@@ -2330,6 +2430,10 @@
  "Viršutinis laidas yra. Apatinio nėra, todėl kelias neužsidaro.": {
   "n": "n/4523bd23cb838fb1-fe805551.mp3",
   "s": "s/4523bd23cb838fb1-4726d579.mp3"
+ },
+ "Visi daiktai numatyti. Pažiūrėk į krūvą.": {
+  "n": "n/34af930cf67a5dc9-e0d0f859.mp3",
+  "s": "s/34af930cf67a5dc9-4727ae78.mp3"
  },
  "Visi gyvūnai savo vietose.": {
   "n": "n/6974ab76ffadda8b-a818f62e.mp3",
@@ -2726,6 +2830,10 @@
  "Žinduoliai": {
   "n": "n/ddf119334452b7c6-973e39a3.mp3",
   "s": "s/ddf119334452b7c6-8531271a.mp3"
+ },
+ "Žingsnis atšauktas. Daiktas vėl ant lentynos.": {
+  "n": "n/f80162ef0057fe10-dd6f58d7.mp3",
+  "s": "s/f80162ef0057fe10-c832d410.mp3"
  },
  "Žirklės": {
   "n": "n/29108178601c894d-99c88dea.mp3",

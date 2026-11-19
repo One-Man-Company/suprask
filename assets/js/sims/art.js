@@ -890,6 +890,39 @@ export const art = {
                 stroke-linecap="round" opacity=".6"/>
         </g>`;
       }
+      if (kind === "deze") {
+        /* Kartoninė dėžutė atviru viršumi: matosi trys plokštumos ir tuščia
+           vidus, todėl ji neatrodys kaip pilnas kubas (LL-13). */
+        return `<g stroke-linejoin="round">
+          <path d="M10 20 L15 15 H35 L30 20 Z" fill="#e6c79b" stroke="#8a6239" stroke-width="2"/>
+          <path d="M30 20 L35 15 V27 L30 32 Z" fill="#c79e6e" stroke="#8a6239" stroke-width="2"/>
+          <rect x="10" y="20" width="20" height="12" rx="1.4" fill="#d9b483" stroke="#8a6239" stroke-width="2"/>
+          <path d="M13.5 24 H26.5" stroke="#a67c4e" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
+          <path d="M10 20 L15 15" stroke="#8a6239" stroke-width="2"/>
+        </g>`;
+      }
+      if (kind === "butelis") {
+        /* Plastikinis butelis: snapelis, kaklelis ir liemuo su etikete.
+           Butelis yra sąsmauka, ne statinė — todėl kaklelis siauresnis. */
+        return `<g stroke-linejoin="round">
+          <rect x="17" y="4" width="6" height="3.6" rx="1.2" fill="#3f7fa8" stroke="#2f5f7f" stroke-width="1.2"/>
+          <path d="M17.6 7.6 h4.8 v3.6 h-4.8 z" fill="#cfe6f2" stroke="#5b7f96" stroke-width="1.4"/>
+          <path d="M14 16 q0 -5 6 -5 q6 0 6 5 v14 q0 5 -6 5 q-6 0 -6 -5 z"
+                fill="#dff0f8" fill-opacity=".85" stroke="#5b7f96" stroke-width="2"/>
+          <rect x="14" y="18.5" width="12" height="5.6" fill="#f2b13c" opacity=".9"/>
+          <path d="M16.8 15 v16" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+        </g>`;
+      }
+      if (kind === "liniuote") {
+        /* Medinė liniuotė: ilga lenta, bet skiriasi nuo `mediena` tuo, kad
+           turi brūkšnelius. Be jų abi piktogramos būtų ta pati forma. */
+        const ticks = [10.5, 14, 17.5, 21, 24.5, 28].map((tx, i) =>
+          `<line x1="${tx}" y1="16.8" x2="${tx}" y2="${i % 2 ? 19 : 20.8}"/>`).join("");
+        return `<g transform="rotate(-28 20 20)">
+          <rect x="6" y="16" width="28" height="8" rx="1.6" fill="#e8c48d" stroke="#8a6239" stroke-width="2"/>
+          <g stroke="#8a6239" stroke-width="1.3" stroke-linecap="round">${ticks}</g>
+        </g>`;
+      }
       /* nafta */
       return `<g>
         <path d="M20 5 C24 12 29 17 29 23 A 9 9 0 0 1 11 23 C 11 17 16 12 20 5 Z"

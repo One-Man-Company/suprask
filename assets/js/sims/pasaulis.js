@@ -3376,6 +3376,315 @@ const augaluGrupes = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 11. Išmesto daikto kelias — „Išmestas daiktas nedingsta“            */
+/* ------------------------------------------------------------------ */
+/*
+ * Viena sąvoka: išmestas daiktas ne išnyksta, o atsiduria krūvoje, kuri
+ * auga. Modelis skirtas būtent nuostatai „išmečiau — dingo“: vaikas penkiems
+ * daiktams renkasi vieną iš trijų veiksmų, o kiekvienas „Išmesiu“ padeda
+ * daiktą į krūvą priešais akis. Krūva yra SKAIČIUOJAMA, ne nupiešta: jos
+ * aukštis priklauso nuo pasirinkimų skaičiaus, todėl „Grįžk vieną“ ją
+ * sumažina. Tai įrodymas, kurio paveikslėlis negali duoti.
+ *
+ * Ko modelis sąmoningai nedaro:
+ *  - neverdina veiksmų į gerus ir blogus (T5.1): išmesti nėra baudžiama,
+ *    tik parodoma, kur daiktas atsidūrė; tausojimas yra pasekmė, ne kaltė;
+ *  - nerūšiuoja atliekų pagal medžiagą (tai 3–4 kl. turinys, LL-23);
+ *  - neparodo tolesnio kelio (išvežimas, perdirbimas) — tai pasakoma vaikui
+ *    po scena ir mokytojui, o ne imituojama.
+ */
+const IDK_ITEM = (kind, x, y, s) =>
+  `<g transform="translate(${x} ${y}) scale(${s})">${art.pictogram(kind, 0, 0, 1)}</g>`;
+
+const ismestoDaiktoKelias = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const objects = (Array.isArray(config.objects) ? config.objects : []).filter(Boolean);
+    const actions = (Array.isArray(config.actions) ? config.actions : []).filter(Boolean);
+    const guess = config.guess && typeof config.guess === "object" ? config.guess : null;
+    const esc = (t) => String(t).replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai: nesuderinta konfigūracija sakoma žodžiais,
+       o ne tyliai pakeičiama bendru sakiniu (LL-33). --- */
+    const problems = [];
+    if (!objects.length) problems.push("nėra nė vieno daikto");
+    if (actions.length < 2) problems.push("nėra bent dviejų veiksmų");
+    actions.forEach((a) => {
+      if (!a || !a.id || !a.label) problems.push("veiksmas be id arba užrašo");
+      if (typeof a.keep !== "boolean") problems.push(`veiksmas „${a && a.id}“ neturi keep`);
+    });
+    if (!actions.some((a) => a.keep === true) || !actions.some((a) => a.keep === false)) {
+      problems.push("reikia ir veiksmo, kuris daiktą palieka, ir veiksmo, kuris jį išmeta");
+    }
+    objects.forEach((o) => {
+      if (!o.id || !o.name || !o.icon) problems.push(`daiktas „${o.id || "?"}“ be id, vardo ar piktogramos`);
+      if (!o.sentences || typeof o.sentences !== "object") {
+        problems.push(`daiktas „${o.id}“ neturi savo sakinių`);
+        return;
+      }
+      actions.forEach((a) => {
+        if (!a || !a.id) return;
+        if (typeof o.sentences[a.id] !== "string" || !o.sentences[a.id].trim()) {
+          problems.push(`daiktas „${o.id}“ neturi sakinio veiksmui „${a.id}“`);
+        }
+      });
+    });
+    if (!guess) {
+      problems.push("nėra spėjimo");
+    } else {
+      if (!guess.say || !S[guess.say]) problems.push("spėjimo klausimo teksto nėra");
+      if (!Array.isArray(guess.options) || guess.options.length < 2) {
+        problems.push("spėjimas turi turėti bent du variantus");
+      } else {
+        guess.options.forEach((o) => {
+          if (!o || !o.label) problems.push("spėjimo variantas be užrašo");
+          else if (!o.say || !S[o.say]) problems.push(`spėjimo varianto „${o.label}“ palyginimo nėra`);
+        });
+      }
+    }
+    ["ask", "guessReadout", "undo", "again", "done"].forEach((k) => {
+      if (!S[k]) problems.push(`sakinio „${k}“ nėra`);
+    });
+    if (problems.length) {
+      console.error(`ismesto-daikto-kelias: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="error-box">Krūva nesuderinta su daiktais.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const SEAT_Y = 166;      // lentynos viršus
+    const GROUND_Y = 236;    // krūvos pagrindas
+    const ICON_S = 34;       // krūvos daikto dydis
+    const RISE = 24;         // kiek daiktas pakelia krūvą
+
+    const state = { idx: 0, guessId: null, decisions: [], reported: false, msg: null };
+
+    const dWord = (n) => (n === 1 ? "daiktas" : n >= 2 && n <= 4 ? "daiktai" : "daiktų");
+    const done = () => state.idx >= objects.length;
+    const cur = () => (done() ? null : objects[state.idx]);
+    const keptOf = () => state.decisions.filter((d) => d.keep);
+    const thrownOf = () => state.decisions.filter((d) => !d.keep);
+    const objOf = (id) => objects.find((o) => o.id === id) || { name: id, icon: id };
+    const guessOpt = () => (guess ? guess.options.find((o) => o.id === state.guessId) || null : null);
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <p id="idk-guess-line" style="margin:0 0 .35rem;min-width:0;text-align:center;font-weight:800;
+           font-size:.9rem;line-height:1.2;overflow-wrap:anywhere;color:var(--ink-soft)"></p>
+        <svg id="idk-scene" viewBox="0 0 360 300" width="100%"
+             style="display:block;max-width:360px;height:auto;margin:0 auto"
+             role="img" aria-label="Lentyna su daiktais ir tuščia vieta krūvai."></svg>
+        <p id="idk-count" style="margin:.45rem 0 0;text-align:center;font-weight:800;font-size:.95rem"></p>
+        <p class="sim-note" style="margin:.15rem 0 0;text-align:center;font-size:.82rem">
+          Krūva rodo tik šio darbo daiktus.</p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.55rem;width:100%;max-width:34rem;margin:0 auto;min-width:0">
+        <p id="idk-ask" style="margin:0;min-width:0;font-size:.95rem;line-height:1.25;font-weight:800;
+           text-align:center;overflow-wrap:anywhere"></p>
+        <div id="idk-guess" role="group" aria-label="Spėjimas"
+             style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;min-width:0"></div>
+        <div id="idk-actions" role="group" aria-label="Ką darysi su daiktu"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.4rem;min-width:0"></div>
+        <div style="display:flex;gap:.45rem;justify-content:center;flex-wrap:wrap;min-width:0">
+          <button type="button" class="btn secondary" id="idk-undo"
+                  style="min-height:48px;flex:1 1 9rem;min-width:0">Grįžk vieną</button>
+          <button type="button" class="btn ghost" id="idk-reset"
+                  style="min-height:48px;flex:1 1 7rem;min-width:0">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const svg = stage.querySelector("#idk-scene");
+    const guessLine = stage.querySelector("#idk-guess-line");
+    const countEl = stage.querySelector("#idk-count");
+    const ask = controls.querySelector("#idk-ask");
+    const guessGroup = controls.querySelector("#idk-guess");
+    const actGroup = controls.querySelector("#idk-actions");
+    const undoBtn = controls.querySelector("#idk-undo");
+    const resetBtn = controls.querySelector("#idk-reset");
+
+    guessGroup.innerHTML = guess.options.map((o) =>
+      `<button type="button" class="btn secondary" data-guess="${esc(o.id)}" aria-pressed="false"
+        style="min-width:0;min-height:56px;padding:.35rem .25rem;font-size:.9rem;line-height:1.15;
+        overflow-wrap:anywhere">${esc(o.label)}</button>`).join("");
+
+    actGroup.innerHTML = actions.map((a) =>
+      `<button type="button" class="btn secondary" data-act="${esc(a.id)}"
+        style="min-width:0;min-height:56px;height:auto;padding:.4rem .3rem;font-size:.92rem;
+        line-height:1.15;overflow-wrap:anywhere">${esc(a.label)}</button>`).join("");
+
+    const guessBtns = Array.from(guessGroup.querySelectorAll("button"));
+    const actBtns = Array.from(actGroup.querySelectorAll("button"));
+
+    function sceneMarkup() {
+      const kept = keptOf().map((d, i) => IDK_ITEM(objOf(d.id).icon, 44 + i * 24, SEAT_Y - 22, 0.55)).join("");
+      const pile = thrownOf().map((d, i) => {
+        const x = 268 - ICON_S / 2 + (i % 2 ? 15 : -15);
+        const y = GROUND_Y - ICON_S - i * RISE;
+        return IDK_ITEM(objOf(d.id).icon, x, y, 0.85);
+      }).join("");
+      const c = cur();
+      return `${art.defs("idk")}
+        ${art.sun(316, 40, 12, "idk", 0.85)}
+        ${art.cloud(64, 46, 0.72)}
+        ${art.cloud(152, 30, 0.45, 0.7)}
+        ${art.hills(360, 238)}
+        ${art.grass(18, 244, 1)}${art.grass(118, 246, 0.85)}${art.grass(332, 244, 0.9)}
+        ${art.plank(52, GROUND_Y, 58, 9, 90)}
+        ${art.plank(148, GROUND_Y, 58, 9, 90)}
+        ${art.plank(36, 178, 128, 12)}
+        ${kept}
+        <ellipse cx="268" cy="${GROUND_Y + 3}" rx="52" ry="9" fill="none" stroke="#8b8578"
+                 stroke-width="2.5" stroke-dasharray="6 7" opacity=".7"/>
+        ${pile}
+        ${c ? IDK_ITEM(c.icon, 79, SEAT_Y - 40, 1) : ""}`;
+    }
+
+    function sceneLabel() {
+      const k = keptOf().length;
+      const t = thrownOf().length;
+      const c = cur();
+      return `Lentynoje ${k} ${dWord(k)}. Krūvoje ${t} ${dWord(t)}.`
+        + (c ? ` Ant lentynos: ${c.name}.` : " Visi daiktai numatyti.");
+    }
+
+    function render(focusSel) {
+      svg.innerHTML = sceneMarkup();
+      svg.setAttribute("aria-label", sceneLabel());
+      guessLine.textContent = state.guessId
+        ? `Tu sakei: ${guessOpt().label}`
+        : "Spėjimas dar neįrašytas.";
+      const k = keptOf().length;
+      const t = thrownOf().length;
+      countEl.textContent = `Lentynoje ${k} ${dWord(k)} · Krūvoje ${t} ${dWord(t)}`;
+
+      ask.textContent = !state.guessId ? S[guess.say] : done() ? S.done : S.ask;
+
+      for (const b of guessBtns) {
+        const on = b.dataset.guess === state.guessId;
+        b.disabled = !!state.guessId;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.background = on ? "var(--ink)" : "";
+        b.style.color = on ? "var(--paper)" : "";
+        b.style.borderColor = on ? "var(--ink)" : "";
+      }
+      for (const b of actBtns) {
+        b.disabled = !state.guessId || done();
+        const a = actions.find((x) => x.id === b.dataset.act);
+        b.setAttribute("aria-label", !state.guessId
+          ? `Pirma įrašyk spėjimą: ${a ? a.label : ""}`
+          : done() ? "Visi daiktai jau numatyti" : `Su šiuo daiktu: ${a ? a.label : ""}`);
+      }
+
+      undoBtn.disabled = state.decisions.length === 0;
+      undoBtn.setAttribute("aria-label", state.decisions.length
+        ? "Grįžk vienu žingsniu atgal"
+        : "Nėra ką atšaukti");
+      resetBtn.setAttribute("aria-label", "Pradėk iš naujo su visais daiktais");
+
+      api.readout(state.msg ? state.msg.readout : ask.textContent);
+      const note = state.msg ? state.msg.note : (state.guessId ? "" : "Pirma įrašyk spėjimą.");
+      api.note(note);
+
+      if (focusSel) {
+        const el = controls.querySelector(focusSel);
+        if (el && !el.disabled) el.focus();
+      }
+    }
+
+    function chooseGuess(id) {
+      if (state.guessId) return;
+      const g = guess.options.find((o) => o.id === id);
+      if (!g) return;
+      state.guessId = id;
+      state.msg = {
+        readout: S.guessReadout,
+        note: "Šis spėjimas liks viršuje iki galo.",
+      };
+      api.speak(S.guessReadout, { rate: 0.9 });
+      render("#idk-actions button");
+    }
+
+    function chooseAction(id) {
+      if (done()) return;
+      const o = cur();
+      const a = actions.find((x) => x.id === id);
+      if (!o || !a) return;
+      state.decisions.push({ id: o.id, action: a.id, keep: a.keep });
+      state.idx += 1;
+      const line = o.sentences[a.id];
+      if (done()) {
+        const g = guessOpt();
+        state.msg = {
+          readout: `${line} ${S.done}`,
+          note: g && S[g.say] ? S[g.say] : "",
+        };
+        api.speak(S.done, { rate: 0.9 });
+        if (!state.reported) {
+          state.reported = true;
+          api.progress({ correct: true });
+        }
+        render("#idk-undo");
+        return;
+      }
+      state.msg = { readout: line, note: a.note || "" };
+      api.speak(line, { rate: 0.9 });
+      /* Fokusas lieka ant to paties veiksmo mygtuko: jis lieka aktyvus, o
+         objektas pasikeitė — tai pasakoma readout'e, ne fokusu. */
+      render(null);
+    }
+
+    function undo() {
+      if (!state.decisions.length) return;
+      state.decisions.pop();
+      state.idx = Math.max(0, state.idx - 1);
+      state.msg = { readout: S.undo, note: "" };
+      api.speak(S.undo, { rate: 0.9 });
+      render("#idk-actions button");
+    }
+
+    function reset() {
+      state.idx = 0;
+      state.guessId = null;
+      state.decisions = [];
+      state.msg = { readout: S.again, note: "Pirma įrašyk spėjimą." };
+      api.speak(S.again, { rate: 0.9 });
+      render("#idk-guess button");
+    }
+
+    controls.addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b || b.disabled) return;
+      if (b.dataset.guess) { chooseGuess(b.dataset.guess); return; }
+      if (b.dataset.act) { chooseAction(b.dataset.act); return; }
+      if (b.id === "idk-undo") { undo(); return; }
+      if (b.id === "idk-reset") { reset(); }
+    });
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "r" || e.key === "R") { e.preventDefault(); reset(); return; }
+      if (e.key === "z" || e.key === "Z" || e.key === "Backspace") { e.preventDefault(); undo(); return; }
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const group = e.target.closest("#idk-guess, #idk-actions");
+      if (!group) return;
+      const btns = [...group.querySelectorAll("button")].filter((b) => !b.disabled);
+      if (btns.length < 2) return;
+      const idx = btns.indexOf(document.activeElement);
+      if (idx < 0) return;
+      e.preventDefault();
+      const to = (idx + (e.key === "ArrowRight" ? 1 : btns.length - 1)) % btns.length;
+      btns[to].focus();
+    });
+
+    render();
+    return null;
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
@@ -3387,4 +3696,5 @@ export const SIMS = {
   "kas-gyvas": kasGyvas,
   "daikto-grandine": daiktoGrandine,
   "augalu-grupes": augaluGrupes,
+  "ismesto-daikto-kelias": ismestoDaiktoKelias,
 };

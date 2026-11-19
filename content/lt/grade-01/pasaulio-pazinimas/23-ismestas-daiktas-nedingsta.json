@@ -1,0 +1,172 @@
+{
+  "id": "23-ismestas-daiktas-nedingsta",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Išmestas daiktas nedingsta",
+  "subtitle": "Jis atsiduria krūvoje, kuri auga prieš akis",
+  "minutes": 9,
+  "outcomes": [
+    "Nurodau, kur atsiduria išmestas daiktas.",
+    "Paaiškinu, kodėl krūva didėja.",
+    "Palyginu, kiek daiktų liko naudojami."
+  ],
+  "concept": {
+    "title": "Daiktas ne dingsta, o keliauja",
+    "big_idea": "Šiukšlių dėžėje daiktas ne išnyksta. Jis atsiduria krūvoje. Kuo daugiau išmeti, tuo krūva didesnė.",
+    "steps": [
+      "Spėk, kas nutinka išmestam daiktui.",
+      "Kiekvienam daiktui pasirink vieną veiksmą.",
+      "Stebėk lentyną ir krūvą: krūva auga, lentyna tuštėja.",
+      "Grįžk vienu žingsniu atgal ir palygink krūvos aukštį."
+    ],
+    "example": "Pieštukas guli krūvoje. Jis nedingo, o ten atsidūrė."
+  },
+  "sim": {
+    "component": "ismesto-daikto-kelias",
+    "config": {
+      "guess": {
+        "say": "guess",
+        "options": [
+          { "id": "dingsta", "label": "Jis dingsta", "say": "cmp_dingsta" },
+          { "id": "lieka", "label": "Jis lieka krūvoje", "say": "cmp_lieka" }
+        ]
+      },
+      "actions": [
+        { "id": "vel", "label": "Naudosiu dar", "keep": true, "note": "Krūva nepaaugo." },
+        { "id": "duodu", "label": "Atiduosiu kitam", "keep": true, "note": "Krūva nepaaugo." },
+        { "id": "metu", "label": "Išmesiu", "keep": false, "note": "Krūva paaugo vienu daiktu." }
+      ],
+      "objects": [
+        {
+          "id": "popierius",
+          "name": "Popieriaus lapas",
+          "icon": "popierius",
+          "sentences": {
+            "vel": "Popieriaus lapas liko ant lentynos. Krūva nepaaugo.",
+            "duodu": "Lapas atiteko draugui. Krūva nepaaugo.",
+            "metu": "Lapas guli krūvoje. Krūva paaugo vienu daiktu."
+          }
+        },
+        {
+          "id": "piestukas",
+          "name": "Pieštukas",
+          "icon": "piestukas",
+          "sentences": {
+            "vel": "Pieštukas liko ant lentynos. Krūva nepaaugo.",
+            "duodu": "Pieštukas atiteko draugui. Krūva nepaaugo.",
+            "metu": "Pieštukas guli krūvoje. Krūva paaugo vienu daiktu."
+          }
+        },
+        {
+          "id": "deze",
+          "name": "Kartoninė dėžutė",
+          "icon": "deze",
+          "sentences": {
+            "vel": "Dėžutė vėl naudojama. Krūva nepaaugo.",
+            "duodu": "Dėžutė atiteko draugui. Krūva nepaaugo.",
+            "metu": "Dėžutė guli krūvoje. Krūva paaugo vienu daiktu."
+          }
+        },
+        {
+          "id": "butelis",
+          "name": "Plastikinis butelis",
+          "icon": "butelis",
+          "sentences": {
+            "vel": "Butelis pripiltas vandens. Krūva nepaaugo.",
+            "duodu": "Butelis atiteko draugui. Krūva nepaaugo.",
+            "metu": "Butelis guli krūvoje. Krūva paaugo vienu daiktu."
+          }
+        },
+        {
+          "id": "liniuote",
+          "name": "Medinė liniuotė",
+          "icon": "liniuote",
+          "sentences": {
+            "vel": "Liniuotė liko ant lentynos. Krūva nepaaugo.",
+            "duodu": "Liniuotė atiteko draugui. Krūva nepaaugo.",
+            "metu": "Liniuotė guli krūvoje. Krūva paaugo vienu daiktu."
+          }
+        }
+      ],
+      "sentences": {
+        "guess": "Kai daiktas išmetamas, kas jam nutinka?",
+        "ask": "Ką darysi su šiuo daiktu?",
+        "guessReadout": "Spėjimas įrašytas. Dabar rink veiksmą.",
+        "undo": "Žingsnis atšauktas. Daiktas vėl ant lentynos.",
+        "again": "Pradedam iš naujo.",
+        "done": "Visi daiktai numatyti. Pažiūrėk į krūvą.",
+        "cmp_dingsta": "Tu sakei, kad daiktas dingsta. Jis guli krūvoje.",
+        "cmp_lieka": "Tu sakei, kad daiktas lieka krūvoje. Taip ir yra."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Popieriaus lapą išmetei į dėžę klasėje. Kur jis atsiduria?",
+      "options": [
+        "Išnyksta visam laikui",
+        "Guli šiukšlių krūvoje",
+        "Grįžta į mišką"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kas lieka, kai dėžė prisipildo.",
+      "why": "Išmestas lapas ne dingsta, o atsiduria krūvoje."
+    },
+    {
+      "q": "Kuri taisyklė padeda, kad krūva augtų lėčiau?",
+      "options": [
+        "Daiktą naudoti dar kartą",
+        "Daiktą išmesti toliau",
+        "Daiktą paslėpti spintoje"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, ar daiktas dar tinka.",
+      "why": "Naudojamas daiktas niekada nepatenka į krūvą."
+    },
+    {
+      "q": "Pieštukas dar rašo. Kur dėti seną pieštuką?",
+      "options": [
+        "Išmesti",
+        "Atiduoti kitam vaikui",
+        "Sulaužyti"
+      ],
+      "answer": 1,
+      "hint": "Jis dar gali rašyti.",
+      "why": "Daiktas, kuris dar tinka, gali likti naudojamas."
+    },
+    {
+      "q": "Kas nutinka išmestam daiktui?",
+      "options": [
+        "Jis tampa oru",
+        "Jis grįžta į parduotuvę",
+        "Jis guli krūvoje"
+      ],
+      "answer": 2,
+      "hint": "Prisimink, ką matei ekrane.",
+      "why": "Daiktas keičia vietą, bet ne išnyksta.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kur atsidurtų tavo išmestas popierius?",
+  "teacher": {
+    "goal": "Suprasti, kad išmestas daiktas ne išnyksta, o atsiduria krūvoje, kuri auga. Modelis leidžia vaikui penkiems daiktams rinktis veiksmą ir matyti pasekmę: kiekvienas „Išmesiu“ padeda daiktą į krūvą, o „Grįžk vieną“ ją sumažina. Išmesti nebaudžiama — parodoma vieta, ne kaltė.",
+    "prompt": "Ką manai, kur daiktas atsiduria po to, kai jį išmeti?",
+    "offline": "Padėkite ant grindų dvi vietas: „lentyna“ ir „krūva“. Duokite penkis daiktus: lapą, pieštuką, dėžutę, butelį, liniuotę. Vaikai po vieną padeda daiktą į vieną vietą ir garsiai sako, ką pasirinko. Pabaigoje suskaičiuokite krūvą ir palyginkite su lentyna. Tada vieną daiktą grąžinkite atgal ir vėl suskaičiuokite. Pabaigoje — mini diskusija „Kaip tausoti daiktus klasėje?“ ir klasės taisyklių aptarimas, kaip numatyta programoje.",
+    "misconceptions": [
+      "„Išmečiau — dingo.“ Modelis rodo priešingai: daiktas nupieštas krūvoje, o skaitliukas „Krūvoje“ paaugo vienu. Dingimo nėra, yra vieta.",
+      "„Krūva auga pati.“ Krūva kinta tik tada, kai vaikas pasirenka „Išmesiu“; „Grįžk vieną“ ją sumažina. Todėl priežastis matoma, o ne numanoma.",
+      "„Toliau numestas daiktas nebesiskaičiuoja.“ Modelyje vieta viena — krūva. Atstumas jos nekeičia, todėl toliau numestas daiktas joje atsiduria taip pat.",
+      "„Tausoti reiškia nieko niekada neišmesti.“ Modelis sąmoningai nebaudžia nei vieno pasirinkimo: išmesti kartais tikrai reikia. Modulis rodo pasekmę, o ne moko, kad išmesti draudžiama.",
+      "Modelio riba: jis neparodo, kas nutinka krūvai toliau — išvežimo, perdirbimo ir puvimo. Tai pasakoma žodžiu, o ne imituojama, kad vaikas nepainiotų modelio su visu keliu."
+    ]
+  },
+  "sources": [
+    "NŠA (2024). Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos, Gamtos mokslai, 1 klasės ilgalaikis planas — 26.3.1 „Gamtos ištekliai, jų tarša ir tausojimas“ (2 val.). Veiklos: mini diskusija (pvz., „Kaip tausoti daiktus klasėje?“) ir klasės taisyklių aptarimas (pvz., „Kokios taisyklės padeda tausoti gamtos išteklius?“). sources/pradinio-bp-rekomendacijos-2024.txt:17649–17656; integracijos lentelė :8452–8463.",
+    "NŠA (2024). Ten pat, bendroji dalis: „Tikimasi sąmoningesnio santykio su gamta ugdymosi, tvaresnio vartojimo įgūdžių stiprinimo“ (:78–80) ir „ugdomi praktiniai tvaresnio vartojimo įgūdžiai (D3)“ (:127–131)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (išmestas daiktas keliauja į krūvą), be rūšiavimo pagal medžiagą ir be gyvavimo ciklo.",
+    "2 žingsnis — vienodas vertinimas: užduotys klausia apie pasekmę naujoje situacijoje, o ne kartoja modelio sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas įrašomas prieš veiksmą ir palyginamas su krūva; paaiškinimas remiasi tuo, ką vaikas mato, o ne pamokymu."
+  ]
+}

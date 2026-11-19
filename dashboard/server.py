@@ -838,7 +838,9 @@ async function loadPublish(){
     const v = p.verdict;
     setText("#pubBig", v ? v.label : (drift === 0 && !p.unpushed_commits) ? "sutampa" : `${drift} neskelbta`);
     setText("#pubLocal",  p.local);
-    setText("#pubLive",  p.published);
+    // `published` be perskaityto gyvo indekso yra 0 vietoj matavimo: rodom
+    // brūkšnį, o ne skaičių, kurio niekas nematavo (#382).
+    setText("#pubLive",  p.published_measured === false ? "—" : p.published);
     setText("#pubUnpushed",  p.unpushed_commits);
     setText("#pubNote",  risky ? `repo nebeturi: ${p.hidden_locally.join(", ").slice(0,40)}`
       : (v && v.reasons && v.reasons.length > 1) ? v.reasons.slice(1).join(" · ").slice(0,50)

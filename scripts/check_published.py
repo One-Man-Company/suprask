@@ -127,6 +127,20 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
     (LL-21). Dabar `check_grade()` tokį atvejį rašo į `repo_error`, o
     `verdict()` pirmoji priežastis — „repo indekso nepavyko perskaityti“.
 
+2026-11-19 (paleidimas #382): nepasiekiama svetainė nebepaverčiama skaičiais.
+  #374 užbaigė `--no-bytes` ir `repo_error` puses, bet trys vietos liko:
+  - `published` buvo skaičiuojamas iš gyvo indekso, kurio **neperskaitėme**:
+    svetainės gedimas virsdavo „Paskelbta: 0 modulių“ — teiginys apie
+    svetainę, kurios nematėme. Dabar yra `published_measured`, o eilutė sako
+    „Paskelbta: neišmatuota“.
+  - baitų ciklas (`check_grade()`) ėjo net tada, kai gyvo indekso nėra: 48
+    užklausos virsdavo 48 eilutėmis „NEPASIEKTA“ apie failus, kurių niekas
+    nematė. Dabar jis paleidžiamas tik su perskaitytu gyvu indeksu, o **repo**
+    indekso vientisumas (įrašas be failo) tikrinamas ir be tinklo.
+  - `report()` pradeda vienu HEAD į `index.html`: kai svetainė neatsiliepia,
+    pagrindinių failų, svetainės kodo ir 1432 garso įrašų patikros
+    nevykdomos, o pranešime pasakoma, kas NETIKRINTA (ne 1451 „nepasiekiama“).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -590,6 +604,22 @@ def live_version() -> str:
     return match.group(0)[3:] if match else ""
 
 
+def site_reachable() -> bool:
+    """Ar gyva svetainė iš viso atsako (HEAD į `index.html`).
+
+    Vienas pigus matavimas prieš visus kitus. Be jo kiekviena gyva patikra
+    atskirai aiškinosi tą patį gedimą ir kiekviena jo rezultatą pranešdavo
+    kaip atskirą faktą: 48 moduliai „nepasiekiami“, 19 kodo failų
+    „nepasiekiami“, 1432 garso įrašai „nepasiekiami“ — nors buvo vienas
+    faktas (svetainė neatsiliepia), o 1451 užklausa tikrino ryšį, ne turinį.
+
+    404/410 čia reiškia „serveris atsako“ — tada svetainė pasiekiama ir
+    toliau matuojama įprastai.
+    """
+    state, _ = head_state("index.html")
+    return state != "unreachable"
+
+
 def check_shell() -> dict:
     files = shell_files()
     with ThreadPoolExecutor(max_workers=6) as pool:
@@ -644,6 +674,10 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
             live_seq = list(json.loads(blob.decode("utf-8")).get("sequence", []))
 
     out["live_index_ok"] = live_index_ok
+    # Ar `published` yra matavimas, ar tik nulis vietoj jo. Kai gyvo indekso
+    # neperskaitėme, „Paskelbta: 0“ yra teiginys apie svetainę, kurios
+    # nematėme (#382, LL-37/LL-21).
+    out["published_measured"] = live_index_ok
     out["local"] = len(local_ids)
     out["published"] = len(live_ids)
     if live_index_ok:
@@ -687,30 +721,41 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
         # nepasenęs: jo svetainėje tiesiog nėra. 2026-11-12 zondas su veidrodžiu
         # rodė tą patį ID abiejose eilutėse.
         missing = set(out["missing_on_live"])
-        todo = [(mid, files[mid]) for mid in local_ids if mid in files and mid not in missing]
-        with ThreadPoolExecutor(max_workers=8) as pool:
-            results = list(pool.map(lambda pair: (pair[0], pair[1], same_bytes(*pair[1:])), todo))
-        for mid, rel, (state, local_size, live_size) in results:
-            if state == "ok":
-                continue
-            if state == "absent":
-                # Indeksas rodo į failą, kurio repo nėra (#370). Tai ne
-                # „pasenęs turinys“ ir ne „nepasiekiamas“: publikavimas čia
-                # nieko nepakeis, kol indeksas netaisytas. Vaidmens taisyklė
-                # šį atvejį vadina lūžusiu indeksu ir reikalauja jį įvardyti
-                # atskirai, o ne sumaišyti su publikavimo defektais.
-                missing_in_repo.append({"id": mid, "file": rel, "grade": grade,
-                                        "repo_bytes": local_size, "live_bytes": live_size})
-            elif state == "unreachable":
-                stale_unknown.append(mid)
-            elif live_size < 0 or local_size < 0:
-                # Būsena „differs“, bet vienas dydis neišmatuotas — tokio
-                # derinio būti neturėtų; jei atsiranda, sakome tai žodžiais,
-                # o ne spausdiname -1 kaip baitus (LL-37).
-                unmeasured.append(mid)
-            else:
-                stale.append({"id": mid, "file": rel, "repo_bytes": local_size,
-                              "live_bytes": live_size})
+        if live_index_ok:
+            todo = [(mid, files[mid]) for mid in local_ids if mid in files and mid not in missing]
+            with ThreadPoolExecutor(max_workers=8) as pool:
+                results = list(pool.map(lambda pair: (pair[0], pair[1], same_bytes(*pair[1:])), todo))
+            for mid, rel, (state, local_size, live_size) in results:
+                if state == "ok":
+                    continue
+                if state == "absent":
+                    # Indeksas rodo į failą, kurio repo nėra (#370). Tai ne
+                    # „pasenęs turinys“ ir ne „nepasiekiamas“: publikavimas čia
+                    # nieko nepakeis, kol indeksas netaisytas. Vaidmens taisyklė
+                    # šį atvejį vadina lūžusiu indeksu ir reikalauja jį įvardyti
+                    # atskirai, o ne sumaišyti su publikavimo defektais.
+                    missing_in_repo.append({"id": mid, "file": rel, "grade": grade,
+                                            "repo_bytes": local_size, "live_bytes": live_size})
+                elif state == "unreachable":
+                    stale_unknown.append(mid)
+                elif live_size < 0 or local_size < 0:
+                    # Būsena „differs“, bet vienas dydis neišmatuotas — tokio
+                    # derinio būti neturėtų; jei atsiranda, sakome tai žodžiais,
+                    # o ne spausdiname -1 kaip baitus (LL-37).
+                    unmeasured.append(mid)
+                else:
+                    stale.append({"id": mid, "file": rel, "repo_bytes": local_size,
+                                  "live_bytes": live_size})
+        else:
+            # Gyvo indekso neperskaitėme, tad palyginti nėra su kuo: 48 baitų
+            # užklausos duotų 48 eilutes „NEPASIEKTA“ apie failus, kurių niekas
+            # nematė (#382, LL-37). Bet „indeksas rodo į failą, kurio repo
+            # nėra“ yra repo defektas — jis tikrinamas be tinklo ir lieka.
+            for mid in local_ids:
+                rel = files.get(mid)
+                if rel and not (CONTENT / rel).exists():
+                    missing_in_repo.append({"id": mid, "file": rel, "grade": grade,
+                                            "repo_bytes": -1, "live_bytes": -1})
     out["stale"] = stale
     out["stale_unknown"] = stale_unknown
     out["missing_in_repo"] = missing_in_repo
@@ -721,7 +766,7 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     # lyginami atskirai — kitaip „ID yra“ nereiškia „svetainė rodo tą patį“.
     aux_stale: list[dict] = []
     aux_absent: list[dict] = []
-    if compare_bytes:
+    if compare_bytes and live_index_ok:
         for name in ("index.json", "path.json"):
             url_rel = f"content/lt/{gd}/{name}"
             state, local_size, live_size = compare(CONTENT / gd / name, url_rel)
@@ -773,6 +818,12 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
            audio_sample: int | None = None) -> dict:
     RETRIES["count"] = 0
     grades = grades or live_grades()
+    # Vienas pigus HEAD prieš viską: jei svetainė neatsiliepia, likusios gyvos
+    # patikros (pagrindiniai failai, svetainės kodas, 1432 garso įrašai) duotų
+    # tik ilgą „nepasiekiama“ sąrašą — vieną gedimą, pakartotą 1451 kartą.
+    # Matuojama kartą, o pranešime pasakoma, kas NETIKRINTA (#382).
+    live_reachable = site_reachable()
+    live_bytes_ok = compare_bytes and live_reachable
     per_grade = [check_grade(g, compare_bytes) for g in grades]
 
     def merge(key: str) -> list:
@@ -788,7 +839,7 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     # Jo stagnacija reiškia 404 naujo modulio garsui, o visi kiti vartai žali.
     aux_stale = list(merge("aux_stale"))
     aux_absent = list(merge("aux_absent"))
-    if compare_bytes:
+    if live_bytes_ok:
         for url_rel, local_path in AUX_FILES:
             # Kontraktas yra būsena, ne boolean: `compare()` grąžina
             # "ok"|"differs"|"absent"|"unreachable". Iki #372 čia buvo
@@ -806,18 +857,29 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
                 aux_stale.append(item)
 
     # Svetainės kodas: ką vaikas iš tikrųjų įkelia, o ne tik ką rodo turinio JSON.
-    shell = check_shell() if compare_bytes else {
+    shell = check_shell() if live_bytes_ok else {
         "shell_stale": [], "shell_unreachable": [], "shell_count": 0,
-        "live_version": "", "repo_version": "",
+        "live_version": "", "repo_version": "", "skipped": True,
     }
 
     # Garsas: manifestas lyginamas aukščiau, bet failai — ne. Be šios dalies
     # „sutampa“ galėjo reikšti „manifestas teisingas, o mp3 svetainėje nėra“.
-    audio = check_audio(None if not compare_bytes else audio_sample) if compare_bytes else {
-        "total": 0, "checked": 0, "sampled": False,
-        "missing": [], "empty": [], "unreachable": [],
-        "note": "garso patikra praleista (--no-bytes)",
-    }
+    if live_bytes_ok:
+        audio = check_audio(None if not compare_bytes else audio_sample)
+    elif not compare_bytes:
+        audio = {
+            "total": 0, "checked": 0, "sampled": False,
+            "missing": [], "empty": [], "unreachable": [],
+            "note": "garso patikra praleista (--no-bytes)",
+        }
+    else:
+        # Svetainė neatsiliepia: 1432 HEAD užklausos matuotų ryšį, ne garsą.
+        # Pasakoma žodžiais, o ne „trūksta 1432“ (#382).
+        audio = {
+            "total": 0, "checked": 0, "sampled": False,
+            "missing": [], "empty": [], "unreachable": [],
+            "note": "garso patikra neįvyko — svetainė nepasiekiama",
+        }
 
     # Neišsiųsti commit'ai. `unpushed()` grąžina ir tai, ar patikra įvyko:
     # git klaida anksčiau atrodė kaip „0 neišsiųstų“ (žr. funkcijos docstring).
@@ -854,9 +916,15 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "last_commit": last_commit(),
         "live_error": "; ".join(live_errors),
         "repo_error": "; ".join(repo_errors),
-        # Ką šis bėgimas **iš tikrųjų** matavo. Be šio lauko `--no-bytes`
-        # sėkmės eilutė skelbė baitų lygybę, kurios niekas netikrino (#374).
+        # Ką šis bėgimas **iš tikrųjų** matavo. Be šio lauko `--no-bytes` ar
+        # nepasiekiamos svetainės sėkmės eilutė skelbė matavimus, kurių
+        # nebuvo (#374, #382).
         "bytes_checked": compare_bytes,
+        "live_measured": live_reachable,
+        # `published` skaičiuojamas tik iš perskaityto gyvo indekso. Kai jo
+        # nėra, skaičius yra 0, bet tai ne matavimas — todėl atskiras laukas
+        # (dashboard'as ir žmogus turi matyti skirtumą).
+        "published_measured": all(g.get("published_measured", False) for g in per_grade),
     }
     # Sprendimas keliauja kartu su duomenimis: dashboard'as neperrašo taisyklės
     # savo (LL-10 — būsena iš to paties šaltinio, iš kurio imamas rc).
@@ -882,6 +950,11 @@ def verdict(data: dict) -> dict:
         reasons.append("repo indekso nepavyko perskaityti")
     if data.get("live_error"):
         reasons.append("gyva svetainė nepasiekiama")
+    # `published` be perskaityto gyvo indekso yra nulis vietoj matavimo. Jei
+    # dėl kokios nors priežasties `live_error` liko tuščias, skaičius vis tiek
+    # neturi atrodyti išmatuotas (#382).
+    if data.get("published_measured") is False and not data.get("live_error"):
+        reasons.append("paskelbtų modulių skaičius neišmatuotas")
     if data.get("missing_on_live"):
         reasons.append(f"{len(data['missing_on_live'])} neskelbta")
     if data.get("hidden_locally"):
@@ -968,9 +1041,20 @@ def main() -> int:
         return 1 if problems(data) else 0
 
     print(f"Repozitorija: {data['local']} moduliai")
-    print(f"Paskelbta:    {data['published']} moduliai")
+    if data.get("published_measured", True):
+        print(f"Paskelbta:    {data['published']} moduliai")
+    else:
+        # Ne „0 modulių“: tiek pat tiesos būtų sakyti „0“ ir „48“, nes gyvo
+        # indekso niekas neperskaitė (#382, LL-37).
+        print("Paskelbta:    neišmatuota — gyvos svetainės indeksas neperskaitytas")
     for g in data["grades"]:
-        print(f"  · {grade_dir(g['grade'])}: repo {g.get('local', 0)}, gyvai {g.get('published', 0)}")
+        live = g.get("published", 0) if g.get("published_measured", True) else "neišmatuota"
+        print(f"  · {grade_dir(g['grade'])}: repo {g.get('local', 0)}, gyvai {live}")
+    if not data.get("live_measured", True):
+        # Viena priežastis, viena eilutė. Anksčiau šis vienas faktas virsdavo
+        # 48 modulių + 19 kodo failų + 1432 garso įrašų sąrašu (LL-37).
+        print("SVETAINĖ NEPASIEKIAMA — pagrindiniai failai, svetainės kodas ir garsas "
+              "NETIKRINTI (matuoti neįmanoma). Taisyk pasiekiamumą, ne turinį.")
     if data["repo_error"]:
         # Ne „svetainė nepasiekiama“: įrankis nemato repo indekso, o be jo
         # bet kokia išvada apie svetainę yra spėjimas (#374).

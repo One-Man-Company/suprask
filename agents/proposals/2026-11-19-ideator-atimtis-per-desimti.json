@@ -1,0 +1,21 @@
+{
+  "role": "ideator",
+  "run_id": 376,
+  "created": "2026-11-19T07:47:19+02:00",
+  "type": "tema",
+  "title": "Atimtis per dešimtį: dešimtuką reikia skaidyti",
+  "body": "1 klasės programos reikalavimas skaičiuoti atimtį peržengiant dešimtį yra tiesioginis: „1 klasė. Atlikti sudėties ir atimties veiksmus: vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį“ (`sources/pradinio-bp-rekomendacijos-2024.txt:692–699`), tą patį kartoja 1 klasės turinio aprašas (`:33520–33521`). Platformoje atimtis per dešimtį neturi nė vieno modulio: `22-sudetis-per-desimti` sprendžia tik sudėtį, `04-skaiciu-tiese` užduotys neperžengia dešimties (15 − 4, 8 + 2), o `16-lygybe-svarstykles` lieka iki 10. Siūlau modelį „dešimtukas ir trys laisvi“: ekrane vienas pilnas dešimtukas ir 3 atskiri taškai; vaikas turi atimti 9 ir pamato, kad laisvų neužtenka — dešimtuką reikia „skelti“ bakstelėjus, ir tik tada atimti. Klaidinga nuostata: „atimti galima tik mažesnį skaičių iš didesnio, o dešimtuko liesti negalima“ — vaikas skaičiuoja 9 − 3 = 6 ir dešimtuką palieka vietoje, o modelis parodo, kad likusių taškų skaičius su jo atsakymu nesutampa. Skirtumas nuo `22` yra ne apipavidalinimas, o priešingas veiksmas: ten vaikas dešimtuką papildo, čia jį skaido, ir klaida kyla ne iš skaičiavimo tvarkos, o iš to, kad trūksta medžiagos atimti. Modelis prideda tai, ko neprideda paveikslėlis: skelti ar nesklęsti galima bandyti kelis kartus, o rezultatas perskaičiuojamas iš tikrų taškų, ne iš užrašo. Sąmoningai neimamas „skolinimasis stulpeliu“ ir atimtis iš dviženklio dviženklio — tai vėlesnių klasių užrašo taisyklės (LL-23); modulyje lieka viena sąvoka, kad dešimtukas yra dešimt atskirų vienetų, kai jų prireikia.",
+  "target": "content/lt/grade-01/matematika/29-atimtis-per-desimti.json",
+  "priority": "high",
+  "status": "new",
+  "misconception": "„Dešimtuko skaidyti negalima, o jei vienetų mažiau — atimk atvirkščiai“ — atimdamas 9 iš 13 vaikas skaičiuoja 9 − 3 = 6 ir palieka pilną dešimtuką, todėl atsakymas nesutampa su taškais, kurie liko ekrane.",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:692–699 — esminių pokyčių lentelė, stulpelis „1 klasė“: „Atlikti sudėties ir atimties veiksmus: • vienaženklių skaičių peržengiant dešimtį, • dviženklio ir vienaženklio skaičių peržengiant dešimtį“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33520–33521 — 1 kl. turinio aprašas: „Atliekami sudėties ir atimties veiksmai šimto ribose: vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį“",
+    "research/wiki/curriculum/matematika-1-klase.md:160 — 1-oKo metų gale: „Sudeda ir atima 100 ribose trimis atvejais (vienženklis+vienženklis per 10; dviženklis+vienženklis per 10; dviženklis+dviženklis neper 10)“",
+    "research/wiki/curriculum/matematika-1-klase.md:186 — programos derintojo patikra: `04-skaiciu-tiese` sim `max: 20`, „nė vienos užduoties su perėjimu per dešimtį (8 + 5; 16 + 7; 16 + 12)“",
+    "content/lt/grade-01/matematika/22-sudetis-per-desimti.json:5–6 — modulio pavadinimas ir paantraštė „Pirma papildyk dešimtuką, paskui pridėk, kas liko“; visa simuliacija sudėties (`config.first` 7–9, `config.second` 4–6), atimties nėra",
+    "content/lt/grade-01/matematika/04-skaiciu-tiese.json:38,49,60,71 — užduotys 8+2, 11–13, 15−4: nė viena neperžengia dešimties, tad atimties per dešimtį nepadengia",
+    "content/lt/grade-01/index.json:27–45 — 18 matematikos modulių, nė vieno su tikslu atimti peržengiant dešimtį; agents/proposals/ neturi pasiūlymo šiam tikslui"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "role": "ideator",
+  "run_id": 376,
+  "created": "2026-11-19T07:47:19+02:00",
+  "type": "tema",
+  "title": "Uždavinys: klausimas pasako, ką daryti",
+  "body": "1 klasės matematikos programoje žodinis uždavinys įvardytas pažodžiui: „uždavinio sąlygoje gali būti prašoma sužinoti, kiek yra iš viso; koks bus likutis; keliais vienetais yra mažiau“, o dviejų žingsnių uždaviniai numatyti tik 2 klasei (`sources/pradinio-bp-rekomendacijos-2024.txt:774–780`). Platformoje šio gebėjimo nestato nė vienas modulis: `04-skaiciu-tiese` moko judėjimo tiese, `22-sudetis-per-desimti` — skaičiavimo būdo, `14-pinigai` — sumos, o paieška „uždavin“ duoda tik du nesusijusius sakinius (`03-lankstymas-ir-karpiniai.json:112,116`, `04-skaiciu-tiese.json:99`). Siūlau modelį „ta pati scena, trys klausimai“: toje pačioje nuotraukoje sėdi 5 paukščiai ir 3 nuskrenda; vaikas pasirenka klausimą — „Kiek liko?“, „Kiek viso?“ arba „Kiek nuskrido?“ — ir skaičių tiesė parodo, ar reikia atimti, sudėti, ar nereikia nieko daryti, nes atsakymas jau pasakytas. Klaidinga nuostata: „veiksmą pasako skaičiai“ (arba „visi uždavinyje esantys skaičiai turi būti panaudoti“), todėl vaikas sudeda 5 ir 3 net tada, kai klausiama, kiek nuskrido. Modelis prideda tai, ko neprideda paveikslėlis: skaičiai nekinta, keičiasi tik klausimas, o veiksmas keičiasi kartu — ir trečiasis klausimas parodo, kad kartais veiksmo iš viso nereikia. Vaikas spėja veiksmą prieš bakstelėdamas, o spėjimas lieka matomas greta rezultato (LL-15), kad modelis jo nepamestų. Sąmoningai neimama „keliais mažiau“ palyginimo formuluotė su skaičių tiese kaip atskira sąvoka — ji lieka vienai `optional` užduočiai, o modulio branduolys yra viena idėja: klausimas, o ne skaičiai, pasako veiksmą. Skaitymo našta laikoma 1 klasei: sakinys iki 10 žodžių, skaitomas balsu, klausimai pasirenkami mygtukais, ne įrašomi.",
+  "target": "content/lt/grade-01/matematika/28-uzdavinio-klausimas.json",
+  "priority": "high",
+  "status": "new",
+  "misconception": "„Veiksmą pasako skaičiai, o ne klausimas“ — vaikas, išgirdęs du skaičius, renkasi sudėtį arba atimtį pagal tai, kuris skaičius didesnis, ir panaudoja abu skaičius net tada, kai klausiama apie tai, kas jau pasakyta („Kiek paukščių nuskrido?“).",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:774–780 — 1–2 kl. skaičiavimo skyrius: „Rekomenduojama susitelkti į tokių situacijų nagrinėjimą, kurių sprendimas susiveda į vieno kurio lygybių a + b = c, a – b = c komponento radimą… kiek yra iš viso; koks bus likutis; keliais vienetais yra mažiau“, o „2-oje klasėje mokiniai mokysis spręsti jau dviejų žingsnių… uždavinius“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33520–33522 — 1 kl.: „Atliekami sudėties ir atimties veiksmai šimto ribose… Mokomasi lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“",
+    "research/wiki/curriculum/matematika-1-klase.md:162 — 1-oKo metų gale: „Sprendžia vieno veiksmo žodinį uždavinį (viso / likutis / „keliais mažiau“)“",
+    "content/lt/grade-01/index.json:27–45 — 18 matematikos modulių; nė vienas neturi žodinio uždavinio tikslo, o `04-skaiciu-tiese` užduotys (`04-skaiciu-tiese.json:38,49,60,71`) visos yra veiksmo atlikimas, ne klausimo pasirinkimas",
+    "content/lt/grade-01/matematika/22-sudetis-per-desimti.json:5–23 — modulis moko skaičiavimo būdo (papildyk dešimtuką), o ne to, kas pasako, kokį veiksmą rinktis; gairių 5 klausimas (nedubliavimas) tenkinamas",
+    "terminal: grep -ril 'uždavin' content/lt/grade-01 → tik technologijos/03-lankstymas-ir-karpiniai.json:112,116 ir matematika/04-skaiciu-tiese.json:99 (nesusiję sakiniai)"
+  ]
+}

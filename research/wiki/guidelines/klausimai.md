@@ -99,6 +99,17 @@ Pirmoji dalis — #258 parengti, bet neįrašyti atmetimai (pasiūlymo failas ne
 
 **Dashboard'o žymos, kurios klaidingos:** „Gyvoji gamta“, „Emocijos ir jausmai“ (padengta `01-dovana-ir-noras`, `:66`), „Kūno dalys“ (26.1.2 dalis `18-kuprine-ir-kuno-dalys`), „Medžiagų savybės“ (`02-medziagu-bandymas`), „Skaičiai iki dvidešimties“ (programa 1 kl. — iki 100, `matematika-1-klase.md:17`).
 
+## Temos, kurių nepasiūlėme (ideator, 2026-11-19)
+
+**Pasiūlyta:** žodinis uždavinys — klausimas, o ne skaičiai, pasako veiksmą (`agents/proposals/2026-11-19-ideator-uzdavinio-klausimas.json`, `:765–780`, `:33520–33522`); atimtis peržengiant dešimtį (`agents/proposals/2026-11-19-ideator-atimtis-per-desimti.json`, `:692–699`, `:33520–33521`); gamtos išteklių tausojimas — „išmestas daiktas nedingsta“ (`agents/proposals/2026-11-19-ideator-ismestas-daiktas-nedingsta.json`, 26.3.1, `:8452–8463`, `:17649–17656`).
+
+- **Spalvų maišymas (dailė)** — programa jį įvardija pažodžiui („maišyti dažų spalvas ir išgauti naujų spalvų“), bet oficialiame pavyzdyje tai **2 klasė** (`:2820–2827`, „4 pavyzdys. 2 klasė“). 1 klasei tai būtų LL-23 (modelio kriterijus — vyresnės klasės sąvoka). Dashboard'o žyma „Pirminės spalvos — iš dalies“ klaidina: 1 kl. spalva lieka nuotaikos ir raiškos klausimas (`01-spalva-ir-nuotaika`), o maišymas — 2 kl.
+- **Drabužių sezoniškumas (23.2.1)** — programa prašo remtis pluoštų „fizinėmis (laidumas orui, šilumai…) savybėmis“ (`:9433–9443`), o temperatūra 1 klasei nepriskirta (2 kl. ir vėliau, `matematika-1-klase.md:142`). Vienintelis garbingas modelis būtų termometras po sluoksniu → LL-23; be jo lieka rūšiavimas pagal paveikslėlį (gairių 2 klausimas).
+- **Mityba / „Sveiko maisto užkandžių dėžutė“ (26.1.2, 23.1)** — grupavimas (augaliniai/gyvuliniai, perdirbti/natūralūs) yra žymėjimas, o pasekmės modelio nėra; „natūralus = sveikas“ modelis virstų moralizavimu, kurį draudžia T5.1.
+- **Trintis (26.4.1)** — 1 kl. plane veikla įvardyta („sunkio, tamprumo, trinties jėgų tyrinėjimas“, `:17830–17832`), bet tai 4 kl. plano eilutė (29.3.1), o 1 kl. `17-judejimas` jau sprendžia „kas lemia greitį/atstumą“ vieno kintamojo modeliu → gairių 5 klausimas.
+
+**Patikra, kad pasiūlytų temų dar nėra** (`content/lt/grade-01/index.json`): matematikoje 18 modulių (04–07, 14–27), nė vieno apie žodinį uždavinį (grep „uždavin“ → 0 susijusių atvejų) ir nė vieno apie atimtį per dešimtį (`22-sudetis-per-desimti` — tik sudėtis; `04` užduotys 8+2, 15−4 neperžengia dešimties); pasaulio pažinime 10 modulių, grep „išmes|išmest|šiukšl|sąvart“ → 0 atvejų.
+
 ---
 
 *Įrašyta: 2026-11-03. Šaltinis: sprendimai, kurių negalėjome pagrįsti esama baze.*

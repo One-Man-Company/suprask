@@ -416,6 +416,43 @@ export const art = {
       <path d="M${x + 52} ${y + 6} q 4 -4 8 0"/></g>`;
   },
 
+  /**
+   * Vienas paukštis — sėdintis (`pose = "sedi"`) arba skrendantis
+   * (`pose = "skrenda"`).
+   *
+   * Skiriasi nuo `birds()` sąmoningai: ten — trys mažyčiai „v“ siluetai
+   * tolumoje (puošmena, nesuskaičiuosi), o čia — vienas atpažįstamas paukštis
+   * su galva, snapu, akimi, uodega ir sparnu. Modeliui, kuriame vaikas
+   * skaičiuoja paukščius, dėmė netinka: iš dėmės paukščio neatpažinsi (LL-13).
+   * `x, y` — kojų taškas (sėdi) arba kūno centras (skrenda); `s` — mastelis.
+   */
+  bird(x, y, s = 1, pose = "sedi", body = "#5f7d8c") {
+    const belly = "#e3edf1";
+    const dark = "#3f5c6b";
+    const beak = "#f0a338";
+    if (pose === "skrenda") {
+      return `<g transform="translate(${x} ${y}) scale(${s})">
+        <path d="M-6 -1 C-8 -17 2 -27 16 -27 C11 -16 7 -7 2 0 Z" fill="${dark}"/>
+        <path d="M-4 1 C-9 12 -2 20 8 19 C4 11 1 5 -1 1 Z" fill="${body}"/>
+        <path d="M-14 0 L-31 -7 L-29 4 Z" fill="${dark}"/>
+        <ellipse cx="-1" cy="0" rx="13" ry="7.5" fill="${body}"/>
+        <circle cx="11" cy="-6" r="6.5" fill="${body}"/>
+        <path d="M17 -7 L27 -4 L17 -1 Z" fill="${beak}"/>
+        <circle cx="13" cy="-8" r="1.6" fill="#22303a"/>
+      </g>`;
+    }
+    return `<g transform="translate(${x} ${y}) scale(${s})">
+      <path d="M-10 -12 L-27 -18 L-25 -8 Z" fill="${dark}"/>
+      <path d="M-13 -9 C-15 -24 -3 -31 7 -28 C17 -25 16 -9 6 -6 C-2 -3 -11 -4 -13 -9 Z" fill="${body}"/>
+      <path d="M-6 -8 C-2 -17 8 -17 12 -10 C9 -5 0 -4 -6 -8 Z" fill="${belly}" opacity=".6"/>
+      <path d="M-7 -19 C0 -23 8 -17 6 -12 C2 -8 -6 -12 -7 -19 Z" fill="${dark}" opacity=".45"/>
+      <circle cx="11" cy="-26" r="7.5" fill="${body}"/>
+      <path d="M18 -27 L28 -24 L18 -21 Z" fill="${beak}"/>
+      <circle cx="13" cy="-28" r="1.7" fill="#22303a"/>
+      <path d="M-3 -6 L-3 -1 M3 -6 L3 -1" stroke="${beak}" stroke-width="1.8" stroke-linecap="round"/>
+    </g>`;
+  },
+
   /** Vandens lašai — kai laistoma. */
   drops(x, y, n = 4, color = "#5fb3e0") {
     const d = Array.from({ length: n }, (_, i) => {

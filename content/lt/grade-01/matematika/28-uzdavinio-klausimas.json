@@ -1,0 +1,116 @@
+{
+  "id": "28-uzdavinio-klausimas",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Uždavinys: klausimas pasako, ką daryti",
+  "subtitle": "Tas pats paveikslėlis, trys klausimai — trys skirtingi veiksmai",
+  "minutes": 10,
+  "outcomes": [
+    "Pagal klausimą pasirenku veiksmą: sudėtį, atimtį arba jokio veiksmo.",
+    "Paaiškinu, kodėl uždavinyje nebūtina naudoti visų skaičių."
+  ],
+  "concept": {
+    "title": "Klausimas renka veiksmą",
+    "big_idea": "Skaičiai patys nepasako, ką daryti. Veiksmą pasako klausimas. Kiek liko — atimi. Kiek iš viso — sudedi. O kartais atsakymas jau parašytas.",
+    "steps": [
+      "Paveikslėlyje sėdi penki paukščiai, o trys skrenda. Tai ta pati nuotrauka.",
+      "Klausimas „Kiek liko?“ prašo likusio skaičiaus. Tada atimi: aštuoni minus trys.",
+      "Klausimas „Kiek iš viso?“ prašo abiejų grupių kartu. Tada sudedi: penki ir trys.",
+      "Klausimas „Kiek nuskrido?“ — atsakymas jau parašytas sąlygoje. Skaičiuoti nereikia."
+    ],
+    "example": "Senelis atnešė tris obuolius, mama — penkis. Klausimas „Kiek iš viso?“ — sudedi: trys ir penki yra aštuoni."
+  },
+  "sim": {
+    "component": "klausimas-renka-veiksma",
+    "config": {
+      "total": 8,
+      "stay": 5,
+      "fly": 3,
+      "sentences": {
+        "story": "Ant tvoros buvo aštuoni paukščiai. Trys nuskrido.",
+        "ask": "Pasirink klausimą, paskui — ką darysi.",
+        "pickQuestion": "Pirma pasirink klausimą viršuje, tada veiksmą.",
+        "guess": "Tu rinkaisi:",
+        "q-liko": "Kiek paukščių liko ant tvoros?",
+        "q-viso": "Kiek paukščių iš viso yra paveikslėlyje?",
+        "q-nuskrido": "Kiek paukščių nuskrido?",
+        "liko-atimti": "Aštuoni minus trys yra penki. Ant tvoros liko penki paukščiai.",
+        "liko-sudeti": "Penki ir trys yra aštuoni. Tai, kiek paukščių paveikslėlyje. Klausimas prašo kito.",
+        "liko-pasakyta": "Sąlyga penkių nepasako. Skaičiuok atėmęs: aštuoni minus trys.",
+        "viso-sudeti": "Penki ir trys yra aštuoni. Iš viso aštuoni paukščiai.",
+        "viso-atimti": "Aštuoni minus trys yra penki. Tai, kiek liko ant tvoros. Klausimas prašo kito.",
+        "viso-pasakyta": "Paveikslėlyje dvi grupės: penki sėdi, trys skrenda. Iš viso rasi sudėjęs.",
+        "nuskrido-pasakyta": "Sąlyga sako: trys nuskrido. Atsakymas jau parašytas — trys.",
+        "nuskrido-sudeti": "Penki ir trys yra aštuoni. Tai, kiek paukščių paveikslėlyje. Klausimas prašo kito.",
+        "nuskrido-atimti": "Aštuoni minus trys yra penki. Tai, kiek liko ant tvoros. Klausimas prašo kito.",
+        "done": "Trys klausimai, trys atsakymai. Paveikslėlis tas pats.",
+        "reset": "Viskas iš naujo. Pasirink klausimą."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Ant tvoros sėdėjo 6 žvirbliai. 2 nuskrido. Kiek liko?",
+      "options": ["8", "4", "2"],
+      "answer": 1,
+      "hint": "Klausimas prašo to, kas dar sėdi. Ar paukščių liko daugiau, ar mažiau?",
+      "why": "Šeši minus du yra keturi. Liko keturi žvirbliai."
+    },
+    {
+      "q": "Lėkštėje 4 obuoliai, krepšyje 3. Kiek obuolių iš viso?",
+      "options": ["7", "1", "4"],
+      "answer": 0,
+      "hint": "Klausimas prašo abiejų krūvų kartu, o ne skirtumo.",
+      "why": "Keturi ir trys yra septyni. Iš viso septyni obuoliai."
+    },
+    {
+      "q": "Sąlyga: „Tupėjo 5 varnos. 2 nuskrido.“ Klausimas: „Kiek nuskrido?“ Ko reikia?",
+      "options": [
+        "Sudėti: 5 + 2",
+        "Atimti: 5 − 2",
+        "Nieko — skaičius jau parašytas"
+      ],
+      "answer": 2,
+      "hint": "Perskaityk sąlygą iki galo: vienas dydis joje jau įvardytas.",
+      "why": "Sąlyga sako, kad nuskrido dvi varnos. Atsakymas jau parašytas, todėl skaičiuoti nereikia."
+    },
+    {
+      "q": "Mama atnešė 3 kriaušes, tėtis — 5. Klausimas: „Kiek kriaušių iš viso?“ Koks veiksmas?",
+      "options": ["3 + 5", "5 − 3", "Nieko nereikia"],
+      "answer": 0,
+      "hint": "Klausimas prašo abiejų grupių kartu, o ne skirtumo.",
+      "why": "Iš viso — abi grupės kartu. Trys ir penkios yra aštuonios kriaušės."
+    },
+    {
+      "q": "Ant tvoros liko 5 paukščiai, o nuskrido 3. Kiek mažiau paukščių nuskrido negu liko?",
+      "options": ["8", "2", "5"],
+      "answer": 1,
+      "hint": "Klausimas prašo skirtumo: kiek trūksta trijų iki penkių?",
+      "why": "Penki minus trys yra du. Nuskrido dviem paukščiais mažiau, negu liko.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip nusprendi, ar uždavinyje reikia sudėti, atimti, ar nieko neskaičiuoti?",
+  "teacher": {
+    "goal": "Suprasti, kad vieno veiksmo žodiniame uždavinyje veiksmą pasako klausimas, o ne skaičiai: likutis — atimtis, „kiek iš viso“ — sudėtis, o kartais atsakymas jau yra sąlygoje ir skaičiuoti nereikia.",
+    "prompt": "Kodėl į klausimą „Kiek nuskrido?“ nereikia nieko skaičiuoti?",
+    "offline": "Padėkite ant stalo penkias pupeles eilėje, o tris — kiek atokiau, tarsi nuskridusias. Klauskite po vieną: „Kiek liko eilėje?“ (vaikas atima), „Kiek pupelių iš viso?“ (vaikas sudeda), „Kiek nuskrido?“ (vaikas rodo į tris ir nieko neskaičiuoja). Keiskite tik klausimą, ne pupeles — tegul vaikas veiksmą pasako prieš atsakydamas.",
+    "misconceptions": [
+      "„Skaičiai pasako veiksmą“: vaikas žiūri į skaičius, o ne į klausimą, todėl į klausimą „Kiek nuskrido?“ dar sudeda penkis ir tris. Modelyje skaičiai nesikeičia, keičiasi tik klausimas — ir kartu keičiasi veiksmas.",
+      "„Visi sąlygos skaičiai turi būti panaudoti“: vaikas jaučia pareigą atimti ir aštuonis, ir tris, nors klausimas prašo vieno skaičiaus. Modelis rodo, kad trys jau parašyti sąlygoje.",
+      "„Kiek liko“ ir „kiek iš viso“ — tas pats klausimas: vaikas į abu atsako aštuoni. Tame pačiame paveikslėlyje modelis duoda du skirtingus atsakymus (penki ir aštuoni) ir parodo juos greta."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“: „uždavinio sąlygoje gali būti prašoma sužinoti, kiek yra iš viso; koks bus likutis; keliais vienetais yra mažiau“, o dviejų žingsnių uždaviniai numatyti 2 klasei (sources/pradinio-bp-rekomendacijos-2024.txt:774–780).",
+    "NŠA (2024), 1 klasės turinio aprašas: „Mokomasi lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“ (sources/pradinio-bp-rekomendacijos-2024.txt:33520–33522).",
+    "research/wiki/curriculum/matematika-1-klase.md §7 — metų gale: „Sprendžia vieno veiksmo žodinį uždavinį (viso / likutis / „keliais mažiau“)“.",
+    "Carpenter, T. P., & Moser, J. M. (1984). The acquisition of addition and subtraction concepts in grades one through three. Journal for Research in Mathematics Education, 15(3), 179–202.",
+    "Fuson, K. C. (1992). Research on whole number addition and subtraction. In D. A. Grouws (Ed.), Handbook of research on mathematics teaching and learning (pp. 243–275). Macmillan."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (klausimas renka veiksmą), o ne uždavinių tipų sąrašas; dviejų žingsnių uždaviniai paliekami 2 klasei",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę kitose situacijose (žvirbliai, obuoliai, kriaušės), o ne įsimintą pavyzdį",
+    "3 žingsnis — pagalba laiku: kiekvienas neteisingas veiksmas turi savo paaiškinimą, modelis parodo, į kurį klausimą tas veiksmas atsako; yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

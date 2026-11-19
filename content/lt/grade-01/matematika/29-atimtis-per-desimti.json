@@ -1,0 +1,95 @@
+{
+  "id": "29-atimtis-per-desimti",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Atimtis per dešimtį: imk iš dešimtuko",
+  "subtitle": "Kai laisvų neužtenka, dalis imama iš dešimtuko",
+  "minutes": 9,
+  "outcomes": [
+    "Atimu iš dešimtuko, kai laisvų dėmių neužtenka.",
+    "Pasakau, kiek dėmių imti iš dešimtuko.",
+    "Suskaičiuoju, kiek dėmių liko po atėmimo."
+  ],
+  "concept": {
+    "title": "Dešimtukas yra dešimt vienetų",
+    "big_idea": "Dešimtukas yra dešimt atskirų vienetų. Kai laisvų neužtenka, dalis imama iš dešimtuko. Nuo to skaičius nesikeičia.",
+    "steps": [
+      "Dešimtuke dešimt dėmių, šalia trys. Viso trylika.",
+      "Reikia atimti devynias. Laisvų trys — neužtenka.",
+      "Imk šešias iš dešimtuko: trys ir šešios yra devynios.",
+      "Liko keturios. Dešimtuke liko keturios dėmės."
+    ],
+    "example": "Dėžutėje dešimt obuolių, o šalia trys. Parduodi devynis: tris imi iš šalia, šešis iš dėžutės. Liko keturi."
+  },
+  "sim": {
+    "component": "desimtukas-ir-atimtis",
+    "config": {
+      "whole": 13,
+      "ten": 10,
+      "take": 9,
+      "sentences": {
+        "start": "Dešimtuke dešimt dėmių, šalia trys. Viso trylika.",
+        "ask": "Kiek dėmių imsi iš dešimtuko?",
+        "empty": "Laisvų trys. Devynioms jų neužtenka. Imk iš dešimtuko.",
+        "more": "Imk daugiau dėmių iš dešimtuko.",
+        "many": "Pasirink mažesnį skaičių.",
+        "done": "Atėmei devynias. Liko keturios.",
+        "again": "Dėmės grąžintos. Pasirink skaičių ir bandyk dar."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Dešimtuke dešimt dėmių, šalia dvi. Atimk aštuonias. Kiek liks?",
+      "options": ["6", "4", "10"],
+      "answer": 1,
+      "hint": "Laisvų dvi. Kiek dėmių reikia paimti iš dešimtuko?",
+      "why": "Dvi laisvos ir šešios iš dešimtuko — aštuonios. Liko keturios."
+    },
+    {
+      "q": "Dešimtuke dešimt dėmių, šalia keturios. Atimk aštuonias. Kiek liks?",
+      "options": ["6", "2", "12"],
+      "answer": 0,
+      "hint": "Keturios laisvos. Kiek dar reikia atimti?",
+      "why": "Keturios laisvos ir keturios iš dešimtuko — aštuonios. Liko šešios."
+    },
+    {
+      "q": "Vaikas atidarė visą dešimtuką, o dėmių neatėmė. Kiek dėmių dabar?",
+      "options": ["10", "3", "13"],
+      "answer": 2,
+      "hint": "Atidarymas dėmių neprideda ir neatima.",
+      "why": "Dešimtukas yra dešimt dėmių. Kai nieko neatimi, lieka trylika."
+    },
+    {
+      "q": "Šešiolika dėmių: dešimtukas ir šešios šalia. Atimk devynias. Kiek liks?",
+      "options": ["3", "7", "13"],
+      "answer": 1,
+      "hint": "Šešios laisvos neužtenka. Kiek imsi iš dešimtuko?",
+      "why": "Šešios laisvos ir trys iš dešimtuko — devynios. Liko septynios.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip žinai, kad atėmus devynias liko keturios? Papasakok.",
+  "teacher": {
+    "goal": "Suprasti, kad dešimtukas yra dešimt atskirų vienetų, todėl atimant per dešimtį dalis imama iš jo; atlikti 13 − 9, 12 − 8, 14 − 8 ir 16 − 9.",
+    "prompt": "Kodėl atimant devynias iš trylikos nepakanka trijų laisvų dėmių?",
+    "offline": "Į nedidelį popierinį maišelį įdėkite dešimt pupelių ir perriškite siūlu, šalia padėkite tris laisvas. Paprašykite vaiko duoti devynias pupeles. Trys laisvos neužteks — tegul atriša maišelį ir ima iš jo. Skaičiuokite kartu: viso trylika, atėmėme devynias, liko keturios. Tą patį pakartokite su 14 − 8, naudodami kiaušinių dėtuvę.",
+    "misconceptions": [
+      "„Dešimtuko liesti negalima“: vaikas laiko dešimtuką vientisa dėže ir atima tik iš trijų laisvų dėmių. Modelyje jis mato, kad po trijų laisvų vis dar trūksta šešių, ir turi imti iš dešimtuko.",
+      "„Atimti galima tik mažesnį iš didesnio“: atimdamas devynias iš trylikos vaikas skaičiuoja 9 − 3 = 6 ir dešimtuko nejudina. Modelyje atėmus tik tris laisvas lieka dešimt dėmių, todėl atsakymas 6 nesutampa su tuo, ką vaikas mato.",
+      "„Jei dešimtuką atidarei, liks mažiau“: vaikas mano, kad atidarymas keičia skaičių. Modelyje bendras skaičius lieka trylika, kol nieko neatimta, kad ir kiek dėmių išimta."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“ — 1 klasė: „Atlikti sudėties ir atimties veiksmus: vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį“ (sources/pradinio-bp-rekomendacijos-2024.txt:692–699).",
+    "NŠA (2024), 1 klasės turinio aprašas: „Atliekami sudėties ir atimties veiksmai šimto ribose: vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį“ ir trūkstamo skaičiaus nustatymas lygybėse a − b = c (sources/pradinio-bp-rekomendacijos-2024.txt:33520–33522).",
+    "research/wiki/curriculum/matematika-1-klase.md §7 — metų gale: „Sudeda ir atima 100 ribose trimis atvejais (vienženklis+vienženklis per 10; dviženklis+vienaženklis per 10; dviženklis+dviženklis neper 10)“.",
+    "Hiebert, J., & Wearne, D. (1992). Links between teaching and learning place value with understanding in first grade. Journal for Research in Mathematics Education, 23(2), 98–122.",
+    "Baroody, A. J. (1984). Children's difficulties in subtraction: Some causes and questions. Journal for Research in Mathematics Education, 15(3), 203–213."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (dešimtukas yra dešimt atskirų vienetų), o ne atimties lentelė ar skaičiavimas stulpeliu",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę kituose skaičiuose (12 − 8, 14 − 8, 16 − 9), o ne įsimintą pavyzdį",
+    "3 žingsnis — pagalba laiku: modelis parodo, kad po trijų laisvų dėmių dar trūksta, o užuominos nukreipia į trūkstamą kiekį; yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

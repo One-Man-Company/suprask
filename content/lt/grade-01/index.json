@@ -42,7 +42,8 @@
         { "id": "24-komandu-seka", "title": "Komandų seka: viena klaida pakreipia kelią", "subtitle": "Kiekviena komanda pradeda ten, kur baigėsi ankstesnė", "file": "grade-01/matematika/24-komandu-seka.json", "minutes": 9, "sim": "komandu-seka" },
         { "id": "25-ilgis-ir-vienetas", "title": "Ilgis: tas pats daiktas, kitas skaičius", "subtitle": "Skaičius priklauso nuo vieneto, kuriuo matuoji", "file": "grade-01/matematika/25-ilgis-ir-vienetas.json", "minutes": 9, "sim": "ilgis-ir-vienetas" },
         { "id": "26-mase-ir-kilogramas", "title": "Masė: vienodo dydžio dėžutės", "subtitle": "Vienodo dydžio dėžutės sveria skirtingai — masę parodo svarstyklės", "file": "grade-01/matematika/26-mase-ir-kilogramas.json", "minutes": 9, "sim": "dezute-ir-kilogramas" },
-        { "id": "27-skaicius-ir-skaitmuo", "title": "Skaičius ir skaitmuo: 13 ir 31", "subtitle": "Tie patys skaitmenys gali reikšti skirtingą kiekį", "file": "grade-01/matematika/27-skaicius-ir-skaitmuo.json", "minutes": 9, "sim": "skaicius-ir-skaitmuo" }
+        { "id": "27-skaicius-ir-skaitmuo", "title": "Skaičius ir skaitmuo: 13 ir 31", "subtitle": "Tie patys skaitmenys gali reikšti skirtingą kiekį", "file": "grade-01/matematika/27-skaicius-ir-skaitmuo.json", "minutes": 9, "sim": "skaicius-ir-skaitmuo" },
+        { "id": "29-atimtis-per-desimti", "title": "Atimtis per dešimtį: imk iš dešimtuko", "subtitle": "Kai laisvų neužtenka, dalis imama iš dešimtuko", "file": "grade-01/matematika/29-atimtis-per-desimti.json", "minutes": 9, "sim": "desimtukas-ir-atimtis" }
       ]
     },
     {

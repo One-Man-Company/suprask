@@ -3846,6 +3846,193 @@ const skaiciusIrSkaitmuo = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 14. Atimtis per dešimtį: kiek imti iš dešimtuko (13 − 9)             */
+/*                                                                    */
+/* Klaidinga nuostata (LL-28): „dešimtuko liesti negalima — atimk      */
+/* mažesnį iš didesnio“. Todėl modelis sąmoningai leidžia pasirinkti   */
+/* NULĮ dėmių iš dešimtuko ir parodyti, kad tada lieka dešimt, o ne    */
+/* šešios: atsakymas nesutampa su dėmėmis, kurias vaikas mato.         */
+/* Apie sąskaitą (13 = 10 + 3, 9 = 3 + 6) kalba tik šis modulis, tad   */
+/* tekstai imami iš `sim.config.sentences`, o ne rašomi kode (LL-42).  */
+/* ------------------------------------------------------------------ */
+const desimtukasIrAtimtis = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const WHOLE = Number(config.whole) || 13;
+    const TEN = Number(config.ten) || 10;
+    const TAKE = Number(config.take) || 9;
+    const LOOSE = Math.max(0, WHOLE - TEN); // kiek dėmių yra šalia dešimtuko
+
+    let fromTen = 0;        // kiek dėmių vaikas pasirinko imti iš dešimtuko
+    let committed = false;  // ar pasirinkimas jau įvykdytas
+    let reported = false;
+
+    const BLUE = "#5aa9e6";
+    const BLUE_EDGE = "#1f5f85";
+    const YELLOW = "#ffc94d";
+    const YELLOW_EDGE = "#8a5b12";
+    const CELL = "aspect-ratio:1;min-width:0;border:2px solid var(--line);border-radius:12px;"
+      + "background:var(--paper-2);display:flex;align-items:center;justify-content:center;box-sizing:border-box";
+    const dot = (fill, edge) =>
+      `<span aria-hidden="true" style="display:block;width:58%;aspect-ratio:1;border-radius:50%;`
+      + `background:${fill};border:2px solid ${edge};box-sizing:border-box"></span>`;
+    const pill = (fill, edge) =>
+      `<span aria-hidden="true" style="display:block;width:1.4rem;height:1.4rem;border-radius:50%;`
+      + `background:${fill};border:2px solid ${edge};box-sizing:border-box"></span>`;
+    const pl = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
+    stage.innerHTML = `
+      <div id="da-wrap" style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <div id="da-eq" style="font-family:var(--font-head);font-weight:900;font-size:1.75rem;line-height:1.15;text-align:center"></div>
+        <p class="sim-note" id="da-ten-label" style="margin:.35rem 0 .2rem;text-align:center"></p>
+        <div id="da-frame" role="img"
+             style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.3rem;max-width:19rem;margin:0 auto"></div>
+        <p class="sim-note" id="da-loose-label" style="margin:.55rem 0 .2rem;text-align:center"></p>
+        <div id="da-loose" role="img"
+             style="display:flex;gap:.3rem;justify-content:center;align-items:center;min-height:1.6rem"></div>
+        <p class="sim-note" id="da-taken-label" style="margin:.55rem 0 .2rem;text-align:center"></p>
+        <div id="da-taken" role="img"
+             style="display:flex;gap:.3rem;justify-content:center;align-items:center;flex-wrap:wrap;min-height:1.6rem"></div>
+        <p class="sim-note" id="da-split" style="margin:.35rem 0 0;text-align:center;min-height:1.4rem"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div role="group" aria-label="Kiek dėmių imti iš dešimtuko"
+           style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.35rem;width:100%;max-width:22rem;margin:0 auto">
+        ${Array.from({ length: TEN + 1 }, (_, n) => `<button type="button" class="btn secondary da-n" data-n="${n}"
+            aria-pressed="false" aria-label="Imti ${n} iš dešimtuko"
+            style="min-height:48px;min-width:0;padding:.3rem .15rem;font-size:1.05rem">${n}</button>`).join("")}
+      </div>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center">
+        <button type="button" class="btn" id="da-take" style="min-height:48px">Imk</button>
+        <button type="button" class="btn ghost" id="da-reset" style="min-height:48px">Iš naujo</button>
+      </div>`;
+
+    const eqEl = stage.querySelector("#da-eq");
+    const frameEl = stage.querySelector("#da-frame");
+    const tenLabel = stage.querySelector("#da-ten-label");
+    const looseEl = stage.querySelector("#da-loose");
+    const looseLabel = stage.querySelector("#da-loose-label");
+    const takenEl = stage.querySelector("#da-taken");
+    const takenLabel = stage.querySelector("#da-taken-label");
+    const splitEl = stage.querySelector("#da-split");
+    const takeBtn = controls.querySelector("#da-take");
+
+    /* --- piešimas ------------------------------------------------------ */
+    function paint() {
+      const fromTenTaken = committed ? fromTen : 0;
+      const looseTaken = committed ? LOOSE : 0;
+      const taken = looseTaken + fromTenTaken;
+      const left = WHOLE - taken;
+
+      eqEl.textContent = committed && taken === TAKE
+        ? `${WHOLE} − ${TAKE} = ${left}`
+        : `${WHOLE} − ${TAKE} = ?`;
+
+      frameEl.innerHTML = Array.from({ length: TEN }, (_, i) =>
+        `<div style="${CELL}">${i < TEN - fromTenTaken ? dot(BLUE, BLUE_EDGE) : ""}</div>`).join("");
+      tenLabel.textContent = `Dešimtukas: ${TEN - fromTenTaken}`;
+      frameEl.setAttribute("aria-label", `Dešimtukas: liko ${pl(TEN - fromTenTaken, "dėmė", "dėmių")}`);
+
+      /* Šalia buvusios dėmės po atėmimo ne dingsta, o persikelia į „Atimta“
+         eilę (LL-27): vaikas mato, kad 9 = 3 + 6, o ne kad dėmės išgaravo. */
+      looseEl.innerHTML = committed ? "" : Array.from({ length: LOOSE }, () => pill(BLUE, BLUE_EDGE)).join("");
+      looseLabel.textContent = committed ? "Šalia: 0" : `Šalia: ${LOOSE}`;
+      looseEl.setAttribute("aria-label", committed ? "Šalia neliko nė vienos dėmės" : `Šalia ${LOOSE} dėmės`);
+
+      const parts = [];
+      for (let i = 0; i < looseTaken; i += 1) parts.push(pill(BLUE, BLUE_EDGE));
+      for (let i = 0; i < fromTenTaken; i += 1) parts.push(pill(YELLOW, YELLOW_EDGE));
+      takenEl.innerHTML = parts.join("");
+      takenEl.setAttribute("aria-label", committed
+        ? `Atimta ${pl(taken, "dėmė", "dėmės")}`
+        : "Dar nieko neatimta");
+
+      takenLabel.textContent = committed
+        ? `Atimta ${looseTaken} + ${fromTenTaken} = ${taken}`
+        : `Iš dešimtuko imsi: ${fromTen}`;
+      splitEl.textContent = committed && taken === TAKE ? `${TAKE} = ${LOOSE} + ${fromTen}` : "";
+
+      api.readout(committed
+        ? `Atimta ${taken}. Liko ${left}.`
+        : `Viso ${WHOLE}. Iš dešimtuko imsi ${fromTen}.`);
+    }
+
+    function markSelection() {
+      controls.querySelectorAll(".da-n").forEach((b) => {
+        const on = Number(b.dataset.n) === fromTen;
+        b.setAttribute("aria-pressed", String(on));
+        b.className = on ? "btn da-n" : "btn secondary da-n";
+        b.style.minHeight = "48px";
+        b.style.minWidth = "0";
+        b.style.padding = ".3rem .15rem";
+        b.style.fontSize = "1.05rem";
+      });
+    }
+
+    /* --- veiksmai ------------------------------------------------------ */
+    function take() {
+      committed = true;
+      paint();
+      const taken = LOOSE + fromTen;
+
+      if (taken === TAKE) {
+        if (S.done) api.speak(S.done);
+        api.note(S.done || "");
+        if (!reported) {
+          reported = true;
+          api.progress({ correct: true });
+        }
+        return;
+      }
+      if (taken < TAKE) {
+        if (fromTen === 0) {
+          /* Būtent klaidingos nuostatos atvejis: dešimtukas nepaliestas. */
+          if (S.empty) api.speak(S.empty);
+          api.note(S.empty || "");
+        } else {
+          if (S.more) api.speak(S.more);
+          api.note(`${S.more || ""} Dar trūksta ${TAKE - taken}.`.trim());
+        }
+        return;
+      }
+      if (S.many) api.speak(S.many);
+      api.note(`${S.many || ""} Atėmei ${taken}, o reikėjo ${TAKE}.`.trim());
+    }
+
+    controls.querySelectorAll(".da-n").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const next = Number(btn.dataset.n);
+        const wasCommitted = committed;
+        fromTen = next;
+        committed = false;
+        markSelection();
+        paint();
+        api.note(wasCommitted
+          ? `Dėmės grąžintos. Imsi ${next} iš dešimtuko.`
+          : `Iš dešimtuko imsi ${next}. Spausk „Imk“.`);
+      });
+    });
+
+    takeBtn.addEventListener("click", take);
+    controls.querySelector("#da-reset").addEventListener("click", () => {
+      fromTen = 0;
+      committed = false;
+      markSelection();
+      paint();
+      if (S.again) api.speak(S.again);
+      api.note(S.again || "");
+    });
+
+    markSelection();
+    paint();
+    api.note(S.ask || "");
+    api.speak(S.start || "");
+    return null;
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
   desimtukas,
@@ -3859,6 +4046,7 @@ export const SIMS = {
   "taskas-tiese-spindulys-atkarpa": taskasTieseSpindulysAtkarpa,
   "piktograma-ir-stulpelis": piktogramaIrStulpelis,
   "sudetis-per-desimti": sudetisPerDesimti,
+  "desimtukas-ir-atimtis": desimtukasIrAtimtis,
   "simto-lentele": simtoLentele,
   "komandu-seka": komanduSeka,
   "skaicius-ir-skaitmuo": skaiciusIrSkaitmuo,

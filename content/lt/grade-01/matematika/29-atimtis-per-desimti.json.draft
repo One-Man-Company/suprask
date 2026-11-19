@@ -1,0 +1,98 @@
+{
+  "id": "29-atimtis-per-desimti",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Atimtis per dešimtį: imk iš dešimtuko",
+  "subtitle": "Kai laisvų neužtenka, dalis imama iš dešimtuko",
+  "minutes": 9,
+  "outcomes": [
+    "Išimu dėmes iš dešimtuko, kai laisvų neužtenka.",
+    "Pasakau, kiek vienetų imti iš dešimtuko.",
+    "Suskaičiuoju, kiek liko po atėmimo."
+  ],
+  "concept": {
+    "title": "Dešimtukas yra dešimt vienetų",
+    "big_idea": "Dešimtukas yra dešimt atskirų vienetų. Kai laisvų neužtenka, vienetą imi iš dešimtuko. Skaičius nuo to nesikeičia.",
+    "steps": [
+      "Dešimtuke dešimt dėmių, šalia trys. Viso trylika.",
+      "Atimk devynias. Laisvų trys — neužtenka.",
+      "Imk šešias dėmes iš dešimtuko. Dabar laisvų devynios.",
+      "Atėmęs devynias matai: liko keturios."
+    ],
+    "example": "Dėžutėje dešimt obuolių, šalia trys. Parduodi devynis. Iš dėžutės imi šešis, o trys buvo šalia."
+  },
+  "sim": {
+    "component": "desimtukas-ir-atimtis",
+    "config": {
+      "whole": 13,
+      "take": 9,
+      "ten": 10,
+      "guess": [3, 6, 9],
+      "sentences": {
+        "start": "Dešimtuke dešimt dėmių, šalia trys.",
+        "predict": "Kiek dėmių imsi iš dešimtuko?",
+        "empty": "Laisvų nebėra. Iš kur imti devynias?",
+        "taken": "Dėmė iš dešimtuko atsidūrė šalia.",
+        "same": "Skaičius nepakito.",
+        "done": "Atėmei devynias. Liko keturios.",
+        "again": "Pradedam iš naujo. Bandyk kitaip."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Dešimtuke dešimt dėmių, šalia dvi. Atimk aštuonias. Kiek liks?",
+      "options": ["6", "4", "10"],
+      "answer": 1,
+      "hint": "Laisvų dvi. Kiek dėmių paimti iš dešimtuko?",
+      "why": "Dvi laisvos ir šešios iš dešimtuko yra aštuonios. Liko keturios."
+    },
+    {
+      "q": "Dešimtuke dešimt dėmių, šalia keturios. Atimk aštuonias. Kiek liks?",
+      "options": ["6", "2", "12"],
+      "answer": 0,
+      "hint": "Kiek liktų vien iš dešimtuko? Nepamiršk keturių šalia.",
+      "why": "Keturios laisvos ir keturios iš dešimtuko yra aštuonios. Liko šešios."
+    },
+    {
+      "q": "Viena mergaitė išėmė šešias dėmes, kita — dešimt. Abi atėmė devynias iš trylikos. Kiek liko kiekvienai?",
+      "options": ["Pirmai keturios, antrai nulis", "Abiem liko keturios", "Pirmai keturios, antrai viena"],
+      "answer": 1,
+      "hint": "Dešimtuko atidarymas skaičiaus nekeičia.",
+      "why": "Kiek dėmių atidarysi, viso lieka tiek pat."
+    },
+    {
+      "q": "Šešiolika dėmių: dešimtukas ir šešios šalia. Atimk devynias. Kiek liks?",
+      "options": ["7", "3", "13"],
+      "answer": 0,
+      "hint": "Laisvų šešios. Kiek dėmių paimti iš dešimtuko?",
+      "why": "Šešios laisvos ir trys iš dešimtuko yra devynios. Liko septynios.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip žinai, kad atėmus devynias liko keturios? Papasakok.",
+  "teacher": {
+    "goal": "Suprasti, kad dešimtukas yra dešimt atskirų vienetų, todėl atimant per dešimtį dalis imama iš jo; atlikti 13 − 9 ir 14 − 8.",
+    "prompt": "Kodėl atimant devynias iš trylikos nepakanka trijų laisvų dėmių?",
+    "offline": "Į nedidelį popierinį maišelį įdėkite dešimt pupelių ir perriškite siūlu, šalia padėkite tris laisvas. Paprašykite vaiko duoti devynias. Trys laisvos neužteks — tegul atriša maišelį ir ima iš jo. Skaičiuokite kartu: viso trylika, atėmėme devynias, liko keturios. Tą patį pakartokite su 14 − 8, naudodami kiaušinių dėtuvę.",
+    "misconceptions": [
+      "„Dešimtuko liesti negalima“: vaikas laiko dešimtuką viena vientisa dėže ir atima tik iš trijų laisvų. Modelyje dėmės iš dešimtuko imamos po vieną, o skaičius prie šono nesikeičia.",
+      "„Atimti galima tik mažesnį iš didesnio“: atimdamas devynias iš trylikos vaikas skaičiuoja 9 − 3 = 6 ir dešimtuko nejudina. Modelyje po devynių atėmimo lieka keturios dėmės, todėl atsakymas 6 nesutampa su tuo, ką vaikas mato.",
+      "„Jei dešimtuką atidarei, liks mažiau“: vaikas mano, kad atidarymas keičia skaičių. Modelyje bendras skaičius lieka trylika, kol nieko neatimta, kad ir kiek dėmių išimta."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“ — 1 klasė: „Atlikti sudėties ir atimties veiksmus: vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį“ (sources/pradinio-bp-rekomendacijos-2024.txt:692–699).",
+    "NŠA (2024), 1 klasės turinio aprašas: atimtis šimto ribose peržengiant dešimtį ir trūkstamo skaičiaus nustatymas lygybėse a − b = c (sources/pradinio-bp-rekomendacijos-2024.txt:33520–33522).",
+    "Hiebert, J., & Wearne, D. (1992). Links between teaching and learning place value with understanding in first grade. Journal for Research in Mathematics Education, 23(2), 98–122. https://doi.org/10.5951/jresematheduc.23.2.0098",
+    "Fuson, K. C. (1990). Conceptual structures for multiunit numbers. Cognition and Instruction, 7(4), 343–403. https://doi.org/10.1207/s1532690xci0704_4",
+    "Baroody, A. J. (1984). Children's difficulties in subtraction: Some causes and questions. Journal for Research in Mathematics Education, 15(3), 203–213. https://doi.org/10.5951/jresematheduc.15.3.0203",
+    "Fuson, K. C., & Willis, G. B. (1988). Subtracting by counting up: More evidence. Journal for Research in Mathematics Education, 19(5), 402–420. https://doi.org/10.5951/jresematheduc.19.5.0402",
+    "Vermeulen, J. A., Béguin, A., Scheltens, F., & Eggen, T. J. H. M. (2020). Evaluating the characteristics of diagnostic items for bridging errors in multi-digit subtraction. Frontiers in Education, 5, 537531. https://doi.org/10.3389/feduc.2020.537531"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (dešimtukas yra dešimt vienetų), o ne atimties lentelė ar stulpelio algoritmas",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę kituose skaičiuose (12 − 8, 14 − 8, 16 − 9), o ne įsimintą pavyzdį",
+    "3 žingsnis — pagalba laiku: užuominos nukreipia į trūkstamą medžiagą ir į atvirkštinę atimtį, yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

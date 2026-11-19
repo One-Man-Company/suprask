@@ -468,6 +468,34 @@ FETCH_ATTEMPTS = 2
 RETRIES = {"count": 0}
 
 
+def fetch_answer(url: str, timeout: int = 20,
+                 attempts: int = FETCH_ATTEMPTS) -> tuple[str, bytes | None]:
+    """(būsena, baitai), kur būsena yra `"ok"` | `"missing"` | `"unreachable"`.
+
+    Atskyrimas atsirado dėl #386: `fetch()` grąžindavo `None` ir 404, ir
+    laikinam ryšio gedimui, o `compare()` abu paversdavo „nepasiekta“.
+    Svetainė, kurioje modulio failo **nėra**, pranešdavo „NEPASIEKTA po 2
+    bandymų“: teiginys apie tinklą, kurio nebuvo — 404 yra atsakymas, ir jo
+    net nekartojame. Vaikui skirtumas didelis: 404 reiškia „publikavimas
+    nepaleistas / failas nedingo“, o nepasiekiamumas — „bandyk dar kartą“.
+    404/410 — galutinis atsakymas, kitos klaidos kartojamos (LL-76, #368).
+    """
+    for attempt in range(max(1, attempts)):
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return "ok", resp.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code in (404, 410):
+                return "missing", None
+        except Exception:  # noqa: BLE001
+            pass
+        if attempt + 1 < max(1, attempts):
+            RETRIES["count"] += 1
+            time.sleep(RETRY_PAUSE)
+    return "unreachable", None
+
+
 def fetch(url: str, timeout: int = 20, attempts: int = FETCH_ATTEMPTS) -> bytes | None:
     """Failo turinys arba `None`. 404/410 — galutinis atsakymas, nekartojama.
 
@@ -479,20 +507,8 @@ def fetch(url: str, timeout: int = 20, attempts: int = FETCH_ATTEMPTS) -> bytes 
     Todėl laikinos klaidos kartojamos, o `_audio_state()` ir `_shell_state()`
     turi tą patį kelią. 404/410 kartojami nėra: tai ne flakas, o atsakymas.
     """
-    for attempt in range(max(1, attempts)):
-        try:
-            req = urllib.request.Request(url, headers=UA)
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
-                return resp.read()
-        except urllib.error.HTTPError as exc:
-            if exc.code in (404, 410):
-                return None
-        except Exception:  # noqa: BLE001
-            pass
-        if attempt + 1 < max(1, attempts):
-            RETRIES["count"] += 1
-            time.sleep(RETRY_PAUSE)
-    return None
+    return fetch_answer(url, timeout, attempts)[1]
+
 
 
 def sha(data: bytes) -> str:
@@ -502,7 +518,14 @@ def sha(data: bytes) -> str:
 def compare(local_path: pathlib.Path, url_rel: str) -> tuple[str, int, int]:
     """(būsena, repo baitai, gyvi baitai).
 
-    Būsena: `"ok"` | `"differs"` | `"absent"` | `"unreachable"`.
+    Būsena: `"ok"` | `"differs"` | `"absent"` | `"gone"` | `"unreachable"`.
+
+    `"absent"` — repo failo nėra (indeksas rodo į nieką), `"gone"` — repo
+    failas yra, o svetainė atsakė 404/410. Iki #386 abu atvejai su gyvos
+    pusės klaida ėjo į `"unreachable"`, todėl svetainė be modulio failo
+    pranešdavo „NEPASIEKTA po 2 bandymų“ — t. y. siūlė tikrinti ryšį, kai
+    reikia publikuoti (LL-21, LL-37). Skirtumas vaikui konkretus: 404 niekada
+    nepraeis savaime, nepasiekiamumas — gali.
 
     Baitų reikšmės: `-1` reiškia **neišmatuota**, ne 0. Tai svarbu, nes 0 baitų
     yra tikras matavimas (tuščias failas), o trūkstamas failas neturi jokio
@@ -525,7 +548,11 @@ def compare(local_path: pathlib.Path, url_rel: str) -> tuple[str, int, int]:
             return "absent", -1, live_size
         return "absent", -1, -1
     local = local_path.read_bytes()
-    live = fetch(LIVE_ROOT + url_rel)
+    status, live = fetch_answer(LIVE_ROOT + url_rel)
+    if status == "missing":
+        # Atsakymas gautas: failo svetainėje nėra. Tai ne ryšio klaida ir ne
+        # pasenęs turinys — nėra ko lyginti baitais (LL-21).
+        return "gone", len(local), -1
     if live is None:
         return "unreachable", len(local), -1
     if sha(live) != sha(local):
@@ -566,12 +593,16 @@ def strip_version(text: str) -> str:
 
 
 def _shell_state(rel: str) -> tuple[str, int, int]:
-    """("ok"|"differs"|"unreachable", repo baitai, gyvi baitai)."""
+    """("ok"|"differs"|"gone"|"unreachable", repo baitai, gyvi baitai)."""
     local_path = ROOT / rel
     if not local_path.exists():
         return "ok", 0, 0
     local = local_path.read_bytes()
-    live = fetch(LIVE_ROOT + rel)
+    status, live = fetch_answer(LIVE_ROOT + rel)
+    if status == "missing":
+        # Svetainė kodo failo neturi: tai nepasibaigęs publikavimas, o ne
+        # ryšio klaida (#386, ta pati LL-21 šeima kaip `compare()`).
+        return "gone", len(local), -1
     if live is None:
         return "unreachable", len(local), -1
     for attempt in (0, 1):
@@ -626,13 +657,19 @@ def check_shell() -> dict:
         results = list(pool.map(lambda rel: (rel, _shell_state(rel)), files))
     stale: list[dict] = []
     unreachable: list[str] = []
+    missing: list[str] = []
     for rel, (state, local_size, live_size) in results:
         if state == "differs":
             stale.append({"file": rel, "repo_bytes": local_size, "live_bytes": live_size})
+        elif state == "gone":
+            # Failo svetainėje nėra (404). Tai nepasibaigęs publikavimas, o ne
+            # „nepasiekiamas“ — kitaip pranešimas siųstų tikrinti ryšį (#386).
+            missing.append(rel)
         elif state == "unreachable":
             unreachable.append(rel)
     return {
         "shell_stale": stale,
+        "shell_gone": missing,
         "shell_unreachable": unreachable,
         "shell_count": len(files),
         "live_version": live_version(),
@@ -712,6 +749,7 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
 
     stale: list[dict] = []
     stale_unknown: list[str] = []
+    live_missing: list[dict] = []
     missing_in_repo: list[dict] = []
     unmeasured: list[str] = []
     if compare_bytes:
@@ -736,6 +774,14 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
                     # atskirai, o ne sumaišyti su publikavimo defektais.
                     missing_in_repo.append({"id": mid, "file": rel, "grade": grade,
                                             "repo_bytes": local_size, "live_bytes": live_size})
+                elif state == "gone":
+                    # Svetainė atsakė 404/410: failo ten nėra, nors indeksas jį
+                    # rodo. Tai nepasibaigęs publikavimas, o ne „bandyk dar
+                    # kartą“ (#386). Sąrašas atskiras, nes baitų nėra su kuo
+                    # lyginti — `live_size` čia `-1`, ir be šios šakos įrašas
+                    # nukristų į „neišmatuotas dydis“.
+                    live_missing.append({"id": mid, "file": rel, "grade": grade,
+                                         "repo_bytes": local_size})
                 elif state == "unreachable":
                     stale_unknown.append(mid)
                 elif live_size < 0 or local_size < 0:
@@ -758,6 +804,7 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
                                             "repo_bytes": -1, "live_bytes": -1})
     out["stale"] = stale
     out["stale_unknown"] = stale_unknown
+    out["live_missing"] = live_missing
     out["missing_in_repo"] = missing_in_repo
     if unmeasured:
         out["stale_unmeasured"] = unmeasured
@@ -766,6 +813,7 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     # lyginami atskirai — kitaip „ID yra“ nereiškia „svetainė rodo tą patį“.
     aux_stale: list[dict] = []
     aux_absent: list[dict] = []
+    aux_gone: list[dict] = []
     if compare_bytes and live_index_ok:
         for name in ("index.json", "path.json"):
             url_rel = f"content/lt/{gd}/{name}"
@@ -776,10 +824,13 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
                     "repo_bytes": local_size, "live_bytes": live_size}
             if state == "absent":
                 aux_absent.append(item)
+            elif state == "gone":
+                aux_gone.append(item)
             else:
                 aux_stale.append(item)
     out["aux_stale"] = aux_stale
     out["aux_absent"] = aux_absent
+    out["aux_gone"] = aux_gone
     return out
 
 
@@ -839,10 +890,11 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     # Jo stagnacija reiškia 404 naujo modulio garsui, o visi kiti vartai žali.
     aux_stale = list(merge("aux_stale"))
     aux_absent = list(merge("aux_absent"))
+    aux_gone = list(merge("aux_gone"))
     if live_bytes_ok:
         for url_rel, local_path in AUX_FILES:
             # Kontraktas yra būsena, ne boolean: `compare()` grąžina
-            # "ok"|"differs"|"absent"|"unreachable". Iki #372 čia buvo
+            # "ok"|"differs"|"absent"|"gone"|"unreachable". Iki #372 čia buvo
             # `if not ok:` — o ne tuščia būsena visada teisinga, tad
             # pasenęs `manifest.json` / `grades.json` būdavo tyliai
             # nerodomas (tyli žalia, blogiau nei prieš #370 darbą).
@@ -853,6 +905,8 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
                     "repo_bytes": local_size, "live_bytes": live_size}
             if state == "absent":
                 aux_absent.append(item)
+            elif state == "gone":
+                aux_gone.append(item)
             else:
                 aux_stale.append(item)
 
@@ -900,11 +954,14 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "stale": merge("stale"),
         "stale_unknown": merge("stale_unknown"),
         "stale_unmeasured": merge("stale_unmeasured"),
+        "live_missing": merge("live_missing"),
         "missing_in_repo": merge("missing_in_repo"),
         "aux_stale": aux_stale,
         "aux_absent": aux_absent,
+        "aux_gone": aux_gone,
         "audio": audio,
         "shell_stale": shell["shell_stale"],
+        "shell_gone": shell.get("shell_gone", []),
         "shell_unreachable": shell["shell_unreachable"],
         "shell_count": shell["shell_count"],
         "live_version": shell["live_version"],
@@ -976,6 +1033,10 @@ def verdict(data: dict) -> dict:
         reasons.append("dingusių ID patikra neįvyko")
     if data.get("stale"):
         reasons.append(f"{len(data['stale'])} pasenęs modulis")
+    if data.get("live_missing"):
+        # Atsakymas 404, ne laikinas ryšio gedimas. Atskira priežastis, nes
+        # taisymas kitas: paleisti publikavimą, o ne bandyti dar kartą (#386).
+        reasons.append(f"{len(data['live_missing'])} modulio failo nėra svetainėje")
     if data.get("stale_unknown"):
         reasons.append(f"{len(data['stale_unknown'])} nepasiekiamas modulis")
     if data.get("stale_unmeasured"):
@@ -990,8 +1051,12 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(data['aux_stale'])} pasenęs pagrindinis failas")
     if data.get("aux_absent"):
         reasons.append(f"{len(data['aux_absent'])} pagrindinis failas be repo kopijos")
+    if data.get("aux_gone"):
+        reasons.append(f"{len(data['aux_gone'])} pagrindinio failo nėra svetainėje")
     if data.get("shell_stale"):
         reasons.append(f"{len(data['shell_stale'])} pasenęs kodas")
+    if data.get("shell_gone"):
+        reasons.append(f"{len(data['shell_gone'])} svetainės kodo failo nėra")
     if data.get("shell_unreachable"):
         reasons.append(f"{len(data['shell_unreachable'])} nepasiekiamas kodas")
     audio = data.get("audio") or {}
@@ -1070,6 +1135,14 @@ def main() -> int:
         print(f"PASENĘS TURINYS — ID yra, failas gyvai kitas ({len(data['stale'])}):")
         for s in data["stale"]:
             print(f"  - {s['id']} ({s['file']}): repo {s['repo_bytes']} B, gyvai {s['live_bytes']} B")
+    if data.get("live_missing"):
+        # Ne „NEPASIEKTA po 2 bandymų“: 404 yra atsakymas, ne tinklo gedimas.
+        # Vaikui tai reiškia, kad modulio svetainėje nėra — reikia publikuoti.
+        print(f"SVETAINĖJE NĖRA MODULIO FAILO — indeksas jį rodo, svetainė atsakė 404 "
+              f"({len(data['live_missing'])}):")
+        for item in data["live_missing"]:
+            print(f"  - {item['id']} ({item['file']}), repo {item['repo_bytes']} B. "
+                  f"Tai nepasibaigęs publikavimas, o ne ryšio klaida.")
     if data["stale_unknown"]:
         print(f"NEPASIEKTA po {FETCH_ATTEMPTS} bandymų ({len(data['stale_unknown'])}): "
               f"{', '.join(data['stale_unknown'])}")

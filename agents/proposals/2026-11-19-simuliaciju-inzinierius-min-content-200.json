@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 381,
+  "created": "2026-11-19T11:13:54+02:00",
+  "type": "ux",
+  "title": "200 % tekste dar du moduliai slenka: simuliacijos blokas telpa tik išsitęsdamas",
+  "body": "Šiame paleidime sutvarkius 05-plakatas-ir-informacija (blokas 313 px tarp 241 px dėžės → 13 px slinktis; pataisa — `min-width:0` ir `max-width:min(44rem,100%)`, 8 būsenos × 360/390/1440 × 16/32 px = 0 defektų), tas pats mechanizmas liko dar dviejuose moduliuose, matuotuose per visą 1 klasę. 10-gyvunu-grupes: `<strong>„Maistą susiranda pats“` dešinysis kraštas 363 px, kai ekranas 360 px (+3 px dokumento slinktis) — tai simuliacijos scenos tekstas `pasaulis.js`. 23-ismestas-daiktas-nedingsta: trys `button.btn.secondary` (`Naudosiu dar`, `Atiduosiu kitam`, `Išmesiu`) yra 304 px pločio, nors valdiklių dėžė 240,8 px (+4 px), nes `.btn` horizontalus paminkštinimas `1.4rem` prie 32 px šaknies sudaro 89,6 px „oro“, o mygtukas negali susitraukti žemiau savo `min-content`. Abu atvejai — LL-55 ir LL-52/LL-70 šeima, tik šie du failai nebuvo perkelti į `min-width:0` + `minmax(min(100%,…),1fr)` + `padding-inline:min(1.4rem,9%)` tvarką, kurią kiti sim failai jau turi. Kadangi `check_view.py` matuoja tik 16 px šaknį (pasiūlymas #7396), šie defektai vartuose nematomi ir gali išgyventi ilgai; todėl siūloma taisyti juos kartu su pirmuoju prisilietimu prie tų simuliacijų, o ne laukti atskiro 200 % audito.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "Zondas probe200.py (2026-11-19, Chromium, 360 px, 32 px šaknis, visi 48 moduliai): po šio paleidimo liko SLINKA 10-gyvunu-grupes (+3, <strong> r=363) ir 23-ismestas-daiktas-nedingsta (+4, trys button.btn.secondary w=304); 05-plakatas-ir-informacija po pataisos — +0",
+    "assets/js/sims/calba.js:1116–1123 ir 1149 — šiame paleidime įdėta `min-width:0;max-width:min(44rem,100%)`; 390 px @32 px anksčiau plakatas išlindo 42 px už `#sim-stage` dėžės, nors dokumentas nesislinko (LL-30)",
+    "assets/css/main.css:348 — `.sim-stage { display:grid; place-items:center }`: `justify-items:center` verčia vaiką imti max-content, o `min-width:auto` neleidžia susitraukti, todėl kiekvienas sim blokas be `min-width:0` tampa platesnis už dėžę 200 % tekste",
+    "research/wiki/guidelines/pamokos.md — LL-55 („Takelis susitraukė, o slanktį toliau laiko vaiko min-content“) ir LL-52/LL-70 (`.btn` paminkštinimas 200 % tekste)"
+  ]
+}

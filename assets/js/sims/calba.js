@@ -1112,8 +1112,13 @@ const plakatasIrInformacija = {
     }
 
     function paint() {
+      /* `#sim-stage` yra grid su `place-items:center`, todėl vaikas išsitempia
+         iki savo min-content, o `min-width:auto` neleidžia jam susitraukti
+         (200 % tekste @360 px: blokas 313 px tarp 241 px dėžės → 13 px
+         horizontalios slinkties). Todėl `min-width:0` ir lubos nuo tėvo,
+         o ne tik `44rem`: 16 px šaknyje matmenys nekinta (298,4 → 298,4). */
       stage.innerHTML = `
-        <div style="width:100%;max-width:44rem">
+        <div style="width:100%;min-width:0;max-width:min(44rem, 100%)">
           <p id="pi-question" style="margin:0 0 .5rem;text-align:center;font-family:var(--font-head);font-weight:900;font-size:clamp(1.02rem,4vw,1.25rem);line-height:1.3"></p>
           <div style="border:3px solid var(--line);border-radius:var(--r-m);background:#fffdf6;padding:.55rem .55rem .7rem">
             <p style="margin:0 0 .5rem;text-align:center;font-family:var(--font-head);font-weight:900;letter-spacing:.04em;font-size:clamp(.9rem,3.4vw,1rem);text-transform:uppercase;color:var(--ink-soft)">${posterTitle}</p>
@@ -1142,7 +1147,7 @@ const plakatasIrInformacija = {
 
     function finish() {
       stage.innerHTML = `
-        <div style="text-align:center;padding:.4rem;max-width:34rem">
+        <div style="text-align:center;padding:.4rem;min-width:0;max-width:min(34rem, 100%)">
           <p style="margin:0;font-family:var(--font-head);font-weight:900;font-size:clamp(1.1rem,4.2vw,1.35rem)">Atsakymus radai abiejose dalyse.</p>
           <p style="margin:.4rem 0 0">Užraše: ${tally.uzrasas} ${plural(tally.uzrasas, "atsakymą", "atsakymus", "atsakymų")}.</p>
           <p style="margin:.15rem 0 0">Piešinyje: ${tally.piesinys} ${plural(tally.piesinys, "atsakymą", "atsakymus", "atsakymų")}.</p>

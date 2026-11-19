@@ -1,0 +1,24 @@
+{
+  "role": "kritikas",
+  "run_id": 384,
+  "created": "2026-11-19T14:24:00+02:00",
+  "type": "kritika",
+  "title": "Tekstas sako „garo nematome“, o scena matomai užrašo „garas“ ant baltos srovelės",
+  "body": "Modulyje „Vandens būsenos“ vaikas perskaito `concept.steps[0]`: „Įpilk vandens ir pakaitink. Virš puodo pakyla garas“, o iškart po to `steps[1]`: „Garas yra tas pats vanduo, tik ore. Jo nematome.“ Simuliacija tuo pačiu metu piešia baltas sroveles (stroke `#ffffff`, plotis 7, opacity 0,32–0,62), o prie jų — matomą užrašą „garas“; kodo komentaras prie jo net suformuluoja priešingą taisyklę: „Garas yra tai, ko nesimato, todėl jis turi vardą pačioje scenoje“. Zondas 390×844 parodė, kad užrašas ir srovelės rodomi jau pradinėje būsenoje, kai `#vb-heat` = 1 ir scena pati sako „Ugnis silpna“ — t. y. prie vos šilto vandens, kur jokio regimo garų debesėlio fizikoje dar nėra. Po virimo (`level` = 0 iš 5) lieka `airWisps` srovelės su ta pačia etikete, nors `api.readout` jau sako „Dabar: Garas“. Vaikas gauna regimą priešpriešą: skaito, kad nematome, ir mato baltą debesį su užrašu „garas“. Tai ne kosmetika — tai klaidingos nuostatos „garas yra baltas debesis“ įtvirtinimas, t. y. būtent tai, ką modulis `teacher.misconceptions` ketina griauti („Garas yra dūmai“). Fizikoje baltas debesis virš puodo yra smulkūs vandens lašeliai, susidarę atvėsus garui; pats garas (dujinė būsena) tikrai nematomas. Taisymas grade-1 kalbai: matomą srovelę pavadinti „lašeliai“ (ar palikti be užrašo), o žodį „garas“ sieti su tuo, ko nesimato, ir rodyti baltą srovelę tik tada, kai vanduo tikrai verda (`heat === 2`), nes prie „Ugnis silpna“ regimo debesėlio neturi būti. Modulio `steps[0]`/`steps[1]` formuluotė derinama prie to paties modelio („pakyla garas — jo nematome; vėsdamas jis virsta smulkiais lašeliais, kuriuos matome“).",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json:18 — „Garas yra tas pats vanduo, tik ore. Jo nematome.“",
+    "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json:17 — „Įpilk vandens ir pakaitink. Virš puodo pakyla garas.“",
+    "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json:30 — `sim.config.words.steam` = „Garas“ (tas pats žodis, kurį piešia scena)",
+    "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json:90 — `teacher.misconceptions`: „Garas yra dūmai“ — klaidinga nuostata, kurią scena stiprina, o ne griauna",
+    "assets/js/sims/pasaulis.js:1034 — `showSteam = heat > 0 && level > 0 && !lid`: regima srovė rodoma jau prie `heat === 1` („Ugnis silpna“), ne tik verdant",
+    "assets/js/sims/pasaulis.js:1035-1038 — `steamWisps` su opacity 0,42/0,32 (heat 1) ir 0,62/0,55/0,42 (heat 2)",
+    "assets/js/sims/pasaulis.js:1041-1046 — komentaras „Garas yra tai, ko nesimato…“ ir matomas `<text>` su žodžiu „garas“",
+    "assets/js/sims/pasaulis.js:1050-1053 — `airWisps`: ore likusio vandens srovelės rodomos ir tada, kai puodas tuščias (`level === 0`)",
+    "assets/js/sims/pasaulis.js:969-971 — `steam()` piešia `stroke=\"#ffffff\" stroke-width=\"7\"`, t. y. matomą pėdsaką, ne nematomas dujas",
+    "Zondas k384_vb_garas.py (Chromium, 390×844, http://127.0.0.1:8991/#/modulis/1/pasaulio-pazinimas/16-vandens-busenos, 0 konsolės klaidų): pradinė būsena — readout „Vandens lygis 5 iš 5. Dangtis nuimtas. Dabar: Vanduo, Garas.“, scene `textInScene: [\"garas\"]`, 5 baltos srovelės, scena pati sako „Ugnis silpna“; po virimo — „Vandens lygis 0 iš 5… Dabar: Garas“, likusios 3 baltos srovelės ore",
+    "Vartai to nepagauna: `validate_content.py --grade 1` → 0 klaidų; `check_view.py` → 144 maršrutai × 3 plotai, 0 problemų; prieštaravimas yra tarp teksto ir piešinio reikšmės, ne geometrijos"
+  ]
+}

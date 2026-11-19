@@ -1,0 +1,24 @@
+{
+  "role": "kritikas",
+  "run_id": 384,
+  "created": "2026-11-19T14:20:00+02:00",
+  "type": "kritika",
+  "title": "Tamsoje modelis neleidžia net sėklai pabusti, o modulis siūlo bandymą, kuris tai paneigia",
+  "body": "Modulis „Augalo gyvenimas“ moko dviejų dalykų, kurie abu prieštarauja tam, ką pamatytų vaikas, atlikęs patį modulį siūlomą bandymą. Pirma, `concept.steps[0]` sako „Sėkla pabunda žemėje, kai yra šilta ir drėgna“ — be šviesos, teisingai. Bet simuliacijos modelis augimą skaičiuoja kaip `min(vanduo, šviesa, šiluma)`, o `AG_LIGHT[0] = 0`, todėl sėkla su vandeniu ir šiluma, bet be šviesos nepabunda nė per 12 dienų: zondas 390×844 parodė 7 dienas iš eilės „Šią dieną sėkla liko tokia pati“ ir readout „Sėkla · vanduo gerai · šviesa nėra · šilta“. Antra, `concept.example` siūlo namų bandymą „Padėk vieną pupelę ant palangės, kitą — į tamsų stalčių… Po savaitės palygink: kuri ilgesnė ir žalesnė?“, o užduotis „Kas nutinka augalui, jei jį laistai, bet laikai tamsoje?“ teisingu laiko atsakymą „Jis blyksta ir neauga“. Realiai pupos daigas tamsoje išsitempia ir būna AUKŠTESNIS už šviesoje augusį, tik blyškus ir su mažais geltonais skiltelėmis (etioliacija, skotomorfogenezė): tai nėra išimtis, tai normali daigų strategija keliui į šviesą. Vadinasi, vaikas, kuris modulio paprašytas atliks bandymą, gaus priešingą rezultatą nei užduoties teisingas atsakymas, o modelis jam „patvirtins“, kad tamsoje nieko nevyksta. Tai ne ta pati kritika kaip 2026-11-05 „perlaistymo“ radinys (ten kalbama apie vandens perteklių ir šilumos kintamąjį) — čia kalbama apie šviesos vaidmenį daigui. Taisymas: modelis turi skirti dygimą (šiluma + drėgmė, be šviesos) nuo tolesnio augimo šviesoje; tamsoje daigas turi ilgėti, o ne sustoti, ir blykti, o ne „neaugti“; užduoties `why`/`options` bei `example` perrašomi pagal tą patį modelį (pvz., „Jis išsitempia ir blyksta“), kad bandymo baigtis ir atsakymas sutaptų.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:251 — `AG_LIGHT = [0, 0.3, 0.7, 1, 1, 1]`: šviesa 0 → augimo dalis 0",
+    "assets/js/sims/pasaulis.js:258 — `gf: Math.min(wf, lf, hf)`: šviesa 0 nuleidžia VISĄ augimą, įskaitant sėklos dygimą",
+    "assets/js/sims/pasaulis.js:547 — `dayStep()`, kai `gf === 0` ir `size === 0`: „Šią dieną sėkla liko tokia pati.“",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:17 — „Sėkla pabunda žemėje, kai yra šilta ir drėgna“ (šviesa neminima)",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:22 — `concept.example`: „…į tamsų stalčių… kuri ilgesnė ir žalesnė?“",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:41-49 — užduotis „Kas nutinka… tamsoje?“ su atsakymu „Jis blyksta ir neauga“ ir `why` „Be šviesos lapai blyksta ir augalas neauga“",
+    "content/lt/grade-01/pasaulio-pazinimas/09-augalo-gyvenimas.json:71 — tas pats teiginys pakartotas praplėtimo užduoties `why`",
+    "Zondas k367_augalas_tamsa.py (Chromium, 390×844, http://127.0.0.1:8991/#/modulis/1/pasaulio-pazinimas/09-augalo-gyvenimas, šviesa 3→0, 6 dienos, 0 konsolės klaidų): kiekviena diena — readout „Sėkla · vanduo gerai · šviesa nėra · šilta“, note „Šią dieną sėkla liko tokia pati“; jokio daigo, jokio ilgėjimo",
+    "Šaltinis: PMC7031072 „Beyond the darkness: recent lessons from etiolation and de-etiolation studies“ — skotomorfogenezė apibūdinama kaip „pale cotyledons“ ir „elongated hypocotyl“, t. y. tamsoje daigas išsitempia",
+    "Šaltinis: PMC88872 „Does Growth Correlate with Turgor-Induced Elastic Strain in Stems?“ — „Hypocotyls of dark-grown plants became taller than those grown under day/night conditions on d 4“",
+    "Vartai to nepagauna: `validate_content.py --grade 1` → 0 klaidų, 0 įspėjimų; `check_language.py` → 0 klaidų; `check_art.py`/`check_view.py` tikrina scenos surinkimą ir matomumą, ne modelio teiginį"
+  ]
+}

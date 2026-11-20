@@ -63,7 +63,15 @@ def main() -> int:
             errors.append(f"index.html: anglicizmas „{w}“ vartotojo sąsajoje")
 
     # 8. Simuliacijų failai: kiekvienas turi grąžinti valymą arba bent neturėti intervalų
-    for f in sorted((ROOT / "assets" / "js" / "sims").glob("*.js")):
+    #    Tuščias katalogas NĖRA švara: jei failų nerasta, patikra būtų tuščia, o
+    #    rezultatas atrodytų žalias (LL-121). Todėl skaičiuojama, kiek failų perskaityta.
+    sims = sorted((ROOT / "assets" / "js" / "sims").glob("*.js"))
+    if not sims:
+        errors.append(
+            "assets/js/sims: nerasta nė vieno simuliacijos failo — patikra būtų tuščia, "
+            "todėl laikoma klaida, o ne švara"
+        )
+    for f in sims:
         text = f.read_text(encoding="utf-8")
         if "setInterval(" in text and "return () =>" not in text:
             warnings.append(f"{f.name}: setInterval be valymo funkcijos")
@@ -72,7 +80,8 @@ def main() -> int:
         print(f"KLAIDA: {e}")
     for w in warnings:
         print(f"ĮSPĖJIMAS: {w}")
-    print(f"\nRezultatas: {len(errors)} klaidų, {len(warnings)} įspėjimų")
+    print(f"\nPerskaityta: {len(sims)} simuliacijų failų")
+    print(f"Rezultatas: {len(errors)} klaidų, {len(warnings)} įspėjimų")
     if not errors:
         print("✔ Sąsaja atitinka pagrindines taisykles.")
     return 1 if errors else 0

@@ -3,7 +3,7 @@
   "grade": 1,
   "strand": "matematika",
   "title": "Pinigai: vertė yra skaičius",
-  "subtitle": "Sumą sudaro skaičiai, o ne pinigų kiekis",
+  "subtitle": "Svarbu monetos vertė, o ne kiek monetų turi",
   "minutes": 9,
   "outcomes": [
     "Atpažįstu euro monetas ir banknotus pagal užrašytą vertę.",
@@ -66,7 +66,7 @@
       "why": "Trys 2 eurų monetos duoda 6 eurus. Kiti rinkiniai duoda 7 ir 5."
     },
     {
-      "q": "Vienas vaikas davė 2 € ir 1 €. Kitas davė tris 1 € monetas. Kuris davė daugiau pinigų?",
+      "q": "Jonas turi 2 € ir 1 € monetas. Aistė turi tris 1 € monetas. Kas turi daugiau pinigų?",
       "options": [
         "Pirmas",
         "Antras",

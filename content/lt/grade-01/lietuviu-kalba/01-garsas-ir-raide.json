@@ -106,7 +106,7 @@
   },
   "tasks": [
     {
-      "q": "Kurio paveikslėlio vardas prasideda ta pačia raide kaip 🌳 medis?",
+      "q": "Kurio paveikslėlio pavadinimas prasideda tuo pačiu garsu kaip 🌳 medis?",
       "options": [
         "👩 mama",
         "🐟 žuvis",

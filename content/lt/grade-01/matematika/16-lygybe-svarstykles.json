@@ -37,7 +37,7 @@
   },
   "tasks": [
     {
-      "q": "Kairėje 5 kubeliai ir uždara dėžutė, dešinėje 8 kubeliai. Svarstyklės lygios. Kiek kubelių dėžutėje?",
+      "q": "Kairėje — 5 kubeliai ir slapta dėžutė. Dešinėje — 8 kubeliai. Svarstyklės lygios. Kiek kubelių dėžutėje?",
       "options": [
         "13",
         "3",
@@ -59,7 +59,7 @@
       "why": "Dėžutė stovi kairėje. Todėl rašoma 6 + ▢ = 10."
     },
     {
-      "q": "Kortelė sako: 8 = 5 + ▢. Kiek kubelių dėžutėje, kad svarstyklės būtų lygios?",
+      "q": "Lygybė užrašyta taip: 8 = 5 + ▢. Kuris skaičius turi būti langelyje?",
       "options": [
         "13",
         "5",

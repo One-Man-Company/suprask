@@ -3,7 +3,7 @@
   "grade": 1,
   "strand": "lietuviu-kalba",
   "title": "Kaip žmonės sveikinasi",
-  "subtitle": "Vienas pastebėjimas dar nėra išvada",
+  "subtitle": "Iš vieno karto negalime spręsti apie visus",
   "minutes": 9,
   "outcomes": [
     "Atlieku nesudėtingą kalbos vartojimo tyrimą: stebiu, kaip sveikinasi žmonės.",
@@ -88,7 +88,7 @@
       "why": "Išvada apie kitus remiasi visais pastebėjimais, ne vienu."
     },
     {
-      "q": "Pastebėjai penkis žmones. Trys pasakė „labas“, vienas mostelėjo, vienas linktelėjo. Kaip pasakytum išvadą?",
+      "q": "Stebėjai penkis žmones. Trys pasakė „labas“, vienas pamojo ranka, vienas linktelėjo. Ar visi sveikinosi taip pat?",
       "options": [
         "Visi sveikinasi žodžiu.",
         "Daugiausia sveikinasi žodžiu.",
@@ -107,7 +107,7 @@
       ],
       "answer": 0,
       "hint": "Vienas balsas dar nepasako apie klasę. Kiek balsų reikia?",
-      "why": "Tas pats tyrimo kelias tinka ir spalvų klausimui.",
+      "why": "Jei nori sužinoti, stebėk kelis kartus, o ne vieną.",
       "optional": true
     }
   ],

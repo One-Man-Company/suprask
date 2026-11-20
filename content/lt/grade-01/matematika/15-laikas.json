@@ -53,7 +53,7 @@
       "why": "Pilną valandą rodo trumpoji rodyklė, kai ilgoji stovi ties 12."
     },
     {
-      "q": "Laikrodis rodo 9 valandas. Ilgoji apeina visą ratą ir vėl stoja ties 12. Kiek dabar valandų?",
+      "q": "Laikrodis rodo 9:00. Ilgoji rodyklė apsuko visą ratą. Kiek dabar valandų?",
       "options": [
         "10 valandų",
         "12 valandų",
@@ -64,7 +64,7 @@
       "why": "Per vieną ratą trumpoji pasislenka vienu skaičiumi. Todėl 9 tampa 10."
     },
     {
-      "q": "Rodyklės neturi žymenų. Viena rodyklė apsisuko visą ratą. Kita pasislinko vienu skaičiumi. Kuri rodo valandas?",
+      "q": "Viena rodyklė apsuko visą ratą, kita pasislinko per vieną skaičių. Kuri rodyklė rodo valandas?",
       "options": [
         "Rodyklė, kuri apsisuko visą ratą",
         "Abi rodo tą patį",

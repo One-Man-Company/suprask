@@ -14,7 +14,7 @@
     "title": "Spalva keičia nuotaiką",
     "big_idea": "Ta pati forma gali atrodyti linksmai arba niūriai. Įspūdį keičia spalva, o ne naujas piešinys.",
     "steps": [
-      "Pirma pasakyk, kas pasikeis: formos ar nuotaika. Tada rinkis dažą.",
+      "Prieš keisdamas spalvą pagalvok, kokia bus paveikslo nuotaika.",
       "Spausk vieną iš keturių dažų. Keisis tik didelės dėmės spalva.",
       "Grįžk į pirmą spalvą. Paveikslas atrodys lygiai taip pat.",
       "Forma pasako, kas nupiešta. Spalva pasako, kaip į tai žiūrima."
@@ -79,7 +79,7 @@
       "why": "Spalva keičia įspūdį, bet ne linijas ir ne dėmių formą."
     },
     {
-      "q": "Tas pats piešinys nuskanuotas nespalvotai. Ar jį dar atpažinsi?",
+      "q": "Tas pats piešinys nupieštas tik paprastu pieštuku, be spalvų. Ar jį atpažinsi?",
       "options": [
         "Ne, be spalvų nieko nematysi",
         "Taip, formos liko tos pačios",

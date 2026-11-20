@@ -3,7 +3,7 @@
   "grade": 1,
   "strand": "matematika",
   "title": "Skaičius ir skaitmuo: 13 ir 31",
-  "subtitle": "Tie patys skaitmenys gali reikšti skirtingą kiekį",
+  "subtitle": "Tie patys skaitmenys — skirtingi skaičiai: 13 ir 31",
   "minutes": 9,
   "outcomes": [
     "Skiriu skaitmenį nuo skaičiaus: skaitmuo yra ženklas, o skaičius — kiekis.",
@@ -88,7 +88,7 @@
       "why": "Keturios dešimtys ir nė vieno vieneto — tai 40."
     },
     {
-      "q": "Rokas mano, kad 19 daugiau už 21. Jis lygina skaitmenis 9 ir 1. Ką atsakytum ir kodėl?",
+      "q": "Kas daugiau: 19 ar 21? Kodėl?",
       "options": [
         "„Taip: devyni didesni už vieną, todėl 19 didesnis“",
         "„Ne: 19 turi vieną dešimtį, o 21 — dvi, todėl 21 didesnis“",

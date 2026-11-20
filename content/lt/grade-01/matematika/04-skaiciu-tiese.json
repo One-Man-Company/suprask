@@ -42,7 +42,7 @@
         "6"
       ],
       "answer": 0,
-      "hint": "Neskaičiuok 8 kaip pirmo žingsnio. Du žingsniai duoda du naujus skaičius.",
+      "hint": "8 nėra pirmas žingsnis. Pirmyn du žingsniai — du nauji skaičiai.",
       "why": "8 + 2 = 10."
     },
     {

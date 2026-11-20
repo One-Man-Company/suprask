@@ -58,7 +58,7 @@
    "why": "Jis žiūri į tave, todėl jo kairė yra tavo dešinėje."
   },
   {
-   "q": "Vabaliukas žiūri į dešinę. Jis pasisuka į savo kairę per ketvirtį rato. Į kurią pusę jis dabar žiūri?",
+   "q": "Vabaliukas žiūri į dešinę. Jis pasisuka vieną kartą kairėn. Kur dabar žiūri jo nosytė?",
    "options": [
     "Į apačią",
     "Į viršų",
@@ -91,7 +91,7 @@
    "why": "„Žengti“ visada veda į priekį, o priekis pasisuko į tave."
   },
   {
-   "q": "Du vaikai stovi vienas priešais kitą. Abu pasuka į savo kairę. Ar jie žiūri į tą pačią pusę?",
+   "q": "Stovi prieš draugą veidu į veidą. Abu pakeliate savo kairę ranką. Ar jūsų rankos toje pačioje pusėje?",
    "options": [
     "Taip, į tą pačią pusę",
     "Ne, į priešingas puses",

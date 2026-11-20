@@ -2,11 +2,11 @@
   "id": "12-bendradarbiavimo-tiltas",
   "grade": 1,
   "strand": "zaidimu-teorija",
-  "title": "Bendradarbiavimo tiltas",
+  "title": "Tiltas: kai dirbame kartu",
   "subtitle": "Kai vienas negali, o dviese — gali",
   "minutes": 10,
   "outcomes": [
-    "Paaiškinu, kada bendradarbiavimas padeda labiau nei pasilikimas sau.",
+    "Suprantu, kada dirbti kartu yra naudingiau nei vienam.",
     "Pastebiu, kad kai kurie tikslai nepasiekiami vienam.",
     "Susitariu dėl sąžiningo indėlio."
   ],
@@ -66,7 +66,7 @@
         "Draugas stato vienas"
       ],
       "answer": 0,
-      "hint": "Sudėk: 1 + 4 = ? Kiek liko iki 6?",
+      "hint": "Sudėk 1 ir 4. Kiek dar reikia iki 6?",
       "why": "1 + 4 = 5, todėl trūksta vieno bloko.",
       "optional": true
     }

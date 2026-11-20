@@ -39,7 +39,7 @@
   },
   "tasks": [
     {
-      "q": "Trys vaikai stato vieną bokštą. Kiekvienas deda po bloką. Vienas nustoja dėti. Kas nutinka?",
+      "q": "Trys vaikai stato bokštą. Vienas nustoja padėti. Kas nutinka bokštui?",
       "options": [
         "Bokštas lieka toks pat",
         "Bokštas lieka nebaigtas visiems",
@@ -61,7 +61,7 @@
       "why": "Bendrame darbe kiekvienas stulpas laiko visą bokštą."
     },
     {
-      "q": "Klasė sutarė po darbo sudėti dažus. Vienas vaikas palieka dažus ant stalo. Kas nutinka kitiems?",
+      "q": "Vaikai sutarė susitvarkyti dažus. Vienas jų nesutvarko. Kaip turi pasielgti kiti?",
       "options": [
         "Niekas nepastebi",
         "Tik tas vaikas turi tvarkytis",

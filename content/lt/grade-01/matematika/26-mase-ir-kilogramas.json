@@ -65,7 +65,7 @@
   },
   "tasks": [
     {
-      "q": "Putų dėžutė stovi kairėje lėkštėje, 1 kg svarstis — dešinėje. Kairė lėkštė pakilo. Ar putų dėžutė sunkesnė už 1 kg?",
+      "q": "Kairėje lėkštėje — putplasčio dėžutė, dešinėje — 1 kg svarstis. Dėžutės lėkštė pakilo į viršų. Ar dėžutė sveria daugiau nei 1 kg?",
       "options": [
         "Taip, sunkesnė už 1 kg",
         "Ne, lengvesnė už 1 kg",
@@ -76,7 +76,7 @@
       "why": "Lėkštė su dėžute pakilo, todėl dėžutė lengvesnė už 1 kg."
     },
     {
-      "q": "Dvi rankinės vienodo dydžio. Vienoje yra tušti indeliai, kitoje — konservų skardinės. Kuri sunkesnė?",
+      "q": "Dvi vienodos dėžės: viena pilna vatos, kita — vinių. Kuri sunkesnė?",
       "options": [
         "Ta, kurioje konservai",
         "Ta, kurioje tušti indeliai",

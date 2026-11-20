@@ -83,7 +83,7 @@
       "optional": true
     }
   ],
-  "reflect": "Kuris metų laikas tau pats mėgstamiausias? Pasakyk du dalykus, kurie tada nutinka gamtoje.",
+  "reflect": "Kuris metų laikas tau labiausiai patinka? Pasakyk du dalykus, kodėl.",
   "teacher": {
     "goal": "Metų laikų kaitos ir jos poveikio gyvajai gamtai supratimas; stebėjimo įgūdis.",
     "prompt": "Kaip pasikeistų tavo kiemas, jei visus metus būtų vasara?",

@@ -59,7 +59,7 @@
       "why": "Prieš vidurdienį abu užrašai sutampa, todėl lieka 9:00."
     },
     {
-      "q": "Vakaras. Močiutės laikrodis rodo 7 val., o virtuvės — 19:00. Ar jie rodo tą patį laiką?",
+      "q": "Vakare laikrodis su rodyklėmis rodo 7, o telefonas — 19:00. Ar tai tas pats laikas?",
       "options": [
         "Ne, 19 yra kita valanda.",
         "Ne, vienas rodo rytą, kitas vakarą.",

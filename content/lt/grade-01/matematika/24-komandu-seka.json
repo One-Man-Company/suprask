@@ -2,7 +2,7 @@
   "id": "24-komandu-seka",
   "grade": 1,
   "strand": "matematika",
-  "title": "Komandų seka: viena klaida pakreipia kelią",
+  "title": "Komandų seka: viena klaida nuveda ne ten",
   "subtitle": "Kiekviena komanda pradeda ten, kur baigėsi ankstesnė",
   "minutes": 9,
   "outcomes": [
@@ -85,7 +85,7 @@
       "why": "Kelią pakreipė viena komanda, todėl taisoma tik ji."
     },
     {
-      "q": "Robotas turi eiti tiesiai per tris langelius. Sekoje: pirmyn, kairėn, pirmyn. Kuri komanda pakreipė kelią?",
+      "q": "Robotas turėjo eiti tiesiai, bet seka buvo: pirmyn, kairėn, pirmyn. Kuri komanda buvo klaidinga?",
       "options": [
         "Pirma",
         "Antra",

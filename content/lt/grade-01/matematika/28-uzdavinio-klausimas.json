@@ -75,14 +75,14 @@
       "why": "Sąlyga sako, kad nuskrido dvi varnos. Atsakymas jau parašytas, todėl skaičiuoti nereikia."
     },
     {
-      "q": "Mama atnešė 3 kriaušes, tėtis — 5. Klausimas: „Kiek kriaušių iš viso?“ Koks veiksmas?",
+      "q": "Mama atnešė 3 kriaušes, tėtis — 5. Klausiama: „Kiek iš viso?“ Kurį veiksmą pasirinksi?",
       "options": ["3 + 5", "5 − 3", "Nieko nereikia"],
       "answer": 0,
       "hint": "Klausimas prašo abiejų grupių kartu, o ne skirtumo.",
       "why": "Iš viso — abi grupės kartu. Trys ir penkios yra aštuonios kriaušės."
     },
     {
-      "q": "Ant tvoros liko 5 paukščiai, o nuskrido 3. Kiek mažiau paukščių nuskrido negu liko?",
+      "q": "Liko 5 paukščiai, nuskrido 3. Kiek mažiau nuskrido negu liko?",
       "options": ["8", "2", "5"],
       "answer": 1,
       "hint": "Klausimas prašo skirtumo: kiek trūksta trijų iki penkių?",

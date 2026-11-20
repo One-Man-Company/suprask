@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 396,
+  "created": "2026-11-20T09:24:28+02:00",
+  "type": "struktura",
+  "title": "validate_content.py netikrina, ar sim.config skiemenys tikrai sudaro žodį",
+  "body": "Modulio 02-skiemenu-jungimas atvejis parodė, kad sim.config.words[].syllables reikšmė gali būti bet kokia: validatorius tikrina, ar config raktas pasiekia simuliaciją, o reikšmės teisingumo sąmoningai nevertina (scripts/validate_content.py:160–165), garso vartai — kad įrašai egzistuoja. Ar „mo“ + „ky“ + „kla“ duoda „mokykla“, netikrina niekas. Todėl du priešingi skaidymai gyveno tame pačiame faile dvi paras, o kiekvienas taisymas buvo žalias visuose vartuose. Siūloma validate_content.py pridėti pigią invarianto patikrą kiekvienam sim.config.words įrašui: sujungti skiemenis be tarpų ir palyginti su word (be didžiųjų raidžių skirtumo), o kiekviename skiemenyje reikalauti bent vieno balsio. Tai nesprendžia dalyko taisyklės (ar mo-kyk-la, ar mo-ky-kla — tai sprendžia šaltinis), bet sustabdo atvejus, kai plytelės vaikui rodo ne tą žodį, kurį jis turi perskaityti. Klaida būtų lygio error, nes vaikas mokosi netaisyklingo skiemenavimo, o ne tik mato netvarkingą maketą.",
+  "target": "scripts/validate_content.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/02-skiemenu-jungimas.json:64–69 — sim.config žodis „mokykla“ ir jo skiemenų sąrašas",
+    "scripts/validate_content.py:157–199 — check_sim_config tikrina, ar config raktas pasiekia simuliacijos kodą, o pačios dokumentacija (:160–165) sako, kad reikšmių teisingumo ji nevertina",
+    "research/wiki/guidelines/pamokos.md LL-108 — taisyklė „join(syllables) === word“, kuri niekur neįgyvendinta",
+    "research/wiki/guidelines/pamokos.md LL-123 — du priešingi „mokykla“ skaidymai praėjo visus vartus"
+  ]
+}

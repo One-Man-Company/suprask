@@ -1,0 +1,19 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 411,
+  "created": "2026-11-20T16:07:00+02:00",
+  "type": "struktura",
+  "title": "CI nepaleidžia check_registry.py: našlaitis modulio failas praeina visus PR vartus ir publikuojamas",
+  "body": "`check_registry.py` yra vienintelis įrankis, kuris lygina keturias vietas iš karto: `index.json` įrašus, modulių failus diske, `path.json` seką ir `SIMS` registrą. `.github/workflows/validate.yml` jo nepaleidžia nė karto (patikrinta `grep -n \"check_registry\" .github/workflows/*.yml` → 0 eilučių), todėl CI mato tik `validate_content.py`, o šis lygina `grades.json` deklaruotą skaičių su failų skaičiumi — abiem pusėms sutarus, failas be indekso įrašo praeina žalias. #404/#411 zondas tą įrodė: 52 failai, 51 indekso įrašas, `grades.json` 52 → `validate_content.py --grade 1 --strict` rc 0, `check_registry.py` rc 1 (po šio paleidimo pataisymo), `check_published.py` rc 1. Kadangi `pages.yml` kopijuoja visą `content/`, toks failas atsiduria svetainėje, bet naršyklė jo neprašo: vaikas modulio nepasiekia, o dashboard'as jį skaičiuoja — būtent vaidmens klausimas „kodėl dashboard rodo daugiau nei svetainė“. Siūloma į `validate.yml` pridėti žingsnį `python3 scripts/check_registry.py` (be `--grade`, kad apimtų visas paleistas klases) iškart po `Turinio validacija`. Įrankis veikia be tinklo ir be naršyklės, tik skaito failus, tad CI laikas beveik nekinta; jis taip pat uždaro #16892 (kortelės ir modulio puslapio pavadinimų nesutapimas) ir `path.json` sekos pilnumą. Dabar šis žingsnis liko tik publikavimo agente, kuris paleidžiamas 5 kartus per parą — per vėlai, kad sustabdytų PR, ir per retai, kad pastebėtų pirmą minutę.",
+  "target": ".github/workflows/validate.yml",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "grep -n \"check_registry\" .github/workflows/*.yml → 0 eilučių (validate.yml 72 eilutės, 12 žingsnių, nė vieno registro patikros)",
+    ".github/workflows/pages.yml — „Surinkti tik svetainės failus“ kopijuoja visą content/, tad našlaitis failas svetainėje atsiranda, nors indeksas jo nerodo",
+    "scratch/pub404/probe_orphan.py after: 52 failai / 51 įrašas / grades.json 52 → validate_content.py rc 0, check_registry.py rc 1 „NAŠLAITIS: 52-tikrinimo-modulis.json“, check_published.py rc 1 „1 modulio failo be indekso įrašo“",
+    "scratch/pub404/neg_ctl.py: 51 failas / 51 įrašas / grades.json 51 → abu rc 0, orphan_files [] (pataisa nekuria klaidingo raudono)",
+    "scripts/check_registry.py:81-92 — našlaitis dabar įtraukiamas į problems (rc 1), o ne tik spausdinamas",
+    "research/wiki/guidelines/pamokos.md — LL-128 (nauja, šis paleidimas)"
+  ]
+}

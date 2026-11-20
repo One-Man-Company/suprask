@@ -15,8 +15,8 @@
     "steps": [
       "Pirma spėk, kuris rutulys atriedės pirmas.",
       "Spausk „Leisk abu“ ir stebėk. Abu rutuliai atrieda beveik kartu.",
-      "Pasirink „Aukšta“ ir vėl leisk abu. Dabar rutuliai atrieda greičiau negu prieš tai.",
-      "Pasirink „Žema“ ir palygink. Dabar rutuliai atrieda lėčiau negu prieš tai."
+      "Pasirink „Aukšta“ ir vėl leisk abu. Dabar rutuliai atrieda greičiau nei prieš tai.",
+      "Pasirink „Žema“ ir vėl leisk abu. Dabar rutuliai atrieda lėčiau nei prieš tai."
     ],
     "example": "Rogės nuo statesnio kalno įsibėgėja greičiau nei nuo lėkšto kalno."
   },
@@ -34,7 +34,7 @@
   },
   "tasks": [
     {
-      "q": "Du vienodo dydžio rutuliai rieda ta pačia plokštuma. Kuris atriedės pirmas?",
+      "q": "Du vienodo dydžio rutuliai rieda ta pačia plokštuma. Kas atriedės pirmas?",
       "options": [
         "Sunkesnis rutulys",
         "Lengvesnis rutulys",
@@ -45,18 +45,18 @@
       "why": "Plokštuma abiem ta pati, todėl jie atrieda beveik kartu."
     },
     {
-      "q": "Rideni tą patį rutulį ta pačia plokštuma. Kaip padaryti, kad jis riedėtų greičiau?",
+      "q": "Rideni rutulį. Kaip padaryti, kad jis riedėtų greičiau?",
       "options": [
         "Pakelti plokštumą",
         "Pakeisti rutulį sunkesniu",
         "Pakeisti rutulį lengvesniu"
       ],
       "answer": 0,
-      "hint": "Bandyme rutulys liko tas pats. Ką pakeitei?",
+      "hint": "Prisimink: sunkus ir lengvas rutulys atrieda beveik kartu.",
       "why": "Aukštesnė plokštuma statesnė, todėl rutulys greičiau įsibėgėja."
     },
     {
-      "q": "Du vaikai leidžiasi vienodomis rogėmis. Nuo kurio kalno vaikas įsibėgės greičiau?",
+      "q": "Vienas kalnas status, kitas lėkštas. Nuo kurio kalno vaikas greičiau įsibėgės rogėmis?",
       "options": [
         "Nuo lėkštesnio kalno",
         "Nuo statesnio kalno",
@@ -67,19 +67,19 @@
       "why": "Statesnis kalnas veikia kaip aukštesnė plokštuma, todėl greitis didesnis."
     },
     {
-      "q": "Rutulys nuo aukštos plokštumos atrieda greičiau. Kodėl taip yra?",
+      "q": "Nuo aukštos plokštumos rutulys atrieda greičiau. Kodėl?",
       "options": [
         "Nes rutulys sunkesnis",
         "Nes plokštuma aukštesnė",
         "Nes rutulys didesnis"
       ],
       "answer": 1,
-      "hint": "Palygink abi plokštumas, o ne rutulius.",
-      "why": "Keičiasi plokštuma, o ne rutulys, todėl greitis didesnis.",
+      "hint": "Palygink abu bandymus, o ne rutulius.",
+      "why": "Rutulys tas pats, o plokštuma aukštesnė, todėl jis atrieda greičiau.",
       "optional": true
     }
   ],
-  "reflect": "Kodėl sunkus rutulys neatsilieka nuo lengvo rutulio? Pasakyk savais žodžiais.",
+  "reflect": "Kodėl sunkus rutulys atrieda taip pat greitai kaip lengvas? Pasakyk savais žodžiais.",
   "teacher": {
     "goal": "Suprasti, kad riedėjimo greitį lemia plokštumos aukštis (nuolydis), o ne daikto svoris. Modelis rodo abu rutulius vienu metu ir leidžia keisti tik vieną sąlygą.",
     "prompt": "Kodėl sunkesnis rutulys neatriedėjo pirmas?",

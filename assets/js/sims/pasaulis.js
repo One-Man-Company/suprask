@@ -3752,6 +3752,304 @@ const ismestoDaiktoKelias = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Kieta vandens forma — tas pats vanduo trimis pavidalais             */
+/* ------------------------------------------------------------------ */
+/* Programa 26.3.2 (1 kl.) prašo atpažinti skirtingų formų kietąją
+   vandens būseną (snaigė, šerkšnas, ledas) ir padaryti išvadą, kad ji
+   gali būti įvairių formų. Modulis 16-vandens-busenos rodo garą ir lašus,
+   todėl šis modelis ima kitą pusę: tą patį kiekį vandens (po vieną
+   puodelį) supilame į tris skirtingas formas, sušaldome, o paskui
+   ištirpdome atgal į tuos pačius puodelius.
+   Klaidinga nuostata, kurią modelis griauja: „ledas, snaigė ir šerkšnas
+   yra kitokia medžiaga, ne vanduo“ — kietas daiktas neteka, todėl vaikas
+   jį priskiria kitai medžiagai. Todėl scena ne tik parodo tris pavidalus,
+   bet ir turi lygio žymą: prieš šaldymą ir po tirpimo vandens lygis
+   puodeliuose tas pats.
+   Formos pavidalą duoda indas, o ne kiekis (LL-28: modelis turi rodyti
+   prieštaraujančius atvejus, o ne vieną). Trys formos rodomos vienu metu
+   sąmoningai — vienas ledo gabalas neparodytų, kad kieta būsena gali būti
+   įvairių formų.
+   Modelio riba: vanduo šaldamas plečiasi, todėl tikras ledas būna šiek
+   tiek didesnis. Tai nerodoma, kad vaikas nepainiotų kiekio su tūriu. */
+const LF_WORDS = { ice: "Ledas", snow: "Snaigė", frost: "Šerkšnas" };
+const LF_KEYS = ["ice", "snow", "frost"];
+const LF_KINDS = ["circle", "flake", "pane"];
+const LF_COLS = [60, 180, 300];
+const LF_CUP = { top: 164, bottom: 244, topHalf: 26, botHalf: 21 };
+const LF_LEVEL = 182;      // žyma: tiek vandens buvo prieš šaldymą
+const LF_MOLD_Y = 74;
+const LF_SENTENCES = [
+  "start", "frozen", "melted", "startNote", "frozenNote", "meltedNote", "again",
+];
+
+const ledoFormos = {
+  mount({ stage, controls, api, config = {} }) {
+    const W = { ...LF_WORDS };
+    const cfgWords = config && typeof config.words === "object" && !Array.isArray(config.words)
+      ? config.words : {};
+    for (const key of LF_KEYS) {
+      const v = cfgWords[key];
+      if (typeof v === "string" && v.trim()) W[key] = v.trim();
+    }
+    const S = config && typeof config.sentences === "object" && !Array.isArray(config.sentences)
+      ? config.sentences : {};
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* Nesuderinta konfigūracija sakoma žodžiais, o ne tyliai pakeičiama
+       bendru sakiniu (LL-33). */
+    const missingSentences = LF_SENTENCES.filter((k) => typeof S[k] !== "string" || !S[k].trim());
+    if (missingSentences.length) {
+      console.error(`ledo-formos: trūksta sakinių ${missingSentences.join(", ")}`);
+      stage.innerHTML = '<p class="error-box">Formos nesuderintos su tekstu.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    let phase = "start";     // start | frozen | melted
+    let reported = false;
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:28rem;margin:0 auto;min-width:0">
+        <svg id="lof-scene" viewBox="0 0 360 300" width="100%"
+             style="display:block;max-width:360px;height:auto;margin:0 auto"
+             role="img" aria-label="Trys puodeliai vandens ir trys tuščios formos."></svg>
+        <p class="sim-note" style="margin:.4rem 0 0;text-align:center;font-size:.8rem">
+          Kiekviena forma gauna po vieną puodelį vandens.
+        </p>
+      </div>`;
+
+    /* Mygtukų paddingas `min(1.4rem,9 %)`: 200 % tekste fiksuotas rem
+       išstumtų už kortelės (ta pati klasė kaip vandens-busenos). */
+    controls.innerHTML = `
+      <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:.5rem;width:100%;max-width:30rem;margin:0 auto">
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;min-width:0">
+          <button class="btn" id="lof-freeze" type="button"
+                  style="flex:1 1 8rem;min-height:48px;min-width:0;padding-inline:min(1.4rem,9%)">Sušaldyk</button>
+          <button class="btn secondary" id="lof-melt" type="button"
+                  style="flex:1 1 8rem;min-height:48px;min-width:0;padding-inline:min(1.4rem,9%)">Ištirpdyk</button>
+          <button class="btn ghost" id="lof-reset" type="button"
+                  style="flex:0 0 auto;min-height:48px;padding-inline:min(1.4rem,9%)">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const svg = stage.querySelector("#lof-scene");
+    const freezeBtn = controls.querySelector("#lof-freeze");
+    const meltBtn = controls.querySelector("#lof-melt");
+    const resetBtn = controls.querySelector("#lof-reset");
+
+    /* Puodelio plotis ties duotu aukščiu — vandens paviršius ir žyma
+       skaičiuojami iš tos pačios funkcijos, todėl lygis paveiksle
+       niekada nesiskiria nuo to, ką sako žyma. */
+    const halfW = (y) => LF_CUP.topHalf
+      - ((y - LF_CUP.top) * (LF_CUP.topHalf - LF_CUP.botHalf)) / (LF_CUP.bottom - LF_CUP.top);
+
+    function cup(cx, full) {
+      const { top, bottom } = LF_CUP;
+      const a = halfW(top);
+      const b = halfW(bottom);
+      const lw = halfW(LF_LEVEL);
+      const outline = `M${cx - a} ${top} L${cx - b} ${bottom}`
+        + ` Q${cx} ${bottom + 6} ${cx + b} ${bottom} L${cx + a} ${top}`;
+      const water = full
+        ? `<path d="M${cx - lw} ${LF_LEVEL} L${cx - b} ${bottom}`
+          + ` Q${cx} ${bottom + 6} ${cx + b} ${bottom} L${cx + lw} ${LF_LEVEL} Z"`
+          + ` fill="url(#lof-water)"/>`
+          + `<line x1="${cx - lw}" y1="${LF_LEVEL}" x2="${cx + lw}" y2="${LF_LEVEL}"`
+          + ` stroke="#ffffff" stroke-opacity=".8" stroke-width="2"/>`
+        : "";
+      return `<g>
+        ${water}
+        <path d="${outline}" fill="none" stroke="#5c6772" stroke-width="3" stroke-linecap="round"/>
+        <line x1="${cx - a - 6}" y1="${LF_LEVEL}" x2="${cx - a + 3}" y2="${LF_LEVEL}"
+              stroke="#5c6772" stroke-width="2.6" stroke-linecap="round"/>
+        <line x1="${cx + a - 3}" y1="${LF_LEVEL}" x2="${cx + a + 6}" y2="${LF_LEVEL}"
+              stroke="#5c6772" stroke-width="2.6" stroke-linecap="round"/>
+      </g>`;
+    }
+
+    function hexPoints(cx, cy, r) {
+      return Array.from({ length: 6 }, (_, i) => {
+        const ang = ((i * 60 - 90) * Math.PI) / 180;
+        return `${(cx + Math.cos(ang) * r).toFixed(1)},${(cy + Math.sin(ang) * r).toFixed(1)}`;
+      }).join(" ");
+    }
+
+    /* Trys kietos formos: apvalus ledo gabalas, šešiakampė snaigė ir
+       plonas šerkšno sluoksnis ant stiklo. Tuščia forma rodoma punktyru —
+       vaikas mato, kad pavidalą duoda indas, o ne vanduo. */
+    function mold(cx, kind, cold) {
+      const y = LF_MOLD_Y;
+      if (kind === "circle") {
+        if (!cold) {
+          return `<circle cx="${cx}" cy="${y}" r="31" fill="none" stroke="#7e8b98"
+                  stroke-width="2.5" stroke-dasharray="8 6"/>`;
+        }
+        return art.ball(cx, y, 31, "#dceff9", "#8fc4dd");
+      }
+      if (kind === "flake") {
+        if (!cold) {
+          return `<polygon points="${hexPoints(cx, y, 35)}" fill="none" stroke="#7e8b98"
+                  stroke-width="2.5" stroke-dasharray="8 6" stroke-linejoin="round"/>`;
+        }
+        const arms = [0, 60, 120].map((deg) => {
+          const rad = (deg * Math.PI) / 180;
+          const dx = Math.cos(rad) * 33;
+          const dy = Math.sin(rad) * 33;
+          return `<line x1="${(cx - dx).toFixed(1)}" y1="${(y - dy).toFixed(1)}"`
+            + ` x2="${(cx + dx).toFixed(1)}" y2="${(y + dy).toFixed(1)}"/>`;
+        }).join("");
+        const twigs = [];
+        for (const deg of [0, 60, 120]) {
+          const rad = (deg * Math.PI) / 180;
+          const ux = Math.cos(rad);
+          const uy = Math.sin(rad);
+          for (const t of [0.5, 0.78]) {
+            for (const side of [-1, 1]) {
+              const px = cx + ux * 33 * t;
+              const py = y + uy * 33 * t;
+              const qx = (-uy * side + ux * 0.45) * 10;
+              const qy = (ux * side + uy * 0.45) * 10;
+              twigs.push(`<line x1="${px.toFixed(1)}" y1="${py.toFixed(1)}"`
+                + ` x2="${(px + qx).toFixed(1)}" y2="${(py + qy).toFixed(1)}"/>`);
+            }
+          }
+        }
+        return `<g stroke="#8fc4dd" stroke-width="3" stroke-linecap="round">
+          <circle cx="${cx}" cy="${y}" r="29" fill="#eaf6fd" fill-opacity=".92" stroke="none"/>
+          ${arms}${twigs.join("")}
+          <circle cx="${cx}" cy="${y}" r="4.5" fill="#ffffff" stroke="#8fc4dd" stroke-width="2"/>
+        </g>`;
+      }
+      /* Plokščia forma — šerkšnas ant šalto stiklo. */
+      const x = cx - 38;
+      const w = 76;
+      const h = 68;
+      const top = y - 34;
+      if (!cold) {
+        return `<rect x="${x}" y="${top}" width="${w}" height="${h}" rx="7" fill="none"
+                stroke="#7e8b98" stroke-width="2.5" stroke-dasharray="8 6"/>`;
+      }
+      const feathers = [
+        [-26, 62, 10, -16], [-14, 60, 8, -20], [0, 62, 10, -14],
+        [14, 60, 8, -18], [26, 62, 9, -14], [-22, 48, 8, -14], [6, 46, 9, -14],
+      ].map(([dx, dy, ex, ey]) => `<path d="M${(cx + dx).toFixed(1)} ${top + dy}`
+        + ` q ${(ex * 0.45).toFixed(1)} ${(ey * 0.5).toFixed(1)} ${ex} ${ey}"/>`).join("");
+      return `<g>
+        <rect x="${x}" y="${top}" width="${w}" height="${h}" rx="7"
+              fill="#dceef8" stroke="#8fc4dd" stroke-width="2.5"/>
+        <g fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" opacity=".95">${feathers}</g>
+      </g>`;
+    }
+
+    function formLabel(cx, text) {
+      return `<text x="${cx}" y="128" text-anchor="middle" font-family="system-ui, sans-serif"
+                    font-size="15" font-weight="800" fill="#26323c">${esc(text)}</text>`;
+    }
+
+    /* Rodyklė rodo, kur vanduo yra DABAR: užšaldžius — formoje, ištirpus —
+       atgal puodelyje. Ji paaiškina tuščią puodelį, kad vaikas nepagalvotų,
+       jog vanduo dingo (LL-13: paveikslas ir sakinys turi sutarti). */
+    function arrowMark(cx) {
+      if (phase === "frozen") {
+        return `<g stroke="#5c6772" stroke-width="2.4" fill="none" opacity=".75" stroke-linecap="round">
+          <path d="M${cx} 158 V143"/><path d="M${cx - 5} 149 L${cx} 142 L${cx + 5} 149"/></g>`;
+      }
+      if (phase === "melted") {
+        return `<g stroke="#5c6772" stroke-width="2.4" fill="none" opacity=".75" stroke-linecap="round">
+          <path d="M${cx} 143 V158"/><path d="M${cx - 5} 152 L${cx} 159 L${cx + 5} 152"/></g>`;
+      }
+      return "";
+    }
+
+    function scene() {
+      const cold = phase === "frozen";
+      const cols = LF_COLS.map((cx, i) => `<g>${mold(cx, LF_KINDS[i], cold)}`
+        + `${formLabel(cx, W[LF_KEYS[i]])}${arrowMark(cx)}${cup(cx, !cold)}</g>`).join("");
+      return `${art.defs("lof")}${art.hills(360, 254, "#e6eff6", "#d2e2ec")}${cols}`;
+    }
+
+    function sceneLabel() {
+      if (phase === "frozen") {
+        return `Trijose formose kietas vanduo: ${W.ice}, ${W.snow}, ${W.frost}. Puodeliai tušti.`;
+      }
+      if (phase === "melted") {
+        return "Ledas ištirpo ir grįžo į puodelius. Vandens lygis toks pat.";
+      }
+      return `Trys puodeliai vandens ir trys tuščios formos: ${W.ice}, ${W.snow}, ${W.frost}.`;
+    }
+
+    function render(focusEl) {
+      svg.innerHTML = scene();
+      svg.setAttribute("aria-label", sceneLabel());
+
+      /* Užrakintas valdiklis pasako, kodėl jis užrakintas (LL-04), o
+         fokusas perkeliamas į tą, kuris dabar veikia (LL-32: naršyklė
+         numeta fokusą išjungusi mygtuką). */
+      freezeBtn.disabled = phase === "frozen";
+      meltBtn.disabled = phase !== "frozen";
+      freezeBtn.setAttribute("aria-label", phase === "frozen"
+        ? "Vanduo jau sustingęs — dabar spausk Ištirpdyk"
+        : "Sušaldyk vandenį trijose formose");
+      meltBtn.setAttribute("aria-label", phase === "frozen"
+        ? "Ištirpdyk ledą ir grąžink vandenį į puodelius"
+        : "Pirma sušaldyk vandenį");
+      resetBtn.setAttribute("aria-label", "Pradėk bandymą iš naujo");
+
+      api.readout(phase === "frozen" ? S.frozen : phase === "melted" ? S.melted : S.start);
+      api.note(phase === "frozen" ? S.frozenNote : phase === "melted" ? S.meltedNote : S.startNote);
+
+      if (focusEl && !focusEl.disabled) focusEl.focus();
+    }
+
+    function freeze() {
+      if (phase === "frozen") return;
+      phase = "frozen";
+      api.speak(S.frozen, { rate: 0.9 });
+      render(meltBtn);
+    }
+
+    function melt() {
+      if (phase !== "frozen") return;
+      phase = "melted";
+      api.speak(S.melted, { rate: 0.9 });
+      render(freezeBtn);
+      /* Pažanga žymima po VISĄ ciklą (sušaldymas + tirpimas): vien
+         sušaldžius vaikas dar nematė, kad vandens vėl tiek pat (LL-29). */
+      if (!reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    function reset() {
+      phase = "start";
+      api.speak(S.again, { rate: 0.9 });
+      render(freezeBtn);
+    }
+
+    freezeBtn.addEventListener("click", freeze);
+    meltBtn.addEventListener("click", melt);
+    resetBtn.addEventListener("click", reset);
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const btns = [...controls.querySelectorAll("button")].filter((b) => !b.disabled);
+      if (btns.length < 2) return;
+      const idx = btns.indexOf(document.activeElement);
+      if (idx < 0) return;
+      e.preventDefault();
+      const to = (idx + (e.key === "ArrowRight" ? 1 : btns.length - 1)) % btns.length;
+      btns[to].focus();
+    });
+
+    render();
+    return null;
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
@@ -3764,4 +4062,5 @@ export const SIMS = {
   "daikto-grandine": daiktoGrandine,
   "augalu-grupes": augaluGrupes,
   "ismesto-daikto-kelias": ismestoDaiktoKelias,
+  "ledo-formos": ledoFormos,
 };

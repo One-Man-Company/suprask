@@ -1003,6 +1003,10 @@
   "n": "n/f67ab10ad4e4c531-5661c2ef.mp3",
   "s": "s/f67ab10ad4e4c531-55d97451.mp3"
  },
+ "Formą ledui davė indas, o ne vandens kiekis.": {
+  "n": "n/23f2e36b0e17ffda-6f671bd4.mp3",
+  "s": "s/23f2e36b0e17ffda-bdb49d4b.mp3"
+ },
  "G": {
   "n": "n/333e0a1e27815d0c-0c135f4c.mp3",
   "s": "s/333e0a1e27815d0c-41491a62.mp3"
@@ -1967,6 +1971,10 @@
   "n": "n/1d30d5e6caee2bed-d71b547a.mp3",
   "s": "s/1d30d5e6caee2bed-1de3ab10.mp3"
  },
+ "Snaigė": {
+  "n": "n/17a3d1fbfbab792b-ce70fc4c.mp3",
+  "s": "s/17a3d1fbfbab792b-acbc86cb.mp3"
+ },
  "Sniegas tirpsta, paukščiai grįžta, medžiai žydi.": {
   "n": "n/c685e0360afa3917-c5f4e703.mp3",
   "s": "s/c685e0360afa3917-04cee785.mp3"
@@ -2151,6 +2159,10 @@
   "n": "n/0253ab164bcb0b07-f01987e2.mp3",
   "s": "s/0253ab164bcb0b07-16fe9a02.mp3"
  },
+ "Trijų puodelių vandens tiek pat.": {
+  "n": "n/189b999a30cd4c15-be15d61b.mp3",
+  "s": "s/189b999a30cd4c15-c91f2967.mp3"
+ },
  "Trikampis": {
   "n": "n/bc5649b646cf679f-40a5678f.mp3",
   "s": "s/bc5649b646cf679f-4b0d86d5.mp3"
@@ -2166,6 +2178,10 @@
  "Trys daiktai, vienas pasikeitė.": {
   "n": "n/19477f386ec2e893-df5dac84.mp3",
   "s": "s/19477f386ec2e893-78d346f8.mp3"
+ },
+ "Trys formos, o vandens visur tiek pat.": {
+  "n": "n/829873ff3b26558a-8027e634.mp3",
+  "s": "s/829873ff3b26558a-b2d78395.mp3"
  },
  "Trys klausimai, trys atsakymai. Paveikslėlis tas pats.": {
   "n": "n/5b90edb4fc88f8a3-dcacee97.mp3",
@@ -2351,9 +2367,21 @@
   "n": "n/c82b4dc6fa6e3cee-e2a3996a.mp3",
   "s": "s/c82b4dc6fa6e3cee-b73fa4d0.mp3"
  },
+ "Vandens lygis puodeliuose pažymėtas linija.": {
+  "n": "n/150b5f2232d16597-50dc6e7f.mp3",
+  "s": "s/150b5f2232d16597-7118522c.mp3"
+ },
  "Vanduo": {
   "n": "n/74417ae0342a57f0-2b53b370.mp3",
   "s": "s/74417ae0342a57f0-7deb8dc3.mp3"
+ },
+ "Vanduo formose. Puodeliai tušti, bet vanduo tas pats.": {
+  "n": "n/e68c2ad4853f083c-798cedec.mp3",
+  "s": "s/e68c2ad4853f083c-c9be8229.mp3"
+ },
+ "Vanduo grįžo į puodelius. Lygis toks pat.": {
+  "n": "n/963089fbc655e042-2e540c15.mp3",
+  "s": "s/963089fbc655e042-f8f64cbb.mp3"
  },
  "Varnas": {
   "n": "n/681b474220302821-fff742db.mp3",
@@ -2754,6 +2782,10 @@
  "Šalta, sniegas, medžiai be lapų, vanduo užšąla.": {
   "n": "n/2cb3683e3c35df4c-a7a95b8d.mp3",
   "s": "s/2cb3683e3c35df4c-4ec89bf3.mp3"
+ },
+ "Šerkšnas": {
+  "n": "n/4f3df3baa4843a89-8e50d9b1.mp3",
+  "s": "s/4f3df3baa4843a89-e13e03de.mp3"
  },
  "Šešios sąvaržėlės": {
   "n": "n/0b02554737373e75-76eaee8e.mp3",

@@ -1,0 +1,123 @@
+{
+  "id": "24-kieta-vandens-forma",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Vienas vanduo, trys formos",
+  "subtitle": "Ledas, snaigė ir šerkšnas — tas pats vanduo",
+  "minutes": 9,
+  "outcomes": [
+    "Atpažįstu ledą, snaigę ir šerkšną kaip kietą vandenį.",
+    "Paaiškinu, kad formą ledui duoda indas ar paviršius.",
+    "Pasakau, kad ištirpęs ledas vėl duoda tiek pat vandens."
+  ],
+  "concept": {
+    "title": "Vienas vanduo, trys formos",
+    "big_idea": "Ledas, snaigė ir šerkšnas yra tas pats vanduo. Formą jam duoda vieta, kur jis užšalo. Ištirpęs jis vėl tampa vandeniu.",
+    "steps": [
+      "Įpilk po vieną puodelį vandens į tris formas.",
+      "Sušaldyk. Vanduo sustings ir įgaus formos pavidalą.",
+      "Ištirpdyk. Pažiūrėk, ar vandens vėl tiek pat.",
+      "Palygink formas. Vanduo tas pats."
+    ],
+    "example": "Ryte ant lango baltas šerkšnas. Baloje kietas ledas. Abu yra vanduo."
+  },
+  "sim": {
+    "component": "ledo-formos",
+    "config": {
+      "words": {
+        "ice": "Ledas",
+        "snow": "Snaigė",
+        "frost": "Šerkšnas"
+      },
+      "sentences": {
+        "start": "Trijų puodelių vandens tiek pat.",
+        "frozen": "Vanduo formose. Puodeliai tušti, bet vanduo tas pats.",
+        "melted": "Vanduo grįžo į puodelius. Lygis toks pat.",
+        "startNote": "Vandens lygis puodeliuose pažymėtas linija.",
+        "frozenNote": "Formą ledui davė indas, o ne vandens kiekis.",
+        "meltedNote": "Trys formos, o vandens visur tiek pat.",
+        "again": "Pradedam iš naujo."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Žiemą bala užšalo ir virto ledu. Kas tas ledas?",
+      "options": [
+        "Sustingęs vanduo",
+        "Kitas dalykas, ne vanduo",
+        "Sniegas, kuris sulipo"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, kas buvo baloje prieš šalčius.",
+      "why": "Ledas yra tas pats balos vanduo, tik sustingęs."
+    },
+    {
+      "q": "Ant šaldyklės sienelės atsirado baltas šerkšnas. Iš kur jis?",
+      "options": [
+        "Iš šaldyklės metalo",
+        "Iš šaldyklės dažų",
+        "Iš vandens, kuris buvo ore"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kas yra ore šaltoje šaldyklėje.",
+      "why": "Šerkšnas yra vanduo, kuris ore užšalo ant šaltos sienelės."
+    },
+    {
+      "q": "Tris formas pripylei tiek pat vandens. Kodėl ledo pavidalai skiriasi?",
+      "options": [
+        "Nes vandens kiekis skyrėsi",
+        "Nes indų pavidalai skyrėsi",
+        "Nes vienas ledas buvo šaltesnis"
+      ],
+      "answer": 1,
+      "hint": "Palygink puodelių lygį prieš šaldymą.",
+      "why": "Formą duoda indas, o vandens kiekis visur toks pat."
+    },
+    {
+      "q": "Ledukas ištirpo puodelyje. Kiek dabar vandens?",
+      "options": [
+        "Tiek pat, kiek įpilta",
+        "Daugiau, nes ledas didesnis",
+        "Mažiau, nes ledas ištirpo"
+      ],
+      "answer": 0,
+      "hint": "Palygink su žyma, kuri buvo ant puodelio.",
+      "why": "Ištirpęs ledas grąžina tiek pat vandens, kiek buvo."
+    },
+    {
+      "q": "Žiemą ant tvoros ryte baltas šerkšnas. Kada jis atsiranda?",
+      "options": [
+        "Kai oras vėsus ir drėgnas",
+        "Kai saulė šviečia stipriai",
+        "Kai lyja šiltas lietus"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kada vanduo gali užšalti.",
+      "why": "Šerkšnas susidaro, kai drėgnas oras atšąla žemiau nulio.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kur esi matęs kieto vandens? Papasakok savais žodžiais.",
+  "teacher": {
+    "goal": "Suprasti, kad ledas, snaigė ir šerkšnas yra tas pats vanduo, o pavidalą jam duoda indas arba paviršius, ant kurio jis užšalo. Modelis tris formas rodo vienu metu ir po tirpimo grąžina vandenį į tuos pačius puodelius iki tos pačios žymos — todėl vaikas mato, kad pasikeitė forma, o kiekis liko.",
+    "prompt": "Kodėl ledas ant balos ir šerkšnas ant lango atrodo kitaip, nors abu yra vanduo?",
+    "offline": "Į tris skirtingus indus (puodelį, jogurto indelį, plastikinį dangtelį) įpilkite tiek pat vandens ir pažymėkite lygį. Palikite šaldiklyje per naktį. Išėmę išimkite ledą iš indų ir padėkite ant lėkštės — vaikai palygina pavidalus. Palaukite, kol ištirps, supilkite atgal į tuos pačius indus ir patikrinkite, ar lygis sutampa su žyma. Paklauskite, kodėl pavidalai skyrėsi, o vandens kiekis ne.",
+    "misconceptions": [
+      "„Ledas, snaigė ir šerkšnas yra kitokia medžiaga, ne vanduo.“ Modelis rodo, kad visos trys formos gauna vandenį iš puodelių, o ištirpusios grąžina jį iki tos pačios žymos.",
+      "„Ledo formą lemia vandens kiekis.“ Visi trys puodeliai pripildyti vienodai, o pavidalai skirtingi, todėl formą duoda indas, ne kiekis.",
+      "„Šerkšnas yra sniegas.“ Sniegas krinta iš debesų, o šerkšnas susidaro ant šalto paviršiaus iš ore esančio vandens. Modelyje jis rodomas kaip plonas sluoksnis ant stiklo.",
+      "Modelio riba: vanduo šaldamas plečiasi, todėl tikras ledas būna šiek tiek didesnis. Tai sąmoningai nerodoma, kad vaikas nepainiotų kiekio su tūriu."
+    ]
+  },
+  "sources": [
+    "NŠA (2024). Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos, Gamtos mokslai, 1 klasė — 26.3.2 „Vandens būsenos“: mokomasi atpažinti skirtingų formų (snaigės, šerkšnas, ledas) kietąją vandens būseną, o pabaigoje daroma išvada, kad kietoji būsena gali būti įvairių formų. sources/pradinio-bp-rekomendacijos-2024.txt:1547–1553.",
+    "NŠA (2024). Ten pat, 1 klasės temų lentelė — 26.3.2 praktinė veikla „Ledo papuošalo gamyba“ ir „Vandens būsenų stebėjimas“. sources/pradinio-bp-rekomendacijos-2024.txt:8470–8474.",
+    "Pradinio ugdymo bendroji programa (2022), Pasaulio pažinimas, 1 klasė: metų pasiekimas — atpažįsta vandens kietąją būseną įvairiomis formomis (snaigė, šerkšnas, ledas) ir kad vanduo keičia būsenas (užrašyta research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:186)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (kieta būsena turi daug formų), o ne trys būsenos iš naujo; garas ir lašai paliekami moduliui 16-vandens-busenos.",
+    "2 žingsnis — vienodas vertinimas: užduotys klausia apie naują situaciją (bala, šaldyklė, tvora), o ne kartoja modelio sakinį.",
+    "3 žingsnis — pagalba laiku: modelis be baudimo rodo tą patį kiekį prieš ir po, o užuominos nukreipia į palyginimą, ne į atsakymą."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 393,
+  "created": "2026-11-20T07:10:00+02:00",
+  "type": "tema",
+  "title": "Skaičiavimas atgal per dešimtį: po 30 eina 29",
+  "body": "Programa 1 klasei tiesiogiai prašo „skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus“ iki 100, o platformoje nė vienas modelis to nedaro: 04-skaiciu-tiese simuliacijos riba max: 20, 19-simto-skaiciu-lentele moko ėjimo kryptimis (dešimt į šoną, vienas žemyn), bet ne skaičiavimo atgal per dešimties ribą. Modelis: vaikas eina atgal po vieną nuo pasirinkto dviženklio (32) ir mato, kas nutinka ties 30 — 29, o ne 20 ir ne 39. Klaidinga nuostata, kurią modelis griautų: „skaičiuojant atgal pabaiga mažėja iki nulio, o dešimtis nesikeičia“ (32, 31, 30, 20). Pasekmė matoma tiesėje ir lentelėje be paaiškinimo: perėjus dešimties ribą pasikeičia dešimčių skaitmuo, o vienetų eilė prasideda iš naujo nuo devynių. Antras žingsnis — tie patys skaičiai pirmyn (28, 29, 30, 31), kad kryptis būtų viena sąvoka, o ne dvi. Modelis naudoja tuos pačius vaizdinius įrankius kaip 04 ir 19 (skaičių tiesė + šimto lentelė), kaip reikalauja matematikos programos patarimas naudoti kelis tuos pačius modelius.",
+  "target": "content/lt/grade-01/matematika/30-skaiciavimas-atgal-per-desimti.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33739 — „1 klasė. Skaičiai nuo 0 iki 100. Mokomasi skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus, susieti objektų skaičių su skaičiumi.“",
+    "research/wiki/curriculum/matematika-1-klase.md:186 — 04-skaiciu-tiese verdiktas „iš dalies“: „sim max: 20, nė vienos užduoties su perėjimu per dešimtį“.",
+    "research/wiki/curriculum/matematika-1-klase.md:157 — 1-o roko metų gebėjimų sąrašas: „Skaičiuoja iki 100 pirmyn ir atgal nuo bet kurio skaičiaus.“",
+    "research/wiki/curriculum/matematika-1-klase.md:61–64 — reikalavimas nuolat naudoti tuos pačius vaizdinius modelius (skaičių tiesė, 100-o lentelė).",
+    "content/lt/grade-01/matematika/04-skaiciu-tiese.json ir 19-simto-skaiciu-lentele.json — pirmas juda tiese iki 20, antras keičia kryptis lentelėje; nė vienas neskaičiuoja atgal per dešimties ribą.",
+    "content/lt/grade-01/index.json — matematika turi 20 modulių (04–07, 14–29); temos „skaičiavimas atgal per dešimtį“ įrašo nėra, o 22 ir 29 moko sudėties/atimties veiksmų, ne skaičiavimo sekos."
+  ]
+}

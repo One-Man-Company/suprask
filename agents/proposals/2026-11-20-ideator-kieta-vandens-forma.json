@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 393,
+  "created": "2026-11-20T07:10:00+02:00",
+  "type": "tema",
+  "title": "Kieta vandens būsena: tas pats vanduo, skirtinga forma",
+  "body": "Programa 26.3.2 prašo mokyti atpažinti kietąją vandens būseną skirtingų formų (snaigė, šerkšnas, ledas) ir daryti išvadą, kad kieta būsena gali būti įvairių formų. Esamas modulis 16-vandens-busenos šios dalies neliečia: jo visi keturi žingsniai ir visos trys klaidingos nuostatos yra apie garą ir lašus, o ledas tepasirodo vienoje praplėtimo užduotyje („ledukas ištirpo“). Modelis: tas pats vandens kiekis išpilamas į tris skirtingo pavidalo formas, sušaldomas ir ištirpdomas atgal — vaikas mato, kad forma pasikeitė, o vandens kiekis liko tas pats. Klaidinga nuostata, kurią modelis griautų: „ledas, šerkšnas ir snaigė yra ne vanduo, o kitokia medžiaga“ — vaikas kietą daiktą priskiria kitai medžiagai, nes jis neteka. Modelio pasekmė matoma be paaiškinimo: ištirpinus grįžta būtent tiek pat vandens, kiek buvo įpilta. Šerkšnas parodomas kaip ta pati kieta būsena ant vėsaus paviršiaus, o ne kaip atskiras reiškinys.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/24-kieta-vandens-forma.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1547–1552 — „Tyrinėjant vandens būsenas, mokomasi atpažinti skirtingų formų (snaigės, šerkšnas, ledas) kietąją vandens būseną… tyrinėjama, kaip vanduo pereina iš vienos būsenos į kitą… Daroma išvada, kad vandens kietoji būsena gali būti įvairių formų.“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:8472–8474 — 1 kl. temų lentelė, 26.3.2 „Vandens būsenos“: praktinė veikla „Ledo papuošalo gamyba“, „Vandens būsenų stebėjimas“.",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:159 — modulio 16-vandens-busenos verdiktas „iš dalies: kietosios būsenos formos (snaigė, šerkšnas, ledas) ir šaldymo kryptis neįtraukta“.",
+    "content/lt/grade-01/pasaulio-pazinimas/16-vandens-busenos.json:16–21, 87–91 — visi concept.steps ir teacher.misconceptions yra apie garą ir lašus; kietoji forma nemokoma, ledas pasirodo tik optional užduotyje :69–79.",
+    "content/lt/grade-01/index.json — pasaulio-pazinimas turi 11 modulių (08, 09, 10, 16, 17, 18, 19, 20, 21, 22, 23); temos „kieta vandens forma“ įrašo nėra.",
+    "agents/proposals/ — nė vieno pasiūlymo šiam tikslui (grep „šerkšn|snaig|kieta.*vandens“ → 0)."
+  ]
+}

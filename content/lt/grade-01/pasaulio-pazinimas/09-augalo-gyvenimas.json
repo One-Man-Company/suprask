@@ -14,12 +14,12 @@
     "title": "Augalas — gyvas ir jam reikia sąlygų",
     "big_idea": "Augalas keičiasi: sėkla, daigas, žiedas, paskui vaisius su sėklomis. Kad augtų, jam reikia vandens, šviesos ir šilumos.",
     "steps": [
-      "Sėkla pabunda žemėje, kai yra šilta ir drėgna.",
+      "Sėkla pabunda žemėje, kai yra šilta ir drėgna. Šviesos tam nereikia.",
       "Daigas leidžiasi šaknimis ir kelia stiebą į šviesą.",
       "Užaugęs augalas žydi, o iš žiedo išauga vaisius. Vaisiuje sunoksta sėklos.",
-      "Be vandens jis vysta, be šviesos blyksta, o šaltyje neauga."
+      "Be vandens jis vysta. Be šviesos daigas išsitempia ir pabąla, o šaltyje neauga."
     ],
-    "example": "Padėk vieną pupelę ant palangės, kitą — į tamsų stalčių. Abi laistyk. Po savaitės palygink: kuri ilgesnė ir žalesnė?"
+    "example": "Padėk vieną pupelę ant palangės, kitą — į tamsų stalčių. Abi laistyk. Po kelių dienų palygink. Palangėje daigas žalias ir tvirtas. Stalčiuje jis ilgas ir blyškus."
   },
   "sim": {
     "component": "augalo-gyvenimas",
@@ -38,15 +38,15 @@
       "why": "Po žydėjimo iš žiedo išauga vaisius, o jame sunoksta sėklos."
     },
     {
-      "q": "Kas nutinka augalui, jei jį laistai, bet laikai tamsoje?",
+      "q": "Pupelę laikai tamsiame stalčiuje ir laistai. Kas nutinka daigui?",
       "options": [
-        "Jis auga greičiau",
-        "Jis blyksta ir neauga",
-        "Jam nieko neatsitinka"
+        "Jis visai nepabunda",
+        "Jis išsitempia ir pabąla",
+        "Jis auga greičiau ir žaliuoja"
       ],
       "answer": 1,
-      "hint": "Palauk kelias dienas tamsoje ir pažiūrėk į lapus.",
-      "why": "Be šviesos lapai blyksta ir augalas neauga."
+      "hint": "Simuliacijoje nustatyk šviesą iki nulio ir spausk „Diena →“ kelias dienas.",
+      "why": "Tamsoje daigas tiesiasi ieškodamas šviesos, bet lapeliai neauga ir pabąla."
     },
     {
       "q": "Kaip augalas kinta nuo sėklos iki vaisiaus?",
@@ -60,15 +60,15 @@
       "why": "Iš sėklos išauga daigas, paskui augalas. Tada augalas žydi, o iš žiedo išauga vaisius."
     },
     {
-      "q": "Kodėl augalas prie lango auga geriau nei spintoje?",
+      "q": "Kodėl spintoje daigas ilgas ir blyškus?",
       "options": [
-        "Nes gauna daugiau šviesos",
-        "Nes jis didesnis",
-        "Nes jį dažniau liečia"
+        "Nes spintoje mažai šviesos",
+        "Nes spintoje vėsiau",
+        "Nes spintoje jį rečiau laistai"
       ],
       "answer": 0,
-      "hint": "Palygink palangę ir spintą: kur lapai žalesni?",
-      "why": "Be šviesos lapai blyksta ir augalas neauga. Prie lango šviesos pakanka.",
+      "hint": "Palygink abi vietas: kuo jos skiriasi labiausiai?",
+      "why": "Be šviesos daigas tiesiasi ir nepažaliuoja. Todėl jis ilgas ir blyškus.",
       "optional": true
     }
   ],
@@ -81,6 +81,7 @@
       "Manoma, kad augalas „maitinasi“ iš žemės vien — nepakanka, reikia šviesos ir šilumos.",
       "„Daug vandens“ laikoma geriau — perlaistytas augalas gali žūti.",
       "„Žiedas yra paskutinis etapas“ — po žydėjimo augalas brandina vaisių, o vaisiuje sunoksta sėklos.",
+      "Manoma, kad tamsoje augalas „neauga“ — iš tikrųjų daigas išsitempia ir pabąla, tik lapų neužaugina ir ilgai be šviesos žūva.",
       "Augimo etapai painiojami su metų laikais: augalas gali augti ir rudenį kambaryje."
     ]
   },

@@ -244,20 +244,30 @@ const metuLaikai = {
    Nė vienas valdiklis nelieka tylus: pasibaigus modeliui (12 diena arba
    augalas, kelias dienas neturėjęs sąlygų, nuvysta) „Diena →“ užrakinamas,
    bet priežastis parašoma matomame tekste (`#ag-end`), o ne paliekama
-   vaikui spėlioti. Sėkla yra vienintelė sąmoninga išimtis: kol nėra
-   vandens ir šilumos, ji nepabunda — tai pasakoma žodžiu, o ne
-   imituojama animacija. */
+   vaikui spėlioti. Sėkla pabunda be šviesos — jai užtenka vandens ir
+   šilumos — o tamsoje daigas ne „sustoja“, o išsitempia ir pabąla
+   (etioliacija): taip auga pupa tamsiame stalčiuje, ir būtent tai vaikas
+   pamato atlikęs modulio siūlomą bandymą. Išsitempęs daigas neilgai
+   išgyvena be šviesos, todėl po kelių tamsių dienų jis vysta — ir tai
+   pasakoma žodžiu, o ne tylima. */
 const AG_WATER = [0, 0.4, 0.85, 1, 0.15, 0];     // vanduo 0–5 → augimo dalis
 const AG_LIGHT = [0, 0.3, 0.7, 1, 1, 1];          // šviesa 0–5 → augimo dalis
 const AG_DAYS_MAX = 12;
 const AG_STEP = 0.22;                             // gera diena ≈ 22 % dydžio
 const AG_WEAK_MAX = 3;                            // tiek dienų be augimo iki nuvytimo
+const AG_GERM_MIN = 0.15;                         // mažiau drėgmės — sėkla nepabunda
+const AG_ETIOLE = 0.34;                           // kiek per tamsią dieną daigas išsitempia
 
+/* Dygimui šviesa NEREIKALINGA: sėklai užtenka vandens ir šilumos — taip
+   sako ir modulio pirmas žingsnis, ir jo siūlomas bandymas su stalčiumi.
+   Todėl `germ` skaičiuojamas be šviesos, o `gf` (augimas su lapais) — su ja.
+   Anksčiau abu ėjo per `Math.min(wf, lf, hf)`, todėl tamsa sustabdydavo net
+   sėklą ir modelis paneigdavo bandymą, kurį pats modulis siūlo (LL-28, #27240). */
 const agFactors = (water, light, warm) => {
   const wf = AG_WATER[water];
   const lf = AG_LIGHT[light];
   const hf = warm ? 1 : 0.1;
-  return { wf, lf, hf, gf: Math.min(wf, lf, hf) };
+  return { wf, lf, hf, germ: Math.min(wf, hf), gf: Math.min(wf, lf, hf) };
 };
 const agWaterWord = (w) => ["nėra", "mažai", "beveik gerai", "gerai", "per daug", "per daug"][w];
 const agLightWord = (l) => (l === 0 ? "nėra" : l <= 2 ? "mažai" : "gerai");
@@ -277,12 +287,17 @@ const agHexMix = (a, b, t) => {
   return "#" + pa.map((v, i) => Math.round(v + (pb[i] - v) * k).toString(16).padStart(2, "0")).join("");
 };
 
-const agStage = ({ size, wilt, cold, pale, bloomDay, ripe, dead }) => {
+const agStage = ({ size, wilt, cold, pale, stretch, bloomDay, ripe, dead }) => {
   if (size <= 0) return "Sėkla";
   if (dead) return "Augalas nuvytęs";
   if (wilt) return "Augalas vysta";
   if (cold) return "Augalas neauga";
-  if (pale) return "Augalas blyškus";
+  /* „Išsitempęs“ rodoma tik tol, kol daigas blyškus: grąžinus šviesą jis
+     žaliuoja ir vėl vadinamas tuo, kuo yra, o ne tuo, ką patyrė (LL-17).
+     Suaugusiam augalui tas pats žodis netinka — jis tamsoje ne „daigas“, o
+     blyškus augalas, todėl vardas priklauso ir nuo dydžio (LL-34). */
+  if (pale && stretch >= 0.2 && size < 0.55) return "Daigas išsitempęs";
+  if (pale) return size < 0.25 ? "Blyškus daigas" : "Augalas blyškus";
   if (ripe > 0) return ripe < 0.75 ? "Vaisius" : "Prinokęs vaisius";
   if (bloomDay > 0) return "Žiedas";
   return size < 0.25 ? "Daigas" : size < 0.55 ? "Jaunas augalas" : "Augalas su lapais";
@@ -304,6 +319,7 @@ const augaloGyvenimas = {
     let bloomDay = 0;      // diena, kai pasirodė žiedas; 0 — dar nebuvo
     let ripe = 0;          // vaisiaus branda 0..1 (po žydėjimo)
     let weak = 0;          // dienos be augimo iš eilės (0..AG_WEAK_MAX)
+    let stretch = 0;       // kiek daigas išsitempęs tamsoje (0..1)
     let dayMsg = "";
     let lastStage = "";
     let reported = false;  // api.progress iškviestas vieną kartą (LL-17)
@@ -374,6 +390,7 @@ const augaloGyvenimas = {
       const { gf } = agFactors(water, light, warm);
       const wilt = water === 0 || water >= 4;
       const pale = light <= 1;
+      const dark = light === 0;
       const cold = !warm;
 
       /* Žiedas pasirodo pirmą kartą, kai augalas užaugęs ir sąlygos geros,
@@ -389,17 +406,20 @@ const augaloGyvenimas = {
       const showFruit = bloomDay > 0 && ripe > 0;
       const fruitS = 1.1 + 0.4 * ripe;
 
-      const h = size <= 0 ? 0 : 22 + size * 152;
-      const leafS = 12 + size * 22;
+      const h = size <= 0 ? 0 : 22 + size * 152 + stretch * 52;
+      const leafS = (12 + size * 22) * (pale ? 0.6 : 1);
       /* Svyravimas įjungiamas iš karto, kai sąlyga bloga (wilt), o ilgiau
          trūkstant augimo — palaipsniui: kiekviena diena be augimo lapus
          labiau gelsta, todėl ir blogu keliu `Diena →` ką nors pakeičia. */
       const dry = Math.min(1, weak / AG_WEAK_MAX);
-      const droop = wilt || weak >= 1 ? 1 : 0;
-      const stemCol = agHexMix(cold ? "#6f93a8" : pale ? "#8fae78" : "#4c8b3a", "#8d7a55", dry * 0.7);
+      /* Tamsoje daigas tiesiasi stačias, o ne nusvyra: nulinkimas liktų
+         tik nuvytusiam augalui, todėl tamsos atvejis jo negauna (LL-18 —
+         pasekmė turi atrodyti taip, kaip ji atrodo gyvenime). */
+      const droop = wilt || (weak >= 1 && (!dark || dead)) ? 1 : 0;
+      const stemCol = agHexMix(cold ? "#6f93a8" : dark ? "#cfcb8d" : pale ? "#8fae78" : "#4c8b3a", "#8d7a55", dry * 0.7);
       const leafCol = agHexMix(water === 0 || dead ? "#b9a06c"
         : water >= 4 ? "#bdb75c"
-          : cold ? "#7fa2b5" : pale ? "#a8c98a" : "#5fbf62", "#a98f55", dry * 0.6);
+          : cold ? "#7fa2b5" : dark ? "#deda92" : pale ? "#a8c98a" : "#5fbf62", "#a98f55", dry * 0.6);
 
       const sunR = 13 + light * 1.6;
       const topX = 180 + (droop ? 13 : 0);
@@ -413,10 +433,14 @@ const augaloGyvenimas = {
                <path d="M116 270 l11 8 l-7 9"/><path d="M252 268 l-10 9 l8 8"/></g>`
           : "";
 
+      /* Tamsa rodoma ir paveikslu, o ne vien žodžiu: kai šviesos nulis,
+         saulė nepiešiama, o visa scena uždengiama švelniu šešėliu. Užrašas
+         „šviesa nėra“ prie ryškaus dangaus su saule prieštarautų tam, ką
+         vaikas mato (LL-34). */
       svg.innerHTML = `
         ${art.defs("ag")}
         <rect x="0" y="0" width="360" height="300" rx="18" fill="url(#ag-sky)"/>
-        ${art.sun(312, 44, sunR, "ag", light / 5)}
+        ${light > 0 ? art.sun(312, 44, sunR, "ag", light / 5) : ""}
         ${light >= 2 ? art.cloud(64, 54, 1) + art.cloud(150, 32, 0.72, 0.85) : ""}
         ${art.hills(360, 232)}
         ${art.soil(0, 248, 360, 52, "ag")}
@@ -434,9 +458,10 @@ const augaloGyvenimas = {
         ${art.grass(118, 251, 0.9, cold ? "#a9c6cf" : "#5aa552")}
         ${art.grass(304, 250, 1, cold ? "#a9c6cf" : "#5aa552")}
         ${cold ? art.snow(0, 246, 12) : ""}
+        ${dark ? `<rect x="0" y="0" width="360" height="300" rx="18" fill="#16233d" opacity=".2"/>` : ""}
       `;
 
-      const st = agStage({ size, wilt, cold, pale, bloomDay, ripe, dead });
+      const st = agStage({ size, wilt, cold, pale, stretch, bloomDay, ripe, dead });
 
       svg.setAttribute("aria-label",
         `Augalo modelis: ${st.toLowerCase()}, vanduo ${agWaterWord(water)}, `
@@ -485,25 +510,28 @@ const augaloGyvenimas = {
       api.readout(`${st} · vanduo ${agWaterWord(water)} · šviesa ${agLightWord(light)}`
         + ` · ${warm ? "šilta" : "šalta"} · ${agDaysText(day)}`);
 
-      /* Kliūtis — ta sąlyga, kurios dalis mažiausia (silpniausia grandis).
-         Sąlygos lyginamos tiesiogiai, o ne per `Math.min` reikšmę: tvarka
-         fiksuota (šiluma → šviesa → vanduo), todėl `low === ...` neatspėja,
-         o pasako pirmą silpniausią grandį. Pataisius ją, žinutė pasikeičia. */
+      /* Kliūtis — silpniausia grandis. Tvarka fiksuota (šiluma → vanduo →
+         šviesa), o ne `Math.min` reikšmė: pataisius vieną sąlygą, žinutė
+         pasikeičia. Vanduo tikrinamas prieš šviesą todėl, kad be vandens
+         augalas nusvyra jau šiandien, o tamsoje jis bent išsitempia.
+         Sėklai šviesa nėra kliūtis: kol ji žemėje, klausiama tik vandens ir
+         šilumos — kitaip modelis siūlytų „trūksta šviesos“ ten, kur dygimas
+         vyksta be jos (LL-25). */
       const why = () => {
         const wf = AG_WATER[water];
         const lf = AG_LIGHT[light];
         const hf = warm ? 1 : 0.1;
-        if (hf < Math.min(wf, lf)) return "šalta, augalas beveik neauga";
-        if (lf < wf) {
-          return light === 0 ? "nėra šviesos, augalas blyškus" : "mažai šviesos, auga lėtai";
+        if (size <= 0) {
+          if (water >= 4) return "per daug vandens, sėkla nepabunda";
+          if (wf <= AG_GERM_MIN) return "nėra vandens, sėkla nepabunda";
+          if (hf < 0.5) return "šalta, sėkla nepabunda";
+          return "";
         }
-        // Sausros žodis priklauso nuo to, ką vaikas mato: sėklai lapai nenusvyra.
-        if (water === 0) {
-          return size <= 0.05 ? "nėra vandens, sėkla nepabunda" : "nėra vandens, lapai nusvyra";
-        }
-        if (water >= 4) {
-          return size <= 0.05 ? "per daug vandens, sėkla nepabunda" : "per daug vandens, šaknys nekvėpuoja";
-        }
+        if (hf < 0.5) return "šalta, augalas beveik neauga";
+        if (water >= 4) return "per daug vandens, šaknys nekvėpuoja";
+        if (water === 0) return "nėra vandens, lapai nusvyra";
+        if (light === 0) return "nėra šviesos";
+        if (lf < wf) return "mažai šviesos, auga lėtai";
         return "mažai vandens, auga lėtai";
       };
 
@@ -514,6 +542,7 @@ const augaloGyvenimas = {
       else if (ripeDone) note = "Vaisius prinoko. Jame yra sėklų — iš jų galėtų išaugti naujas augalas.";
       else if (showFruit) note = "Žiedas virto vaisiumi. Spausk „Diena →“ ir stebėk, kaip jis keičiasi.";
       else if (size >= 1) note = "Augalas išaugo ir pražydo. Dabar pakeisk vieną sąlygą — kas nutiks?";
+      else if (size <= 0) note = "Sėkla dar žemėje. Spausk „Diena →“ ir pažiūrėk, ar ji pabus — šviesa tam nereikalinga.";
       else note = "Sąlygos geros. Spausk „Diena →“ — augalas paūgės.";
       api.note(dayMsg ? `${dayMsg} ${note}` : note);
 
@@ -534,8 +563,31 @@ const augaloGyvenimas = {
     const dayStep = () => {
       if (day >= AG_DAYS_MAX) return;
       if (size > 0 && weak >= AG_WEAK_MAX) return;
-      const { gf } = agFactors(water, light, warm);
+      const { wf, germ, gf } = agFactors(water, light, warm);
       day += 1;
+
+      /* Sėkla pabunda be šviesos: užtenka vandens ir šilumos. Anksčiau ir
+         dygimas ėjo per `gf`, todėl tamsiame stalčiuje sėkla likdavo
+         nepabudusi nė per 12 dienų — modelis paneigdavo bandymą, kurį
+         siūlo pats modulis (LL-28, #27240). */
+      if (size <= 0) {
+        if (germ > AG_GERM_MIN) {
+          size = Math.max(0.1, germ * AG_STEP);
+          weak = 0;
+          dayMsg = light === 0
+            ? "Sėkla pabudo net tamsoje: daigui šviesos nereikia."
+            : "Sėkla pabudo: daigas išlindo iš žemės.";
+        } else {
+          dayMsg = water >= 4
+            ? "Šią dieną sėkla liko tokia pati: vandens per daug."
+            : wf <= AG_GERM_MIN
+              ? "Šią dieną sėkla liko tokia pati: nėra vandens."
+              : "Šią dieną sėkla liko tokia pati: per šalta.";
+        }
+        render();
+        return;
+      }
+
       if (gf > 0) {
         size = Math.min(1, size + gf * AG_STEP);
         weak = Math.max(0, weak - 1);       // geros dienos atgaivina palaipsniui
@@ -543,13 +595,28 @@ const augaloGyvenimas = {
           ripe = Math.min(1, ripe + agRipeStep(bloomDay));
         }
         dayMsg = gf < 0.5 ? "Šią dieną augalas beveik nepajudėjo." : "";
-      } else if (size > 0) {
+      /* Tamsa: daigas ne „sustoja“, o tiesiasi ir bąla (etioliacija) — taip
+         pupa elgiasi tamsiame stalčiuje. Lapų jis neužaugina, nes neturi
+         iš ko maitintis, todėl po kelių tamsių dienų vysta. Kiekviena tamsi
+         diena vis tiek ką nors pakeičia matomai: stiebas ilgėja, spalva
+         blanksta (LL-04, interaktyvumo principas 1). */
+      } else if (light === 0 && wf > 0) {
+        /* Tiesiasi tik daigas: suaugęs augalas tamsoje ne „išsitempia“, o
+           netenka žalumo ir sustoja — todėl `stretch` ir žodis priklauso
+           nuo to, ką vaikas tikrai mato (LL-34). */
+        const young = size < 0.55;
+        if (young) stretch = Math.min(1, stretch + AG_ETIOLE);
+        weak = Math.min(AG_WEAK_MAX, weak + 1);
+        dayMsg = weak >= AG_WEAK_MAX
+          ? (young ? "Tamsoje daigas išsitempė, bet šviesos taip ir nerado."
+            : "Augalas tamsoje ilgai nebelaukė šviesos.")
+          : (young ? "Tamsoje daigas išsitempė ir pabalo: jis ieško šviesos."
+            : "Tamsoje lapai blyksta, o augalas nebepajuda.");
+      } else {
         weak = Math.min(AG_WEAK_MAX, weak + 1);
         dayMsg = weak >= AG_WEAK_MAX
           ? "Augalas nuvyto — jam per ilgai trūko sąlygų."
           : "Šią dieną augalas nepajudėjo. Jam vis sunkiau.";
-      } else {
-        dayMsg = "Šią dieną sėkla liko tokia pati.";
       }
       render();
     };
@@ -564,7 +631,7 @@ const augaloGyvenimas = {
     q("#ag-next").addEventListener("click", dayStep);
     q("#ag-reset").addEventListener("click", () => {
       water = 3; light = 3; warm = true; day = 1; size = 0;
-      bloomDay = 0; ripe = 0; weak = 0; dayMsg = ""; lastStage = "";
+      bloomDay = 0; ripe = 0; weak = 0; stretch = 0; dayMsg = ""; lastStage = "";
       render();
     });
 

@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 401,
+  "created": "2026-11-20T10:34:24+02:00",
+  "type": "tema",
+  "title": "D.1.3.1 (balsiai ir priebalsiai be terminų) lieka be modulio, nes 06-garso-trukme jo nebesiekia",
+  "body": "Slenkstinis 1–2 kl. lietuvių kalbos pasiekimas D.1.3.1 — „Naudodamasis pagalbine medžiaga, skiria balsius, priebalsius (nevartojant terminų), taisyklingai juos taria“ (sources/pradinio-bp-rekomendacijos-2024.txt:39749–39752) — platformoje neturi nė vieno modulio. Iki šiol į jį pretendavo 06-garso-trukme, bet jo modelis skirsto garsus pagal trukmę, o m, s, š, n yra priebalsiai, kuriuos tempti galima; paleidimas 401 šią pretenziją pašalino ir priskyrė modulį D.1.1. Reikia atskiro modulio, kuriame vaikas garsus skiria pagal kitą požymį: ar orui išeinant iš burnos kelias laisvas (balsis), ar jis sutinka kliūtį (priebalsis). Modelis galėtų būti dviejų jutimų bandymas — delnas prie lūpų ir veidrodis — o ekrane to paties bandymo atitikmuo: plytelių rūšiavimas į dvi krūvas be terminų, su grįžtamuoju ryšiu, kuris rodo oro kelią, o ne atsakymą. Klaidinga nuostata, kurią modelis privalo parodyti: „balsis yra tai, ką galima tempti“ — būtent ji m, s ir š nuneša į ne tą krūvą (06-garso-trukme teacher.misconceptions[1]). Be tokio modulio 1 klasės lietuvių kalbos pasiekimų sritis D lieka nepadengta vienu slenkstiniu lygiu, o padengimo lentelėje tema tebėra „iš dalies“.",
+  "target": "content/lt/grade-01/lietuviu-kalba/07-balsiai-ir-priebalsiai.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:39749–39752 — D.1.3.1 (1–2 kl., I lygis): „Naudodamasis pagalbine medžiaga, skiria balsius, priebalsius (nevartojant terminų), taisyklingai juos taria“",
+    "content/lt/grade-01/lietuviu-kalba/06-garso-trukme.json:83 — po paleidimo 401 teacher.goal remiasi D.1.1 ir aiškiai sako, kad balsių ir priebalsių skyrimo modelis nesiekia",
+    "content/lt/grade-01/lietuviu-kalba/01-garsas-ir-raide.json:120–128 — modulis sprendžia raidės ir garso skirtumą, ne balsių ir priebalsių skyrimą",
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:143 — „D.1.3.1 tikrąja prasme (balsiai ≠ priebalsiai be terminų) — nė vieno modulio“",
+    "docs/SVIETIMAS-1-GAIRES.md T2.1 — kiekvienas rezultatas susiejamas su konkrečiu oficialios programos pasiekimu"
+  ]
+}

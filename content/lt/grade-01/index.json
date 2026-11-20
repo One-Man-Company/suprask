@@ -44,7 +44,8 @@
         { "id": "26-mase-ir-kilogramas", "title": "Masė: vienodo dydžio dėžutės", "subtitle": "Vienodo dydžio dėžutės sveria skirtingai — masę parodo svarstyklės", "file": "grade-01/matematika/26-mase-ir-kilogramas.json", "minutes": 9, "sim": "dezute-ir-kilogramas" },
         { "id": "27-skaicius-ir-skaitmuo", "title": "Skaičius ir skaitmuo: 13 ir 31", "subtitle": "Tie patys skaitmenys gali reikšti skirtingą kiekį", "file": "grade-01/matematika/27-skaicius-ir-skaitmuo.json", "minutes": 9, "sim": "skaicius-ir-skaitmuo" },
         { "id": "28-uzdavinio-klausimas", "title": "Uždavinys: klausimas pasako, ką daryti", "subtitle": "Tas pats paveikslėlis, trys klausimai — trys skirtingi veiksmai", "file": "grade-01/matematika/28-uzdavinio-klausimas.json", "minutes": 10, "sim": "klausimas-renka-veiksma" },
-        { "id": "29-atimtis-per-desimti", "title": "Atimtis per dešimtį: imk iš dešimtuko", "subtitle": "Kai laisvų neužtenka, dalis imama iš dešimtuko", "file": "grade-01/matematika/29-atimtis-per-desimti.json", "minutes": 9, "sim": "desimtukas-ir-atimtis" }
+        { "id": "29-atimtis-per-desimti", "title": "Atimtis per dešimtį: imk iš dešimtuko", "subtitle": "Kai laisvų neužtenka, dalis imama iš dešimtuko", "file": "grade-01/matematika/29-atimtis-per-desimti.json", "minutes": 9, "sim": "desimtukas-ir-atimtis" },
+        { "id": "30-skaiciavimas-atgal-per-desimti", "title": "Po 30 eina 29, o ne 20", "subtitle": "Skaičiuojant atgal dešimtis mažėja, o vienetai pradeda nuo devynių", "file": "grade-01/matematika/30-skaiciavimas-atgal-per-desimti.json", "minutes": 9, "sim": "skaiciavimas-per-desimti" }
       ]
     },
     {

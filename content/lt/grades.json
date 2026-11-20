@@ -1,12 +1,12 @@
 {
-  "updated": "2026-11-19",
+  "updated": "2026-11-20",
   "language": "lt",
   "grades": [
     {
       "grade": 1,
       "status": "live",
       "age": "6–7 metai",
-      "modules": 49
+      "modules": 50
     },
     {
       "grade": 2,

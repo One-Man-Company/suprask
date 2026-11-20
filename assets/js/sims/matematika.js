@@ -3222,6 +3222,305 @@ const simtoLentele = {
 };
 
 /* ------------------------------------------------------------------ */
+/* 13. Skaičiavimas atgal per dešimtį                                  */
+/*                                                                     */
+/* Kodėl būtent taip: vaikas eina atgal po VIENĄ nuo 32 ir prie 30     */
+/* pamato, kad dešimčių skaitmuo sumažėja, o vienetai prasideda iš      */
+/* naujo nuo devynių. Vien skaičių tiesė to nepasako (ji rodo tik       */
+/* „kairiau“), viena skaitmenų kortelė — irgi ne (ji rodo „3 → 2“, bet  */
+/* ne vietą). Todėl abu vaizdai rodomi kartu: tiesė atsako „kur“,       */
+/* kortelė — „kas pasikeitė“. Dešimtukų juostos leidžia pamatyti, kad   */
+/* žymeklis pereina į kitą dešimtuką, o ne tik pasislenka per tašką.    */
+/*                                                                     */
+/* Klaidinga nuostata: „pabaiga mažėja iki nulio, o dešimtis            */
+/* nesikeičia“ (32, 31, 30, 20). Modelis jos nepaneigia žodžiais —      */
+/* jis parodo 29 ir skaitmenis 2 ir 9.                                 */
+/*                                                                     */
+/* Spėjimas (LL-15) lyginamas su tuo, kas įvyko, ir tik vieną kartą.    */
+/* Pažanga (LL-29) — tik peržengus dešimtį į ABI puses, ne po pirmo     */
+/* žingsnio.                                                           */
+/* ------------------------------------------------------------------ */
+const SDP_START = 32;
+const SDP_MIN = 18;
+const SDP_MAX = 42;
+
+const SDP_GUESS = ["29", "20", "39"];
+
+const SDP_SAY = {
+  spek: "Kas bus, kai nuo 30 eisi atgal?",
+  spejimas: "Spėjimas įrašytas. Dabar eik atgal.",
+  atgal: "Peržengei dešimtį atgal. Vienetai vėl pradeda nuo devynių.",
+  pirmyn: "Peržengei dešimtį pirmyn. Vienetai pradeda nuo nulio.",
+  toliau: "Dabar eik pirmyn ir pažiūrėk, kas bus nuo 29.",
+  krastas: "Toliau eiti negalima. Spausk Iš naujo.",
+  "spejimas-sutapo": "Sutapo. Dešimtis sumažėjo, vienetai prasidėjo nuo devynių.",
+  "spejimas-kitas": "Nesutapo. Dešimtis sumažėjo, vienetai prasidėjo nuo devynių.",
+  baigta: "Perėjai dešimtį į abi puses.",
+  "baigta-antra": "Dešimtis keičiasi, vienetai pradeda iš naujo.",
+  "is-naujo": "Pradedam iš naujo. Vėl spėk, kas bus atgal.",
+};
+
+const skaiciavimasPerDesimti = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const say = (key) => S[key] || SDP_SAY[key] || "";
+    const start = Math.max(10, Math.min(99, Number(config.start) || SDP_START));
+    const min = Math.max(0, Math.min(start, Number(config.min) || SDP_MIN));
+    const max = Math.max(start, Number(config.max) || SDP_MAX);
+    const guesses = Array.isArray(config.guesses) && config.guesses.length === 3
+      ? config.guesses.map(String)
+      : SDP_GUESS;
+
+    /* Dešimtukas, apie kurį klausiame spėjimo: 32 → 30. */
+    const bound = Math.floor(start / 10) * 10;
+    const answerValue = String(bound - 1);
+
+    let n = start;
+    let guess = null;      // vaiko spėjimas (0–2)
+    let compared = false;  // spėjimas lyginamas vieną kartą (LL-15)
+    let down = false;      // peržengta dešimtį atgal
+    let up = false;        // peržengta dešimtį pirmyn
+    let reported = false;
+    let trail = [];        // kur vaikas jau buvo
+    let flash = null;      // kuri kortelė ką tik pasikeitė
+
+    const W = 340;
+    const H = 132;
+    const PAD = 22;
+    const Y = 80;
+    const stepPx = (W - PAD * 2) / Math.max(1, max - min);
+    const xOf = (v) => PAD + (v - min) * stepPx;
+    const numFs = "clamp(26px,7vw,32px)";
+    const capFs = "clamp(14px,3.6vw,15px)";
+    const ring = "inset 0 0 0 2px transparent";
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:32rem;margin:0 auto;box-sizing:border-box">
+        <div role="group" aria-label="Skaičiaus skaitmenys"
+             style="display:flex;gap:.5rem;justify-content:center;margin:0 0 .4rem">
+          <div id="sdp-tens-box" style="min-width:4.4rem;padding:.3rem .55rem;text-align:center;border-radius:var(--r-m);background:var(--paper-2);box-shadow:${ring};box-sizing:border-box">
+            <span id="sdp-tens" style="display:block;font-family:var(--font-head);font-weight:900;font-size:${numFs};line-height:1.05;font-variant-numeric:tabular-nums">–</span>
+            <span style="display:block;font-size:${capFs};font-weight:700;color:var(--ink-soft)">dešimtys</span>
+          </div>
+          <div id="sdp-ones-box" style="min-width:4.4rem;padding:.3rem .55rem;text-align:center;border-radius:var(--r-m);background:var(--paper-2);box-shadow:${ring};box-sizing:border-box">
+            <span id="sdp-ones" style="display:block;font-family:var(--font-head);font-weight:900;font-size:${numFs};line-height:1.05;font-variant-numeric:tabular-nums">–</span>
+            <span style="display:block;font-size:${capFs};font-weight:700;color:var(--ink-soft)">vienetai</span>
+          </div>
+        </div>
+        <svg id="sdp-svg" viewBox="0 0 ${W} ${H}" role="img"
+             aria-label="Skaičių tiesė su dešimtukų juostomis"
+             style="display:block;width:100%;height:auto"></svg>
+      </div>`;
+
+    const svg = stage.querySelector("#sdp-svg");
+    const tensEl = stage.querySelector("#sdp-tens");
+    const onesEl = stage.querySelector("#sdp-ones");
+    const tensBox = stage.querySelector("#sdp-tens-box");
+    const onesBox = stage.querySelector("#sdp-ones-box");
+
+    /* --- dešimtukų juostos: 20–29, 30–39, 40–42 ----------------------- */
+    let block = 0;
+    for (let t = Math.ceil(min / 10) * 10; t <= max; t += 10) {
+      const v1 = Math.max(min, t);
+      const v2 = Math.min(max, t + 9);
+      const x1 = Math.max(2, xOf(v1) - stepPx / 2);
+      const x2 = Math.min(W - 2, xOf(v2) + stepPx / 2);
+      svg.appendChild(svgEl("rect", {
+        x: x1, y: Y - 16, width: Math.max(4, x2 - x1), height: 32, rx: 6,
+        fill: block % 2
+          ? "color-mix(in srgb, var(--sun) 16%, var(--paper-2))"
+          : "var(--paper-2)",
+      }));
+      block += 1;
+    }
+
+    /* --- ašis ir žymės ------------------------------------------------- */
+    svg.appendChild(svgEl("line", {
+      x1: PAD - stepPx / 2, y1: Y, x2: W - PAD + stepPx / 2, y2: Y,
+      stroke: "var(--line)", "stroke-width": 3, "stroke-linecap": "round",
+    }));
+
+    for (let v = min; v <= max; v += 1) {
+      const x = xOf(v);
+      const major = v % 10 === 0;
+      svg.appendChild(svgEl("line", {
+        x1: x, y1: major ? Y - 11 : Y - 6, x2: x, y2: major ? Y + 11 : Y + 6,
+        stroke: major ? "var(--ink-faint)" : "var(--line)",
+        "stroke-width": major ? 2.2 : 1.2,
+      }));
+      if (major) {
+        const label = svgEl("text", {
+          x, y: Y + 32, "text-anchor": "middle", fill: "var(--ink-soft)",
+          "font-size": 16, "font-family": "system-ui", "font-weight": 800,
+        });
+        label.textContent = String(v);
+        svg.appendChild(label);
+      }
+    }
+
+    /* --- pėdsakai (kur vaikas jau buvo) -------------------------------- */
+    const trailG = svgEl("g", {});
+    svg.appendChild(trailG);
+
+    /* --- žymeklis ------------------------------------------------------ */
+    const marker = svgEl("g", {});
+    marker.appendChild(svgEl("circle", {
+      r: 16, fill: "var(--accent)", stroke: "var(--paper)", "stroke-width": 3,
+    }));
+    const numEl = svgEl("text", {
+      "text-anchor": "middle", y: 5, fill: "#fff", "font-size": 15,
+      "font-weight": 900, "font-family": "system-ui",
+    });
+    marker.appendChild(numEl);
+    svg.appendChild(marker);
+
+    /* --- valdikliai ---------------------------------------------------- */
+    controls.innerHTML = `
+      <div id="sdp-guess" role="group" aria-label="Spėk, kas bus, kai eisi atgal"
+           style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;align-items:center;width:100%">
+        <span id="sdp-guess-q" style="width:100%;text-align:center;font-weight:800"></span>
+        ${guesses.map((v, i) => `<button type="button" class="btn secondary" data-g="${i}"
+            aria-label="Spėju, kad bus ${v}"
+            style="min-height:48px;min-width:4rem">${v}</button>`).join("")}
+      </div>
+      <div id="sdp-tools" style="display:none;width:100%">
+        <div role="group" aria-label="Ėjimas skaičių tiese"
+             style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;width:100%">
+          <button type="button" class="btn secondary" id="sdp-back" aria-label="Vienu žingsniu atgal"
+                  style="min-height:56px;min-width:5.6rem">← Atgal</button>
+          <button type="button" class="btn" id="sdp-fwd" aria-label="Vienu žingsniu pirmyn"
+                  style="min-height:56px;min-width:5.6rem">Pirmyn →</button>
+          <button type="button" class="btn ghost" id="sdp-reset" style="min-height:48px">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const guessBox = controls.querySelector("#sdp-guess");
+    const tools = controls.querySelector("#sdp-tools");
+    controls.querySelector("#sdp-guess-q").textContent = say("spek");
+
+    /* --- piešimas ------------------------------------------------------ */
+    function paint() {
+      const tens = Math.floor(n / 10);
+      const ones = n % 10;
+      tensEl.textContent = String(tens);
+      onesEl.textContent = String(ones);
+
+      /* Paryškinama TIK ta kortelė, kurios skaitmuo pasikeitė. */
+      tensBox.style.boxShadow = flash === "tens" ? "inset 0 0 0 3px var(--accent)" : ring;
+      onesBox.style.boxShadow = flash === "ones" ? "inset 0 0 0 3px var(--accent)" : ring;
+
+      marker.setAttribute("transform", `translate(${xOf(n)},${Y})`);
+      numEl.textContent = String(n);
+
+      while (trailG.firstChild) trailG.removeChild(trailG.firstChild);
+      trail.forEach((v) => {
+        trailG.appendChild(svgEl("circle", {
+          cx: xOf(v), cy: Y, r: 3.4, fill: "var(--ink-faint)",
+        }));
+      });
+
+      svg.setAttribute("aria-label",
+        `Skaičių tiesė. Pažymėtas skaičius ${n}: dešimtys ${tens}, vienetai ${ones}.`);
+    }
+
+    /* --- veiksmai ------------------------------------------------------ */
+    function move(delta) {
+      const to = n + delta;
+      if (to < min || to > max) {
+        api.note(say("krastas"));
+        api.speak(say("krastas"));
+        return;
+      }
+
+      const from = n;
+      const t1 = Math.floor(from / 10);
+      const t2 = Math.floor(to / 10);
+      const o1 = from % 10;
+      const o2 = to % 10;
+      const crossed = t1 !== t2;
+
+      trail.push(from);
+      n = to;
+      flash = crossed ? "tens" : "ones";
+      paint();
+
+      let text = crossed
+        ? `${from} → ${to}. Dešimtis ${t1} → ${t2}, vienetai ${o1} → ${o2}.`
+        : `${from} → ${to}. Dešimtis ta pati (${t2}), vienetai ${o1} → ${o2}.`;
+
+      api.readout(crossed ? `Dabar ${to}. Dešimtis ${t2}, vienetai ${o2}.` : `Dabar ${to}.`);
+
+      /* LL-15 — spėjimas lyginamas su įvykiu, tik pirmą kartą ir tik
+         peržengus tą dešimtuką, apie kurį buvo klausiama. */
+      if (delta < 0 && from === bound && !compared && guess !== null) {
+        compared = true;
+        const g = guesses[guess];
+        text += ` Tavo spėjimas: ${g}. `
+          + say(g === answerValue ? "spejimas-sutapo" : "spejimas-kitas");
+      } else if (crossed) {
+        text += ` ${say(delta < 0 ? "atgal" : "pirmyn")}`;
+      }
+
+      if (crossed && delta < 0) down = true;
+      if (crossed && delta > 0) up = true;
+
+      /* Pažanga — tik peržengus dešimtį į abi puses (LL-29). */
+      if (down && up && !reported) {
+        reported = true;
+        text += ` ${say("baigta")} ${say("baigta-antra")}`;
+        api.progress({ correct: true });
+      } else if (down && !up) {
+        text += ` ${say("toliau")}`;
+      }
+
+      api.note(text);
+      if (crossed) api.speak(say(delta < 0 ? "atgal" : "pirmyn"));
+      else api.speak(String(to));
+    }
+
+    function reset() {
+      n = start;
+      guess = null;
+      compared = false;
+      down = false;
+      up = false;
+      reported = false;
+      trail = [];
+      flash = null;
+      paint();
+      tools.style.display = "none";
+      guessBox.style.display = "flex";
+      api.readout(`Tu esi ties ${start}.`);
+      api.note(say("is-naujo"));
+      api.speak(say("is-naujo"));
+      guessBox.querySelector("[data-g]").focus();
+    }
+
+    guessBox.querySelectorAll("[data-g]").forEach((b) => {
+      b.addEventListener("click", () => {
+        guess = Number(b.dataset.g);
+        guessBox.style.display = "none";
+        tools.style.display = "block";
+        api.note(say("spejimas"));
+        api.speak(say("spejimas"));
+        /* LL-32 — fokusas perkeliamas į pirmą likusį veiksmą. */
+        tools.querySelector("#sdp-back").focus();
+      });
+    });
+
+    controls.querySelector("#sdp-back").addEventListener("click", () => move(-1));
+    controls.querySelector("#sdp-fwd").addEventListener("click", () => move(1));
+    controls.querySelector("#sdp-reset").addEventListener("click", reset);
+
+    paint();
+    api.readout(`Tu esi ties ${start}.`);
+    api.note(say("spek"));
+    api.speak(say("spek"));
+    return null;
+  },
+};
+
+/* ------------------------------------------------------------------ */
 /* 14. Komandų seka tinklelyje                                         */
 /*                                                                     */
 /* Kodėl būtent taip: seka vykdoma PO VIENĄ, o posūkis sukamas roboto   */
@@ -4048,6 +4347,7 @@ export const SIMS = {
   "sudetis-per-desimti": sudetisPerDesimti,
   "desimtukas-ir-atimtis": desimtukasIrAtimtis,
   "simto-lentele": simtoLentele,
+  "skaiciavimas-per-desimti": skaiciavimasPerDesimti,
   "komandu-seka": komanduSeka,
   "skaicius-ir-skaitmuo": skaiciusIrSkaitmuo,
 };

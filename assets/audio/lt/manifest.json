@@ -727,6 +727,10 @@
   "n": "n/3141d5e53863c11a-830b9222.mp3",
   "s": "s/3141d5e53863c11a-3f4b3f6f.mp3"
  },
+ "Dabar eik pirmyn ir pažiūrėk, kas bus nuo 29.": {
+  "n": "n/4e18577cf775f330-dca35c2a.mp3",
+  "s": "s/4e18577cf775f330-cb8ab447.mp3"
+ },
  "Daigas": {
   "n": "n/e9ebf47dd9afa46f-0377d56d.mp3",
   "s": "s/e9ebf47dd9afa46f-aaffef6d.mp3"
@@ -770,6 +774,10 @@
  "Dešimt. Puiku!": {
   "n": "n/84869c7b0017a54b-da490e30.mp3",
   "s": "s/84869c7b0017a54b-68760a29.mp3"
+ },
+ "Dešimtis keičiasi, vienetai pradeda iš naujo.": {
+  "n": "n/8b976b6881740a7b-cf392dd5.mp3",
+  "s": "s/8b976b6881740a7b-e0d3caf2.mp3"
  },
  "Dešimtuke dešimt dėmių, šalia trys. Viso trylika.": {
   "n": "n/374e7b088a131049-391d5710.mp3",
@@ -1183,6 +1191,10 @@
   "n": "n/a173a8cebb84e1b1-80d9eea6.mp3",
   "s": "s/a173a8cebb84e1b1-a6d20f06.mp3"
  },
+ "Kas bus, kai nuo 30 eisi atgal?": {
+  "n": "n/a78bc36a0ab9f8f6-e68c52b4.mp3",
+  "s": "s/a78bc36a0ab9f8f6-f769e439.mp3"
+ },
  "Kas geria?": {
   "n": "n/304a8cc0a125d425-6272726a.mp3",
   "s": "s/304a8cc0a125d425-5bb83eec.mp3"
@@ -1559,6 +1571,10 @@
   "n": "n/38cebf4836a918cb-65706811.mp3",
   "s": "s/38cebf4836a918cb-7211c8dd.mp3"
  },
+ "Nesutapo. Dešimtis sumažėjo, vienetai prasidėjo nuo devynių.": {
+  "n": "n/ab51257ba581ae9d-23b738d3.mp3",
+  "s": "s/ab51257ba581ae9d-8a98c7a8.mp3"
+ },
  "Nė vieno laido. Kelias visai nutrūkęs.": {
   "n": "n/59d8042b3c1fd28c-3f002c4f.mp3",
   "s": "s/59d8042b3c1fd28c-f6b2179f.mp3"
@@ -1691,6 +1707,18 @@
   "n": "n/432afa070cceea11-9cf15bfe.mp3",
   "s": "s/432afa070cceea11-3e66e30b.mp3"
  },
+ "Perėjai dešimtį į abi puses.": {
+  "n": "n/eaa754620147ec79-144cc542.mp3",
+  "s": "s/eaa754620147ec79-213feec4.mp3"
+ },
+ "Peržengei dešimtį atgal. Vienetai vėl pradeda nuo devynių.": {
+  "n": "n/b290b51692fb29da-4af494c5.mp3",
+  "s": "s/b290b51692fb29da-831a68b9.mp3"
+ },
+ "Peržengei dešimtį pirmyn. Vienetai pradeda nuo nulio.": {
+  "n": "n/0fd3dedf58878dc2-16276493.mp3",
+  "s": "s/0fd3dedf58878dc2-f9046277.mp3"
+ },
  "Piešinys su berniuku": {
   "n": "n/ecf4b0d268d2d5e7-c3c4e646.mp3",
   "s": "s/ecf4b0d268d2d5e7-60540135.mp3"
@@ -1802,6 +1830,10 @@
  "Pradedam iš naujo. Vienas lapas.": {
   "n": "n/2189b66512ac0f1f-6ae070e1.mp3",
   "s": "s/2189b66512ac0f1f-47f3c433.mp3"
+ },
+ "Pradedam iš naujo. Vėl spėk, kas bus atgal.": {
+  "n": "n/b875e35c2d3350b1-0a1e5a42.mp3",
+  "s": "s/b875e35c2d3350b1-e7374b1a.mp3"
  },
  "Pradedam. Prijunk laidus ir pažiūrėk, ar lemputė šviečia.": {
   "n": "n/cbe1d27c52bcf99c-cbd96c13.mp3",
@@ -2003,6 +2035,10 @@
   "n": "n/124584c5355fcdcc-56ecbc6f.mp3",
   "s": "s/124584c5355fcdcc-5f5e9c43.mp3"
  },
+ "Spėjimas įrašytas. Dabar eik atgal.": {
+  "n": "n/a76bfadbd298abf8-0bd14893.mp3",
+  "s": "s/a76bfadbd298abf8-d777be8d.mp3"
+ },
  "Spėjimas įrašytas. Dabar perjunk 24 valandų sistemą.": {
   "n": "n/c58ee21a4e528a1f-615ea451.mp3",
   "s": "s/c58ee21a4e528a1f-797c81e7.mp3"
@@ -2074,6 +2110,10 @@
  "Sustabdyta. Gali keisti korteles.": {
   "n": "n/06988fc50cfab3d9-83dbbf11.mp3",
   "s": "s/06988fc50cfab3d9-ceb10e90.mp3"
+ },
+ "Sutapo. Dešimtis sumažėjo, vienetai prasidėjo nuo devynių.": {
+  "n": "n/58f048973b988347-eb6c87ca.mp3",
+  "s": "s/58f048973b988347-d0c1dece.mp3"
  },
  "Sveiki!": {
   "n": "n/5a7c3a043b7d6b1d-347efa08.mp3",
@@ -2150,6 +2190,10 @@
  "Tiltas pastatytas — perėjo abu!": {
   "n": "n/2e8cb9ac1abdb1f9-e3cafef7.mp3",
   "s": "s/2e8cb9ac1abdb1f9-df46d12c.mp3"
+ },
+ "Toliau eiti negalima. Spausk Iš naujo.": {
+  "n": "n/8472a837493d6412-836727fa.mp3",
+  "s": "s/8472a837493d6412-cceeddb3.mp3"
  },
  "Toliau lentelėje nieko nėra.": {
   "n": "n/77dcbc55541f3e17-f58f517e.mp3",

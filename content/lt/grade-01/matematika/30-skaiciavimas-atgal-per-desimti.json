@@ -1,0 +1,99 @@
+{
+  "id": "30-skaiciavimas-atgal-per-desimti",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Po 30 eina 29, o ne 20",
+  "subtitle": "Skaičiuojant atgal dešimtis mažėja, o vienetai pradeda nuo devynių",
+  "minutes": 9,
+  "outcomes": [
+    "Skaičiuoju atgal per dešimtį ir pasakau, kad po 30 eina 29.",
+    "Paaiškinu, kad peržengus dešimtį keičiasi dešimčių skaitmuo.",
+    "Skaičiuoju tuos pačius skaičius pirmyn ir atgal."
+  ],
+  "concept": {
+    "title": "Dešimtukas baigiasi devyniais",
+    "big_idea": "Skaičiuodamas atgal skaičius mažėja po vieną. Peržengus dešimtį dešimčių skaitmuo sumažėja, o vienetai pradedami nuo devynių. Todėl po 30 eina 29, o ne 20.",
+    "steps": [
+      "Pradėk nuo 32 ir eik atgal po vieną.",
+      "31, 30 — dešimtis dar ta pati, vienetai mažėja.",
+      "Ženk dar vieną žingsnį: vienetai baigėsi, todėl dešimtis mažėja.",
+      "Po 30 eina 29: dešimtys 2, vienetai 9."
+    ],
+    "example": "Žaisdami slėpynes visi skaičiuoja atgal: 32, 31, 30, 29."
+  },
+  "sim": {
+    "component": "skaiciavimas-per-desimti",
+    "config": {
+      "start": 32,
+      "min": 18,
+      "max": 42,
+      "guesses": ["29", "20", "39"],
+      "sentences": {
+        "spek": "Kas bus, kai nuo 30 eisi atgal?",
+        "spejimas": "Spėjimas įrašytas. Dabar eik atgal.",
+        "atgal": "Peržengei dešimtį atgal. Vienetai vėl pradeda nuo devynių.",
+        "pirmyn": "Peržengei dešimtį pirmyn. Vienetai pradeda nuo nulio.",
+        "toliau": "Dabar eik pirmyn ir pažiūrėk, kas bus nuo 29.",
+        "krastas": "Toliau eiti negalima. Spausk Iš naujo.",
+        "spejimas-sutapo": "Sutapo. Dešimtis sumažėjo, vienetai prasidėjo nuo devynių.",
+        "spejimas-kitas": "Nesutapo. Dešimtis sumažėjo, vienetai prasidėjo nuo devynių.",
+        "baigta": "Perėjai dešimtį į abi puses.",
+        "baigta-antra": "Dešimtis keičiasi, vienetai pradeda iš naujo.",
+        "is-naujo": "Pradedam iš naujo. Vėl spėk, kas bus atgal."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Nuo 41 atgal vienu žingsniu. Kuris skaičius eina po 40?",
+      "options": ["39", "30", "49"],
+      "answer": 0,
+      "hint": "Vienetai baigėsi ties 40. Nuo ko pradedi vienetus?",
+      "why": "40 − 1 = 39: dešimtis mažėja, o vienetai prasideda nuo devynių."
+    },
+    {
+      "q": "Nuo 25 skaičiuoji tris žingsnius atgal. Kur sustosi?",
+      "options": ["28", "23", "22"],
+      "answer": 2,
+      "hint": "Vienas žingsnis atgal — vienu mažiau. Pradėk nuo 25.",
+      "why": "25, 24, 23, 22: trys žingsniai atgal veda iki 22."
+    },
+    {
+      "q": "Vaikas skaičiuoja atgal: 32, 31, 30. Kuris skaičius eis toliau?",
+      "options": ["20", "29", "31"],
+      "answer": 1,
+      "hint": "Skaičius mažėja po vieną. Kiek yra 30 atėmus 1?",
+      "why": "30 − 1 = 29: dešimtis mažėja, o vienetai prasideda nuo devynių."
+    },
+    {
+      "q": "Šimto lentelėje 30 yra eilutės gale. Kur stovi 29?",
+      "options": ["Viena langeliu kairėn", "Viena eilute žemyn", "Dešimt langelių kairėn"],
+      "answer": 0,
+      "hint": "Skaičius 29 yra vienu mažesnis už 30.",
+      "why": "Lentelėje 29 stovi prieš 30, tame pačiame dešimtuke.",
+      "optional": true
+    }
+  ],
+  "reflect": "Papasakok, kodėl po 30 eina 29, o ne 20.",
+  "teacher": {
+    "goal": "Suprasti, kad skaičiuojant atgal per dešimtį keičiasi dešimčių skaitmuo, o vienetai pradedami iš naujo nuo devynių; mokėti skaičiuoti atgal nuo 32 iki 28 ir pirmyn iki 31.",
+    "prompt": "Kodėl po 30 atgal eina 29, o ne 20?",
+    "offline": "Ant popieriaus lapo parašykite skaičius nuo 20 iki 40 vienoje eilutėje. Paprašykite vaiko pirštu eiti atgal nuo 32 ir garsiai sakyti skaičius. Ties 30 sustokite ir paklauskite, kas bus toliau. Tegul vaikas užrašo 29, tada eikite pirmyn iki 31. Pakartokite nuo 41 ir nuo 61.",
+    "misconceptions": [
+      "„Pabaiga mažėja iki nulio, o dešimtis nesikeičia“: vaikas skaičiuoja 32, 31, 30, 20. Modelyje po 30 žymeklis pereina į kairįjį dešimtuką, o skaitmenų kortelė rodo 2 ir 9.",
+      "„Po 30 eina 39“: vaikas vienetus pakeičia devyniais, bet dešimtį palieka tą pačią. Modelyje matosi, kad 39 yra dešimčia didesnis už 29.",
+      "„Kiekvienas žingsnis atgal keičia dešimtį“: vaikas mano, kad nuo 32 atgal iškart bus 22. Modelyje 32 → 31 → 30 keičia tik vienetus."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“ — 1 klasė: „Skaičiai nuo 0 iki 100. Mokomasi skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus, susieti objektų skaičių su skaičiumi“ (sources/pradinio-bp-rekomendacijos-2024.txt:33739).",
+    "Matematikos bendroji programa (2022), 1 klasė — natūralieji skaičiai iki 100 skaitomi, užrašomi ir lyginami; skaičiuojama pirmyn ir atgal nuo bet kurio skaičiaus.",
+    "research/wiki/curriculum/matematika-1-klase.md §7 — metų gale: „Skaičiuoja iki 100 pirmyn ir atgal nuo bet kurio skaičiaus“; §8 — skaičių tiesė ir 100-o lentelė yra nuolatiniai modeliai, ne dekoracija.",
+    "Fuson, K. C. (1988). Children's Counting and Concepts of Number. Springer: perėjimas per dešimtį skaičiuojant atgal — viena dažniausių pirmokų skaičiavimo klaidų."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (peržengus dešimtį keičiasi dešimčių skaitmuo), o ne skaičiavimo lentelė ar dešimties sudėtis",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę kituose skaičiuose (41, 25, 30, 29), o ne įsimintą pavyzdį",
+    "3 žingsnis — pagalba laiku: spėjimas lyginamas su tuo, ką parodė žymeklis; užuominos nukreipia į vienetų eilę, yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

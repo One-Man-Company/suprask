@@ -25,6 +25,13 @@ jobs:
       - name: Turinio validacija
         run: python3 scripts/validate_content.py
 
+      # index.json ↔ moduliai ↔ path.json ↔ SIMS sutapimas ir našlaičiai
+      # failai. `validate_content.py` jų nelygina: be šio žingsnio našlaitis
+      # modulio failas (įrašytas, bet neįtrauktas į index.json) praeidavo
+      # visus PR vartus ir atsidurdavo svetainėje (#30960).
+      - name: Registrų sankirta
+        run: python3 scripts/check_registry.py
+
       - name: Dokumentų skaičiai
         run: python3 scripts/check_docs_facts.py
 

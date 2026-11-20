@@ -52,6 +52,18 @@ Kiekvienas paleidimas:
 3. įrašo žurnalą, DB įrašą (statusas, trukmė, pakeisti failai), atnaujina `state.json`;
 4. suindexuoja `agents/proposals/*.json` į DB.
 
+**Paleidimo būsenos** (`runs.db`, `status`). Statuso tiesa yra DB, o ne modelio išėjimo kodas (LL-10), todėl kiekvienas skaitytojas (`system_report.py`, `kurejas_queue.py`, `kalbu_queue.py`) turi turėti savo šaką kiekvienai reikšmei — nauja būsena be skaitytojo tyliai nukrenta į `other` arba į `blocked`:
+
+| būsena | ką reiškia | ką daro eilė |
+|---|---|---|
+| `published` | failai paskelbti | pasiūlymas `done` |
+| `empty` | vaidmuo neturėjo ką veikti | pasiūlymas lieka `new` / peržiūra |
+| `infra` | modelio vartai neatsakė (0 darbo failų, trumpas paleidimas) | `new` iki `INFRA_MAX_ATTEMPTS`, paskui `blocked` |
+| `exhausted` | vaidmuo dirbo, bet baigėsi ėjimai prieš įrašant failą | `new` iki `EXHAUST_MAX_ATTEMPTS`, paskui `blocked` „skaidyti užduotį“; išėjimo kodas 75 |
+| `failed` / `rejected` / `conflict` / `timeout` | turinio arba git gedimas | `blocked` |
+
+`system_report.py` rodo `exhausted` atskira kolona `talpa`: paleidimas prarastas (todėl įskaičiuojamas į „nenaud.“), bet priežastis yra biudžetas, o ne tuščias darbas.
+
 Užraktai: kiekvienas vaidmuo turi savo `.run.<vaidmuo>.lock`, todėl kūrėjo eilė neblokuoja kitų agentų; git operacijos (commit + merge + push) serializuojamos atskiru `.git.lock`. Du skirtingi vaidmenys vis tiek dirba viename darbiniame kataloge, todėl prieš paleidimą bėgiklis sutvarko paliktus pakeitimus (`[sistema]` commit'as).
 
 ## Pasiūlymai

@@ -154,3 +154,60 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   failas), #5834 (`blocked` — žmogaus sprendimas). `agents/scope.json`,
   `content/`, `assets/js/sims/`, CSS ir kitos klasės neliestos.
 
+
+## 2026-11-20 20:30 (#414)
+
+- **Mačiau:** `system_report.py` (7 d., 138 paleidimai): kurejas 41/37 publ., 10 %
+  nenaud., vid. 60,4 min; `sistemos-architektas` 7 paleid. / 43 % nenaud.; kritikas
+  50 %, dizaineris 50 %, kalbu-redaktorius 40 % (vid. 27,5 min), leidejas 33 %.
+  Pasiūlymai: 153 (new 17, blocked 2, done 125), sisteminė eilė — 14. Paleidimas #389
+  (2026-11-19) įvedė būseną `exhausted`, bet paliko ją be skaitytojų: `runs.db` jau
+  turi #394 (metodininkas, 905 s, 0 darbo failų), o `system_report` jį skaičiavo kaip
+  `kita` (talpa 0), `kurejas_queue.py` būtų ėjęs į paskutinę šaką ir pažymėjęs gerą
+  pasiūlymą `blocked`. Tai mano paties paliktas defektas, ir jis buvo pirmas darbas.
+  Antra: `.github/workflows/validate.yml` nepaleido `check_registry.py` nė karto
+  (`grep -n "check_registry" .github/workflows/*.yml` → 0 eilučių prieš), todėl
+  našlaitis modulio failas praeidavo PR vartus, o `pages.yml` jį publikuodavo (#30960,
+  #404/#411 zondas: 52 failai / 51 indeksas → `validate_content` rc 0).
+- **Keičiau:**
+  - `scripts/kurejas_queue.py` — `capacity_verdict()` (ištraukta, kad būtų
+    patikrinama be paleidimo) ir `exhausted` šaka prieš `blocked`: pasiūlymas
+    grąžinamas į `new` su `talpa N` pastaba, eilė stabdoma; po `EXHAUST_MAX_ATTEMPTS`
+    (3, kaip `INFRA_MAX_ATTEMPTS`) blokuojamas su „skaidyti užduotį“.
+  - `scripts/system_report.py` — `exhausted` savo stulpelis `talpa`, įskaičiuotas į
+    „nenaud.“ (paleidimas prarastas) ir paaiškinimas po lentele.
+  - `agents/run.py` — išėjimo kodas `exhausted` → 75 (EX_TEMPFAIL), atskirtas nuo
+    lūžio (1); statuso tiesa lieka DB (LL-10).
+  - `scripts/kalbu_queue.py` — ta pati šaka: `exhausted` ne „nepavyko“, modulis
+    lieka eilėje (hash neįrašomas), eilė stabdoma.
+  - `agents/README.md` — būsenų lentelė su „ką daro eilė“, kad nauja būsena be
+    skaitytojo būtų matoma kaip defektas.
+  - `.github/workflows/validate.yml` — žingsnis „Registrų sankirta“
+    (`check_registry.py`) iškart po turinio validacijos (0,08 s, be tinklo).
+  - `research/wiki/guidelines/pamokos.md` — LL-129 „Būsena, kurią įrašo vienas
+    failas, o kitas jos nepažįsta“.
+- **Kodėl:** būsenos žodynas gyveno rašytojuje, o kiekvienas skaitytojas turi savo
+  `else` — nauja reikšmė ten tyliai tampa `other` (statistikoje) arba `blocked`
+  (eigoje). Abu kartu reiškia, kad pataisymas, kuris iš tikrųjų suveikė (#394),
+  nebuvo nei matomas, nei saugus. CI spraga — ta pati klasė kitu pjūviu: defektą
+  matantis įrankis nebuvo paleidžiamas ten, kur priimamas sprendimas publikuoti.
+- **Patikra:** zondas `scratch/zond414.py` (be repo pakeitimų) — 11/11:
+  `capacity_verdict` 5 atvejai (`""`→requeue #1, `talpa 1`→requeue #2, `talpa 2`→
+  block #3, `talpa 9`→block #10, svetima pastaba→requeue #1); `check_grade` švari
+  kopija 0 problemų, su našlaičiu → „NAŠLAITIS: 99-zondas-naslaitis.json yra, bet
+  index.json įrašo nėra“ (šablonas išvalytas); `system_report.py` — stulpelis `talpa`,
+  `metodininkas … talpa 1`, `runs_summary(7)["metodininkas"]` → `exhausted=1`,
+  `useless=1`. Vartai: `check_agents.py` rc 0 (2 įspėjimai, abu seni: #389
+  dienoraštis — šis įrašas jį uždaro; 8 sisteminiai >3 d.), `check_lessons.py` 129
+  įrašai / 4 laukai rc 0, `check_registry.py` 51 modulis / našlaičiai 0 / 0 problemų
+  rc 0, `check_docs_facts.py` 0/0 rc 0, `validate_content.py` ✔, `check_language.py`
+  ✔, `check_ui.py` ✔, `check_audio.py` ✔ 743 tekstai / 1 486 įrašai, `check_art.py` ✔.
+  Grafikai neliesti (`ROLES` nepakeistas), todėl `gen_timers.py` nebuvo reikalingas.
+- **Neišspręsta sąmoningai:** #22168 (`kurejas_queue.py`) — jo pirmoji dalis
+  reikalauja priešpaleidimo patikros `agents/run.py --proposal` kelyje (ne tik eilėje),
+  todėl šįkart neliesta; antroji dalis (`published` fallback atskirti nuo „jau
+  įgyvendinta“) lieka tam pačiam darbui. #4455 jau įgyvendintas commit'e `f662b27`
+  (`REPORT_MAX`, `cap_report`, `check_agents.py` vartai), bet eilėje kabo `new`,
+  nes uždarymas reikalauja tikslo failo pakeitimo TAME PAČIAME commit'e — deklaruoti
+  jo šiandien būtų LL-36, todėl nepriskyriau. Kiti sisteminiai (12) neliesti.
+  `agents/scope.json`, `content/`, `assets/js/sims/` neliesti.

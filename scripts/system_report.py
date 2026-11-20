@@ -44,7 +44,13 @@ BAD = ("empty", "conflict", "rejected", "timeout", "failed", "infra", "interrupt
 # rezultatas (žr. `ROLES[…]["inspect"]`). Nekūrybiniam vaidmeniui `checked`
 # reiškia tą patį kaip `empty`, todėl jis pridedamas atskirai.
 USELESS = ("empty", "conflict", "rejected", "timeout", "skipped", "failed",
-           "infra", "interrupted", "unpushed", "other")
+           "infra", "interrupted", "unpushed", "other",
+           # `exhausted` (2026-11-19): vaidmuo dirbo, bet baigėsi ėjimai prieš
+           # įrašant failą. Paleidimas PRARASTAS, todėl jis priklauso šiai
+           # sumai — kitaip vaidmuo, kuris visada trenkiasi į ėjimų ribą,
+           # atrodytų su 0 % nenaudingų. Bet priežastis kita, todėl rodoma
+           # atskira kolona `talpa` (`kurejas_queue.py` grąžina pasiūlymą į eilę).
+           "exhausted")
 
 
 def inspect_roles() -> set[str]:
@@ -68,7 +74,7 @@ def runs_summary(days: int) -> tuple[dict, list[dict]]:
             "rejected": 0, "timeout": 0, "skipped": 0, "failed": 0, "infra": 0,
             "interrupted": 0, "unpushed": 0, "checked": 0, "partial": 0,
             "dry-run": 0, "running": 0, "other": 0, "paused": 0,
-            "duration_s": 0, "last": None,
+            "exhausted": 0, "duration_s": 0, "last": None,
         })
         st = (r.get("status") or "other").lower()
         # Pristabdytas paleidimas NĖRA bandymas: jis įvyko tam, kad bėgiklis
@@ -315,13 +321,16 @@ def main() -> int:
     pause_note = f" (dar {paused_n} pristabdyta — žr. žemiau)" if paused_n else ""
     print(f"\nPaleidimai: {len(rows)}{pause_note}")
     print(f"{'vaidmuo':<24}{'paleid.':>8}{'publ.':>7}{'tušti':>7}{'konfl.':>7}{'atm.':>6}"
-          f"{'nepav.':>7}{'kita':>6}{'vid.m':>7}{'nenaud.':>9}{'prist.':>7}")
+          f"{'nepav.':>7}{'talpa':>7}{'kita':>6}{'vid.m':>7}{'nenaud.':>9}{'prist.':>7}")
     for role, c in sorted(per_role.items(), key=lambda kv: -kv[1]["runs"]):
         print(f"{role:<24}{c['runs']:>8}{c['published']:>7}{c['empty']:>7}{c['conflict']:>7}"
-              f"{c['rejected']:>6}{c['failed_all']:>7}{c['other_all']:>6}{c['avg_min']:>7}"
+              f"{c['rejected']:>6}{c['failed_all']:>7}{c['exhausted']:>7}{c['other_all']:>6}"
+              f"{c['avg_min']:>7}"
               f"{int(c['useless_ratio'] * 100):>8}%{c['paused']:>7}")
     print("  nepav. = failed + infra + interrupted + timeout · kita = checked + ok + partial + dry-run · "
           "nenaud. skaičiuoja ir failed/interrupted, ir `checked` ne patikros vaidmeniui")
+    print("  talpa = baigėsi ėjimų limitas (`exhausted`): paleidimas prarastas, bet pasiūlymas "
+          "grąžinamas į eilę, o ne blokuojamas")
 
     if windows:
         total_h = sum(w["hours"] for w in windows)

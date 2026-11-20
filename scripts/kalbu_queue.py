@@ -167,6 +167,12 @@ def main() -> int:
                 "at": time.strftime("%Y-%m-%dT%H:%M"),
             }
             save_state(state)
+        elif status == "exhausted":
+            # Talpa, ne modulio kaltė: redaktorius dirbo, bet baigėsi ėjimai.
+            # Modulis NĖRA peržiūrėtas (į hash neįrašom), o eilė stabdoma —
+            # kitaip du tokie iš eilės sustabdytų visą eilę kaip „nepavykę“.
+            print("   Baigėsi ėjimų limitas — modulis lieka eilėje, stabdau šį paleidimą.")
+            break
         else:
             failed += 1
             if failed >= 2 and done == 0:

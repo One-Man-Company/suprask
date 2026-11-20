@@ -1939,7 +1939,13 @@ def main() -> int:
             f"failų: {len(files)}, {result['detail']}"
             + (f", commit {result['sha'][:7]}" if result["sha"] else "")
         )
-        return 0 if status in ("ok", "partial", "published", "empty") else 1
+        return 0 if status in ("ok", "partial", "published", "empty") else (
+            # 75 = EX_TEMPFAIL: darbas nepadarytas, bet procesas nesugedo, o
+            # priežastis — ėjimų limitas, ne turinys. Atskirta nuo 1 (lūžis),
+            # kad žurnale ir vartuose `exhausted` nebūtų skaitomas kaip klaida;
+            # statuso tiesa vis tiek yra `agents/runs.db`, o ne išėjimo kodas
+            # (LL-10). `kurejas_queue.py` skaito DB, ne kodą.
+            75 if status == "exhausted" else 1)
 
     except subprocess.TimeoutExpired:
         elapsed = int((dt.datetime.now() - started).total_seconds())

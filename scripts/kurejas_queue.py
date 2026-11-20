@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import pathlib
+import re
 import subprocess
 import sys
 import time
@@ -45,6 +46,13 @@ SYSTEM_PREFIXES = ("agents/", "scripts/", "deploy/", "dashboard/", "docs/")
 # ciklas, neįkeltas profilis). Toks paleidimas neturi sudeginti pasiūlymo —
 # 2026-11-07 eilė per 40 s taip sudegino 37 pasiūlymus (3 s kiekvienas).
 MIN_ATTEMPT_S = 120
+
+# Kiek kartų galima grąžinti pasiūlymą į eilę dėl ėjimų limito (`exhausted`).
+# Po tiek bandymų tai jau ne biudžeto atsitiktinumas, o per didelė užduotis
+# vienam paleidimui — toks įrašas blokuojamas peržiūrai, o ne sukasi amžinai.
+# Skaičius toks pat kaip `INFRA_MAX_ATTEMPTS` (`agents/run.py:166`), kad abi
+# nesėkmės rūšys elgtųsi vienodai.
+EXHAUST_MAX_ATTEMPTS = 3
 
 # „tema“ tipo pasiūlymas, kurio failas JAU yra, reiškia, kad modulis jau
 # sukurtas (pasiūlymas pasenęs) — jo kurti antrą kartą nereikia.
@@ -182,6 +190,24 @@ def run_one(proposal_id: int) -> tuple[str, str, dict | None]:
     return status, line, run_row
 
 
+def capacity_verdict(note: str, duration: int) -> tuple[str, int, str]:
+    """Sprendimas po `exhausted` paleidimo: (veiksmas, bandymas, pastaba).
+
+    Ištraukta į funkciją, kad būtų galima patikrinti be paleidimo: eilės
+    elgsena su `exhausted` (pasiūlymas grąžinamas, o ne blokuojamas) yra
+    taisyklė, kurios kitaip niekas neįrodo — 2026-11-19 ši šaka neegzistavo,
+    ir `blocked` sąraše atsidurdavo geri pasiūlymai.
+    """
+    found = re.match(r"talpa (\d+)", note or "")
+    attempt = (int(found.group(1)) if found else 0) + 1
+    if attempt >= EXHAUST_MAX_ATTEMPTS:
+        return ("block", attempt,
+                f"talpa {attempt}: {EXHAUST_MAX_ATTEMPTS} paleidimai baigėsi ėjimų limitu "
+                f"({duration}s, 0 darbo failų) — užduotis per didelė vienam paleidimui")
+    return ("requeue", attempt,
+            f"talpa {attempt}: ėjimų limitas per {duration}s, 0 darbo failų")
+
+
 def main() -> int:
     paused, until = system_pause.is_paused()
     if paused:
@@ -274,6 +300,25 @@ def main() -> int:
             reason = "infrastruktūros gedimas (modelio vartai)" if run_status == "infra" else "nebandymas"
             print(f"   Paleidimas truko {duration}s ir nepakeitė nė vieno darbo failo — "
                   f"{reason}. Pasiūlymas lieka new, stabdau eilę.")
+            break
+
+        if run_status == "exhausted" and no_work:
+            # Talpa, o ne turinys. Nuo 2026-11-19 `agents/run.py` skiria trečią
+            # nesėkmės rūšį: vaidmuo matavo ir skaitė, bet baigėsi ėjimai prieš
+            # įrašant failą. Toks paleidimas NEGALI blokuoti pasiūlymo — kitaip
+            # geras eilės įrašas prarandamas visam laikui dėl modelio biudžeto
+            # (LL-101 atvirkštinė pusė). Bet ir kartoti to paties su ta pačia
+            # riba neverta: stabdom eilę ir paliekam sprendimą architektui.
+            verdict, attempt, note = capacity_verdict(prop.get("note") or "", duration)
+            if verdict == "block":
+                db.set_proposal_status(int(prop["id"]), "blocked", note)
+                review += 1
+                print(f"   {EXHAUST_MAX_ATTEMPTS} bandymai iš eilės baigėsi ėjimų limitu — "
+                      f"#{prop['id']} blokuojamas peržiūrai (skaidyti užduotį).")
+                continue
+            db.set_proposal_status(int(prop["id"]), "new", note)
+            print(f"   Paleidimas baigėsi ėjimų limitu ({duration}s) — talpa, ne turinys. "
+                  f"Pasiūlymas lieka new (bandymas {attempt}/{EXHAUST_MAX_ATTEMPTS}), stabdau eilę.")
             break
 
         if run_status == "published":

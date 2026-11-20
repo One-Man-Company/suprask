@@ -14,8 +14,8 @@
     "title": "Vanduo keičia formą",
     "big_idea": "Ledas ir garas yra tas pats vanduo. Kai pakaiti, kyla į orą, o kai atvėsta, tampa lašais.",
     "steps": [
-      "Įpilk vandens ir pakaitink. Virš puodo pakyla garas.",
-      "Garas yra tas pats vanduo, tik ore. Jo nematome.",
+      "Įpilk vandens ir pakaitink. Vanduo virsta garu.",
+      "Garo nematome. Verdant virš puodo matome smulkius lašus.",
       "Uždėk vėsų dangtį. Ant jo susirenka lašai.",
       "Pakreipk dangtį. Lašai nubėga atgal į puodą."
     ],
@@ -87,7 +87,7 @@
     "misconceptions": [
       "„Išgaravęs vanduo išnyksta.“ Modelis su dangčiu parodo, kad garas sugrįžta lašais ir vandens lygis puode vėl pakyla.",
       "„Lašai ant dangčio atsirado iš paties dangčio.“ Lašų daugėja tik kaitinant, o šaltas dangtis be puodo lieka sausas.",
-      "„Garas yra dūmai.“ Garas — tas pats vanduo, tik dujinės būsenos. Dūmai lieka nuo degimo."
+      "„Garas yra dūmai.“ Baltas debesėlis virš puodo — smulkūs lašai, o pats garas nematomas: jis tas pats vanduo, tik dujinės būsenos. Dūmai lieka nuo degimo."
     ]
   },
   "sources": [

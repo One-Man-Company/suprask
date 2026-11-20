@@ -908,9 +908,10 @@ const gyvunuGrupes = {
    ant dangčio. Šiluma keičia greitį (0 / 1 / 2 lygio per „pakaitinimą“),
    o dangtis — tai, kur garas nusėda. Dangtis vėsus, nes ant jo guli
    ledukas: tai paaiškina, kodėl garas virsta lašais.
-   Ribos: puodas rodomas perpjautas (kitaip vandens nesimatytų), o
-   vanduo ore lieka nepavaizduotas — tik žodžiu pasakome, kad jis ten.
-   Modelis neturi laikmačio: vienas paspaudimas = kelios minutės.
+   Ribos: puodas rodomas perpjautas (kitaip vandens nesimatytų). Pats garas
+   nematomas, todėl jis nepiešiamas: baltas debesėlis virš puodo yra
+   smulkūs lašai (atvėsęs garas), o ore likęs garas žymimas punktyru, ne
+   debesiu. Modelis neturi laikmačio: vienas paspaudimas = kelios minutės.
 
    Žodžiai ateina iš modulio `sim.config.words`, o ne iš kodo: anksčiau
    konfigūracija buvo negyva (žodžiai kabėjo JSON, o simuliacija juos turėjo
@@ -955,7 +956,7 @@ const vandensBusenos = {
     let returned = 0;        // kiek lašų grąžinta į puodą
     let presses = 0;         // kiek kartų kaitinta — tik bangelių vietai
     let reported = false;
-    let msg = "Pakaitink puodą ir pažiūrėk, kas kyla virš vandens.";
+    let msg = "Pakaitink puodą ir stebėk, kas atsitiks vandeniui.";
     const spoke = { steam: false, drops: false, ice: false, back: false };
 
     const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
@@ -983,6 +984,7 @@ const vandensBusenos = {
         </div>
         <p class="sim-note" style="font-size:.8rem;text-align:center">
           Modelis supaprastintas: puodas rodomas perpjautas, kad matytum vandenį.
+          Brūkšneliai rodo ore esantį garą, kurio nematome.
         </p>
       </div>`;
 
@@ -1039,12 +1041,31 @@ const vandensBusenos = {
         + ` fill="${col}" opacity="${op}"/>`;
     }
 
-    /* Garo srovelė: kylanti vingiuota linija. Kiekis ir aukštis priklauso
-       nuo šilumos, o ne nuo atsitiktinumo — tą patį veiksmą vaikas gali
-       pakartoti ir pamatyti tą patį vaizdą. */
-    function steam(x, top, h, op) {
+    /* Balta migla virš puodo — smulkūs lašai, o ne pats garas. Garui kylant
+       ir atvėstant jis virsta lašeliais, kuriuos jau matome, o dujinės
+       būsenos vandens nematyti. Todėl migla piešiama TIK verdant
+       (`heat === 2`) ir be užrašo „garas“.
+       Anksčiau baltos srovelės būdavo rodomos jau prie „Šilta“ ir turėjo
+       matomą užrašą „garas“ — vaikas skaitė „jo nematome“ ir tuo pačiu metu
+       matė baltą debesį su vardu „garas“. Tai įtvirtindavo būtent tą
+       nuostatą („garas = baltas debesis“), kurią modulis nori griauti
+       (pasiūlymas #27241). Kiekis ir aukštis priklauso nuo šilumos, o ne
+       nuo atsitiktinumo — tą patį veiksmą vaikas gali pakartoti ir pamatyti
+       tą patį vaizdą. */
+    function mist(x, top, h, op) {
       return `<path d="M${x} ${top} q -9 -${h * 0.3} 0 -${h * 0.55} q 9 -${h * 0.28} 0 -${h * 0.55}"`
         + ` stroke="#ffffff" stroke-opacity="${op}" stroke-width="7" fill="none" stroke-linecap="round"/>`;
+    }
+
+    /* Vanduo, kuris išėjo į orą, yra garas — jo nematome. Todėl jo
+       nepiešiame kaip debesies ir nevardijame scenoje: punktyras yra žymė
+       „vanduo yra čia“, o ne regima forma. Be šios žymės išgaravęs vanduo
+       atrodytų dingęs (5–6 m. vaiko nuostata, Bar ir Galili, 1994), o su
+       balta srovele — atrodytų matomas, priešingai nei sako tekstas. */
+    function vaporMark(x, y, h, op) {
+      return `<path d="M${x} ${y} q -7 -${h * 0.34} 0 -${h * 0.52} q 7 -${h * 0.26} 0 -${h * 0.48}"`
+        + ` stroke="#6f93a8" stroke-opacity="${op}" stroke-width="2.4" fill="none"`
+        + ` stroke-linecap="round" stroke-dasharray="3 6"/>`;
     }
 
     function render() {
@@ -1106,26 +1127,21 @@ const vandensBusenos = {
           ${drops > 0 ? art.drops(-16, 1, drops, "#5fb3e0") : ""}
         </g>`;
 
-      /* Garas: be dangčio kyla aukštyn ir tolsta; su dangčiu lieka po juo. */
-      const showSteam = heat > 0 && level > 0 && !lid;
-      const steamWisps = showSteam
-        ? (heat === 2
-          ? steam(168, 140, 62, 0.62) + steam(184, 138, 74, 0.55) + steam(200, 142, 54, 0.42)
-          : steam(172, 142, 42, 0.42) + steam(192, 144, 34, 0.32))
+      /* Garas yra visur, kur šiltas vanduo liečiasi su oru, bet jo nesimato:
+         jo vardą neša kortelė po scena, readout ir balsas. Regima tampa tik
+         tai, kas atvėso — migla virš puodo, ir tik verdant. */
+      const hasVapor = heat > 0 && level > 0;
+      const showMist = hasVapor && heat === 2 && !lid;
+      const mistWisps = showMist
+        ? mist(168, 140, 62, 0.62) + mist(184, 138, 74, 0.55) + mist(200, 142, 54, 0.42)
         : "";
 
-      /* Garas yra tai, ko nesimato, todėl jis turi vardą pačioje scenoje,
-         o ne tik kortelėje po ja. */
-      const steamWord = showSteam
-        ? `<text x="208" y="122" font-family="system-ui, sans-serif" font-size="11" font-weight="700"
-                fill="#4a5560">${esc(words.steam.toLowerCase())}</text>`
-        : "";
-
-      /* Vanduo, kuris išėjo į orą: silpnos srovelės toliau nuo puodo.
-         Jos rodo, kad vanduo liko ore, o nedingo. */
+      /* Vanduo, kuris išėjo į orą: punktyras žymi, kad jis ten yra ir jo
+         nematome. Debesėlio nepiešiame — kitaip scena prieštarautų sakiniams
+         „vanduo liko ore, tik jo nematome“ (LL-34, pasiūlymas #27241). */
       const showAir = inAir > 0 && !lid;
-      const airWisps = showAir
-        ? steam(286, 132, 46, 0.22) + steam(306, 122, 36, 0.18)
+      const airMarks = showAir
+        ? vaporMark(222, 128, 46, 0.7) + vaporMark(240, 118, 36, 0.5)
         : "";
 
       svg.innerHTML = `
@@ -1152,27 +1168,29 @@ const vandensBusenos = {
         ${flames}
         ${pot}
         ${lid ? lidOn : lidOff}
-        ${steamWisps}
-        ${steamWord}
-        ${airWisps}`;
+        ${mistWisps}
+        ${airMarks}`;
 
       svg.setAttribute("aria-label",
         `Puodas ant laužo. Vandens lygis ${level} iš ${VB_MAX}. `
         + `${heat === 0 ? "Ugnis nedega" : strong ? "Ugnis stipri" : "Ugnis silpna"}. `
         + `${lid ? "Dangtis uždėtas" : "Dangtis nuimtas"}. `
+        + (showMist ? "Virš puodo matosi smulkūs lašai, o pats garas nematomas. " : "")
         + (drops > 0 ? `${words.drops} ant dangčio: ${drops}.` : ""));
 
       /* Kortelės atitinka tai, kas modelyje yra DABAR, ir skaitomos iš tų
-         pačių sąlygų, iš kurių piešiama scena (showSteam, showAir, lid) —
-         kitaip paveikslas ir užrašas galėtų išsiskirti (LL-34). Su dangčiu
-         garo nesimato, bet jis ten yra ir virsta lašais, todėl kortelė sako
-         „po dangčiu“. Išgaravus visam vandeniui, „Vanduo“ vėl rodo
-         „dar nėra“ (LL-17). */
+         pačių sąlygų, iš kurių piešiama scena (hasVapor, showAir, lid) —
+         kitaip paveikslas ir užrašas galėtų išsiskirti (LL-34). Garas yra
+         tada, kai vanduo šiltas arba verda, net jei jo nesimato; migla
+         (`showMist`) yra tik regima to garo dalis ir kortelės nekeičia.
+         Su dangčiu garo nesimato, bet jis ten yra ir virsta lašais, todėl
+         kortelė sako „po dangčiu“. Išgaravus visam vandeniui, „Vanduo“ vėl
+         rodo „dar nėra“ (LL-17). */
       const where = {
         water: level > 0 ? "yra puode" : "dar nėra",
         steam: lid
-          ? (heat > 0 && level > 0 ? "po dangčiu" : "dar nėra")
-          : (showSteam || showAir ? "ore" : "dar nėra"),
+          ? (hasVapor ? "po dangčiu" : "dar nėra")
+          : (hasVapor || showAir ? "ore" : "dar nėra"),
         ice: lid ? "ant dangčio" : "dar nėra",
       };
       for (const key of Object.keys(where)) {
@@ -1287,7 +1305,11 @@ const vandensBusenos = {
       heat = Number(e.target.value);
       msg = heat === 0
         ? "Vėsu: garų beveik nematyti."
-        : heat === 1 ? "Šilta: vanduo pradeda garuoti." : "Verdantis: garas kyla stipriai.";
+        : heat === 1
+          ? "Šilta: vanduo pradeda garuoti."
+          : (lid
+            ? "Verdantis: garas kaupiasi po dangčiu."
+            : "Verdantis: vanduo virsta garu. Virš puodo matosi smulkūs lašai.");
       render();
     });
     q("#vb-boil").addEventListener("click", boil);
@@ -1299,7 +1321,7 @@ const vandensBusenos = {
       /* Žodžiai vėl tariami naujame bandyme: vaikas, pradėjęs iš naujo,
          turi išgirsti tuos pačius vardus, o ne tylą. */
       spoke.steam = spoke.drops = spoke.ice = spoke.back = false;
-      msg = "Naujas bandymas. Pakaitink puodą ir stebėk garą.";
+      msg = "Naujas bandymas. Pakaitink puodą ir vėl stebėk vandenį.";
       render();
     });
 

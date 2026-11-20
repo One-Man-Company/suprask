@@ -168,6 +168,21 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   `scratch/pub388/probe_f.py` — prieš pataisymą `verdict.label` =
   „gyva svetainė nepasiekiama“, po — „klasės failo nėra svetainėje“.
 
+2026-11-20 (paleidimas #404): modulio failas, kurio niekas neindeksuoja, nebe tyli žalia.
+  Zondas (`scratch/pub404/probe_orphan.py`) atkartojo realų darbą: modulio failas
+  įdėtas į `content/lt/grade-01/matematika/`, `grades.json` skelbiamas skaičius
+  pakeltas 51 → 52, o `index.json` įrašo nėra. `pages.yml` kopijuoja visą
+  `content/`, tad failas svetainėje **yra**, bet naršyklė jo neprašo — modulio
+  vaikas nepasiekia, o dashboard'as skaičiuoja failą. Visi trys vartai liko žali:
+  `validate_content.py --grade 1 --strict` rc 0 (skaičius sutampa su failų
+  skaičiumi), `check_registry.py --grade 1` rc 0 (našlaitį **išspausdino**, bet
+  į `problems` neįtraukė), o šis įrankis pranešė „repo 51, gyvai 51, sutampa“ —
+  52 failai diske virto 51 moduliu abiejose pusėse. Dabar `check_grade()` skaito
+  ir failus (ne tik indeksą) ir įrašo `orphan_files`, `verdict()` turi savo
+  priežastį, o pranešimas įvardija failą. Tai LL-37 šeima (tyli riba), tik
+  riboja ne užklausą, o aibę: matuota „indeksas prieš indeksą“, o vaikui
+  svarbu „failas prieš naršyklę“.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -705,6 +720,32 @@ def check_shell() -> dict:
 
 
 
+def orphan_module_files(grade: int, listed: set[str]) -> list[dict]:
+    """Modulių failai, kurių klasės `index.json` nerodo.
+
+    Tai **ne** tas pats kaip „failas nėra svetainėje“ (#386) ir ne „failas
+    nėra repo“ (#370). Failas guli `content/lt/grade-NN/<kryptis>/`, tad
+    `pages.yml` jį nukopijuoja ir svetainėje jis yra, bet naršyklė modulio
+    ieško per `index.json` įrašą — be jo modulio vaikas nepasieks, nors
+    dashboard'as failą skaičiuoja. Būtent tai yra šio vaidmens klausimas
+    „kodėl dashboard rodo daugiau nei svetainė“ (#404).
+
+    Skaičiavimas vietinis: tinklo neprireikia, todėl jis atliekamas ir tada,
+    kai gyvo indekso perskaityti nepavyksta — failo buvimas repo yra faktas
+    ne apie svetainę.
+    """
+    gdir = CONTENT / grade_dir(grade)
+    out: list[dict] = []
+    if not gdir.exists():
+        return out
+    for path in sorted(gdir.glob("*/*.json")):
+        if path.stem in listed:
+            continue
+        out.append({"grade": grade, "id": path.stem,
+                    "file": str(path.relative_to(CONTENT))})
+    return out
+
+
 def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     gd = grade_dir(grade)
     # `repo_error` ir `live_error` yra skirtingi dalykai: pirmasis reiškia,
@@ -780,6 +821,10 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     except (OSError, json.JSONDecodeError):
         local_seq = []
     out["not_in_path"] = [m for m in local_ids if m not in local_seq]
+    # Failai, kurių indeksas nemini (#404). Skaičiuojama vietinėje pusėje, todėl
+    # ir tada, kai gyvo indekso perskaityti nepavyko: failo buvimas repo yra
+    # faktas apie repo, ne apie tinką.
+    out["orphan_files"] = orphan_module_files(grade, set(local_ids))
     out["path_differs"] = bool(live_seq) and live_seq != local_seq
     if out["path_differs"]:
         out["path_missing"] = [m for m in local_seq if m not in live_seq]
@@ -986,6 +1031,7 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "missing_on_live": merge("missing_on_live"),
         "hidden_locally": merge("hidden_locally"),
         "not_in_path": merge("not_in_path"),
+        "orphan_files": merge("orphan_files"),
         "vanished_ids": merge("vanished_ids"),
         "history_note": "; ".join(g.get("history_note", "") for g in per_grade if g.get("history_note")),
         "history_unchecked": [g["grade"] for g in per_grade if g.get("history_checked") is False],
@@ -1066,6 +1112,12 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(data['hidden_locally'])} dingo iš repo")
     if data.get("not_in_path"):
         reasons.append(f"{len(data['not_in_path'])} ne kelyje")
+    if data.get("orphan_files"):
+        # Failas yra repo ir svetainėje (pages.yml kopijuoja visą content/), bet
+        # indekso įrašo nėra — naršyklė jo neprašo. Tai ne publikavimo
+        # trūkumas, kurį ištaisytų push, ir ne ryšio klaida: trūksta įrašo
+        # `index.json` (#404).
+        reasons.append(f"{len(data['orphan_files'])} modulio failo be indekso įrašo")
     unexplained = [v for v in data.get("vanished_ids", []) if not v.get("resolved")]
     if unexplained:
         reasons.append(f"{len(unexplained)} dingęs ID (pažanga liko be modulio)")
@@ -1225,6 +1277,15 @@ def main() -> int:
               f"tai ne „0 baitų“")
     if data["not_in_path"]:
         print(f"NĖRA path.json sekoje ({len(data['not_in_path'])}): {', '.join(data['not_in_path'])}")
+    if data.get("orphan_files"):
+        # Ne „neskelbta“ ir ne „pasenęs turinys“: failas yra abiejose pusėse,
+        # tik jo niekas neindeksuoja, tad naršyklė į jį niekada nenukreips
+        # (#404). Taisymas — `index.json` įrašas (ir `path.json`), ne push.
+        print(f"FAILAS BE INDEKSO ĮRAŠO — svetainėje jis yra, bet vaikas jo "
+              f"nepasieks ({len(data['orphan_files'])}):")
+        for item in data["orphan_files"]:
+            print(f"  - {item['id']} ({item['file']}): `index.json` įrašo nėra. "
+                  f"Įrašyk modulį į indeksą arba pašalink failą.")
     accepted = [v for v in data.get("vanished_ids", []) if v.get("resolved")]
     unexplained = [v for v in data.get("vanished_ids", []) if not v.get("resolved")]
     if unexplained:

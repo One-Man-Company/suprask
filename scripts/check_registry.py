@@ -81,6 +81,15 @@ def check_grade(grade_dir: pathlib.Path, keys: set[str]) -> dict:
     files = {p.stem for p in grade_dir.glob("*/*.json")}
     listed = {m.get("id") for m in entries}
     orphans = sorted(files - listed)
+    # Našlaitis buvo tik išspausdinamas (`našlaičiai N`), bet į `problems`
+    # neįtraukiamas, todėl rc liko 0. #404 zondas: failas + sutvarkytas
+    # `grades.json` skaičius → `validate_content.py` 0 klaidų, šis įrankis
+    # „našlaičiai 1 / PROBLEMŲ: 0“. Įrankis, kuris defektą mato ir jo
+    # neįvardija, yra tyli žalia (LL-37/LL-10): `pages.yml` kopijuoja visą
+    # `content/`, tad failas svetainėje yra, bet naršyklė modulio ieško per
+    # `index.json` ir vaikas jo nepasieks.
+    for o in orphans:
+        problems.append(f"NAŠLAITIS: {o}.json yra, bet index.json įrašo nėra")
 
     path_file = grade_dir / "path.json"
     path_ids: list[str] = []

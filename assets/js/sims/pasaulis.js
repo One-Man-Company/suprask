@@ -690,11 +690,20 @@ const gyvunuGrupes = {
     const left = () => animals.filter((a) => !a.done).length;
     const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
 
+    /* `#sim-stage` yra grid su `place-items:center`, todėl vaikas išsitempia
+       iki savo min-content, o `min-width:auto` neleidžia jam susitraukti
+       (LL-55). Todėl blokas turi `min-width:0` ir lubas nuo TĖVO, o ne tik
+       `34rem`: 200 % tekste (32 px šaknis) @360 px dvi fiksuotos dėžių
+       kolonos likdavo 112,4 px, o ilgiausias žodis „susiranda“ — 162,4 px,
+       tad `<strong>` dešinys kraštas siekė 363 px (dokumentas slinko +3 px).
+       `auto-fit` su `min(100%, 9rem)` kolonų skaičių ima iš turimos vietos:
+       16 px šaknyje lieka tos pačios dvi kolonos (145,2 / 160,2 / 268 px),
+       32 px šaknyje dėžės sustoja viena po kitos. */
     stage.innerHTML = `
-      <div style="width:100%;max-width:34rem;margin:0 auto">
+      <div style="width:100%;min-width:0;max-width:min(34rem,100%);margin:0 auto">
         <div id="gg-tray" role="group" aria-label="Gyvūnai"
              style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;padding:.6rem;border-radius:var(--r-m);background:color-mix(in srgb, var(--mint) 10%, var(--paper))"></div>
-        <div id="gg-bins" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin-top:.8rem"></div>
+        <div id="gg-bins" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));gap:.5rem;margin-top:.8rem"></div>
         <div id="gg-winter" style="display:none;margin-top:.8rem;padding:.6rem .7rem;border-radius:var(--r-m);background:var(--paper-2);border:2px solid var(--line)"></div>
         <p class="sim-note" id="gg-msg" tabindex="-1"></p>
       </div>`;
@@ -776,8 +785,8 @@ const gyvunuGrupes = {
         + "background:var(--paper-2);cursor:pointer;font:inherit;color:inherit;min-height:9.5rem";
       bin.innerHTML =
         `<span aria-hidden="true" style="font-size:1.6rem;line-height:1.1">${b.emoji}</span>`
-        + `<strong style="font-size:.92rem;line-height:1.15;text-align:center;font-family:var(--font-head)">${b.label}</strong>`
-        + `<span class="group" style="display:none;font-size:.8rem;line-height:1.15;font-weight:700;text-align:center;color:var(--ink-soft)"></span>`
+        + `<strong style="max-width:100%;overflow-wrap:break-word;font-size:.92rem;line-height:1.15;text-align:center;font-family:var(--font-head)">${b.label}</strong>`
+        + `<span class="group" style="display:none;max-width:100%;overflow-wrap:break-word;font-size:.8rem;line-height:1.15;font-weight:700;text-align:center;color:var(--ink-soft)"></span>`
         + `<span class="items" aria-hidden="true" style="display:flex;gap:2px;flex-wrap:wrap;justify-content:center;min-height:1.6rem;font-size:1.15rem;line-height:1.1"></span>`;
 
       const holder = bin.querySelector(".items");
@@ -3555,7 +3564,7 @@ const ismestoDaiktoKelias = {
         <div id="idk-guess" role="group" aria-label="Spėjimas"
              style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;min-width:0"></div>
         <div id="idk-actions" role="group" aria-label="Ką darysi su daiktu"
-             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.4rem;min-width:0"></div>
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:.4rem;min-width:0"></div>
         <div style="display:flex;gap:.45rem;justify-content:center;flex-wrap:wrap;min-width:0">
           <button type="button" class="btn secondary" id="idk-undo"
                   style="min-height:48px;flex:1 1 9rem;min-width:0">Grįžk vieną</button>

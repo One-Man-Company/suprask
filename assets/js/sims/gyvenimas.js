@@ -81,24 +81,33 @@ const dovanIrNoras = {
     const seen = new Set();
     let reported = false;
 
+    /* `1fr 1fr` yra `minmax(auto,1fr)`: takelio minimumas — vaiko min-content.
+       Kol kortelėse buvo tik „kamuolys“ ir „knyga“, tai tilpo; prie 200 %
+       teksto (32 px šaknis) @360 px žodis „Pakeisk“ vienas yra ~103 px, o
+       `#dn-want` min-content — 195 px, todėl takelis išsitiesė iki 203 px,
+       dvi kolonos sudarė 425 px ir dokumentas slinko +125 px (LL-55/LL-70).
+       Todėl takelis rašomas `minmax(0,1fr)` (gali trauktis, ne tik augti), o
+       kiekvienas tinklelio vaikas turi `min-width:0`. Žodžiai laužomi tik
+       tada, kai kitaip neišsitektų (`overflow-wrap:anywhere`), o ne iš anksto:
+       16 px šaknyje matmenys nepakito — kolonos lieka 145/160 px kaip buvusios. */
     stage.innerHTML = `
-      <div style="width:100%;max-width:26rem">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.45rem">
+      <div style="width:100%;min-width:0;max-width:26rem">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.6rem;margin-bottom:.45rem">
           <div style="display:grid;justify-items:center;gap:.2rem;min-width:0">
-            <span style="font-weight:800;font-size:.95rem;color:var(--ink-soft)">${varying.name}</span>
+            <span style="font-weight:800;font-size:.95rem;color:var(--ink-soft);max-width:100%;overflow-wrap:anywhere">${varying.name}</span>
             <button type="button" id="dn-want"
-              style="width:100%;min-height:3.8rem;padding:.4rem .3rem;border:2px dashed var(--ink-soft);border-radius:1rem;background:var(--paper);display:grid;justify-items:center;gap:.1rem;font:inherit;font-weight:800;color:var(--ink);cursor:pointer">
+              style="width:100%;min-width:0;min-height:3.8rem;padding:.4rem .3rem;border:2px dashed var(--ink-soft);border-radius:1rem;background:var(--paper);display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:.1rem;font:inherit;font-weight:800;color:var(--ink);cursor:pointer">
               <span id="dn-want-icon" aria-hidden="true">${wantIcon(wants)}</span>
-              <span id="dn-want-word" style="font-size:1rem">${wants}</span>
-              <span style="font-size:.8rem;font-weight:700;color:var(--ink-soft)">Pakeisk norą</span>
+              <span id="dn-want-word" style="font-size:1rem;max-width:100%;overflow-wrap:anywhere">${wants}</span>
+              <span style="font-size:.8rem;font-weight:700;color:var(--ink-soft);max-width:100%;overflow-wrap:anywhere">Pakeisk norą</span>
             </button>
           </div>
           <div style="display:grid;justify-items:center;gap:.2rem;min-width:0">
-            <span style="font-weight:800;font-size:.95rem;color:var(--ink-soft)">${fixed.name}</span>
-            <div style="width:100%;min-height:3.8rem;padding:.4rem .3rem;border:2px solid var(--line);border-radius:1rem;background:var(--paper-2);display:grid;justify-items:center;gap:.1rem;font-weight:800;color:var(--ink)">
+            <span style="font-weight:800;font-size:.95rem;color:var(--ink-soft);max-width:100%;overflow-wrap:anywhere">${fixed.name}</span>
+            <div style="width:100%;min-width:0;min-height:3.8rem;padding:.4rem .3rem;border:2px solid var(--line);border-radius:1rem;background:var(--paper-2);display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:.1rem;font-weight:800;color:var(--ink)">
               <span aria-hidden="true">${wantIcon(fixed.wants)}</span>
-              <span style="font-size:1rem">${fixed.wants}</span>
-              <span style="font-size:.8rem;font-weight:700;color:var(--ink-soft)">Noras nesikeičia</span>
+              <span style="font-size:1rem;max-width:100%;overflow-wrap:anywhere">${fixed.wants}</span>
+              <span style="font-size:.8rem;font-weight:700;color:var(--ink-soft);max-width:100%;overflow-wrap:anywhere">Noras nesikeičia</span>
             </div>
           </div>
         </div>

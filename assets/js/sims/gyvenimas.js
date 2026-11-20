@@ -89,7 +89,10 @@ const dovanIrNoras = {
        Todėl takelis rašomas `minmax(0,1fr)` (gali trauktis, ne tik augti), o
        kiekvienas tinklelio vaikas turi `min-width:0`. Žodžiai laužomi tik
        tada, kai kitaip neišsitektų (`overflow-wrap:anywhere`), o ne iš anksto:
-       16 px šaknyje matmenys nepakito — kolonos lieka 145/160 px kaip buvusios. */
+       16 px šaknyje matmenys nepakito — kolonos lieka 145/160 px kaip buvusios.
+       Ta pati taisyklė galioja ir jausmų eilutei žemiau (`#dn-r-mood`,
+       `#dn-i-mood`): žodis „nusiminęs“ prie 200 % yra 187 px, tad ir ten
+       takelis rašomas `minmax(0,1fr)`. */
     stage.innerHTML = `
       <div style="width:100%;min-width:0;max-width:26rem">
         <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.6rem;margin-bottom:.45rem">
@@ -115,9 +118,9 @@ const dovanIrNoras = {
         <svg id="dn-scene" viewBox="0 0 320 210" width="100%" role="img" style="display:block"
              aria-label="Scena"></svg>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;text-align:center;margin-top:.35rem">
-          <div id="dn-r-mood" style="font-weight:800;min-height:1.6rem">—</div>
-          <div id="dn-i-mood" style="font-weight:800;min-height:1.6rem">—</div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.6rem;text-align:center;margin-top:.35rem">
+          <div id="dn-r-mood" style="font-weight:800;min-height:1.6rem;min-width:0;max-width:100%;overflow-wrap:anywhere">—</div>
+          <div id="dn-i-mood" style="font-weight:800;min-height:1.6rem;min-width:0;max-width:100%;overflow-wrap:anywhere">—</div>
         </div>
 
         <p id="dn-compare" hidden
@@ -178,7 +181,11 @@ const dovanIrNoras = {
         "aria-label",
         open
           ? `${varying.name} norėjo ${gen(wants)}. ${fixed.name} norėjo ${gen(fixed.wants)}. Dėžutėje ${gift}.`
-          : `Dėžutė uždaryta. ${varying.name} nori ${wants}. ${fixed.name} nori ${fixed.wants}.`
+          /* „nori“ reikalauja kilmininko, kaip ir „norėjo“: be `gen()` čia
+             skambėjo „Rėjus nori kamuolys“ — tas pats žodis, kaip kortelėje,
+             bet netaisyklingoje formoje. `GENITIVE` žodynas šiame faile jau
+             yra, tad naudojamas ir uždarytos dėžutės būsenoje. */
+          : `Dėžutė uždaryta. ${varying.name} nori ${gen(wants)}. ${fixed.name} nori ${gen(fixed.wants)}.`
       );
 
       let text;

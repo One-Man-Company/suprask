@@ -1,0 +1,19 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 403,
+  "created": "2026-11-20T11:38:00+02:00",
+  "type": "ux",
+  "title": "200 % tekste 7 simuliacijos vis dar išsikiša iš savo dėžės, nors dokumentas neslenka",
+  "body": "Šiame paleidime sutvarkius `01-dovana-ir-noras` (du `1fr 1fr` tinkleliai → `minmax(0,1fr)`; dokumento slinktis @360/32 px 125 px → 0, 120 matavimų be defektų), bendras 1 klasės 200 % zondas (360 px, 32 px šaknis, visi valdikliai po vieną) liko su 167 įrašais 19 modulių. Didžioji dalis (≈63) yra +0,7 px SVG formų pakraštys — tai matavimo triukšmas, ne defektas. Realūs, trijų dydžių matavimu patvirtinti likučiai yra šie: `04-kaip-zmones-sveikinasi` (scena +54,8 px, paskui +16,6), `07-balsiai-ir-priebalsiai` (`#ok-tiles` plytelės 128,3 px pločio dviejų kolonų tinklelyje; **+4,2 px už `.sim-shell` kortelės**, t. y. matomas sulaužytas rėmelis), `05-desimtukas` (+23,7…+56,8), `29-atimtis-per-desimti` (+23,9), `23-piktograma-ir-stulpelis` (+27,1), `03-sakinio-zodziai` (+14,9), `27-skaicius-ir-skaitmuo` (+11,3), `30-skaiciavimas-atgal-per-desimti`, `21-kas-sukure-dailka`, `01-elektros-grandine`, `01-garso-aukstis`, `06-garso-trukme`, `01-susitarimas-ir-zaidimas`. Keturi iš jų (`03`, `27`, `04`, `21`) išsikiša iš `#sim-stage` dėžės, bet lieka kortelės viduje — vaikui tai atrodo kaip nesucentruotas, į dešinę pasislinkęs blokas (LL-30), o ne kaip slenkantis puslapis, todėl joks vartas to nemato. Siūloma juos taisyti po vieną tuo pačiu mechanizmu, kuris jau įrodytas (tinklelio takelis `minmax(0,1fr)`, vaikui `min-width:0`, `max-width` nuo tėvo, o `overflow-wrap` tik kaip krašto apsauga), ir kiekvieną matuoti būsenų zondu, nes pradinė būsena telpa (nauja pamoka LL-127). Tai ne kosmetika: `07-balsiai-ir-priebalsiai` mygtukai 128,3 px pločio tik todėl, kad 32 px šaknyje du stulpeliai nebetelpa į 240,8 px, ir vaikas mato turinį už kortelės rėmelio.",
+  "target": "assets/js/sims/calba.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "probe_click_200.py (Chromium chromium-1255, 360 px, 32 px šaknis, 51 maršrutas, visi #sim-stage/#sim-controls mygtukai po vieną, 14 žingsnių): po pataisos 167 įrašai 19 modulių, dok slinkčių 0 (prieš: 1 įrašas `dok +125` modulyje 01-dovana-ir-noras)",
+    "verify_spill.py (tas pats Chromium, 360 px, 32 px šaknis): 07-balsiai-ir-priebalsiai — stage w=241 right=300, shell w=296 right=328, `div`/`#ok-tiles`/`button` w=128,3, overShell=+4,2 px, doc=0; 03-sakinio-zodziai — w=255,8, overStage=+14,9, overShell=−12,7; 27-skaicius-ir-skaitmuo — w=113,8, overStage=+11,3, overShell=−16,3",
+    "assets/js/sims/calba.js:1486 — `grid-template-columns:1fr 1fr` (tas pats `minmax(auto,1fr)` spąstai, dėl kurių 01-dovana-ir-noras slinko +125 px)",
+    "assets/js/sims/gyvenimas.js:118 — šiame paleidime pataisytas antrasis `1fr 1fr` (jausmų eilutė), pirmasis — :86; abu dabar `minmax(0,1fr)`",
+    "research/wiki/guidelines/pamokos.md — LL-127 (nauja, šis paleidimas): pradinė būsena telpa, būsena po paspaudimo — ne",
+    "docs/KURINIO-STANDARTAS.md §4.6 — „Veikia 360 px pločio ekrane; lietimo taikiniai ≥ 48 px“"
+  ]
+}

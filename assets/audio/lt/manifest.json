@@ -551,6 +551,10 @@
   "n": "n/de4fcca618546df9-e0d8c979.mp3",
   "s": "s/de4fcca618546df9-f584fb9d.mp3"
  },
+ "Abiejose krūvose yra garsų, kuriuos gali tempti. Ilgis nepasako, kuri tai krūva.": {
+  "n": "n/4fda2a8ac2744188-abef7bd7.mp3",
+  "s": "s/4fda2a8ac2744188-bd821a6b.mp3"
+ },
  "Abu kartu": {
   "n": "n/33b9b9c23825b7b4-3ed6d89a.mp3",
   "s": "s/33b9b9c23825b7b4-023c3b5f.mp3"
@@ -1427,6 +1431,10 @@
   "n": "n/c90fb2c84132f82d-d754e5bb.mp3",
   "s": "s/c90fb2c84132f82d-6a39fd21.mp3"
  },
+ "Laikyk garsą ir žiūrėk, ar oras nueis iki galo.": {
+  "n": "n/d8963ad5dde95c56-2c1955ef.mp3",
+  "s": "s/d8963ad5dde95c56-5499703b.mp3"
+ },
  "Laimėjai": {
   "n": "n/c91cd8edce6c0d11-1682c91b.mp3",
   "s": "s/c91cd8edce6c0d11-be9a0edb.mp3"
@@ -1583,6 +1591,14 @@
   "n": "n/c4694f2e93d5c4e7-2a2461c3.mp3",
   "s": "s/c4694f2e93d5c4e7-9f069b13.mp3"
  },
+ "Oras nuėjo iki galo. Kelyje nieko nebuvo.": {
+  "n": "n/e0f7ab218c92635a-aa7d7a5a.mp3",
+  "s": "s/e0f7ab218c92635a-f2f3e5cb.mp3"
+ },
+ "Oras sustojo. Kelyje yra kliūtis.": {
+  "n": "n/371434ed72ca053e-c731d4bc.mp3",
+  "s": "s/371434ed72ca053e-e005f725.mp3"
+ },
  "P": {
   "n": "n/5c62e091b8c0565f-5df0e1a2.mp3",
   "s": "s/5c62e091b8c0565f-89285630.mp3"
@@ -1598,6 +1614,10 @@
  "Padėk plyteles į dvi eiles: ilgas garsas ir trumpas garsas.": {
   "n": "n/42b40a7aafe456c5-7d476d59.mp3",
   "s": "s/42b40a7aafe456c5-8944593c.mp3"
+ },
+ "Padėk plytelę į krūvą. Tada imk kitą.": {
+  "n": "n/e2f5151376275244-c8534375.mp3",
+  "s": "s/e2f5151376275244-9ed496aa.mp3"
  },
  "Pagalvok ir pasakyk": {
   "n": "n/7d0a64f2091b33af-346fa946.mp3",
@@ -1658,6 +1678,10 @@
  "Pasirink mažesnį skaičių.": {
   "n": "n/051aef55b356262b-12107e97.mp3",
   "s": "s/051aef55b356262b-8981a3da.mp3"
+ },
+ "Pasirink plytelę. Tada spėk, kur orui kelyje yra kliūtis.": {
+  "n": "n/434bbeff547d4cbf-8b284f36.mp3",
+  "s": "s/434bbeff547d4cbf-76a408cf.mp3"
  },
  "Pasirink, kiek dešimčių ir kiek vienetų.": {
   "n": "n/9d8add673b29f792-5c13bff8.mp3",
@@ -2162,6 +2186,10 @@
  "Tam": {
   "n": "n/085baa1d3c064c31-23510c12.mp3",
   "s": "s/085baa1d3c064c31-6022b5d4.mp3"
+ },
+ "Tark garsą balsu, o delnu jausk orą prie lūpų.": {
+  "n": "n/c53f46eb62435bc2-6fc2d605.mp3",
+  "s": "s/c53f46eb62435bc2-01a38771.mp3"
  },
  "Tark garsą ir laikyk, kol pildosi juosta.": {
   "n": "n/f9715849f99731a8-84705dfe.mp3",
@@ -2838,6 +2866,10 @@
  "Ši dėžutė jau pasverta. Pasirink kitą.": {
   "n": "n/71197fbe692b362e-6c8c2c01.mp3",
   "s": "s/71197fbe692b362e-9308edb7.mp3"
+ },
+ "Ši plytelė ne savo krūvoje. Pažiūrėk, ką rodė bandymas.": {
+  "n": "n/12d7fec90973ad46-516bb3fa.mp3",
+  "s": "s/12d7fec90973ad46-14d53011.mp3"
  },
  "Ši seka veda ne prie vėliavos. Viena komanda klaidinga.": {
   "n": "n/6d6f88831dc26d38-c2d34fc3.mp3",

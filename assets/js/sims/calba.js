@@ -1600,6 +1600,433 @@ const garsoJuosta = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 7. Oro kelias: kliūtis ar laisvas kelias                            */
+/* ------------------------------------------------------------------ */
+/* Modelis turi VIENĄ kintamąjį (garso kliūtį burnoje) ir du
+   NEPRIKLAOMUS požymius, iš kurių visas darbas ir kyla:
+     `obstacle` — ar orui kelyje kas nors užstoja (lūpos, dantys, liežuvis);
+     `long`     — ar garsą galima tempti.
+   Būtent todėl „m“ ir „s“ gali būti ilgi IR turėti kliūtį. Tai
+   prieštaraujantis pavyzdys, be kurio modelis neįrodytų nieko (LL-28), o
+   klaidinga nuostata „ką galiu tempti, tas balsis“ liktų nepaliesta.
+   Ekrane kliūtis yra pertvara tarp oro langelių: laisvas kelias užpildo
+   visus šešis, kliūtis sustabdo pusėje. Prieš bandymą pertvara rodo „?“, o
+   ne savo padėtį — kitaip vaikas perskaitytų atsakymą prieš spėjimą
+   (LL-15). Po bandymo ji arba išnyksta (kelias laisvas), arba pastorėja
+   (kliūtis); tekstas po ja pasako, kuri kūno dalis užstoja kelią, todėl
+   forma nėra vienintelis informacijos nešėjas.
+   Pavieniai garsai sąmoningai NETARIAMI: sintezatorius „s“ perskaitytų
+   kaip raidės vardą „es“ ir sukurtų būtent tą painiavą, kurią modelis
+   griauna. Tariami tik sakiniai iš `sim.config.sentences`, o garsą taria
+   pats vaikas — delnu prie lūpų arba prieš veidrodį.
+   Spėjimas yra vienas vienam garsui, prieš bandymą, ir lieka ekrane kaip
+   įrašas „Tu spėjai… Įvyko…“, niekada nevadinamas klaida (P3).
+   Pažanga žymima tik tada, kai visos plytelės savo krūvose (§4, LL-29):
+   viena teisingai padėta plytelė dar nėra įveiktas modelis. */
+
+const OK_SLOTS = 6;
+const OK_TICK = 170;
+
+const oroKelias = {
+  mount({ stage, controls, api, config }) {
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    const raw = Array.isArray(config.sounds) ? config.sounds : [];
+    const parts = config.parts && typeof config.parts === "object" ? config.parts : {};
+    const piles = config.piles && typeof config.piles === "object" ? config.piles : {};
+    const S = config.sentences && typeof config.sentences === "object" ? config.sentences : {};
+    const PART_KEYS = ["lips", "teeth", "tongue"];
+    const OBSTACLES = new Set(["none"].concat(PART_KEYS));
+    const REQUIRED = ["start", "pick", "test", "free", "blocked", "place", "wrong", "done"];
+
+    const sounds = raw.map((s) => ({
+      sound: String((s && s.sound) ?? "").trim(),
+      obstacle: String((s && s.obstacle) ?? "").trim(),
+      long: Boolean(s && s.long === true),
+    }));
+
+    let invalid = raw.length < 4;
+    raw.forEach((s) => {
+      if (!s || typeof s.sound !== "string" || !s.sound.trim()) invalid = true;
+      if (!s || typeof s.obstacle !== "string" || !OBSTACLES.has(s.obstacle)) invalid = true;
+      if (!s || typeof s.long !== "boolean") invalid = true;
+    });
+    const missing = REQUIRED.filter((k) => !String(S[k] ?? "").trim());
+    if (!String(piles.free ?? "").trim()) missing.push("piles.free");
+    if (!String(piles.blocked ?? "").trim()) missing.push("piles.blocked");
+    PART_KEYS.forEach((k) => { if (!String(parts[k] ?? "").trim()) missing.push(`parts.${k}`); });
+
+    if (invalid || missing.length) {
+      console.error("[oro-kelias] reikia bent 4 garsų su „sound“, „obstacle“, „long“ ir tekstų:", REQUIRED.join(", "), missing, config);
+      stage.innerHTML = `<p class="error-box">Garsų duomenys nesuderinti.</p>`;
+      controls.innerHTML = "";
+      api.readout("Garsų duomenys nesuderinti.");
+      api.note("");
+      return () => {};
+    }
+
+    const reduced = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const spoken = new Set();
+    const tested = new Map();      // plytelė → ar kelias buvo laisvas
+    const guessed = new Map();     // plytelė → vaiko spėjimas „free“ | „blocked“
+    const placement = new Map();   // plytelė → „free“ | „blocked“
+    const marked = new Set();      // po „Palygink“ ne savo krūvoje
+    let picked = -1;
+    let timer = null;
+    let testing = false;
+    let reported = false;
+
+    function say(key) {
+      const text = String(S[key] ?? "").trim();
+      if (!text || spoken.has(key)) return;
+      spoken.add(key);
+      api.speak(text, { rate: .85 });
+    }
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:34rem;margin:0 auto">
+        <p style="margin:0 0 .5rem;font-family:var(--font-head);font-weight:900;font-size:clamp(1rem,3.8vw,1.15rem)">Pasirink plytelę, tada spausk „Tark ir pūsk“.</p>
+        <div id="ok-tiles" role="group" aria-label="Garsų plytelės"
+          style="display:grid;grid-template-columns:repeat(auto-fit,minmax(3.2rem,1fr));gap:.5rem"></div>
+        <div style="margin-top:.8rem;padding:.6rem .7rem;border:2px solid var(--line);border-radius:var(--r-s);background:var(--paper)">
+          <p style="margin:0;font-size:clamp(.98rem,3.6vw,1.08rem);font-weight:800">Ar šiam garsui kelyje kas nors užstoja?</p>
+          <div style="display:flex;gap:.5rem;margin-top:.4rem;flex-wrap:wrap">
+            <button class="btn secondary" type="button" data-guess="free" aria-pressed="false" style="min-height:48px">${esc(piles.free)}</button>
+            <button class="btn secondary" type="button" data-guess="blocked" aria-pressed="false" style="min-height:48px">${esc(piles.blocked)}</button>
+          </div>
+          <p id="ok-trace" role="status" style="margin:.4rem 0 0;font-size:clamp(.94rem,3.4vw,1.04rem);min-height:1.4rem"></p>
+          <div id="ok-path" aria-hidden="true" style="display:grid;grid-template-columns:1fr 1fr 1fr auto 1fr 1fr 1fr;gap:3px;align-items:center;height:38px;margin-top:.45rem">
+            ${[0, 1, 2].map((k) => `<span data-slot="${k}" style="display:block;height:14px;border-radius:999px;background:var(--line)"></span>`).join("")}
+            <span id="ok-gate"></span>
+            ${[3, 4, 5].map((k) => `<span data-slot="${k}" style="display:block;height:14px;border-radius:999px;background:var(--line)"></span>`).join("")}
+          </div>
+          <p id="ok-under" style="margin:.3rem 0 0;font-size:var(--fs-s);color:var(--ink-soft);min-height:1.5rem"></p>
+        </div>
+        <div style="margin-top:.8rem">
+          <p style="margin:0 0 .35rem;font-size:clamp(.95rem,3.4vw,1.05rem)">Pasirink plytelę, tada spausk krūvą.</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:.6rem">
+            <div>
+              <button class="btn secondary" type="button" data-box="free"
+                aria-label="Dėti pasirinktą plytelę į krūvą ${esc(piles.free)}"
+                style="width:100%;min-height:64px">${esc(piles.free)}</button>
+              <div id="ok-free" role="group" aria-label="Krūva ${esc(piles.free)}"
+                style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem;min-height:2rem"></div>
+            </div>
+            <div>
+              <button class="btn secondary" type="button" data-box="blocked"
+                aria-label="Dėti pasirinktą plytelę į krūvą ${esc(piles.blocked)}"
+                style="width:100%;min-height:64px">${esc(piles.blocked)}</button>
+              <div id="ok-blocked" role="group" aria-label="Krūva ${esc(piles.blocked)}"
+                style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem;min-height:2rem"></div>
+            </div>
+          </div>
+          <button class="btn" type="button" id="ok-check" style="width:100%;min-height:48px;margin-top:.7rem">Palygink</button>
+          <p id="ok-verdict" role="status" style="margin:.5rem 0 0;font-size:clamp(.95rem,3.4vw,1.06rem);min-height:2.6rem"></p>
+        </div>
+      </div>`;
+    controls.innerHTML = `
+      <button class="btn" id="ok-blow" type="button" style="min-height:56px">Tark ir pūsk</button>
+      <button class="btn secondary" id="ok-reset" type="button" style="min-height:48px">Iš naujo</button>`;
+
+    const tilesEl = stage.querySelector("#ok-tiles");
+    const freeEl = stage.querySelector("#ok-free");
+    const blockedEl = stage.querySelector("#ok-blocked");
+    const gateEl = stage.querySelector("#ok-gate");
+    const underEl = stage.querySelector("#ok-under");
+    const traceEl = stage.querySelector("#ok-trace");
+    const verdictEl = stage.querySelector("#ok-verdict");
+    const slots = [...stage.querySelectorAll("[data-slot]")].sort((a, b) => Number(a.dataset.slot) - Number(b.dataset.slot));
+    const blowBtn = controls.querySelector("#ok-blow");
+
+    function fill(n) {
+      slots.forEach((c, i) => { c.style.background = i < n ? "var(--accent)" : "var(--line)"; });
+    }
+
+    /* Trys pertvaros būsenos: „unknown“ — dar nebandyta (klausimas), „free“ —
+       kelias atviras (pertvara išnyksta), „blocked“ — kliūtis (pertvara
+       pastorėja). Spalva niekada nėra vienintelė žinia: po ja esantis tekstas
+       pasako tą patį žodžiais (standartas §4.4). */
+    function setGate(state) {
+      gateEl.textContent = state === "unknown" ? "?" : "";
+      gateEl.style.display = "block";
+      gateEl.style.boxSizing = "border-box";
+      gateEl.style.margin = "0 .15rem";
+      gateEl.style.borderRadius = "4px";
+      if (state === "blocked") {
+        gateEl.style.width = ".5rem";
+        gateEl.style.height = "30px";
+        gateEl.style.border = "0";
+        gateEl.style.background = "var(--ink-soft)";
+      } else if (state === "free") {
+        gateEl.style.width = "0";
+        gateEl.style.height = "0";
+        gateEl.style.border = "0";
+        gateEl.style.background = "transparent";
+        gateEl.style.margin = "0";
+      } else {
+        gateEl.style.width = "1.4rem";
+        gateEl.style.height = "24px";
+        gateEl.style.border = "2px dashed var(--ink-faint)";
+        gateEl.style.background = "transparent";
+        gateEl.style.color = "var(--ink-soft)";
+        gateEl.style.fontSize = ".72rem";
+        gateEl.style.textAlign = "center";
+        gateEl.style.lineHeight = "20px";
+      }
+    }
+
+    function tileMarkup(i, inBox) {
+      const s = sounds[i];
+      return `<button class="btn secondary" type="button" ${inBox ? `data-out="${i}"` : `data-tile="${i}"`}
+        aria-label="${inBox ? `Plytelė ${esc(s.sound)}, grąžinti į sąrašą` : `Plytelė ${esc(s.sound)}`}"
+        aria-pressed="${i === picked ? "true" : "false"}"
+        style="${i === picked ? "border-color:var(--accent);" : ""}min-height:56px;min-width:3.2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.05rem;padding:.25rem .4rem">
+        <span style="font-family:var(--font-head);font-weight:900;font-size:clamp(1.15rem,4.6vw,1.5rem);line-height:1">${esc(s.sound)}</span>
+        ${inBox && marked.has(i) ? `<span style="font-size:.66rem;line-height:1.1;color:var(--ink-soft)">ne čia</span>` : ""}
+      </button>`;
+    }
+
+    function renderTiles() {
+      const ids = sounds.map((_, i) => i).filter((i) => !placement.has(i));
+      tilesEl.innerHTML = ids.map((i) => tileMarkup(i, false)).join("");
+      tilesEl.querySelectorAll("[data-tile]").forEach((b) => {
+        b.addEventListener("click", () => pick(Number(b.dataset.tile)));
+      });
+    }
+
+    function renderBoxes() {
+      [["free", freeEl], ["blocked", blockedEl]].forEach(([grp, host]) => {
+        const ids = sounds.map((_, i) => i).filter((i) => placement.get(i) === grp);
+        host.innerHTML = ids.length
+          ? ids.map((i) => tileMarkup(i, true)).join("")
+          : `<span style="font-size:var(--fs-s);color:var(--ink-soft)">tuščia</span>`;
+        host.querySelectorAll("[data-out]").forEach((b) => {
+          b.addEventListener("click", () => takeBack(Number(b.dataset.out)));
+        });
+      });
+    }
+
+    function cancelTest() {
+      if (timer) { clearTimeout(timer); timer = null; }
+      testing = false;
+      fill(0);
+      setGate("unknown");
+      underEl.textContent = "";
+      traceEl.textContent = "";
+    }
+
+    function pick(i) {
+      if (testing) cancelTest();
+      picked = i;
+      const s = sounds[i];
+      renderTiles();
+      renderBoxes();
+      api.readout(`Plytelė ${s.sound}. Tark garsą balsu.`);
+      api.note(guessed.has(i)
+        ? "Šį garsą jau bandei. Spausk krūvą arba iš naujo „Tark ir pūsk“."
+        : "Pirmiau spėk, ar orui kelyje kas nors užstoja. Tada spausk „Tark ir pūsk“ ir tark garsą balsu.");
+      if (!guessed.has(i)) say("pick");
+    }
+
+    function takeBack(i) {
+      placement.delete(i);
+      marked.clear();
+      verdictEl.textContent = "";
+      renderTiles();
+      renderBoxes();
+      const back = tilesEl.querySelector(`[data-tile="${i}"]`);
+      if (back) back.focus({ preventScroll: true });
+      api.readout(`Plytelė ${sounds[i].sound} grįžo į sąrašą.`);
+    }
+
+    function plural(n) {
+      if (n === 1) return "Viena plytelė";
+      if (n % 10 >= 2 && n % 10 <= 9 && !(n % 100 >= 11 && n % 100 <= 19)) return `${n} plytelės`;
+      return `${n} plytelių`;
+    }
+
+    function runTest() {
+      if (picked < 0) {
+        api.readout("Pirmiausia pasirink plytelę.");
+        api.note("Pasirink plytelę iš sąrašo, tada spausk „Tark ir pūsk“.");
+        const first = tilesEl.querySelector("[data-tile]");
+        if (first) first.focus({ preventScroll: true });
+        return;
+      }
+      if (testing) return;
+      const s = sounds[picked];
+      const free = s.obstacle === "none";
+      const target = free ? OK_SLOTS : 3;
+
+      testing = true;
+      setGate("unknown");
+      fill(0);
+      underEl.textContent = "";
+      traceEl.textContent = "";
+      api.readout(`Garsas ${s.sound}. Oras eina per burną.`);
+      say("test");
+
+      const finish = () => {
+        testing = false;
+        if (timer) { clearTimeout(timer); timer = null; }
+        fill(target);
+        setGate(free ? "free" : "blocked");
+        tested.set(picked, free);
+        underEl.textContent = free
+          ? "Oras ėjo iki galo — kelyje nieko nebuvo."
+          : `Oras sustojo: kelią užstoja ${parts[s.obstacle]}.`;
+        const guess = guessed.get(picked);
+        traceEl.textContent = guess
+          ? `Tu spėjai: „${piles[guess]}“. Įvyko: „${piles[free ? "free" : "blocked"]}“.`
+          : `Nespėjai. Įvyko: „${piles[free ? "free" : "blocked"]}“.`;
+        api.readout(free ? "Oras ėjo iki galo." : "Oras sustojo ties kliūtimi.");
+        api.note("Dabar pasirink plytelę ir spausk krūvą, į kurią ją dedi.");
+        say(free ? "free" : "blocked");
+      };
+
+      if (reduced) { finish(); return; }
+      let n = 0;
+      const step = () => {
+        n += 1;
+        fill(n);
+        if (n >= target) { finish(); return; }
+        timer = setTimeout(step, OK_TICK);
+      };
+      timer = setTimeout(step, OK_TICK);
+    }
+
+    function place(grp) {
+      if (picked < 0) {
+        api.readout("Pirmiausia pasirink plytelę.");
+        api.note("Pasirink plytelę iš sąrašo viršuje, tada spausk krūvą.");
+        return;
+      }
+      placement.set(picked, grp);
+      marked.clear();
+      verdictEl.textContent = "";
+      const idx = picked;
+      const s = sounds[idx];
+      picked = -1;
+      renderTiles();
+      renderBoxes();
+      api.readout(`Plytelė ${s.sound} — krūvoje „${piles[grp]}“.`);
+      api.note(tested.has(idx)
+        ? "Jei persigalvojai, spausk plytelę krūvoje — ji grįš į sąrašą."
+        : "Šios plytelės dar nebandei. Gali pirmiau pasirinkti ją ir spausti „Tark ir pūsk“.");
+      const next = tilesEl.querySelector("[data-tile]");
+      if (next) next.focus({ preventScroll: true });
+      say("place");
+    }
+
+    function compare() {
+      const unplaced = sounds.map((_, i) => i).filter((i) => !placement.has(i));
+      if (unplaced.length) {
+        verdictEl.textContent = `Dar ne visos plytelės krūvose: liko ${unplaced.length} iš ${sounds.length}.`;
+        api.readout(`Dar liko ${unplaced.length}.`);
+        api.note("Padėk visas plyteles, tada spausk „Palygink“.");
+        return;
+      }
+      const wrong = sounds.map((_, i) => i).filter((i) =>
+        placement.get(i) !== (sounds[i].obstacle === "none" ? "free" : "blocked"));
+      marked.clear();
+      wrong.forEach((i) => marked.add(i));
+      renderBoxes();
+
+      if (wrong.length) {
+        const facts = wrong.map((i) => {
+          const s = sounds[i];
+          if (!tested.has(i)) return `„${s.sound}“ — dar neišbandei`;
+          return s.obstacle === "none"
+            ? `„${s.sound}“ — bandyme kelias buvo laisvas`
+            : `„${s.sound}“ — bandyme oras sustojo, kelią užstoja ${parts[s.obstacle]}`;
+        });
+        verdictEl.textContent = `${plural(wrong.length)} ne savo krūvoje. ${facts.join("; ")}.`;
+        api.readout(`${plural(wrong.length)} ne savo krūvoje.`);
+        api.note("Spausk plytelę krūvoje — ji grįš į sąrašą. Perkelk tas, kurių bandymas rodė ką kita.");
+        say("wrong");
+        return;
+      }
+
+      /* Krūvos teisingos — dabar modelis parodo, kad ilgis ir kliūtis
+         nepriklauso vienas nuo kito. Sąrašai skaičiuojami iš tų pačių
+         duomenų, kuriuos matė vaikas (LL-21), o jei prieštaraujančio
+         pavyzdžio nėra — sakoma tiesiai, o ne apsimetama įrodymu. */
+      const longFree = sounds.filter((s) => s.obstacle === "none" && s.long).map((s) => s.sound);
+      const longBlocked = sounds.filter((s) => s.obstacle !== "none" && s.long).map((s) => s.sound);
+      const names = (list) => list.map((x) => `„${x}“`).join(", ");
+      verdictEl.textContent = "Tinka: kiekviena plytelė savo krūvoje.";
+      if (longFree.length && longBlocked.length) {
+        api.note(`Abiejose krūvose yra garsų, kuriuos gali tempti: „${piles.free}“ — ${names(longFree)}, „${piles.blocked}“ — ${names(longBlocked)}. Todėl ilgis nepasako, kuriai krūvai garsas priklauso.`);
+        api.readout("Tinka. Abiejose krūvose yra ilgų garsų.");
+      } else {
+        console.warn("[oro-kelias] modelyje nėra prieštaraujančio pavyzdžio: ilgų garsų yra tik vienoje krūvoje", { longFree, longBlocked });
+        api.note("Tinka: kiekviena plytelė savo krūvoje. Šioje užduotyje ilgi garsai yra tik vienoje krūvoje, todėl ilgis čia dar nieko neįrodo.");
+        api.readout("Tinka. Visos plytelės savo krūvose.");
+      }
+      if (!reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+      say("done");
+    }
+
+    stage.querySelectorAll("[data-guess]").forEach((b) => {
+      b.addEventListener("click", () => {
+        if (picked < 0) {
+          api.readout("Pirma pasirink plytelę.");
+          api.note("Pasirink plytelę iš sąrašo, tada spėk.");
+          const first = tilesEl.querySelector("[data-tile]");
+          if (first) first.focus({ preventScroll: true });
+          return;
+        }
+        if (tested.has(picked)) {
+          api.readout("Šis garsas jau išbandytas.");
+          api.note("Šio garso spėjimas jau palygintas su bandymu. Pasirink kitą plytelę.");
+          return;
+        }
+        const value = b.dataset.guess;
+        guessed.set(picked, value);
+        stage.querySelectorAll("[data-guess]").forEach((x) => {
+          x.setAttribute("aria-pressed", x === b ? "true" : "false");
+        });
+        api.readout(`Spėjai: „${piles[value]}“.`);
+        api.note("Spėjimas nėra atsakymas — palyginsi jį su tuo, ką parodys bandymas.");
+        blowBtn.focus({ preventScroll: true });
+      });
+    });
+
+    stage.querySelectorAll("[data-box]").forEach((b) => {
+      b.addEventListener("click", () => place(b.dataset.box));
+    });
+    stage.querySelector("#ok-check").addEventListener("click", compare);
+    blowBtn.addEventListener("click", runTest);
+    controls.querySelector("#ok-reset").addEventListener("click", () => {
+      placement.clear();
+      marked.clear();
+      verdictEl.textContent = "";
+      renderTiles();
+      renderBoxes();
+      const first = tilesEl.querySelector("[data-tile]");
+      if (first) first.focus({ preventScroll: true });
+      api.readout("Pradedam iš naujo. Bandymai išlieka.");
+      api.note("Tavo bandymai liko, o krūvos tuščios. Dėk plyteles iš naujo.");
+    });
+
+    fill(0);
+    setGate("unknown");
+    renderTiles();
+    renderBoxes();
+    api.readout("Pasirink garsą.");
+    api.note("Pasirink plytelę, spėk, tada spausk „Tark ir pūsk“ ir tark garsą balsu.");
+    say("start");
+
+    return () => {
+      if (timer) { clearTimeout(timer); timer = null; }
+    };
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
@@ -1607,4 +2034,5 @@ export const SIMS = {
   "kaip-zmones-sveikinasi": kaipZmonesSveikinasi,
   "plakatas-ir-informacija": plakatasIrInformacija,
   "garso-juosta": garsoJuosta,
+  "oro-kelias": oroKelias,
 };

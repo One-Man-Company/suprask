@@ -12,7 +12,7 @@
   ],
   "concept": {
     "title": "Kas duoda maistą?",
-    "big_idea": "Naminis gyvūnas maistą ir pastogę gauna iš žmogaus. Laukinis susiranda pats. Todėl grupę pasako ne vieta, o tai, kas juo rūpinasi.",
+    "big_idea": "Naminis gyvūnas maistą ir pastogę gauna iš žmogaus. Laukinis susiranda pats. Todėl grupę pasako ne vieta, o tai, kas gyvūnu rūpinasi.",
     "steps": [
       "Pasirink gyvūną ir pažiūrėk, kur jis gyvena.",
       "Atsakyk, kas jam duoda maistą: žmogus ar jis pats.",
@@ -34,7 +34,7 @@
           "winter": "Lieka tvarte. Šieną atneša žmogus."
         },
         {
-          "label": "Katė", "emoji": "🐈", "place": "kieme po namu", "bin": "naminis",
+          "label": "Katė", "emoji": "🐈", "place": "kieme prie namo", "bin": "naminis",
           "trait": "žmogus jai pila pieno",
           "winter": "Lieka prie namo. Pieną duoda žmogus."
         },
@@ -74,25 +74,25 @@
   },
   "tasks": [
     {
-      "q": "Gandras susisuko lizdą ant tvarto stogo. Kuris gyvūnas yra naminis?",
+      "q": "Karvė gyvena tvarte, o gandras ant tvarto stogo. Kuris gyvūnas yra naminis?",
       "options": [
-        "Gandras, nes jis gyvena prie tvarto",
+        "Gandras, nes jis gyvena ant tvarto",
         "Karvė, nes jai maistą duoda žmogus",
         "Abu, nes jie gyvena viename kieme"
       ],
       "answer": 1,
-      "hint": "Kas rūpinasi gyvūnu kasdien: pats gyvūnas ar kas kitas?",
+      "hint": "Pagalvok, kas gyvūną šeria kiekvieną dieną.",
       "why": "Karvei maistą duoda žmogus, o gandras varles gaudo pats."
     },
     {
-      "q": "Katinas miega kieme po namu. Žmogus jam pila pieno. Katinas yra…",
+      "q": "Katinas miega kieme prie namo. Žmogus jam pila pieno. Kuris paaiškinimas apie katiną teisingas?",
       "options": [
         "Laukinis, nes gyvena lauke",
         "Naminis, nes jis moka gaudyti peles",
         "Naminis, nes juo rūpinasi žmogus"
       ],
       "answer": 2,
-      "hint": "Kodėl tas žmogus neša jam pieną?",
+      "hint": "Kodėl žmogus pila jam pieno?",
       "why": "Katinui maistą duoda žmogus, todėl jis naminis, nors miega lauke."
     },
     {
@@ -100,10 +100,10 @@
       "options": [
         "Taip, nes ji atbėgo į kiemą",
         "Ne, ji pati susiranda maistą",
-        "Taip, nes ji gyvena prie namo"
+        "Taip, nes ji ieško maisto kieme"
       ],
       "answer": 1,
-      "hint": "Kiemas dar ne namai. Iš kur lapė gauna ėdalo?",
+      "hint": "Lapė tik įbėgo į kiemą. Kas jai duoda maisto?",
       "why": "Lapė maisto ieško pati, todėl ji laukinė. Kiemas to nekeičia."
     },
     {
@@ -114,15 +114,15 @@
         "Karvei maistą duoda žmogus, o gandrui — niekas"
       ],
       "answer": 2,
-      "hint": "Kas žiemą atneša šieno, o kas turi skristi jo ieškoti?",
+      "hint": "Šieną žiemą atneša ūkininkas. O kur tada dingsta varlės?",
       "why": "Naminį gyvūną žmogus šeria ir žiemą. Laukinis maisto ieško pats."
     },
     {
       "q": "Šuo ilgai gyveno prieglaudoje, o paskui rado naujus namus. Kas jam pasikeitė?",
       "options": [
         "Atsirado žmogus, kuris duoda maisto ir rūpinasi",
-        "Jis tapo laukiniu",
-        "Jis išmoko pats susirasti maisto"
+        "Šuo tapo laukiniu gyvūnu",
+        "Šuo išmoko pats susirasti maisto"
       ],
       "answer": 0,
       "hint": "Ko šuniui labiausiai trūko, kol jis laukė naujų namų?",

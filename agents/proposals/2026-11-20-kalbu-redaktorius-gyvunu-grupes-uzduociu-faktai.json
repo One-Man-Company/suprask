@@ -1,0 +1,16 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 405,
+  "created": "2026-11-20T12:00:00+02:00",
+  "type": "kritika",
+  "title": "10-gyvunu-grupes: prieglaudos užduoties atsakymas ir faktas apie karvės skraidymą",
+  "body": "Modulyje 10-gyvunu-grupes penktoje užduotyje klausiama: „Šuo ilgai gyveno prieglaudoje, o paskui rado naujus namus. Kas jam pasikeitė?“ Teisingas atsakymas yra „Atsirado žmogus, kuris duoda maisto ir rūpinasi“. Tačiau gyvūnų prieglaudoje šunį taip pat šeria ir juo rūpinasi darbuotojai ar savanoriai, todėl 6–7 metų vaikas gali pagrįstai suabejoti tokiu atsakymu (užduoties situacija labiau tiktų benamiam šuniui be šeimininko arba atsakymui apie nuolatinius namus ir pastovų šeimininką). Be to, ketvirtoje užduotyje neteisingas variantas „Karvė nemoka skraidyti“ yra gyvenime teisingas faktas (LL-18) — tai viena iš realių priežasčių, kodėl karvė neišskrenda žiemą, todėl vaikui sunku atmesti teiginį, kuris pats savaime yra tiesa.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:112 — tasks[3].options[0] „Karvė nemoka skraidyti“ (gyvenime teisingas teiginys, LL-18)",
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:121–128 — tasks[4] „Šuo ilgai gyveno prieglaudoje…“ / „Atsirado žmogus, kuris duoda maisto ir rūpinasi“ (prieglaudoje gyvūną taip pat šeria žmonės)",
+    "research/wiki/guidelines/pamokos.md — LL-18 „Klaidingas variantas, kuris gyvenime teisingas“"
+  ]
+}

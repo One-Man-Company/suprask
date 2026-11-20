@@ -6,20 +6,20 @@
   "subtitle": "Seka, kurią gali numatyti",
   "minutes": 9,
   "outcomes": [
-    "Pastebiu pasikartojančią seką, ją tęsiu ir randu trūkstamą narį.",
+    "Pastebiu, kas kartojasi, tęsiu seką ir randu, ko trūksta.",
     "Paaiškinu sekos taisyklę savais žodžiais.",
     "Sugalvoju savo seką ir ją užrašau."
   ],
   "concept": {
     "title": "Taisyklė, kuri kartojasi",
-    "big_idea": "Dėsningumas — tai tvarka, kuri kartojasi. Kai ją atrandi, gali numatyti, kas bus toliau, net nematęs.",
+    "big_idea": "Dėsningumas — tai tvarka, kuri kartojasi. Kai taisyklę randi, numatai, kas bus toliau.",
     "steps": [
       "Pažiūrėk į seką: raudonas, mėlynas, raudonas, mėlynas…",
       "Taisyklė: du skirtingi elementai kartojasi iš eilės.",
-      "Todėl toliau bus raudonas. Tai jau prognozė, o ne spėjimas.",
+      "Todėl toliau bus raudonas. Tai jau numatymas, o ne spėjimas.",
       "Kartais vieno elemento trūksta viduryje. Tada žiūrėk į visą grupę."
     ],
-    "example": "Seka: 🟡🟡🟢 🟡🟡🟢 … Taisyklė „du geltoni, vienas žalias“. Kas bus po antro geltono? Žalias."
+    "example": "Seka: 🟡🟡🟢 🟡🟡🟢 … Taisyklė „du geltoni, vienas žalias“. Kas bus po dviejų geltonų? Žalias."
   },
   "sim": {
     "component": "desningumai",
@@ -56,7 +56,7 @@
             "🔴"
           ],
           "answer": 0,
-          "prompt": "Seka kartojasi po trijų. Kas toliau?"
+          "prompt": "Grupėje trys elementai. Kas toliau?"
         },
         {
           "seq": [
@@ -73,7 +73,7 @@
             "🟢"
           ],
           "answer": 0,
-          "prompt": "Trys skirtingi elementai. Kas toliau?"
+          "prompt": "Grupėje trys skirtingi elementai. Kas toliau?"
         },
         {
           "seq": [
@@ -107,7 +107,7 @@
             "🔵"
           ],
           "answer": 1,
-          "prompt": "Viduryje trūksta vieno elemento. Kas jis?"
+          "prompt": "Viduryje trūksta vieno elemento. Kas ten stovi?"
         }
       ]
     }
@@ -125,7 +125,7 @@
       "why": "Kartojasi pora 1, 2 — todėl po 1 eina 2."
     },
     {
-      "q": "Seka: 🔺🔺🔻 🔺🔺🔻 … Kas bus po dviejų trikampių?",
+      "q": "Seka: 🔺🔺🔻 🔺🔺🔻 … Kas bus po dviejų vienodų trikampių?",
       "options": [
         "🔺",
         "🔻",
@@ -136,15 +136,15 @@
       "why": "Taisyklė „du aukštyn, vienas žemyn“."
     },
     {
-      "q": "Kodėl dėsningumas naudingas?",
+      "q": "Kodėl dėsningumas yra naudingas?",
       "options": [
         "Nes jis gražus",
         "Nes jį lengva nukopijuoti",
         "Nes padeda numatyti, kas bus toliau"
       ],
       "answer": 2,
-      "hint": "Pagalvok apie prognozę.",
-      "why": "Radęs taisyklę, gali numatyti tolesnius elementus."
+      "hint": "Pagalvok, kam tau pačiam praverčia tvarka.",
+      "why": "Kai randi taisyklę, numatai, kas bus toliau."
     },
     {
       "q": "Seka: 🔵🔵▢ 🔵🔵⭐ … Kas turi stovėti tuščiame langelyje?",
@@ -154,12 +154,12 @@
         "⬛"
       ],
       "answer": 1,
-      "hint": "Pažiūrėk, kiek elementų kartojasi. Gal grupė ilgesnė nei du?",
-      "why": "Grupė kartojasi po tris: du apskritimai, viena žvaigždė.",
+      "hint": "Pažiūrėk į antrą grupę. Kiek elementų joje yra?",
+      "why": "Grupėje trys elementai: du apskritimai ir viena žvaigždė.",
       "optional": true
     }
   ],
-  "reflect": "Sugalvok savo seką iš trijų spalvų ir pasakyk ją draugui. Ar jis atspės taisyklę?",
+  "reflect": "Sugalvok savo seką iš trijų spalvų. Pasakyk ją draugui. Ar jis supras taisyklę?",
   "teacher": {
     "goal": "Algoritminio mąstymo pradmenys: pasikartojančios struktūros atpažinimas ir tęsimas.",
     "prompt": "Kokia taisyklė šioje sekoje? Kaip sužinojai?",

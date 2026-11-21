@@ -214,6 +214,21 @@ EXHAUST_MARKERS = (
     "maximum number of turns",
     "ran out of turns",
     "reached the turn",
+    # 2026-11-21 (#429): sąrašas buvo siauresnis už kalbą, kuria vaidmenys
+    # iš tikrųjų rašo. Išmatavus 400 paleidimų ataskaitas, 6 iš jų sakė
+    # „baigėsi ėjimai“, bet tik 4 buvo atpažinti: #425 `kritikas` (699 s,
+    # „Baigėsi iteracijos prieš įrašant pasiūlymą“) ir #320 `leidejas`
+    # (478 s, „baigėsi žingsniai“) liko `empty`. Pasekmė ne kosmetinė:
+    # `empty` reiškia „vaidmuo neturi ką veikti“ (architektas mažina grafiką),
+    # o `kurejas_queue.py` tokią eilutę net blokuoja (žr. `blocked += 1`
+    # šaką), nors kaltas biudžetas. Todėl žymimos ir trumposios formos —
+    # be žodžio „limitas“, kuris lietuviškai dažnai praleidžiamas.
+    "baigėsi iteracij",
+    "baigėsi žingsniai",
+    "baigėsi ėjim",
+    "nebeliko ėjim",
+    "neužteko ėjim",
+    "išnaudojau ėjim",
 )
 
 
@@ -1885,7 +1900,17 @@ def main() -> int:
         # grafiką) ir nėra „pasiūlymas netinkamas“ (nuo to priklauso, ar siųsti
         # `blocked`). Be šios šakos visi 10 `empty` paleidimų buvo skaitomi kaip
         # tuščias darbas, o eilė užblokuodavo gerą pasiūlymą.
-        exhaust = exhausted_reason(out, err)
+        #
+        # `inspect` vaidmenų (tikrintojas, publikavimo-agentas, kuratorius,
+        # sveikatos-inspektorius) ŠI ŠAKA NELIEČIA, ir tai išmatuota, o ne
+        # numanoma. Jų rezultatas yra ataskaita, todėl „baigėsi žingsniai“ jų
+        # tekste reiškia „pabaigiau suvestinę“, ne „praradau failą“. 2026-11-21
+        # matuota per 352 realias ataskaitas: platus žymeklių sąrašas be šio
+        # vartų duotų 8 klaidingus teigiamus (visi — `checked` publikavimo
+        # agentai ir tikrintojai, t. y. būtent tie, kurių ataskaita ir yra
+        # darbas), o su vartais — 0. Be vartų `checked` virstų `exhausted`,
+        # ir patikros vaidmuo atrodytų kaip nuolat prarandantis darbą.
+        exhaust = "" if cfg.get("inspect") else exhausted_reason(out, err)
         if exhaust and not work and status in ("ok", "partial", "empty"):
             status = "exhausted"
         # Failai parašyti, bet paskutiniai žingsniai liko nebaigti — darbas yra,

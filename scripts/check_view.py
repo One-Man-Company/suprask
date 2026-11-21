@@ -48,7 +48,18 @@ VIEWPORTS = {
     "phone": {"width": 390, "height": 844},
     # 360 px — pigiausių Android telefonų plotis ir standarto §4.6 riba.
     "small": {"width": 360, "height": 780},
+    # `tiny` = 320 px. SĄMONINGAI neįtrauktas į numatytąjį sąrašą (#4921):
+    # standartas žemiau 360 px nieko nežada, todėl šis plotas yra
+    # diagnostika pigiausiam telefonui (`--viewports tiny`), o ne vartas.
+    # Be jo tolerancijos šaka (`width < STANDARD_MIN_WIDTH`) buvo
+    # nepasiekiama per CLI — taisyklė egzistavo, bet jos niekas negalėjo
+    # išbandyti.
+    "tiny": {"width": 320, "height": 780},
 }
+
+# Numatytasis sąrašas lieka BE `tiny`: publikavimo vartai neturi tapti
+# griežtesni už standartą.
+DEFAULT_VIEWPORTS = "desktop,phone,small"
 
 # Standarto §4.6 mažiausias palaikomas plotis. Antraštės metaduomenys privalo
 # tilpti vienoje eilutėje ties šiuo pločiu ir plačiau; žemiau jo lūžimas
@@ -59,6 +70,59 @@ BRAVE_INIT = """
 try { Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('insecure', 'SecurityError'); } }); } catch (e) {}
 try { Object.defineProperty(Crypto.prototype, 'subtle', { get() { return undefined; } }); } catch (e) {}
 try { Object.defineProperty(window, 'speechSynthesis', { get() { return undefined; } }); } catch (e) {}
+"""
+
+# 200 % teksto režimas (#7396, WCAG 1.4.4). Šaknies šriftas 16 → 32 px.
+# Kodėl atskiras režimas, o ne numatytasis: žmogus su padidintu tekstu yra
+# realus naudotojas, bet jo patikra neturi blokuoti publikavimo tol, kol
+# defektai nesutvarkyti — kitaip vartai būna raudoni be priežasties, o tai
+# moko juos apeiti (`#7396` sąmoningai taip ir siūlė).
+TEXT_SCALE_INIT = """
+() => {
+  document.documentElement.style.fontSize = '32px';
+  // `rem` kintamieji CSS'e skaičiuojami nuo šaknies, todėl vieno priskyrimo
+  // pakanka: jokia kita transformacija nereikalinga ir neturi būti
+  // (LL-40 — matuojama tai, ką vaikas tikrai gauna, o ne zondo sugalvota
+  // geometrija).
+}
+"""
+
+# Kas išlenda už ekrano pločio 200 % teksto režime. Grąžinami KONKRETŪS
+# elementai su pertekliumi, kad defektas turėtų adresatą, o ne skaičių
+# (LL-36 / LL-40: taisymas ties zondo pločiu, o ne defekto ruože).
+MEASURE_SCALED = r"""
+() => {
+  const vw = document.documentElement.clientWidth;
+  const over = document.documentElement.scrollWidth - vw;
+  const offenders = [];
+  if (over > 1) {
+    const all = [...document.querySelectorAll('body *')];
+    for (const el of all) {
+      const r = el.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) continue;
+      const right = Math.round(r.right + window.scrollX);
+      const bleed = Math.round(right - vw);
+      if (bleed > 1) {
+        offenders.push({
+          sel: el.tagName.toLowerCase() + (el.className ? '.' + String(el.className).split(/\s+/).slice(0, 2).join('.') : ''),
+          text: (el.textContent || '').trim().slice(0, 48),
+          bleed,
+          w: Math.round(r.width),
+        });
+      }
+    }
+    // Nuosekliausi (didžiausias perteklius, trumpiausias tekstas) — kad
+    // ataskaitoje matytųsi tikrasis kaltininkas, o ne jo tėvai.
+    offenders.sort((a, b) => (b.bleed - a.bleed) || (a.text.length - b.text.length));
+  }
+  return {
+    width: vw,
+    scrollWidth: document.documentElement.scrollWidth,
+    overflow: over,
+    rootFont: parseFloat(getComputedStyle(document.documentElement).fontSize) || 0,
+    offenders: offenders.slice(0, 4),
+  };
+}
 """
 
 MEASURE = r"""
@@ -240,11 +304,51 @@ def check_route(page, base: str, route: str, viewport: dict) -> dict:
     return data
 
 
+def check_scaled(page, base: str, route: str, viewport: dict, scale: int) -> dict:
+    """Modulis su padidintu tekstu: ar neatsiranda horizontali slinktis (#7396).
+
+    Skirta nuo `check_route()`: ten matuojama, ką vaikas pamato įprastu
+    šriftu; čia — ką pamato žmogus, pasididinęs tekstą 200 %. Matuojamas
+    TAS PATS turinys, todėl defektą galima priskirti konkrečiam moduliui,
+    o ne „svetainei apskritai“ (LL-40).
+    """
+    errors: list[str] = []
+    page.on("pageerror", lambda e: errors.append(str(e)[:160]))
+    page.on("console", lambda m: errors.append("console: " + m.text[:160]) if m.type == "error" else None)
+
+    url = f"{base.rstrip('/')}/#/modulis/1/{route}"
+    try:
+        page.goto(url, wait_until="domcontentloaded", timeout=25000)
+        page.wait_for_selector(".task", timeout=12000)
+        # Šriftas didinamas PO to, kai turinys įkeltas: prieš įkeliant
+        # naršyklė dar neturi ko pertvarkyti, o matavimas būtų tuščias.
+        page.evaluate(TEXT_SCALE_INIT)
+        page.wait_for_timeout(400)
+    except Exception as exc:  # noqa: BLE001
+        return {"route": route, "viewport": viewport["width"], "scale": scale,
+                "errors": errors + [f"nepasikrovė: {exc}"[:160]], "ok": False}
+
+    data = page.evaluate(MEASURE_SCALED)
+    data["route"] = route
+    data["viewport"] = viewport["width"]
+    data["scale"] = scale
+    data["errors"] = errors[:5]
+    # Pastaba apie šaknies šriftą: jei jis nepakilo (pvz., CSS naudoja
+    # absoliučius px visame puslapyje), matavimas būtų apie nieką ir tai
+    # turi būti pasakyta, o ne nutylėta (LL-37).
+    data["scale_applied"] = data.get("rootFont", 0) >= 30
+    data["ok"] = data["overflow"] <= 1 and not data["errors"]
+    return data
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default="https://one-man-company.github.io/suprask/")
     ap.add_argument("--module", default="")
-    ap.add_argument("--viewports", default="desktop,phone,small")
+    ap.add_argument("--viewports", default=DEFAULT_VIEWPORTS)
+    ap.add_argument("--text-scale", type=int, default=0, metavar="N",
+                    help="padidinti šaknies šriftą N %% (200 = WCAG 1.4.4); "
+                         "atskiras režimas, neįtrauktas į numatytąjį bėgimą")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
 

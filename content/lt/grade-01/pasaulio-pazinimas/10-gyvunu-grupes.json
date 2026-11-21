@@ -107,26 +107,26 @@
       "why": "Lapė maisto ieško pati, todėl ji laukinė. Kiemas to nekeičia."
     },
     {
-      "q": "Žiemą karvė lieka tvarte, o gandras išskrenda. Kodėl?",
+      "q": "Žiemą po ledu nebeliko varlių. Kur gandras randa maistą?",
       "options": [
-        "Karvė nemoka skraidyti",
-        "Gandras labiau bijo šalčio",
-        "Karvei maistą duoda žmogus, o gandrui — niekas"
-      ],
-      "answer": 2,
-      "hint": "Šieną žiemą atneša ūkininkas. O kur tada dingsta varlės?",
-      "why": "Naminį gyvūną žmogus šeria ir žiemą. Laukinis maisto ieško pats."
-    },
-    {
-      "q": "Šuo ilgai gyveno prieglaudoje, o paskui rado naujus namus. Kas jam pasikeitė?",
-      "options": [
-        "Atsirado žmogus, kuris duoda maisto ir rūpinasi",
-        "Šuo tapo laukiniu gyvūnu",
-        "Šuo išmoko pats susirasti maisto"
+        "Skrenda į šiltus kraštus, kur varlių dar yra",
+        "Lieka tvarte ir lesa šieną su karve",
+        "Įminga ir miega iki pavasario"
       ],
       "answer": 0,
-      "hint": "Ko šuniui labiausiai trūko, kol jis laukė naujų namų?",
-      "why": "Naminiam gyvūnui reikia žmogaus, kuris duoda maisto ir pastogę.",
+      "hint": "Pažiūrėk, ką gandras gaudo vasarą.",
+      "why": "Gandras laukinis, todėl maisto ieško kitur. Karvei šieną duoda žmogus."
+    },
+    {
+      "q": "Šuo gyveno prieglaudoje. Ten juo rūpinosi daug žmonių. Paskui jį paėmė viena šeima. Kas šuniui pasikeitė?",
+      "options": [
+        "Šuo tapo laukiniu, nes paliko prieglaudą",
+        "Dabar jam nebereikia žmogaus",
+        "Dabar jis turi savo namus ir vieną šeimininką"
+      ],
+      "answer": 2,
+      "hint": "Prieglaudoje jau rūpinosi žmonės. Kas visai kitaip?",
+      "why": "Šuo visą laiką buvo naminis. Dabar jis turi savo namus ir vieną šeimininką.",
       "optional": true
     }
   ],
@@ -139,6 +139,7 @@
       "„Kas gyvena tvarte ar kieme, tas naminis.“ Gandras suka lizdą ant tvarto stogo, bet maistą susiranda pats.",
       "„Kas gyvena lauke, tas laukinis.“ Katė, kuriai žmogus duoda pieno, lieka naminė.",
       "„Laukinis reiškia piktas arba pavojingas.“ Modelyje lapė tik ieško maisto; laukinis reiškia „pats susiranda“, o ne „puola“.",
+      "„Šuo iš prieglaudos — benamis, vadinasi, laukinis.“ Prieglaudoje šunį šeria ir juo rūpinasi žmonės, o paskui jį paima šeima. Šuo visą laiką lieka naminis; keičiasi tik tai, kiek žmonių juo rūpinasi ir ar jis turi savo namus.",
       "„Jei gyvūnas naminis, jis pats maisto nesusiranda.“ Višta lesa žolę, bet be žmogaus grūdų ir vištidės šalčiausią žiemą neišgyventų."
     ]
   },

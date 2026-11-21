@@ -1483,20 +1483,20 @@ const garsoJuosta = {
       sortEl.innerHTML = `
         <p style="margin:0 0 .2rem;font-family:var(--font-head);font-weight:900;font-size:clamp(1rem,3.6vw,1.15rem)">Padėk plyteles į dvi eiles.</p>
         <p style="margin:0 0 .5rem;font-size:clamp(.94rem,3.4vw,1.04rem);color:var(--ink-soft)">Pasirink plytelę, tada spausk eilę.</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-          <div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 8.5rem),1fr));gap:.6rem">
+          <div style="min-width:0">
             <button class="btn secondary" type="button" data-box="long"
               aria-label="Dėti pasirinktą plytelę į eilę Ilgas garsas"
-              style="width:100%;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem">
+              style="width:100%;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;min-width:0;overflow-wrap:anywhere">
               Ilgas garsas<span style="font-size:.72rem;font-weight:600;color:var(--ink-soft)">dėti čia</span>
             </button>
             <div id="gj-long" role="group" aria-label="Eilė Ilgas garsas"
               style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem;min-height:2rem"></div>
           </div>
-          <div>
+          <div style="min-width:0">
             <button class="btn secondary" type="button" data-box="short"
               aria-label="Dėti pasirinktą plytelę į eilę Trumpas garsas"
-              style="width:100%;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem">
+              style="width:100%;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;min-width:0;overflow-wrap:anywhere">
               Trumpas garsas<span style="font-size:.72rem;font-weight:600;color:var(--ink-soft)">dėti čia</span>
             </button>
             <div id="gj-short" role="group" aria-label="Eilė Trumpas garsas"

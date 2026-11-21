@@ -364,7 +364,7 @@ const sakinioZodziai = {
     let reported = false;
 
     stage.innerHTML = `
-      <div style="width:100%;max-width:36rem">
+      <div style="width:100%;min-width:0;max-width:min(36rem, 100%)">
         <p id="sz-q" style="margin:0 0 .6rem;text-align:center;font-family:var(--font-head);font-weight:900;font-size:clamp(1.1rem,4.4vw,1.45rem);overflow-wrap:anywhere"></p>
         <div id="sz-words" role="group" aria-label="Sakinio žodžiai" style="display:flex;gap:.55rem;flex-wrap:wrap;justify-content:center;padding:.75rem;border:2px dashed var(--line);border-radius:var(--r-m);background:var(--paper)"></div>
         <p class="sim-note" id="sz-msg" style="min-height:2.6rem;margin-top:.6rem"></p>
@@ -688,7 +688,7 @@ const kaipZmonesSveikinasi = {
     }
 
     stage.innerHTML = `
-      <div style="width:100%;max-width:36rem">
+      <div style="width:100%;min-width:0;max-width:min(36rem, 100%)">
         <p id="kz-question" style="margin:0 0 .6rem;text-align:center;font-family:var(--font-head);font-weight:900;font-size:clamp(1rem,3.6vw,1.2rem)"></p>
         <div style="display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .6rem;border:2px dashed var(--line);border-radius:var(--r-m);background:var(--paper)">
           <div id="kz-emoji" aria-hidden="true" style="font-size:clamp(2.4rem,11vw,3.4rem);line-height:1">🏫</div>
@@ -1233,7 +1233,7 @@ const garsoJuosta = {
     }
 
     stage.innerHTML = `
-      <div style="width:100%;max-width:32rem;margin:0 auto">
+      <div style="width:100%;min-width:0;max-width:min(32rem, 100%);margin:0 auto">
         <div id="gj-tiles" role="group" aria-label="Garsų plytelės"
           style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;min-height:4rem"></div>
         <div id="gj-guesswrap" style="margin-top:.7rem;padding:.55rem .7rem;border:2px dashed var(--line);border-radius:var(--r-s);background:var(--paper)">
@@ -1280,7 +1280,7 @@ const garsoJuosta = {
       const inner = Array.from({ length: GJ_CELLS }, (_, k) =>
         `<span style="display:block;border-radius:1px;background:${k < n ? "var(--accent)" : "var(--line)"}"></span>`).join("");
       return `<span data-mini="${i}" aria-hidden="true"
-        style="display:grid;grid-template-columns:repeat(${GJ_CELLS},minmax(0,1fr));gap:1px;width:3.2rem;height:.45rem;margin-top:.2rem">${inner}</span>`;
+        style="display:grid;grid-template-columns:repeat(${GJ_CELLS},minmax(0,1fr));gap:1px;width:3.2rem;max-width:100%;height:.45rem;margin-top:.2rem">${inner}</span>`;
     }
 
     function paintMini(i, n) {
@@ -1685,15 +1685,15 @@ const oroKelias = {
     }
 
     stage.innerHTML = `
-      <div style="width:100%;max-width:34rem;margin:0 auto">
+      <div style="width:100%;min-width:0;max-width:min(34rem, 100%);margin:0 auto">
         <p style="margin:0 0 .5rem;font-family:var(--font-head);font-weight:900;font-size:clamp(1rem,3.8vw,1.15rem)">Pasirink plytelę, tada spausk „Tark ir pūsk“.</p>
         <div id="ok-tiles" role="group" aria-label="Garsų plytelės"
-          style="display:grid;grid-template-columns:repeat(auto-fit,minmax(3.2rem,1fr));gap:.5rem"></div>
+          style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 3.2rem),1fr));gap:.5rem"></div>
         <div style="margin-top:.8rem;padding:.6rem .7rem;border:2px solid var(--line);border-radius:var(--r-s);background:var(--paper)">
           <p style="margin:0;font-size:clamp(.98rem,3.6vw,1.08rem);font-weight:800">Ar šiam garsui kelyje kas nors užstoja?</p>
           <div style="display:flex;gap:.5rem;margin-top:.4rem;flex-wrap:wrap">
-            <button class="btn secondary" type="button" data-guess="free" aria-pressed="false" style="min-height:48px">${esc(piles.free)}</button>
-            <button class="btn secondary" type="button" data-guess="blocked" aria-pressed="false" style="min-height:48px">${esc(piles.blocked)}</button>
+            <button class="btn secondary" type="button" data-guess="free" aria-pressed="false" style="min-height:48px;min-width:0;max-width:100%;overflow-wrap:anywhere">${esc(piles.free)}</button>
+            <button class="btn secondary" type="button" data-guess="blocked" aria-pressed="false" style="min-height:48px;min-width:0;max-width:100%;overflow-wrap:anywhere">${esc(piles.blocked)}</button>
           </div>
           <p id="ok-trace" role="status" style="margin:.4rem 0 0;font-size:clamp(.94rem,3.4vw,1.04rem);min-height:1.4rem"></p>
           <div id="ok-path" aria-hidden="true" style="display:grid;grid-template-columns:1fr 1fr 1fr auto 1fr 1fr 1fr;gap:3px;align-items:center;height:38px;margin-top:.45rem">
@@ -1705,7 +1705,7 @@ const oroKelias = {
         </div>
         <div style="margin-top:.8rem">
           <p style="margin:0 0 .35rem;font-size:clamp(.95rem,3.4vw,1.05rem)">Pasirink plytelę, tada spausk krūvą.</p>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:.6rem">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 8.5rem),1fr));gap:.6rem">
             <div>
               <button class="btn secondary" type="button" data-box="free"
                 aria-label="Dėti pasirinktą plytelę į krūvą ${esc(piles.free)}"

@@ -177,6 +177,20 @@ python3 scripts/validate_content.py --grade 1   # viena klasė
 python3 scripts/validate_content.py --strict    # įspėjimai kaip klaidos
 ```
 
+Matomumo patikra (`check_view.py`) numatytai matuoja desktop / phone / small (360 px).
+Du papildomi režimai yra **diagnostika**, o ne publikavimo vartai:
+
+```bash
+python3 scripts/check_view.py --viewports tiny            # 320 px, žemiau standarto ribos
+python3 scripts/check_view.py --text-scale 200            # WCAG 1.4.4, šaknis 16 → 32 px
+```
+
+`--text-scale` atskirai nuo numatytojo bėgimo sąmoningai: 200 % teksto yra
+realus naudotojas, bet raudoni vartai be pataisymo moko juos apeiti. Režimas
+spausdina konkretų išlindusį elementą ir jo perteklių pikseliais, o `--json`
+laukas `scaled_unapplied` pasako, jei šaknies šriftas nepakilo (tada matavimas
+būtų apie nieką, o ne apie „telpa“).
+
 Validatorius tikrina: JSON validumą, privalomus laukus, ID unikalumą, nuorodų į failus egzistavimą, simuliacijos registravimą, užduočių skaičių, `hint`/`why` buvimą, atsakymų pasiskirstymą, teksto ilgį, diakritiką, draudžiamus žodžius, `renamed_from` vienareikšmiškumą (§7.1) ir jo sutapimą su `scripts/known_renames.json`.
 
 ## 9. Naujos klasės pridėjimas

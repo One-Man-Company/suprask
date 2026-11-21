@@ -211,3 +211,68 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   nes uždarymas reikalauja tikslo failo pakeitimo TAME PAČIAME commit'e — deklaruoti
   jo šiandien būtų LL-36, todėl nepriskyriau. Kiti sisteminiai (12) neliesti.
   `agents/scope.json`, `content/`, `assets/js/sims/` neliesti.
+
+## 2026-11-21 20:24 (#429)
+
+- **Mačiau:** `system_report.py` (7 d., 136 paleidimai): kritikas 67 % nenaud.
+  (6 paleid.: 2 publ., 3 `empty`), dizaineris 50 %, leidejas 33 %, ideator 33 %;
+  14 sisteminių pasiūlymų, seniausias #4455 — 13 d. Visi vartai žali. Bet
+  gilesnis matavimas (400 `runs.db` eilučių + 352 realios ataskaitos) parodė, kad
+  #414 įvestas `exhausted` klasifikatorius **vis dar aklas savo paties kalbai**:
+  `EXHAUST_MARKERS` reikalavo žodžio „limit“, todėl #425 kritikas (699 s,
+  „Baigėsi iteracijos prieš įrašant pasiūlymą“) ir #320 leidejas (478 s,
+  „baigėsi žingsniai“) liko `empty`. Kaina dviguba: `empty` architektui sako
+  „mažink grafiką“, o `kurejas_queue.py` tokią eilutę blokuoja — nors kaltas
+  biudžetas. Tai LL-101 šeima trečią kartą.
+  Antra: `check_view.py` turėjo `eyebrow_ok` tolerancijos šaką
+  (`width < STANDARD_MIN_WIDTH`), kurios per CLI nebuvo įmanoma pasiekti —
+  `VIEWPORTS` neturėjo nė vieno <360 px ploto (#4921), ir 200 % teksto režimo
+  nebuvo visai (#7396).
+- **Keičiau:**
+  - `agents/run.py` — `EXHAUST_MARKERS` papildyti trumposiomis formomis
+    (`baigėsi iteracij`, `baigėsi žingsniai`, `baigėsi ėjim`, `nebeliko ėjim`…)
+    IR šaka uždaroma `inspect` vaidmenims: `exhaust = "" if cfg.get("inspect")`.
+  - `scripts/check_view.py` — `VIEWPORTS["tiny"]` (320×780, NE numatytajame
+    sąraše), `DEFAULT_VIEWPORTS` konstanta, `TEXT_SCALE_INIT`, `MEASURE_SCALED`,
+    `check_scaled()` ir `--text-scale N`. Režimas atskiras, `--json` grąžina
+    `text_scale` / `scaled_checked` / `scaled_problems` / `scaled_unapplied`,
+    o `null` reiškia „nematuota“, ne „švaru“.
+- **Kodėl:** pirmas bandymas buvo platus sąrašas be vartų — ir jis **krito
+  matavime**: 14 klaidingų teigiamų per 352 ataskaitas, visi `publikavimo-agentas`
+  ir `tikrintojas`, kurių tekste „baigėsi žingsniai“ reiškia „pabaigiau
+  suvestinę“, o ne „praradau failą“. Tai LL-40 spąstai (taisymas ties zondo
+  pločiu). Todėl taisyklė ne spėta, o pasirinkta iš keturių kandidčių pagal
+  naudą ir žalą. `check_view` atveju priežastis ta pati kitu pjūviu: taisyklė,
+  kurios negalima paleisti, yra ne vartai, o komentaras.
+- **Patikra:**
+  - Klasifikatorius, 352 realios ataskaitos: `A senas` 4 pagauti / 6 klaidingi;
+    `B platus` 6 / **8**; `C sakinys` 3 / 5; `D langas` 4 / 5;
+    **`E (platus + inspect vartai)` 6 / 0** — `[425, 369, 367, 320, 317, 295]`,
+    klaidingų `[]`. Neigiamos kontrolės („Eilė tuščia“, „nėra ką veikti“,
+    „20-turn budget“, „Pirmas žingsnis: …“) — 0 klaidingų teigiamų.
+  - `check_view.py` įprastas režimas: 51 maršrutas × small → 0 problemų,
+    rc 0 (elgsena nepakitusi).
+  - `--text-scale 200`: tekstas TIKRAI auga — `.task-q` 19,0 → 37,1 px (×1,96),
+    `p` 13,12 → 26,24, `h1` 32 → 64, `rootFont` 32, `scale_applied` true
+    visuose 51. `small` (360 px) 200 % → **0 slinkčių**: #7396 defektas
+    realiai jau sutvarkytas CSS'e, o ne mano zondo aklumas.
+  - Naujas režimas randa likutį: `tiny` 320 px @ 200 % →
+    `matematika/30-skaiciavimas-atgal-per-desimti` +6 px,
+    `svg „20304032“` — konkrečiai įvardytas elementas, ne skaičius.
+  - **Sugautas mano paties defektas matavimo metu:** maišant režimus tame
+    pačiame puslapyje inline `fontSize` likdavo (hash maršrutizatorius
+    neperkrauna dokumento), todėl įprastas bėgimas rodė `minTaskFont` 37,12 px
+    ir 47/51 klaidingų praleidimų. Ištaisyta dviem atskirais ėjimais; po
+    pataisymo įprastas 0 problemų, padidintas 0.
+  - Vartai: `validate_content.py` 0/0, `check_ui.py` 0/0, `check_lessons.py`
+    133 įrašai / 4 laukai, `check_registry.py` 51/51/223/51, našlaičiai 0,
+    `check_docs_facts.py` 0/0, `check_agents.py` rc 0 (1 įspėjimas —
+    sisteminiai >3 d.; dienoraščio įspėjimas šiuo įrašu užsidaro).
+    Grafikai neliesti (`ROLES` nepakeistas) → `gen_timers.py` nereikalingas.
+- **Neišspręsta sąmoningai:** `30-skaiciavimas-atgal-per-desimti` +6 px prie
+  320 px/200 % — tai `assets/js/sims/` ir CSS, o ne mano vaidmuo; siūlymas
+  rašomas atskirai. #4516/#24171/#24447/#29003/#16338/#16892 nepradėti —
+  #4516, sprendžiant iš `check_language.py:56–60` (`SENTENCE_LIMIT_SEVERITY =
+  "error"`), jau įgyvendintas ir kabo eilėje kaip #4455; to neįrodžiau, todėl
+  numerio nedeklaravau (LL-36). #4455/#22168 — ta pati priežastis kaip #414.
+  `agents/scope.json`, `content/`, `assets/js/sims/` neliesti.

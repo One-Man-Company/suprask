@@ -103,8 +103,12 @@ MEASURE_SCALED = r"""
       const right = Math.round(r.right + window.scrollX);
       const bleed = Math.round(right - vw);
       if (bleed > 1) {
+        // `className` ant SVG elementų yra `SVGAnimatedString`, ne tekstas —
+        // be šios šakos ataskaitoje atsiranda „svg.[object SVGAnimatedString]“
+        // ir defektas netenka adresato (LL-36).
+        const cls = typeof el.className === 'string' ? el.className : (el.getAttribute('class') || '');
         offenders.push({
-          sel: el.tagName.toLowerCase() + (el.className ? '.' + String(el.className).split(/\s+/).slice(0, 2).join('.') : ''),
+          sel: el.tagName.toLowerCase() + (cls ? '.' + cls.split(/\s+/).slice(0, 2).join('.') : ''),
           text: (el.textContent || '').trim().slice(0, 48),
           bleed,
           w: Math.round(r.width),
@@ -378,6 +382,7 @@ def main() -> int:
     chrome = os.environ.get("CHROME_BIN") or str(pathlib.Path.home() / ".local/bin/google-chrome")
 
     results: list[dict] = []
+    scaled: list[dict] = []
     with sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path=chrome, args=["--no-sandbox"])
         for vname in names:
@@ -385,12 +390,29 @@ def main() -> int:
             ctx = browser.new_context(viewport=vp, device_scale_factor=1)
             ctx.add_init_script(BRAVE_INIT)
             page = ctx.new_page()
+            # DU ATSKIRI ĖJIMAI, ne vienas su šakiniu if'u. `check_scaled()`
+            # nustato `documentElement.style.fontSize = '32px'`, o maršrutizatorius
+            # yra HASH'inis — `page.goto()` su kitu `#/...` NEperkrauna dokumento,
+            # todėl inline stilius išlieka. 2026-11-21 pamatuota: maišant režimus
+            # tame pačiame puslapyje, įprasto bėgimo `minTaskFont` rodė 37,12 px
+            # (padidintas!), o 47/51 maršrutų virto klaidingais praleidimais.
+            # Todėl pirmiausia išmatuojamas VISAS įprastas turinys, tik paskui —
+            # padidintas (LL-40: matuok tai, ką vaikas gauna, o ne tai, ką paliko
+            # ankstesnis zondas).
             for route in routes:
                 results.append(check_route(page, args.base, route["route"], vp))
+            if args.text_scale:
+                for route in routes:
+                    scaled.append(check_scaled(page, args.base, route["route"], vp, args.text_scale))
             ctx.close()
         browser.close()
 
     bad = [r for r in results if not r.get("ok")]
+    scaled_bad = [r for r in scaled if not r.get("ok")]
+    # Šaknies šriftas, kuris nepakilo, reiškia, kad matavimas buvo apie nieką.
+    # Tai atskiriama nuo „telpa“ (LL-37), nes kitaip žalias rezultatas
+    # reikštų priešingai, nei rodo.
+    scale_unapplied = [r for r in scaled if not r.get("scale_applied")]
     plane_list = ", ".join(f"{n} {VIEWPORTS[n]['width']}px" for n in names)
     if args.json:
         print(json.dumps({
@@ -401,7 +423,14 @@ def main() -> int:
             # Toleruoti atvejai (antraštė lūžta tik todėl, kad netelpa žemiau
             # standarto pločio) — atskirai, kad neliktų paslėpti serveryje (LL-37).
             "notes": [r for r in results if r.get("ok") and r.get("eyebrowLines", 1) > 1],
+            # 200 % teksto režimas (#7396) — tik kai paprašytas; `null` reiškia
+            # „nematuota“, o ne „švaru“.
+            "text_scale": args.text_scale or None,
+            "scaled_checked": len(scaled) if args.text_scale else None,
+            "scaled_problems": scaled_bad if args.text_scale else None,
+            "scaled_unapplied": [r["route"] for r in scale_unapplied] if args.text_scale else None,
             "all": results,
+            "scaled_all": scaled if args.text_scale else None,
         }, ensure_ascii=False))
     else:
         print(f"Plotai: {plane_list}")
@@ -446,7 +475,28 @@ def main() -> int:
                   f"plotis žemiau standarto {STANDARD_MIN_WIDTH} px; žyma vienoje eilutėje")
         if not bad:
             print("✔ Visi moduliai matomi ir telpa visuose plotuose (su Brave skydų blokais).")
+        # 200 % teksto režimas (#7396) — atskira sekcija, kad žalias įprastas
+        # bėgimas niekada neatrodytų kaip žalias ir padidintam tekstui.
+        if args.text_scale:
+            print(f"\nTekstas {args.text_scale} % (WCAG 1.4.4): patikrinta {len(scaled)} · "
+                  f"problemos: {len(scaled_bad)}")
+            if scale_unapplied:
+                print(f"  ! šaknies šriftas nepakilo {len(scale_unapplied)} maršrutuose — "
+                      f"matavimas nepatikimas: {', '.join(r['route'] for r in scale_unapplied[:3])}")
+            for r in scaled_bad[:12]:
+                who = (r.get("offenders") or [{}])[0]
+                where = (f"{who.get('sel', '?')} „{who.get('text', '')[:34]}“ "
+                         f"+{who.get('bleed', 0)}px") if who else "nežinoma"
+                bits = [f"slinktis {r.get('overflow', 0)}px", where]
+                for e in (r.get("errors") or [])[:1]:
+                    bits.append(e[:60])
+                print(f"  ✗ {r['route']} @{r['viewport']}px: " + "; ".join(bits))
+            if not scaled_bad:
+                print("  ✔ Tekstas telpa ir 200 % dydžiu.")
 
+    # `--text-scale` problemos NEGRĄŽINA ne-nulinio kodo, kol defektai
+    # nesutvarkyti: #7396 sąmoningai prašė atskiro režimo, nes raudoni vartai
+    # be pataisymo moko juos apeiti. Tai pasakyta, o ne nutylėta (LL-37).
     return 1 if bad else 0
 
 

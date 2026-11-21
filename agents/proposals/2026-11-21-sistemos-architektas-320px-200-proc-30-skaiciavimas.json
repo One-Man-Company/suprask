@@ -1,0 +1,16 @@
+{
+  "role": "sistemos-architektas",
+  "run_id": 429,
+  "created": "2026-11-21T20:40:00+02:00",
+  "type": "struktura",
+  "title": "Rėmas telpa 360 px, bet 320 px @200 % vis dar išstumia 6 px: „30-skaiciavimas-atgal“ blokai",
+  "body": "Naujas `check_view.py --text-scale 200` režimas (#7396) ir `tiny` plotas (#4921) leido pamatuoti tai, ko iki šiol niekas nematė. Rezultatas geras: prie standarto pločio (360 px) ir 200 % teksto 51/51 maršrutų telpa — #7396 aprašyti 20/31 defektai realiai sutvarkyti per #422/#424 (LL-133 rėmo paminkštinimas px). Bet prie 320 px (žemiau standarto, bet realus pigiausių telefonų plotis) ir 200 % teksto vienas modulis vis dar išstumia 6 px: `matematika/30-skaiciavimas-atgal-per-desimti`. Kaltininkas įvardytas, ne skaičius — `svg` su skaičių eilute „20304032“, t. y. simuliacijos blokai telpa į 360 px, bet ne į 320 px su dvigubu šriftu. Standartas žemiau 360 px nieko nežada, todėl tai ne vartų klaida ir `tiny` sąmoningai neįtrauktas į numatytąjį sąrašą. Vis dėlto 320 px yra realus įrenginys, o pataisymas greičiausiai pigus: tinklelio minimumas skaičiuojamas nuo turimo ploto (LL-133 taisyklė), o ne nuo šaknies. Siūloma simuliacijų inžinieriui išmatuoti `#sim-stage` plotį prie 320 px/200 % ir susiaurinti blokų minimumą taip, kad prie 360 px vaizdas nepasikeistų (LL-40: taisoma defekto ruože, ne zondo plote).",
+  "target": "assets/js/sims/matematika.js",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "scripts/check_view.py --viewports tiny --text-scale 200 → matematika/30-skaiciavimas-atgal-per-desimti +6 px, svg „20304032“ (2026-11-21, #429)",
+    "scripts/check_view.py --viewports small --text-scale 200 → 51/51 telpa, 0 problemų: prie standarto pločio defekto nėra",
+    "research/wiki/guidelines/pamokos.md LL-133 — rėmo matai px, tinklelio minimumas nuo turimo ploto"
+  ]
+}

@@ -979,6 +979,104 @@ Atsakymų indeksai 1 / 0 / 1 / 0 — pirmas ir trečias nesutampa su antru ir ke
 
 **Pastaba dėl pasiūlymo.** Ideatorius siūlė, kad vaikas „paspaudžia garsą žodyje ir laiko — vieno garso juosta pildosi tol, kol garsas skamba, kito sustoja per akimirką“. Metodas tą patį veiksmą palieka, bet **juostą sieja su garso savybe, o ne su tikru garso ilgiu ekrane**: platformos garsas yra iš anksto įrašyti mp3, o sintezatorius nepagamina valdomo ilgio pavienio priebalsio, todėl „kol garsas skamba“ būtų netiesa (LL-14, LL-15). Antra, pasiūlyme rūšiavimas buvo atskiras žingsnis po bandymo; čia jis lieka, bet tikrinamas **vienu kartu po visų plytelių** („Palygink“), o ne po kiekvienos — kitaip modelis tampa vertintoju, o ne įrankiu. Trečia, pasiūlymas prašė „dviejų eilių pagal spėjimą“; eilės lieka, bet jų pavadinimai yra „Ilgas garsas“ ir „Trumpas garsas“, o ne „balsiai“ ir „priebalsiai“, nes D.1.3.1 reikalauja skirti be terminų, o s ir m yra priebalsiai, kurie tęsiasi.
 
+### M-12 — Dviženklis ir dviženklis: dešimtys prie dešimčių, vienetai prie vienetų
+
+**Data:** 2026-11-21 · **Tema:** 1 klasės matematika, trečias programos sudėties atvejis (`agents/log/ideator-2026-11-21T0741.md` — tema parengta, bet pasiūlymo failas neįrašytas) · **Tikslas:** `content/lt/grade-01/matematika/31-dvizenkliai-neper-desimties.json`
+
+**Viena didelė idėja.** Kai vienetų suma mažesnė už dešimt, naujas dešimtukas nesusidaro. Dešimčių sumoje yra tiek, kiek jų buvo abiejuose dėmenyse, o vienetai lieka vienetais.
+
+**Ką sako programa.** 1 klasės turinio aprašas įvardija tris privalomus atvejus: „vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį, **dviženklių skaičių neperžengiant dešimties**“ (`sources/pradinio-bp-rekomendacijos-2024.txt:33520–33521`); tas pats atvejis kartojamas pasiekime A1 (`:692–699`) ir wiki `matematika-1-klase.md` §2.2. Platformoje trečias atvejis neturi nė vieno modulio: `22-sudetis-per-desimti` sprendžia sudėtį **per** dešimtį (8 + 5, 16 + 7), `29-atimtis-per-desimti` — atimtį per dešimtį, `27-skaicius-ir-skaitmuo` — skaitmens vietą (13 ir 31), `30-skaiciavimas-atgal-per-desimti` — skaičiavimą atgal. Paieška `grep "16 + 12|neperžengiant|dviženkl"` `content/lt/grade-01` randa tik citatas `sources` laukuose, ne užduotį.
+
+**Kodėl modelis, o ne paveikslėlis.** Paveikslėlis parodo **sumą**, o ne tai, iš ko ji susidarė: 28 atrodo taip pat, ar gautas iš 16 + 12, ar iš 14 + 14. Skirtumas, kurį vaikas turi suprasti, yra **sandara** — kiek strypų ir kiek kubelių atkeliavo iš kiekvieno dėmens ir ar kubeliai susidėjo į naują strypą. Tam reikia palyginti dvi būsenas (prieš ir po) ir priežastį (kubelių skaičių). Modelis duoda ir trečią dalyką, kurio paveikslėlis neturi: vaikas **pats keičia antrą dėmenį** ir mato, kad dešimčių skaičius kinta tik tada, kai kinta antro dėmens dešimtys, o vienetai strypo neprideda — kol jų nesurenka dešimt.
+
+**Ką rodo tyrimai.**
+Fuson (1990) parodė, kad daugiaženklių skaičių sudėtis remiasi tuo, kaip vaikas supranta **daugiaviečius skaičius** (multiunit), o ne atskira „stulpelio“ procedūra: jei skaičius vaikui yra tik ženklų seka, sudėjimas virsta skaitmenų sudėjimu, ir 16 + 12 = 38 yra logiška tos nuostatos pasekmė, o ne apsirikimas. Iš to metodui išeina reikalavimas: modelis rodo skaičių kaip strypus ir kubelius, ne kaip du skaitmenis.
+Fuson ir Briars (1990) parodė, kad dešimtukų strypeliai ir vienetų kubeliai įkūnija skaičiaus sandarą ir kad su šiuo modeliu vaikai įveikia daugiaženklę sudėtį. Tyrimas darytas su **antra** klase, todėl 1 klasei imama tik modelio idėja, o ne apimtis — modelyje nėra nei keturženklių skaičių, nei pernešimo.
+Hiebert ir Wearne (1996) parodė, kad supratimas ir procedūros tikslumas auga kartu tik tada, kai mokymasis remiasi simbolių ir daiktų sąsaja; todėl kiekviena modulio būsena turi tris vienu metu matomus dalykus: strypus ir kubelius, skaičių ir sakinį apie tai, kas įvyko.
+Fuson (1990, forumo straipsnis) kelia klausimą, ar vietos vertės ir daugiaženklės sudėties mokymas procedūromis pirma laiko yra pagrįstas; šiame metode procedūra („sudėk dešimtis atskirai“) yra **išvada** to, ką vaikas pamatė, o ne pradžios taisyklė.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Sudėjus du dviženklius skaičius visada atsiranda trečia dešimtis.“** Tai pernešimo overgeneralizacija: vaikas ką tik mokėsi sudėties per dešimtį (`22`), kur kiekvieną kartą susidarydavo naujas dešimtukas. Modelis laiko pirmą dėmenį (16) nepajudinamą, o antrą keičia: 16 + 12 = 28, 16 + 13 = 29 — strypų visada du, nes kubelių niekada nėra dešimt. Paneigiama tuo pačiu veiksmu su skirtingu rezultatu, ne paaiškinimu.
+2. **„16 + 12 = 18, nes reikia sudėti tik vienetus.“** Vaikas prie 16 prideda 2 ir pamiršta antrą dešimtį. Modelis rodo, kad antro skaičiaus strypas taip pat keliauja prie pirmojo — juda daiktas, ne skaitmuo.
+3. **„Didesnis dėmuo lemia daugiau dešimčių.“** Nėra „vyresnio“ dėmens: ir 16, ir 12 duoda po vieną strypą, o sumos strypai suskaičiuojami tik po sudėjimo. Abu dėmenys piešiami tuo pačiu pavidalu (tas pats strypo ilgis, ta pati spalva), todėl skirtumas tarp jų yra tik kiekis.
+4. **„Naujas dešimtukas atsiranda savaime, kai skaičius tampa didesnis.“** Modelis sąmoningai leidžia vienetų pridėti tik tiek, kad jų suma liktų devyni; bandant pridėti dešimtą, valdiklis nepasikeičia, o `api.note` pasako, kad daugiau vienetų jau sudarytų dešimtuką (LL-04 — užrakintas valdiklis paaiškinamas, o ne tyli).
+
+**Seka (konkretumas → pusiau abstraktus modelis → simbolis → perkėlimas).**
+
+1. **Ryšulėliai ant stalo.** Vaikai riša po dešimt pagaliukų. Vienas padeda 16 (ryšulėlis ir šeši pagaliukai), kitas — 12. Sudeda ryšulėlius prie ryšulėlių, pagaliukus prie pagaliukų ir gauna du ryšulėlius bei aštuonis pagaliukus. Tikslas: skirtumą pajusti rankomis, o ne išgirsti taisyklę; mokytojas nepasako, kad „dešimčių bus dvi“.
+2. **Ekranas, du dėmenys, vienas kintamasis.** Ekrane tos pačios krūvelės: pirmas skaičius (16) nepajudinamas, antrą vaikas keičia (dešimtys 1–4, vienetai 0–3). Prieš pirmą sudėjimą — **spėjimas**: „Kiek dešimčių bus sumoje?“ (Dvi / Trys / Viena). Tikslas: pamatyti, kad atsakymą lemia dėmenų dešimtys, o ne tai, kad „skaičių daug“.
+3. **Sudėjimas ir paaiškinimas.** Vaikas spaudžia „Sudėk“: strypai keliauja į sumos krūvą, kubeliai — į savo. Atsiranda trys vienu metu matomos eilutės: strypai, kubeliai ir skaičius 28. `api.note` sako **kodėl**: „Vienetų mažiau nei dešimt, todėl dešimtukas nesusidaro.“
+4. **Antras ir trečias dėmuo.** Vaikas sudeda dar du skirtingus antruosius dėmenis (pvz., 16 + 22, 16 + 33) ir mato, kad strypų daugėja tik tada, kai daugėja antro dėmens dešimčių. Po trečio sudėjimo — `api.progress`.
+5. **Perkėlimas į simbolį ir į gyvenimą.** Tada patys skaičiai be strypų: 23 + 14, 31 + 25, ir atvirkštinė užduotis, kurioje dėmenys duoti žodžiais („3 dešimtys ir 6 vienetai“). Tikslas: ta pati taisyklė toje vietoje, kur ji bus naudojama skaičiuojant mintinai.
+
+**Privalomas spėjimo žingsnis.** Vienas spėjimas apie **vieną** pasekmę (kiek dešimčių), palyginamas su įvykiu (LL-15). Spėjimas niekada nevadinamas klaida ir lieka matomas virš sumos. Be jo modelis virsta judesiu: vaikas žiūri, kaip strypai persirikiuoja, ir sąryšio su dėmenimis nepastebi.
+
+**Simuliacijos specifikacija.** Komponentas `strypeliai-ir-suma`, failas `assets/js/sims/matematika.js` (šis failas yra vienintelė `scripts/check_art.py` LEGACY scena ir pats piešia savo formas, kaip `skaicius-ir-skaitmuo`, todėl LEGACY sąrašo liesti nereikia). Registracija: `SIMS` bloke (`matematika.js:4335–4352`) pridedama eilutė `"strypeliai-ir-suma": strypeliaiIrSuma,`. `config`:
+
+```json
+{ "first": { "tens": 1, "ones": 6 },
+  "second": { "tens": 1, "ones": 2 },
+  "labels": { "tensPlace": "Dešimtys", "onesPlace": "Vienetai", "groupSecond": "Antras skaičius",
+              "less": "viena mažiau", "more": "viena daugiau", "add": "Sudėk",
+              "reset": "Iš naujo", "sumWord": "Suma",
+              "rodsAria": "Dešimčių strypeliai, kiekvienas po dešimt kubelių",
+              "onesAria": "Vienetų kubeliai" },
+  "sentences": { "start": "…", "guess": "…", "merged": "…", "count": "…",
+                 "limit": "…", "again": "…", "resetNote": "…" } }
+```
+
+**Riba išvedama, o ne įrašyta.** `config` sąmoningai neturi lauko, kiek vienetų daugiausia galima pridėti: `onesMax = 9 - first.ones` (su pirminiu dėmeniu 16 → 3). Jei `second.ones` viršija šią ribą, komponentas rašo `console.error` ir rodo „Skaičiai nesuderinti.“, o ne tyliai nukerpa. Tai ta pati taisyklė kaip M-07 (`kiekis = board.px / unit.px`) ir M-11 (`cells = sound.stretch ? 8 : 1`): teiginys ekrane išvedamas iš tų pačių duomenų, kuriuos mato vaikas.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | dvi krūvelės (16 ir 12), strypai ir kubeliai, tuščia sumos eilutė, spėjimo mygtukai | „16 ir 12. Kiek bus dešimčių?“ | „Pasirink antrą skaičių ir pažiūrėk į krūveles.“ |
+| spėjimas | pasirinktas spėjimas lieka virš sumos, mygtukas „Sudėk“ | „Tu sakei: trys.“ | „Dabar sudėk ir pažiūrėk.“ |
+| sudėta | strypai sumos krūvoje, kubeliai savo, skaičius 28 | „28. Dvi dešimtys ir aštuoni vienetai.“ | „Vienetų mažiau nei dešimt, todėl dešimtukas nesusidaro.“ |
+| spėjimas nepataikė | tas pats vaizdas, spėjimas lieka matomas | „Tu sakei: trys. Gavosi dvi.“ | „Dešimtys susideda iš dėmenų dešimčių.“ |
+| vienetų riba | kubelių tiek pat, `+` nepasikeičia | „Vienetų daugiau nebus.“ | „Daugiau vienetų jau sudarytų dešimtuką.“ |
+| trečias sudėjimas | trys sumos eilutės viena po kitos | „Trys krūvelės, viena taisyklė.“ | „Visur dešimčių tiek, kiek jų dėmenyse.“ |
+| „Iš naujo“ | krūvelės atstatytos, sumos eilutė tuščia | „Pradedam iš naujo.“ | „Pakeisk antrą skaičių ir sudėk dar kartą.“ |
+
+Septynios savybės, kurių negalima praleisti:
+
+- **Vienas kintamasis:** `second` (antras dėmuo). Pirmas dėmuo nepajudinamas — jis yra kontrolinis atvejis, kaip lenta M-07 (įterpiama vieną kartą) ir puodelis su žyma vandens formos metode. Vaikas keičia vieną dėmenį, todėl pasekmę gali priskirti būtent jam.
+- **Geometrija 360 px:** scena `container-type:inline-size`, `--u: clamp(14px, 3.8cqw, 24px)` (ta pati formulė kaip `skaicius-ir-skaitmuo`, `matematika.js:3991–3995`). Strypas — 10 segmentų juosta `var(--u)` pločio ir `calc(var(--u) * 4.2)` aukščio; kubeliai — `repeat(3, var(--u))` tinklelis. Prie 360 px `--u = 14 px`: keturi strypai ir trys kubeliai telpa į 250 px, abi krūvelės ir sumos eilutė — į 328 px su tarpais. Jokio horizontalaus slinkimo; 200 % tekste `cqw` laiko tuos pačius matmenis, didėja tik užrašai (`min-width:0` ant tėvų, LL-125).
+- **Įėjimai ir klaviatūra:** `Tab` tarp valdiklių, `Enter`/`Space` aktyvuoja, `←`/`→` keičia pasirinktą skaitmenį, `R` atstato. Taikiniai: dešimčių ±, vienetų ±, spėjimo trys mygtukai ir „Sudėk“ — visi ≥ 48 px.
+- **Fokusas** (LL-32): po sudėjimo fokusas lieka „Sudėk“ ir `readout` pasikeičia; po „Iš naujo“ — į pirmą vienetų valdiklį, o ne į paslėptą elementą; atsiradus spėjimo mygtukams — į pirmą iš jų.
+- **Grįžtamasis ryšys** — `readout` po sudėjimo, `api.note` sako **kodėl**, niekada „teisingai“ ir niekada apie vaiką (T5.1). `api.progress({ correct: true })` — vieną kartą, po trečio sudėjimo (ne po pirmo, LL-29), ir tikrinama dabartinė būsena, ne istorija (LL-17). „Iš naujo“ pažangos netrina (LL-16).
+- **Garsas:** tariamos tik instrukcijos (`config.sentences`, 7 frazės × 2 įrašai = 14 naujų mp3). Sumos skaičius **netariamas** — jis keičiasi kiekvieną sudėjimą (LL-14); jį perskaito `api.readout` ekrane.
+- **Be laikmačių, be ėjimų limito, be „game over“.** Sudėti galima tiek kartų, kiek vaikas nori.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Simuliacijoje 16 + 12. Kiek bus dešimčių?“ — Trys / Dvi / Viena | Dvi (1) | „Trys“ — pernešimo overgeneralizacija iš `22` | „Suskaičiuok strypelius abiejose krūvelėse.“ |
+| 2 | taikymas | „Kiek yra 23 + 14?“ — 27 / 47 / 37 | 37 (2) | 27 — sudėjo vienetus ir vieną dešimtį | „Skaičių 14 sudaro viena dešimtis ir keturi vienetai.“ |
+| 3 | perkėlimas | „Ant lentynos 31 knyga. Dar 25. Kiek knygų iš viso?“ — 56 / 46 / 66 | 56 (0) | 46 — pamiršo antrą dešimtį; 66 — pridėjo dešimtį, kurios nebuvo | „Lentynoje trys dešimtys, o kitoje krūvoje dvi.“ |
+| 4 | perkėlimas (`optional: true`) | „Vienas vaikas turi 3 dešimtis ir 6 vienetus. Kitas turi 2 dešimtis ir 2 vienetus. Kiek jų iš viso?“ — 48 / 58 / 68 | 58 (1) | 48 — dešimčių sudėjo viena mažiau, nei yra | „Suskaičiuok, kiek dešimčių turi abu vaikai.“ |
+
+Atsakymų indeksai 1 / 2 / 0 / 1 — ne visi tame pačiame indekse (`validate_content.py` tikrina pasiskirstymą). Nė viena užuomina nekartoja teisingo varianto skaičiaus ir nė viena nepasako atsakymo.
+
+**Refleksija.** „Kur gyvenime tau teko sudėti du dviženklius skaičius? Pasakyk, kaip skaičiavai.“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — vaikas įvardija savo skaičiavimo kelią (pvz., „pirma dešimtis, paskui vienetus“). Tai patikrinimas be ekrano ir be balo.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Modelis sąmoningai nesustoja ties dešimčia.** Vienetų galima pridėti tik iki devynių, nes dviejų dviženklių skaičių sudėtis **per** dešimtį nėra 1 klasės programos trečias atvejis — tai kito modulio tema (LL-23). Vaikui tai pasakoma vienu sakiniu, mokytojui — `teacher.misconceptions[3]`.
+2. **„Dešimt vienetų = viena dešimtis“ modelyje neįrodoma.** Strypas nupieštas kaip dešimt kubelių, bet *kodėl* dešimt vienetų yra viena dešimtis, rodo `05-desimtukas`; čia tai laikoma žinoma.
+3. **Strypas nėra „skaičius 10“.** Strypas yra viena dešimtis, o ne dešimt atskirų daiktų, kuriuos galima liesti. Vaikas, kuris strypą skaičiuoja kaip vieną daiktą, gali gauti teisingą atsakymą ir vis tiek nesuprasti vietos vertės — todėl būtinas spėjimas ir 2–4 užduotys be strypų.
+4. **Suma niekada neviršija 100.** Pirmas dėmuo 16, antras iki 43, todėl sumos iki 59; 1 klasės programa leidžia iki 100, bet modelis sąmoningai nesiekia ribos — šimto lentelė yra `19-simto-skaiciu-lentele`.
+5. **Spalva nėra informacijos nešėja.** Strypai ir kubeliai skiriasi forma ir padėtimi, ne spalva (T5.5); spėjimas ir sumos eilutės sunumeruotos.
+
+**Ką tai reiškia modulio autoriui.** `id` — `31-dvizenkliai-neper-desimties` (numeris 31 matematikoje laisvas, užimti 04–07 ir 14–30); `title` — „Sudėtis be naujo dešimtuko“ (26 simboliai iš 42); `subtitle` — „16 + 12: dešimtys prie dešimčių, vienetai prie vienetų“ (54 iš 80); `minutes` — 9; trys `outcomes` (8/8/7 žodžių); `concept.title` — „Dešimtys prie dešimčių“ (22 iš 40); `concept.big_idea` — 112 simbolių (9 + 6 žodžių sakiniai); `concept.steps` — keturi žingsniai (6/6/10/7 žodžių, 51/48/59/50 simbolių); `concept.example` — 16 pieštukų klasėje (11 žodžių). Įrašius modulį jis turi patekti į `content/lt/grade-01/index.json` (matematikos kryptis, po `30-skaiciavimas-atgal-per-desimti`) ir į `path.json` — **po `22-sudetis-per-desimti`**, nes ten vaikas jau moka papildyti iki dešimtuko, o čia pamato, kad jo papildyti nereikia. Failo numeris ir eilė kelyje neprivalo sutapti (`path.json` tvarką gali keisti dizaineris).
+
+**Patikra tikru įrankiu (2026-11-21).** Metodo specifikacija surašyta kaip juodraštinis modulis scratch kataloge (ne `content/`, todėl `git status` švarus) ir paleisti abu vartai su tuo pačiu keliu, kuriuo tikrina CI: `validate_content.check_module` → **0 klaidų, 1 įspėjimas** („nepavyko perskaityti simuliacijos „strypeliai-ir-suma“ kūno — sim.config gyvumas nepatikrintas“ — sąžininga, kol komponento nėra registre), `check_language.check_module` → **0 klaidų, 0 įspėjimų, 0 pastabų**. Aritmetika perskaičiuota skriptu, ne mintyse: 16 + 12 = 28 (dvi dešimtys), 23 + 14 = 37, 31 + 25 = 56, 36 + 22 = 58; atsakymų indeksai 1 / 2 / 0 / 1. Ilgiai matuoti skriptu (`len()` simboliams, `validate_content.word_count` žodžiams), ne akimis. Juodraštis po patikros pašalintas (`finally`), failo `content/` kataloge neliko.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, matematika — trys 1 klasės sudėties ir atimties atvejai (`sources/pradinio-bp-rekomendacijos-2024.txt:33520–33521`), pasiekimas A1 (`:692–699`). Fuson, K. C. (1990). Conceptual structures for multiunit numbers: Implications for learning and teaching multidigit addition, subtraction, and place value. *Cognition and Instruction, 7*(4), 343–403. https://doi.org/10.1207/s1532690xci0704_4 · Fuson, K. C., & Briars, D. J. (1990). Using a base-ten blocks learning/teaching approach for first- and second-grade place-value and multidigit addition and subtraction. *Journal for Research in Mathematics Education, 21*(3), 180–206. https://doi.org/10.5951/jresematheduc.21.3.0180 · Hiebert, J., & Wearne, D. (1996). Instruction, understanding, and skill in multidigit addition and subtraction. *Cognition and Instruction, 14*(3), 251–283. https://doi.org/10.1207/s1532690xci1403_1 · Fuson, K. C. (1990). A forum for researchers: Issues in place-value and multidigit addition and subtraction learning and teaching. *Journal for Research in Mathematics Education, 21*(4), 273–280. https://doi.org/10.5951/jresematheduc.21.4.0273
+
+**Pastaba dėl pasiūlymo.** Ideatorius (#418) parengė šią temą su tais pačiais šaltiniais, bet paleidimas baigėsi prieš įrašant failą, todėl `tema` pasiūlymo `agents/proposals/` kataloge nėra. Metodas idėją palieka, bet **modelį susiaurina**: ideatorius siūlė „sudedame dviženklius skaičius“, o čia pirmas dėmuo nepajudinamas ir vienetų suma laikoma po devyniais — kitaip modelis rodytų pernešimą, kurio 1 klasės programa nereikalauja (LL-23), ir tas pats modulis mokytų dviejų dalykų (T1.2).
+
 ## Atviros prielaidos
 
 

@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 422,
+  "created": "2026-11-21T11:45:00+02:00",
+  "type": "simuliacija",
+  "title": "Sim tarpai rem vienetais prie 200 % teksto atima 1–3 px iki 48 px ribos",
+  "body": "Platformos rėmo paraštes sutvarkius (#422: main ir .sim-shell paminkštinimas dabar px, o ne rem), 200 % zondas 51 moduliui @360 px parodė, kad liko 9 moduliai su defektais. Dalį jų sudaro ne simuliacijos išlipimas, o per mažas taikinys: 23-piktograma-ir-stulpelis trauko langeliai 47x52 px (plotis 1 px žemiau standarto §4.6 48 px), nes jo `.3rem` tarpai prie 32 px šaknies išauga nuo 4,8 iki 9,6 px ir atima 19,2 px iš 301,2 px ploto. Tas pats mechanizmas kaip dešimtuke, kuris šiame paleidime sutvarkytas (gap: min(.5rem, 8px)). Siūloma peržiūrėti visus sim tinklelius, kurių tarpai rašyti rem, ir keisti juos į min(Xrem, Ypx), kad didinant tekstą didėtų langeliai, o ne tarpai; 23-piktograma yra pirmas kandidatas, nes ten defektas matuotas. Tai nėra naujas modelis, o tos pačios šeimos pataisa, todėl turėtų būti vienas paleidimas vienam sim failui, kaip ir reikalauja vaidmuo.",
+  "target": "assets/js/sims/matematika.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "/home/zoltanas/.hermes/profiles/deepseek41flash/cache/scratch/r422_probe_after.txt (23-piktograma: taikinys 47x52, 14 defektų)",
+    "/home/zoltanas/.hermes/profiles/deepseek41flash/cache/scratch/r422_measure3.py (tray gap 9,6 px, pW 301,2 @32 px)",
+    "docs/KURINIO-STANDARTAS.md §4.6 (lietimo taikiniai ≥ 48 px)",
+    "research/wiki/guidelines/pamokos.md LL-133"
+  ]
+}

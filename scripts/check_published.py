@@ -183,6 +183,19 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   riboja ne užklausą, o aibę: matuota „indeksas prieš indeksą“, o vaikui
   svarbu „failas prieš naršyklę“.
 
+2026-11-21 (paleidimas #423): svetainės failai imami iš katalogo, ne tik `*.js`/`*.css`.
+  `shell_files()` rinkdavo `index.html`, `404.html`, `assets/js/**/*.js` ir
+  `assets/css/*.css`, o `pages.yml` publikuoja `cp -r assets` — t. y. visą
+  katalogą. Bet koks kitas svetainės failas (paveikslas, SVG, šriftas, JSON)
+  būtų paskelbtas be vartų: baitų lyginimas jo nepamatytų, o vaikas, radęs
+  404 paveikslo adrese, nematytų jokio įspėjimo. Matuota buvo tai, kas
+  įrašyta sąraše, ne tai, ką svetainė siunčia (LL-37 — tyli riba). Šiandien
+  tokių failų nėra, todėl poveikis nulinis (`shell_count` 19 → 19), bet pirmas
+  `assets/img/*.svg` praeitų visas patikras žalias. Dabar `shell_files()`
+  prideda visus `assets/` failus, išskyrus `assets/audio/` — garsas tikrinamas
+  atskirai (`check_audio()` ir AUX `manifest.json`), o 1 486 mp3 dublikatas
+  bėgimą pailgintų be naujos informacijos.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -625,10 +638,17 @@ def same_bytes(rel: str) -> tuple[str, int, int]:
 
 
 def shell_files() -> list[str]:
-    """Svetainės kodo failai, kuriuos naršyklė įkelia (`index.html`, JS, CSS).
+    """Svetainės failai, kuriuos naršyklė įkelia (`index.html`, JS, CSS, kiti `assets/`).
 
     Sąrašas imamas iš katalogų, ne įrašomas ranka: nauja simuliacija
     `assets/js/sims/` faile atsiranda be įrankio pakeitimo.
+
+    `SHELL_GLOBS` išvardija tik `*.js` ir `*.css`, o `pages.yml` publikuoja
+    visą `assets/` (`cp -r assets`). Todėl po jų pridedami visi kiti `assets/`
+    failai — paveikslas, SVG, šriftas, JSON. Kitaip pirmas `assets/img/*.svg`
+    būtų paskelbtas be vartų: baitai žali, o vaikas paveikslo adrese randa 404
+    (LL-37 — riboja sąrašas, ne svetainė). `assets/audio/` praleidžiamas:
+    garsą tikrina `check_audio()` ir AUX `manifest.json`.
     """
     out: list[str] = []
     for name, pattern in SHELL_GLOBS:
@@ -639,6 +659,16 @@ def shell_files() -> list[str]:
             continue
         if path.is_dir():
             out += [str(p.relative_to(ROOT)) for p in sorted(path.rglob(pattern))]
+    assets = ROOT / "assets"
+    if assets.is_dir():
+        for p in sorted(assets.rglob("*")):
+            if not p.is_file():
+                continue
+            rel = p.relative_to(ROOT).as_posix()
+            if rel.startswith("assets/audio/"):
+                continue
+            if rel not in out:
+                out.append(rel)
     return out
 
 

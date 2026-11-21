@@ -109,10 +109,16 @@ const desimtukas = {
        skaičiuojamas iš to paties 3.4rem. 16 px šaknyje langeliai lieka
        54,4 px (360 px ekrane — 53,3 px), kaip ir prieš taisymą.
        Penki stulpeliai sąmoningai nekeičiami: dešimtukas yra dvi eilės po
-       penkis, ir būtent eilė, o ne pusė, yra 1 klasės sąvoka. */
+       penkis, ir būtent eilė, o ne pusė, yra 1 klasės sąvoka.
+
+       Tarpai — PX, ne rem (#422). `.5rem` prie 200 % teksto išauga iki
+       16 px, keturi tarpai atima 64 px, ir penki langeliai 301 px tėve
+       telpa tik po 47,4 px — mažiau už standarto §4.6 48 px. Matuota
+       @360/32 px: su `min(.5rem, 8px)` langelis 53,8 px, o 16 px šaknyje
+       tarpas nesikeičia (8 px). */
     stage.innerHTML = `
       <div style="text-align:center">
-        <div id="dt-grid" style="display:grid;grid-template-columns:repeat(5,minmax(0,3.4rem));grid-template-rows:repeat(2,auto);gap:.5rem;justify-content:center;width:100%;max-width:calc(5 * 3.4rem + 4 * .5rem);margin:0 auto;box-sizing:border-box;container-type:inline-size"></div>
+        <div id="dt-grid" style="display:grid;grid-template-columns:repeat(5,minmax(0,3.4rem));grid-template-rows:repeat(2,auto);gap:min(.5rem,8px);justify-content:center;width:100%;max-width:calc(5 * 3.4rem + 4 * 8px);margin:0 auto;box-sizing:border-box;container-type:inline-size"></div>
         <p class="sim-note" id="dt-msg">Spausk langelius ir skaičiuok. Kiek trūksta iki 10?</p>
       </div>`;
     controls.innerHTML = `<button class="btn secondary" id="dt-clear">Išvalyti</button>`;

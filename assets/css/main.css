@@ -125,7 +125,16 @@ a:hover { text-decoration-color: var(--accent); }
 .icon-btn:hover { transform: translateY(-1px); background: var(--line); }
 .icon-btn[aria-pressed="false"] { opacity: .55; }
 
-main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 2rem) 4rem; }
+/* Šoninis paminkštinimas — PX, ne rem (#422). `clamp(1rem, …)` minimumas
+   seka šaknies šriftu, todėl prie 200 % teksto (32 px šaknis) jis išauga
+   nuo 16 iki 32 px ir atima 2×16 = 32 px iš turinio pločio. Matuota @360:
+   `main` 4vw = 14,4 px, bet clamp minimumas laimėjo, todėl simuliacijos
+   kortelė susiaurėjo 57,6 px (su `.sim-shell` paminkštinimu) ir dešimtuko
+   langeliai prie 200 % teksto liko 35 px — mažiau už standarto §4.6 48 px.
+   Paraštė yra rėmas, ne tekstas: didinant tekstą ji neturi didėti, kitaip
+   didesnis tekstas netenka vietos (WCAG 1.4.4 / 1.4.10 dvasia). 13–32 px
+   atkartoja senąsias .8rem–2rem ribas 16 px šaknyje. */
+main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(13px, 4vw, 32px) 4rem; }
 
 .site-foot {
   border-top: 1px solid var(--line); padding: 2rem clamp(1rem, 4vw, 2rem) 3rem;
@@ -341,9 +350,14 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
   background: var(--ink); color: var(--paper); border-radius: 50%; font-weight: 900;
 }
 
+/* Paminkštinimas PX (žr. `main` aukščiau, #422): prie 200 % teksto
+   `.8rem` išauga nuo 12,8 iki 25,6 px ir kartu su puslapio parašte atima
+   57,6 px iš simuliacijos ploto — būtent tiek, kiek dešimtuko penkiems
+   langeliams reikia, kad liktų ≥ 48 px. 13–24 px atkartoja senąsias
+   .8rem–1.5rem ribas 16 px šaknyje, todėl įprastas vaizdas nesikeičia. */
 .sim-shell {
   background: var(--paper-2); border: 2px solid var(--line); border-radius: var(--r-l);
-  padding: clamp(.8rem, 2.5vw, 1.5rem); box-shadow: var(--shadow-2);
+  padding: clamp(13px, 2.5vw, 24px); box-shadow: var(--shadow-2);
 }
 .sim-stage { display: grid; place-items: center; gap: 1rem; }
 /* Valdiklių juosta. `.container-type: inline-size` daro ją konteineriu, kad

@@ -211,6 +211,31 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   pašalinti), t. y. invariantas laikosi. Patikra pigi (~48 MB vietinio
   skaitymo, jokių tinklo užklausų), tad ji daroma kiekvieną bėgimą.
 
+2026-11-21 (paleidimas #428): #426 patikra įjungta ir jos tyli riba uždaryta.
+  #426 paliko `audio_name_digest()` parašytą, bet **nejungtą**: `report()` jį
+  kvietė, o rezultatas neįeidavo nei į išvestį, nei į `verdict()`, nei į
+  pranešimą. Tai reiškia, kad patikra egzistavo tik kaip funkcija, kurios
+  niekas neperskaito — tas pats defektas kaip #370 (parašyta, bet vartai
+  nenaudoja). Dabar:
+  - `report()` įrašo `audio_name` į išvestį (ir `--json`, ir žmogui);
+  - `verdict()` turi dvi naujas priežastis: `mismatch` (vardas rodo kitą
+    turinį → pergeneruoti garsą, ne publikuoti) ir `absent` (manifesto įrašas
+    be repo failo → vardo maišas nepatikrintas);
+  - pranešime yra eilutė „Garso vardai: N iš N — vardo maišas = baitų maišas“,
+    o sėkmės eilutėje — „garso vardai N/N = baitai“.
+  Antroji pataisa ta pati sritis: `audio_name_digest()` trūkstamą failą
+  praleisdavo `continue`, todėl `checked + unverified + mismatch` buvo
+  mažiau už `total` ir skaičius atrodė pilnas, nors dalis įrašų nepatikrinta
+  (LL-37 — tyli riba; ta pati klasė kaip #303 mėginys ir #404 našlaitis).
+  Dabar trūkstamas failas patenka į `absent` ir yra įvardijamas.
+  Išmatuota 2026-11-21: 1 486/1 486 vardo maišas = baitų maišas, `absent` 0,
+  `unverified` 0, 0,15 s (vietinis skaitymas, be tinklo).
+
+  Svarbus skirtumas nuo #426 ataskaitos: ji teigė „48 MB vietinio skaitymo,
+  ~1 s“. Matuota 0,15 s — failų skaitymas nekainuoja nieko, o 48 s kainuoja
+  HEAD užklausos (`check_audio()`). Šis įrašas tą skaičių pataiso, o ne
+  kartoja (LL-21 — skaičius dokumente, kurio niekas neperskaičiuoja).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -410,21 +435,32 @@ def audio_name_digest() -> dict:
       - `unverified` — vardas be turinio maišo (senas formatas, `<sha>.mp3`).
         Toks URL negali įrodyti turinio, todėl jis nėra „ok“ — bet ir ne
         „sugedęs baitas“. Skaičiuojamas atskirai, kad pranešimas nemeluotų.
+      - `absent` — manifesto įrašas, kurio failo repo nėra. Ši aibė atsirado
+        #428: iki tol toks įrašas buvo tyliai praleistas (`continue`), todėl
+        `checked` + `unverified` + `mismatch` buvo **mažiau** už `total`, o tai
+        yra tyli riba (LL-37) — skaičiai atrodė kaip pilnas matavimas, nors
+        dalis įrašų nebuvo nei patikrinta, nei įvardyta. Trūkstamą failą
+        svetainėje jau matuoja `check_audio()`, tad čia jis tik įvardijamas,
+        o ne dubliuojamas kaip antra klaida.
     """
     rels, total = audio_paths(None)
     if not total:
         return {"total": 0, "checked": 0, "mismatch": [], "unverified": [],
-                "note": "manifestas neperskaitytas — vardo maišo patikra neįvyko"}
+                "absent": [], "note": "manifestas neperskaitytas — vardo maišo "
+                                      "patikra neįvyko"}
     base = AUDIO_MANIFEST.parent
     mismatch: list[str] = []
     unverified: list[str] = []
+    absent: list[str] = []
     checked = 0
     for rel in rels:
         path = base / rel
         try:
             data = path.read_bytes()
         except OSError:
-            # Failo nėra — tai jau `check_audio()` sritis („nėra svetainėje“).
+            # Failo nėra — tai jau `check_audio()` sritis („nėra svetainėje“),
+            # bet aibė turi būti įvardyta, kad sumos sutaptų su `total`.
+            absent.append(rel)
             continue
         stem = path.stem
         if "-" not in stem:
@@ -436,7 +472,8 @@ def audio_name_digest() -> dict:
         else:
             mismatch.append(rel)
     return {"total": total, "checked": checked,
-            "mismatch": mismatch, "unverified": unverified, "note": ""}
+            "mismatch": mismatch, "unverified": unverified,
+            "absent": absent, "note": ""}
 
 
 def grade_dir(grade: int) -> str:
@@ -1195,6 +1232,11 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "aux_absent": aux_absent,
         "aux_gone": aux_gone,
         "audio": audio,
+        # Vardo maišo patikra — vietinė, be tinklo (#426/#428). `audio` sako
+        # „failas svetainėje yra“, o šis laukas — „tas failas yra tie baitai,
+        # kuriuos žada jo vardas“. Skyrė ne teorinis: nukirptas mp3 su senu
+        # vardu praeitų HEAD patikrą, o vaikas girdėtų pusę žodžio.
+        "audio_name": audio_name,
         "shell_stale": shell["shell_stale"],
         "shell_gone": shell.get("shell_gone", []),
         "shell_unreachable": shell["shell_unreachable"],
@@ -1333,6 +1375,19 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(audio['empty'])} tuščias garso failas")
     if audio.get("unreachable"):
         reasons.append(f"{len(audio['unreachable'])} nepasiekiamas garso failas")
+    # Vardo maišo patikra (#426/#428). Tai NE „trūksta garso“: failas yra, bet
+    # jo baitai ne tie, kuriuos žada vardas — taisymas pergeneruoti, ne
+    # publikuoti. Del to atskira priežastis, o ne ta pati eilutė.
+    name = data.get("audio_name") or {}
+    if name.get("mismatch"):
+        reasons.append(f"{len(name['mismatch'])} garso failo vardas rodo kitą "
+                       f"turinį (pergeneruoti, ne publikuoti)")
+    if name.get("absent"):
+        # Įrašas manifeste, failo repo nėra. `check_audio()` tai jau mato kaip
+        # „dangling“, bet būtent šis laukas pasako, kad vardo maišo patikra
+        # to įrašo NEATLIKO — kitaip suma atrodytų pilna (LL-37).
+        reasons.append(f"{len(name['absent'])} garso įrašo failo nėra repo "
+                       f"(vardo maišas nepatikrintas)")
     # Numatytasis `False`, ne `True`: nežinoma būsena neturi atrodyti kaip
     # išmatuotas nulis. `check()` visada įrašo raktą, tad šis kelias liečia tik
     # svetimus dict'us (senas snapshot'as, rankinis zondas) — jiems saugiau
@@ -1537,6 +1592,29 @@ def main() -> int:
             print("  (mėginys, ne visa apimtis — numatytasis režimas tikrina visus įrašus)")
     elif audio.get("note"):
         print(f"Garsas: {audio['note']}")
+    # Vardo maišo eilutė — visada, kai patikra įvyko, net jei viskas gerai:
+    # „failas yra“ ir „failas yra tie baitai“ yra du skirtingi teiginiai, o
+    # skirtumas vaikui girdimas (nukirptas mp3 → pusė žodžio).
+    name = data.get("audio_name") or {}
+    if name.get("note"):
+        print(f"Garso vardai: {name['note']}")
+    elif name.get("total"):
+        bad = len(name.get("mismatch", [])) + len(name.get("absent", []))
+        unverified = len(name.get("unverified", []))
+        line = (f"Garso vardai: {name.get('checked', 0)} iš {name['total']} — "
+                f"vardo maišas = baitų maišas")
+        if bad:
+            line += f" — NEATITINKA {bad}"
+        if unverified:
+            line += f" — {unverified} be turinio maišo (senas vardas)"
+        print(line)
+        for rel in name.get("mismatch", [])[:10]:
+            print(f"  - {rel} — vardas rodo kitą turinį, pergeneruok garsą")
+        for rel in name.get("absent", [])[:10]:
+            print(f"  - {rel} — manifesto įrašas, failo repo nėra "
+                  f"(vardo maišas nepatikrintas)")
+        if len(name.get("mismatch", [])) > 10:
+            print(f"  … ir dar {len(name['mismatch']) - 10}")
     if data["unpushed_commits"]:
         print(f"Neišstumta commit'ų: {data['unpushed_commits']}")
     if not data.get("unpushed_checked", False):
@@ -1546,16 +1624,26 @@ def main() -> int:
         # Ne klaida, bet svarbu: jei svetainė flakuoja, skaičius auga.
         print(f"Užklausos, kartotos po laikinos klaidos: {data['retried_requests']}")
     if not problems(data):
+        name = data.get("audio_name") or {}
+        # Vardo maišas tikrinamas ir `--no-bytes` režime (jis vietinis, be
+        # tinklo), todėl jo sėkmės dalis sakoma abiem atvejais — kitaip
+        # „garsas NETIKRINTAS“ paneigtų matavimą, kuris įvyko.
+        name_tail = ""
+        if name.get("total"):
+            name_tail = (f", garso vardai {name.get('checked', 0)}/{name['total']}"
+                         f" = baitai")
         if data.get("bytes_checked", True):
             print(f"✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai, "
                   f"svetainės kodas {data.get('shell_count', 0)} failų"
+                  f"{name_tail}"
                   f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
         else:
             # `--no-bytes` sąmoningai nelygina baitų, kodo ir garso. Iki #374
             # ši eilutė vis tiek sakydavo „baitai“ ir „svetainės kodas 0 failų“,
             # t. y. pranešdavo apie matavimą, kurio nebuvo (LL-37).
             print("✔ ID ir seka sutampa — DALINĖ PATIKRA: modulių baitai, pagrindinių failų baitai, "
-                  "svetainės kodas ir garsas NETIKRINTI (--no-bytes).")
+                  "svetainės kodas ir garsas svetainėje NETIKRINTI (--no-bytes)"
+                  f"{name_tail}.")
 
     return 1 if problems(data) else 0
 

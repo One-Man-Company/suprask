@@ -196,6 +196,21 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   atskirai (`check_audio()` ir AUX `manifest.json`), o 1 486 mp3 dublikatas
   bėgimą pailgintų be naujos informacijos.
 
+2026-11-21 (paleidimas #426): garso failo vardas neša turinio maišą — dabar jis tikrinamas.
+  `check_audio()` klausia svetainės HEAD, t. y. „ar failas ten yra“, o ne „ar
+  ten tie baitai“. Skirtumas ne teorinis: `scripts/generate_audio.py:380-381`
+  mp3 vardą sudaro `<sha256(tekstas)[:16]>-<sha256(baitai)[:8]>`, tad URL pats
+  įrodo turinį — bet tik tol, kol repo baitai atitinka vardą. To netikrino
+  niekas: nukirptas ar perrašytas mp3 su senu vardu duoda ir `check_audio.py`
+  (jis tik `exists()` ir `0 B`), ir HEAD patikrą žalias, o vaikas girdi tylą ar
+  pusę žodžio. Dabar `audio_name_digest()` perskaito manifesto failus ir lygina
+  vardo maišą su baitų maišu; nesutapimas turi savo `verdict()` priežastį
+  (ne „trūksta garso“ — taisymas kitas: pergeneruoti, o ne publikuoti).
+  Matuota 2026-11-21: 1 486/1 486 sutampa, o `git log --diff-filter=M` pagal
+  dabartinį vardų formatą rodo 0 vietoje pakeistų mp3 (1 986 pridėti, 500
+  pašalinti), t. y. invariantas laikosi. Patikra pigi (~48 MB vietinio
+  skaitymo, jokių tinklo užklausų), tad ji daroma kiekvieną bėgimą.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -376,6 +391,52 @@ def check_audio(sample: int | None = None) -> dict:
         "note": "",
     }
 
+
+def audio_name_digest() -> dict:
+    """Ar garso failo vardas sutampa su jo baitais — be jokios tinklo užklausos.
+
+    `scripts/generate_audio.py:380-381` mp3 vardą sudaro
+    `<sha256(tekstas)[:16]>-<sha256(baitai)[:8]>`, tad **URL neša turinio
+    maišą**. Dėl to `check_audio()` HEAD patikra yra prasminga: jei failas
+    svetainėje yra, tai jau tie baitai, kurių vardas nurodytas. Bet ši grandis
+    laikosi tik tol, kol repo failas atitinka savo vardą — ir to iki #426
+    netikrino niekas. Nukirptas (bet ne 0 B) ar perrašytas mp3 su senu vardu
+    praeidavo ir `check_audio.py` (`exists()`), ir HEAD patikrą, o vaikas
+    girdėjo tylą ar pusę žodžio (LL-37: riba buvo sąraše, ne svetainėje).
+
+    Būsenos:
+      - `mismatch` — vardo maišas ≠ baitų maišas. Taisymas: pergeneruoti garsą,
+        o ne publikuoti (`scripts/generate_audio.py`).
+      - `unverified` — vardas be turinio maišo (senas formatas, `<sha>.mp3`).
+        Toks URL negali įrodyti turinio, todėl jis nėra „ok“ — bet ir ne
+        „sugedęs baitas“. Skaičiuojamas atskirai, kad pranešimas nemeluotų.
+    """
+    rels, total = audio_paths(None)
+    if not total:
+        return {"total": 0, "checked": 0, "mismatch": [], "unverified": [],
+                "note": "manifestas neperskaitytas — vardo maišo patikra neįvyko"}
+    base = AUDIO_MANIFEST.parent
+    mismatch: list[str] = []
+    unverified: list[str] = []
+    checked = 0
+    for rel in rels:
+        path = base / rel
+        try:
+            data = path.read_bytes()
+        except OSError:
+            # Failo nėra — tai jau `check_audio()` sritis („nėra svetainėje“).
+            continue
+        stem = path.stem
+        if "-" not in stem:
+            unverified.append(rel)
+            continue
+        claimed = stem.rsplit("-", 1)[1]
+        if hashlib.sha256(data).hexdigest()[:8] == claimed:
+            checked += 1
+        else:
+            mismatch.append(rel)
+    return {"total": total, "checked": checked,
+            "mismatch": mismatch, "unverified": unverified, "note": ""}
 
 
 def grade_dir(grade: int) -> str:
@@ -1102,6 +1163,11 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
             "missing": [], "empty": [], "unreachable": [],
             "note": "garso patikra neįvyko — svetainė nepasiekiama",
         }
+
+    # Vardo maišo patikra — vietinė, be tinklo: ji galioja ir kai svetainė
+    # nepasiekiama, nes kalbama apie repo failus. Būtent ji paverčia HEAD
+    # patikrą „yra toks failas“ į „yra tie baitai“ (#426).
+    audio_name = audio_name_digest()
 
     # Neišsiųsti commit'ai jau perskaityti prieš laukimą (žr. `report()`):
     # git klaida anksčiau atrodė kaip „0 neišsiųstų“ (žr. funkcijos docstring).

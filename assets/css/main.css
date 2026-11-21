@@ -10,10 +10,15 @@
   --paper-2: #fffdf8;
   --ink: #23201c;
   --ink-soft: #5f574d;
-  --ink-faint: #8b8175;
+  --ink-faint: #6f665a;
   --line: #e7ddcd;
   --accent: #ff8a3d;          /* oranžinė — pagrindinis veiksmas */
   --accent-press: #e8742a;
+  /* Tekstas ant akcento. Baltas ant oranžinės duoda 2,35:1 — per mažai
+     (T5.5 reikalauja ≥ 4,5:1), todėl akcentinėse vietose naudojamas tamsus
+     rašalas: 6,92:1 abiejose temose. Tokenas atskirtas nuo --ink, nes
+     tamsioje temoje --ink yra šviesus ir ant akcento vėl duotų 2,05:1. */
+  --on-accent: #23201c;
   --sun: #ffc94d;
   --mint: #4fc3a1;
   --sky: #5aa9e6;
@@ -111,7 +116,7 @@ a:hover { text-decoration-color: var(--accent); }
 .brand { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; }
 .brand-mark {
   display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px;
-  background: var(--accent); color: #fff; font-weight: 900; font-size: 1.3rem;
+  background: var(--accent); color: var(--on-accent); font-weight: 900; font-size: 1.3rem;
   box-shadow: var(--shadow-1); rotate: -4deg;
 }
 .brand-name { font-family: var(--font-head); font-weight: 900; font-size: 1.25rem; letter-spacing: -0.02em; }
@@ -158,7 +163,7 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
   min-height: var(--tap); padding: .7rem 1.4rem;
   font-family: var(--font-head); font-weight: 800; font-size: 1.05rem;
-  border: 0; border-radius: var(--r-pill); background: var(--accent); color: #fff;
+  border: 0; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent);
   cursor: pointer; text-decoration: none; box-shadow: 0 3px 0 var(--accent-press);
   transition: transform .1s ease, box-shadow .1s ease;
 }
@@ -177,12 +182,16 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
   flex: 0 0 auto; white-space: nowrap;
   padding: .3rem .8rem; border-radius: var(--r-pill);
   background: color-mix(in srgb, var(--accent) 12%, var(--paper-2));
-  color: color-mix(in srgb, var(--accent) 70%, var(--ink));
+  color: color-mix(in srgb, var(--accent) 45%, var(--ink));
   font-size: var(--fs-xs); font-weight: 800;
 }
-.chip.mint { background: color-mix(in srgb, var(--mint) 18%, var(--paper-2)); color: #0f6f56; }
-.chip.sky { background: color-mix(in srgb, var(--sky) 18%, var(--paper-2)); color: #1d5e8c; }
-.chip.grape { background: color-mix(in srgb, var(--grape) 18%, var(--paper-2)); color: #5b46b3; }
+/* Žymos tekstas: 70 % akcento davė 3,55:1 šviesioje temoje, o tamsioje
+   kietai įrašyti #0f6f56 / #1d5e8c / #5b46b3 — 1,7–1,9:1 ant tamsaus
+   fono. Dabar kiekviena spalva maišoma su einamosios temos rašalu, todėl
+   ta pati taisyklė veikia abiejose temose (5,4–6,7:1 šviesioje). */
+.chip.mint { background: color-mix(in srgb, var(--mint) 18%, var(--paper-2)); color: color-mix(in srgb, var(--mint) 45%, var(--ink)); }
+.chip.sky { background: color-mix(in srgb, var(--sky) 18%, var(--paper-2)); color: color-mix(in srgb, var(--sky) 45%, var(--ink)); }
+.chip.grape { background: color-mix(in srgb, var(--grape) 18%, var(--paper-2)); color: color-mix(in srgb, var(--grape) 45%, var(--ink)); }
 
 /* Modulių eilutė klasės sąraše. Be `min-width: 0` flex elementas negali
    susitraukti žemiau savo turinio, todėl 360 px ekrane eilutė išstumdavo
@@ -222,7 +231,7 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
   font-family: var(--font-head); font-weight: 900; font-size: .95rem;
   font-variant-numeric: tabular-nums;
 }
-.step-badge.done { background: color-mix(in srgb, var(--ok) 80%, var(--ink)); }
+.step-badge.done { background: color-mix(in srgb, var(--ok) 55%, var(--ink)); }
 
 /* Dabartinė vieta kelyje. Iki #286 klasės sąraše nebuvo nė vieno ženklo, kur
    vaikas yra: „Tęsk nuo čia“ kortelė viršuje įvardydavo modulį, bet tame pačiame
@@ -234,7 +243,7 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
    `outline` čia netinka, nes `:focus-visible` turi tą pačią savybę ir
    klaviatūros fokusas liktų nematomas (LL-32 šeima). */
 .mod-row.is-current { box-shadow: inset 0 0 0 2px var(--accent), var(--shadow-1); }
-.step-badge.current { background: var(--accent); color: var(--ink); }
+.step-badge.current { background: var(--accent); color: var(--on-accent); }
 
 /* Klasės puslapio sąrašas eina kelio eile, o kryptis rodoma tik ten, kur ji
    pasikeičia. Taip puslapyje lieka viena tvarka: numeriai 1…19 be šuolių. */
@@ -304,7 +313,7 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .continue-card.done { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 8%, var(--paper-2)); }
 .continue-label {
   text-transform: uppercase; letter-spacing: .1em; font-size: var(--fs-xs);
-  font-weight: 900; color: color-mix(in srgb, var(--accent) 70%, var(--ink));
+  font-weight: 900; color: color-mix(in srgb, var(--accent) 45%, var(--ink));
 }
 @media (max-width: 30rem) {
   .continue-card { flex-direction: column; align-items: flex-start; }
@@ -459,8 +468,11 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .choice.wrong { border-color: var(--coral); background: color-mix(in srgb, var(--coral) 10%, var(--paper)); }
 .choice[disabled] { cursor: default; }
 .task-feedback { margin-top: .7rem; font-size: var(--fs-s); font-weight: 700; min-height: 1.3rem; }
-.task-feedback.ok { color: var(--ok); }
-.task-feedback.try { color: var(--warn); }
+/* 55 %, ne gryna spalva: --ok 3,31:1 ir --warn 2,5:1 šviesioje temoje, o
+   tamsioje gryna žalia/ geltona taip pat nepakanka. Sumaišyta su temos
+   rašalu — 6,76:1 ir 5,90:1 (šviesi), 7,98:1 ir 8,77:1 (tamsi). */
+.task-feedback.ok { color: color-mix(in srgb, var(--ok) 55%, var(--ink)); }
+.task-feedback.try { color: color-mix(in srgb, var(--warn) 55%, var(--ink)); }
 
 /* Navigacija ir lankstomi blokai */
 .crumbs a { display: inline-flex; align-items: center; min-height: var(--tap); vertical-align: middle; }
@@ -564,7 +576,11 @@ svg { max-width: 100%; height: auto; }
   max-width: 36rem;
   margin: 0 auto;
   padding: 1.1rem 1.25rem 1.25rem;
-  background: #fff;
+  /* Kieta #fff plokštė tamsioje temoje duoda baltą tekstą ant balto fono
+     (--ink ten #f6efe3): 1,06:1, t. y. pranešimo nesimato. Fonas imamas iš
+     temos, kad tekstas liktų įskaitomas abiejose (14,7:1 šviesioje,
+     13,9:1 tamsioje). */
+  background: var(--paper-2);
   color: var(--ink, #2b2118);
   border: 2px solid var(--ink, #2b2118);
   border-bottom: none;
@@ -579,7 +595,7 @@ svg { max-width: 100%; height: auto; }
 .boot-fallback p { margin: 0 0 .6rem; font-size: .95rem; line-height: 1.45; }
 .boot-fallback button {
   min-height: 48px; padding: .6rem 1.1rem; font-weight: 800; cursor: pointer;
-  border: 2px solid var(--ink, #2b2118); border-radius: 12px; background: #fff;
+  border: 2px solid var(--ink, #2b2118); border-radius: 12px; background: var(--paper-2); color: var(--ink, #2b2118);
 }
 html.js .boot-fallback { display: none; }
 @keyframes bootReveal { to { opacity: 1; pointer-events: auto; transform: none; } }

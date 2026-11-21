@@ -306,22 +306,29 @@ async function viewStrand(grade, strandId) {
   if (!s) return notFound();
   const { seq } = pathSequence(g, await loadPath(grade));
 
-  // Krypties sąrašas laikosi tos pačios kelio eilės kaip klasės puslapis —
-  // kitaip ta pati kryptis atrodytų vis kitaip, priklausomai nuo įėjimo.
-  const mods = s.modules.slice().sort((a, b) => seq.indexOf(a.id) - seq.indexOf(b.id)).map((m) => `
-    <a class="card" href="#/modulis/${grade}/${s.id}/${m.id}" style="text-decoration:none;display:grid;gap:.4rem">
-      <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:start">
-        <h3 style="margin:0;font-size:1.15rem;min-width:0;overflow-wrap:anywhere">${esc(m.title)}</h3>
-        <span class="chip ${progress.isDone(m.id) ? "mint" : ""}">${progress.isDone(m.id) ? "atlikta" : `${m.minutes || 8} min.`}</span>
-      </div>
-      <p class="strand-meta" style="margin:0">${esc(m.subtitle || "")}</p>
-    </a>`).join("");
+  /* Krypties puslapis rodo TĄ PATĮ numerį kaip klasės puslapis. Anksčiau
+   * čia buvo atskiras kortelių tinklelis be numerių ir be vietos žymos:
+   * tas pats modulis klasėje buvo „4“, o kryptyje — „ketvirta kortelė iš
+   * 20“ be jokio skaičiaus, todėl vaikas negalėjo atpažinti, kur jis yra
+   * (matuota #424: 20 kortelių, 0 numerių, 0 `aria-current`). Dabar
+   * sąrašas sudėtas iš tų pačių `moduleRow` eilučių, tik iš vienos
+   * krypties modulių — numeris lieka viso kelio numeris, o ne eilės
+   * krypties viduje, nes būtent jį vaikas mato modulio apačioje
+   * („Kitas žingsnis · N iš 51“). */
+  const nextId = seq.find((id) => !progress.isDone(id));
+  const started = seq.some((id) => progress.isDone(id));
+  const own = s.modules.slice().sort((a, b) => seq.indexOf(a.id) - seq.indexOf(b.id));
+  const steps = own.map((m) => moduleRow(s, m, seq.indexOf(m.id) + 1, seq.length, {
+    current: m.id === nextId,
+    started,
+  })).join("");
 
   app.innerHTML = `
     <div class="crumbs"><a href="#/">Pradžia</a> / <a href="#/klase/${grade}">${grade} klasė</a> / ${esc(s.title)}</div>
     <h1><span aria-hidden="true">${s.emoji}</span> ${esc(s.title)}</h1>
     <p class="lede" style="color:var(--ink-soft)">${esc(s.intro || "")}</p>
-    <div class="grid grid-2" style="margin-top:1.5rem">${mods}</div>
+    <p class="strand-meta" style="margin:.2rem 0 .6rem">Skaičius rodo vietą visame kelyje — todėl jie eina ne iš eilės. <a href="#/klase/${grade}">Visas kelias</a></p>
+    <div class="path-list">${steps}</div>
   `;
 }
 

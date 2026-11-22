@@ -4776,6 +4776,160 @@ const dienosJuosta = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 15. Bendruomenės — kas priklauso būriui                             */
+/* ------------------------------------------------------------------ */
+/* Klaidinga nuostata: „bendruomenė — tai tik tie, kurie tokie patys
+   kaip aš (šeima, mano draugai)“. Vaikas 6–7 m. dažnai bendruomenę
+   supranta kaip „saviškiai“ ir kitokį žmogų laiko svetimu.
+   Modelis turi vieną kintamąjį — pasirinktą bendruomenę. Iš jo kyla
+   dvi pasekmės, kurių tekstas vienas neparodo:
+     1) tas pats žmogus (Emilis) pažymimas keliose bendruomenėse;
+     2) toje pačioje bendruomenėje būna skirtingų žmonių (mokytoja ir
+        vaikas, Ajus, kurio šeimoje namuose kalbama kita kalba).
+   Todėl bendruomenę sieja bendras reikalas, o ne vienodumas.
+   Sąrašas „kiek bendruomenių“ rodomas tik apžiūrėjus visas: kitaip jis
+   būtų skaičiavimas prieš supratimą. */
+const bendruomenes = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const peopleCfg = Array.isArray(config.people) ? config.people : [];
+    const circlesCfg = Array.isArray(config.circles) ? config.circles : [];
+
+    const ids = peopleCfg.map((p) => p && p.id);
+    const uniqueIds = new Set(ids);
+    const valid = peopleCfg.length >= 3
+      && circlesCfg.length >= 2
+      && uniqueIds.size === ids.length
+      && peopleCfg.every((p) => p && p.id && p.label && p.emoji)
+      && circlesCfg.every((c) => c && c.id && c.label && c.shared
+        && Array.isArray(c.members) && c.members.length > 0
+        && c.members.every((m) => uniqueIds.has(m)));
+    const circleIds = circlesCfg.map((c) => c && c.id);
+    if (!valid || new Set(circleIds).size !== circleIds.length) {
+      console.error("bendruomenes: žmogus be label/emoji arba bendruomenė be narių / su nežinomu žmogumi.");
+      stage.innerHTML = '<p class="sim-note" style="text-align:center">Bendruomenės nesuderintos su žmonėmis.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const visited = new Set();
+    let reported = false;      // api.progress — vieną kartą, apžiūrėjus visas (LL-17)
+    let active = null;
+    const personById = (id) => peopleCfg.find((p) => p.id === id);
+    const circleById = (id) => circlesCfg.find((c) => c.id === id);
+    const membersOf = (id) => new Set(circleById(id).members);
+
+    stage.innerHTML = `
+      <div style="width:100%;min-width:0;max-width:min(30rem,100%);margin:0 auto">
+        <p id="bn-title" style="margin:0 0 .5rem;text-align:center;font-family:var(--font-head);font-size:1rem;font-weight:800;line-height:1.25">
+          Pasirink bendruomenę.
+        </p>
+        <div id="bn-grid" role="group" aria-label="Žmonės"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.4rem),1fr));gap:.45rem"></div>
+        <p id="bn-shared" class="sim-note" style="margin:.6rem 0 0;text-align:center;min-height:2.4em"></p>
+        <p id="bn-tally" style="margin:.35rem 0 0;text-align:center;font-size:.9rem;font-weight:800;line-height:1.3"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.45rem;width:100%;max-width:30rem;margin:0 auto;
+                  grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr))">
+        ${circlesCfg.map((c) => `<button class="btn secondary" type="button" data-circle="${c.id}"
+            aria-pressed="false" style="min-height:52px;font-size:.95rem;padding:.35rem .5rem"
+            aria-label="Bendruomenė: ${c.label}">${c.label}</button>`).join("")}
+        <button class="btn ghost" type="button" id="bn-reset" style="min-height:48px;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
+    // Pastaba yra už scenos ribų — be šios eilutės po perkrovimo liktų
+    // ankstesnio pasirinkimo sakinys (LL-16).
+    api.note("");
+
+    const gridEl = stage.querySelector("#bn-grid");
+    const sharedEl = stage.querySelector("#bn-shared");
+    const tallyEl = stage.querySelector("#bn-tally");
+    const titleEl = stage.querySelector("#bn-title");
+    const buttons = [...controls.querySelectorAll("button[data-circle]")];
+
+    peopleCfg.forEach((p) => {
+      const card = document.createElement("div");
+      card.dataset.person = p.id;
+      card.style.cssText = "display:grid;justify-items:center;gap:.1rem;min-width:0;"
+        + "padding:.45rem .25rem;border-radius:14px;border:3px solid transparent;"
+        + "background:var(--paper-2);transition:opacity .15s,border-color .15s";
+      card.innerHTML =
+        `<span aria-hidden="true" style="font-size:1.9rem;line-height:1.05">${p.emoji}</span>`
+        + `<span style="max-width:100%;overflow-wrap:break-word;font-size:.85rem;line-height:1.15;font-weight:800;text-align:center">${p.label}</span>`
+        + `<span class="bn-badge" style="min-height:1.1em;font-size:.72rem;line-height:1.1;font-weight:800;color:var(--ink-soft)"></span>`;
+      gridEl.appendChild(card);
+    });
+
+    function paint() {
+      const member = active ? membersOf(active) : null;
+      gridEl.querySelectorAll("[data-person]").forEach((card) => {
+        const p = personById(card.dataset.person);
+        const on = !!member && member.has(p.id);
+        const badge = card.querySelector(".bn-badge");
+        card.style.borderColor = on ? "var(--ink)" : "transparent";
+        // Ne narys nepranyksta visai: kortelė lieka, tik pritemsta, o
+        // būseną sako ir tekstas, ne vien spalva (LL-18, prieinamumas).
+        card.style.opacity = active && !on ? ".5" : "1";
+        badge.textContent = on ? (S.member || "čia") : "";
+        card.setAttribute("aria-label", active
+          ? `${p.label}. ${on ? "Būna šioje bendruomenėje." : "Nebūna šioje bendruomenėje."}`
+          : p.label);
+      });
+    }
+
+    function paintTally() {
+      if (visited.size < circlesCfg.length) {
+        tallyEl.textContent = "";
+        return;
+      }
+      const counts = peopleCfg
+        .map((p) => ({ label: p.label, n: circlesCfg.filter((c) => c.members.includes(p.id)).length }))
+        .filter((x) => x.n > 1);
+      // Sąrašas, o ne sakinys: kiekvienas žmogus skaitomas atskirai, tad
+      // vaikui nereikia laikyti kelių skaičių vienoje eilutėje (LL-35).
+      tallyEl.innerHTML = `<span style="display:block;margin-bottom:.15rem">Kiek bendruomenių turi kiekvienas žmogus:</span>`
+        + `<ul style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.1rem .8rem">`
+        + counts.map((x) => `<li>${x.label} — <strong>${x.n}</strong></li>`).join("")
+        + `</ul>`;
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        active = btn.dataset.circle;
+        const c = circleById(active);
+        buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+        titleEl.textContent = `Bendruomenė: ${c.label}`;
+        sharedEl.textContent = c.shared;
+        paint();
+        const first = visited.size === 0;
+        visited.add(active);
+        paintTally();
+        api.readout(`${c.label}. ${c.shared}`);
+        api.speak(c.label, { rate: .9 });
+        if (first) api.note(S.rule || "");
+        if (visited.size === circlesCfg.length) {
+          if (!reported) { reported = true; api.progress({ correct: true }); }
+          api.note(`${S.rule || ""} ${S.all || ""}`.trim());
+        }
+      });
+    });
+
+    controls.querySelector("#bn-reset").addEventListener("click", () => {
+      stage.innerHTML = "";
+      controls.innerHTML = "";
+      bendruomenes.mount({ stage, controls, api, config });
+    });
+
+    paint();
+    api.readout(S.start || "Pasirink bendruomenę.");
+    api.speak(S.start || "Pasirink bendruomenę.");
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "dienos-juosta": dienosJuosta,
   "metu-laikai": metuLaikai,
@@ -4791,4 +4945,5 @@ export const SIMS = {
   "ismesto-daikto-kelias": ismestoDaiktoKelias,
   "ledo-formos": ledoFormos,
   "traumos-priezastis": traumosPriezastis,
+  "bendruomenes": bendruomenes,
 };

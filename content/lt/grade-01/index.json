@@ -390,6 +390,14 @@
      "file": "grade-01/pasaulio-pazinimas/30-dienos-rezimas-mityba.json",
      "minutes": 9,
      "sim": "dienos-juosta"
+    },
+    {
+     "id": "34-bendruomenes",
+     "title": "Kas priklauso bendruomenei?",
+     "subtitle": "Bendruomenę sieja bendras reikalas, o ne vienodumas",
+     "file": "grade-01/pasaulio-pazinimas/34-bendruomenes.json",
+     "minutes": 9,
+     "sim": "bendruomenes"
     }
    ]
   },

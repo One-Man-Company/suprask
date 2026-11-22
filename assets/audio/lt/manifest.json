@@ -563,6 +563,10 @@
   "n": "n/8b4bce0166a74e84-30d4895f.mp3",
   "s": "s/8b4bce0166a74e84-73adfb5c.mp3"
  },
+ "Ajus": {
+  "n": "n/dff4410a694c9eb0-3574ee0c.mp3",
+  "s": "s/dff4410a694c9eb0-402b307d.mp3"
+ },
  "Akmenėlis": {
   "n": "n/db209a986e7c2abf-1f57a2cc.mp3",
   "s": "s/db209a986e7c2abf-aaf3a101.mp3"
@@ -702,6 +706,10 @@
  "Bakstelėk figūrą. Ji įsiskaito į savo grupę.": {
   "n": "n/5d730d6540952a24-d9140fb7.mp3",
   "s": "s/5d730d6540952a24-82ec682c.mp3"
+ },
+ "Bendruomenę sieja bendras reikalas, o ne vienodumas.": {
+  "n": "n/70db15f491b5cf81-2b544841.mp3",
+  "s": "s/70db15f491b5cf81-50f0ea75.mp3"
  },
  "Berniukai nubėgo į klasę.": {
   "n": "n/bd34d7a1abb9d7c2-38606c33.mp3",
@@ -1019,6 +1027,14 @@
   "n": "n/a9f51566bd6705f7-5d6f8aea.mp3",
   "s": "s/a9f51566bd6705f7-5c0b3da6.mp3"
  },
+ "Emilis": {
+  "n": "n/4ea1ed702de88fab-80b74c72.mp3",
+  "s": "s/4ea1ed702de88fab-5c634f23.mp3"
+ },
+ "Emilis būna keturiose bendruomenėse, o Ajus — trijose.": {
+  "n": "n/b43f4e9d1fd37ea9-e5c7e6d7.mp3",
+  "s": "s/b43f4e9d1fd37ea9-a081861b.mp3"
+ },
  "Ešerys": {
   "n": "n/6d27ce5b4ffa8b9a-cd9ef39e.mp3",
   "s": "s/6d27ce5b4ffa8b9a-115ae524.mp3"
@@ -1195,6 +1211,10 @@
   "n": "n/de6158f28323879e-d3f30971.mp3",
   "s": "s/de6158f28323879e-5cd616a3.mp3"
  },
+ "Kaimo šventė": {
+  "n": "n/1ce73d2630332022-b05b7a80.mp3",
+  "s": "s/1ce73d2630332022-ed8a9f61.mp3"
+ },
  "Kairė sunkesnė.": {
   "n": "n/d668000feecfe009-475c2f25.mp3",
   "s": "s/d668000feecfe009-fa0d8f0b.mp3"
@@ -1347,6 +1367,10 @@
   "n": "n/9fd129ef9e44b5d4-073f1b15.mp3",
   "s": "s/9fd129ef9e44b5d4-cecb63fd.mp3"
  },
+ "Kiemas": {
+  "n": "n/9e92cf6af2b42ca8-f7f58338.mp3",
+  "s": "s/9e92cf6af2b42ca8-9ef8915c.mp3"
+ },
  "Kitas žodis": {
   "n": "n/ef09cee90b709c37-70eb381f.mp3",
   "s": "s/ef09cee90b709c37-82118aee.mp3"
@@ -1354,6 +1378,10 @@
  "Kiškis": {
   "n": "n/4e806f63471ec890-48d3820a.mp3",
   "s": "s/4e806f63471ec890-d90fe6f9.mp3"
+ },
+ "Klasė": {
+  "n": "n/4c89ae541063c565-791092b6.mp3",
+  "s": "s/4c89ae541063c565-f10dc8f8.mp3"
  },
  "Klausyk abiejų: pulsas žemai, plojimai aukštai.": {
   "n": "n/2b053f0b8f2c5df5-ed72ef17.mp3",
@@ -1599,6 +1627,10 @@
   "n": "n/9ab19ec14d02bcc2-390d207c.mp3",
   "s": "s/9ab19ec14d02bcc2-61eb293c.mp3"
  },
+ "Mama": {
+  "n": "n/fb9aa9a7b3d837e7-7772dc1c.mp3",
+  "s": "s/fb9aa9a7b3d837e7-e163b19a.mp3"
+ },
  "Mažas metalas dugne.": {
   "n": "n/343c8f5bfbe1f97c-565e1b9a.mp3",
   "s": "s/343c8f5bfbe1f97c-567eb694.mp3"
@@ -1626,6 +1658,10 @@
  "Miške": {
   "n": "n/605dae53843db1a4-76ec9741.mp3",
   "s": "s/605dae53843db1a4-7251f2c7.mp3"
+ },
+ "Mokytoja": {
+  "n": "n/c90d5e08642e3c1c-df12e930.mp3",
+  "s": "s/c90d5e08642e3c1c-ade68b48.mp3"
  },
  "Mostelėjo": {
   "n": "n/8049a7991ecef952-53cd647e.mp3",
@@ -1734,6 +1770,10 @@
  "Pasiekei lapą.": {
   "n": "n/e4ff17609ce48006-064c37ee.mp3",
   "s": "s/e4ff17609ce48006-c893f127.mp3"
+ },
+ "Pasirink bendruomenę.": {
+  "n": "n/275639077a24abba-1c44dffa.mp3",
+  "s": "s/275639077a24abba-a07b4bec.mp3"
  },
  "Pasirink dėžutę, tada spėk.": {
   "n": "n/46fc1f119b037d5c-e1d0409f.mp3",
@@ -2107,6 +2147,10 @@
   "n": "n/e21d097bc4fb939d-ec6b99c3.mp3",
   "s": "s/e21d097bc4fb939d-9676c3d1.mp3"
  },
+ "Rūta": {
+  "n": "n/b140820bf377005a-34e1286a.mp3",
+  "s": "s/b140820bf377005a-5fe912a5.mp3"
+ },
  "S": {
   "n": "n/8de0b3c47f112c59-db2f4c1a.mp3",
   "s": "s/8de0b3c47f112c59-e9441265.mp3"
@@ -2398,6 +2442,10 @@
  "Toliau tinklelio nėra.": {
   "n": "n/0253ab164bcb0b07-f01987e2.mp3",
   "s": "s/0253ab164bcb0b07-16fe9a02.mp3"
+ },
+ "Tomas": {
+  "n": "n/86c496b088a575d6-c0860daf.mp3",
+  "s": "s/86c496b088a575d6-71b2f6bc.mp3"
  },
  "Tomas turėjo mėlyną skėtį.": {
   "n": "n/c88217195c6f7e21-bfb3a3c5.mp3",
@@ -3063,6 +3111,10 @@
   "n": "n/391a70de1fdee94a-3ffff381.mp3",
   "s": "s/391a70de1fdee94a-0be70005.mp3"
  },
+ "čia": {
+  "n": "n/69fff85055727023-0d906618.mp3",
+  "s": "s/69fff85055727023-6bcb5b41.mp3"
+ },
  "Ė": {
   "n": "n/ad412e2f29d9d8d7-f44c3952.mp3",
   "s": "s/ad412e2f29d9d8d7-a088f18c.mp3"
@@ -3098,6 +3150,10 @@
  "Šalta, sniegas, medžiai be lapų, vanduo užšąla.": {
   "n": "n/2cb3683e3c35df4c-a7a95b8d.mp3",
   "s": "s/2cb3683e3c35df4c-4ec89bf3.mp3"
+ },
+ "Šeima": {
+  "n": "n/f7a3b97dbb767051-e5d05aa9.mp3",
+  "s": "s/f7a3b97dbb767051-018366d8.mp3"
  },
  "Šerkšnas": {
   "n": "n/4f3df3baa4843a89-8e50d9b1.mp3",

@@ -1,6 +1,6 @@
 {
  "grade": 1,
- "updated": "2026-11-22",
+ "updated": "2026-11-23",
  "note": "Rekomenduojamas kelias: kalbiniai ir matematiniai moduliai kaitaliojami, kad viena sritis neišnaudotų vaiko dėmesio. Tvarką gali keisti dizainerio agentas, jei tai pagrindžia priklausomybėmis.",
  "sequence": [
   "01-garsas-ir-raide",
@@ -55,6 +55,7 @@
   "19-dumai-ir-isejimas",
   "25-traumu-prevencija",
   "30-dienos-rezimas-mityba",
+  "34-bendruomenes",
   "01-garso-aukstis",
   "02-ritmas-ir-perkusija",
   "23-ismestas-daiktas-nedingsta",

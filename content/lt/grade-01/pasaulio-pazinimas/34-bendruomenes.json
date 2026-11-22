@@ -1,0 +1,192 @@
+{
+  "id": "34-bendruomenes",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Kas priklauso bendruomenei?",
+  "subtitle": "Bendruomenę sieja bendras reikalas, o ne vienodumas",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu, kas priklauso bendruomenei, pagal bendrą reikalą.",
+    "Pasakau, kad vienas žmogus gali būti keliose bendruomenėse.",
+    "Paaiškinu, kodėl vienoje bendruomenėje būna skirtingų žmonių."
+  ],
+  "concept": {
+    "title": "Bendras reikalas",
+    "big_idea": "Bendruomenė — tai žmonės, kuriuos sieja bendras reikalas. Tai gali būti namai, klasė arba šventė. Vienoje bendruomenėje būna labai skirtingų žmonių. Vienas žmogus būna keliose bendruomenėse.",
+    "steps": [
+      "Paspausk bendruomenės pavadinimą ir pažiūrėk, kurie žmonės pažymėti.",
+      "Perskaityk, kas tuos žmones sieja: vieta ar darbas kartu.",
+      "Paspausk visas bendruomenes ir surask tą patį žmogų."
+    ],
+    "example": "Emilis gyvena su mama, mokosi klasėje ir žaidžia kieme. Kaimo šventėje jis sutinka mamą, mokytoją ir kaimyną Ajų."
+  },
+  "sim": {
+    "component": "bendruomenes",
+    "config": {
+      "people": [
+        {
+          "id": "emilis",
+          "label": "Emilis",
+          "emoji": "👦"
+        },
+        {
+          "id": "mama",
+          "label": "Mama",
+          "emoji": "👩"
+        },
+        {
+          "id": "mokytoja",
+          "label": "Mokytoja",
+          "emoji": "👩‍🏫"
+        },
+        {
+          "id": "ruta",
+          "label": "Rūta",
+          "emoji": "👧"
+        },
+        {
+          "id": "tomas",
+          "label": "Tomas",
+          "emoji": "🧒"
+        },
+        {
+          "id": "ajus",
+          "label": "Ajus",
+          "emoji": "🧑"
+        }
+      ],
+      "circles": [
+        {
+          "id": "seima",
+          "label": "Šeima",
+          "members": [
+            "emilis",
+            "mama"
+          ],
+          "shared": "Juos sieja tie patys namai ir rūpinimasis vienas kitu."
+        },
+        {
+          "id": "klase",
+          "label": "Klasė",
+          "members": [
+            "emilis",
+            "mokytoja",
+            "ruta",
+            "ajus"
+          ],
+          "shared": "Juos sieja ta pati klasė: jie mokosi kartu."
+        },
+        {
+          "id": "kiemas",
+          "label": "Kiemas",
+          "members": [
+            "emilis",
+            "tomas",
+            "ajus"
+          ],
+          "shared": "Juos sieja tas pats kiemas: jie žaidžia kartu."
+        },
+        {
+          "id": "svente",
+          "label": "Kaimo šventė",
+          "members": [
+            "emilis",
+            "mama",
+            "mokytoja",
+            "ruta",
+            "tomas",
+            "ajus"
+          ],
+          "shared": "Juos sieja ta pati aikštė ir ta pati šventė."
+        }
+      ],
+      "sentences": {
+        "start": "Pasirink bendruomenę.",
+        "member": "čia",
+        "rule": "Bendruomenę sieja bendras reikalas, o ne vienodumas.",
+        "all": "Emilis būna keturiose bendruomenėse, o Ajus — trijose."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Emilis gyvena su mama, mokosi klasėje ir žaidžia kieme. Kiek bendruomenių jis turi?",
+      "options": [
+        "Tik vieną — šeimą",
+        "Tris — šeimą, klasę ir kiemą",
+        "Nė vienos, nes jis dar mažas"
+      ],
+      "answer": 1,
+      "hint": "Spausk mygtukus po vieną ir žiūrėk, kur pažymėtas jo vardas.",
+      "why": "Emilis priklauso trims bendruomenėms, nes kiekvienoje jį sieja kitas reikalas."
+    },
+    {
+      "q": "Ajaus šeimoje namuose kalbama kita kalba. Kieme jis žaidžia su Emiliu ir Tomu. Ar Ajus priklauso kiemo bendruomenei?",
+      "options": [
+        "Taip, nes jis žaidžia tame pačiame kieme",
+        "Ne, nes jo šeima kalba kita kalba",
+        "Ne, nes jis gyvena kitame name"
+      ],
+      "answer": 0,
+      "hint": "Bendruomenę kuria bendras darbas, o ne kalba namuose.",
+      "why": "Ajus su kitais vaikais sieja bendras žaidimas tame pačiame kieme."
+    },
+    {
+      "q": "Mokytoja mokosi su vaikais klasėje, bet negyvena Emilio name. Kuriai bendruomenei ji priklauso?",
+      "options": [
+        "Emilio šeimai",
+        "Emilio kiemui",
+        "Klasei, nes ten ji moko kartu su vaikais"
+      ],
+      "answer": 2,
+      "hint": "Kur ji kasdien daro tą patį darbą?",
+      "why": "Mokytoją su vaikais sieja mokymasis toje pačioje klasėje."
+    },
+    {
+      "q": "Kaimo šventėje susitinka senelė, mokytoja, Ajus ir Emilis. Kas juos sieja?",
+      "options": [
+        "Tai, kad jie visi gyvena viename name",
+        "Tai, kad jie visi yra vienodo amžiaus",
+        "Tai, kad juos sieja ta pati vieta ir šventė"
+      ],
+      "answer": 2,
+      "hint": "Pažiūrėk, kokie jie skirtingi, ir kodėl vis tiek susirenka.",
+      "why": "Bendruomenė susirenka dėl bendro reikalo, nors jos nariai labai skirtingi."
+    },
+    {
+      "q": "Emilis kviečia Ajų į gimtadienį. Ajaus šeimoje kai kurių patiekalų nevalgoma. Ką Emiliui daryti?",
+      "options": [
+        "Nepakviesti Ajaus, nes jis kitoks",
+        "Pakviesti ir paklausti, ką Ajus mėgsta",
+        "Pakviesti ir pasakyti, kad reikia valgyti viską"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kaip jaustumeisi, jei kas nors nepaisytų tavo šeimos papročių.",
+      "why": "Paklausk, ko Ajus nori, ir taip gerbk jo šeimos papročius.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kokiose bendruomenėse būni tu? Kas tave sieja su žmonėmis kiekvienoje iš jų?",
+  "teacher": {
+    "goal": "Sąvoką „bendruomenė“ sieti su bendru reikalu, o ne su vienodumu. Vaikas mokosi atpažinti, kad tas pats žmogus priklauso kelioms bendruomenėms ir kad vienoje bendruomenėje būna skirtingų žmonių.",
+    "prompt": "Kodėl Emilis yra ir šeimoje, ir klasėje, ir kieme? Kas jį su tais žmonėmis sieja?",
+    "offline": "Ant didelio lapo nupieškite tris apskritimus: „Mūsų namai“, „Mūsų klasė“, „Mūsų kiemas“. Kiekvienas vaikas ant lipduko užrašo savo vardą ir klijuoja į tuos apskritimus, kuriuose būna. Tada skaičiuokite, kiek apskritimų turi vienas vaikas, ir aptarkite, kas jį su tais žmonėmis sieja. Pabaigoje pridėkite ketvirtą apskritimą „Miestelio šventė“ ir paklauskite, ar jame gali būti visi.",
+    "misconceptions": [
+      "„Bendruomenė — tai tik šeima.“ Emilis priklauso ir šeimai, ir klasei, ir kiemui; kiekvienoje vietoje jį sieja kitas bendras reikalas.",
+      "„Kas kalba kita kalba ar švenčia kitas šventes, tas nepriklauso bendruomenei.“ Ajus žaidžia tame pačiame kieme ir mokosi toje pačioje klasėje, todėl priklauso abiem bendruomenėms.",
+      "„Bendruomenėje visi turi būti vienodi.“ Kaimo šventėje būna ir senelė, ir mokytoja, ir vaikai; juos sieja vieta ir šventė, o ne vienodumas.",
+      "„Jei žmogus neina į mano klasę, jis visai ne bendruomenės narys.“ Mama priklauso šeimai ir šventei, nors klasėje jos nėra."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), tarpdalykinė tema „Pilietinės visuomenės savikūra“ — 1 klasei: „vaikas suprastų bendruomenių skirtingumus, aptariant skirtingus pavyzdžius“ (sources/pradinio-bp-rekomendacijos-2024.txt:7060–7066).",
+    "Ten pat, ta pati tema 2 klasei — „mokosi atpažinti skirtingas bendruomenes, religijas, aplinkas <…> tolerancijos kitybei reiškiniu“ (sources/pradinio-bp-rekomendacijos-2024.txt:7062–7066). Šiame modulyje sąmoningai imama tik 1 klasei skirta dalis: bendruomenių skirtingumas per konkrečius pavyzdžius, be religijų lyginimo (LL-23).",
+    "Ten pat, visuomenės pažinimo sritis — vaiko kaip bendruomenės nario ugdymas ir dalyvavimas bendruomenės veikloje (sources/pradinio-bp-rekomendacijos-2024.txt:1317–1328)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena sąvoka: bendruomenę sieja bendras reikalas; modelis turi vieną kintamąjį (pasirinktą bendruomenę) ir šešis žmones.",
+    "2 žingsnis — vertinamas perkėlimas: Ajus, kalbantis namuose kita kalba; mokytoja, kuri nepriklauso šeimai; kaimo šventė, kurioje susitinka skirtingi žmonės.",
+    "3 žingsnis — pagalba laiku: klaida nebaudžiama, užuomina nukreipia nuo žmogaus išvaizdos prie bendro reikalo, o sąrašas „kiek bendruomenių“ pasirodo tik apžiūrėjus visas.",
+    "8 žingsnis — veikla be ekrano su trimis apskritimais ir lipdukais tinka klasei be kompiuterių."
+  ]
+}

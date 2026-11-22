@@ -35,6 +35,12 @@ jobs:
       - name: Dokumentų skaičiai
         run: python3 scripts/check_docs_facts.py
 
+      # Programos padengties eilė yra agentų darbo sąrašas. Jei
+      # `curriculum/*.md` pasikeitė, o `backlog.json` nepergeneruotas, agentai
+      # dirbtų pagal pasenusį sąrašą — todėl tai vartai, ne rekomendacija.
+      - name: Programos padengties eilė
+        run: python3 scripts/curriculum_backlog.py --check
+
       - name: ffmpeg
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
 

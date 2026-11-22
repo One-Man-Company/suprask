@@ -1,0 +1,122 @@
+{
+  "id": "30-dienos-rezimas-mityba",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Vėliau keltis — trumpesni pusryčiai",
+  "subtitle": "Tas pats išėjimas, vėlesnis kėlimasis atima pusryčių laiką",
+  "minutes": 9,
+  "outcomes": [
+    "Paaiškinu, kodėl vėlesnis kėlimasis atima laiką pusryčiams.",
+    "Palyginu du rytus ir pasakau, kuris palieka laiko pavalgyti.",
+    "Nurodau, kuri rytmečio dalis atima laiką iš kitos."
+  ],
+  "concept": {
+    "title": "Laikas atimamas, ne pridedamas",
+    "big_idea": "Rytas turi fiksuotą galą: išėjimą į mokyklą. Jei keliesi vėliau, rengimuisi ir keliui laiko nebelieka daugiau. Tas laikas atimamas iš pusryčių.",
+    "steps": [
+      "Pasirink kėlimosi laiką.",
+      "Spėk, ar dar liks laiko pavalgyti.",
+      "Paspausk „Rodyk“ ir pažiūrėk į lėkštę.",
+      "Palygink visus tris rytus."
+    ],
+    "example": "Keliaisi 6:45 — pusryčiams lieka 35 minutės. Keliesi 7:25 — nebelieka nė vienos."
+  },
+  "sim": {
+    "component": "dienos-juosta",
+    "config": {
+      "wakeTimes": ["6:45", "7:05", "7:25"],
+      "labels": {
+        "wakeTitle": "Kada keliesi?",
+        "guessTitle": "Ar spėsi pavalgyti?",
+        "guessed": "Tavo spėjimas",
+        "yes": "Taip, spėsiu",
+        "no": "Ne, nespėsiu",
+        "show": "Rodyk rytą",
+        "again": "Iš naujo",
+        "depart": "Išeinu"
+      },
+      "sentences": {
+        "start": "Pasirink kėlimosi laiką ir spėk.",
+        "startNote": "Išėjimas visada tas pats.",
+        "askGuess": "Pirma spėk, ar liks laiko pusryčiams.",
+        "guessNote": "Dabar spausk „Rodyk rytą“.",
+        "inTime": "Pusryčiams laiko liko.",
+        "none": "Pusryčiams laiko nebeliko.",
+        "noteMid": "Išėjimas tas pats, todėl trumpėjo pusryčiai.",
+        "done": "Trys rytai, viena taisyklė.",
+        "doneNote": "Vėliau kėleisi — trumpesni pusryčiai.",
+        "reset": "Pradedam iš naujo. Lėkštės lieka."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Vaikas kėlėsi 6:45 ir pusryčiams turėjo 35 minutes. Kitas rytas toks pat, tik kėlėsi 7:05. Kas pasikeitė?",
+      "options": [
+        "Rengimasis sutrumpėjo",
+        "Pusryčių laikas sutrumpėjo",
+        "Išėjimo laikas pasistūmėjo"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, ar išėjimo laikas paveiksle pajudėjo.",
+      "why": "Išėjimas liko tas pats, todėl trumpesnis laikas atimtas iš pusryčių."
+    },
+    {
+      "q": "Rytas trunka nuo pabudimo iki išėjimo. Kurioje vietoje atsiranda laikas, kai pabundi anksčiau?",
+      "options": [
+        "Rengiantis ilgiau",
+        "Kelyje į mokyklą",
+        "Pusryčiams"
+      ],
+      "answer": 2,
+      "hint": "Rengimasis ir kelias nesikeičia nė viename ryte.",
+      "why": "Ankstesnis pabudimas prideda laiko ten, kur jo trūko — pusryčiams."
+    },
+    {
+      "q": "Vaikas nori ilgiau pamiegoti, bet nenori likti be pusryčių. Kurį darbą jis gali atlikti vakare?",
+      "options": [
+        "Pasidėti kuprinę ir maistą vakare, kad rytas būtų trumpesnis",
+        "Bėgti į mokyklą greičiau",
+        "Valgyti pusryčius kelyje"
+      ],
+      "answer": 0,
+      "hint": "Ieškok darbo, kurį galima atlikti ne ryte.",
+      "why": "Vakare atliktas darbas sutrumpina rytą, todėl laiko lieka abiem."
+    },
+    {
+      "q": "Ketvirtadienį vaikas kėlėsi 6:45, penktadienį — 7:25. Abu kartus išėjo 8:00. Kas penktadienį dingo?",
+      "options": [
+        "Rengimosi laiką",
+        "Kelią į mokyklą",
+        "Pusryčius"
+      ],
+      "answer": 2,
+      "hint": "Suskaičiuok, kiek laiko liko po rengimosi ir kelio.",
+      "why": "Rengimasis ir kelias užima tiek pat, todėl dingo pusryčių laikas.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kuri tavo ryto dalis atima laiką iš kitos? Pasakyk savais žodžiais.",
+  "teacher": {
+    "goal": "Suprasti, kad rytas yra uždaras laiko tarpas su fiksuotu galu, todėl vėlesnis kėlimasis ne prideda laiko, o atima jį iš tos dalies, kuri neturi savo trukmės — pusryčių. Modelis keičia vieną dydį (kėlimosi laiką), o rengimasis, kelias ir išėjimas lieka nepajudinami.",
+    "prompt": "Paklausk: „Kai keliąsi vėliau, iš kur atsiranda laikas, o iš kur jis dingsta?“",
+    "offline": "Ant lapo nupieškite ilgą juostą ir pažymėkite abu galus: pabudimą ir išėjimą. Vaikas deda tris korteles su užrašais „rengiuosi“, „valgau“, „einu“ ir matuoja jas liniuote. Paskui pabudimo žymą perkelkite dešimčia minučių vėliau ir palikite tas pačias tris korteles: dvi telpa, trečia nebetelpa. Klausimas — kuri kortelė turi sutrumpėti, o kuri negali.",
+    "misconceptions": [
+      "„Jei keliuosi vėliau, rytas tiesiog prasideda vėliau.“ Modelis laiko išėjimą vietoje, todėl pasistūmėja tik pradžia, o laisvo laiko sumažėja.",
+      "„Vėluodamas galiu tiesiog apsirengti greičiau.“ Rengimosi trukmė modelyje nesikeičia nė karto — trumpėja būtent pusryčių ruožas, kol jo nebelieka.",
+      "„Pusryčiai nėra svarbūs, svarbu spėti į mokyklą.“ Modelis rodo, kad laikas atimamas iš konkretaus ruožo, o ne abstrakčiai — lėkštė mažėja prieš akis.",
+      "„Vaikas kaltas, kad neišsimiega.“ Modelyje nėra miego trukmės ir nėra vertinimo; keičiamas tik kėlimosi laikas, kurį dažnai nustato suaugusieji."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Pasaulio pažinimas“, 26.1.2 „Sveikas gyvenimas“ (sources/pradinio-bp-rekomendacijos-2024.txt, 1516–1531 eil.): „taikyti praktinį darbą parengiant savo poilsio ir mokymosi režimą“; rekomenduojama vaizdinė medžiaga „Pradinuko dienos režimas“ ir „Sveikos mitybos lėkštė“. Ten pat, 1 klasės ilgalaikis planas — šiai temai 3 val., veiklos „situaciniai, vaidybiniai, stalo žaidimai“, projektas „Sveiko maisto užkandžių dėžutė“ (17626–17631 eil.).",
+    "Paruthi, S., Brooks, L. J., D'Ambrosio, C., Hall, W. A., Kotagal, S., Lloyd, R. M., Malow, B. A., Maski, K., Nichols, C., Quan, S. F., Rosen, C. L., Troester, M. M., & Wise, M. S. (2016). Recommended amount of sleep for pediatric populations: A consensus statement of the American Academy of Sleep Medicine. Journal of Clinical Sleep Medicine, 12(6), 785–786. https://doi.org/10.5664/jcsm.5866 — 6–12 m. vaikams rekomenduojama 9–12 val. miego per parą reguliariai; modelyje miego trukmė sąmoningai neskaičiuojama, nes tai ne jo kintamasis.",
+    "Adolphus, K., Lawton, C. L., & Dye, L. (2013). The effects of breakfast on behavior and academic performance in children and adolescents. Frontiers in Human Neuroscience, 7, 425. https://doi.org/10.3389/fnhum.2013.00425 — apžvalga rodo teigiamą pusryčių poveikį darbingumui pamokoje, ryškiausią jaunesniems nei 13 m. vaikams; todėl modulis pusryčius rodo kaip laiko, o ne kaip taisyklių klausimą."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena sąvoka: rytas yra uždaras laiko tarpas, todėl vėlesnis kėlimasis atima laiką iš pusryčių. Miego trukmės, mitybos piramidės ir maisto grupių modelyje nėra — jos būtų antra sąvoka tame pačiame kadre.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo palyginti du rytus ir rasti, kas pasikeitė, o ne atkartoti modulio sakinį; ketvirta užduotis — perkėlimas į savaitės dienas.",
+    "3 žingsnis — pagalba laiku: spėjimas prieš kiekvieną rytą palyginamas su lėkšte, kiekviena klaida turi užuominą, kuri nurodo į išėjimo laiką; nėra laikmačio, o ketvirta užduotis — praplėtimas.",
+    "P2 / T3.1 / T3.4 / T5.1 / T5.5: veiksmas prieš paaiškinimą, grįžtamasis ryšys apie ruožą, o ne apie vaiką, yra praplėtimas, 52 px taikiniai, būsena pasakoma žodžiu ir skaičiumi, ne vien spalva."
+  ]
+}

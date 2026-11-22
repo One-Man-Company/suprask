@@ -4462,7 +4462,322 @@ const traumosPriezastis = {
   },
 };
 
+/* --- Dienos režimas ir mityba (1 klasė, 26.1.2) ------------------------
+   Modelis: rytas nuo kėlimosi iki išėjimo į mokyklą. Vaikas keičia VIENĄ
+   dalyką — kėlimosi laiką. Visi kiti dydžiai nekinta: pasiruošimas (5 min.),
+   rengimasis (25 min.), ėjimas į mokyklą (10 min.) ir išėjimo laikas 7:45.
+   Todėl pusryčiams liekantis laikas IŠVEDAMAS, o ne įrašytas:
+   `breakfast = departure - wake - (keltis + rengimasis + ėjimas)`.
+   Klaidinga nuostata, kurią modelis griauja: „jei prabundu vėliau, viską
+   spėsiu, tik darysiu greičiau“ — laikas atimamas iš pusryčių, o ne iš
+   rengimosi, ir ilgainiui pusryčių nebelieka visai. Tai matoma kaip
+   mažėjanti lėkštė, o ne kaip vertinimas, ar vaikas „gerai“ pasielgė.
+   Sąmoningos ribos: modelis rodo TIK rytą (ne visą parą), neskaičiuoja
+   miego trukmės ir neverčia vaiko nieko daryti greičiau — greitis nėra
+   kintamasis, nes jo negalima pamatuoti sąžiningai (LL-18). */
+const DR_START = 6 * 60 + 30;      // ašis prasideda 6:30
+const DR_END = 8 * 60 + 10;        // ašis baigiasi 8:10
+const DR_X0 = 24;
+const DR_X1 = 304;
+const DR_Y = 156;                  // juostos viršus
+const DR_H = 26;
+const DR_DEPART = 8 * 60;          // išėjimas į mokyklą
+const DR_FIXED = 5 + 25 + 10;      // keltis + rengimasis + ėjimas
+
+const drX = (min) => DR_X0 + ((min - DR_START) * (DR_X1 - DR_X0)) / (DR_END - DR_START);
+
+const drClock = (min) => `${Math.floor(min / 60)}:${String(min % 60).padStart(2, "0")}`;
+
+const drParse = (text) => {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(String(text).trim());
+  if (!m) return null;
+  const h = Number(m[1]);
+  const mi = Number(m[2]);
+  if (!(h >= 0 && h <= 23 && mi >= 0 && mi <= 59)) return null;
+  return h * 60 + mi;
+};
+
+const dienosJuosta = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const raw = Array.isArray(config.wakeTimes) ? config.wakeTimes : [];
+    const wakes = raw.map((t) => ({ text: String(t), min: drParse(t) }));
+
+    const problems = [];
+    if (wakes.length < 3) problems.push("kėlimosi laikų mažiau nei trys");
+    wakes.forEach((w) => {
+      if (w.min === null) problems.push(`laikas „${w.text}“ ne HH:MM formato`);
+      else if (w.min < DR_START || w.min >= DR_DEPART) problems.push(`laikas „${w.text}“ už ašies ribų`);
+    });
+    ["wakeTitle", "guessTitle", "guessed", "yes", "no", "show", "again", "depart"].forEach((k) => {
+      if (!L[k]) problems.push(`užrašo „${k}“ nėra`);
+    });
+    ["start", "startNote", "askGuess", "guessNote", "inTime", "none", "noteMid", "done", "doneNote", "reset"]
+      .forEach((k) => { if (!S[k]) problems.push(`sakinio „${k}“ nėra`); });
+    if (problems.length) {
+      console.error(`dienos-juosta: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="error-box">Rytas nesuderintas su laikais.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const init = wakes.findIndex((w) => w.min !== null);
+    const state = { idx: init, guess: null };
+    const tried = new Map();          // kėlimosi laikas -> pusryčių min.
+    let reported = false;
+
+    const breakfastOf = (wake) => DR_DEPART - wake - DR_FIXED;
+
+    stage.innerHTML = `
+      <div style="width:100%;min-width:0;max-width:min(21rem,100%);margin:0 auto">
+        <p id="dr-guess" style="margin:0 0 .3rem;min-width:0;text-align:center;font-weight:800;
+           font-size:.88rem;line-height:1.2;overflow-wrap:anywhere;color:var(--ink-soft)"></p>
+        <svg id="dr-scene" viewBox="0 0 328 280" width="100%"
+             style="display:block;max-width:328px;height:auto;margin:0 auto"
+             role="img" aria-label="Ryto juosta nuo 6:30 iki 8:00."></svg>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.55rem;width:100%;max-width:34rem;margin:0 auto;min-width:0">
+        <div style="min-width:0">
+          <p style="margin:0 0 .3rem;font-weight:800;text-align:center;font-size:.9rem">${L.wakeTitle}</p>
+          <div id="dr-wakes" role="group" aria-label="${L.wakeTitle}"
+               style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,4.6rem),1fr));
+               gap:.35rem;min-width:0"></div>
+        </div>
+        <div style="min-width:0">
+          <p style="margin:0 0 .3rem;font-weight:800;text-align:center;font-size:.9rem">${L.guessTitle}</p>
+          <div id="dr-guess-row" role="group" aria-label="${L.guessTitle}"
+               style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem;min-width:0"></div>
+        </div>
+        <div style="display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;min-width:0">
+          <button class="btn" type="button" id="dr-show"
+                  style="flex:1 1 8rem;min-width:0;min-height:52px">${L.show}</button>
+          <button class="btn ghost" type="button" id="dr-again"
+                  style="flex:0 1 7rem;min-width:0;min-height:52px">${L.again}</button>
+        </div>
+      </div>`;
+
+    const svg = stage.querySelector("#dr-scene");
+    const guessLine = stage.querySelector("#dr-guess");
+    const wakeEl = controls.querySelector("#dr-wakes");
+    const guessEl = controls.querySelector("#dr-guess-row");
+    const showBtn = controls.querySelector("#dr-show");
+    const againBtn = controls.querySelector("#dr-again");
+
+    wakeEl.innerHTML = wakes.map((w, i) =>
+      `<button type="button" class="btn secondary" data-wake="${i}" aria-pressed="${i === init}"
+        style="min-width:0;min-height:56px;padding:.3rem .2rem;font-size:.95rem;
+        overflow-wrap:anywhere">${escDr(w.text)}</button>`).join("");
+    guessEl.innerHTML = `
+      <button type="button" class="btn secondary" data-guess="yes" aria-pressed="false"
+        style="min-width:0;min-height:56px;padding:.3rem .2rem;font-size:.95rem">${escDr(L.yes)}</button>
+      <button type="button" class="btn secondary" data-guess="no" aria-pressed="false"
+        style="min-width:0;min-height:56px;padding:.3rem .2rem;font-size:.95rem">${escDr(L.no)}</button>`;
+
+    const wakeBtns = Array.from(wakeEl.querySelectorAll("button[data-wake]"));
+    const guessBtns = Array.from(guessEl.querySelectorAll("button[data-guess]"));
+
+    function escDr(t) {
+      return String(t).replace(/[&<>"]/g,
+        (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    }
+
+    /* Juosta: laiko ašis, trys pastovūs ruožai ir pusryčiai, kurių ilgis
+       išvedamas. Ruožo ilgis pikseliais = tos pačios funkcijos, kuri skaičiuoja
+       minutes, rezultatas — todėl lėkštė ir sakinys negali prasilenkti. */
+    function scene() {
+      const cur = wakes[state.idx];
+      const wake = cur.min;
+      const bf = breakfastOf(wake);
+      const cuts = [
+        { key: "keltis", min: 5, fill: "#f2b13c", label: "" },
+        { key: "rengtis", min: 25, fill: "#8fb8d8", label: "" },
+        { key: "valgyti", min: Math.max(0, bf), fill: "#7fc98a", label: "" },
+        { key: "eiti", min: 10, fill: "#c98fb8", label: "" },
+      ];
+      let cursor = wake;
+      const segs = cuts.map((c) => {
+        if (c.min <= 0) return "";
+        const x = drX(cursor);
+        const w = Math.max(4, drX(cursor + c.min) - x);
+        cursor += c.min;
+        const words = c.key === "keltis" ? "keltis" : c.key === "rengtis" ? "rengtis"
+          : c.key === "valgyti" ? "pusryčiai" : "kelias";
+        const fit = w > 46;
+        return `<g><rect x="${x.toFixed(1)}" y="${DR_Y}" width="${w.toFixed(1)}" height="${DR_H}"
+                 rx="4" fill="${c.fill}" stroke="#3a342b" stroke-width="1.6"/>
+          ${fit ? `<text x="${(x + w / 2).toFixed(1)}" y="${DR_Y + 17}" text-anchor="middle"
+                 font-family="system-ui, sans-serif" font-size="10.5" font-weight="800"
+                 fill="#26323c">${words}</text>` : ""}</g>`;
+      }).join("");
+
+      /* Išėjimo laikas yra kontrolinis taškas: jis nesikeičia nė karto, todėl
+         vaikas mato, kad juda ne mokykla, o jo rytas. */
+      const dx = drX(DR_DEPART);
+      const ticks = [6 * 60 + 30, 7 * 60, 7 * 60 + 30, 8 * 60].map((t) => {
+        const x = drX(t);
+        return `<line x1="${x.toFixed(1)}" y1="${DR_Y + DR_H + 4}" x2="${x.toFixed(1)}"
+                  y2="${DR_Y + DR_H + 10}" stroke="#5c6772" stroke-width="2"/>
+          <text x="${x.toFixed(1)}" y="${DR_Y + DR_H + 24}" text-anchor="middle"
+                font-family="system-ui, sans-serif" font-size="11" font-weight="700"
+                fill="#3a342b">${drClock(t)}</text>`;
+      }).join("");
+
+      /* Lėkštė: spindulys iš tų pačių minučių. Minusas — perbraukta lėkštė,
+         o ne tuščia vieta, kad dingimas būtų įvardytas, ne nutylėtas. */
+      const r = bf > 0 ? Math.min(30, 10 + bf * 0.55) : 0;
+      const plate = bf > 0
+        ? `<g>${art.ball(64, 224, r, "#f6f1e3", "#b9a87f")}
+             <text x="64" y="228" text-anchor="middle" font-family="system-ui, sans-serif"
+               font-size="13" font-weight="800" fill="#26323c">${bf} min.</text>
+             <text x="110" y="204" font-family="system-ui, sans-serif" font-size="11.5"
+               font-weight="700" fill="#3a342b">pusryčiams</text></g>`
+        : `<g><circle cx="64" cy="224" r="26" fill="none" stroke="#b23a2e" stroke-width="2.4"
+             stroke-dasharray="7 6"/>
+           <path d="M46 206 L82 242 M82 206 L46 242" stroke="#b23a2e" stroke-width="3.2"
+             stroke-linecap="round"/>
+           <text x="104" y="228" font-family="system-ui, sans-serif" font-size="12"
+             font-weight="800" fill="#b23a2e">pusryčių nebeliko</text></g>`;
+
+      return `${art.defs("dr")}
+        ${art.plank(12, 262, 304, 14)}
+        ${segs}
+        <line x1="${dx.toFixed(1)}" y1="${DR_Y - 16}" x2="${dx.toFixed(1)}" y2="${DR_Y + DR_H}"
+              stroke="#b23a2e" stroke-width="2.6" stroke-dasharray="6 5"/>
+        <text x="${dx.toFixed(1)}" y="${DR_Y - 22}" text-anchor="middle"
+              font-family="system-ui, sans-serif" font-size="11" font-weight="800"
+              fill="#b23a2e">${escDr(L.depart)} ${drClock(DR_DEPART)}</text>
+        ${ticks}
+        ${plate}`;
+    }
+
+    function message() {
+      const cur = wakes[state.idx];
+      const bf = breakfastOf(cur.min);
+      if (state.guess === null) return { readout: S.start, note: S.startNote };
+      if (!tried.has(cur.text)) return { readout: S.askGuess, note: S.guessNote };
+      const all = tried.size >= wakes.filter((w) => w.min !== null).length;
+      /* Skaičius sakinyje imamas iš tos pačios funkcijos, kuri piešia lėkštę,
+         todėl sakinys ir lėkštė negali prasilenkti (LL-95 šeima). */
+      const word = bf > 0 ? `${bf} min. ${S.inTime}` : S.none;
+      return {
+        readout: all ? `${word} ${S.done}` : word,
+        /* „Kodėl“ po pirmo ryto: anksčiau čia grįždavo pradžios instrukcija,
+           todėl vaikas po veiksmo negirdėdavo priežasties (T2.3). */
+        note: all ? S.doneNote : S.noteMid,
+      };
+    }
+
+    function render(focusSel) {
+      svg.innerHTML = scene();
+      const cur = wakes[state.idx];
+      const bf = breakfastOf(cur.min);
+      svg.setAttribute("aria-label", `Kėliausi ${cur.text}. Išeinu ${drClock(DR_DEPART)}. `
+        + (bf > 0 ? `Pusryčiams liko ${bf} minučių.` : "Pusryčiams laiko neliko."));
+      guessLine.textContent = state.guess
+        ? `${L.guessed}: ${state.guess === "yes" ? L.yes : L.no}` : "";
+
+      wakeBtns.forEach((b) => {
+        const w = wakes[Number(b.dataset.wake)];
+        const on = Number(b.dataset.wake) === state.idx;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "";
+        b.setAttribute("aria-label", `${w.text}.${tried.has(w.text) ? " Jau bandei." : " Pasirink kėlimosi laiką."}`);
+      });
+      guessBtns.forEach((b) => {
+        const on = state.guess === b.dataset.guess;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "";
+        b.disabled = tried.has(cur.text);
+        b.setAttribute("aria-label", tried.has(cur.text)
+          ? "Šis rytas jau parodytas — rinkis kitą laiką"
+          : `Spėk: ${b.textContent}`);
+      });
+      showBtn.disabled = state.guess === null || tried.has(cur.text);
+      showBtn.setAttribute("aria-label", state.guess === null
+        ? "Pirma spėk, ar spėsi pavalgyti" : tried.has(cur.text)
+          ? "Šis rytas jau parodytas" : "Rodyk rytą ir pažiūrėk, kiek liko pusryčiams");
+      againBtn.setAttribute("aria-label", "Pradėk iš naujo. Lėkštės lieka.");
+
+      const m = message();
+      api.readout(m.readout);
+      api.note(m.note);
+      if (focusSel) {
+        const el = controls.querySelector(focusSel);
+        if (el && !el.disabled) el.focus();
+      }
+    }
+
+    function chooseWake(i) {
+      state.idx = i;
+      state.guess = null;
+      render("#dr-guess-row button");
+    }
+
+    function chooseGuess(v) {
+      state.guess = v === "yes" ? "yes" : "no";
+      render("#dr-show");
+    }
+
+    function show() {
+      const cur = wakes[state.idx];
+      if (state.guess === null || tried.has(cur.text)) return;
+      tried.set(cur.text, breakfastOf(cur.min));
+      /* Sėkmės sąlyga — dabartinė lentelė (visi laikai parodyti), ne
+         prisiminimas (LL-17); žymima po paskutinio ryto, ne po pirmo (LL-29). */
+      if (tried.size >= wakes.filter((w) => w.min !== null).length && !reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+      api.speak(breakfastOf(cur.min) > 0 ? S.inTime : S.none, { rate: 0.92 });
+      const next = wakes.findIndex((w, i) => !tried.has(w.text) && i !== state.idx);
+      render(next >= 0 ? `button[data-wake="${next}"]` : "#dr-again");
+    }
+
+    function reset() {
+      state.guess = null;
+      /* Lėkštės sąmoningai netuščios (LL-16): „Iš naujo“ atstato rytą, o ne
+         ištrina tai, ką vaikas jau sužinojo. */
+      const next = wakes.findIndex((w) => !tried.has(w.text));
+      state.idx = next >= 0 ? next : init;
+      api.speak(S.reset, { rate: 0.92 });
+      render(next >= 0 ? `button[data-wake="${next}"]` : "#dr-again");
+    }
+
+    wakeEl.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-wake]");
+      if (b && !b.disabled) chooseWake(Number(b.dataset.wake));
+    });
+    guessEl.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-guess]");
+      if (b && !b.disabled) chooseGuess(b.dataset.guess);
+    });
+    showBtn.addEventListener("click", show);
+    againBtn.addEventListener("click", reset);
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "r" || e.key === "R") { e.preventDefault(); reset(); return; }
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const group = e.target.closest("#dr-wakes, #dr-guess-row");
+      if (!group) return;
+      const btns = [...group.querySelectorAll("button")].filter((b) => !b.disabled);
+      if (btns.length < 2) return;
+      const idx = btns.indexOf(document.activeElement);
+      if (idx < 0) return;
+      e.preventDefault();
+      btns[(idx + (e.key === "ArrowRight" ? 1 : btns.length - 1)) % btns.length].focus();
+    });
+
+    render();
+    return () => {};
+  },
+};
+
 export const SIMS = {
+  "dienos-juosta": dienosJuosta,
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
   "gyvunu-grupes": gyvunuGrupes,

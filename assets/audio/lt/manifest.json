@@ -743,6 +743,10 @@
   "n": "n/4d4d65ccf59bb3f5-03f1af0d.mp3",
   "s": "s/4d4d65ccf59bb3f5-d4f2b451.mp3"
  },
+ "Dabar spausk „Rodyk rytą“.": {
+  "n": "n/884b4c7076e26aba-f5aa5a91.mp3",
+  "s": "s/884b4c7076e26aba-2176801a.mp3"
+ },
  "Daigas": {
   "n": "n/e9ebf47dd9afa46f-0377d56d.mp3",
   "s": "s/e9ebf47dd9afa46f-aaffef6d.mp3"
@@ -1138,6 +1142,14 @@
  "Išmesiu": {
   "n": "n/fbb720fdb8de8edc-3605f717.mp3",
   "s": "s/fbb720fdb8de8edc-74ffc54e.mp3"
+ },
+ "Išėjimas tas pats, todėl trumpėjo pusryčiai.": {
+  "n": "n/bd5b27f6beaad8cf-1f74aa04.mp3",
+  "s": "s/bd5b27f6beaad8cf-42a259e8.mp3"
+ },
+ "Išėjimas visada tas pats.": {
+  "n": "n/34b8e69dc368d698-3058762f.mp3",
+  "s": "s/34b8e69dc368d698-626cc894.mp3"
  },
  "J": {
   "n": "n/6da43b944e494e88-b68b1146.mp3",
@@ -1703,6 +1715,10 @@
   "n": "n/f8b179f3979112b1-a8058e17.mp3",
   "s": "s/f8b179f3979112b1-72590a10.mp3"
  },
+ "Pasirink kėlimosi laiką ir spėk.": {
+  "n": "n/543cd74d361cbc82-70f79849.mp3",
+  "s": "s/543cd74d361cbc82-b0cdbdd9.mp3"
+ },
  "Pasirink mažesnį skaičių.": {
   "n": "n/051aef55b356262b-12107e97.mp3",
   "s": "s/051aef55b356262b-8981a3da.mp3"
@@ -1815,6 +1831,10 @@
   "n": "n/8e2fbed9a06630c0-4db885da.mp3",
   "s": "s/8e2fbed9a06630c0-0316a2de.mp3"
  },
+ "Pirma spėk, ar liks laiko pusryčiams.": {
+  "n": "n/cfec274b298571db-f3d309ce.mp3",
+  "s": "s/cfec274b298571db-40caf5f0.mp3"
+ },
  "Pirma spėk, tada eik.": {
   "n": "n/beabeaa69634aa42-c61d7a1f.mp3",
   "s": "s/beabeaa69634aa42-194ea0fb.mp3"
@@ -1866,6 +1886,10 @@
  "Pradedam iš naujo. Ciferblatas rodo 2 val. po pietų.": {
   "n": "n/cf50f1166eb90f2e-fe5271b3.mp3",
   "s": "s/cf50f1166eb90f2e-7731a29b.mp3"
+ },
+ "Pradedam iš naujo. Lėkštės lieka.": {
+  "n": "n/6516987f911f8fde-811a39ed.mp3",
+  "s": "s/6516987f911f8fde-f66d2d90.mp3"
  },
  "Pradedam iš naujo. Padėk tašką ant tiesės.": {
   "n": "n/6d7863e56d1ac8c6-7771c9df.mp3",
@@ -1926,6 +1950,14 @@
  "Pulsas žemai, plojimai aukštai.": {
   "n": "n/9deadd952326e379-e68d462b.mp3",
   "s": "s/9deadd952326e379-e0d247f1.mp3"
+ },
+ "Pusryčiams laiko liko.": {
+  "n": "n/dfb11e9d1640ff97-d37b155e.mp3",
+  "s": "s/dfb11e9d1640ff97-fdfd19c1.mp3"
+ },
+ "Pusryčiams laiko nebeliko.": {
+  "n": "n/87e1c99428f38a7d-c5c0fcfd.mp3",
+  "s": "s/87e1c99428f38a7d-014d3d09.mp3"
  },
  "Pėdsakai rodo visą kelią. Kur jis pasisuko?": {
   "n": "n/87353ff8635b1855-41115b15.mp3",
@@ -2307,6 +2339,10 @@
   "n": "n/5b90edb4fc88f8a3-dcacee97.mp3",
   "s": "s/5b90edb4fc88f8a3-f58247b5.mp3"
  },
+ "Trys rytai, viena taisyklė.": {
+  "n": "n/62f31e4efbed1834-10b7c113.mp3",
+  "s": "s/62f31e4efbed1834-5d8dc413.mp3"
+ },
  "Trys skaičiai, viena lenta.": {
   "n": "n/bb0ea531b3d25363-87c18e5f.mp3",
   "s": "s/bb0ea531b3d25363-5664d65b.mp3"
@@ -2630,6 +2666,10 @@
  "Vėl žalia. Paveikslas toks pat.": {
   "n": "n/c46c25cb45cad82f-edbfd1d8.mp3",
   "s": "s/c46c25cb45cad82f-facc9830.mp3"
+ },
+ "Vėliau kėleisi — trumpesni pusryčiai.": {
+  "n": "n/27142789508f09a2-abc71e30.mp3",
+  "s": "s/27142789508f09a2-50fefbe3.mp3"
  },
  "Y": {
   "n": "n/18f5384d58bcb1bb-bd31640d.mp3",

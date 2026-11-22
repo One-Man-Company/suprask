@@ -1731,6 +1731,10 @@
   "n": "n/ad161d55c7544049-3fd8ad22.mp3",
   "s": "s/ad161d55c7544049-0404eeb5.mp3"
  },
+ "Pasirink žodį ir tark jį garsiai.": {
+  "n": "n/79e029470c83bb50-8fd751c7.mp3",
+  "s": "s/79e029470c83bb50-fd5daaf4.mp3"
+ },
  "Pasirink, kiek dešimčių ir kiek vienetų.": {
   "n": "n/9d8add673b29f792-5c13bff8.mp3",
   "s": "s/9d8add673b29f792-00bd4241.mp3"
@@ -1790,6 +1794,10 @@
  "Peržengei dešimtį pirmyn. Vienetai pradeda nuo nulio.": {
   "n": "n/0fd3dedf58878dc2-16276493.mp3",
   "s": "s/0fd3dedf58878dc2-f9046277.mp3"
+ },
+ "Peržiūrėjai visus žodžius. Viena pora sulimpa, kita ne.": {
+  "n": "n/6c377b5b0499b6eb-d5842a27.mp3",
+  "s": "s/6c377b5b0499b6eb-b20f0739.mp3"
  },
  "Piešinys su berniuku": {
   "n": "n/ecf4b0d268d2d5e7-c3c4e646.mp3",
@@ -1906,6 +1914,10 @@
  "Pradedam iš naujo. Prijunk laidus.": {
   "n": "n/13f77b21b8fd4a6b-b404e361.mp3",
   "s": "s/13f77b21b8fd4a6b-be4a4fd6.mp3"
+ },
+ "Pradedam iš naujo. Tie patys žodžiai.": {
+  "n": "n/d481ca1880b5fa8f-ebe4ee5d.mp3",
+  "s": "s/d481ca1880b5fa8f-67a0bc47.mp3"
  },
  "Pradedam iš naujo. Trys vienodo dydžio kaladėlės.": {
   "n": "n/5b1b1cb7703dc981-0d5edcfe.mp3",
@@ -2095,6 +2107,14 @@
   "n": "n/f9f4cc8ceeef0aad-656c362a.mp3",
   "s": "s/f9f4cc8ceeef0aad-571d829a.mp3"
  },
+ "Skiemenų per daug. Du balsiai greta skamba vienu balsu.": {
+  "n": "n/42e1a584c22b7ae6-910841aa.mp3",
+  "s": "s/42e1a584c22b7ae6-7f7a3dba.mp3"
+ },
+ "Skiemenų per mažai. Įsiklausyk, kur balsas sustoja.": {
+  "n": "n/f3111ced0efc488e-20600217.mp3",
+  "s": "s/f3111ced0efc488e-40cc4e29.mp3"
+ },
  "Smėlis kasamas.": {
   "n": "n/1d30d5e6caee2bed-d71b547a.mp3",
   "s": "s/1d30d5e6caee2bed-1de3ab10.mp3"
@@ -2114,6 +2134,10 @@
  "Spausk paveikslėlį ir paklausyk žodžio.": {
   "n": "n/050db6f27be6c9b7-ccf54bb1.mp3",
   "s": "s/050db6f27be6c9b7-3887037c.mp3"
+ },
+ "Spausk tarpą ten, kur žodis sustoja.": {
+  "n": "n/aa0a9837eba9b964-68031d86.mp3",
+  "s": "s/aa0a9837eba9b964-1da3adc9.mp3"
  },
  "Spausk „Pasverti“.": {
   "n": "n/18e6efb4759d8904-d4e91800.mp3",
@@ -2298,6 +2322,10 @@
  "Tiltas pastatytas — perėjo abu!": {
   "n": "n/2e8cb9ac1abdb1f9-e3cafef7.mp3",
   "s": "s/2e8cb9ac1abdb1f9-df46d12c.mp3"
+ },
+ "Tinka:": {
+  "n": "n/bfdd3580d320f60e-f14b2dcd.mp3",
+  "s": "s/bfdd3580d320f60e-9b787831.mp3"
  },
  "Toliau eiti negalima. Spausk Iš naujo.": {
   "n": "n/8472a837493d6412-836727fa.mp3",
@@ -2703,6 +2731,14 @@
   "n": "n/18ac3e7343f01689-60745850.mp3",
   "s": "s/18ac3e7343f01689-784f3d55.mp3"
  },
+ "duo": {
+  "n": "n/fdd823e31be438f6-36d88af4.mp3",
+  "s": "s/fdd823e31be438f6-44f39cee.mp3"
+ },
+ "duona": {
+  "n": "n/52c2e7cc9ff7a914-775ceba5.mp3",
+  "s": "s/52c2e7cc9ff7a914-7e4fa48e.mp3"
+ },
  "e": {
   "n": "n/3f79bb7b435b0532-51b2286e.mp3",
   "s": "s/3f79bb7b435b0532-ec152a13.mp3"
@@ -2735,6 +2771,10 @@
   "n": "n/8254c329a92850f6-1f2cbcfa.mp3",
   "s": "s/8254c329a92850f6-1f3e3cee.mp3"
  },
+ "kas": {
+  "n": "n/04ead045b10c1a7f-429142f8.mp3",
+  "s": "s/04ead045b10c1a7f-a218db88.mp3"
+ },
  "katė": {
   "n": "n/8c355f6e873fec60-771bfc81.mp3",
   "s": "s/8c355f6e873fec60-f8fd85f0.mp3"
@@ -2742,6 +2782,10 @@
  "kieme": {
   "n": "n/9ccbcda6035caeaa-22def03a.mp3",
   "s": "s/9ccbcda6035caeaa-ece459a2.mp3"
+ },
+ "kis": {
+  "n": "n/a1328c633b67e3f8-3e9ebd15.mp3",
+  "s": "s/a1328c633b67e3f8-94ba6f13.mp3"
  },
  "knygą": {
   "n": "n/72e7d8afce87edf9-f6a2249b.mp3",
@@ -2758,6 +2802,14 @@
  "la": {
   "n": "n/b737ca7ee563ae80-8f50a739.mp3",
   "s": "s/b737ca7ee563ae80-717b14fe.mp3"
+ },
+ "lai": {
+  "n": "n/44e99ddf71477461-ae1a405e.mp3",
+  "s": "s/44e99ddf71477461-3be7cb76.mp3"
+ },
+ "laikas": {
+  "n": "n/d8f1cb5734f12989-3bcc6bfd.mp3",
+  "s": "s/d8f1cb5734f12989-1df35588.mp3"
  },
  "lis": {
   "n": "n/afc0b0d1d853ba78-778cbf59.mp3",
@@ -2795,13 +2847,25 @@
   "n": "n/abb838da0f22d104-7edc8654.mp3",
   "s": "s/abb838da0f22d104-b77d9912.mp3"
  },
+ "mė": {
+  "n": "n/2fe959b01a142101-701bb5ae.mp3",
+  "s": "s/2fe959b01a142101-c9e018e7.mp3"
+ },
  "n": {
   "n": "n/1b16b1df538ba12d-e0be721a.mp3",
   "s": "s/1b16b1df538ba12d-d6eee406.mp3"
  },
+ "na": {
+  "n": "n/3d9fc4bde7ceef05-b8da292c.mp3",
+  "s": "s/3d9fc4bde7ceef05-ad5eea4a.mp3"
+ },
  "namas": {
   "n": "n/438884ffc7d8d72d-e1005a40.mp3",
   "s": "s/438884ffc7d8d72d-e98e311a.mp3"
+ },
+ "nas": {
+  "n": "n/047de0f543c7e359-f79a7e02.mp3",
+  "s": "s/047de0f543c7e359-3006c103.mp3"
  },
  "o": {
   "n": "n/65c74c15a686187b-238528bc.mp3",
@@ -2815,9 +2879,25 @@
   "n": "n/148de9c5a7a44d19-af1a2858.mp3",
   "s": "s/148de9c5a7a44d19-2981381c.mp3"
  },
+ "pa": {
+  "n": "n/9513229d43597826-d3e7a355.mp3",
+  "s": "s/9513229d43597826-ab8f9601.mp3"
+ },
+ "paėmė": {
+  "n": "n/d7bf76fd4d77b77d-950ac163.mp3",
+  "s": "s/d7bf76fd4d77b77d-e6b43bba.mp3"
+ },
  "pi": {
   "n": "n/85b42e1702877c85-df3eb45c.mp3",
   "s": "s/85b42e1702877c85-058187e1.mp3"
+ },
+ "pie": {
+  "n": "n/558211ed72b2d696-d5fac5b4.mp3",
+  "s": "s/558211ed72b2d696-72851100.mp3"
+ },
+ "pienas": {
+  "n": "n/1208f8bfda65e511-ba54b717.mp3",
+  "s": "s/1208f8bfda65e511-57fc1e88.mp3"
  },
  "pieną": {
   "n": "n/2b877a47316d966e-6873538a.mp3",
@@ -2886,6 +2966,14 @@
  "z": {
   "n": "n/594e519ae499312b-21fd361a.mp3",
   "s": "s/594e519ae499312b-8fa085b8.mp3"
+ },
+ "zui": {
+  "n": "n/33b0c3d940292a9c-3bd41455.mp3",
+  "s": "s/33b0c3d940292a9c-74d7f2d4.mp3"
+ },
+ "zuikis": {
+  "n": "n/b52a85fef92fbafe-37f646f3.mp3",
+  "s": "s/b52a85fef92fbafe-b1b436fb.mp3"
  },
  "Ą": {
   "n": "n/53ccee140d0804e0-23ce4dce.mp3",
@@ -2963,6 +3051,10 @@
   "n": "n/12d7fec90973ad46-516bb3fa.mp3",
   "s": "s/12d7fec90973ad46-14d53011.mp3"
  },
+ "Ši pora tariama vienu balsu, todėl ribos joje nėra.": {
+  "n": "n/435d286d49c9be7c-6feefd21.mp3",
+  "s": "s/435d286d49c9be7c-e503dc76.mp3"
+ },
  "Ši seka veda ne prie vėliavos. Viena komanda klaidinga.": {
   "n": "n/6d6f88831dc26d38-c2d34fc3.mp3",
   "s": "s/6d6f88831dc26d38-4fe26aa1.mp3"
@@ -2974,6 +3066,10 @@
  "Šilta, daug lapų, obuoliai noksta, bitės dūzgia.": {
   "n": "n/d37d19f4b16ea501-556a5c3f.mp3",
   "s": "s/d37d19f4b16ea501-3edceabe.mp3"
+ },
+ "Šioje vietoje žodis nesustoja. Skaičiuok, kiek skiemenų girdi.": {
+  "n": "n/030eef6ef6dfa717-f45bee2e.mp3",
+  "s": "s/030eef6ef6dfa717-6e3fb15c.mp3"
  },
  "Šlapios grindys": {
   "n": "n/310e5aa3d68ec76f-e21f548d.mp3",

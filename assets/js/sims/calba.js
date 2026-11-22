@@ -2027,6 +2027,214 @@ const oroKelias = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 8. Garsinė sandara: du balsiai, tariami vienu balsu                 */
+/* ------------------------------------------------------------------ */
+/* Modelis: vienintelis keičiamas dalykas — KUR vaikas stato pauzę, o
+   rezultatas lyginamas su žodžio sandara, kuri imama iš
+   `config.words[].syllables`. Skirtukas tarp raidžių yra vaiko
+   sprendimas; dalių skaičius ekrane išvedamas iš tų pačių duomenų,
+   kuriuos mato vaikas (LL-21), o ne įrašytas tekstu.
+   Nuostata, kurią modelis griauna: „du balsiai greta — du garsai“.
+   Todėl sąraše yra penki žodžiai, kuriuose balsių pora tariama vienu
+   balsu (sau-lė, lai-kas, duo-na, zui-kis, pie-nas), IR vienas
+   prieštaraujantis žodis (pa-ė-mė), kuriame greta esantys balsiai
+   priklauso skirtingiems skiemenims (LL-28: be priešpavyzdžio modelis
+   teigtų netiesą „pora visada sulimpa“).
+   Pavieniai garsai NETARIAMI: sintezatorius „s“ perskaitytų kaip raidės
+   vardą „es“. Tariami tik sakiniai iš `sim.config.sentences`, o žodį ir
+   jo dalis vaikas taria pats.
+   Pažanga žymima tik peržiūrėjus VISUS žodžius, o ne teisingai
+   sudėjus pirmą (§4, LL-17). */
+
+const DT_VOWELS = new Set("aąeęėiįyouųū".split(""));
+
+/* SkieMENŲ formos — tos pačios, kaip `skiemenu-jungimas` modulyje: vaikas
+   tame pačiame sraute neturi išgirsti dviejų pavadinimų tam pačiam dalykui
+   (LL-34 šeima). */
+const DT_KIEKIS = ["", "vienas skiemuo", "du skiemenys", "trys skiemenys", "keturi skiemenys", "penki skiemenys"];
+const DtPlural = (n) => DT_KIEKIS[n] || `${n} skiemenų`;
+
+const dvibalsiuTakas = {
+  mount({ stage, controls, api, config }) {
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const raw = Array.isArray(config.words) ? config.words : [];
+    const words = raw
+      .filter((it) => it && typeof it.word === "string" && Array.isArray(it.syllables) && it.syllables.length >= 2)
+      .map((it) => {
+        const letters = Array.from(it.word);
+        const syl = it.syllables.map(String);
+        /* SkieMENŲ RIBOS išvedamos iš dalių ilgio, o ne iš atskiro lauko,
+           kuris galėtų išsiderinti su pačiu žodžiu. */
+        const bounds = [];
+        let at = 0;
+        syl.slice(0, -1).forEach((s) => { at += Array.from(s).length; bounds.push(at); });
+        return { word: it.word, letters, syl, bounds, joins: syl.join("") === it.word };
+      })
+      .filter((it) => it.joins && it.bounds.every((b) => b > 0 && b < it.letters.length));
+
+    const S = config.sentences && typeof config.sentences === "object" ? config.sentences : {};
+    const REQUIRED = ["start", "place", "more", "less", "glued", "miss", "right", "done", "again"];
+    const missing = REQUIRED.filter((k) => !String(S[k] ?? "").trim());
+
+    if (words.length < 3 || missing.length) {
+      console.error("[dvibalsiu-takas] reikia bent 3 žodžių su „word“ ir „syllables“ bei tekstų:", REQUIRED.join(", "), missing, config);
+      stage.innerHTML = `<p class="error-box">Žodžių duomenys nesuderinti.</p>`;
+      controls.innerHTML = "";
+      api.readout("Žodžių duomenys nesuderinti.");
+      api.note("");
+      return () => {};
+    }
+
+    const tried = new Set();     // kurių žodžių patikra jau buvo
+    let w = 0;
+    let pauses = new Set();      // skirtukų vietos: tarp raidžių i ir i+1
+    let reported = false;
+
+    stage.innerHTML = `
+      <div style="width:100%;min-width:0;max-width:min(38rem, 100%);margin:0 auto;text-align:center">
+        <p id="dt-word" style="margin:0 0 .35rem;font-family:var(--font-head);font-weight:900;font-size:clamp(1.4rem,6.2vw,1.9rem);overflow-wrap:anywhere"></p>
+        <div id="dt-strip" role="group" aria-label="Žodžio raidės ir skiemenų ribos"
+          style="display:flex;flex-wrap:wrap;gap:.15rem;justify-content:center;align-items:stretch;min-height:4.2rem"></div>
+        <p id="dt-hear" style="margin:.6rem 0 0;font-family:var(--font-head);font-weight:900;font-size:clamp(1.05rem,4.2vw,1.3rem);min-height:2rem;overflow-wrap:anywhere"></p>
+        <p id="dt-note" class="sim-note" style="margin:.3rem 0 0;min-height:3.4rem"></p>
+      </div>`;
+    controls.innerHTML = `
+      <button class="btn" id="dt-check" type="button" style="min-height:52px">Tikrink</button>
+      <button class="btn secondary" id="dt-next" type="button" style="min-height:48px;display:none">Kitas žodis →</button>
+      <button class="btn secondary" id="dt-reset" type="button" style="min-height:48px">Iš naujo</button>`;
+
+    const stripEl = stage.querySelector("#dt-strip");
+    const wordEl = stage.querySelector("#dt-word");
+    const hearEl = stage.querySelector("#dt-hear");
+    const noteEl = stage.querySelector("#dt-note");
+    const checkBtn = controls.querySelector("#dt-check");
+    const nextBtn = controls.querySelector("#dt-next");
+    const resetBtn = controls.querySelector("#dt-reset");
+
+    const at = () => words[w];
+
+    function pieces() {
+      const it = at();
+      const out = [];
+      let cur = "";
+      it.letters.forEach((ch, i) => {
+        cur += ch;
+        if (pauses.has(i)) { out.push(cur); cur = ""; }
+      });
+      out.push(cur);
+      return out;
+    }
+
+    function paint() {
+      const it = at();
+      wordEl.textContent = it.word;
+      stripEl.innerHTML = it.letters.map((ch, i) => {
+        const tile = `<span style="display:flex;align-items:center;justify-content:center;min-width:2.2rem;min-height:56px;padding:.1rem .25rem;border:2px solid var(--line);border-radius:var(--r-s);background:var(--paper);font-family:var(--font-head);font-weight:900;font-size:clamp(1.25rem,5.4vw,1.6rem)">${esc(ch)}</span>`;
+        if (i === it.letters.length - 1) return tile;
+        const on = pauses.has(i);
+        const label = on
+          ? `Nuimti skiemens ribą tarp ${it.letters[i]} ir ${it.letters[i + 1]}`
+          : `Dėti skiemens ribą tarp ${it.letters[i]} ir ${it.letters[i + 1]}`;
+        return `${tile}<button class="btn secondary" type="button" data-slot="${i}" aria-pressed="${on}" aria-label="${esc(label)}"
+          style="min-width:48px;min-height:56px;align-self:stretch;padding:.1rem;font-size:clamp(1rem,4vw,1.15rem);font-weight:900;line-height:1"
+          >${on ? "|" : "·"}</button>`;
+      }).join("");
+      stripEl.querySelectorAll("[data-slot]").forEach((b) => {
+        b.addEventListener("click", () => tapSlot(Number(b.dataset.slot)));
+      });
+      hearEl.textContent = pieces().join(" · ");
+      api.readout(`${it.word}. ${DtPlural(pauses.size + 1)}.`);
+      api.note(String(S.start ?? "") + " " + String(S.place ?? ""));
+      nextBtn.style.display = "none";
+      checkBtn.style.display = "";
+    }
+
+    function tapSlot(i) {
+      if (pauses.has(i)) pauses.delete(i); else pauses.add(i);
+      const focusBack = `${i}`;
+      paint();
+      api.readout(`${at().word}. ${DtPlural(pauses.size + 1)}.`);
+      api.note(String(S.place ?? ""));
+      const again = stripEl.querySelector(`[data-slot="${focusBack}"]`);
+      if (again) again.focus({ preventScroll: true });
+    }
+
+    /* Pirmas skirtukas, kertantis skiemens vidų. Būtent ten žodis
+       nesustoja, todėl ši vieta ir paaiškinama. */
+    function firstInside() {
+      const it = at();
+      return [...pauses].sort((a, b) => a - b).find((i) => !it.bounds.includes(i + 1));
+    }
+
+    function check() {
+      const it = at();
+      const inside = firstInside();
+      const exact = pauses.size === it.bounds.length && inside === undefined;
+
+      if (exact) {
+        tried.add(w);
+        hearEl.textContent = it.syl.join(" · ");
+        api.readout(`${it.syl.join("-")} — ${DtPlural(it.syl.length)}.`);
+        noteEl.textContent = `${String(S.right ?? "")} ${it.syl.join("-")}.`;
+        api.note(`${String(S.right ?? "")} ${it.syl.join("-")}.`);
+        checkBtn.style.display = "none";
+        nextBtn.style.display = "";
+        nextBtn.focus({ preventScroll: true });
+        if (tried.size === words.length && !reported) {
+          reported = true;
+          api.progress({ words: words.length });
+          noteEl.textContent = String(S.done ?? "");
+          api.note(String(S.done ?? ""));
+        }
+        return;
+      }
+
+      /* Trys skirtingos priežastys, trys skirtingi sakiniai. Ankstesnė
+         versija „per mažai / per daug“ rinkosi tik iš skaičiaus ir
+         teigdavo netiesą, kai skiemenų skaičius jau buvo teisingas, o
+         netinkama buvo tik ribos vieta (duon|a). Antra — „ši pora
+         priklauso dviem skiemenims“ buvo sakoma ir apie n|a, kuri nėra
+         balsių pora (LL-33 šeima: tekstas rašytas pagal pirmą pavyzdį). */
+      const want = it.syl.length;
+      const counted = pauses.size + 1;
+      let text = counted > want ? String(S.more ?? "") : (counted < want ? String(S.less ?? "") : "");
+      if (inside !== undefined) {
+        const a = it.letters[inside];
+        const b = it.letters[inside + 1];
+        const gluedPair = DT_VOWELS.has(a) && DT_VOWELS.has(b);
+        const extra = gluedPair ? String(S.glued ?? "") : String(S.miss ?? "");
+        text = text ? `${text} ${extra}` : extra;
+      }
+      hearEl.textContent = pieces().join(" · ");
+      noteEl.textContent = `${text} Žodis skyla ${it.syl.join("-")}.`.trim();
+      api.readout(`${DtPlural(counted)}. Žodis skyla ${it.syl.join("-")}.`);
+      api.note(`${text} Žodis skyla ${it.syl.join("-")}.`.trim());
+    }
+
+    function nextWord() {
+      w = (w + 1) % words.length;
+      pauses = new Set();
+      paint();
+      const first = stripEl.querySelector("[data-slot]");
+      if (first) first.focus({ preventScroll: true });
+    }
+
+    checkBtn.addEventListener("click", check);
+    nextBtn.addEventListener("click", nextWord);
+    resetBtn.addEventListener("click", () => {
+      w = 0;
+      pauses = new Set();
+      paint();
+      api.readout("Pradedam iš naujo.");
+      api.note(String(S.again ?? ""));
+    });
+
+    paint();
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
@@ -2035,4 +2243,5 @@ export const SIMS = {
   "plakatas-ir-informacija": plakatasIrInformacija,
   "garso-juosta": garsoJuosta,
   "oro-kelias": oroKelias,
+  "dvibalsiu-takas": dvibalsiuTakas,
 };

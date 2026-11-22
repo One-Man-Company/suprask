@@ -11,14 +11,13 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **53**
-- Padengta / iš dalies / nėra: **28 / 8 / 11**
+- Modulių dabar: **54**
+- Padengta / iš dalies / nėra: **29 / 8 / 10**
 
 ## Ko dar nėra (prioritetas)
 
 | Būsena | Tema | Kodas | Rezultatas | Šaltinis |
 |---|---|---|---|---|
-| missing | Garsinė sandara | A:garsine-sandara | „Žino garsinę sandarą: balsius, priebalsius, dvibalsius“ (1 lentelė) | `1-klases-temų-žemėlapis.md:28` |
 | missing | Teksto supratimas | A:teksto-supratimas | „Randa tekste aiškiai pateiktą informaciją“ (B.1.2) | `1-klases-temų-žemėlapis.md:30` |
 | missing | Transformacijos / Konstravimas | B:transformacijos-konstravimas | „Apibūdinti objektų ar žmonių vietą… kairėn/dešinėn, pagal/prieš laikrodžio rodyklę“ | `1-klases-temų-žemėlapis.md:46` |
 | missing | Bendruomenės | C:bendruomenes | „Mokosi atpažinti skirtingas bendruomenes, religijas, aplinkas… tolerancijos kitybei“ | `1-klases-temų-žemėlapis.md:64` |
@@ -39,6 +38,7 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | partial | žmonių įvairovė | 26.2.1 | modulio nėra; atmesta guidelines/klausimai.md:71 (asmens duomenys) | `pasaulio-pazinimas-1-klase.md:171` |
 | covered | Garsas kalbos sraute | A:garsas-kalbos-sraute | „Skiria lietuvių kalbos garsus kalbos sraute“ (D.1.1) | `1-klases-temų-žemėlapis.md:26` |
 | covered | Garsas vs raidė | A:garsas-vs-raide | „Paaiškina, kuo raidė skiriasi nuo garso“ (D.1.1) | `1-klases-temų-žemėlapis.md:27` |
+| covered | Garsinė sandara | A:garsine-sandara | „Žino garsinę sandarą: balsius, priebalsius, dvibalsius“ (1 lentelė) | `1-klases-temų-žemėlapis.md:28` |
 | covered | Kalbos vartojimo tyrimas | A:kalbos-vartojimo-tyrimas | „Pagal pavyzdį atlieka nesudėtingus kalbos vartojimo tyrimus“ (D.5.2) | `1-klases-temų-žemėlapis.md:29` |
 | covered | Kelių sakinių tekstas | A:keliu-sakiniu-tekstas | „Rašyti kelių sakinių tekstus saviraiškos tikslais“ (1–2 kl.) | `1-klases-temų-žemėlapis.md:32` |
 | covered | Veikėjas | A:veikejas | „Įvardija ir apibūdina bent vieną veikėją“ (B.2.1.1) | `1-klases-temų-žemėlapis.md:31` |

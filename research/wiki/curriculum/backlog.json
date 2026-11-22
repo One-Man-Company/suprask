@@ -1,14 +1,14 @@
 {
  "grade": 1,
- "generated": "2026-11-22T22:16:34",
+ "generated": "2026-11-22T23:09:34",
  "source_hash": "a95e59a5741f37ce",
  "curriculum_positions": 47,
  "counts": {
-  "covered": 28,
+  "covered": 29,
   "partial": 8,
-  "missing": 11
+  "missing": 10
  },
- "modules_now": 53,
+ "modules_now": 54,
  "rows": [
   {
    "key": "26.2.3",
@@ -218,7 +218,7 @@
     "02-skiemenu-jungimas"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/lietuviu-kalba/08-teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p.json"
+   "target": "content/lt/grade-01/lietuviu-kalba/11-teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p.json"
   },
   {
    "key": "A:garsas-kalbos-sraute",
@@ -270,9 +270,11 @@
    "svietimas": "#1",
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:28",
    "strand": "lietuviu-kalba",
-   "modules": [],
-   "status": "missing",
-   "target": "content/lt/grade-01/lietuviu-kalba/09-garsine-sandara.json"
+   "modules": [
+    "10-garsine-sandara"
+   ],
+   "status": "covered",
+   "target": ""
   },
   {
    "key": "A:kalbos-vartojimo-tyrimas",
@@ -304,7 +306,7 @@
    "strand": "lietuviu-kalba",
    "modules": [],
    "status": "missing",
-   "target": "content/lt/grade-01/lietuviu-kalba/10-teksto-supratimas.json"
+   "target": "content/lt/grade-01/lietuviu-kalba/12-teksto-supratimas.json"
   },
   {
    "key": "A:veikejas",

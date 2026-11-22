@@ -1,0 +1,122 @@
+{
+  "id": "10-garsine-sandara",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Du balsiai, vienas balsas",
+  "subtitle": "Sau-lė turi du skiemenis, nors balsių poroje du ženklai",
+  "minutes": 10,
+  "outcomes": [
+    "Skaitau žodį skiemenimis ir skaičiuoju, kiek jų girdžiu.",
+    "Parodau, kur žodyje baigiasi vienas skiemuo, o prasideda kitas.",
+    "Pasakau, kad du balsiai greta gali skambėti vienu balsu."
+  ],
+  "concept": {
+    "title": "Skiemuo — ne raidė",
+    "big_idea": "Žodyje „saulė“ balsiai a ir u skamba vienu balsu. Todėl žodis turi du skiemenis, o ne tris. Bet „paėmė“ balsiai eina į skirtingus skiemenis.",
+    "steps": [
+      "Pasirink žodį ir tark jį garsiai.",
+      "Spausk tarpus tarp raidžių ten, kur žodis sustoja.",
+      "Spausk „Tikrink“ ir palygink su tuo, ką girdi."
+    ],
+    "example": "Sakyk „sau-lė“: du kartus. Sakyk „pa-ė-mė“: tris kartus. Pirmame žodyje pora sulimpa, antrame ne."
+  },
+  "sim": {
+    "component": "dvibalsiu-takas",
+    "config": {
+      "words": [
+        { "word": "saulė", "syllables": ["sau", "lė"] },
+        { "word": "laikas", "syllables": ["lai", "kas"] },
+        { "word": "duona", "syllables": ["duo", "na"] },
+        { "word": "zuikis", "syllables": ["zui", "kis"] },
+        { "word": "pienas", "syllables": ["pie", "nas"] },
+        { "word": "paėmė", "syllables": ["pa", "ė", "mė"] }
+      ],
+      "sentences": {
+        "start": "Pasirink žodį ir tark jį garsiai.",
+        "place": "Spausk tarpą ten, kur žodis sustoja.",
+        "more": "Skiemenų per daug. Du balsiai greta skamba vienu balsu.",
+        "less": "Skiemenų per mažai. Įsiklausyk, kur balsas sustoja.",
+        "glued": "Ši pora tariama vienu balsu, todėl ribos joje nėra.",
+        "miss": "Šioje vietoje žodis nesustoja. Skaičiuok, kiek skiemenų girdi.",
+        "right": "Tinka:",
+        "done": "Peržiūrėjai visus žodžius. Viena pora sulimpa, kita ne.",
+        "again": "Pradedam iš naujo. Tie patys žodžiai."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Vaikas sako, kad „saulė“ turi tris skiemenis. Kiek skiemenų rodo bandymas?",
+      "options": [
+        "Tris: a, u ir ė",
+        "Du: sau ir lė",
+        "Vieną, nes žodis trumpas"
+      ],
+      "answer": 1,
+      "hint": "Suplok žodį ir suskaičiuok, kiek kartų sustoji.",
+      "why": "Balsiai a ir u tariami vienu balsu, todėl skiemenys du.",
+      "optional": false
+    },
+    {
+      "q": "Žodyje „pienas“ du balsiai stovi greta. Kiek jis turi skiemenų?",
+      "options": [
+        "Du: pie-nas",
+        "Tris: pi-en-as",
+        "Šešis, po vieną raidei"
+      ],
+      "answer": 0,
+      "hint": "Tark žodį lėtai. Ar tarp i ir e sustoji?",
+      "why": "Pie-nas turi du skiemenis, pora ie tariama vienu balsu.",
+      "optional": false
+    },
+    {
+      "q": "„Paėmė“ balsiai a ir ė stovi greta. Kiek skiemenų turi šis žodis?",
+      "options": [
+        "Tris: pa, ė, mė",
+        "Du: paė ir mė",
+        "Keturis: p, a, ė, mė"
+      ],
+      "answer": 0,
+      "hint": "Pasakyk žodį lėtai. Ar tarp a ir ė sustoji?",
+      "why": "Čia balsiai eina į skirtingus skiemenis, todėl jų trys.",
+      "optional": false
+    },
+    {
+      "q": "Draugas sako, kad balsiai greta visada yra vienas skiemuo. Kuris žodis tai paneigia?",
+      "options": [
+        "duona",
+        "zuikis",
+        "paėmė"
+      ],
+      "answer": 2,
+      "hint": "Ieškok žodžio, kuriame tarp balsių tenka sustoti.",
+      "why": "Pa-ė-mė: balsiai greta, bet kiekvienas savo skiemenyje.",
+      "optional": true
+    }
+  ],
+  "reflect": "Pasakyk žodį, kuriame du balsiai skamba vienu balsu. Kiek jame skiemenų?",
+  "teacher": {
+    "goal": "Garsinė sandara be terminų (D.1.3.1 — slenkstinis pasiekimo D.1.3 lygis, „naudodamasis pagalbine medžiaga“): vaikas girdi, kad du greta parašyti balsiai gali būti vienas balsas, todėl skiemenų skaičius nelygus balsių raidžių skaičiui. Terminai „dvibalsis“ ir „balsis“ vaikui ekrane nevartojami — pati programos formuluotė prašo jų nevartoti; jie lieka šiame bloke. Sąvoka „skiemuo“ vartojama todėl, kad ją jau vartoja 02 modulis ir standarto §6 terminų sąrašas. Modelyje sąmoningai yra priešpavyzdys „paėmė“, kuriame gretimi balsiai priklauso skirtingiems skiemenims: be jo vaikas išmoktų priešingą, per plačią taisyklę (LL-28).",
+    "prompt": "Kai balsiai stovi greta, kaip sužinai, ar jie skamba kartu?",
+    "offline": "Duok vaikui raidžių korteles ir paprašyk sudėlioti žodį „saulė“. Vaikas deda delną po smakru ir taria žodį lėtai: kiekvieną kartą, kai smakras nusileidžia, jis atitraukia vieną kortelių grupę — taip atsiranda skiemenys. Tą patį pakartokite su „paėmė“. Klausimas: kodėl pirmame žodyje smakras nusileidžia du kartus, o antrame tris? Pabaigoje tegul vaikas suranda dar vieną žodį, kuriame balsiai greta skamba kartu.",
+    "misconceptions": [
+      "„Kiek balsių, tiek skiemenų.“ Netiesa: „saulė“ turi tris balsių raides, o skiemenis du, nes a ir u tariami vienu balsu.",
+      "„Du balsiai greta visada sulimpa į vieną skiemenį.“ Netiesa: „paėmė“ tariama pa-ė-mė, nes balsiai priklauso skirtingiems skiemenims. Būtent todėl modelis turi šį priešpavyzdį.",
+      "„Rašyba rodo, kaip tarti.“ Raidžių skaičius yra rašybos, o ne tarimo dalykas; vaikas skaito garsus, ne raidžių vardus.",
+      "„Ilgesnis žodis turi daugiau skiemenų.“ Skaičiuojami skiemenys, o ne raidės: „zuikis“ ir „duona“ abu turi po du skiemenis, nors raidžių skirtingai.",
+      "Skiemens riba tariant ir žodžio kėlimas į kitą eilutę sutampa ne visada. Tariant du priebalsiai tarp balsių dalijami („mokykla“ — mo-kyk-la), o keliant žodį galimi abu skaidymai. Modelyje kėlimas nenagrinėjamas, todėl vaiko, kuris skiemenavo kitaip nei eilutės gale įprasta, taisyti nereikia."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“: D.1.3.1 (1–2 kl., I lygis) „Naudodamasis pagalbine medžiaga, skiria balsius, priebalsius (nevartojant terminų), taisyklingai juos taria“ (vietinis failas sources/pradinio-bp-rekomendacijos-2024.txt:39749–39752). D.1.3.2–D.1.3.4 yra aukštesni to paties pasiekimo lygiai — dvibalsiai ir balsių ilgumas (:39753–39766).",
+    "Ten pat, 1 klasės ilgalaikis planas, „Garsas“: „Žinos lietuvių kalbos garsinę sandarą: balsius, priebalsius, dvibalsius“ (sources/pradinio-bp-rekomendacijos-2024.txt:14497–14500). Tai šios programos pozicijos (A:garsine-sandara) formuluotė.",
+    "Ten pat, pradinio ugdymo pažinimo kompetencijos aprašas: „Raides jungia, sudaro skiemenis, žodžius, sakinius“ (:17002) — skiemens sąvoka pradiniame ugdyme vartojama kaip skaitymo technikos prielaida.",
+    "Valstybinė lietuvių kalbos komisija. Bendrinės lietuvių kalbos fonetika / Dabartinės lietuvių kalbos gramatika (Ambrazas V., red., 1997), fonetikos skyrius: bendrinėje kalboje dvibalsiai ai, au, ei, ui, ie, uo tariami tame pačiame skiemenyje, o ie ir uo yra sutaptiniai dvibalsiai, tariami vienu balsu. Modelyje vartojami būtent šie šeši dvibalsiai ir vienas priešpavyzdys („paėmė“), kuriame gretimi balsiai skiriasi skiemenimis."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (ar du balsiai greta yra vienas skiemuo), o ne visa garsų klasifikacija. Balsių ir priebalsių skyrimas lieka modulyje 07, balsių ilgumas — aukštesniuose lygiuose.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo palyginti du žodžius ir rasti priežastį, o ne atkartoti modulio sakinį; praplėtimo užduotis prašo paneigti per plačią taisyklę.",
+    "3 žingsnis — pagalba laiku: kiekviena netinkama skiemens riba paaiškinama tuo, ką vaikas pats išgirdo, o tikroji žodžio sandara parodoma iškart; nėra laikmačio ir klaida netrinama.",
+    "P2 / T1.5 / T3.4 / T5.1 / T5.5: veiksmas prieš paaiškinimą, sakiniai iki 10 žodžių, praplėtimo užduotis, grįžtamasis ryšys apie skiemenį (ne apie vaiką), 56 px taikiniai ir būsena pasakoma žodžiu, ne vien spalva."
+  ]
+}

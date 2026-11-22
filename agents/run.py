@@ -308,8 +308,12 @@ def resolve_status(pre_status: str, publish_status: str) -> str:
 ROLES: dict[str, dict] = {
     "ideator": {
         "file": "roles/ideator.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
+        # Du langai: 47 programos pozicijos ir 1 klasė — vienas paleidimas
+        # neša 1–3 pasiūlymus, todėl vieno lango nepakanka kūrėjui maitinti.
+        # Vėliausias 07:40, kad iki 09:00 kūrėjo eilė jau turėtų temos įrašų.
         "max_turns": 30, "budget": 1200, "timeout": 1800,
-        "cadence": "kasdien", "on_calendar": "*-*-* 07:40:00",
+        "cadence": "kasdien 2 langai (07:10, 07:40)",
+        "on_calendar": ["*-*-* 07:10:00", "*-*-* 07:40:00"],
         "description": "Ieško naujų pamokų idėjų ir temų, teikia pasiūlymus",
     },
     "metodininkas": {
@@ -321,7 +325,16 @@ ROLES: dict[str, dict] = {
     "kurejas": {
         "file": "roles/kurejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
         "max_turns": 60, "budget": 2400, "timeout": 3600,
-        "cadence": "kasdien", "on_calendar": "*-*-* 09:00:00",
+        # Trys langai per dieną: vienas modulis = 10–13 min, o iki 2026-11-22
+        # eilė turėjo TIK vieną langą (09:00) ir jis baigdavosi po 76 min, nes
+        # eilė tuščėjo (3 įrašai, visi `kritika`) — per dieną atsirado 1 modulis,
+        # nors programoje 12 pozicijų be modulio. Turinio augimui reikia ir
+        # pasiūlos (`scripts/backlog_proposals.py`), ir laiko.
+        #   09:00 — po rytinio ideatoriaus/metodininko
+        #   10:20 — antras langas iki simuliacijų inžinieriaus (11:00)
+        #   20:50 — vakare, kai po architekto (20:20) niekas neberašo
+        "cadence": "kasdien 3 langai (09:00, 10:20, 20:50)",
+        "on_calendar": ["*-*-* 09:00:00", "*-*-* 10:20:00", "*-*-* 20:50:00"],
         "description": "Eilės darbuotojas: ima pasiūlymus po vieną ir įgyvendina, kol eilė tuščia",
         # Eilės režimas: vienas paleidimas apdoroja iki N pasiūlymų, po kiekvieno
         # publikuoja ir atleidžia užraktą. Žr. scripts/kurejas_queue.py.
@@ -550,6 +563,11 @@ def open_proposals_text(limit: int = 10) -> str:
 
 LESSONS_FILE = ROOT / "research" / "wiki" / "guidelines" / "pamokos.md"
 
+# Programos padengties eilė (sugeneruota `scripts/curriculum_backlog.py` iš
+# `research/wiki/curriculum/*.md`). Promptas ją įterpia, todėl agentas mato
+# ne 29 žmogaus surašytas temas, o visas programos pozicijas su kodais.
+BACKLOG_FILE = ROOT / "research" / "wiki" / "curriculum" / "backlog.json"
+
 
 def lessons_brief(limit: int = 40) -> str:
     """Trumpas pamokų sąrašas — agentas mato jas kiekvieną paleidimą."""
@@ -583,6 +601,50 @@ def goal_query(proposal: dict) -> str:
     ])
 
 
+def _backlog_brief(grade: int, limit: int = 40) -> list[str]:
+    """Programos padengties eilė iš `research/wiki/curriculum/backlog.json`.
+
+    Kodėl ne vien `scope.json`: tas sąrašas yra 29 eilutės, kurias žmogus
+    surašė ranka. Programa yra platesnė (1 kl. — 47 pozicijos su kodais
+    26.x.x), ir būtent jos agentui reikia, kad „kurk daugiau turinio" turėtų
+    adresą: ką, kokiame faile, pagal kokį programos punktą.
+    """
+    path = BACKLOG_FILE
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    rows = [r for r in data.get("rows", []) if r.get("grade", grade) == grade]
+    todo = [r for r in rows if r.get("status") != "covered"]
+    if not todo:
+        return []
+    order = {"missing": 0, "partial": 1}
+    todo.sort(key=lambda r: (order.get(r.get("status"), 2), r.get("key", "")))
+    c = data.get("counts", {})
+    lines = [
+        "",
+        f"--- PROGRAMOS PADENGTIS (sugeneruota iš research/wiki/curriculum/backlog.json, {grade} kl.) ---",
+        f"Programos pozicijų {data.get('curriculum_positions', '?')}: "
+        f"padengta {c.get('covered', '?')}, iš dalies {c.get('partial', '?')}, "
+        f"BE MODULIO {c.get('missing', '?')}. Modulių dabar {data.get('modules_now', '?')}.",
+        "Tai eilė, iš kurios imamas darbas. `target` — failas, kurio dar nėra;",
+        "`(be srauto)` reiškia, kad programos temai repo neturi krypties — tai",
+        "STRUKTŪRINĖ spraga: rašyk į `research/wiki/guidelines/klausimai.md`, o ne",
+        "sukiok modulį netinkamoje vietoje.",
+        "",
+        "| Būsena | Kodas | Tema | target |",
+        "|---|---|---|---|",
+    ]
+    for r in todo[:limit]:
+        note = f" — {r['gap'][:70]}" if r.get("gap") else ""
+        lines.append(f"| {r.get('status')} | {r.get('key', '')} | {r.get('topic', '')}{note} "
+                     f"| `{r.get('target') or '(be srauto)'}` |")
+    if len(todo) > limit:
+        lines.append(f"| … | | dar {len(todo) - limit} pozicijų — žr. backlog.md | |")
+    lines.append("")
+    return lines
+
+
 def scope_brief() -> str:
     """Kurias klases žmogus įjungė ir kokias minimalias temas reikia padengti."""
     data = grade_scope.report()
@@ -604,7 +666,7 @@ def scope_brief() -> str:
             for x in g["subjects"]:
                 lines.append(f"    - {x['label']} — {'jau yra' if x['covered'] else 'DAR NĖRA'}")
         if g["min_topics"]:
-            lines.append("  Minimalios temos, kurios PRIVALO būti padengtos:")
+            lines.append("  Minimalios temos, kurios PRIVALO būti padengtos (žmogaus sąrašas):")
             for c in g["coverage"]:
                 if c["covered"]:
                     mark = "jau yra" + (f" ({', '.join(c['modules'][:2])})" if c.get("modules") else "")
@@ -616,6 +678,7 @@ def scope_brief() -> str:
                 lines.append(f"    - {c['topic']} — {mark}")
         else:
             lines.append("  Minimalių temų sąrašas tuščias — vadovaukis programos žemėlapiu.")
+        lines += _backlog_brief(int(g["grade"]))
     lines += [
         "",
         "TAISYKLĖS:",
@@ -629,6 +692,9 @@ def scope_brief() -> str:
         "2b. Žyma „iš dalies“ NĖRA padengta tema: modulis temą paliečia, bet temos branduolio",
         "    (vienos didelės idėjos, kurią vaikas supranta darydamas) dar nėra. Skliaustuose nurodytas",
         "    modulis, kurį verta perskaityti prieš kuriant, kad nekartotum jau padaryto modelio.",
+        "2c. PROGRAMOS PADENGTIS blokas yra tikslesnis už žmogaus sąrašą: jis sugeneruotas iš",
+        "    `research/wiki/curriculum/*.md` ir rodo programos kodus (26.1.1 …). Jei abu nesutaria,",
+        "    laikykis jo, o nesutarimą įrašyk `research/wiki/guidelines/klausimai.md`.",
         "3. Kiekviena tema turi būti išnagrinėta visapusiškai: kas tai, kodėl taip, kaip atpažinti,",
         "   kur gyvenime sutinkama, ką daryti kitaip — tiek, kiek leidžia klasės amžius.",
         "4. Kalba ir uždavinių sudėtingumas — tos klasės vaikui, ne vyresniam.",

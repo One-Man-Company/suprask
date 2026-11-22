@@ -1,9 +1,11 @@
 [Unit]
-Description=SUPRASK — kurejas (kasdien)
+Description=SUPRASK — kurejas (kasdien 3 langai (09:00, 10:20, 20:50))
 
 [Timer]
 # Sugeneruota iš agents/run.py ROLES. Nekeisk ranka — paleisk deploy/gen_timers.py.
 OnCalendar=*-*-* 09:00:00
+OnCalendar=*-*-* 10:20:00
+OnCalendar=*-*-* 20:50:00
 Persistent=true
 RandomizedDelaySec=240
 Unit=suprask-kurejas-queue.service

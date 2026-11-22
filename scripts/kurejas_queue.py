@@ -35,6 +35,19 @@ import run as runner  # noqa: E402
 
 PRIORITY_ORDER = {"high": 0, "normal": 1, "low": 2}
 
+# Turėjimas tvarkoje neturi konkuruoti su turinio augimu. Eilė imama iš
+# galvos, todėl TIPAS rūšiuojamas prieš prioritetą: naujas modulis („tema")
+# visada eina prieš esamo modulio taisymą („kritika", „ux", „kritika-y").
+CONTENT_FIRST = {
+    "tema": 0,           # naujas modulis — turinys auga
+    "metodas": 1,        # metodo specifikacija naujam moduliui
+    "simuliacija": 2,    # naujos simuliacijos
+    "kritika": 3,        # esamo modulio taisymas
+    "ux": 3,
+    "atitiktis": 4,      # atitikties programai pataisymas
+    "struktura": 5,      # sistemos darbas (paprastai atmetamas SYSTEM_PREFIXES)
+}
+
 # Pasiūlymai, kurių tikslas — sistemos failas (agentų bėgiklis, skriptai,
 # publikavimas, dashboard, normatyviniai dokumentai), NE kūrėjo darbas. Kūrėjo
 # vaidmuo jų neliesti negali (ribos), todėl kiekvienas toks bandymas = iki
@@ -133,8 +146,24 @@ def is_system_work(prop: dict) -> bool:
 
 
 def queue() -> list[dict]:
+    """Kūrėjo eilė. Pirmiau NAUJAS turinys („tema"), paskui pataisymai („kritika").
+
+    Kodėl: 2026-11-22 eilėje buvo 3 įrašai ir visi trys buvo `kritika` (esamo
+    modulio taisymas). Kūrėjas 76 min taisė jau sukurtus modulius, o naujo
+    turinio per dieną neatsirado nė vieno — nors programoje 12 pozicijų be
+    modulio. Prioritetas (`high/normal/low`) to nesprendžia: kritika gali
+    turėti `high`, o tema `normal`. Todėl rūšiuojama pirma pagal TIPĄ, o tik
+    paskui pagal prioritetą.
+
+    Tema su `high`, bet eilės gale, virsta dar vienu tuščiu paleidimu, nes
+    eilė imama iš galvos (`pending[0]`).
+    """
     rows = [r for r in db.proposals(500, status="new") if not is_system_work(r)]
-    rows.sort(key=lambda r: (PRIORITY_ORDER.get((r.get("priority") or "normal").lower(), 1), int(r["id"])))
+    rows.sort(key=lambda r: (
+        CONTENT_FIRST.get((r.get("type") or "").lower(), 2),
+        PRIORITY_ORDER.get((r.get("priority") or "normal").lower(), 1),
+        int(r["id"]),
+    ))
     return rows
 
 
@@ -238,6 +267,21 @@ def main() -> int:
         obsolete, duplicates = triage()
         if obsolete or duplicates:
             print(f"Tvarkyklė: pasenę {obsolete}, dubliai {duplicates}")
+        # Pasiūlos garantija: programos spragos iš `curriculum/backlog.json`
+        # tampa eilės įrašais. Be šito eilė maitinama TIK modelio (ideatoriaus,
+        # metodininko, kritiko), o 2026-11-22 trys iš keturių modelio paleidimų
+        # baigėsi ėjimų limitu neįrašę failo — todėl eilėje buvo 0 temos įrašų
+        # ir kūrėjas visą dieną taisė esamus modulius.
+        try:
+            subprocess.run([sys.executable, str(ROOT / "scripts" / "curriculum_backlog.py")],
+                           cwd=ROOT, check=False, capture_output=True, text=True)
+            sync = subprocess.run([sys.executable, str(ROOT / "scripts" / "backlog_proposals.py")],
+                                   cwd=ROOT, check=False, capture_output=True, text=True)
+            out = (sync.stdout or "").strip().splitlines()
+            if out:
+                print("Programos spragos → eilė: " + " ".join(out[-3:]))
+        except OSError as exc:  # skriptas neprieinamas — eilė dirba su tuo, kas yra
+            print(f"Įspėjimas: backlog sinchronizacija nepavyko ({exc})")
 
     pending = queue()
     system = system_queue()

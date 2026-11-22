@@ -1,0 +1,15 @@
+{
+  "role": "sistemos-architektas",
+  "run_id": 0,
+  "created": "2026-11-22T21:13:06",
+  "type": "tema",
+  "title": "A:teksto-supratimas — Teksto supratimas",
+  "body": "1 klasės programos pozicija A:teksto-supratimas — Teksto supratimas. Modulio šiai programos pozicijai NĖRA. Programos reikalavimas: „Randa tekste aiškiai pateiktą informaciją“ (B.1.2) Kūrėjas: sukurk VIENĄ modulį šiam tikslui pagal docs/KURINIO-STANDARTAS.md; viena didelė idėja, 3–5 užduotys su „why“, viena klaidinga nuostata, kurią modelis parodo.",
+  "target": "content/lt/grade-01/lietuviu-kalba/11-teksto-supratimas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:30 — programos pozicija A:teksto-supratimas",
+    "research/wiki/curriculum/backlog.json — būsena „missing“, padengta 21/47"
+  ]
+}

@@ -1,0 +1,849 @@
+{
+ "grade": 1,
+ "generated": "2026-11-22T21:13:56",
+ "source_hash": "a95e59a5741f37ce",
+ "curriculum_positions": 47,
+ "counts": {
+  "covered": 21,
+  "partial": 14,
+  "missing": 12
+ },
+ "modules_now": 52,
+ "rows": [
+  {
+   "key": "26.2.3",
+   "section": "Ko platformoje nėra",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "medžiai, krūmai, žolės",
+   "outcome": "modulio nėra; pasiūlymai 2026-11-16-ideator-medziai-krumai-zoles.json ir 2026-11-16-metodininkas-medziai-krumai-zoles.json (M-10, target 22)",
+   "strand": "pasaulio-pazinimas",
+   "level": "",
+   "interactivity": "",
+   "svietimas": "",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:169",
+   "modules": [
+    "22-medziai-krumai-zoles",
+    "08-metu-laikai",
+    "02-medziagu-bandymas"
+   ],
+   "status": "covered",
+   "target": "",
+   "hours": "4"
+  },
+  {
+   "key": "26.3.1",
+   "section": "Ko platformoje nėra",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "gamtos ištekliai, tarša, tausojimas",
+   "outcome": "modulio nėra; pasiūlymas 2026-11-14-ideator-kas-sukure-dailka.json (target 21)",
+   "strand": "pasaulio-pazinimas",
+   "level": "",
+   "interactivity": "",
+   "svietimas": "",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:170",
+   "modules": [
+    "21-kas-sukure-dailka"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/26-gamtos-istekliai-tarsa-tausojimas.json",
+   "hours": "2"
+  },
+  {
+   "key": "26.2.1",
+   "section": "Ko platformoje nėra",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "žmonių įvairovė",
+   "outcome": "modulio nėra; atmesta guidelines/klausimai.md:71 (asmens duomenys)",
+   "strand": "pasaulio-pazinimas",
+   "level": "",
+   "interactivity": "",
+   "svietimas": "",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:171",
+   "modules": [
+    "08-metu-laikai"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/27-zmoniu-ivairove.json",
+   "hours": "3"
+  },
+  {
+   "key": "26.5.1",
+   "section": "Ko platformoje nėra",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "energijos reikia visiems",
+   "outcome": "atskiro modulio nėra; atmesta guidelines/klausimai.md:70 (gairių 2 klausimas)",
+   "strand": "pasaulio-pazinimas",
+   "level": "",
+   "interactivity": "",
+   "svietimas": "",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:172",
+   "modules": [
+    "10-gyvunu-grupes",
+    "09-augalo-gyvenimas",
+    "01-susitarimas-ir-zaidimas"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/28-energijos-reikia-visiems.json",
+   "hours": "2"
+  },
+  {
+   "key": "26.2.2",
+   "section": "Ko platformoje nėra",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "naminiai ir laukiniai gyvūnai",
+   "outcome": "padengta 10-gyvunu-grupes (perrašytas 2026-11-18, #348: kriterijus — kas duoda maistą, ne vieta)",
+   "strand": "pasaulio-pazinimas",
+   "level": "",
+   "interactivity": "",
+   "svietimas": "",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:173",
+   "modules": [
+    "10-gyvunu-grupes",
+    "08-metu-laikai"
+   ],
+   "status": "covered",
+   "target": "",
+   "hours": "2"
+  },
+  {
+   "key": "26.1.1",
+   "section": "Ko platformoje nėra",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "traumų prevencija",
+   "outcome": "yra tik gaisro dalis (19); traumų temos nėra",
+   "strand": "pasaulio-pazinimas",
+   "level": "Taikyti",
+   "interactivity": "Situacijos sprendimas (atvejo analizė)",
+   "svietimas": "",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:174",
+   "modules": [
+    "25-traumu-prevencija"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/29-traumu-prevencija.json",
+   "hours": "3"
+  },
+  {
+   "key": "26.1.2",
+   "section": "Ko platformoje nėra",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "dienos režimas, mityba",
+   "outcome": "yra tik kuprinės dalis (18); režimo ir mitybos nėra",
+   "strand": "pasaulio-pazinimas",
+   "level": "Suprasti",
+   "interactivity": "„Kiek sveria tavo kuprinė?“ + kūno dalių žemėlapis",
+   "svietimas": "",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:175",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/30-dienos-rezimas-mityba.json",
+   "hours": "3"
+  },
+  {
+   "key": "26.2.4",
+   "section": "C. Pasaulio pažinimas",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "Bendri gyvų organizmų požymiai",
+   "outcome": "demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“; žaidimas „Gyvas–negyvas“ (:8445–8448)",
+   "level": "",
+   "interactivity": "",
+   "svietimas": "",
+   "hours": "1",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:90",
+   "strand": "pasaulio-pazinimas",
+   "modules": [
+    "08-metu-laikai",
+    "10-gyvunu-grupes",
+    "01-susitarimas-ir-zaidimas"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/31-bendri-gyvu-organizmu-pozymiai.json"
+  },
+  {
+   "key": "26.3.2",
+   "section": "C. Pasaulio pažinimas",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "Vandens būsenos",
+   "outcome": "„Ledo papuošalo gamyba“; kietosios būsenos formos (:1547–1552, :8472–8474)",
+   "level": "Suprasti",
+   "interactivity": "Ledo/snaigės/garų kaitos modelis su temperatūra",
+   "svietimas": "",
+   "hours": "2",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:92",
+   "strand": "pasaulio-pazinimas",
+   "modules": [
+    "16-vandens-busenos",
+    "24-kieta-vandens-forma",
+    "20-kas-gyvas",
+    "09-augalo-gyvenimas"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "26.4.1",
+   "section": "C. Pasaulio pažinimas",
+   "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
+   "topic": "Judėjimas",
+   "outcome": "tyrimas „Daiktų judėjimo greičio tyrimas“; nuožulnioji plokštuma (:1557–1565, :8483–8484)",
+   "level": "Analizuoti",
+   "interactivity": "Nuožulniosios plokštumos bandymas: ritinys/rutulys/kiaušinis",
+   "svietimas": "",
+   "hours": "3",
+   "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:93",
+   "strand": "pasaulio-pazinimas",
+   "modules": [
+    "20-kas-gyvas"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "gap:teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p",
+   "section": "Ko platformoje nėra",
+   "sritis": "",
+   "topic": "Teksto skaitymas su supratimu (B.1.2 tiesiogine prasme)",
+   "outcome": "05-plakatas-ir-informacija randa informaciją plakate, bet nė vienas modulis nepateikia kelių sakinių teksto, apie kurį būtų klausiama",
+   "strand": "lietuviu-kalba",
+   "level": "",
+   "interactivity": "",
+   "svietimas": "",
+   "source": "research/wiki/curriculum/lietuviu-kalba-1-klase.md:145",
+   "modules": [
+    "02-skiemenu-jungimas"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/lietuviu-kalba/08-teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p.json"
+  },
+  {
+   "key": "A:garsas-kalbos-sraute",
+   "section": "A. Lietuvių kalba ir literatūra",
+   "sritis": "Kalbos pažinimas (D)",
+   "topic": "Garsas kalbos sraute",
+   "outcome": "„Skiria lietuvių kalbos garsus kalbos sraute“ (D.1.1)",
+   "level": "Suprasti",
+   "interactivity": "Garso taikymas: rask žodyje paslėptą garsą, atskirk nuo triukšmo",
+   "svietimas": "#1 — viena sąvoka, daug kartojimų",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:26",
+   "strand": "lietuviu-kalba",
+   "modules": [
+    "06-garso-trukme",
+    "04-kaip-zmones-sveikinasi",
+    "01-garso-aukstis",
+    "01-garsas-ir-raide"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/lietuviu-kalba/09-garsas-kalbos-sraute.json"
+  },
+  {
+   "key": "A:garsas-vs-raide",
+   "section": "A. Lietuvių kalba ir literatūra",
+   "sritis": "Kalbos pažinimas (D)",
+   "topic": "Garsas vs raidė",
+   "outcome": "„Paaiškina, kuo raidė skiriasi nuo garso“ (D.1.1)",
+   "level": "Suprasti",
+   "interactivity": "Jutiminis palyginimas: girdžiu / matau / liečiu (lentelė iš 2 pavyzdžio)",
+   "svietimas": "#2 — vienodas sąvokos kriterijus visiems",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:27",
+   "strand": "lietuviu-kalba",
+   "modules": [
+    "01-garsas-ir-raide",
+    "06-garso-trukme",
+    "01-garso-aukstis"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "A:garsine-sandara",
+   "section": "A. Lietuvių kalba ir literatūra",
+   "sritis": "Kalbos pažinimas (D)",
+   "topic": "Garsinė sandara",
+   "outcome": "„Žino garsinę sandarą: balsius, priebalsius, dvibalsius“ (1 lentelė)",
+   "level": "Prisiminti",
+   "interactivity": "Spalvotas garsų rūšiavimas žodyje",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:28",
+   "strand": "lietuviu-kalba",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/lietuviu-kalba/10-garsine-sandara.json"
+  },
+  {
+   "key": "A:kalbos-vartojimo-tyrimas",
+   "section": "A. Lietuvių kalba ir literatūra",
+   "sritis": "Kalbos pažinimas (D)",
+   "topic": "Kalbos vartojimo tyrimas",
+   "outcome": "„Pagal pavyzdį atlieka nesudėtingus kalbos vartojimo tyrimus“ (D.5.2)",
+   "level": "Taikyti",
+   "interactivity": "„Kaip žmonės sveikinasi?“ — rink duomenis, grupuok, daryk išvadą",
+   "svietimas": "#3 — matoma tyrimo eiga",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:29",
+   "strand": "lietuviu-kalba",
+   "modules": [
+    "04-kaip-zmones-sveikinasi"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "A:teksto-supratimas",
+   "section": "A. Lietuvių kalba ir literatūra",
+   "sritis": "Skaitymas (B)",
+   "topic": "Teksto supratimas",
+   "outcome": "„Randa tekste aiškiai pateiktą informaciją“ (B.1.2)",
+   "level": "Suprasti",
+   "interactivity": "Trumpas tekstas + 1–2 klausimai, žymėjimas pačiame tekste",
+   "svietimas": "#2",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:30",
+   "strand": "lietuviu-kalba",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/lietuviu-kalba/11-teksto-supratimas.json"
+  },
+  {
+   "key": "A:veikejas",
+   "section": "A. Lietuvių kalba ir literatūra",
+   "sritis": "Skaitymas (B)",
+   "topic": "Veikėjas",
+   "outcome": "„Įvardija ir apibūdina bent vieną veikėją“ (B.2.1.1)",
+   "level": "Suprasti",
+   "interactivity": "Veikėjo kortelė: kas jis, ką daro, kaip jaučiasi",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:31",
+   "strand": "lietuviu-kalba",
+   "modules": [
+    "17-kryptys-ir-vieta",
+    "01-dovana-ir-noras"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "A:keliu-sakiniu-tekstas",
+   "section": "A. Lietuvių kalba ir literatūra",
+   "sritis": "Rašymas (C)",
+   "topic": "Kelių sakinių tekstas",
+   "outcome": "„Rašyti kelių sakinių tekstus saviraiškos tikslais“ (1–2 kl.)",
+   "level": "Taikyti",
+   "interactivity": "Raidžių/žodžių dėlionė su pavyzdžiu (be laisvo teksto lauko)",
+   "svietimas": "#3",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:32",
+   "strand": "lietuviu-kalba",
+   "modules": [
+    "14-pinigai",
+    "03-sakinio-zodziai"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/lietuviu-kalba/12-keliu-sakiniu-tekstas.json"
+  },
+  {
+   "key": "B:skaiciai-0-100",
+   "section": "B. Matematika",
+   "sritis": "Skaičiai ir skaičiavimai",
+   "topic": "Skaičiai 0–100",
+   "outcome": "„Skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus“",
+   "level": "Prisiminti",
+   "interactivity": "100-o lentelės „takas“: eik nuo 47 iki 52",
+   "svietimas": "#1 — vienas modelis, daug variantų",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:38",
+   "strand": "matematika",
+   "modules": [
+    "30-skaiciavimas-atgal-per-desimti",
+    "28-uzdavinio-klausimas",
+    "27-skaicius-ir-skaitmuo",
+    "25-ilgis-ir-vienetas"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:skaicius-skaitmuo-skaiciu-tiese",
+   "section": "B. Matematika",
+   "sritis": "Skaičiai ir skaičiavimai",
+   "topic": "Skaičius, skaitmuo, skaičių tiesė",
+   "outcome": "„Aptariamos skaičiaus ir skaitmens sąvokos. Tyrinėjama… skaičių tiesė“",
+   "level": "Suprasti",
+   "interactivity": "Skaičiaus „išardymas“ į skaitmenis + šuoliai tiesėje",
+   "svietimas": "#2",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:39",
+   "strand": "matematika",
+   "modules": [
+    "30-skaiciavimas-atgal-per-desimti",
+    "27-skaicius-ir-skaitmuo",
+    "19-simto-skaiciu-lentele",
+    "18-taskas-tiese-spindulys-atkarpa"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:sudetis-per-10",
+   "section": "B. Matematika",
+   "sritis": "Skaičiai ir skaičiavimai",
+   "topic": "Sudėtis per 10",
+   "outcome": "„Vienaženklių skaičių peržengiant dešimtį“",
+   "level": "Taikyti",
+   "interactivity": "Dešimties „papildymas“ iki 10, tada likutis",
+   "svietimas": "#3 — klaidos tipas matomas",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:40",
+   "strand": "matematika",
+   "modules": [
+    "28-uzdavinio-klausimas",
+    "22-sudetis-per-desimti",
+    "04-skaiciu-tiese"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:sudetis-atimtis-iki-100",
+   "section": "B. Matematika",
+   "sritis": "Skaičiai ir skaičiavimai",
+   "topic": "Sudėtis/atimtis iki 100",
+   "outcome": "„Dviženklio ir vienaženklio… peržengiant dešimtį“; „dviženklių… neperžengiant dešimties“",
+   "level": "Taikyti",
+   "interactivity": "Skaičių tiesė + 100 lentelė kaip pastovūs įrankiai",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:41",
+   "strand": "matematika",
+   "modules": [
+    "28-uzdavinio-klausimas",
+    "04-skaiciu-tiese",
+    "29-atimtis-per-desimti",
+    "22-sudetis-per-desimti"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:trukstamas-demuo",
+   "section": "B. Matematika",
+   "sritis": "Skaičiai ir skaičiavimai",
+   "topic": "Trūkstamas dėmuo",
+   "outcome": "„Lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“",
+   "level": "Analizuoti",
+   "interactivity": "„Kiek trūksta?“ — langelio užpildymas, keli sprendimai",
+   "svietimas": "#1 — giluminis, ne procedūrinis",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:42",
+   "strand": "matematika",
+   "modules": [
+    "16-lygybe-svarstykles",
+    "09-augalo-gyvenimas",
+    "07-desningumai",
+    "05-desimtukas"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/matematika/31-trukstamas-demuo.json"
+  },
+  {
+   "key": "B:pinigai",
+   "section": "B. Matematika",
+   "sritis": "Skaičiai ir skaičiavimai",
+   "topic": "Pinigai",
+   "outcome": "„Atpažinti euro banknotus ir monetas pagal vertę… sudėlioti keliais skirtingais deriniais“",
+   "level": "Taikyti",
+   "interactivity": "Virtuali piniginė, keli teisingi keliai",
+   "svietimas": "#3",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:43",
+   "strand": "matematika",
+   "modules": [
+    "14-pinigai"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:sekos-desningumai",
+   "section": "B. Matematika",
+   "sritis": "Modeliai ir sąryšiai",
+   "topic": "Sekos (dėsningumai)",
+   "outcome": "„Sekos iš 2–3 pasikartojančių narių grupių… pratęsti, rasti trūkstamus, sukurti savo“",
+   "level": "Analizuoti",
+   "interactivity": "Sekos „tęsėjas“ + savos taisyklės kūrimas",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:44",
+   "strand": "matematika",
+   "modules": [
+    "07-desningumai"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:taskas-tiese-spindulys-atkarpa",
+   "section": "B. Matematika",
+   "sritis": "Geometrija",
+   "topic": "Taškas, tiesė, spindulys, atkarpa",
+   "outcome": "„Vaizdavimas brėžinyje ir padėties vienas kito atžvilgiu apibūdinimas“",
+   "level": "Suprasti",
+   "interactivity": "Brėžinys su „taškas yra/ne tiesėje“ patikra",
+   "svietimas": "#2",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:45",
+   "strand": "matematika",
+   "modules": [
+    "18-taskas-tiese-spindulys-atkarpa",
+    "04-skaiciu-tiese"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:transformacijos-konstravimas",
+   "section": "B. Matematika",
+   "sritis": "Geometrija",
+   "topic": "Transformacijos / Konstravimas",
+   "outcome": "„Apibūdinti objektų ar žmonių vietą… kairėn/dešinėn, pagal/prieš laikrodžio rodyklę“",
+   "level": "Taikyti",
+   "interactivity": "Tinklelis B1/C3 + komandų seka (lobio paieška)",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:46",
+   "strand": "matematika",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/matematika/32-transformacijos-konstravimas.json"
+  },
+  {
+   "key": "B:erdvines-figuros",
+   "section": "B. Matematika",
+   "sritis": "Geometrija",
+   "topic": "Erdvinės figūros",
+   "outcome": "„Įvardyti stačiakampį gretasienį, kūgį, ritinį… rasti panašių daiktų aplinkoje“",
+   "level": "Prisiminti",
+   "interactivity": "Figūros atpažinimas realiose nuotraukose",
+   "svietimas": "#2",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:47",
+   "strand": "matematika",
+   "modules": [
+    "21-erdvines-figuros",
+    "06-figuros"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:mase-kg",
+   "section": "B. Matematika",
+   "sritis": "Matavimai",
+   "topic": "Masė (kg)",
+   "outcome": "„Pajausti, kokių daiktų masę tinka/netinka apibūdinti kg“",
+   "level": "Taikyti",
+   "interactivity": "„Spėti ir tikrinti“: kiek sveria?",
+   "svietimas": "#3 — spėjimas prieš atsakymą",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:48",
+   "strand": "matematika",
+   "modules": [
+    "26-mase-ir-kilogramas"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:laikas",
+   "section": "B. Matematika",
+   "sritis": "Matavimai",
+   "topic": "Laikas",
+   "outcome": "„Nusakyti laiką pilnomis valandomis (val., h), 12 ir 24 val. sistemose“",
+   "level": "Taikyti",
+   "interactivity": "Analoginis + skaitmeninis laikrodis greta",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:49",
+   "strand": "matematika",
+   "modules": [
+    "20-laikas-12-ir-24-val",
+    "15-laikas",
+    "08-metu-laikai"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "B:piktograma-stulpeline-diagrama",
+   "section": "B. Matematika",
+   "sritis": "Duomenys",
+   "topic": "Piktograma, stulpelinė diagrama",
+   "outcome": "„Perskaityti… pateikiamą informaciją, ja remtis atsakant į tyrimo klausimą“",
+   "level": "Suprasti",
+   "interactivity": "Klasės apklausa → automatinė diagrama",
+   "svietimas": "#3",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:50",
+   "strand": "matematika",
+   "modules": [
+    "23-piktograma-ir-stulpelis"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "C:augalai-medziai-krumai-zoles",
+   "section": "C. Pasaulio pažinimas",
+   "sritis": "Gamtos mokslai (D)",
+   "topic": "Augalai: medžiai, krūmai, žolės",
+   "outcome": "„Skirti medžius, krūmus ir žoles; atpažinti klevą, ąžuolą, beržą, eglę, pušį“",
+   "level": "Prisiminti",
+   "interactivity": "Rūšiavimas pagal lapą/žievę (realios nuotraukos)",
+   "svietimas": "#2 — vienodi požymiai",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:56",
+   "strand": "pasaulio-pazinimas",
+   "modules": [
+    "22-medziai-krumai-zoles",
+    "20-kas-gyvas",
+    "09-augalo-gyvenimas",
+    "08-metu-laikai"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "C:augalo-dalys",
+   "section": "C. Pasaulio pažinimas",
+   "sritis": "Gamtos mokslai (D)",
+   "topic": "Augalo dalys",
+   "outcome": "„Atpažinti augalo dalis (šaknys, stiebas/kamienas, lapai, žiedas, vaisius, sėkla)“",
+   "level": "Prisiminti",
+   "interactivity": "Augalo „rentgenas“: prijunk dalį prie vietos",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:57",
+   "strand": "pasaulio-pazinimas",
+   "modules": [
+    "22-medziai-krumai-zoles",
+    "20-kas-gyvas",
+    "09-augalo-gyvenimas"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/32-augalo-dalys.json"
+  },
+  {
+   "key": "C:augalo-gyvenimo-ciklas",
+   "section": "C. Pasaulio pažinimas",
+   "sritis": "Gamtos mokslai (D)",
+   "topic": "Augalo gyvenimo ciklas",
+   "outcome": "„Nagrinėjamas augalo gyvenimo ciklas (dygimas, augimas, vaisių brandinimas)“",
+   "level": "Suprasti",
+   "interactivity": "Laiko juosta + augimo simuliacija („Nuo sėklos iki sėklos“)",
+   "svietimas": "#3 — pažanga per savaites",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:58",
+   "strand": "pasaulio-pazinimas",
+   "modules": [
+    "09-augalo-gyvenimas",
+    "22-medziai-krumai-zoles",
+    "20-kas-gyvas",
+    "10-gyvunu-grupes"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "C:stebejimas",
+   "section": "C. Pasaulio pažinimas",
+   "sritis": "Gamtamokslinis komunikavimas (B)",
+   "topic": "Stebėjimas",
+   "outcome": "„Savais žodžiais papasakoti apie… užfiksuotus gamtos objektus“ („Rudens požymiai mokyklos kieme“)",
+   "level": "Suprasti",
+   "interactivity": "Stebėjimo žurnalas su 3 paveikslėlių pasirinkimais",
+   "svietimas": "#3",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:63",
+   "strand": "pasaulio-pazinimas",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/33-stebejimas.json"
+  },
+  {
+   "key": "C:bendruomenes",
+   "section": "C. Pasaulio pažinimas",
+   "sritis": "Visuomeninis ugdymas",
+   "topic": "Bendruomenės",
+   "outcome": "„Mokosi atpažinti skirtingas bendruomenes, religijas, aplinkas… tolerancijos kitybei“",
+   "level": "Suprasti",
+   "interactivity": "Kas priklauso bendruomenei? — grupavimas",
+   "svietimas": "#2",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:64",
+   "strand": "pasaulio-pazinimas",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/34-bendruomenes.json"
+  },
+  {
+   "key": "C:as-ir-mano-seima",
+   "section": "C. Pasaulio pažinimas",
+   "sritis": "Visuomeninis ugdymas",
+   "topic": "Aš ir mano šeima",
+   "outcome": "Prisistatymas, šeimos istorijos pasakojimas (projektas „Mano šeimos istorija“)",
+   "level": "Taikyti",
+   "interactivity": "Šeimos „medis“ iš kortelių",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:65",
+   "strand": "pasaulio-pazinimas",
+   "modules": [
+    "17-kryptys-ir-vieta"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/35-as-ir-mano-seima.json"
+  },
+  {
+   "key": "D:erdvines-raides",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Dailė",
+   "topic": "Erdvinės raidės",
+   "outcome": "1 kl. pavyzdys „Dekoruotos ir erdvinės raidės“ (erdvinė raiška, kompozicija)",
+   "level": "Taikyti",
+   "interactivity": "Raidės konstravimas iš dalių + simetrija",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:71",
+   "strand": "daile",
+   "modules": [
+    "21-erdvines-figuros",
+    "01-garsas-ir-raide"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/daile/02-erdvines-raides.json"
+  },
+  {
+   "key": "D:garso-savybes",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Muzika",
+   "topic": "Garso savybės",
+   "outcome": "„Eksperimentavimas garsais leidžia pažinti keturias garso savybes: trukmę…“",
+   "level": "Suprasti",
+   "interactivity": "Garso laboratorija: ilgas/trumpas, aukštas/žemas, garsus/tylus, tembras",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:72",
+   "strand": "muzika",
+   "modules": [
+    "07-balsiai-ir-priebalsiai",
+    "06-garso-trukme",
+    "01-garso-aukstis"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/muzika/03-garso-savybes.json"
+  },
+  {
+   "key": "D:klausymasis",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Muzika",
+   "topic": "Klausymasis",
+   "outcome": "Žanrų ir atlikėjų pažinimas (1–2 kl.)",
+   "level": "Prisiminti",
+   "interactivity": "Klausymasis su judesiu / pasirinkimu (aktyvusis metodas)",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:73",
+   "strand": "muzika",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/muzika/04-klausymasis.json"
+  },
+  {
+   "key": "D:elektronika",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Technologijos",
+   "topic": "Elektronika",
+   "outcome": "23.4.1: elektros srovė, šaltiniai, jungiklis, saugus elgesys",
+   "level": "Suprasti",
+   "interactivity": "Grandinės jungiklis: įjungti → lemputė dega",
+   "svietimas": "#1 — nauja kryptis nuo 1 kl.",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:74",
+   "strand": "technologijos",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/technologijos/04-elektronika.json"
+  },
+  {
+   "key": "D:medziagu-savybes",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Technologijos",
+   "topic": "Medžiagų savybės",
+   "outcome": "23.3.1: „kieti, minkšti, plastiški, blizgūs“; tinkamumas darbui",
+   "level": "Analizuoti",
+   "interactivity": "Medžiagų bandymas: kuri tinka laiveliui?",
+   "svietimas": "#1",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:75",
+   "strand": "technologijos",
+   "modules": [
+    "22-medziai-krumai-zoles",
+    "08-metu-laikai",
+    "02-medziagu-bandymas",
+    "01-garso-aukstis"
+   ],
+   "status": "partial",
+   "target": "content/lt/grade-01/technologijos/05-medziagu-savybes.json"
+  },
+  {
+   "key": "D:drabuziu-prieziura",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Technologijos",
+   "topic": "Drabužių priežiūra",
+   "outcome": "„1 klasė. Drabužių, avalynės priežiūra“",
+   "level": "Taikyti",
+   "interactivity": "Sekos pratimas: kaip prižiūri avalynę",
+   "svietimas": "#3",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:76",
+   "strand": "technologijos",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/technologijos/06-drabuziu-prieziura.json"
+  },
+  {
+   "key": "D:funkciniai-judesiai",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Fizinis ugdymas",
+   "topic": "Funkciniai judesiai",
+   "outcome": "„Susipažinimas su mokinių turimais ir trūkstamais judėjimo gebėjimais“; „abi kūno pusės tolygiai“",
+   "level": "Taikyti",
+   "interactivity": "„Gyvūnų gimnastika“ be rezultato vertinimo",
+   "svietimas": "#3 — tik individuali ūgtis",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:77",
+   "strand": null,
+   "modules": [],
+   "status": "missing",
+   "target": ""
+  },
+  {
+   "key": "D:emociju-zodynas",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Gyvenimo įgūdžiai",
+   "topic": "Emocijų žodynas",
+   "outcome": "„Atpažįsta, įvardija ir valdo emocijas, elgesį“",
+   "level": "Suprasti",
+   "interactivity": "Situacija → kuri emocija? (piktas, baikštus, patenkintas…)",
+   "svietimas": "#3",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:78",
+   "strand": "gyvenimo-igudziai",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/gyvenimo-igudziai/02-emociju-zodynas.json"
+  },
+  {
+   "key": "D:komandu-seka",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Informatika (B)",
+   "topic": "Komandų seka",
+   "outcome": "„Sudaro ir vykdo komandų sekas, naudojasi žaidybinėmis programavimo priemonėmis“ (B3.3)",
+   "level": "Taikyti",
+   "interactivity": "Bee-Bot logika tinklelyje (sąsaja su matematikos Transformacijomis)",
+   "svietimas": "#1 — vienas modelis dviem dalykams",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:79",
+   "strand": null,
+   "modules": [
+    "24-komandu-seka",
+    "07-desningumai"
+   ],
+   "status": "covered",
+   "target": ""
+  },
+  {
+   "key": "D:virtualumas",
+   "section": "D. Menai, technologijos, fizinis, gyvenimo įgūdžiai",
+   "sritis": "Etika",
+   "topic": "Virtualumas",
+   "outcome": "„Draugiško elgesio internete taisyklės“ („Aš ir virtualumas“)",
+   "level": "Suprasti",
+   "interactivity": "Situacijos pasirinkimas: kas draugiška?",
+   "svietimas": "#2",
+   "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:80",
+   "strand": "dorinis-ugdymas",
+   "modules": [],
+   "status": "missing",
+   "target": "content/lt/grade-01/dorinis-ugdymas/02-virtualumas.json"
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+{
+  "role": "sistemos-architektas",
+  "run_id": 0,
+  "created": "2026-11-22T21:13:06",
+  "type": "tema",
+  "title": "B:transformacijos-konstravimas — Transformacijos / Konstravimas",
+  "body": "1 klasės programos pozicija B:transformacijos-konstravimas — Transformacijos / Konstravimas. Modulio šiai programos pozicijai NĖRA. Programos reikalavimas: „Apibūdinti objektų ar žmonių vietą… kairėn/dešinėn, pagal/prieš laikrodžio rodyklę“ Kūrėjas: sukurk VIENĄ modulį šiam tikslui pagal docs/KURINIO-STANDARTAS.md; viena didelė idėja, 3–5 užduotys su „why“, viena klaidinga nuostata, kurią modelis parodo.",
+  "target": "content/lt/grade-01/matematika/32-transformacijos-konstravimas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:46 — programos pozicija B:transformacijos-konstravimas",
+    "research/wiki/curriculum/backlog.json — būsena „missing“, padengta 21/47"
+  ]
+}

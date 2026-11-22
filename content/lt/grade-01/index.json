@@ -76,6 +76,14 @@
      "file": "grade-01/lietuviu-kalba/10-garsine-sandara.json",
      "minutes": 10,
      "sim": "dvibalsiu-takas"
+    },
+    {
+     "id": "11-teksto-supratimas",
+     "title": "Atsakymas: kuriame sakinyje?",
+     "subtitle": "Klausimas pasako, kuriame sakinyje ieškoti atsakymo",
+     "file": "grade-01/lietuviu-kalba/11-teksto-supratimas.json",
+     "minutes": 10,
+     "sim": "teksto-klausimas"
     }
    ]
   },

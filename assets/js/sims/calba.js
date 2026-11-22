@@ -2235,6 +2235,198 @@ const dvibalsiuTakas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 9. Teksto supratimas: klausimas pasako, kuriame sakinyje atsakymas  */
+/* ------------------------------------------------------------------ */
+/* Modelis: vienintelis keičiamas dalykas — KLAUSIMAS. Tas pats tekstas
+   lieka ekrane, o atsakymas persikelia į kitą sakinį. Todėl vaikas pats
+   atranda, kad „pirmas sakinys“ ar „ilgiausias sakinys“ nėra taisyklė
+   (gairės P2).
+   Klaidinga nuostata, kurią modelis turi parodyti: atsakymo ieškoma
+   sakinyje, kuriame pakartotas klausimo žodis. Kiekvienam klausimui
+   `misses` paaiškina BUTENT tą sakinį — todėl vaikas pamato, kad žodis
+   sakinyje dar nereiškia atsakymo, o klausimo prasmė reiškia.
+   Pažanga žymima įveikus VISUS klausimus, o ne po pirmo (§4, LL-29).
+   Sakinių NEtariame automatiškai: juos taria vaikas arba mokytojas, o
+   balsas skamba tik paspaudus sakinį — kad modelis netaptų klausymo
+   užduotimi (LL-11). */
+
+const tekstoKlausimas = {
+  mount({ stage, controls, api, config }) {
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const sentences = Array.isArray(config.sentences)
+      ? config.sentences.map((s) => String(s ?? "").trim()).filter(Boolean)
+      : [];
+    const questions = Array.isArray(config.questions) ? config.questions : [];
+    const F = config.feedback && typeof config.feedback === "object" ? config.feedback : {};
+    const title = String(config.title ?? "").trim();
+
+    const valid = sentences.length >= 2
+      && questions.length >= 2
+      && questions.every((q) => q
+        && typeof q.label === "string" && q.label.trim()
+        && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < sentences.length);
+
+    if (!valid) {
+      console.error("[teksto-klausimas] reikia bent 2 sakinių ir 2 klausimų su „label“ bei „answer“", config);
+      stage.innerHTML = `<p class="error-box">Teksto duomenys nesuderinti.</p>`;
+      controls.innerHTML = "";
+      api.readout("Teksto duomenys nesuderinti.");
+      api.note("");
+      return () => {};
+    }
+
+    const timers = [];
+    let qi = 0;
+    let answered = false;
+    let reported = false;
+    const foundIn = [];           // kuriame sakinyje rastas atsakymas (kiekvienam klausimui)
+
+    let questionEl = null;
+    let listEl = null;
+    let nextEl = null;
+
+    const cur = () => questions[qi % questions.length];
+
+    function paint() {
+      stage.innerHTML = `
+        <div style="width:100%;min-width:0;max-width:min(40rem, 100%)">
+          <p id="tk-question" style="margin:0 0 .6rem;text-align:center;font-family:var(--font-head);font-weight:900;font-size:clamp(1.05rem,4vw,1.28rem);line-height:1.3;overflow-wrap:anywhere"></p>
+          <div style="border:3px solid var(--line);border-radius:var(--r-m);background:#fffdf6;padding:.65rem .65rem .3rem">
+            ${title ? `<p style="margin:0 0 .45rem;text-align:center;font-family:var(--font-head);font-weight:900;letter-spacing:.04em;font-size:clamp(.9rem,3.4vw,1rem);text-transform:uppercase;color:var(--ink-soft);overflow-wrap:anywhere">${esc(title)}</p>` : ""}
+            <div id="tk-lines" role="group" aria-label="Teksto sakiniai" style="display:grid;gap:.45rem"></div>
+          </div>
+          <p class="sim-note" id="tk-msg" style="margin:.55rem 0 0;min-height:2.6rem"></p>
+        </div>`;
+      controls.innerHTML = `
+        <button class="btn secondary" id="tk-again" type="button">Iš naujo</button>
+        <button class="btn" id="tk-next" type="button" style="display:none">Kitas klausimas →</button>`;
+
+      questionEl = stage.querySelector("#tk-question");
+      listEl = stage.querySelector("#tk-lines");
+      nextEl = controls.querySelector("#tk-next");
+      controls.querySelector("#tk-again").addEventListener("click", reset);
+      nextEl.addEventListener("click", next);
+      paintQuestion();
+    }
+
+    function paintQuestion() {
+      answered = false;
+      const q = cur();
+      questionEl.textContent = q.label;
+      listEl.innerHTML = sentences.map((text, i) => `
+        <button class="btn secondary" type="button" data-line="${i}"
+          aria-label="Sakinys ${i + 1}: ${esc(text)}"
+          style="display:block;width:100%;min-height:52px;text-align:left;padding:.55rem .7rem;line-height:1.35;white-space:normal;overflow-wrap:anywhere">
+          <span aria-hidden="true" style="display:inline-block;margin-right:.45rem;font-weight:900;color:var(--ink-soft)">${i + 1}</span>${esc(text)}
+        </button>`).join("");
+      listEl.querySelectorAll("[data-line]").forEach((b) => {
+        b.addEventListener("click", () => pick(Number(b.dataset.line), b));
+      });
+      nextEl.style.display = "none";
+      msgEl().textContent = String(F.start ?? "");
+      api.readout(q.label);
+      /* Klausimas tariamas: 6–7 metų vaikas jo dar neperskaito sklandžiai, o
+         klausimas yra vienintelė užduotis. Įrašas jau yra (raktas „label“),
+         todėl tai ne naujas garsas, o esamo prijungimas (LL-104). */
+      api.speak(q.label, { rate: .85 });
+      api.note(String(F.start ?? ""));
+      const first = listEl.querySelector("[data-line]");
+      if (first) first.focus({ preventScroll: true });
+    }
+
+    function msgEl() {
+      return stage.querySelector("#tk-msg");
+    }
+
+    function clearMarks() {
+      listEl.querySelectorAll("[data-line]").forEach((b) => { b.style.boxShadow = ""; });
+    }
+
+    function pick(i, btn) {
+      const q = cur();
+      if (answered) return;
+
+      if (i === q.answer) {
+        answered = true;
+        foundIn[qi % questions.length] = i;
+        btn.style.boxShadow = "inset 0 0 0 4px var(--ok)";
+        const result = String(q.result ?? "").trim() || `Atsakymas yra ${i + 1} sakinyje.`;
+        api.readout(result);
+        api.speak(sentences[i], { rate: .85 });
+        api.note(result);
+        msgEl().textContent = result;
+        nextEl.style.display = "";
+        nextEl.textContent = qi + 1 < questions.length ? "Kitas klausimas →" : "Baigti";
+        nextEl.focus({ preventScroll: true });
+        return;
+      }
+
+      /* Klaidos paaiškinimas turi būti apie TĄ sakinį, o ne bendras. Jei
+         konfigūracijoje jo nėra, sakome tą pačią strategiją kiekvieną
+         kartą: palygink, apie ką sakinys, su tuo, ko klausia klausimas
+         (LL-33: tekstas rašomas pagal kiekvieną pavyzdį, ne pagal pirmą). */
+      const miss = q.misses && typeof q.misses === "object" ? q.misses[String(i)] : "";
+      const text = String(miss ?? "").trim() || "Šis sakinys į klausimą neatsako.";
+      api.readout(text);
+      api.note("Ne šis sakinys. Apie ką jis? O ko klausia klausimas?");
+      msgEl().textContent = "Ne šis sakinys. Apie ką jis? O ko klausia klausimas?";
+      btn.style.boxShadow = "inset 0 0 0 3px var(--sun)";
+      timers.push(setTimeout(() => { btn.style.boxShadow = ""; }, 1200));
+      btn.focus({ preventScroll: true });
+    }
+
+    function next() {
+      if (qi + 1 < questions.length) {
+        qi += 1;
+        clearMarks();
+        paintQuestion();
+        return;
+      }
+      finish();
+    }
+
+    function finish() {
+      /* Skaičius ekrane skaičiuojamas iš to, ką vaikas tikrai atrado, o ne
+         įrašomas ranka (LL-21). Jei visi atsakymai buvo tame pačiame
+         sakinyje, sakinys formuluojamas kitaip — tekstas neturi teigti
+         daugiau, nei rodo duomenys. */
+      const distinct = new Set(foundIn.filter((n) => Number.isInteger(n)));
+      const where = distinct.size === sentences.length
+        ? "Atsakymai buvo visuose sakiniuose."
+        : (distinct.size === 1
+          ? "Šiame tekste visi atsakymai buvo viename sakinyje."
+          : `Atsakymai buvo ${distinct.size} skirtinguose sakiniuose.`);
+      stage.innerHTML = `
+        <div style="text-align:center;padding:.4rem;min-width:0;max-width:min(34rem, 100%)">
+          <p style="margin:0;font-family:var(--font-head);font-weight:900;font-size:clamp(1.1rem,4.2vw,1.35rem);overflow-wrap:anywhere">Perskaitei tekstą ir radai atsakymus.</p>
+          <p style="margin:.45rem 0 0">${esc(where)}</p>
+          <p class="sim-note" style="margin-top:.6rem">Klausimas pasako, kuriame sakinyje ieškoti. Tas pats sakinys atsako ne į visus klausimus.</p>
+        </div>`;
+      controls.innerHTML = `<button class="btn" id="tk-restart" type="button">Bandyti dar kartą</button>`;
+      controls.querySelector("#tk-restart").addEventListener("click", reset);
+      api.readout(`${String(F.done ?? "")} ${where}`.trim());
+      api.note(String(F.done ?? ""));
+      if (!reported) {
+        reported = true;
+        api.progress({ questions: questions.length });
+      }
+    }
+
+    function reset() {
+      qi = 0;
+      answered = false;
+      foundIn.length = 0;
+      paint();
+      api.readout(String(F.again ?? "Pradedam iš naujo."));
+      api.note(String(F.again ?? ""));
+    }
+
+    paint();
+    return () => timers.forEach(clearTimeout);
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
@@ -2244,4 +2436,5 @@ export const SIMS = {
   "garso-juosta": garsoJuosta,
   "oro-kelias": oroKelias,
   "dvibalsiu-takas": dvibalsiuTakas,
+  "teksto-klausimas": tekstoKlausimas,
 };

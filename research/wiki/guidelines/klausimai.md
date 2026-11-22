@@ -113,3 +113,7 @@ Pirmoji dalis — #258 parengti, bet neįrašyti atmetimai (pasiūlymo failas ne
 ---
 
 *Įrašyta: 2026-11-03. Šaltinis: sprendimai, kurių negalėjome pagrįsti esama baze.*
+
+## Du įrašai apie tą pačią teksto supratimo poziciją (2026-11-22, #450)
+
+`research/wiki/curriculum/backlog.json` turi **dvi** eilutes, nusakančias tą patį dalyką: `A:teksto-supratimas` („Teksto supratimas“, B.1.2, target `11-teksto-supratimas.json`) ir `gap:teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p` (target `11-teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p.json`). Abi buvo `missing`/`partial`, abi rodo į tą pačią programos poziciją ir tą patį supratimo klausimą, o `11-` numerį naudoja abi. Modulis `11-teksto-supratimas` sukurtas pagal `A:teksto-supratimas` target'ą; `gap:` eilutė po pergeneravimo automatiškai tapo `covered`, nes jos žodžių kamienai sutapo su nauju moduliu. **Klausimas kuratoriui:** ar `gap:` eilutę reikia šalinti iš `research/wiki/curriculum/lietuviu-kalba-1-klase.md:145`, ar ji turėtų rodyti į būsimą atskirą modulį su kitu failo numeriu? Kol neatsakyta, naujo modulio su `11-teksto-skaitymas-...` kurti nereikia — jis dubliuotų esamą.

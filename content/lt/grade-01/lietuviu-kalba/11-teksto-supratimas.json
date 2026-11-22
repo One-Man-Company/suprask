@@ -1,0 +1,195 @@
+{
+  "id": "11-teksto-supratimas",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Atsakymas: kuriame sakinyje?",
+  "subtitle": "Klausimas pasako, kuriame sakinyje ieškoti atsakymo",
+  "minutes": 10,
+  "outcomes": [
+    "Randu tekste sakinį, kuriame aiškiai parašytas atsakymas.",
+    "Pasakau, kodėl kitas sakinys į klausimą neatsako.",
+    "Paaiškinu, kodėl atsakymas ne visada pirmame sakinyje."
+  ],
+  "concept": {
+    "title": "Klausimas rodo kelią",
+    "big_idea": "Atsakymas yra tame sakinyje, kuris atsako į klausimą. Pirmas sakinys ne visada tinka.",
+    "steps": [
+      "Perskaityk klausimą ir pasakyk, ko ieškai.",
+      "Perskaityk visus teksto sakinius iš eilės.",
+      "Spausk tą sakinį, kuris atsako į klausimą.",
+      "Jei sakinys netinka, palygink: apie ką jis? O ko klausia klausimas?"
+    ],
+    "example": "Klausimas „Kas ėjo į mokyklą?“ veda į pirmą sakinį. Klausimas „Koks buvo oras?“ — į antrą. Pirmas sakinys irgi kalba apie rytą."
+  },
+  "sim": {
+    "component": "teksto-klausimas",
+    "config": {
+      "title": "Rytas prie mokyklos",
+      "sentences": [
+        "Rytą Tomas su mama ėjo į mokyklą.",
+        "Lauke lijo smulkus lietus.",
+        "Tomas turėjo mėlyną skėtį.",
+        "Prie vartų jie sutiko Joną.",
+        "Berniukai nubėgo į klasę."
+      ],
+      "questions": [
+        {
+          "label": "Kas ėjo į mokyklą?",
+          "answer": 0,
+          "result": "Pirmame sakinyje parašyta: į mokyklą ėjo Tomas su mama.",
+          "misses": {
+            "1": "Šiame sakinyje kalbama apie lietų. Kas ėjo į mokyklą, neparašyta.",
+            "2": "Šiame sakinyje kalbama apie skėtį. Kas ėjo į mokyklą, neparašyta.",
+            "3": "Šiame sakinyje kalbama apie Joną. Kas ėjo į mokyklą, neparašyta.",
+            "4": "Šiame sakinyje berniukai jau bėga į klasę. Kas ėjo į mokyklą, neparašyta."
+          }
+        },
+        {
+          "label": "Koks buvo oras?",
+          "answer": 1,
+          "result": "Antrame sakinyje parašyta: lauke lijo smulkus lietus.",
+          "misses": {
+            "0": "Čia pasakyta, kas ėjo į mokyklą. Apie orą neparašyta.",
+            "2": "Čia pasakyta, koks buvo skėtis. Apie orą neparašyta.",
+            "3": "Čia pasakyta, su kuo jie sutiko. Apie orą neparašyta.",
+            "4": "Čia pasakyta, kur berniukai nubėgo. Apie orą neparašyta."
+          }
+        },
+        {
+          "label": "Kokios spalvos buvo skėtis?",
+          "answer": 2,
+          "result": "Trečiame sakinyje parašyta: skėtis buvo mėlynas.",
+          "misses": {
+            "0": "Čia pasakyta, kas ėjo į mokyklą. Apie skėtį neparašyta.",
+            "1": "Čia pasakyta, koks buvo oras. Apie skėčio spalvą neparašyta.",
+            "3": "Čia pasakyta, su kuo jie sutiko. Apie skėtį neparašyta.",
+            "4": "Čia pasakyta, kur berniukai nubėgo. Apie skėtį neparašyta."
+          }
+        },
+        {
+          "label": "Su kuo jie sutiko prie vartų?",
+          "answer": 3,
+          "result": "Ketvirtame sakinyje parašyta: prie vartų jie sutiko Joną.",
+          "misses": {
+            "0": "Čia pasakyta, kas ėjo į mokyklą. Apie sutikimą neparašyta.",
+            "1": "Čia pasakyta, koks buvo oras. Apie sutikimą neparašyta.",
+            "2": "Čia pasakyta, koks buvo skėtis. Apie sutikimą neparašyta.",
+            "4": "Čia pasakyta, kur berniukai nubėgo. Apie sutikimą neparašyta."
+          }
+        },
+        {
+          "label": "Kur Tomas ėjo su mama?",
+          "answer": 0,
+          "result": "Pirmame sakinyje parašyta: Tomas su mama ėjo į mokyklą.",
+          "misses": {
+            "1": "Čia pasakyta, koks buvo oras. Kur Tomas ėjo su mama, neparašyta.",
+            "2": "Tomas čia paminėtas, bet pasakyta, ką jis turėjo. Kur jis ėjo, neparašyta.",
+            "3": "Čia pasakyta, su kuo jie sutiko prie vartų. Kur Tomas ėjo, neparašyta.",
+            "4": "Čia pasakyta, kur nubėgo berniukai. Kad Tomas ėjo su mama, neparašyta."
+          }
+        },
+        {
+          "label": "Kur berniukai nubėgo?",
+          "answer": 4,
+          "result": "Penktame sakinyje parašyta: berniukai nubėgo į klasę.",
+          "misses": {
+            "0": "Čia pasakyta, kas ėjo į mokyklą. Kur nubėgo berniukai, neparašyta.",
+            "1": "Čia pasakyta, koks buvo oras. Apie klasę neparašyta.",
+            "2": "Čia pasakyta, koks buvo skėtis. Kur berniukai nubėgo, neparašyta.",
+            "3": "Čia pasakyta, su kuo jie sutiko prie vartų. Kur jie nubėgo, neparašyta."
+          }
+        }
+      ],
+      "feedback": {
+        "start": "Perskaityk klausimą ir ieškok sakinio, kuris į jį atsako.",
+        "done": "Peržiūrėjai visus klausimus.",
+        "again": "Pradedam iš naujo. Tas pats tekstas, tie patys klausimai."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "„Senelis pasodino obelį. Po dvejų metų medis užaugo. Rudenį obuoliai noksta.“ Kuriame sakinyje parašyta, kada obuoliai noksta?",
+      "options": [
+        "Pirmame sakinyje",
+        "Trečiame sakinyje",
+        "Antrame sakinyje"
+      ],
+      "answer": 1,
+      "hint": "Ieškok sakinio, kuriame kalbama apie obuolius, o ne apie sodinimą.",
+      "why": "Laikas parašytas trečiame sakinyje, o pirmas sakinys pasakoja apie sodinimą.",
+      "optional": false
+    },
+    {
+      "q": "Tekstas: „Mama kepė pyragą. Tomas padėjo jai. Pyragas buvo su obuoliais.“ Kur parašyta, su kuo buvo pyragas?",
+      "options": [
+        "Pirmame sakinyje",
+        "Antrame sakinyje",
+        "Trečiame sakinyje"
+      ],
+      "answer": 2,
+      "hint": "Perskaityk visus tris sakinius ir rask tą, kuriame minimas įdaras.",
+      "why": "Pyragas su obuoliais minimas trečiame, o ne pirmame sakinyje.",
+      "optional": false
+    },
+    {
+      "q": "„Boružė ropojo lapu. Ji turėjo septynis taškus. Tada pūstelėjo vėjas.“ Kuris sakinys sako, kiek taškų?",
+      "options": [
+        "Antras sakinys",
+        "Pirmas sakinys",
+        "Trečias sakinys"
+      ],
+      "answer": 0,
+      "hint": "Sakinyje apie ropojimą skaičiaus nėra.",
+      "why": "Skaičius parašytas ten, kur kalbama apie taškus ant nugaros.",
+      "optional": false
+    },
+    {
+      "q": "„Per lietų žolė buvo šlapia. Saulė išdžiovino žolę.“ Kuris sakinys sako, kas išdžiovino?",
+      "options": [
+        "Pirmas sakinys",
+        "Antras sakinys",
+        "Abu sakiniai"
+      ],
+      "answer": 1,
+      "hint": "Pirmame sakinyje kalbama apie lietų, o klausiama apie ką kitą.",
+      "why": "Sakinį renki pagal klausimo prasmę, o ne pagal vietą tekste.",
+      "optional": false
+    },
+    {
+      "q": "„Kačiukas miegojo kėdėje. Kėdė stovėjo prie lango. Kačiukas pabudo nuo triukšmo.“ Kuriame sakinyje parašyta, nuo ko?",
+      "options": [
+        "Trečiame sakinyje",
+        "Pirmame sakinyje",
+        "Antrame sakinyje"
+      ],
+      "answer": 0,
+      "hint": "Žodis „kačiukas“ parašytas dviejuose sakiniuose. Ar abu jie atsako į klausimą?",
+      "why": "Pirmas sakinys sako, kur jis miegojo. Nuo ko pabudo — tik trečias.",
+      "optional": true
+    }
+  ],
+  "reflect": "Perskaitei tekstą ir radai atsakymą. Kaip supratai, kuriame sakinyje jo ieškoti?",
+  "teacher": {
+    "goal": "Skaitymo sritis B (B.1.2, patenkinamas lygis B.1.2.2): rasti tekste aiškiai pateiktą informaciją, kai klausimas nurodo, ko ieškoti. Vaikas mokosi rinktis sakinį pagal klausimo prasmę, o ne pagal sakinio vietą.",
+    "prompt": "Kurį sakinį pasirinkai? Kas tame sakinyje pasakyta apie tai, ko klausė klausimas?",
+    "offline": "Perskaitykite vaikui tris trumpus sakinius apie dienos įvykį, pavyzdžiui: „Ryte lijo. Mama išvirė košę. Po pietų išėjome į kiemą.“ Duokite vaikui korteles su tais pačiais sakiniais. Jūs užduokite klausimą, o vaikas padeda pirštą ant kortelės, kuri atsako. Tada pakeiskite klausimą ir paklauskite, ar pirštas turi likti toje pačioje vietoje. Po kelių klausimų paklauskite: „Ar atsakymas visada pirmoje kortelėje?“",
+    "misconceptions": [
+      "„Atsakymas visada pirmame sakinyje.“ Netiesa: pirmas sakinys dažnai tik pradeda pasakojimą, o atsakymas būna vėliau. Modelyje atsakymai pasiskirstę po visą tekstą.",
+      "„Jei sakinyje pakartotas klausimo žodis, tai ten ir atsakymas.“ Žodis gali būti paminėtas ir tada, kai atsakymo nėra, todėl lyginama klausimo prasmė, o ne vienas žodis.",
+      "„Užtenka perskaityti klausimą ir atsakyti iš atminties.“ Atsakymas ieškomas pačiame tekste, nes atmintis trumpa, o tekstas lieka ekrane."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“, 1–2 klasė, veikla „Mokausi rasti man svarbią informaciją“ (sources/pradinio-bp-rekomendacijos-2024.txt:7585–7606).",
+    "Ten pat, B.1.2: „Skaito savo poreikius ir galimybes atitinkančius tekstus, randa tekste aiškiai pateiktą informaciją“ (sources/pradinio-bp-rekomendacijos-2024.txt:7604–7607).",
+    "Ten pat, patenkinamas lygis B.1.2.2 — ta pati formuluotė, o slenkstinis B.1.2.1 reikalauja rasti bent dalį informacijos (sources/pradinio-bp-rekomendacijos-2024.txt:32449–32450, 32463–32466).",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), skaitymo sritis B.1.2, 1 klasė."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena didelė idėja: sakinį, kuriame yra atsakymas, parodo klausimo prasmė, o ne jo vieta tekste.",
+    "2 žingsnis — užduotys perkelia taisyklę į kitus tekstus (obelis, pyragas, boružė, žolė, kačiukas), o ne kartoja modulio sakinį (T2.2).",
+    "3 žingsnis — užuomina nukreipia į paieškos klaidą, o ne į atsakymą; po netinkamo pasirinkimo paaiškinamas būtent tas sakinys, o ne rodomas teisingas (T3.1, T3.2).",
+    "8 žingsnis — veikla be ekrano su popieriaus kortelėmis ir suaugusiojo klausimais, be interneto (T8.3)."
+  ]
+}

@@ -9,11 +9,11 @@ Ne įsiminti — suprasti. Simuliacijos, modeliai ir žaidimai, kurie paaiškina
 
 ## Kas yra viduje (šiandien)
 
-**1 klasė — 9 kryptys, 54 modulių, 54 interaktyvių simuliacijų:**
+**1 klasė — 9 kryptys, 55 modulių, 55 interaktyvių simuliacijų:**
 
 | Kryptis | Moduliai |
 |---|---|
-| 🔤 Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Kas? Ką veikia? · Kaip žmonės sveikinasi · Plakatas: kur ieškoti atsakymo · Garsas, kurį gali tempti · Kas garsui užstoja kelią · Du balsiai, vienas balsas |
+| 🔤 Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Kas? Ką veikia? · Kaip žmonės sveikinasi · Plakatas: kur ieškoti atsakymo · Atsakymas: kuriame sakinyje? · Garsas, kurį gali tempti · Kas garsui užstoja kelią · Du balsiai, vienas balsas |
 | 🔢 Matematika | Skaičių tiesė · Dešimtukas · Sudėtis per dešimtį · Atimtis per dešimtį · Po 30 eina 29, o ne 20 · Uždavinys: klausimas pasako, ką daryti · Šimto lentelė · Skaičius ir skaitmuo · Figūros · Dėsningumai · Pinigai · Laikas: vienas ratas · Laikas: 2 val. ir 14:00 · Lygybė · Kryptys · Taškas, tiesė, spindulys, atkarpa · Ilgis · Masė · Erdvinės figūros · Piktograma ir stulpelis · Komandų seka |
 | 🌍 Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Kas gyvas: auga ir reaguoja, ne tik juda · Kas sukūrė šį daiktą: kelias iki gamtos · Medžiai, krūmai, žolės: grupę rodo stiebas · Išmestas daiktas nedingsta · Vienas vanduo, trys formos · Kas gyvena tvarte? · Kur dingsta vanduo · Nuožulnioji plokštuma · Kuprinė: tas pats svoris · Dūmai: žemai ir lauk · Trauma turi priežastį · Vėliau keltis — trumpesni pusryčiai |
 | 🎵 Muzika | Aukštas garsas ne visada garsus · Ritmas: plojimai ant pulso |
@@ -109,7 +109,7 @@ HTTP prieiga ribojama Tailscale tinklu — jokio prisijungimo ekrano. Žr. [`das
 
 ## Garsas
 
-Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 791 tekstų po du variantus (sakinys ir skiemuo) — 1582 įrašų, ~53 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
+Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 802 tekstų po du variantus (sakinys ir skiemuo) — 1604 įrašų, ~54 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
 
 ## Licencijos
 
@@ -122,6 +122,6 @@ Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė
 | | |
 |---|---|
 | Versija | 0.1 (2026-11) |
-| Parengta | 1 klasė — 9 kryptys, 54 modulių, 54 simuliacijų, 235 užduočių |
+| Parengta | 1 klasė — 9 kryptys, 55 modulių, 55 simuliacijų, 240 užduočių |
 | Toliau | 2 klasė, tada 3–4 |
 | Kalbos | lietuvių (struktūra paruošta kitoms) |

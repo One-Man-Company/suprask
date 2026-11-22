@@ -1,7 +1,7 @@
 ---
 title: "1 klasės programos padengties eilė"
 tipas: padengtis
-atnaujinta: 2026-11-22
+atnaujinta: 2026-11-23
 saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curriculum/"
 ---
 
@@ -11,14 +11,13 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **54**
-- Padengta / iš dalies / nėra: **29 / 8 / 10**
+- Modulių dabar: **55**
+- Padengta / iš dalies / nėra: **31 / 7 / 9**
 
 ## Ko dar nėra (prioritetas)
 
 | Būsena | Tema | Kodas | Rezultatas | Šaltinis |
 |---|---|---|---|---|
-| missing | Teksto supratimas | A:teksto-supratimas | „Randa tekste aiškiai pateiktą informaciją“ (B.1.2) | `1-klases-temų-žemėlapis.md:30` |
 | missing | Transformacijos / Konstravimas | B:transformacijos-konstravimas | „Apibūdinti objektų ar žmonių vietą… kairėn/dešinėn, pagal/prieš laikrodžio rodyklę“ | `1-klases-temų-žemėlapis.md:46` |
 | missing | Bendruomenės | C:bendruomenes | „Mokosi atpažinti skirtingas bendruomenes, religijas, aplinkas… tolerancijos kitybei“ | `1-klases-temų-žemėlapis.md:64` |
 | missing | Stebėjimas | C:stebejimas | „Savais žodžiais papasakoti apie… užfiksuotus gamtos objektus“ („Rudens požymiai mokyklos kieme“) | `1-klases-temų-žemėlapis.md:63` |
@@ -31,7 +30,6 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | partial | Trūkstamas dėmuo | B:trukstamas-demuo | „Lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“ | `1-klases-temų-žemėlapis.md:42` |
 | partial | Aš ir mano šeima | C:as-ir-mano-seima | Prisistatymas, šeimos istorijos pasakojimas (projektas „Mano šeimos istorija“) | `1-klases-temų-žemėlapis.md:65` |
 | partial | Bendri gyvų organizmų požymiai | 26.2.4 | demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“; žaidimas „Gyvas–negyvas“ (:8445–8448) | `pasaulio-pazinimas-1-klase.md:90` |
-| partial | Teksto skaitymas su supratimu (B.1.2 tiesiogine prasme) | gap:teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p | 05-plakatas-ir-informacija randa informaciją plakate, bet nė vienas modulis nepateikia kelių sakinių teksto, a | `lietuviu-kalba-1-klase.md:145` |
 | partial | energijos reikia visiems | 26.5.1 | atskiro modulio nėra; atmesta guidelines/klausimai.md:70 (gairių 2 klausimas) | `pasaulio-pazinimas-1-klase.md:172` |
 | partial | gamtos ištekliai, tarša, tausojimas | 26.3.1 | modulio nėra; pasiūlymas 2026-11-14-ideator-kas-sukure-dailka.json (target 21) | `pasaulio-pazinimas-1-klase.md:170` |
 | partial | traumų prevencija | 26.1.1 | yra tik gaisro dalis (19); traumų temos nėra | `pasaulio-pazinimas-1-klase.md:174` |
@@ -41,6 +39,7 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Garsinė sandara | A:garsine-sandara | „Žino garsinę sandarą: balsius, priebalsius, dvibalsius“ (1 lentelė) | `1-klases-temų-žemėlapis.md:28` |
 | covered | Kalbos vartojimo tyrimas | A:kalbos-vartojimo-tyrimas | „Pagal pavyzdį atlieka nesudėtingus kalbos vartojimo tyrimus“ (D.5.2) | `1-klases-temų-žemėlapis.md:29` |
 | covered | Kelių sakinių tekstas | A:keliu-sakiniu-tekstas | „Rašyti kelių sakinių tekstus saviraiškos tikslais“ (1–2 kl.) | `1-klases-temų-žemėlapis.md:32` |
+| covered | Teksto supratimas | A:teksto-supratimas | „Randa tekste aiškiai pateiktą informaciją“ (B.1.2) | `1-klases-temų-žemėlapis.md:30` |
 | covered | Veikėjas | A:veikejas | „Įvardija ir apibūdina bent vieną veikėją“ (B.2.1.1) | `1-klases-temų-žemėlapis.md:31` |
 | covered | Erdvinės figūros | B:erdvines-figuros | „Įvardyti stačiakampį gretasienį, kūgį, ritinį… rasti panašių daiktų aplinkoje“ | `1-klases-temų-žemėlapis.md:47` |
 | covered | Laikas | B:laikas | „Nusakyti laiką pilnomis valandomis (val., h), 12 ir 24 val. sistemose“ | `1-klases-temų-žemėlapis.md:49` |
@@ -62,6 +61,7 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Garso savybės | D:garso-savybes | „Eksperimentavimas garsais leidžia pažinti keturias garso savybes: trukmę…“ | `1-klases-temų-žemėlapis.md:72` |
 | covered | Komandų seka | D:komandu-seka | „Sudaro ir vykdo komandų sekas, naudojasi žaidybinėmis programavimo priemonėmis“ (B3.3) | `1-klases-temų-žemėlapis.md:79` |
 | covered | Medžiagų savybės | D:medziagu-savybes | 23.3.1: „kieti, minkšti, plastiški, blizgūs“; tinkamumas darbui | `1-klases-temų-žemėlapis.md:75` |
+| covered | Teksto skaitymas su supratimu (B.1.2 tiesiogine prasme) | gap:teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p | 05-plakatas-ir-informacija randa informaciją plakate, bet nė vienas modulis nepateikia kelių sakinių teksto, a | `lietuviu-kalba-1-klase.md:145` |
 | covered | dienos režimas, mityba | 26.1.2 | yra tik kuprinės dalis (18); režimo ir mitybos nėra | `pasaulio-pazinimas-1-klase.md:175` |
 | covered | medžiai, krūmai, žolės | 26.2.3 | modulio nėra; pasiūlymai 2026-11-16-ideator-medziai-krumai-zoles.json ir 2026-11-16-metodininkas-medziai-kruma | `pasaulio-pazinimas-1-klase.md:169` |
 | covered | naminiai ir laukiniai gyvūnai | 26.2.2 | padengta 10-gyvunu-grupes (perrašytas 2026-11-18, #348: kriterijus — kas duoda maistą, ne vieta) | `pasaulio-pazinimas-1-klase.md:173` |

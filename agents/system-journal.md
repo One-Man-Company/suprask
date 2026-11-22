@@ -347,3 +347,32 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   „kalbu-redaktorius — Gemini 4 Hydrogen“ po to, kai agentas grąžintas į
   DeepSeek — ištrinta. Tai rodo, kad modelio keitimas turi atnaujinti ir docs, ne
   tik `ROLES`.
+
+## 2026-11-22 23:40 · jokių dirbtinių lubų agentams (žmogaus sprendimas)
+
+- **Mačiau:** žmogus atsiuntė dvi ekrano nuotraukas: (1) patvirtinimo klausimą
+  `hermes config set approvals.mode off` ir (2) eilutę „It's near its budget
+  limit — 30 API calls, 34 min." Abu buvo tikri: `logs/errors.log` — **383
+  atmesti įsakymai**, o kūrėjo #447 po 3600 s turėjo PARUOŠTĄ modulį
+  (`10-garsine-sandara.json`), bet jo nepaskelbė.
+- **Reikalavimas:** agentai neturi turėti jokių limitų, jokių patvirtinimų ir
+  neturi nieko klausti.
+- **Keičiau:**
+  - `agents/run.py::invoke()` — pašalinti `--max-turns` ir `--run-budget`;
+    pridėtas `--yolo` ABIEM žingsniams (`/goal` ir `--resume`), nes be jo
+    tikrasis darbo žingsnis vėl klaustų patvirtinimo, o one-shot režime jo
+    niekas nepatvirtintų.
+  - `deepseek41flash/config.yaml`: `approvals.mode: off`, `agent.max_turns: 0`
+    (0 = be ribos pagal `resolve_turn_limit`).
+  - Procesų watchdog'as (`cfg["timeout"]`) padidintas 4× (1800→7200,
+    2400→9600, 3600→14400, 1200→4800). Jis NĖRA darbo lubos: saugo nuo
+    pakibusio proceso, kuris laikytų globalų užraktą ir užšaldytų visus
+    agentus. Jo metu paruoštas darbas dabar publikuojamas, o ne išmetamas.
+- **Patikra:** `hermes … chat -Q --yolo … python3 -c "…; sys.exit(3)"` →
+  įvykdyta be klausimo, išėjimas 3; trijų žingsnių testas → „1, 2, 3 printed…
+  DONE" be nė vieno patvirtinimo; `logs/errors.log` „BLOCKED" skaičius
+  nepakito (383 — visi istoriniai); `check_agents.py` 15 vaidmenų ✔.
+- **Pasekmė, kurią verta žinoti:** be `--max-turns` agentas gali dirbti
+  ilgiau, todėl eilė (`--max-minutes 720`) ir watchdog'as yra vienintelės
+  ribos. Tai sąmoninga: geriau ilgas paleidimas, kuris baigia darbą, nei
+  trumpas, kuris palieka pusę modulio.

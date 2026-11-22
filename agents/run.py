@@ -311,20 +311,20 @@ ROLES: dict[str, dict] = {
         # Du langai: 47 programos pozicijos ir 1 klasė — vienas paleidimas
         # neša 1–3 pasiūlymus, todėl vieno lango nepakanka kūrėjui maitinti.
         # Vėliausias 07:40, kad iki 09:00 kūrėjo eilė jau turėtų temos įrašų.
-        "max_turns": 30, "budget": 1200, "timeout": 1800,
+        "max_turns": 30, "budget": 1200, "timeout": 7200,
         "cadence": "kasdien 2 langai (07:10, 07:40)",
         "on_calendar": ["*-*-* 07:10:00", "*-*-* 07:40:00"],
         "description": "Ieško naujų pamokų idėjų ir temų, teikia pasiūlymus",
     },
     "metodininkas": {
         "file": "roles/metodininkas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 40, "budget": 1500, "timeout": 2400,
+        "max_turns": 40, "budget": 1500, "timeout": 9600,
         "cadence": "kasdien", "on_calendar": "*-*-* 08:20:00",
         "description": "Kuria vaizdavimo metodus ir simuliacijų scenarijus pasiūlymams",
     },
     "kurejas": {
         "file": "roles/kurejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 60, "budget": 2400, "timeout": 3600,
+        "max_turns": 60, "budget": 2400, "timeout": 14400,
         # Trys langai per dieną: vienas modulis = 10–13 min, o iki 2026-11-22
         # eilė turėjo TIK vieną langą (09:00) ir jis baigdavosi po 76 min, nes
         # eilė tuščėjo (3 įrašai, visi `kritika`) — per dieną atsirado 1 modulis,
@@ -345,37 +345,37 @@ ROLES: dict[str, dict] = {
     },
     "simuliaciju-inzinierius": {
         "file": "roles/simuliaciju-inzinierius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 60, "budget": 2400, "timeout": 3600,
+        "max_turns": 60, "budget": 2400, "timeout": 14400,
         "cadence": "kasdien", "on_calendar": "*-*-* 11:00:00",
         "description": "Kuria ir tobulina interaktyvias simuliacijas, atidaro PR",
     },
     "dizaineris": {
         "file": "roles/dizaineris.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 30, "budget": 1200, "timeout": 1800,
+        "max_turns": 30, "budget": 1200, "timeout": 7200,
         "cadence": "antradieniais, ketvirtadieniais, šeštadieniais", "on_calendar": "Tue,Thu,Sat *-*-* 12:30:00",
         "description": "Tobulina klasių struktūrą ir sąsają (desktop/tablet pirmiausia)",
     },
     "kritikas": {
         "file": "roles/kritikas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 40, "budget": 1800, "timeout": 2400,
+        "max_turns": 40, "budget": 1800, "timeout": 9600,
         "cadence": "kasdien", "on_calendar": "*-*-* 14:00:00",
         "description": "Nepriklausoma kritika: pedagogika, UX, turinio teiginiai, gairių laikymasis",
     },
     "programos-derintojas": {
         "file": "roles/programos-derintojas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 40, "budget": 1500, "timeout": 2400,
+        "max_turns": 40, "budget": 1500, "timeout": 9600,
         "cadence": "pirmadieniais, ketvirtadieniais", "on_calendar": "Mon,Thu *-*-* 15:00:00",
         "description": "Derina turinį su oficialia programa ir amžiaus tinkamumu",
     },
     "leidejas": {
         "file": "roles/leidejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 30, "budget": 1200, "timeout": 1800,
+        "max_turns": 30, "budget": 1200, "timeout": 7200,
         "cadence": "kasdien", "on_calendar": "*-*-* 16:30:00",
         "description": "Sujungia patvirtintus PR, atnaujina changelog ir publikavimą",
     },
     "kalbu-redaktorius": {
         "file": "roles/kalbu-redaktorius.md", "profile": "education41-gemini", "toolsets": "terminal,file",
-        "max_turns": 30, "budget": 1200, "timeout": 1800,
+        "max_turns": 30, "budget": 1200, "timeout": 7200,
         "cadence": "antradieniais, penktadieniais", "on_calendar": "Tue,Fri *-*-* 13:10:00",
         "description": "Kalbos ir UX redaktorius: formuluočių vienareikšmiškumas + ką vaikas mato desktop/planšetėje/telefone su Brave skydais (Gemini 4 Hydrogen; atsarginis — DeepSeek 4.1 Flash)",
             # Ne vienas modulis per paleidimą, o eilė: ji ima tik tuos modulius,
@@ -384,14 +384,14 @@ ROLES: dict[str, dict] = {
 },
     "sistemos-architektas": {
         "file": "roles/sistemos-architektas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 60, "budget": 2400, "timeout": 3600,
+        "max_turns": 60, "budget": 2400, "timeout": 14400,
         "cadence": "kasdien", "on_calendar": "*-*-* 20:20:00",
         "description": "Sistemos architektas: matuoja visų agentų darbą, taiso sistemines problemas, "
                        "keičia grafikus ir promptus, prireikus prideda agentų",
     },
     "publikavimo-agentas": {
         "file": "roles/publikavimo-agentas.md", "profile": "deepseek41flash", "toolsets": "terminal,file",
-        "max_turns": 26, "budget": 1000, "timeout": 1200,
+        "max_turns": 26, "budget": 1000, "timeout": 4800,
         # `inspect` — vaidmuo, kurio rezultatas yra ATASKAITA, ne failai. Tik
         # tokiems paleidimams „failų nepakeista“ virsta `checked` (žr. main()).
         # Kūrėjui tas pats virsdavo klaidinga sėkme: 37 pasiūlymai per 40 s
@@ -406,25 +406,25 @@ ROLES: dict[str, dict] = {
     },
     "tikrintojas": {
         "file": "roles/tikrintojas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 30, "budget": 900, "timeout": 1200, "inspect": True,
+        "max_turns": 30, "budget": 900, "timeout": 4800, "inspect": True,
         "cadence": "kasdien", "on_calendar": "*-*-* 05:50:00",
         "description": "Validuoja turinį ir sąsają, registruoja klaidas",
     },
     "sveikatos-inspektorius": {
         "file": "roles/sveikatos-inspektorius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 30, "budget": 900, "timeout": 1200, "inspect": True,
+        "max_turns": 30, "budget": 900, "timeout": 4800, "inspect": True,
         "cadence": "ketvirtadieniais", "on_calendar": "Thu *-*-* 06:50:00",
         "description": "Tikrina gyvą svetainę, nuorodas ir našumą",
     },
     "tyrejas": {
         "file": "roles/tyrejas.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 40, "budget": 1500, "timeout": 2400,
+        "max_turns": 40, "budget": 1500, "timeout": 9600,
         "cadence": "pirmadieniais", "on_calendar": "Mon *-*-* 06:40:00",
         "description": "Tiria naujus metodus ir tyrimus, papildo research/wiki/",
     },
     "kuratorius": {
         "file": "roles/kuratorius.md", "profile": "deepseek41flash", "toolsets": "terminal,file,web",
-        "max_turns": 30, "budget": 900, "timeout": 1200, "inspect": True,
+        "max_turns": 30, "budget": 900, "timeout": 4800, "inspect": True,
         "cadence": "sekmadieniais", "on_calendar": "Sun *-*-* 18:00:00",
         "description": "Savaitės suvestinė, changelog, atviri klausimai",
     },
@@ -1865,13 +1865,23 @@ def main() -> int:
         def invoke(profile: str):
             """Vienas paleidimas. Jei vaidmuo turi `goal` ir yra pasiūlymas —
             pirmiausia nustatomas tikslas, po to tas pats darbas atliekamas
-            `--resume`, kad veiktų `/goal` teisėjo ciklas."""
+            `--resume`, kad veiktų `/goal` teisėjo ciklas.
+
+            BE ĖJIMŲ IR LAIKO LIMITŲ (2026-11-22, žmogaus sprendimas):
+            `--max-turns` ir `--run-budget` buvo dirbtinės lubos, o ne apsauga.
+            Matuota: ideatorius 2× baigėsi ėjimų limitu NEPARAŠĘS pasiūlymo
+            (420 s ir 879 s, 0 darbo failų), kūrėjas #447 po 3600 s turėjo
+            PARAŠYTĄ modulį, bet jo nepaskelbė. Agentas turi baigti darbą, o ne
+            atsiskaityti už tai, kad baigėsi biudžetas. Lieka TIK proceso
+            watchdog'as (`cfg["timeout"]`), kuris saugo nuo pakibusio proceso;
+            jo metu paruoštas darbas publikuojamas (žr. `TimeoutExpired`).
+            `--yolo` — jokių patvirtinimo klausimų (agentas dirba be žmogaus).
+            """
             base = [
                 HERMES, "-p", profile, "chat",
                 "-Q",
+                "--yolo",
                 "-t", cfg["toolsets"],
-                "--max-turns", str(cfg["max_turns"]),
-                "--run-budget", str(cfg["budget"]),
                 "--in", str(ROOT),
             ]
 
@@ -1893,8 +1903,12 @@ def main() -> int:
                 return run_cmd(base + ["--query-file", query_path])
 
             # 2 žingsnis: darbas toje pačioje sesijoje su įkeltu tikslu.
+            # `--yolo` kartojamas SĄMONINGAI: be jo šis žingsnis (t. y. tikrasis
+            # darbas) vėl klaustų patvirtinimo, o one-shot režime jo niekas
+            # nepatvirtins — paleidimas tiesiog nepadarytų darbo.
             work_cmd = [HERMES, "-p", profile, "--resume", session, "chat",
-                        "-Q", "--query-file", query_path, "--in", str(ROOT)]
+                        "-Q", "--yolo", "-t", cfg["toolsets"],
+                        "--query-file", query_path, "--in", str(ROOT)]
             code, out, err = run_cmd(work_cmd)
             return code, (f"[goal {session[:20]}] " + out), err
 

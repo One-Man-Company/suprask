@@ -376,3 +376,22 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   ilgiau, todėl eilė (`--max-minutes 720`) ir watchdog'as yra vienintelės
   ribos. Tai sąmoninga: geriau ilgas paleidimas, kuris baigia darbą, nei
   trumpas, kuris palieka pusę modulio.
+
+## 2026-11-23 00:30 · patikra su naujomis taisyklėmis (ne agento)
+
+- **Patikrinta, kad lubų tikrai nebėra:** kūrėjas #450 dirbo **153 API
+  iškvietimus** ir **3298 s**, t. y. toli už buvusios 30 iškvietimų / 34 min
+  ribos, ir **paskelbė** modulį (`560d7b8`, 36 failai,
+  `11-teksto-supratimas.json`). Buvusiomis taisyklėmis jis būtų nutrauktas
+  maždaug ties 30-uoju iškvietimu. Modulių 53 → **55**.
+- **Patikrinta pačiame procese:** `tr '\0' '\n' < /proc/<pid>/cmdline` —
+  `--yolo` yra, `--max-turns` ir `--run-budget` **0 kartų**.
+- **Patikra:** `check_docs_facts.py` 0 klaidų; `curriculum_backlog.py --check`
+  suderinta; programos padengtis 47 pozicijos, **9 be modulio** (buvo 12);
+  eilėje 11 pasiūlymų, visi `tema`.
+- **Pamoka, kurią verta prisiminti:** nelimitinis paleidimas yra ilgas
+  (iki valandos vienam moduliui), todėl kūrėjo langai (09:00, 10:20, 20:50)
+  gali persidengti su kitais agentais. Tai ne gedimas: globalus užraktas
+  serializuoja rašymą, o kitas agentas palaukia (iki 900 s) arba praleidžia
+  paleidimą. Jei tai ims kirstis, teisinga priemonė — ne grąžinti lubas, o
+  išdėstyti langus.

@@ -3309,15 +3309,31 @@ const skaiciavimasPerDesimti = {
     const capFs = "clamp(14px,3.6vw,15px)";
     const ring = "inset 0 0 0 2px transparent";
 
+    /* Dvi skaitmenų kortelės. Geometrija išlieka flex (kortelės platėja pagal
+       savo turinį), bet mažiausias plotis nebėra vien `4.4rem`.
+       Buvo: kiekviena kortelė `min-width:4.4rem`, o rem seka šaknies šriftu —
+       prie 200 % teksto (32 px šaknis) kortelė buvo 140,8 px, tad dvi kortelės
+       su 16 px tarpu reikalavo 297,6 px, kai 320 px ekrane teturėjo 264 px:
+       puslapis slinko 6 px (#33877, matuota `--viewports tiny --text-scale
+       200`). Ataskaita kaltininku įvardijo `svg` todėl, kad jo tėvas
+       išsitempia pagal kortelių eilutės min-content; pati kreivė telpa.
+       Dabar mažiausias plotis — `min(4.4rem, 50% − 4px)`: 16 px šaknyje
+       laimi 4.4rem ir vaizdas nepakinta (matuota identiškai @320/360/390/
+       1024/1440), o prie 200 % teksto kortelė traukiasi nuo TURIMO ploto ir
+       telpa tiksliai (2 × 128 + 8 = 264 px). Tarpas irgi ribojamas px
+       (`min(.5rem,8px)`) — ta pati priežastis kaip #422 / LL-135. */
+    const digitGap = "min(.5rem,8px)";
+    const digitMin = "min(4.4rem, calc(50% - 4px))";
+
     stage.innerHTML = `
       <div style="width:100%;max-width:32rem;margin:0 auto;box-sizing:border-box">
         <div role="group" aria-label="Skaičiaus skaitmenys"
-             style="display:flex;gap:.5rem;justify-content:center;margin:0 0 .4rem">
-          <div id="sdp-tens-box" style="min-width:4.4rem;padding:.3rem .55rem;text-align:center;border-radius:var(--r-m);background:var(--paper-2);box-shadow:${ring};box-sizing:border-box">
+             style="display:flex;gap:${digitGap};justify-content:center;margin:0 0 .4rem">
+          <div id="sdp-tens-box" style="min-width:${digitMin};padding:.3rem .55rem;text-align:center;border-radius:var(--r-m);background:var(--paper-2);box-shadow:${ring};box-sizing:border-box">
             <span id="sdp-tens" style="display:block;font-family:var(--font-head);font-weight:900;font-size:${numFs};line-height:1.05;font-variant-numeric:tabular-nums">–</span>
             <span style="display:block;font-size:${capFs};font-weight:700;color:var(--ink-soft)">dešimtys</span>
           </div>
-          <div id="sdp-ones-box" style="min-width:4.4rem;padding:.3rem .55rem;text-align:center;border-radius:var(--r-m);background:var(--paper-2);box-shadow:${ring};box-sizing:border-box">
+          <div id="sdp-ones-box" style="min-width:${digitMin};padding:.3rem .55rem;text-align:center;border-radius:var(--r-m);background:var(--paper-2);box-shadow:${ring};box-sizing:border-box">
             <span id="sdp-ones" style="display:block;font-family:var(--font-head);font-weight:900;font-size:${numFs};line-height:1.05;font-variant-numeric:tabular-nums">–</span>
             <span style="display:block;font-size:${capFs};font-weight:700;color:var(--ink-soft)">vienetai</span>
           </div>

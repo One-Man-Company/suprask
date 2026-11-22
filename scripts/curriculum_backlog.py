@@ -234,7 +234,15 @@ def _matches(topic: str, blob: str) -> int:
 
 
 def enrich(rows: list[dict], grade: int) -> list[dict]:
-    """Prideda būseną: covered / partial / missing ir esamus modulius."""
+    """Prideda būseną: covered / partial / missing ir esamus modulius.
+
+    Lyginama ir su modulio TEKSTU, ir su jo ID (failo vardu). Be ID dalies
+    modulis su kūrybiniu pavadinimu atrodydavo nepadengtas: 53-asis modulis
+    `30-dienos-rezimas-mityba` vadinasi „Vėliau keltis — trumpesni pusryčiai",
+    o jo outcome'ai kalba apie kėlimąsi ir pusryčius — žodžių „dienos",
+    „režimas", „mityba" ten nėra, nors modulis būtent ta tema. `scope.coverage`
+    ID sutapimą skaičiuoja atskirai ir vertina jį daugiau, todėl darome taip pat.
+    """
     modules = _module_blobs(grade)
     numbers: dict[str, int] = {}
     for r in rows:
@@ -242,12 +250,15 @@ def enrich(rows: list[dict], grade: int) -> list[dict]:
         scored = []
         for mid, blob in modules:
             hit = _matches(r["topic"], blob)
-            if hit:
-                scored.append((hit, mid))
-        scored.sort(reverse=True)
+            id_hit = _matches(r["topic"], scope._norm(mid))
+            total = hit + id_hit
+            if total:
+                scored.append((id_hit, total, mid))
+        # ID sutapimas vertesnis už atsitiktinį žodį outcomes tekste.
+        scored.sort(key=lambda x: (-x[0], -x[1], x[2]))
         need = max(1, -(-len(words) * 6 // 10))  # 60 %
-        strong = [mid for m, mid in scored if m >= need]
-        weak = [mid for m, mid in scored if m < need]
+        strong = [mid for _idh, m, mid in scored if m >= need]
+        weak = [mid for _idh, m, mid in scored if m < need]
         r["modules"] = (strong + weak)[:4]
         r["status"] = "covered" if strong else ("partial" if weak else "missing")
         # `target` suteikiamas TIK po sujungimo (build()), kad dvi eilutės

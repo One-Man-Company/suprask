@@ -80,9 +80,9 @@ Agentai gyvena `agents/` kataloge ir paleidžiami `systemd --user` timeriais per
 |---|---|---|---|
 | `tikrintojas` | kasdien 05:50 | validuoja turinį, nuorodas, simuliacijų registrą | ataskaita, issue |
 | `tyrejas` | pirmadienis 06:40 | ieško tyrimų ir metodų | wiki įrašai |
-| `ideator` | kasdien 07:40 | ieško naujų pamokų idėjų pagal programos spragas | 1–3 pasiūlymai |
+| `ideator` | kasdien 07:10, 07:40 | ieško naujų pamokų idėjų pagal programos spragas | 1–3 pasiūlymai |
 | `metodininkas` | kasdien 08:20 | projektuoja mokymo metodą ir simuliacijos scenarijų | metodo pasiūlymas |
-| `kurejas` | kasdien 09:00 | kuria modulį pagal patvirtintą metodą | PR |
+| `kurejas` | kasdien 3 langai (09:00, 10:20, 20:50) | kuria modulius iš eilės pagal programos spragas | PR |
 | `simuliaciju-inzinierius` | kasdien 11:00 | kuria ir tobulina simuliacijas | PR |
 | `dizaineris` | II, IV, VI 12:30 | tobulina struktūrą (`path.json`) ir sąsają | PR + pilotas |
 | `kritikas` | kasdien 14:00 | nepriklausoma kritika: pedagogika, UX, teiginiai, gairės | kritikos įrašai, blokavimai |
@@ -90,7 +90,7 @@ Agentai gyvena `agents/` kataloge ir paleidžiami `systemd --user` timeriais per
 | `leidejas` | kasdien 16:30 | sujungia patikrintus PR, atnaujina changelog | sujungti PR |
 | `sveikatos-inspektorius` | ketvirtadienis 06:50 | tikrina gyvą svetainę ir našumą | ataskaita, issue |
 | `kuratorius` | sekmadienis 18:00 | savaitės suvestinė ir prioritetai | suvestinė |
-| `kalbu-redaktorius` | II, V 13:10 (Gemini 4 Hydrogen; atsarginis DeepSeek 4.1 Flash) | tikrina užduočių formuluotes: vienareikšmiškumas, žodžių ir sakinio ilgis | PR |
+| `kalbu-redaktorius` | II, V 13:10 | tikrina užduočių formuluotes: vienareikšmiškumas, žodžių ir sakinio ilgis | PR |
 | `sistemos-architektas` | kasdien 20:20 | matuoja agentų darbą, taiso sistemines problemas, keičia grafikus ir promptus | PR, ataskaita |
 | `publikavimo-agentas` | kasdien 5 kartus (06:20, 11:40, 16:00, 19:30, 23:00) | užtikrina, kad sukurtas turinys būtų paskelbtas ir neprarastų ankstesnių modulių | publikavimas |
 

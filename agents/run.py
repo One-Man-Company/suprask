@@ -2040,14 +2040,47 @@ def main() -> int:
 
     except subprocess.TimeoutExpired:
         elapsed = int((dt.datetime.now() - started).total_seconds())
+        # Laikas baigėsi, BET darbas gali būti padarytas. 2026-11-22 #447
+        # parašė visą modulį (`10-garsine-sandara.json` + index + path + 136 s
+        # garso), o po 3600 s ši šaka įrašė tik „Baigėsi laikas" — darbas liko
+        # darbinėje kopijoje, o kitas paleidimas jį sušlavė į `[sistema]`
+        # commit'ą. Modulis atsirado, bet be autorystės, be validacijos ir su
+        # `blocked` pasiūlymu. Todėl laiko limitas PIRMIAU publikuoja tai, kas
+        # jau paruošta, o tik paskui skelbia timeout.
+        published = ""
+        files = changed_files(before) if "before" in dir() else []
+        try:
+            watch.stop()
+            foreign = watch.roles()
+            files, foreign_files, notes = publication_plan(files, args.role, foreign)
+            if work_files(files):
+                result = publish(args.role, run_id, files, "laiko limitas — publikuojamas jau paruoštas darbas",
+                                 implemented_id=int(proposal["id"]) if proposal else None,
+                                 foreign_roles=foreign, notes=notes)
+                published = f" Laikas baigėsi, bet darbas paskelbtas: {result['detail']}"
+                db.finish_run(run_id, result["status"], 124, elapsed, str(log_path.relative_to(ROOT)),
+                              "Laiko limitas; paruoštas darbas paskelbtas.",
+                              commit_sha=result["sha"], validation=result["validation"],
+                              detail=f"Laikas ({timeout}s). {result['detail']}")
+                log_path.write_text(
+                    f"# {args.role} — {stamp}\n\n- paleidimas: #{run_id}\n"
+                    f"- Baigėsi laikas ({timeout}s), bet darbas paskelbtas: {result['detail']}\n",
+                    encoding="utf-8")
+                update_state(args.role, cfg, result["status"], log_path)
+                print(f"{args.role} #{run_id}: {result['status']} (timeout, bet paskelbta) "
+                      f"— {result['detail']}" + (f", commit {result['sha'][:7]}" if result["sha"] else ""))
+                return 0 if result["status"] == "published" else 124
+        except Exception as exc:  # noqa: BLE001 — publikavimas neturi maskuoti timeout
+            published = f" (publikavimas po timeout nepavyko: {exc})"
+            print(f"{args.role}: publikavimas po timeout nepavyko — {exc}")
         log_path.write_text(
-            f"# {args.role} — {stamp}\n\n- paleidimas: #{run_id}\n- Baigėsi laikas ({timeout}s).\n",
+            f"# {args.role} — {stamp}\n\n- paleidimas: #{run_id}\n- Baigėsi laikas ({timeout}s).{published}\n",
             encoding="utf-8",
         )
         db.finish_run(run_id, "timeout", 124, elapsed, str(log_path.relative_to(ROOT)),
-                      f"Baigėsi laikas ({timeout}s).", detail=f"Baigėsi laikas ({timeout}s).")
+                      f"Baigėsi laikas ({timeout}s).", detail=f"Baigėsi laikas ({timeout}s).{published}")
         update_state(args.role, cfg, "timeout", log_path)
-        print(f"{args.role} #{run_id}: timeout")
+        print(f"{args.role} #{run_id}: timeout{published}")
         return 124
     finally:
         watch.stop()

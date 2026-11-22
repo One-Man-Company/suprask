@@ -252,9 +252,31 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
     atskirą eilutę (būsena be savo šakos būtų LL-129).
   Išmatuota 2026-11-22: 1 486/1 486 priekis = `sha(manifesto raktas)[:16]`,
   `text_mismatch` 0, `mismatch` 0, `absent` 0, 0,2 s (vietinis skaitymas).
-  Neigiama kontrolė (`scratch/pub433/probe.py`): manifeste pakeistas vienas
-  raktas → `text_mismatch` 1, `verdict` „1 garso failo vardas rodo kitą TEKSTĄ“,
-  rc 1; atkūrus — vėl 0 ir rc 0.
+  Neigiamos kontrolės #433 bėgimas **nepaleido**: docstring'e buvo nuoroda į
+  `scratch/pub433/probe.py`, kurio nebuvo nė repo, nė diske (žr. #439 žemiau).
+
+2026-11-22 (paleidimas #439): patikros teiginys pagaliau turi paleidžiamą įrodymą.
+  #433 paliko docstring'e sakinį „Neigiama kontrolė (`scratch/pub433/probe.py`)
+  → `text_mismatch` 1 … rc 1“, kurio **niekas nepaleido** ir kurio failo niekada
+  nebuvo. Tai LL-36 (įrodymas, kurio faile nebeliko) ir LL-21 (teiginys be
+  matavimo), tik atvirkščia tvarka: pirmiau parašytas rezultatas, paskui
+  nepadarytas matavimas. Be to paaiškėjo šaknis: `git log --all -- scratch` →
+  **0 commit'ų**, t. y. visi iki šiol cituoti zondai (`pub368`, `pub370`,
+  `pub386`, `pub388`, `pub404`) gyveno kataloge, kuris į repo nepatenka, tad
+  nė vieno jų pakartoti neįmanoma — dokumente liko tik jų pažadas.
+  Dabar yra `scripts/probe_check_published.py` — **įtrauktas į repo**,
+  paleidžiamas be tinklo (veidrodis statomas laikiname kataloge iš tikrų
+  `assets/audio/lt/` failų, repo neliečiamas):
+    `python3 scripts/probe_check_published.py` → **10/10**, rc 0, 0,3 s.
+  Jis įjungia kiekvieną `audio_name_digest()` būseną atskirai (A sveika
+  būsena → `checked = total`; B pakeistas teksto raktas → `text_mismatch` 1 ir
+  `verdict` „…kitą TEKSTĄ…“; C nukirptas mp3 → `mismatch` 1 ir „…kitą
+  turinį…“; D įrašas be failo → `absent` 1; E atkūrimas → vėl žalia; F tikras
+  manifestas po zondo nepakitęs) ir kiekviename žingsnyje tikrina sumos
+  invariantą `checked + mismatch + text_mismatch + unverified + absent = total`
+  (LL-37). Paleistas ir šio bėgimo fone: `check_published.py` numatytuoju
+  režimu — repo 52 / paskelbta 52, garsas 1 514/1 514, vardo maišas
+  1 514/1 514, svetainės kodas 19 failų, rc 0.
 
 Naudojimas:
     python3 scripts/check_published.py               # žmogui

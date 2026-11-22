@@ -1,0 +1,22 @@
+{
+  "role": "kritikas",
+  "run_id": 440,
+  "created": "2026-11-22T14:10:00+02:00",
+  "type": "kritika",
+  "title": "Masės modulyje sąlyga apie vatą ir vinis, o visi trys variantai bei why — apie konservus, hint — apie rankinę",
+  "body": "Modulio 26 „Masė: vienodo dydžio dėžutės“ antroji užduotis vaikui neįveikiama ne todėl, kad sunki, o todėl, kad sąlyga ir atsakymai kalba apie skirtingus daiktus. Sąlyga: „Dvi vienodos dėžės: viena pilna vatos, kita — vinių. Kuri sunkesnė?“ Variantai: „Ta, kurioje konservai“, „Ta, kurioje tušti indeliai“, „Abi vienodos, nes vienodo dydžio“; teisingas — pirmas, o `why` aiškina „Konservų skardinės sunkesnės už tuščius indelius“. Nei vatų, nei vinių nė viename variante nėra, todėl 6–7 m. vaikas negali susieti savo pasirinkimo su sąlyga: jis turi atpažinti, kad „konservai“ yra tai pat, kas „vinys“, nors tai skirtingi daiktai. `hint` dar toliau: „Dydis nepasako. Pagalvok, kas rankinės viduje.“ — rankinės modulyje nėra nė vienoje vietoje, išskyrus šaltinio citatą. Tai ne ta pati kritika kaip 2026-11-05 „užuomina atskleidžia atsakymą“ ar LL-33 (paaiškinimas pagal pirmą pavyzdį): čia sąlyga buvo perrašyta į dėžes su vata ir vinimis, o variantai, `why` ir `hint` liko iš ankstesnės temos versijos (rankinė, konservai). Pėdsakas matomas: `sources[3]` cituoja vadovėlio užduotį „Rankinės yra vienodo dydžio, tačiau jų masė skirtinga“ (sources/pradinio-bp-rekomendacijos-2024.txt:33801), o `svietimas1` 2 žingsnyje vis dar vardija „rankinės, miltų pakelis, kamuolys“, nors modulyje rankinės nebėra. Taisymas: arba grąžinti sąlygą prie rankinės/konservų (tada atitinka šaltinį ir `why`), arba perrašyti variantus ir `why` pagal vatą ir vinis („Ta, kurioje vinys“) bei `hint` į „Pagalvok, kas dėžutės viduje“, ir suderinti `svietimas1` sakinį. Antras variantas geresnis, nes simuliacija rodo putas ir smėlį — medžiagos, ne konkretūs daiktai.",
+  "target": "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json:79 — sąlyga: „Dvi vienodos dėžės: viena pilna vatos, kita — vinių. Kuri sunkesnė?“",
+    "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json:80-84 — variantai: „Ta, kurioje konservai“, „Ta, kurioje tušti indeliai“, „Abi vienodos, nes vienodo dydžio“ — nė vieno varianto daiktas nėra sąlygoje",
+    "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json:85 — `answer: 0`, t. y. teisingas variantas „Ta, kurioje konservai“",
+    "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json:86 — `hint`: „Dydis nepasako. Pagalvok, kas rankinės viduje.“ — rankinės modulyje nėra",
+    "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json:87 — `why`: „Masę lemia tai, kas viduje. Konservų skardinės sunkesnės už tuščius indelius.“",
+    "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json:129 — šaltinis cituoja būtent rankinės užduotį (sources/pradinio-bp-rekomendacijos-2024.txt:33801–33806), tad tekstas atsiliko nuo sąlygos, o ne nuo šaltinio",
+    "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json:136 — `svietimas1` 2 žingsnis: „…(rankinės, miltų pakelis, kamuolys)…“ — rankinės sąraše, kurio modulis nebedėsto",
+    "content/lt/grade-01/matematika/26-mase-ir-kilogramas.json:26-31 — simuliacija rodo „Putų dėžutė“ / „Smėlio dėžutė“, t. y. medžiagas; sąlygos „vata / vinys“ su modeliu suderinama, o „konservai / tušti indeliai“ — ne",
+    "Vartai to nepagauna: `python3 scripts/validate_content.py --grade 1` → 0 klaidų, 0 įspėjimų; `python3 scripts/check_language.py` → 0 klaidų (52 moduliai, sakinio riba 10 ž.)"
+  ]
+}

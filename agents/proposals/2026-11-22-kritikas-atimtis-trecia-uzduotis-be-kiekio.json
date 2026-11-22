@@ -1,0 +1,21 @@
+{
+  "role": "kritikas",
+  "run_id": 440,
+  "created": "2026-11-22T14:12:00+02:00",
+  "type": "kritika",
+  "title": "Atimties modulio trečioji užduotis prašo skaičiaus, kurio sąlygoje nėra: teisingas atsakymas 13 niekaip neišvedamas",
+  "body": "Modulio 29 „Atimtis per dešimtį: imk iš dešimtuko“ trečia užduotis: „Vaikas atidarė visą dešimtuką, o dėmių neatėmė. Kiek dėmių dabar?“ Variantai 10, 3 ir 13, teisingas — 13. Bet sąlyga nepasako, kiek dėmių iš viso buvo: „13“ gaunasi tik žinant, kad dešimtuke dešimt, o šalia dar trys, ir šis skaičius modulio užduotyse nepasakytas nė karto — pirmoji užduotis ima 10 + 2 (12), antroji — 10 + 4 (14), ketvirtoji — 10 + 6 (16). Simuliacijos konfigūracijoje `whole` yra 13, bet vaikas, spręsdamas užduotį, simuliacijos nematо ir iš sąlygos 13 išvesti negali. `hint` („Atidarymas dėmių neprideda ir neatima“) kiekio taip pat neįvardija. Vaikas, pasirinkęs „10“, samprotauja teisingai pagal sąlygą — dešimtukas ir yra dešimt dėmių — ir lieka neteisingas. Tai LL-01 (trūkstamas kiekis užduoties sąlygoje) atvejis, kuris praslydo todėl, kad skaičius yra kitoje modulio dalyje (`sim.config.whole`), o ne užduotyje: validatorius tikrina `hint`/`why` buvimą ir atsakymų pasiskirstymą, ne ar atsakymas išvedamas iš sąlygos. Taisymas: sąlygą papildyti kiekiu („Dešimtuke dešimt dėmių, šalia trys. Vaikas atidarė visą dešimtuką, o dėmių neatėmė. Kiek dėmių dabar?“) arba užduotį perkelti į praplėtimą ir formuluoti kaip „Kiek dėmių lieka, jei nieko neatimi?“ su variantais, kurie nereikalauja neįvardyto skaičiaus.",
+  "target": "content/lt/grade-01/matematika/29-atimtis-per-desimti.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/29-atimtis-per-desimti.json:57 — sąlyga: „Vaikas atidarė visą dešimtuką, o dėmių neatėmė. Kiek dėmių dabar?“ — pradinio kiekio nėra",
+    "content/lt/grade-01/matematika/29-atimtis-per-desimti.json:58 — variantai: „10“, „3“, „13“ — visi trys išvedami iš sąlygos, todėl vaikas neturi kuo atskirti",
+    "content/lt/grade-01/matematika/29-atimtis-per-desimti.json:59-61 — `answer: 2` (t. y. 13), `hint`: „Atidarymas dėmių neprideda ir neatima“, `why`: „…Kai nieko neatimi, lieka trylika“ — trylika sąlygoje neįvardyta",
+    "content/lt/grade-01/matematika/29-atimtis-per-desimti.json:43 — pirmoji užduotis naudoja 10 + 2 (viso 12)",
+    "content/lt/grade-01/matematika/29-atimtis-per-desimti.json:50 — antroji užduotis naudoja 10 + 4 (viso 14)",
+    "content/lt/grade-01/matematika/29-atimtis-per-desimti.json:64 — ketvirtoji užduotis naudoja 16; trečioji yra vienintelė, kurios kiekis neįvardytas nei jos sąlygoje, nei kitose užduotyse",
+    "content/lt/grade-01/matematika/29-atimtis-per-desimti.json:27-29 — skaičius 13 yra tik `sim.config.whole`, t. y. kitoje modulio dalyje, kurios užduoties metu vaikas nemato",
+    "Vartai to nepagauna: `validate_content.py --grade 1` → 0 klaidų, 0 įspėjimų; `check_language.py` → 0 klaidų"
+  ]
+}

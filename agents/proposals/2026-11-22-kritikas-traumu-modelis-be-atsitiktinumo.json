@@ -1,0 +1,21 @@
+{
+  "role": "kritikas",
+  "run_id": 440,
+  "created": "2026-11-22T14:14:00+02:00",
+  "type": "kritika",
+  "title": "Traumų modulio mokytojo blokas žada atsitiktinumą, kurio modelis neturi: tas pats daiktas kelyje visada baigiasi kritimu",
+  "body": "Modulyje 25 „Trauma turi priežastį“ mokytojui skirtos klaidingų nuostatų pastraipos (teacher.misconceptions) teigia du dalykus, kurių simuliacija neparodo ir negali parodyti. Pirma: „Modelyje tas pats ėjimas du kartus baigiasi skirtingai, nors vaikas ir vieta tie patys — skyrėsi tik daiktas kelyje.“ Antra: „Ne: kritimas yra tikimybė, o modelis rodo, kas ją padidina.“ Simuliacijos kodas neturi jokio atsitiktinumo: `outcomeOf(key) = key === \"nieko\" ? \"safe\" : \"fall\"` (pasaulis.js:4161), `Math.random` šiame faile nėra nė vieno, o to paties komponento komentaras (pasaulis.js:4103–4104) pats sako „kritimas yra tikimybė, o ne garantija“ — bet kodas būtent garantuoja kritimą kiekvienam daiktui. Todėl mokytojas, perskaitęs pastraipą ir du kartus paleidęs „šlapios grindys“, pamatys du vienodus kritimus, o ne skirtingus rezultatus, ir neteks pasitikėjimo moduliu; vaikui taip pat nepaaiškinama, kodėl gyvenime tas pats ėjimas kartais baigiasi saugiai. Tai ne LL-28 (modelyje nėra prieštaraujančio pavyzdžio — kontrolinė kortelė „nieko“ yra ir veikia) ir ne LL-33: čia mokytojo tekstas aprašo modelio elgseną, kurios implementacijoje nėra. Taisymas dvipusis: arba modelis tikrai tampa tikimybinis (kiekvienam daiktui nustatytas kritimo dažnis, pvz. šlapios grindys 3 iš 4 ėjimų, ir lentelė rodo bandymų rezultatus), arba mokytojo tekstas persakomas pagal deterministinį modelį: „Modelyje tas pats ėjimas su tuo pačiu daiktu kelyje visada baigiasi vienodai; kitoks rezultatas atsiranda tik pakeitus daiktą.“ Antras variantas pigesnis, bet tada reikia ir simuliacijos komentaro bei `teacher.goal` sakinio „Modelyje kritimas yra tikimybė, o ne garantija“ suderinimo, kitaip ta pati netiesa lieka kitame lauke.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/25-traumu-prevencija.json",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/25-traumu-prevencija.json:130 — „Modelyje tas pats ėjimas du kartus baigiasi skirtingai, nors vaikas ir vieta tie patys — skyrėsi tik daiktas kelyje.“",
+    "content/lt/grade-01/pasaulio-pazinimas/25-traumu-prevencija.json:135 — „Ne: kritimas yra tikimybė, o modelis rodo, kas ją padidina.“",
+    "content/lt/grade-01/pasaulio-pazinimas/25-traumu-prevencija.json:126 — `teacher.goal`: „Modelyje kritimas yra tikimybė, o ne garantija“",
+    "assets/js/sims/pasaulis.js:4161 — `const outcomeOf = (key) => (key === \"nieko\" ? \"safe\" : \"fall\");` — rezultatas priklauso tik nuo rakto, atsitiktinumo nėra",
+    "assets/js/sims/pasaulis.js:4376 — `const outcome = outcomeOf(c.key);` — kiekvienas ėjimas ima tą patį, nuo bandymų skaičiaus nepriklausantį rezultatą",
+    "assets/js/sims/pasaulis.js:4103-4104 — komentaras teigia tą patį, ko kodas nedaro: „kritimas yra tikimybė, o ne garantija“",
+    "assets/js/sims/pasaulis.js — `Math.random` šiame faile: 0 atvejų (patikrinta paieška)",
+    "Vartai to nepagauna: `validate_content.py --grade 1` → 0 klaidų, 0 įspėjimų; `check_language.py` → 0 klaidų"
+  ]
+}

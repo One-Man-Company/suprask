@@ -4081,6 +4081,387 @@ const ledoFormos = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 13. Traumos priežastis — pašalink priežastį, įvykis nebeįvyksta      */
+/* ------------------------------------------------------------------ */
+/* Programa 26.1.1 „Saugus elgesys“ (1 kl., 3 val.) turi projektą „Kaip
+   išvengti traumų?“ (`sources/pradinio-bp-rekomendacijos-2024.txt:14960–14966`,
+   ilgalaikis planas `:17618–17626`). Platformoje 26.1.1 teturėjo dūmų kelią
+   (`19-dumai-ir-isejimas`), o traumos priežasties nebuvo nė viename modulyje.
+   Klaidingos nuostatos, kurias modelis griauja:
+     1. „trauma atsitinka be priežasties, tiesiog nepasisekė“;
+     2. „užteks būti atsargesniam, ir daiktas kelyje nebekliudys“;
+     3. „kaltas vaikas, o ne vieta“.
+   Todėl scenoje kinta VIENAS dalykas — kas yra kelyje. Vaikas, ėjimas ir
+   vieta nesikeičia niekada, todėl priežastį galima priskirti vietai, o ne
+   vaikui, ir palyginti ėjimą su priežastimi ir be jos.
+   Pasekmė IŠVEDAMA iš to paties rakto, kurį vaikas pasirinko kortele, o ne
+   įrašyta `config.causes[]` lauke:
+     outcome(key) = key === "nieko" ? "safe" : "fall".
+   Jei konfigūracijoje trūksta rakto ar užrašo, komponentas sako žodžiais
+   („Vieta nesuderinta.“) ir rašo console.error — tyliai nepraleidžia (LL-33).
+   Ribos: kritimas yra tikimybė, o ne garantija (todėl paaiškinimas sako
+   „gali kliudyti“, o ne „nukris“), figūrėlė niekada nesužeidžiama ir
+   neverda, o sąraše yra kontrolinė kortelė „nieko“ — be jos modelis
+   neturėtų nė vieno prieštaraujančio pavyzdžio (LL-28).
+   Tariniai tekstai yra `config.sentences` (juos renka
+   `scripts/generate_audio.py`), o mygtukų užrašai — `config.labels`:
+   mygtukų balsas netariamas, todėl jiems įrašų nereikia. */
+const TP_X0 = 44;        // vaiko pradžia
+const TP_XSTOP = 134;    // sustojimas prie kliūties (kliūtis prasideda 136)
+const TP_XEND = 272;     // saugaus ėjimo pabaiga
+const TP_FLOOR = 252;    // grindų viršus
+const TP_KID = 0.9;
+const TP_OBJ_X = 176;    // kliūties zonos centras (136–216)
+
+const traumosPriezastis = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const place = typeof config.place === "string" ? config.place.trim() : "";
+    const causes = Array.isArray(config.causes) ? config.causes.filter(Boolean) : [];
+
+    const esc = (t) => String(t).replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai ------------------------------------------- */
+    const problems = [];
+    if (!place) problems.push("nėra vietos pavadinimo");
+    if (causes.length < 2) problems.push("nėra bent dviejų kortelių");
+    causes.forEach((c) => {
+      if (!c || !c.key || !c.label || !c.short || !c.note) {
+        problems.push(`kortelė „${(c && c.key) || "?"}“ be key/label/short/note`);
+      }
+    });
+    if (!causes.some((c) => c && c.key === "nieko")) {
+      problems.push("nėra kontrolinės kortelės „nieko“ — be jos modelis neturi prieštaraujančio pavyzdžio");
+    }
+    ["guessYes", "guessNo", "walk", "again", "foundTitle", "guessed"].forEach((k) => {
+      if (!L[k]) problems.push(`užrašo „${k}“ nėra`);
+    });
+    ["start", "startNote", "guess", "guessNote", "readyNote", "safe", "fall",
+      "tableNote", "full", "fullNote", "reset"].forEach((k) => {
+      if (!S[k]) problems.push(`sakinio „${k}“ nėra`);
+    });
+    if (problems.length) {
+      console.error(`traumos-priezastis: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="error-box">Vieta nesuderinta.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const state = { causeKey: null, guess: null, walked: null };
+    const rows = new Map();          // raktas -> „safe“ | „fall“ (lentelė)
+    let kidX = TP_X0;
+    let animating = false;
+    let raf = 0;
+    let reported = false;
+
+    const causeOf = (key) => causes.find((c) => c.key === key) || null;
+    const outcomeOf = (key) => (key === "nieko" ? "safe" : "fall");
+
+    stage.innerHTML = `
+      <div style="width:100%;min-width:0;max-width:min(20.5rem,100%);margin:0 auto">
+        <p id="tp-guess-line" style="margin:0 0 .3rem;min-width:0;text-align:center;font-weight:800;
+           font-size:.9rem;line-height:1.2;overflow-wrap:anywhere;color:var(--ink-soft)"></p>
+        <svg id="tp-scene" viewBox="0 0 328 300" width="100%"
+             style="display:block;max-width:328px;height:auto;margin:0 auto"
+             role="img" aria-label="Koridoriaus atkarpa. Kelyje nieko nėra."></svg>
+        <div id="tp-table" style="margin-top:.25rem;min-width:0"></div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.6rem;width:100%;max-width:34rem;margin:0 auto;min-width:0">
+        <div style="min-width:0">
+          <p style="margin:0 0 .3rem;font-weight:800;text-align:center;font-size:.92rem">Kas yra kelyje?</p>
+          <div id="tp-cards" role="group" aria-label="Kas yra kelyje"
+               style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));
+               gap:.4rem;min-width:0"></div>
+        </div>
+        <div style="min-width:0">
+          <p style="margin:0 0 .3rem;font-weight:800;text-align:center;font-size:.92rem">Ar ėjimas baigsis saugiai?</p>
+          <div id="tp-guess" role="group" aria-label="Tavo spėjimas"
+               style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;min-width:0"></div>
+        </div>
+        <div style="display:flex;gap:.45rem;justify-content:center;flex-wrap:wrap;min-width:0">
+          <button class="btn" type="button" id="tp-walk"
+                  style="flex:1 1 9rem;min-width:0;min-height:52px">${esc(L.walk)}</button>
+          <button class="btn ghost" type="button" id="tp-again"
+                  style="flex:0 1 8rem;min-width:0;min-height:52px">${esc(L.again)}</button>
+        </div>
+      </div>`;
+
+    /* Kortelės kuriamos iš `config.causes[]` — jų skaičius ir žodžiai ateina
+       iš turinio, o ne iš kodo (LL-61). */
+    const cardsEl = controls.querySelector("#tp-cards");
+    const guessEl = controls.querySelector("#tp-guess");
+    const walkBtn = controls.querySelector("#tp-walk");
+    const againBtn = controls.querySelector("#tp-again");
+    const svg = stage.querySelector("#tp-scene");
+    const guessLine = stage.querySelector("#tp-guess-line");
+    const tableEl = stage.querySelector("#tp-table");
+
+    cardsEl.innerHTML = causes.map((c) =>
+      `<button type="button" class="btn secondary" data-cause="${esc(c.key)}" aria-pressed="false"
+        style="min-width:0;min-height:56px;height:auto;padding:.35rem .3rem;font-size:.92rem;
+        line-height:1.15;overflow-wrap:anywhere">${esc(c.label)}</button>`).join("");
+
+    guessEl.innerHTML = `
+      <button type="button" class="btn secondary" data-guess="yes" aria-pressed="false"
+        style="min-width:0;min-height:56px;padding:.35rem .25rem;font-size:.95rem">${esc(L.guessYes)}</button>
+      <button type="button" class="btn secondary" data-guess="no" aria-pressed="false"
+        style="min-width:0;min-height:56px;padding:.35rem .25rem;font-size:.95rem">${esc(L.guessNo)}</button>`;
+
+    const cardBtns = Array.from(cardsEl.querySelectorAll("button[data-cause]"));
+    const guessBtns = Array.from(guessEl.querySelectorAll("button[data-guess]"));
+
+    /* --- piešinys ---------------------------------------------------- */
+
+    /* Kliūtis visada toje pačioje zonos vietoje. Tai modelio teiginys, o ne
+       dekoracija: pasikeitusi yra tik kliūtis, o vieta ir ėjimas lieka tie
+       patys. Žodis prie kliūties yra todėl, kad spalva niekada nebūtų
+       vienintelė informacijos nešėja (tamsus ruožas be užrašo nieko nesako). */
+    function objectMarkup(c) {
+      const caption = (text) => `<text x="${TP_OBJ_X}" y="228" text-anchor="middle"
+        font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#3a342b">${esc(text)}</text>`;
+      if (!c) return "";
+      if (c.key === "slapia") {
+        return `${art.river(136, 240, 80, 12, "tp")}${caption(c.short)}`;
+      }
+      if (c.key === "kuprine") {
+        return `${art.block(156, 222, 30, "#d97a45", "", "#8f4a21")}
+          ${art.block(164, 238, 14, "#b85f2f", "", "#8f4a21")}${caption(c.short)}`;
+      }
+      if (c.key === "tamsu") {
+        return `${art.block(136, 236, 80, 16, "#3c4350", "", "#22262e")}${caption(c.short)}`;
+      }
+      return caption(c.short);   // „nieko“ — kelyje tikrai nieko nėra
+    }
+
+    function pathMarkup() {
+      if (!state.walked) return "";
+      if (state.walked.outcome === "safe") {
+        return `<path d="M${TP_X0} 258 H${TP_XEND}" fill="none" stroke="#3a4a5a" stroke-width="3.5"
+              stroke-linecap="round" stroke-dasharray="8 6"/>
+          <path d="M${TP_XEND - 2} 251 L${TP_XEND + 11} 258 L${TP_XEND - 2} 265 Z" fill="#3a4a5a"/>`;
+      }
+      /* Kelias nutrūksta ties kliūtimi: brūkšnys baigiasi, o per jį eina
+         trūkio ženklas. Jis nėra vienintelis informacijos šaltinis —
+         `readout` tą patį sako žodžiu („Kliudė.“). */
+      return `<path d="M${TP_X0} 258 H${TP_XSTOP}" fill="none" stroke="#3a4a5a" stroke-width="3.5"
+            stroke-linecap="round" stroke-dasharray="8 6"/>
+        <path d="M${TP_XSTOP - 5} 250 L${TP_XSTOP + 7} 266 M${TP_XSTOP + 7} 250 L${TP_XSTOP - 5} 266"
+              fill="none" stroke="#b23a2e" stroke-width="3.2" stroke-linecap="round"/>`;
+    }
+
+    function sceneMarkup() {
+      const c = state.causeKey ? causeOf(state.causeKey) : null;
+      const fell = !!state.walked && state.walked.outcome !== "safe";
+      const kid = `<g${fell ? ` transform="rotate(-16 ${kidX} ${TP_FLOOR})"` : ""}>`
+        + `${art.kid(kidX, TP_FLOOR, TP_KID)}</g>`;
+      return `${art.defs("tp")}
+        ${art.plank(10, 268, 308, 16)}
+        ${pathMarkup()}
+        ${objectMarkup(c)}
+        ${kid}`;
+    }
+
+    function sceneLabel() {
+      const c = state.causeKey ? causeOf(state.causeKey) : null;
+      const what = c ? `Kelyje: ${c.short}.` : "Kelyje nieko nėra.";
+      const end = !state.walked ? "Vaikas dar neėjo."
+        : state.walked.outcome === "safe" ? "Ėjimas baigėsi saugiai." : "Ėjimas nutrūko ties kliūtimi.";
+      return `${place}. ${what} ${end}`;
+    }
+
+    function tableMarkup() {
+      const done = causes.filter((c) => rows.has(c.key));
+      const items = done.map((c) => {
+        const word = rows.get(c.key) === "safe" ? S.safe : S.fall;
+        return `<li style="margin:.1rem 0;overflow-wrap:anywhere">`
+          + `<strong>${esc(c.short)}</strong> — ${esc(word)}</li>`;
+      }).join("");
+      return `<p style="margin:.4rem 0 .15rem;font-size:.8rem;font-weight:800;text-align:center;
+          color:var(--ink-soft);overflow-wrap:anywhere">${esc(L.foundTitle)} · ${esc(place)}</p>`
+        + (items ? `<ul style="margin:0;padding-left:1.1rem;font-size:.86rem;line-height:1.3">${items}</ul>` : "");
+    }
+
+    function drawScene() {
+      svg.innerHTML = sceneMarkup();
+    }
+
+    /* --- būsena ------------------------------------------------------ */
+
+    function message() {
+      if (!state.causeKey) return { readout: S.start, note: S.startNote };
+      if (!state.guess) return { readout: S.guess, note: S.guessNote };
+      if (!state.walked) return { readout: S.guess, note: S.readyNote };
+      const c = causeOf(state.causeKey);
+      const word = state.walked.outcome === "safe" ? S.safe : S.fall;
+      const full = rows.size >= causes.length;
+      return {
+        readout: full ? `${word} ${S.full}` : word,
+        note: `${c.note} ${full ? S.fullNote : S.tableNote}`,
+      };
+    }
+
+    function render(focusSel) {
+      drawScene();
+      svg.setAttribute("aria-label", sceneLabel());
+      tableEl.innerHTML = tableMarkup();
+      guessLine.textContent = state.guess
+        ? `${L.guessed}: ${state.guess === "yes" ? L.guessYes : L.guessNo}`
+        : "";
+
+      for (const b of cardBtns) {
+        const on = b.dataset.cause === state.causeKey;
+        const c = causeOf(b.dataset.cause);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "";
+        b.setAttribute("aria-label", `${c.label}. ${rows.has(c.key)
+          ? "Šitą jau bandei, bet gali bandyti dar kartą." : "Pasirink, kas yra kelyje."}`);
+      }
+      for (const b of guessBtns) {
+        const on = state.guess === b.dataset.guess;
+        b.disabled = !state.causeKey || !!state.walked || animating;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "";
+        b.setAttribute("aria-label", state.walked
+          ? "Šis ėjimas jau įrašytas — rinkis kitą daiktą"
+          : state.causeKey ? `Spėk: ${b.textContent}` : "Pirma pasirink, kas yra kelyje");
+      }
+
+      /* LL-32: fokusas niekada nelieka ant išjungto valdiklio. Todėl „Eik“
+         išjungiamas tik tada, kai yra į kur jį perkelti, o `focusSel`
+         nurodo gyvą elementą. */
+      walkBtn.disabled = !state.causeKey || !state.guess || !!state.walked || animating;
+      walkBtn.setAttribute("aria-label", !state.causeKey
+        ? "Pirma pasirink, kas yra kelyje"
+        : !state.guess ? "Pirma spėk, ar ėjimas baigsis saugiai"
+          : state.walked ? "Šitas ėjimas jau įrašytas" : "Eik ir pažiūrėk, kuo baigsis");
+      againBtn.setAttribute("aria-label", "Pradėk iš naujo. Lentelė lieka.");
+
+      const m = message();
+      api.readout(m.readout);
+      api.note(m.note);
+
+      if (focusSel) {
+        const el = controls.querySelector(focusSel);
+        if (el && !el.disabled) el.focus();
+      }
+    }
+
+    /* --- veiksmai ---------------------------------------------------- */
+
+    function chooseCause(key) {
+      if (animating || !causeOf(key)) return;
+      cancelAnimationFrame(raf);
+      state.causeKey = key;
+      state.guess = null;
+      state.walked = null;
+      kidX = TP_X0;
+      api.speak(S.guess, { rate: 0.92 });
+      render("#tp-guess button");
+    }
+
+    function chooseGuess(value) {
+      if (animating || !state.causeKey || state.walked) return;
+      state.guess = value === "yes" ? "yes" : "no";
+      render("#tp-walk");
+    }
+
+    function walk() {
+      if (animating || !state.causeKey || !state.guess || state.walked) return;
+      const c = causeOf(state.causeKey);
+      const outcome = outcomeOf(c.key);
+      const target = outcome === "safe" ? TP_XEND : TP_XSTOP;
+
+      const finish = () => {
+        animating = false;
+        kidX = target;
+        state.walked = { key: c.key, outcome };
+        rows.set(c.key, outcome);
+        /* Sėkmės sąlyga — DABARTINĖ lentelės būsena (visos eilutės), o ne
+           prisiminimas, kad kažkas kadaise buvo įrašyta (LL-17). */
+        if (rows.size >= causes.length && !reported) {
+          reported = true;
+          api.progress({ correct: true });
+        }
+        api.speak(outcome === "safe" ? S.safe : S.fall, { rate: 0.92 });
+        render("#tp-again");
+      };
+
+      const reduce = typeof window.matchMedia === "function"
+        && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduce) {
+        kidX = target;
+        finish();
+        return;
+      }
+
+      /* Judėjimas yra vienas ir tas pats — keičiasi tik tai, kur jis
+         sustoja. Per kadrą keičiamas TIK piešinys: `readout` ir `aria-label`
+         atnaujinami po ėjimo, kad ekrano skaitytuvas nekalbėtų kiekvieno
+         kadro (LL-14). */
+      animating = true;
+      walkBtn.disabled = true;
+      const from = kidX;
+      const t0 = performance.now();
+      const DUR = 700;
+      const step = (now) => {
+        const k = Math.min(1, (now - t0) / DUR);
+        kidX = from + (target - from) * k;
+        drawScene();
+        if (k < 1) { raf = requestAnimationFrame(step); return; }
+        finish();
+      };
+      raf = requestAnimationFrame(step);
+    }
+
+    function reset() {
+      cancelAnimationFrame(raf);
+      animating = false;
+      state.causeKey = null;
+      state.guess = null;
+      state.walked = null;
+      kidX = TP_X0;
+      api.speak(S.reset, { rate: 0.92 });
+      /* Lentelė sąmoningai NEBEtuštinama (LL-16): „Iš naujo“ atstato sceną,
+         o ne ištrina tai, ką vaikas jau sužinojo. */
+      const untried = causes.find((c) => !rows.has(c.key));
+      render(untried ? `button[data-cause="${untried.key}"]` : "button[data-cause]");
+    }
+
+    cardsEl.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-cause]");
+      if (b && !b.disabled) chooseCause(b.dataset.cause);
+    });
+    guessEl.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-guess]");
+      if (b && !b.disabled) chooseGuess(b.dataset.guess);
+    });
+    walkBtn.addEventListener("click", walk);
+    againBtn.addEventListener("click", reset);
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "r" || e.key === "R") { e.preventDefault(); reset(); return; }
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const group = e.target.closest("#tp-cards, #tp-guess");
+      if (!group) return;
+      const btns = [...group.querySelectorAll("button")].filter((b) => !b.disabled);
+      if (btns.length < 2) return;
+      const idx = btns.indexOf(document.activeElement);
+      if (idx < 0) return;
+      e.preventDefault();
+      btns[(idx + (e.key === "ArrowRight" ? 1 : btns.length - 1)) % btns.length].focus();
+    });
+
+    render();
+    return () => { cancelAnimationFrame(raf); animating = false; };
+  },
+};
+
 export const SIMS = {
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,
@@ -4094,4 +4475,5 @@ export const SIMS = {
   "augalu-grupes": augaluGrupes,
   "ismesto-daikto-kelias": ismestoDaiktoKelias,
   "ledo-formos": ledoFormos,
+  "traumos-priezastis": traumosPriezastis,
 };

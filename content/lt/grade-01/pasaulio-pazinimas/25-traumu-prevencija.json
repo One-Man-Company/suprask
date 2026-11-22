@@ -1,0 +1,150 @@
+{
+  "id": "25-traumu-prevencija",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Trauma turi priežastį",
+  "subtitle": "Pašalink priežastį — įvykis nebeįvyksta",
+  "minutes": 9,
+  "outcomes": [
+    "Randu vietą, kur kas nors gali pakenkti.",
+    "Pašalinu priežastį ir matau, kad įvykis nebeįvyksta.",
+    "Paaiškinu, kodėl priežastis yra vietoje, o ne manyje."
+  ],
+  "concept": {
+    "title": "Priežastis yra vietoje",
+    "big_idea": "Kelyje šlapios grindys, kuprinė ar tamsa. Tas pats ėjimas baigiasi kritimu. Kai to daikto nėra, jis baigiasi saugiai.",
+    "steps": [
+      "Pasirink, kas yra kelyje.",
+      "Spėk, ar ėjimas baigsis saugiai.",
+      "Paspausk „Eik“ ir pažiūrėk, kuo baigsis.",
+      "Palygink visus daiktus su „nieko“."
+    ],
+    "example": "Klasėje kuprinė guli prie durų. Kas ją pakelia, tas pašalina priežastį."
+  },
+  "sim": {
+    "component": "traumos-priezastis",
+    "config": {
+      "place": "Koridorius",
+      "causes": [
+        {
+          "key": "slapia",
+          "label": "Šlapios grindys",
+          "short": "šlapios grindys",
+          "note": "Grindys šlapios toje vietoje. Čia gali paslysti."
+        },
+        {
+          "key": "kuprine",
+          "label": "Kuprinė ant grindų",
+          "short": "kuprinė",
+          "note": "Kuprinė guli kelyje. Koja už jos gali užkliūti."
+        },
+        {
+          "key": "tamsu",
+          "label": "Tamsus kampas",
+          "short": "tamsu",
+          "note": "Kampe tamsu. Kliūties nesimato, bet ji ten yra."
+        },
+        {
+          "key": "nieko",
+          "label": "Nieko nėra",
+          "short": "nieko",
+          "note": "Kelyje nieko nėra. Tas pats ėjimas baigiasi saugiai."
+        }
+      ],
+      "labels": {
+        "guessYes": "Taip",
+        "guessNo": "Ne",
+        "walk": "Eik",
+        "again": "Iš naujo",
+        "foundTitle": "Ką radau kelyje",
+        "guessed": "Tavo spėjimas"
+      },
+      "sentences": {
+        "start": "Kas yra kelyje?",
+        "startNote": "Pasirink vieną ir pažiūrėk.",
+        "guess": "Ar šis ėjimas baigsis saugiai?",
+        "guessNote": "Pirma spėk, tada eik.",
+        "readyNote": "Dabar spausk „Eik“.",
+        "safe": "Saugiai.",
+        "fall": "Kliudė.",
+        "tableNote": "Išbandyk ir kitus daiktus.",
+        "full": "Visus daiktus bandei. Viena taisyklė.",
+        "fullNote": "Tas pats vaikas, ta pati vieta.",
+        "reset": "Pradedam iš naujo."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Koridoriuje šlapios grindys. Kas nutiks, kai vaikas bėgs?",
+      "options": [
+        "Nieko, grindys nesvarbu",
+        "Jis gali paslysti ir nukristi",
+        "Jis bėgs greičiau"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk į grindis toje vietoje, kur bėgama.",
+      "why": "Šlapioje vietoje koja slysta, todėl gali nukristi."
+    },
+    {
+      "q": "Ant grindų palikta kuprinė. Kur ją dėti, kad nekliudytų?",
+      "options": [
+        "Apibėgti ją greičiau",
+        "Peršokti per ją",
+        "Pakelti ir padėti ant suolo"
+      ],
+      "answer": 2,
+      "hint": "Priežastis yra ant grindų, o ne ore.",
+      "why": "Daiktas kelyje lieka tol, kol guli ant grindų."
+    },
+    {
+      "q": "Kiemo aikštelėje kampas be šviesos. Kaip pašalinti tamsą?",
+      "options": [
+        "Paprašyti suaugusiojo įjungti šviesą",
+        "Bėgti pro tamsą kuo greičiau",
+        "Eiti pro tamsą lėtai ir atsargiai"
+      ],
+      "answer": 0,
+      "hint": "Tamsa kliūties nepašalina, tik ją paslepia.",
+      "why": "Šviesa parodo kliūtį, o tamsa ją tik paslepia."
+    },
+    {
+      "q": "Kamuolys guli prie sporto salės durų. Kuris veiksmas pašalina priežastį?",
+      "options": [
+        "Apibėgti kamuolį",
+        "Paliesti kamuolį",
+        "Nustumti kamuolį į šalį"
+      ],
+      "answer": 2,
+      "hint": "Priežastis lieka, jei daiktas tebėra kelyje.",
+      "why": "Nustumtas kamuolys nebeguli kelyje, todėl niekas neužkliūva.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kokią priežastį rastum savo klasėje? Pasakyk, ką su ja darytum.",
+  "teacher": {
+    "goal": "Suprasti, kad įvykis turi vietoje esančią priežastį, kurią galima rasti ir pašalinti, todėl „nepasisekė“ nėra paaiškinimas. Modelis keičia vieną dalyką — kas yra kelyje; vaikas, ėjimas ir vieta nesikeičia, todėl priežastis priskiriama vietai, o ne vaikui. Modelyje kritimas yra tikimybė, o ne garantija: figūrėlė nesužeidžiama ir niekada neverda.",
+    "prompt": "Paklausk: „Kas buvo kelyje? Kas pasikeitė, kai daikto nebeliko?“",
+    "offline": "Ant lapo nupieškite mokyklos koridorių tiesia linija. Paprašykite vaiko apibraukti vietą, kur kas nors galėtų pakenkti — mokytojas neįvardija atsakymo ir neklausia, ar vaikas atsargus. Paskui ant tos vietos padėkite daiktą (kuprinę, liniuotę) ir paprašykite vedžioti pirštą tuo pačiu keliu: pirštas sustoja ties daiktu. Nuimkite daiktą ir pakartokite tą patį kelią — pirštas praeina. Pabaigoje paklauskite, kas pasikeitė: vaikas, kelias ar vieta. Suaugusiojo darbas lieka apšvietimas, grindų ir koridoriaus tvarka.",
+    "misconceptions": [
+      "„Trauma atsitinka be priežasties, tiesiog nepasisekė.“ Modelyje tas pats ėjimas du kartus baigiasi skirtingai, nors vaikas ir vieta tie patys — skyrėsi tik daiktas kelyje.",
+      "„Užteks būti atsargesniam, ir daiktas kelyje nebekliudys.“ Kintamasis yra daiktas, o ne atsargumas: kol priežastis yra, ėjimas baigiasi kritimu.",
+      "„Kaltas vaikas, o ne vieta.“ Modelis sako, kas yra kelyje („Grindys šlapios toje vietoje“), o ne „bėgai per greitai“; žodis „kaltas“ nevartojamas nė karto.",
+      "„Kuprinė ant grindų — tik netvarka.“ Kritimas sustoja būtent ties kuprine, o paaiškinimas įvardija daiktą, ne tvarką.",
+      "„Pavojinga vieta yra visada pavojinga.“ Ta pati vieta su tuo pačiu vaiku yra saugi, kai kortelėje pasirenkama „nieko“.",
+      "„Jei gyvenime bėgau šlapiomis grindimis ir nenukritau, modelis melavo.“ Ne: kritimas yra tikimybė, o modelis rodo, kas ją padidina."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Pasaulio pažinimas“, 26.1.1 „Saugus elgesys“ (sources/pradinio-bp-rekomendacijos-2024.txt, 14960–14966 eil.): „Projektas „Kaip išvengti traumų?“ Projekto tikslas: išsiaiškinti, kaip žmogaus kūno dalis galima apsaugoti nuo traumų ir kodėl tai svarbu (skrajutė „Būk atsargus mokyklos koridoriuose, kiemo aikštelėje, sporto salėje“)“. Ten pat, 1 klasės ilgalaikis planas — ta tema 3 val., veiklos „atvejo analizė, situaciniai, vaidybiniai žaidimai“ (17618–17626 eil.).",
+    "Schwebel, D. C. (2019). Why “accidents” are not accidental: Using psychological science to understand and prevent unintentional child injuries. American Psychologist, 74(9), 1137–1147. https://doi.org/10.1037/amp0000487",
+    "Zhuravlev, P., Mueller, C., & St. Vil, D. (2024). Just my luck: How children’s causal attributions contribute to injury prevention. European Journal of Trauma and Emergency Surgery, 50, 3095–3098. https://doi.org/10.1007/s00068-023-02425-3",
+    "Hillier, L. M., & Morrongiello, B. A. (1998). Age and gender differences in school-age children’s appraisals of injury risk. Journal of Pediatric Psychology, 23(4), 229–238. https://doi.org/10.1093/jpepsy/23.4.229"
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena sąvoka: priežastis yra vietoje ir ją galima pašalinti; modelis turi vieną kintamąjį (kas yra kelyje) ir keturias korteles, o ne saugaus elgesio taisyklių sąrašą.",
+    "2 žingsnis — vertinamas perkėlimas: tos pačios sąvokos klausiama apie paliktą kuprinę, tamsų kiemo kampą ir kamuolį prie sporto salės durų, o ne apie modulio sakinį.",
+    "3 žingsnis — pagalba laiku: veiksmas prieš paaiškinimą, kiekviena klaida turi užuominą, kuri nukreipia į priežastį vietoje; nėra laikmačio, o ketvirta užduotis — praplėtimas.",
+    "P2 / T3.1 / T3.4 / T5.1 / T5.5: vaikas pirma spėja, tada eina ir palygina; grįžtamasis ryšys sako, kas kelyje, o ne koks vaikas; yra praplėtimas; 48 px taikiniai, būsena pasakoma žodžiu, ne vien spalva."
+  ]
+}

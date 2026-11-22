@@ -67,7 +67,8 @@
         { "id": "21-kas-sukure-dailka", "title": "Kas sukūrė šį daiktą: kelias iki gamtos", "subtitle": "Popierius prasideda miške, o stiklinė — smėlyje", "file": "grade-01/pasaulio-pazinimas/21-kas-sukure-dailka.json", "minutes": 9, "sim": "daikto-grandine" },
         { "id": "22-medziai-krumai-zoles", "title": "Medžiai, krūmai, žolės: grupę rodo stiebas", "subtitle": "Aukštis klaidina: grupę pasako stiebas", "file": "grade-01/pasaulio-pazinimas/22-medziai-krumai-zoles.json", "minutes": 9, "sim": "augalu-grupes" },
         { "id": "23-ismestas-daiktas-nedingsta", "title": "Išmestas daiktas nedingsta", "subtitle": "Jis atsiduria krūvoje, kuri auga prieš akis", "file": "grade-01/pasaulio-pazinimas/23-ismestas-daiktas-nedingsta.json", "minutes": 9, "sim": "ismesto-daikto-kelias" },
-        { "id": "24-kieta-vandens-forma", "title": "Vienas vanduo, trys formos", "subtitle": "Ledas, snaigė ir šerkšnas — tas pats vanduo", "file": "grade-01/pasaulio-pazinimas/24-kieta-vandens-forma.json", "minutes": 9, "sim": "ledo-formos" }
+        { "id": "24-kieta-vandens-forma", "title": "Vienas vanduo, trys formos", "subtitle": "Ledas, snaigė ir šerkšnas — tas pats vanduo", "file": "grade-01/pasaulio-pazinimas/24-kieta-vandens-forma.json", "minutes": 9, "sim": "ledo-formos" },
+        { "id": "25-traumu-prevencija", "title": "Trauma turi priežastį", "subtitle": "Pašalink priežastį — įvykis nebeįvyksta", "file": "grade-01/pasaulio-pazinimas/25-traumu-prevencija.json", "minutes": 9, "sim": "traumos-priezastis" }
       ]
     },
     {

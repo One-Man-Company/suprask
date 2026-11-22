@@ -2326,13 +2326,22 @@ const piktogramaIrStulpelis = {
        „Apskritimai“) prie 28,8 px šrifto netilpo į 295 px ir puslapis slinko
        63 px (#4741). Konteineris leidžia etikečių šriftą sieti su TIKRU
        kortelės pločiu (`cqw`), o ne su ekranu. */
+    /* Tarpai ir paminkštinimas — PX, o ne rem (LL-133, LL-135, #32798). Prie
+       200 % teksto (32 px šaknis) `.3rem` tarpai išauga iki 9,6 px, o `.4rem`
+       paminkštinimas — iki 12,8 px; keturi tarpai ir abi paraštės atima
+       25,6 + 38,4 = 64 px iš 301,2 px, ir penki langeliai telpa tik po
+       (301,2 − 4 − 64) / 5 = 46,6 px — mažiau už standarto §4.6 48 px.
+       Riba `min(.3rem, 5px)` / `min(.4rem, 7px)` 16 px šaknyje nieko
+       nekeičia (4,8 ir 6,4 px → langelis 53,0 px), o prie 32 px laiko tarpą
+       5 px, paminkštinimą 7 px ir palieka langeliui 52,6 px. Abi reikšmės
+       matuotos @360 px; `min-height` jau buvo px, todėl jo keisti nereikėjo. */
     stage.innerHTML = `
       <div id="pk-wrap" style="width:100%;max-width:34rem;margin:0 auto;box-sizing:border-box;min-width:0;container-type:inline-size">
         <p class="sim-note" id="pk-lead" style="margin:0 0 .35rem;text-align:center">
           Bakstelėk figūrą. Ji įsiskaito į savo grupę.
         </p>
         <div id="pk-tray" role="group" aria-label="Padėklas su figūromis"
-             style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.3rem;padding:.4rem;box-sizing:border-box;border:2px dashed var(--line);border-radius:var(--r-m);background:var(--paper-2)"></div>
+             style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:min(.3rem,5px);padding:min(.4rem,7px);box-sizing:border-box;border:2px dashed var(--line);border-radius:var(--r-m);background:var(--paper-2)"></div>
 
         <div style="margin-top:.5rem">
           <div id="pk-plot" role="img" aria-label="Stulpelinė diagrama"

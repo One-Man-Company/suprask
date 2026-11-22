@@ -1088,4 +1088,101 @@ export const art = {
       <circle cx="${f(cx)}" cy="${f(pivotY)}" r="6" fill="#4f5c68"/>
     </g>`;
   },
+
+  /* ------------------------------------------------------------------ */
+  /* Tekstilė (1 klasės technologijos)                                  */
+  /*                                                                    */
+  /* Kodėl atskiri metodai: skalbimo pamokoje vaikas turi atpažinti      */
+  /* KETURIAS skirtingas drabužių rūšis ir jų spalvą be smulkių užrašų   */
+  /* (LL-06). Todėl marškiniai, kojinė, suknelė ir kelnės skiriasi       */
+  /* FORMA, o ne vien spalva: balti marškiniai ir baltos kojinės tame     */
+  /* pačiame paveiksle turi būti atskiriami iš karto (LL-13). Spalva      */
+  /* ateina iš parametro, nes po skalbimo ji kinta — būtent tai ir yra    */
+  /* pamokos įrodymas.                                                   */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Drabužio siluetas 64 × 64 lauke.
+   * `kind`: marskiniai | kojine | suknele | kelnes.
+   * `x, y` — kairys viršutinis lauko kampas, `s` — mastelis, `color` — audinio spalva.
+   */
+  garment(kind, x, y, s = 1, color = "#eef2f5") {
+    const toRgb = (c) => {
+      const t = String(c).replace("#", "");
+      const v = t.length === 3 ? t.split("").map((ch) => ch + ch).join("") : t;
+      return [0, 2, 4].map((i) => parseInt(v.slice(i, i + 2), 16));
+    };
+    const toward = (target, k) => "#" + toRgb(color)
+      .map((v, i) => Math.round(v + (target[i] - v) * k).toString(16).padStart(2, "0")).join("");
+    const dark = toward([26, 34, 42], 0.36);
+    const light = toward([255, 255, 255], 0.5);
+    const stroke = `stroke="${dark}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"`;
+    const shine = `<path d="M21 30 V50" stroke="${light}" stroke-width="3.2" opacity=".55" stroke-linecap="round"/>`;
+
+    let body = "";
+    if (kind === "kojine") {
+      body = `<path d="M22 8 H42 V33 C42 39 46 42 51 45 C57 48 57 55 49 56 H39 C31 56 26 50 23 43 Z"
+                 fill="${color}" ${stroke}/>
+        <rect x="22" y="8" width="20" height="8" fill="${dark}" opacity=".28"/>
+        <g stroke="${dark}" stroke-opacity=".4" stroke-width="1.2">
+          <line x1="26" y1="10" x2="26" y2="14"/><line x1="31" y1="10" x2="31" y2="14"/>
+          <line x1="36" y1="10" x2="36" y2="14"/><line x1="41" y1="10" x2="41" y2="14"/>
+        </g>
+        <path d="M23 43 C26 50 31 56 39 56" stroke="${light}" stroke-width="2.2" fill="none" opacity=".5"/>`;
+    } else if (kind === "suknele") {
+      body = `<path d="M27 8 L19 12 L11 22 L18 30 L23 25 V30 L11 55 Q32 61 53 55 L41 30 V25 L46 30 L53 22 L45 12 L37 8 Q32 14 27 8 Z"
+                 fill="${color}" ${stroke}/>
+        <path d="M24 30 Q32 33 40 30" stroke="${dark}" stroke-width="2" fill="none" opacity=".5"/>
+        <path d="M25 10 Q32 16 39 10" stroke="${dark}" stroke-width="2" fill="none"/>
+        ${shine}`;
+    } else if (kind === "kelnes") {
+      body = `<path d="M18 8 H46 L49 56 H37 L32 34 L27 56 H15 Z" fill="${color}" ${stroke}/>
+        <path d="M18 15 H46" stroke="${dark}" stroke-width="2.2" opacity=".55"/>
+        <path d="M32 15 V30" stroke="${dark}" stroke-width="1.6" opacity=".35"/>
+        ${shine}`;
+    } else {
+      /* marškiniai: trumpomis rankovėmis, tiesiu apačios kraštu */
+      body = `<path d="M25 9 L17 13 L7 24 L15 32 L21 27 V54 Q32 58 43 54 V27 L49 32 L57 24 L47 13 L39 9 Q32 16 25 9 Z"
+                 fill="${color}" ${stroke}/>
+        <path d="M25 9 Q32 17 39 9" stroke="${dark}" stroke-width="2.2" fill="none"/>
+        ${shine}`;
+    }
+    return `<g transform="translate(${x} ${y}) scale(${s})">${body}</g>`;
+  },
+
+  /**
+   * Pinta pintinė su lūpomis ir vytelių raštu. `x` — kairys kraštas,
+   * `baseY` — dugnas, `w` — plotis (viršuje), `h` — aukštis.
+   * Vytelės yra įstrižos ir horizontalios, todėl pintinė neatrodys kaip
+   * plokščias dubuo (LL-13), o atviras viršus leidžia matyti, kas viduje.
+   */
+  basket(x, baseY, w, h, color = "#d9b787") {
+    const f = (v) => v.toFixed(1);
+    const dark = "#8a6239";
+    const top = baseY - h;
+    const inset = w * 0.06;
+    const step = (w - 2 * inset) / 8;
+    const slants = Array.from({ length: 9 }, (_, i) => {
+      const sx = x + inset + i * step;
+      return `<line x1="${f(sx)}" y1="${f(top + 8)}" x2="${f(sx - 7)}" y2="${f(baseY - 8)}"
+                    stroke="${dark}" stroke-opacity=".3" stroke-width="1.6"/>`;
+    }).join("");
+    const bands = [0.3, 0.55, 0.8].map((t) => {
+      const by = top + h * t;
+      return `<path d="M${f(x + inset + 1)} ${f(by)} Q ${f(x + w / 2)} ${f(by + h * 0.09)} ${f(x + w - inset - 1)} ${f(by)}"
+                    stroke="${dark}" stroke-opacity=".34" stroke-width="1.8" fill="none"/>`;
+    }).join("");
+    return `<g>
+      <ellipse cx="${f(x + w / 2)}" cy="${f(baseY + 4)}" rx="${f(w * 0.46)}" ry="6"
+               fill="${dark}" opacity=".18"/>
+      <path d="M${f(x + inset)} ${f(top)} H${f(x + w - inset)} L${f(x + w - inset - 6)} ${f(baseY)}
+               H${f(x + inset + 6)} Z" fill="${color}" stroke="${dark}" stroke-width="2.4"
+            stroke-linejoin="round"/>
+      ${slants}${bands}
+      <rect x="${f(x - 2)}" y="${f(top - 8)}" width="${f(w + 4)}" height="14" rx="7"
+            fill="${color}" stroke="${dark}" stroke-width="2.6"/>
+      <rect x="${f(x + 6)}" y="${f(top - 5.5)}" width="${f(w - 12)}" height="4" rx="2"
+            fill="#ffffff" opacity=".35"/>
+    </g>`;
+  },
 };

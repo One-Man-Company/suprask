@@ -11,14 +11,13 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **58**
-- Padengta / iš dalies / nėra: **34 / 7 / 6**
+- Modulių dabar: **59**
+- Padengta / iš dalies / nėra: **35 / 7 / 5**
 
 ## Ko dar nėra (prioritetas)
 
 | Būsena | Tema | Kodas | Rezultatas | Šaltinis |
 |---|---|---|---|---|
-| missing | Drabužių priežiūra | D:drabuziu-prieziura | „1 klasė. Drabužių, avalynės priežiūra“ | `1-klases-temų-žemėlapis.md:76` |
 | missing | Elektronika | D:elektronika | 23.4.1: elektros srovė, šaltiniai, jungiklis, saugus elgesys | `1-klases-temų-žemėlapis.md:74` |
 | missing | Emocijų žodynas | D:emociju-zodynas | „Atpažįsta, įvardija ir valdo emocijas, elgesį“ | `1-klases-temų-žemėlapis.md:78` |
 | missing | Funkciniai judesiai | D:funkciniai-judesiai | „Susipažinimas su mokinių turimais ir trūkstamais judėjimo gebėjimais“; „abi kūno pusės tolygiai“ | `1-klases-temų-žemėlapis.md:77` |
@@ -57,6 +56,7 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Judėjimas | 26.4.1 | tyrimas „Daiktų judėjimo greičio tyrimas“; nuožulnioji plokštuma (:1557–1565, :8483–8484) | `pasaulio-pazinimas-1-klase.md:93` |
 | covered | Stebėjimas | C:stebejimas | „Savais žodžiais papasakoti apie… užfiksuotus gamtos objektus“ („Rudens požymiai mokyklos kieme“) | `1-klases-temų-žemėlapis.md:63` |
 | covered | Vandens būsenos | 26.3.2 | „Ledo papuošalo gamyba“; kietosios būsenos formos (:1547–1552, :8472–8474) | `pasaulio-pazinimas-1-klase.md:92` |
+| covered | Drabužių priežiūra | D:drabuziu-prieziura | „1 klasė. Drabužių, avalynės priežiūra“ | `1-klases-temų-žemėlapis.md:76` |
 | covered | Erdvinės raidės | D:erdvines-raides | 1 kl. pavyzdys „Dekoruotos ir erdvinės raidės“ (erdvinė raiška, kompozicija) | `1-klases-temų-žemėlapis.md:71` |
 | covered | Garso savybės | D:garso-savybes | „Eksperimentavimas garsais leidžia pažinti keturias garso savybes: trukmę…“ | `1-klases-temų-žemėlapis.md:72` |
 | covered | Komandų seka | D:komandu-seka | „Sudaro ir vykdo komandų sekas, naudojasi žaidybinėmis programavimo priemonėmis“ (B3.3) | `1-klases-temų-žemėlapis.md:79` |

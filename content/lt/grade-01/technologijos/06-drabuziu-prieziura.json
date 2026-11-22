@@ -1,0 +1,106 @@
+{
+  "id": "06-drabuziu-prieziura",
+  "grade": 1,
+  "strand": "technologijos",
+  "title": "Balti skalbsis atskirai nuo spalvotų",
+  "subtitle": "Kodėl balti marškiniai parausta, kai skalbi juos su raudona suknele",
+  "minutes": 9,
+  "outcomes": [
+    "Skirstau drabužius į baltus ir spalvotus prieš skalbimą.",
+    "Paaiškinu, kodėl baltas audinys nusidažo, kai skalbiu jį su spalvotu."
+  ],
+  "concept": {
+    "title": "Dažai pereina į vandenį",
+    "big_idea": "Skalbiant spalvotas audinys atiduoda dalį dažų į vandenį. Šviesus audinys tuos dažus sugeria ir nusidažo. Todėl balti drabužiai skalbsis atskirai nuo spalvotų.",
+    "steps": [
+      "Sudėk drabužius: baltus į vieną pintinę, spalvotus į kitą.",
+      "Spausk „Skalbti“ ir pažiūrėk, kas atsitiko drabužiams.",
+      "Jei balti nusidažė, paskirstyk kitaip ir skalpk iš naujo."
+    ],
+    "example": "Namuose balti marškinėliai skalbsis atskirai nuo raudonos suknelės."
+  },
+  "sim": {
+    "component": "drabuziu-prieziura",
+    "config": {
+      "sentences": {
+        "pradzia": "Keturi drabužiai. Du balti, du spalvoti.",
+        "pasirinkta": "Pasirinkai drabužį. Dabar pasirink pintinę.",
+        "sudeta": "Visi drabužiai pintinėse. Spausk „Skalbti“.",
+        "nepilna": "Dar ne visi drabužiai pintinėse.",
+        "tvarkinga": "Balti liko balti. Spalvoti liko savo spalvos.",
+        "sumaisyta": "Balti drabužiai paraudo.",
+        "is-naujo": "Pradedam iš naujo. Keturi drabužiai."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Balti marškiniai ir raudona suknelė skalbti kartu. Kaip atrodys marškiniai?",
+      "options": [
+        "Marškiniai liks balti",
+        "Marškiniai taps rausvi",
+        "Suknelė liks sausa"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, kas nutiko vandenyje, kai abu drabužiai buvo kartu.",
+      "why": "Spalvotas audinys atiduoda dažus, o baltas juos sugeria."
+    },
+    {
+      "q": "Močiutė skalbia baltą rankšluostį su tamsiomis kelnėmis. Kaip jai patartum elgtis?",
+      "options": [
+        "Skalbti atskirai",
+        "Skalbti kartu — mašina išskalbs",
+        "Įdėti daugiau muilo"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kas atsitiko baltiems drabužiams bendrame skalbyne.",
+      "why": "Tamsios kelnės atiduotų dažus, todėl baltas rankšluostis nusidažytų."
+    },
+    {
+      "q": "Balti marškiniai išskalbti kartu su mėlynomis kelnėmis. Kas nutiks marškiniams?",
+      "options": [
+        "Liks tokie pat balti",
+        "Taps raudoni",
+        "Įgaus mėlyną atspalvį"
+      ],
+      "answer": 2,
+      "hint": "Spalva iš tamsaus audinio eina į šviesų.",
+      "why": "Mėlyni dažai nuo kelnių pereina ant balto audinio."
+    },
+    {
+      "q": "Raudona suknelė liko raudona. Kodėl baltos kojinės paraudo?",
+      "options": [
+        "Kojinės buvo nešvarios",
+        "Suknelė buvo šlapia",
+        "Dažai išplaukė iš suknelės ir nusėdo ant kojinių"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kur išėjo spalva iš audinio.",
+      "why": "Vanduo nuneša dažus nuo spalvoto audinio. Šviesus audinys juos sugeria.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip paaiškintum draugui, kodėl baltus drabužius reikia skalbti atskirai?",
+  "teacher": {
+    "goal": "Suprasti, kad skalbiant spalvotas audinys atiduoda dažus į vandenį, o baltas juos sugeria, todėl baltus drabužius reikia skalbti atskirai nuo spalvotų. Modelis leidžia vaikui pačiam paskirstyti keturis drabužius, išskalbti ir pamatyti pasekmę, o ne išgirsti taisyklę. Avalynės priežiūra (batų valymas ir džiovinimas) sąmoningai neįtraukta — tai atskiras modulis, o ne šio modelio išvada.",
+    "prompt": "Kodėl balti marškiniai paraudo, nors juos skalbei su raudona suknele tame pačiame vandenyje?",
+    "offline": "Duokite vaikui dvi pintines arba du dubenis ir krūvą drabužių. Tegul vaikas balsu pasako, į kurią krūvą keliauja kiekvienas daiktas, o jūs tik patikrinkite. Bandymas su popieriumi: į stiklinę su vandeniu įdėkite raudonos servetėlės gabalėlį ir baltą nosinaitę — po kelių minučių nosinaitė parausta. Tada tą pačią nosinaitę įdėkite į švarų vandenį atskirai ir palyginkite. Skalbimo metu namie prašykite vaiko rūšiuoti tik baltus ir spalvotus drabužius (ne pagal audinį ir ne pagal temperatūrą) — taip liekama vieno kriterijaus ribose.",
+    "misconceptions": [
+      "„Skalbimo mašina viską išskalbia, todėl spalva nesvarbi.“ Modelis sudeda baltus ir spalvotus į vieną pintinę, o po skalbimo balti drabužiai parausta — mašina nuplauna purvą, bet ne sustabdo dažus.",
+      "„Drabužis keičiasi tik tada, kai jis nešvarus.“ Po skalbimo purvo dėmės dingo abiem atvejais, o spalvos pasikeitė tik ten, kur buvo spalvotas audinys.",
+      "„Mažas spalvotas daiktas baltiems nieko nepadarys.“ Modelio sprendimą lemia tai, ar pintinėje yra spalvotas audinys, o ne jo dydis.",
+      "„Nusidažiusį baltą drabužį reikia skalbti ilgiau.“ Modelio pamoka kita: dažai jau audinyje, todėl padeda ne ilgesnis skalbimas, o rūšiavimas prieš skalbimą."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Technologijos“, 23.2.2 „Drabužių, avalynės priežiūra“: praktiškai išbandomi drabužių tvarkymo būdai ir avalynės bei tekstilės valymas be cheminių priemonių.",
+    "Technologijų bendroji programa (2022), 23.2 „Tekstilė“: drabužių asortimentas pagal paskirtį, audinių struktūra ir priežiūra artimiausioje aplinkoje 1–2 klasėje.",
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), 9 skyrius, C3: „1 klasė. Drabužių, avalynės priežiūra. Praktiškai išbandomi avalynės sutvarkymo būdai“ — avalynė paliekama atskiram moduliui, kad modulyje liktų viena idėja."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (spalvotas audinys atiduoda dažus, baltas juos sugeria). Audinio rūšis, skalbimo temperatūra ir avalynė sąmoningai neįtrauktos.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą į kitą spalvą ir kitą daiktą (mėlynos kelnės, baltas rankšluostis), o ne įsimintą formuluotę.",
+    "3 žingsnis — pagalba laiku: klaida nebaudžiama, modelis parodo, kas atsitiko, ir leidžia paskirstyti kitaip; yra praplėtimo užduotis.",
+    "8 žingsnis — mokytojas lieka mokytoju: veikla be ekrano su dviem pintinėmis ir servetėlės bandymu stiklinėje."
+  ]
+}

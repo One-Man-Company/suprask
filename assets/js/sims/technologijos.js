@@ -1019,8 +1019,365 @@ const lankstymasIrKarpiniai = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Drabužių priežiūra: balti atskirai, spalvoti atskirai              */
+/*                                                                    */
+/* Kodėl toks modelis: 23.2.2 sritis prašo praktiškai išbandyti        */
+/* drabužių priežiūrą, o vaiko sprendimas skalbime yra RŪŠIAVIMAS, ne  */
+/* seka „išskalbk–išdžiovink–išlygink“ (kuri kartotų komandų sekos     */
+/* mechaniką). Klaidinga nuostata — „mašina viską išskalbia, todėl      */
+/* spalva nesvarbi“ — parodoma tiesiogiai: balti marškiniai bendrame   */
+/* skalbyne parausta, nes spalvotas audinys atiduoda dažus.            */
+/* Prieš skalbimą visi drabužiai nešvarūs (matoma dėmė), po skalbimo    */
+/* dėmės dingsta — todėl skalbimas veikia ir tada, kai vaikas sudėjo    */
+/* teisingai, o ne tik tada, kai klydo (LL-15: rezultatas nepametamas). */
+/* Progress žymimas tik pabaigus visą ciklą (visi keturi sudėti ir      */
+/* išskalbti), o ne po pirmo įdėjimo (LL-29).                           */
+/* ------------------------------------------------------------------ */
+
+const DP_STYLE_ID = "cc-drabuziu-style";
+
+const DP_CSS = `
+.dp-scene {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: var(--r-m);
+  background: var(--paper-2);
+}
+.dp-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  justify-content: center;
+  width: 100%;
+}
+.dp-item {
+  flex: 1 1 6.4rem;
+  min-width: 6.1rem;
+  min-height: 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .1rem;
+  padding: .3rem .35rem .45rem;
+  border: 2px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--paper-2);
+  color: var(--ink);
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  cursor: pointer;
+}
+.dp-item svg { width: 46px; height: 46px; }
+.dp-where {
+  font-size: .74rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  line-height: 1.2;
+}
+.dp-item.is-picked {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 34%, transparent);
+}
+.dp-item:focus-visible, .dp-bin:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.dp-bins {
+  display: flex;
+  gap: .5rem;
+  width: 100%;
+}
+.dp-bin {
+  flex: 1 1 0;
+  min-height: 56px;
+  padding: .4rem .5rem;
+  border: 2px dashed var(--line);
+  border-radius: var(--r-s);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.dp-bin:hover { border-style: solid; }
+.dp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  justify-content: center;
+  width: 100%;
+}
+.dp-actions .btn { min-height: 48px; }
+`;
+
+const DP_SAY = {
+  pradzia: "Keturi drabužiai. Du balti, du spalvoti.",
+  pasirinkta: "Pasirinkai drabužį. Dabar pasirink pintinę.",
+  sudeta: "Visi drabužiai pintinėse. Spausk „Skalbti“.",
+  nepilna: "Dar ne visi drabužiai pintinėse.",
+  tvarkinga: "Balti liko balti. Spalvoti liko savo spalvos.",
+  sumaisyta: "Balti drabužiai paraudo.",
+  "is-naujo": "Pradedam iš naujo. Keturi drabužiai.",
+};
+
+const DP_PINK = "#efbccb";
+
+function ensureDpStyle() {
+  if (document.getElementById(DP_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = DP_STYLE_ID;
+  style.textContent = DP_CSS;
+  document.head.appendChild(style);
+}
+
+const drabuziuPrieziura = {
+  mount({ stage, controls, api, config }) {
+    ensureDpStyle();
+
+    const say = config.sentences || {};
+    const line = (key) => say[key] || DP_SAY[key] || "";
+
+    const ITEMS = [
+      { id: "marskiniai", kind: "marskiniai", label: "Balti marškiniai", color: "#f2f1e9", light: true },
+      { id: "kojines", kind: "kojine", label: "Baltos kojinės", color: "#f2f1e9", light: true },
+      { id: "suknele", kind: "suknele", label: "Raudona suknelė", color: "#d9534f", light: false },
+      { id: "kelnes", kind: "kelnes", label: "Mėlynos kelnės", color: "#3f6fb5", light: false },
+    ];
+    const BINS = [
+      { id: "balta", label: "Balti", where: "baltuose" },
+      { id: "spalvota", label: "Spalvoti", where: "spalvotuose" },
+    ];
+
+    let place = {};
+    let picked = null;
+    let washed = false;
+    let reported = false;
+
+    stage.innerHTML = `<svg class="dp-scene" viewBox="0 0 340 320" role="img"
+      aria-label="Drabužiai ant lentynos ir dvi pintinės"></svg>`;
+    controls.innerHTML = `
+      <div class="dp-items" id="dp-items"></div>
+      <div class="dp-bins">
+        <button type="button" class="dp-bin" id="dp-bin-balta">Į baltus</button>
+        <button type="button" class="dp-bin" id="dp-bin-spalvota">Į spalvotus</button>
+      </div>
+      <div class="dp-actions">
+        <button type="button" class="btn" id="dp-wash">Skalbti</button>
+        <button type="button" class="btn ghost" id="dp-reset">Iš naujo</button>
+      </div>`;
+
+    const scene = stage.querySelector(".dp-scene");
+    const chipBox = controls.querySelector("#dp-items");
+    const washBtn = controls.querySelector("#dp-wash");
+
+    const inBin = (binId) => ITEMS.filter((it) => place[it.id] === binId);
+    const binHasColour = (binId) => inBin(binId).some((it) => !it.light);
+    const colourNow = (it) => (washed && it.light && binHasColour(place[it.id]) ? DP_PINK : it.color);
+
+    /* Purvo dėmė matoma tik prieš skalbimą: taip vaikas pamato, kad skalbimas
+       ką nors padarė ir tada, kai spalvos liko savo vietose. */
+    function garmentAt(it, x, y, s, col) {
+      const dirt = washed
+        ? ""
+        : `<g opacity=".5">${art.spot(x + 12 * s, y + 30 * s, 20 * s, 14 * s, "#8a7357")}</g>`;
+      return `${art.garment(it.kind, x, y, s, col)}${dirt}`;
+    }
+
+    function paintScene() {
+      const onShelf = ITEMS.filter((it) => !place[it.id])
+        .map((it) => garmentAt(it, 26 + ITEMS.indexOf(it) * 72, 100, 0.86, it.color))
+        .join("");
+
+      const bins = [
+        { id: "balta", x: 12 },
+        { id: "spalvota", x: 176 },
+      ].map(({ id, x }) => {
+        const list = inBin(id);
+        const inner = list.map((it, i) => garmentAt(
+          it,
+          x + 34 + (i % 2) * 58,
+          220 + Math.floor(i / 2) * 36,
+          0.66,
+          colourNow(it),
+        )).join("");
+        const name = BINS.find((b) => b.id === id).label;
+        const label = `<text x="${x + 76}" y="216" text-anchor="middle"
+          style="font-family:var(--font-head);font-size:12.5px;font-weight:800;fill:#5b3d18">${name}</text>`;
+        return `${art.basket(x, 306, 152, 92)}${inner}${label}`;
+      }).join("");
+
+      scene.innerHTML = `${art.plank(10, 148, 320, 12)}
+        <rect x="22" y="148" width="10" height="14" rx="3" fill="#8a5c33" opacity=".5"/>
+        <rect x="308" y="148" width="10" height="14" rx="3" fill="#8a5c33" opacity=".5"/>
+        ${onShelf}${bins}`;
+
+      const shelfLeft = ITEMS.filter((it) => !place[it.id]).map((it) => it.label.toLowerCase());
+      const parts = [shelfLeft.length ? `Ant lentynos: ${shelfLeft.join(", ")}.` : "Lentyna tuščia."];
+      BINS.forEach((b) => {
+        const list = inBin(b.id).map((it) => it.label.toLowerCase());
+        parts.push(list.length
+          ? `Pintinėje „${b.label}“: ${list.join(", ")}.`
+          : `Pintinė „${b.label}“ tuščia.`);
+      });
+      if (washed) {
+        const pink = ITEMS.filter((it) => it.light && binHasColour(place[it.id]))
+          .map((it) => it.label);
+        parts.push(pink.length
+          ? `${pink.join(" ir ")} paraudo.`
+          : "Balti liko balti, purvo dėmės dingo.");
+      }
+      scene.setAttribute("aria-label", parts.join(" "));
+    }
+
+    function paintChips() {
+      ITEMS.forEach((it) => {
+        const btn = chipBox.querySelector(`#dp-i-${it.id}`);
+        if (!btn) return;
+        const where = place[it.id];
+        const binName = where ? BINS.find((b) => b.id === where).where : "";
+        btn.classList.toggle("is-picked", picked === it.id);
+        btn.setAttribute("aria-pressed", String(picked === it.id));
+        btn.querySelector(".dp-where").textContent = where
+          ? (washed ? `Išskalbti ${binName}` : `Jau ${binName}`)
+          : "Dar ant lentynos";
+        btn.setAttribute("aria-label", where
+          ? `${it.label}. ${washed ? "Išskalbti" : "Jau"} ${binName}.`
+          : `${it.label}. Dar ant lentynos. Bakstelėk ir pasirink pintinę.`);
+      });
+    }
+
+    function paint() {
+      paintScene();
+      paintChips();
+    }
+
+    function buildChips() {
+      chipBox.innerHTML = ITEMS.map((it) => `
+        <button type="button" class="dp-item" id="dp-i-${it.id}">
+          <svg viewBox="0 0 64 64" aria-hidden="true">${art.garment(it.kind, 4, 4, 0.88, it.color)}</svg>
+          <span>${it.label}</span>
+          <span class="dp-where">Dar ant lentynos</span>
+        </button>`).join("");
+      ITEMS.forEach((it) => {
+        chipBox.querySelector(`#dp-i-${it.id}`).addEventListener("click", () => pick(it.id));
+      });
+    }
+
+    const allPlaced = () => ITEMS.every((it) => place[it.id]);
+
+    function pick(id) {
+      if (washed) {
+        api.readout("Skalbiniai jau išskalbti.");
+        api.note("Spausk „Iš naujo“, jei nori paskirstyti kitaip.");
+        return;
+      }
+      const it = ITEMS.find((x) => x.id === id);
+      picked = id;
+      paintChips();
+      api.readout(`${it.label}. Į kurią pintinę dėsi?`);
+      api.note("Spausk „Į baltus“ arba „Į spalvotus“.");
+      api.speak(line("pasirinkta"));
+    }
+
+    function placeIn(binId) {
+      if (washed) {
+        api.readout("Skalbiniai jau išskalbti.");
+        api.note("Spausk „Iš naujo“, jei nori paskirstyti kitaip.");
+        return;
+      }
+      if (!picked) {
+        const left = ITEMS.filter((it) => !place[it.id]);
+        api.readout("Pirma bakstelėk drabužį.");
+        api.note(left.length
+          ? "Pasirink vieną iš drabužių ant lentynos."
+          : "Visi drabužiai jau pintinėse. Spausk „Skalbti“.");
+        const any = chipBox.querySelector(".dp-item");
+        if (any) any.focus();
+        return;
+      }
+      const it = ITEMS.find((x) => x.id === picked);
+      const bin = BINS.find((b) => b.id === binId);
+      place[it.id] = binId;
+      picked = null;
+      paint();
+      api.readout(`${it.label} — ${bin.where}.`);
+
+      if (allPlaced()) {
+        api.readout(line("sudeta"));
+        api.note("Pintinės pilnos. Spausk „Skalbti“ ir pažiūrėk, kas nutiks.");
+        api.speak(line("sudeta"));
+        washBtn.focus();
+        return;
+      }
+      const left = ITEMS.filter((x) => !place[x.id]).length;
+      api.note(left === 1 ? "Liko vienas drabužys." : `Liko dar ${left} drabužiai.`);
+    }
+
+    function wash() {
+      if (!allPlaced()) {
+        api.readout(line("nepilna"));
+        api.note("Sudėk į pintines visus keturis drabužius.");
+        api.speak(line("nepilna"));
+        const next = ITEMS.find((it) => !place[it.id]);
+        const chip = next && chipBox.querySelector(`#dp-i-${next.id}`);
+        if (chip) chip.focus();
+        return;
+      }
+      washed = true;
+      paint();
+
+      const pink = ITEMS.filter((it) => it.light && binHasColour(place[it.id]));
+      if (!pink.length) {
+        api.readout(line("tvarkinga"));
+        api.note("Purvo dėmės dingo, o spalvos liko savo vietose. Taip baltus ir skalbiame — atskirai.");
+        api.speak(line("tvarkinga"));
+        // Pažanga žymima tik pabaigus visą ciklą: visi sudėti ir išskalbti (LL-29).
+        if (!reported) {
+          reported = true;
+          api.progress({ correct: true });
+        }
+        return;
+      }
+
+      api.readout(line("sumaisyta"));
+      api.note(`${pink.map((it) => it.label).join(" ir ")} nusidažė, `
+        + "nes pintinėje buvo spalvotas audinys. Spausk „Iš naujo“ ir paskirstyk kitaip.");
+      api.speak(line("sumaisyta"));
+    }
+
+    function reset() {
+      place = {};
+      picked = null;
+      washed = false;
+      paint();
+      api.readout(line("is-naujo"));
+      api.note("Bakstelėk drabužį, tada pasirink pintinę.");
+      api.speak(line("is-naujo"));
+    }
+
+    washBtn.addEventListener("click", wash);
+    controls.querySelector("#dp-bin-balta").addEventListener("click", () => placeIn("balta"));
+    controls.querySelector("#dp-bin-spalvota").addEventListener("click", () => placeIn("spalvota"));
+    controls.querySelector("#dp-reset").addEventListener("click", reset);
+
+    buildChips();
+    paint();
+    api.readout(line("pradzia"));
+    api.note("Bakstelėk drabužį, tada pasirink pintinę.");
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "elektros-grandine": elektrosGrandine,
   "medziagu-bandymas": medziaguBandymas,
   "lankstymas-ir-karpiniai": lankstymasIrKarpiniai,
+  "drabuziu-prieziura": drabuziuPrieziura,
 };

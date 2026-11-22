@@ -1,14 +1,14 @@
 {
  "grade": 1,
- "generated": "2026-11-23T01:16:38",
+ "generated": "2026-11-23T01:35:07",
  "source_hash": "a95e59a5741f37ce",
  "curriculum_positions": 47,
  "counts": {
-  "covered": 34,
+  "covered": 35,
   "partial": 7,
-  "missing": 6
+  "missing": 5
  },
- "modules_now": 58,
+ "modules_now": 59,
  "rows": [
   {
    "key": "26.2.3",
@@ -766,7 +766,7 @@
    "strand": "technologijos",
    "modules": [],
    "status": "missing",
-   "target": "content/lt/grade-01/technologijos/04-elektronika.json"
+   "target": "content/lt/grade-01/technologijos/07-elektronika.json"
   },
   {
    "key": "D:medziagu-savybes",
@@ -799,9 +799,11 @@
    "svietimas": "#3",
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:76",
    "strand": "technologijos",
-   "modules": [],
-   "status": "missing",
-   "target": "content/lt/grade-01/technologijos/05-drabuziu-prieziura.json"
+   "modules": [
+    "06-drabuziu-prieziura"
+   ],
+   "status": "covered",
+   "target": ""
   },
   {
    "key": "D:funkciniai-judesiai",

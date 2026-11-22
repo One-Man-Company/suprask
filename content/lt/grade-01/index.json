@@ -497,6 +497,14 @@
      "file": "grade-01/technologijos/03-lankstymas-ir-karpiniai.json",
      "minutes": 9,
      "sim": "lankstymas-ir-karpiniai"
+    },
+    {
+     "id": "06-drabuziu-prieziura",
+     "title": "Balti skalbsis atskirai nuo spalvotų",
+     "subtitle": "Kodėl balti marškiniai parausta, kai skalbi juos su raudona suknele",
+     "file": "grade-01/technologijos/06-drabuziu-prieziura.json",
+     "minutes": 9,
+     "sim": "drabuziu-prieziura"
     }
    ]
   },

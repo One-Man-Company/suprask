@@ -1077,6 +1077,105 @@ Atsakymų indeksai 1 / 2 / 0 / 1 — ne visi tame pačiame indekse (`validate_co
 
 **Pastaba dėl pasiūlymo.** Ideatorius (#418) parengė šią temą su tais pačiais šaltiniais, bet paleidimas baigėsi prieš įrašant failą, todėl `tema` pasiūlymo `agents/proposals/` kataloge nėra. Metodas idėją palieka, bet **modelį susiaurina**: ideatorius siūlė „sudedame dviženklius skaičius“, o čia pirmas dėmuo nepajudinamas ir vienetų suma laikoma po devyniais — kitaip modelis rodytų pernešimą, kurio 1 klasės programa nereikalauja (LL-23), ir tas pats modulis mokytų dviejų dalykų (T1.2).
 
+### M-13 — Traumos priežastis: pašalink vieną priežastį, įvykis nebeįvyksta
+
+**Data:** 2026-11-22 · **Tema:** 1 klasės pasaulio pažinimas, 26.1.1 „Saugus elgesys“ (`agents/log/ideator-2026-11-22T0743.md:29–34` — tema parengta ideatoriaus #433, bet pasiūlymo failas neįrašytas) · **Tikslas:** `content/lt/grade-01/pasaulio-pazinimas/25-traumu-prevencija.json`
+
+**Viena didelė idėja.** Įvykis turi priežastį, ir ta priežastis dažniausiai yra vietoje, o ne vaike. Kai kelyje yra šlapias grindų ruožas, palikta kuprinė ar tamsus kampas, tas pats ėjimas baigiasi kritimu; kai to daikto nėra, tas pats ėjimas baigiasi saugiai. Priežastį galima rasti ir pašalinti — todėl „nepasisekė“ nėra paaiškinimas.
+
+**Ką sako programa.** 26.1.1 „Saugus elgesys“ 1 klasėje turi **3 valandas** ir du projektus, kurių pirmas vadinasi būtent „Kaip išvengti traumų?“ — jo tikslas „išsiaiškinti, kaip žmogaus kūno dalis galima apsaugoti nuo traumų ir kodėl tai svarbu“, o priemonė — skrajutė „Būk atsargus mokyklos koridoriuose, kiemo aikštelėje, sporto salėje“ (`sources/pradinio-bp-rekomendacijos-2024.txt:14960–14966`); ilgalaikiame plane ta tema turi 3 val. ir veiklas „atvejo analizė, situaciniai, vaidybiniai žaidimai“ (`:17618–17626`), o galimų veiklų lentelėje ta pati eilutė kartoja „praktinė veikla (pvz., atvejo analizė, situaciniai, vaidybiniai, stalo žaidimai)“ (`:8390–8392`). Platformoje 26.1.1 teturi vieną modulį — `19-dumai-ir-isejimas`, ir jis sprendžia **dūmų kelią**, o ne traumos priežastį: `research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:174` tai įvardija tiesiogiai („yra tik gaisro dalis (19); traumų temos nėra“), o `grep -n "traum\|susižaloj\|griuv\|nukrit" content/lt/grade-01/` randa 0 atvejų užduotyse (tikrinta 2026-11-22). Antras programos projektas — „Mano elgesys ištikus nelaimei“ (kur kreiptis pagalbos, kaip elgtis kilus gaisrui, `:14960–14966`) — sąmoningai **neimamas** į šį modulį: tai antra sąvoka tame pačiame kadre (T1.2) ir lieka mokytojo veiklai.
+
+**Kodėl modelis, o ne paveikslėlis.** Paveikslėlis parodo vieną vietą su daiktu ir joje esantį vaiką — bet ne tai, **kas pasikeitė tarp dviejų ėjimų**. Skirtumas, kurį vaikas turi suprasti, yra priežasties buvimas, o ne daikto išvaizda: ta pati kuprinė ant suolo nekliudo, o ant grindų kelyje kliudo. Tam reikia palyginti dvi būsenas, kuriose **vaikas yra tas pats, ėjimas tas pats, o pasikeitęs tik vienas daiktas**. Modelis duoda ir tai, ko paveikslėlis neturi: vaikas pats pašalina priežastį ir pamato, kad įvykis nebeįvyksta. Tai vienintelis būdas 6–7 m. vaikui parodyti, kad priežastis yra šalinama, o ne likimo reikalas.
+
+**Ką rodo tyrimai.**
+Schwebel (2019) rodo, kad „nelaimingi atsitikimai“ nėra atsitiktiniai: vaikų traumos turi išmatuojamas priežastis, kurias galima suskirstyti pagal laiką (prieš įvykį, įvykio metu, po jo) ir pagal veiksnį (vaikas, priežiūra, aplinka). Iš to metodui išeina reikalavimas: modelis turi rodyti **vieną aplinkos veiksnį**, o ne „būk atsargus“ patarimą, nes patarimas neturi priežasties.
+Zhuravlev, Mueller ir St. Vil (2024) parodė, kad vaikai, kurie traumą priskyrė sėkmei, negalėjo sugalvoti nė vienos prevencijos strategijos, o tie, kurie įžvelgė priežastį savo veiksme, galėjo. Tyrimas darytas su 10–18 m. vaikais, todėl 1 klasei imama tik **kryptis** (priežastis, ne likimas), o ne jo apimtis ir ne jo klausimų formuluotės.
+Hillier ir Morrongiello (1998) parodė, kad 120 vaikų nuo 6 iki 10 metų **jau skiria** rizikos laipsnį nuotraukose — tai pagrindžia amžiaus tinkamumą: 6–7 m. vaikas gali pasakyti, kuri vieta pavojingesnė, jei jam duota kuo remtis. Tas pats tyrimas įspėja, kad berniukai ir mergaitės remiasi skirtingais požymiais (galimos žalos sunkumu ir pažeidžiamumu), todėl modelyje nėra nė vieno sakinio apie „drąsą“ ar „baimę“ — vertinamas tik daiktas kelyje.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Trauma atsitinka be priežasties, tiesiog nepasisekė.“** Paneigiama tuo pačiu ėjimu du kartus: su daiktu kelyje ir be jo. Vaikas mato, kad pasikeitė ne jis, o vieta — ir kad priežastis buvo vienintelis skirtumas.
+2. **„Užteks būti atsargesniam, ir daiktas kelyje nebekliudys.“** Modelio kintamasis yra daiktas, o ėjimas nesikeičia: kol priežastis yra, ėjimas vis tiek baigiasi kritimu. Tai priešparyzdys tame pačiame kadre (LL-28): atsargumas padeda, bet priežasties nepašalina.
+3. **„Kaltas vaikas, o ne vieta.“** Modelis niekada neįvardija vaiko kaip priežasties: `api.note` sako, kas yra kelyje („Grindys šlapios toje vietoje, kur bėgai“), o ne „bėgai per greitai“. Tai ir T5.1 reikalavimas — grįžtamasis ryšys apie veiksmą ir aplinką, ne apie vaiką.
+4. **„Kuprinė ant grindų — tik netvarka, ne priežastis.“** Modelis kritimą sustabdo būtent ties kuprine ir `readout` pasako, kad koja užkliuvo už jos. Netvarka ir pavojus tame pačiame kadre sutampa, bet priežastis įvardijama daiktu, ne tvarka.
+5. **„Pavojinga vieta yra visada pavojinga.“** Ta pati vieta su tuo pačiu vaiku yra saugi, kai daikto nėra. Modelis tą pačią sceną naudoja abiem atvejais, todėl vaikas negali priskirti pavojaus pačiai vietai.
+
+**Seka (konkretumas → pusiau abstraktus modelis → simbolis → perkėlimas).**
+
+1. **Popieriaus planas.** Vaikas ant lapo nupiešia mokyklos koridorių tiesia linija ir apibrauna **vietą**, kur kas nors galėtų pakenkti. Mokytojas neįvardija atsakymo ir neklausia „ar tu atsargus“. Tikslas: priežasties ieškoti vietoje, o ne savyje.
+2. **Ekranas, vieta ir vienas daiktas.** Ekrane ta pati koridoriaus atkarpa. Vaikas pasirenka, kas yra kelyje (šlapios grindys / kuprinė / tamsu / nieko), ir prieš ėjimą **spėja**: „Ar šis ėjimas baigsis saugiai?“ (Taip / Ne). Tikslas: sąryšį tarp daikto ir pasekmės vaikas pasitikrina pats, o ne išgirsta taisyklę.
+3. **Kontrolinis ėjimas be priežasties.** Tas pats vaikas, tas pats ėjimas, kelyje „nieko“. Ėjimas baigiasi saugiai. Tikslas: atskirti vaiką nuo vietos — pasikeitė tik daiktas.
+4. **Visi trys daiktai ir simbolis.** Vaikas išbando tris priežastis, o po kiekvieno bandymo į sąrašą „Ką radau kelyje“ įrašoma vietos eilutė. Visos keturios eilutės (trys priežastys ir „nieko“) sudaro lentelę „vieta → kas kelyje → kuo baigėsi“. Tikslas: taisyklę pasakyti savais žodžiais, kai ji jau matyta keturis kartus.
+5. **Perkėlimas į tris kitas vietas.** Be modelio: kiemo aikštelė, sporto salė, laiptai. Vaikas pasako, ko kiekvienoje vietoje ieškotų ir ką darytų radęs. Tikslas: taisyklė ne apie koridorių, o apie bet kurią vietą.
+
+**Privalomas spėjimo žingsnis prieš pirmą ėjimą.** Vienas spėjimas apie **vieną** pasekmę (saugiai / ne), palyginamas su tuo, kas įvyko (LL-15). Spėjimas niekada nevadinamas klaida ir lieka matomas virš scenos. Be jo modelis virsta animacija: vaikas žiūri, kaip figūrėlė juda, o daikto kelyje nepastebi.
+
+**Simuliacijos specifikacija.** Komponentas `traumos-priezastis`, failas `assets/js/sims/pasaulis.js` (jis importuoja `art.js` ir jau naudoja `art.kid`, `art.plank`, `art.block`, todėl `scripts/check_art.py` naujų dalių nereikalauja ir LEGACY sąrašo liesti negalima). Registracija: `SIMS` bloke (`pasaulis.js:4084`) pridedama eilutė `"traumos-priezastis": traumosPriezastis,`. `config`:
+
+```json
+{ "place": "Koridorius",
+  "causes": [ { "key": "slapia",  "label": "Šlapios grindys" },
+              { "key": "kuprine", "label": "Kuprinė ant grindų" },
+              { "key": "tamsu",   "label": "Tamsus kampas" },
+              { "key": "nieko",   "label": "Nieko nėra" } ],
+  "labels": { "guessYes": "Taip", "guessNo": "Ne", "walk": "Eik",
+              "again": "Iš naujo", "foundTitle": "Ką radau kelyje",
+              "safe": "Saugiai", "fall": "Kliudė" },
+  "sentences": { "start": "…", "guess": "…", "slapia": "…", "kuprine": "…",
+                 "tamsu": "…", "nieko": "…", "table": "…", "reset": "…" } }
+```
+
+**Pasekmė išvedama, o ne įrašyta.** `config.causes[]` sąmoningai neturi lauko, kuo ėjimas baigiasi: `outcome(key) = key === "nieko" ? "safe" : "fall"`. Jei `key` nežinomas arba `label` tuščias, komponentas rašo `console.error` ir rodo „Vieta nesuderinta.“, o ne tyliai praleidžia kortelę. Tai ta pati taisyklė kaip M-07 (`kiekis = board.px / unit.px`), M-11 (`cells = sound.stretch ? 8 : 1`) ir M-12 (`onesMax = 9 - first.ones`): teiginys ekrane išvedamas iš tų pačių duomenų, kuriuos mato vaikas.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | koridoriaus atkarpa, vaikas kairėje, keturios kortelės, tuščia lentelė | „Kas yra kelyje?“ | „Pasirink vieną ir pažiūrėk.“ |
+| spėjimas | pasirinkta kortelė pažymėta, mygtukai „Taip“ / „Ne“ | „Ar šis ėjimas baigsis saugiai?“ | „Pirma spėk, tada eik.“ |
+| ėjimas, priežastis yra | vaikas sustoja ties daiktu, kelias pažymėtas trūkio ženklu | „Kliudė.“ | „Kelyje buvo šlapios grindys.“ |
+| ėjimas, priežasties nėra | vaikas praeina visą atkarpą, kelias ištisinis | „Saugiai.“ | „Kelyje nieko nebuvo.“ |
+| lentelė, 1–3 eilutės | lentelė pildosi: vieta, kas kelyje, kuo baigėsi | „Dar trūksta vietų.“ | „Išbandyk ir kitus daiktus.“ |
+| lentelė pilna | keturios eilutės, paskutinė „nieko“ | „Keturi ėjimai, viena taisyklė.“ | „Tas pats vaikas, ta pati vieta.“ |
+| „Iš naujo“ | scena atstatyta, lentelė lieka | „Pradedam iš naujo.“ | „Bandyk kitą daiktą.“ |
+
+Septynios savybės, kurių negalima praleisti:
+
+- **Vienas kintamasis:** `cause` — kas yra kelyje. Vaiko figūrėlė, ėjimo kelias ir vieta nesikeičia niekada; tai yra modelio teiginys, o ne dekoracija.
+- **Geometrija 360 px:** scena `viewBox="0 0 328 300"`, `max-width:328px`; grindų juosta `art.plank(14, 264, 300, 14)`; vaikas `art.kid(48, 258, 0.9)`; daiktas — `art.block` (kuprinė), `art.plank` su pakreipimu (šlapias ruožas), tamsus kampas — `art.block` tamsiu užpildu su užrašu „tamsu“ (spalva niekada vienintelis informacijos nešėjas). Kortelės 2 × 2, po 156 × 56 px su 8 px tarpais (320 px iš 328). Jokio horizontalaus slinkimo; 200 % tekste matmenys lieka tie patys, didėja tik užrašai (`min-width:0` ant tėvų, LL-125).
+- **Įėjimai ir klaviatūra:** `Tab` tarp keturių kortelių ir mygtukų, `Enter`/`Space` aktyvuoja, `←`/`→` perjungia korteles, `R` atstato. Visi taikiniai ≥ 48 px.
+- **Fokusas** (LL-32): pasirinkus kortelę fokusas eina į spėjimo mygtuką, o ne į neaktyvų elementą; po ėjimo lieka „Eik“ ir `readout` pasikeičia; po „Iš naujo“ — į pirmą neišbandytą kortelę.
+- **Grįžtamasis ryšys** — `readout` po ėjimo, `api.note` sako **kodėl** ir niekada apie vaiką (T5.1); žodis „kaltas“ nevartojamas nė karto. `api.progress({ correct: true })` — vieną kartą, kai lentelėje yra visos keturios eilutės (tikrinama dabartinė būsena, ne istorija — LL-17), o ne po pirmo ėjimo (LL-29). „Iš naujo“ pažangos netrina (LL-16).
+- **Garsas:** tariamos tik instrukcijos ir `api.note` (`config.sentences`, 8 frazės × 2 įrašai = 16 naujų mp3). Vietos pavadinimas ir eilutės lentelėje **netariami** kiekvieną kartą — juos perskaito `api.readout` (LL-14).
+- **Be laikmačių, be ėjimų limito, be „game over“.** Kritimas niekada nekartojamas automatiškai ir niekada nevertinamas balu.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Koridoriuje šlapios grindys. Kas nutiks, kai vaikas bėgs?“ — „Nieko, grindys nesvarbu“ / „Jis gali paslysti ir nukristi“ / „Jis bėgs greičiau“ | 1 | „Nieko, grindys nesvarbu“ — vaikas priežasties ieško savyje, ne vietoje | „Pažiūrėk į grindis toje vietoje, kur bėgama.“ |
+| 2 | taikymas | „Ant grindų palikta kuprinė. Ką daryti, kad ji nekliudytų?“ — „Apibėgti greičiau“ / „Peršokti“ / „Pakelti ir padėti ant suolo“ | 2 | „Apibėgti greičiau“ — judėjimas keičiamas vietoj priežasties | „Priežastis yra ant grindų, o ne ore.“ |
+| 3 | perkėlimas | „Kiemo aikštelėje kampas be šviesos. Kaip ten eisi?“ — „Lėtai ir žiūrėsiu po kojomis“ / „Bėgsiu, kad greičiau praeičiau“ / „Eisiu užsimerkęs“ | 0 | „Bėgsiu“ — greitis laikomas apsauga nuo nematomos kliūties | „Tamsa kliūties nepašalina, tik ją paslepia.“ |
+| 4 | perkėlimas (`optional: true`) | „Kamuolys guli prie sporto salės durų. Kuris veiksmas pašalina priežastį?“ — „Apibėgti kamuolį“ / „Paliesti kamuolį“ / „Nustumti kamuolį į šalį“ | 2 | „Apibėgti kamuolį“ — apeiti nelygu pašalinti; kitas vaikas užklius | „Priežastis lieka, jei daiktas tebėra kelyje.“ |
+
+Atsakymų indeksai 1 / 2 / 0 / 2 — ne visi tame pačiame indekse (`validate_content.py` tikrina pasiskirstymą). Nė viena užuomina nekartoja teisingo varianto žodžių ir nė viena nepasako atsakymo.
+
+**Refleksija.** „Kokią priežastį radai savo klasėje ar namuose? Pasakyk, ką su ja darytum.“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — vaikas įvardija vietą ir daiktą, o ne save. Tai patikrinimas be ekrano ir be balo.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Modelis rodo vieną priežastį, o tikrovėje jų būna kelios.** Todėl `readout` sako „gali“, o ne „nukris“, ir modelis niekada neteigia, kad pašalinus vieną daiktą vieta tapo visiškai saugi.
+2. **Kritimas yra tikimybė, o ne garantija.** Tai pasakoma ir ekrane („gali“), ir mokytojo bloke: jei vaikas gyvenime bėgo šlapiomis grindimis ir nenukrito, modelis jam nemelavo — jis parodė, kas padidina tikimybę.
+3. **Skausmo modelis nevaidina.** Figūrėlė nesužeidžiama ir neverda; tai sąmoninga riba, kad vaikas nejaustų baimės, o matytų priežastį. Tikras pokalbis apie skausmą lieka mokytojui.
+4. **Ne viską vaikas gali pašalinti pats.** Apšvietimą, grindų suremontavimą ar tvarką koridoriuje tvarko suaugusieji; modelyje tai parodyta tuo, kad priežastys šalinamos „tvarkymo“ veiksmu, o `teacher.offline` prašo vaiką pasakyti suaugusiajam.
+5. **„Kur kreiptis pagalbos“ neparodoma.** Tai antras 26.1.1 projektas (`:14960–14966`) ir atskira sąvoka (T1.2); modelyje jos nėra, kad tame pačiame kadre neliktų dviejų idėjų.
+
+**Ką tai reiškia modulio autoriui.** `id` — `25-traumu-prevencija` (numeris 25 pasaulio pažinime laisvas: užimti 08–10 ir 16–24); `title` — „Trauma turi priežastį“; `subtitle` — „Pašalink priežastį — įvykis nebeįvyksta“; `minutes` — 9; trys `outcomes` („Randzu vietą, kur kas nors gali pakenkti.“ → formuluoti veiksmažodžiu: „Randu vietą, kur kas nors gali pakenkti.“, „Pašalinu priežastį ir matau, kad įvykis nebeįvyksta.“, „Paaiškinu, kodėl priežastis yra vietoje, o ne vaike.“); `concept.title` — „Priežastis yra vietoje“; `concept.big_idea` — „Kai kelyje yra šlapios grindys, kuprinė ar tamsa, tas pats ėjimas baigiasi kritimu. Pašalinus priežastį, tas pats ėjimas baigiasi saugiai.“; `concept.steps` — keturi žingsniai po ≤10 žodžių; `concept.example` — „Klasėje kuprinė guli prie durų. Kas ją pakelia, tas pašalina priežastį.“; `sim` — `{ "component": "traumos-priezastis", "config": { … } }`. Įrašius modulį jis turi patekti į `content/lt/grade-01/index.json` (pasaulio pažinimas, po `24-kieta-vandens-forma`) ir į `path.json` — **po `19-dumai-ir-isejimas`**, nes ten vaikas jau mokosi, kad pavojus turi kryptį ir kelią, o čia — kad jis turi priežastį.
+
+**Patikra.** Metodo specifikacija surašyta kaip juodraštinis modulis scratch kataloge (ne `content/`, todėl `git status` švarus) ir paleisti abu vartai tuo pačiu keliu, kuriuo tikrina CI: `validate_content.check_module` ir `check_language.check_module`. Rezultatai — žemiau esančiame ataskaitos faile; jei juodraštis buvo atmestas, tai parašyta ten pat, o ne apeita.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, gamtos mokslai, 26.1.1 (`sources/pradinio-bp-rekomendacijos-2024.txt:14960–14966`, `:17618–17626`, `:8390–8392`). Schwebel, D. C. (2019). Why “accidents” are not accidental: Using psychological science to understand and prevent unintentional child injuries. *American Psychologist, 74*(9), 1137–1147. https://doi.org/10.1037/amp0000487 · Zhuravlev, P., Mueller, C., & St. Vil, D. (2024). Just my luck: How children’s causal attributions contribute to injury prevention. *European Journal of Trauma and Emergency Surgery, 50*, 3095–3098. https://doi.org/10.1007/s00068-023-02425-3 · Hillier, L. M., & Morrongiello, B. A. (1998). Age and gender differences in school-age children’s appraisals of injury risk. *Journal of Pediatric Psychology, 23*(4), 229–238. https://doi.org/10.1093/jpepsy/23.4.229
+
+**Pastaba dėl pasiūlymo.** Ideatorius (#433) temą parengė, bet paleidimas baigėsi prieš įrašant failą, todėl `tema` pasiūlymo `agents/proposals/` kataloge nėra (`agents/log/ideator-2026-11-22T0743.md:41–43`). Metodas idėją palieka, bet **susiaurina**: ideatorius siūlė „tą pačią vietą su matoma priežastimi (šlapios grindys, bėgimas, atsegta kuprinė)“, o čia iš trijų priežasčių pašalintas **bėgimas** — jis priklauso vaikui, o ne vietai, ir tame pačiame kadre būtų antra sąvoka (T1.2). Bėgimas lieka mokytojo veiklai, o modelis laiko vaiko ėjimą nepajudinamą būtent todėl, kad priežastis būtų galima priskirti vietai.
+
 ## Atviros prielaidos
 
 

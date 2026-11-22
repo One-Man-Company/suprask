@@ -1,0 +1,24 @@
+{
+  "role": "metodininkas",
+  "run_id": 434,
+  "created": "2026-11-22T08:42:00+02:00",
+  "type": "metodas",
+  "title": "M-13 — Traumos priežastis: pašalink vieną priežastį, įvykis nebeįvyksta",
+  "body": "Metodas temai, kuri 1 klasės programoje turi 3 valandas, o platformoje teturi gaisro dalį: 26.1.1 „Saugus elgesys“ ir projektas „Kaip išvengti traumų?“ (sources/pradinio-bp-rekomendacijos-2024.txt:14960–14966, ilgalaikis planas :17618–17626). Vaikas pirmiausia apžiūri tą pačią mokyklos koridoriaus vietą popieriuje ir suranda, kas joje galėtų pakenkti, tada ekrane keičia vieną daiktą: šlapias grindų ruožas, ant grindų palikta kuprinė, tamsus kampas be šviesos. Kai priežastis yra, tas pats judėjimas baigiasi kritimu; kai priežasties nėra, tas pats judėjimas baigiasi saugiai. Vaikas ne klausosi taisyklės, o mato, kad įvykis turi priežastį, kurią galima pašalinti — ir kad priežastis yra aplinkoje, ne vaiko bėdumas. Modelis sąmoningai neteisia vaiko ir nevardija „kaltės“: rodoma vieta ir daiktas, o grįžtamasis ryšys sako, kas pasikeitė kelyje. Užduotys perkelia tą pačią taisyklę į kiemo aikštelę, sporto salę ir į „kur kreiptis pagalbos“, o praplėtimo užduotis prašo sugalvoti dar vieną priežastį, kurios modelyje nėra.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/25-traumu-prevencija.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md — M-13 (šis paleidimas): seka, simuliacijos būsenos, 4 užduotys, klaidingos nuostatos, modelio ribos",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:14960–14966 — 26.1.1 „Saugus elgesys“: projektas „Kaip išvengti traumų?“ (kaip apsaugoti kūno dalis ir kodėl tai svarbu), skrajutė „Būk atsargus mokyklos koridoriuose, kiemo aikštelėje, sporto salėje“, projektas „Mano elgesys ištikus nelaimei“ (kur kreiptis pagalbos)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17618–17626 — 1 klasės ilgalaikis planas: 26.1.1 — 3 val., atvejo analizė, situaciniai ir vaidybiniai žaidimai",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:8390–8392 — 26.1.1 galimos veiklos 1 klasėje: praktinė veikla (atvejo analizė, situaciniai, vaidybiniai, stalo žaidimai), filmų peržiūra ir analizė",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:85 — 26.1.1, 3 val., projektai „Kaip išvengti traumų?“ ir „Mano elgesys ištikus nelaimei“",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:174 — spragos lentelė: „26.1.1 traumų prevencija — yra tik gaisro dalis (19); traumų temos nėra“",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md (4 skyriaus 4 punktas) — saugumas ir sveikata mokomi per savo kūną ir savo aplinką, ne per abstrakčias taisykles",
+    "content/lt/grade-01/pasaulio-pazinimas/19-dumai-ir-isejimas.json — vienintelis 26.1.1 modulis, jis sprendžia dūmų kelią, ne traumos priežastį; grep „traum|susižaloj|nukrit“ content/lt/grade-01 → 0 atvejų (tikrinta 2026-11-22)",
+    "agents/log/ideator-2026-11-22T0743.md:29–34 — tema parengta ideatoriaus #433, bet pasiūlymo failas neįrašytas (LL-36/L-85 šeima); šaltinio eilutės ir spragos įrodymas paimti iš čia ir patikrinti šiame paleidime",
+    "Schwebel, D. C. (2019). Why “accidents” are not accidental: Using psychological science to understand and prevent unintentional child injuries. American Psychologist, 74(9), 1137–1147. https://doi.org/10.1037/amp0000487 — vaikų traumos turi išmatuojamas priežastis (elgsena, priežiūra, aplinka), todėl jas galima numatyti ir šalinti",
+    "Zhuravlev, P., Mueller, C., & St. Vil, D. (2024). Just my luck: How children’s causal attributions contribute to injury prevention. European Journal of Trauma and Emergency Surgery, 50, 3095–3098. https://doi.org/10.1007/s00068-023-02425-3 — vaikai, kurie traumą priskyrė sėkmei, negalėjo sugalvoti nė vienos prevencijos strategijos; kurie įžvelgė priežastį — galėjo. Tyrimas su 10–18 m. vaikais, todėl 1 klasei imama tik kryptis (priežastis, ne likimas), o ne jo apimtis"
+  ]
+}

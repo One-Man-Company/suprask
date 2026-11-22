@@ -4930,6 +4930,261 @@ const bendruomenes = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 16. Stebėjimo žurnalas — rudens požymiai mokyklos kieme            */
+/* ------------------------------------------------------------------ */
+/* Modelio kintamasis — mėnuo (rugsėjis, spalis, lapkritis). Vaikas
+   pasirenka medį ir mėnesį, o paskui įrašo, ką mato. Stebėjimas čia
+   parodomas kaip ĮRAŠAS: tas pats objektas žiūrimas kelis kartus, o
+   žurnalas leidžia palyginti. Eglė yra sąmoningas prieštaraujantis
+   pavyzdys (LL-28): be jos trys klevo įrašai mokytų, kad „rudenį visi
+   medžiai gelsta“, nors eglė visą rudenį lieka žalia. */
+const LAPU_SPOTAI = [
+  [128, 258, 1.15, -1, 0], [146, 266, 1, 1, 0], [166, 272, 1.1, -1, 0],
+  [196, 262, 1, 1, 0], [212, 270, 1.05, -1, 0], [238, 264, 1, 1, 0],
+  [120, 272, .95, 1, 0], [156, 280, 1.05, -1, 0], [228, 278, .95, 1, 0],
+  [206, 284, 1.1, -1, 0], [138, 286, .9, 1, 0], [250, 282, 1, -1, 0],
+];
+const LAPU_SPALVOS = ["#e08a2e", "#d9791f", "#e9a13a", "#c96a1c"];
+
+const stebejimoZurnalas = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const objects = Array.isArray(config.objects) ? config.objects : [];
+    const months = Array.isArray(config.months) ? config.months : [];
+    const cards = config.words && typeof config.words === "object" ? config.words : {};
+    const records = config.records && typeof config.records === "object" ? config.records : {};
+
+    const esc = (t) => String(t).replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai ------------------------------------------- */
+    const problems = [];
+    if (objects.length < 2) problems.push("reikia bent dviejų stebimų objektų");
+    if (months.length < 2) problems.push("reikia bent dviejų mėnesių");
+    objects.forEach((o) => {
+      if (!o || !o.id || !o.label || !o.kind) {
+        problems.push(`objektas „${(o && o.id) || "?"}“ be id/label/kind`);
+        return;
+      }
+      if (!Array.isArray(cards[o.kind]) || cards[o.kind].length < 2) {
+        problems.push(`objektui „${o.id}“ trūksta kortelių „${o.kind}“`);
+      }
+      if (!records[o.id] || typeof records[o.id] !== "object") {
+        problems.push(`objektui „${o.id}“ trūksta įrašų`);
+        return;
+      }
+      months.forEach((m) => {
+        if (!m || !m.id) { problems.push("mėnuo be id"); return; }
+        const text = records[o.id][m.id];
+        if (!text) problems.push(`nėra įrašo „${o.id}“ per „${m.id}“`);
+        else if (Array.isArray(cards[o.kind]) && !cards[o.kind].includes(text)) {
+          problems.push(`įrašo „${text}“ nėra tarp kortelių „${o.kind}“`);
+        }
+      });
+    });
+    ["objectQ", "monthQ", "cardQ", "journal", "reset"].forEach((k) => {
+      if (!L[k]) problems.push(`užrašo „${k}“ nėra`);
+    });
+    ["start", "look", "wrong", "rule", "done"].forEach((k) => {
+      if (!S[k]) problems.push(`sakinio „${k}“ nėra`);
+    });
+    if (problems.length) {
+      console.error(`stebejimo-zurnalas: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="sim-note" style="text-align:center">Stebėjimo objektai nesuderinti.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    let objId = objects[0].id;
+    let monthId = months[0].id;
+    const written = new Map();      // „objektas|mėnuo“ -> įrašo tekstas
+    let reported = false;           // api.progress — vieną kartą, surinkus visą žurnalą
+
+    const objOf = (id) => objects.find((o) => o.id === id) || null;
+    const monthOf = (id) => months.find((m) => m.id === id) || null;
+
+    const cellTh = "padding:.3rem .2rem;border-top:1px solid var(--line);text-align:left;"
+      + "font-weight:800;font-size:.85rem;line-height:1.2;overflow-wrap:anywhere";
+    const cellTd = "padding:.3rem .15rem;border-top:1px solid var(--line);text-align:center;"
+      + "font-weight:700;font-size:.85rem;line-height:1.2;overflow-wrap:anywhere";
+
+    stage.innerHTML = `
+      <div style="width:100%;min-width:0;max-width:25rem;margin:0 auto">
+        <svg id="sz-scene" viewBox="0 0 360 300" width="100%" role="img" aria-label="Mokyklos kiemas"
+             style="display:block;width:100%;height:auto;border-radius:16px"></svg>
+        <table id="sz-journal" style="width:100%;margin:.55rem 0 0;border-collapse:collapse;table-layout:fixed">
+          <caption style="caption-side:top;text-align:left;font-weight:800;font-size:.92rem;padding:0 0 .3rem">
+            ${esc(L.journal)}</caption>
+          <thead><tr>
+            <th scope="col" style="width:34%;padding:.15rem .2rem;text-align:left;font-size:.85rem">Mėnuo</th>
+            ${objects.map((o) => `<th scope="col" style="padding:.15rem .15rem;text-align:center;font-size:.85rem">${esc(o.label)}</th>`).join("")}
+          </tr></thead>
+          <tbody id="sz-rows"></tbody>
+        </table>
+        <p id="sz-summary" class="sim-note" style="margin:.35rem 0 0;text-align:center;font-size:.85rem;line-height:1.3;min-height:1.2em"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.55rem;width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <div style="min-width:0">
+          <p style="margin:0 0 .3rem;text-align:center;font-weight:800;font-size:.92rem">${esc(L.objectQ)}</p>
+          <div role="group" aria-label="${esc(L.objectQ)}"
+               style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;min-width:0">
+            ${objects.map((o) => `<button type="button" class="btn secondary" data-object="${esc(o.id)}"
+                aria-pressed="${o.id === objId}"
+                style="min-width:0;min-height:52px;font-size:.98rem">${esc(o.label)}</button>`).join("")}
+          </div>
+        </div>
+        <div style="min-width:0">
+          <p style="margin:0 0 .3rem;text-align:center;font-weight:800;font-size:.92rem">${esc(L.monthQ)}</p>
+          <div role="group" aria-label="${esc(L.monthQ)}"
+               style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem;min-width:0">
+            ${months.map((m) => `<button type="button" class="btn secondary" data-month="${esc(m.id)}"
+                aria-pressed="${m.id === monthId}"
+                style="min-width:0;min-height:52px;padding:.3rem .15rem;font-size:.9rem">${esc(m.label)}</button>`).join("")}
+          </div>
+        </div>
+        <div style="min-width:0">
+          <p style="margin:0 0 .3rem;text-align:center;font-weight:800;font-size:.92rem">${esc(L.cardQ)}</p>
+          <div id="sz-cards" style="display:grid;grid-template-columns:minmax(0,1fr);gap:.35rem;min-width:0"></div>
+        </div>
+        <button type="button" class="btn ghost" id="sz-reset"
+                style="min-height:48px;font-size:.95rem">${esc(L.reset)}</button>
+      </div>`;
+
+    const svg = stage.querySelector("#sz-scene");
+    const rowsEl = stage.querySelector("#sz-rows");
+    const summaryEl = stage.querySelector("#sz-summary");
+    const cardsEl = controls.querySelector("#sz-cards");
+    const objBtns = Array.from(controls.querySelectorAll("button[data-object]"));
+    const monthBtns = Array.from(controls.querySelectorAll("button[data-month]"));
+
+    function paintScene() {
+      const obj = objOf(objId);
+      const m = monthOf(monthId);
+      /* Lapuotis keičiasi pagal mėnesį, spygliuotis — ne. Būtent šis
+         skirtumas ir yra modelio atsakymas, o ne puošmena. */
+      const season = obj.kind === "spygliuotis" ? "egle" : (m.stage || "ruduo");
+      const n = obj.kind === "spygliuotis" ? 0
+        : Math.max(0, Math.min(LAPU_SPOTAI.length, Number(m.fallen) || 0));
+      const leaves = LAPU_SPOTAI.slice(0, n).map(([lx, ly, s, dir, droop], i) =>
+        art.leaf(lx, ly, s, dir, droop, LAPU_SPALVOS[i % LAPU_SPALVOS.length])).join("");
+      svg.innerHTML = `
+        ${art.defs("sz")}
+        <rect x="0" y="0" width="360" height="300" rx="16" fill="url(#sz-autumn)"/>
+        ${art.sun(296, 54, 15, "sz", 0.8)}
+        ${art.cloud(72, 52, 0.75, 0.85)}
+        ${art.hills(360, 206, "#cdd79b", "#b4c07e")}
+        ${art.soil(0, 226, 360, 74, "sz", 20)}
+        ${art.grass(46, 232, 1, "#6f9a4e")}
+        ${art.grass(320, 230, 0.95, "#6f9a4e")}
+        ${art.tree(174, 260, 1.75, season)}
+        ${leaves}
+        <text x="16" y="34" font-family="system-ui" font-size="19" font-weight="800" fill="#3a342b">${esc(obj.label)}</text>
+        <text x="16" y="55" font-family="system-ui" font-size="14" font-weight="600" fill="#5f574d">${esc(m.label)}</text>`;
+      svg.setAttribute("aria-label",
+        `Mokyklos kiemas. ${obj.label}, ${m.label}. ${records[obj.id][m.id]}.`);
+    }
+
+    function paintJournal() {
+      rowsEl.innerHTML = months.map((m) => `<tr>
+        <th scope="row" style="${cellTh}">${esc(m.label)}</th>
+        ${objects.map((o) => {
+          const text = written.get(`${o.id}|${m.id}`);
+          return `<td style="${cellTd}">${text ? esc(text) : "—"}</td>`;
+        }).join("")}
+      </tr>`).join("");
+    }
+
+    function summary() {
+      const parts = objects.map((o) => {
+        const texts = months.map((m) => written.get(`${o.id}|${m.id}`)).filter(Boolean);
+        const kinds = new Set(texts);
+        return kinds.size === 1
+          ? `${o.label}: ${texts.length} kartus tas pats įrašas`
+          : `${o.label}: ${kinds.size} skirtingi įrašai`;
+      });
+      return `${parts.join(". ")}.`;
+    }
+
+    function record(index) {
+      const obj = objOf(objId);
+      const m = monthOf(monthId);
+      const list = cards[obj.kind] || [];
+      const text = list[index];
+      if (!text) return;
+      if (text !== records[obj.id][m.id]) {
+        /* Klaida nebaudžiama ir neįrašoma: žurnalas turi rodyti tai, ką
+           vaikas tikrai mato, o ne pirmą spėjimą. */
+        api.note(S.wrong);
+        api.readout(`${obj.label}, ${m.label}: ${S.wrong}`);
+        return;
+      }
+      written.set(`${obj.id}|${m.id}`, text);
+      paintJournal();
+      api.speak(text, { rate: 0.9 });
+      api.readout(`${obj.label}, ${m.label}: ${text}`);
+      api.note(S.look);
+      if (written.size === objects.length * months.length) {
+        summaryEl.textContent = summary();
+        if (!reported) {
+          reported = true;
+          api.note(`${S.rule} ${S.done}`);
+          api.progress({ correct: true });
+          api.speak(S.done);
+        }
+      }
+    }
+
+    function paintCards() {
+      const list = cards[objOf(objId).kind] || [];
+      cardsEl.innerHTML = list.map((text, i) =>
+        `<button type="button" class="btn secondary" data-card="${i}"
+          style="min-width:0;min-height:52px;height:auto;padding:.4rem .5rem;
+          font-size:.98rem;line-height:1.2;overflow-wrap:anywhere">${esc(text)}</button>`).join("");
+      Array.from(cardsEl.querySelectorAll("button[data-card]"))
+        .forEach((btn) => btn.addEventListener("click", () => record(Number(btn.dataset.card))));
+    }
+
+    objBtns.forEach((btn) => btn.addEventListener("click", () => {
+      objId = btn.dataset.object;
+      objBtns.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      paintScene();
+      paintCards();
+      const o = objOf(objId);
+      api.speak(o.label);
+      api.readout(`${o.label}. ${S.look}`);
+    }));
+
+    monthBtns.forEach((btn) => btn.addEventListener("click", () => {
+      monthId = btn.dataset.month;
+      monthBtns.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      const m = monthOf(monthId);
+      paintScene();
+      api.speak(m.label);
+      api.readout(`${m.label}. ${S.look}`);
+    }));
+
+    controls.querySelector("#sz-reset").addEventListener("click", () => {
+      stage.innerHTML = "";
+      controls.innerHTML = "";
+      stebejimoZurnalas.mount({ stage, controls, api, config });
+    });
+
+    // Pastaba išvaloma sąmoningai — kitaip po perkrovimo liktų ankstesnio
+    // bandymo sakinys (LL-16).
+    api.note("");
+    paintScene();
+    paintJournal();
+    paintCards();
+    api.readout(S.start);
+    api.speak(S.start);
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "dienos-juosta": dienosJuosta,
   "metu-laikai": metuLaikai,
@@ -4946,4 +5201,5 @@ export const SIMS = {
   "ledo-formos": ledoFormos,
   "traumos-priezastis": traumosPriezastis,
   "bendruomenes": bendruomenes,
+  "stebejimo-zurnalas": stebejimoZurnalas,
 };

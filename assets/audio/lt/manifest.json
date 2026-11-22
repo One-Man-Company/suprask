@@ -707,6 +707,10 @@
   "n": "n/5d730d6540952a24-d9140fb7.mp3",
   "s": "s/5d730d6540952a24-82ec682c.mp3"
  },
+ "Be lapų": {
+  "n": "n/78406f4343040a86-90b59df8.mp3",
+  "s": "s/78406f4343040a86-c0c39026.mp3"
+ },
  "Bendruomenę sieja bendras reikalas, o ne vienodumas.": {
   "n": "n/70db15f491b5cf81-2b544841.mp3",
   "s": "s/70db15f491b5cf81-50f0ea75.mp3"
@@ -1026,6 +1030,10 @@
  "E": {
   "n": "n/a9f51566bd6705f7-5d6f8aea.mp3",
   "s": "s/a9f51566bd6705f7-5c0b3da6.mp3"
+ },
+ "Eglė": {
+  "n": "n/1f7125f49e94f038-825393a2.mp3",
+  "s": "s/1f7125f49e94f038-6d70e2d8.mp3"
  },
  "Emilis": {
   "n": "n/4ea1ed702de88fab-80b74c72.mp3",
@@ -1387,6 +1395,14 @@
   "n": "n/2b053f0b8f2c5df5-ed72ef17.mp3",
   "s": "s/2b053f0b8f2c5df5-8a06b845.mp3"
  },
+ "Klevas": {
+  "n": "n/da9e105ea0b55dd0-6bd09a18.mp3",
+  "s": "s/da9e105ea0b55dd0-e8ca6e3a.mp3"
+ },
+ "Klevas keitėsi, o eglė liko žalia.": {
+  "n": "n/6e37eac028213be2-67d45fdf.mp3",
+  "s": "s/6e37eac028213be2-8bff8805.mp3"
+ },
  "Kliudė.": {
   "n": "n/4f1030a1c7090531-e7806861.mp3",
   "s": "s/4f1030a1c7090531-0699bd71.mp3"
@@ -1547,6 +1563,14 @@
   "n": "n/782dbd829e6e7ce2-9a5c8b14.mp3",
   "s": "s/782dbd829e6e7ce2-2905bff5.mp3"
  },
+ "Lapai geltoni": {
+  "n": "n/cf0902d77177bf74-29abbb0b.mp3",
+  "s": "s/cf0902d77177bf74-2e2d3fc1.mp3"
+ },
+ "Lapai krinta": {
+  "n": "n/6a85a9d270a6532b-094aab62.mp3",
+  "s": "s/6a85a9d270a6532b-24eec50e.mp3"
+ },
  "Lapas atiteko draugui. Krūva nepaaugo.": {
   "n": "n/d30fd2071ffa29d3-e21255a4.mp3",
   "s": "s/d30fd2071ffa29d3-d7d38f39.mp3"
@@ -1558,6 +1582,10 @@
  "Lapas perlenktas pusiau. Perlenk dar kartą.": {
   "n": "n/255123887f79d358-9b6a40b1.mp3",
   "s": "s/255123887f79d358-81e61873.mp3"
+ },
+ "Lapkritis": {
+  "n": "n/0f959dbd67209e46-3192f592.mp3",
+  "s": "s/0f959dbd67209e46-0a5f52cf.mp3"
  },
  "Lapė": {
   "n": "n/554e0a133245fe50-2ceabdf8.mp3",
@@ -1803,6 +1831,10 @@
   "n": "n/051aef55b356262b-12107e97.mp3",
   "s": "s/051aef55b356262b-8981a3da.mp3"
  },
+ "Pasirink medį ir mėnesį.": {
+  "n": "n/543cf86cdeca6f69-9204c469.mp3",
+  "s": "s/543cf86cdeca6f69-dd9a1ee3.mp3"
+ },
  "Pasirink plytelę. Tada spėk, kur orui kelyje yra kliūtis.": {
   "n": "n/434bbeff547d4cbf-8b284f36.mp3",
   "s": "s/434bbeff547d4cbf-76a408cf.mp3"
@@ -1839,9 +1871,17 @@
   "n": "n/d2e49dfc62d6e714-ae0aef9a.mp3",
   "s": "s/d2e49dfc62d6e714-0fdf0fb2.mp3"
  },
+ "Pažiūrėk dar kartą į medį ir žemę.": {
+  "n": "n/0d67d9d60f16f690-1d2ecdd5.mp3",
+  "s": "s/0d67d9d60f16f690-0e5cf7fa.mp3"
+ },
  "Pažiūrėk ne į vietą, o į tai, kas duoda maistą.": {
   "n": "n/3b31730d5e058355-7031232c.mp3",
   "s": "s/3b31730d5e058355-273c7590.mp3"
+ },
+ "Pažiūrėk į medį ir į žemę po juo.": {
+  "n": "n/42b1695de0c0b730-e51ef7d1.mp3",
+  "s": "s/42b1695de0c0b730-d5c0dda6.mp3"
  },
  "Pelėda": {
   "n": "n/9f5897c7a3b79e29-125b8a6f.mp3",
@@ -2115,6 +2155,10 @@
   "n": "n/6cef84a6159698ce-597a4673.mp3",
   "s": "s/6cef84a6159698ce-2cda6df1.mp3"
  },
+ "Rugsėjis": {
+  "n": "n/21c19102e26d6d55-e048e6ec.mp3",
+  "s": "s/21c19102e26d6d55-e3131091.mp3"
+ },
  "Rutulys iš priekio atrodo kaip apskritimas.": {
   "n": "n/5ae87117bcb6ca9e-fba13175.mp3",
   "s": "s/5ae87117bcb6ca9e-980f8324.mp3"
@@ -2227,6 +2271,10 @@
   "n": "n/c685e0360afa3917-c5f4e703.mp3",
   "s": "s/c685e0360afa3917-04cee785.mp3"
  },
+ "Spalis": {
+  "n": "n/60be12bf25a6cd50-aa12c32f.mp3",
+  "s": "s/60be12bf25a6cd50-d7ba154d.mp3"
+ },
  "Spausk dalis: pirmas spausdinimas — tau, antras — draugui.": {
   "n": "n/9d0bea2621b15a38-184cd99f.mp3",
   "s": "s/9d0bea2621b15a38-32e98a03.mp3"
@@ -2242,6 +2290,18 @@
  "Spausk „Pasverti“.": {
   "n": "n/18e6efb4759d8904-d4e91800.mp3",
   "s": "s/18e6efb4759d8904-9825fbc1.mp3"
+ },
+ "Spygliai geltoni": {
+  "n": "n/f66044b0ae083278-c095d3a8.mp3",
+  "s": "s/f66044b0ae083278-ba2aea33.mp3"
+ },
+ "Spygliai krinta": {
+  "n": "n/e7e1123a111ccb97-9e3ec9c3.mp3",
+  "s": "s/e7e1123a111ccb97-c7e1e718.mp3"
+ },
+ "Spygliai žali": {
+  "n": "n/e681cc5e761a505f-b67cb72d.mp3",
+  "s": "s/e681cc5e761a505f-1fa6b07b.mp3"
  },
  "Spėjai kitaip. Rodyklės liko vietoje, keitėsi tik užrašas.": {
   "n": "n/3237c9dcda911865-e3649eb8.mp3",
@@ -2298,6 +2358,10 @@
  "Stačiakampis gretasienis nuo šono irgi atrodo kaip stačiakampis.": {
   "n": "n/8e83fef04200b9f4-f2a4c557.mp3",
   "s": "s/8e83fef04200b9f4-7d2f5fc0.mp3"
+ },
+ "Stebėk kelis kartus ir užrašyk, ką matai.": {
+  "n": "n/a990ce122c2b7cb8-2b810e67.mp3",
+  "s": "s/a990ce122c2b7cb8-7703cac3.mp3"
  },
  "Stiklinė atvežama į parduotuvę.": {
   "n": "n/a7bdd974d2ad4b20-1bd8b608.mp3",

@@ -11,16 +11,13 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **55**
-- Padengta / iš dalies / nėra: **31 / 7 / 9**
+- Modulių dabar: **58**
+- Padengta / iš dalies / nėra: **34 / 7 / 6**
 
 ## Ko dar nėra (prioritetas)
 
 | Būsena | Tema | Kodas | Rezultatas | Šaltinis |
 |---|---|---|---|---|
-| missing | Transformacijos / Konstravimas | B:transformacijos-konstravimas | „Apibūdinti objektų ar žmonių vietą… kairėn/dešinėn, pagal/prieš laikrodžio rodyklę“ | `1-klases-temų-žemėlapis.md:46` |
-| missing | Bendruomenės | C:bendruomenes | „Mokosi atpažinti skirtingas bendruomenes, religijas, aplinkas… tolerancijos kitybei“ | `1-klases-temų-žemėlapis.md:64` |
-| missing | Stebėjimas | C:stebejimas | „Savais žodžiais papasakoti apie… užfiksuotus gamtos objektus“ („Rudens požymiai mokyklos kieme“) | `1-klases-temų-žemėlapis.md:63` |
 | missing | Drabužių priežiūra | D:drabuziu-prieziura | „1 klasė. Drabužių, avalynės priežiūra“ | `1-klases-temų-žemėlapis.md:76` |
 | missing | Elektronika | D:elektronika | 23.4.1: elektros srovė, šaltiniai, jungiklis, saugus elgesys | `1-klases-temų-žemėlapis.md:74` |
 | missing | Emocijų žodynas | D:emociju-zodynas | „Atpažįsta, įvardija ir valdo emocijas, elgesį“ | `1-klases-temų-žemėlapis.md:78` |
@@ -52,10 +49,13 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Sudėtis per 10 | B:sudetis-per-10 | „Vienaženklių skaičių peržengiant dešimtį“ | `1-klases-temų-žemėlapis.md:40` |
 | covered | Sudėtis/atimtis iki 100 | B:sudetis-atimtis-iki-100 | „Dviženklio ir vienaženklio… peržengiant dešimtį“; „dviženklių… neperžengiant dešimties“ | `1-klases-temų-žemėlapis.md:41` |
 | covered | Taškas, tiesė, spindulys, atkarpa | B:taskas-tiese-spindulys-atkarpa | „Vaizdavimas brėžinyje ir padėties vienas kito atžvilgiu apibūdinimas“ | `1-klases-temų-žemėlapis.md:45` |
+| covered | Transformacijos / Konstravimas | B:transformacijos-konstravimas | „Apibūdinti objektų ar žmonių vietą… kairėn/dešinėn, pagal/prieš laikrodžio rodyklę“ | `1-klases-temų-žemėlapis.md:46` |
 | covered | Augalai: medžiai, krūmai, žolės | C:augalai-medziai-krumai-zoles | „Skirti medžius, krūmus ir žoles; atpažinti klevą, ąžuolą, beržą, eglę, pušį“ | `1-klases-temų-žemėlapis.md:56` |
 | covered | Augalo dalys | C:augalo-dalys | „Atpažinti augalo dalis (šaknys, stiebas/kamienas, lapai, žiedas, vaisius, sėkla)“ | `1-klases-temų-žemėlapis.md:57` |
 | covered | Augalo gyvenimo ciklas | C:augalo-gyvenimo-ciklas | „Nagrinėjamas augalo gyvenimo ciklas (dygimas, augimas, vaisių brandinimas)“ | `1-klases-temų-žemėlapis.md:58` |
+| covered | Bendruomenės | C:bendruomenes | „Mokosi atpažinti skirtingas bendruomenes, religijas, aplinkas… tolerancijos kitybei“ | `1-klases-temų-žemėlapis.md:64` |
 | covered | Judėjimas | 26.4.1 | tyrimas „Daiktų judėjimo greičio tyrimas“; nuožulnioji plokštuma (:1557–1565, :8483–8484) | `pasaulio-pazinimas-1-klase.md:93` |
+| covered | Stebėjimas | C:stebejimas | „Savais žodžiais papasakoti apie… užfiksuotus gamtos objektus“ („Rudens požymiai mokyklos kieme“) | `1-klases-temų-žemėlapis.md:63` |
 | covered | Vandens būsenos | 26.3.2 | „Ledo papuošalo gamyba“; kietosios būsenos formos (:1547–1552, :8472–8474) | `pasaulio-pazinimas-1-klase.md:92` |
 | covered | Erdvinės raidės | D:erdvines-raides | 1 kl. pavyzdys „Dekoruotos ir erdvinės raidės“ (erdvinė raiška, kompozicija) | `1-klases-temų-žemėlapis.md:71` |
 | covered | Garso savybės | D:garso-savybes | „Eksperimentavimas garsais leidžia pažinti keturias garso savybes: trukmę…“ | `1-klases-temų-žemėlapis.md:72` |

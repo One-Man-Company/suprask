@@ -1,0 +1,180 @@
+{
+  "id": "33-stebejimas",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Ką pastebėjau kieme?",
+  "subtitle": "Stebėjimas — tai įrašai, kuriuos gali palyginti",
+  "minutes": 9,
+  "outcomes": [
+    "Užrašau, ką mačiau, ir pasakau, kada mačiau.",
+    "Palyginu to paties medžio įrašus ir pasakau, kas pasikeitė.",
+    "Pasakau, kad eglė rudenį lieka žalia, o klevo lapai krinta."
+  ],
+  "concept": {
+    "title": "Stebėjimo žurnalas",
+    "big_idea": "Stebėjimas — tai ne vienas žvilgsnis. Užrašyk, ką matai ir kada, tada palygink. Taip pamatai, kas pasikeitė.",
+    "steps": [
+      "Pasirink medį ir mėnesį.",
+      "Pažiūrėk į medį ir į žemę po juo.",
+      "Pasirink įrašą, kuris pasako, ką matai.",
+      "Palygink žurnale visus tris mėnesius."
+    ],
+    "example": "Rugsėjį klevas dar žalias. Lapkritį jis beveik be lapų, o eglė visą laiką žalia."
+  },
+  "sim": {
+    "component": "stebejimo-zurnalas",
+    "config": {
+      "objects": [
+        {
+          "id": "klevas",
+          "label": "Klevas",
+          "kind": "lapuotis"
+        },
+        {
+          "id": "egle",
+          "label": "Eglė",
+          "kind": "spygliuotis"
+        }
+      ],
+      "months": [
+        {
+          "id": "rugsejis",
+          "label": "Rugsėjis",
+          "stage": "ruduo-anksti",
+          "fallen": 2
+        },
+        {
+          "id": "spalis",
+          "label": "Spalis",
+          "stage": "ruduo-krenta",
+          "fallen": 7
+        },
+        {
+          "id": "lapkritis",
+          "label": "Lapkritis",
+          "stage": "ruduo-velai",
+          "fallen": 12
+        }
+      ],
+      "words": {
+        "lapuotis": [
+          "Lapai geltoni",
+          "Lapai krinta",
+          "Be lapų"
+        ],
+        "spygliuotis": [
+          "Spygliai žali",
+          "Spygliai geltoni",
+          "Spygliai krinta"
+        ]
+      },
+      "records": {
+        "klevas": {
+          "rugsejis": "Lapai geltoni",
+          "spalis": "Lapai krinta",
+          "lapkritis": "Be lapų"
+        },
+        "egle": {
+          "rugsejis": "Spygliai žali",
+          "spalis": "Spygliai žali",
+          "lapkritis": "Spygliai žali"
+        }
+      },
+      "labels": {
+        "objectQ": "Ką stebi?",
+        "monthQ": "Kada stebi?",
+        "cardQ": "Ką užrašysi į žurnalą?",
+        "journal": "Stebėjimo žurnalas",
+        "reset": "Iš naujo"
+      },
+      "sentences": {
+        "start": "Pasirink medį ir mėnesį.",
+        "look": "Pažiūrėk į medį ir į žemę po juo.",
+        "wrong": "Pažiūrėk dar kartą į medį ir žemę.",
+        "rule": "Stebėk kelis kartus ir užrašyk, ką matai.",
+        "done": "Klevas keitėsi, o eglė liko žalia."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Rugsėjį lapai geltoni. Kas bus su klevo lapais lapkritį?",
+      "options": [
+        "Tuos pačius geltonus lapus",
+        "Medį beveik be lapų",
+        "Žalius klevo lapus"
+      ],
+      "answer": 1,
+      "hint": "Palygink, kiek lapų klevas turi rugsėjį ir lapkritį.",
+      "why": "Klevo lapai rudenį nukrinta, todėl lapkritį jis beveik be lapų."
+    },
+    {
+      "q": "Emilis tris kartus stebėjo eglę. Kas įrašyta žurnale visus tris kartus?",
+      "options": [
+        "Vis tris kartus tą patį įrašą",
+        "Pirmą kartą žali, paskui geltoni",
+        "Lapkritį eglė buvo be spyglių"
+      ],
+      "answer": 0,
+      "hint": "Pažiūrėk į eglę simuliacijoje visais mėnesiais.",
+      "why": "Eglė turi spyglius, ne lapus, todėl rudenį lieka žalia."
+    },
+    {
+      "q": "Kieme auga beržas. Spalį jo lapai geltoni ir krinta. Kas bus su beržu lapkritį?",
+      "options": [
+        "Lapai bus dar žalesni",
+        "Beržo lapai nepakito",
+        "Beržas bus beveik be lapų"
+      ],
+      "answer": 2,
+      "hint": "Beržas yra lapuotis, kaip ir klevas.",
+      "why": "Beržas yra lapuotis, todėl rudenį jo lapai taip pat krinta."
+    },
+    {
+      "q": "Emilis nori mamai papasakoti apie kiemą. Kas padės jam pasakoti tiksliai?",
+      "options": [
+        "Prisiminti, kokia buvo diena",
+        "Įrašų, ką matė ir kada",
+        "Pasakyti, kad kieme buvo gražu"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kaip nepainiotum rugsėjo su lapkričiu.",
+      "why": "Įrašas su mėnesiu padeda prisiminti, ką matei."
+    },
+    {
+      "q": "Žiemą Emilis žiūri į klevą ir eglę. Kas bus su klevu ir egle žiemą?",
+      "options": [
+        "Klevas be lapų, eglė žalia",
+        "Abu medžiai bus žali",
+        "Abu medžiai be lapų"
+      ],
+      "answer": 0,
+      "hint": "Prisimink skirtumą tarp lapų ir spyglių.",
+      "why": "Eglė žiemą lieka žalia, o klevas būna be lapų.",
+      "optional": true
+    }
+  ],
+  "reflect": "Ką matei kieme rugsėjį, o ką lapkritį? Papasakok savais žodžiais.",
+  "teacher": {
+    "goal": "Stebėjimą sieti su įrašu, o ne su vienu žvilgsniu. Vaikas mokosi užrašyti, ką mato ir kada, o paskui palyginti tuos įrašus: taip pamato ir laipsnišką klevo pokytį, ir tai, kad eglė per visą rudenį nepakito.",
+    "prompt": "Kodėl apie klevą gali pasakyti, kad jis keitėsi, o apie eglę — kad ne? Ką tau parodė trys įrašai?",
+    "offline": "Duokite kiekvienam vaikui lapą su trimis stulpeliais: „Ką matau?“, „Kada?“, „Ką girdžiu?“. Pirmadienį vaikai apibraukia medį mokyklos kieme ir nupiešia, ką mato: lapus, spyglio formą, ką nors po medžiu. Penktadienį piešia tą patį medį iš naujo. Tada poromis lygina abu piešinius ir pasako: „Rugsėjį buvo…, o dabar yra…“. Mokytojas užrašo vaiko sakinį jo paties žodžiais, o ne taiso į suaugusiojo formuluotę.",
+    "misconceptions": [
+      "„Rudenį visi medžiai gelsta ir numeta lapus.“ Eglė turi spyglius, ne lapus; trys žurnalo įrašai rodo tą patį: spygliai žali.",
+      "„Stebėti — tai vieną kartą pažiūrėti.“ Žurnale pokytis matomas tik palyginus kelis to paties medžio įrašus skirtingais mėnesiais.",
+      "„Jei klevas rugsėjį geltonas, toks bus ir lapkritį.“ Trys įrašai rodo laipsnišką pokytį: lapai gelsta, paskui krinta, paskui jų beveik nelieka.",
+      "„Pakanka pasakyti, kad buvo gražu.“ Tikslus pasakojimas remiasi įrašu: kas, kada ir ką veikė."
+    ]
+  },
+  "sources": [
+    "Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), gamtamokslinis komunikavimas 1–2 klasei — „Savais žodžiais papasakoti apie artimiausioje aplinkoje pastebėtus ir skaitmeninėmis priemonėmis užfiksuotus gamtos objektus ir reiškinius, pvz., „Rudens požymiai mokyklos kieme“, „Mokyklos kieme augančių medžių įvairovė““ (sources/pradinio-bp-rekomendacijos-2024.txt:12196–12199).",
+    "Ten pat, 26.2.3 Augalai — „Stebėjimus fiksuoti stebėjimo lape (pvz., kada pasirodė daigelis, kiek paaugo stiebelis, kada sukrovė žiedą ir pan.), daryti išvadas“ (sources/pradinio-bp-rekomendacijos-2024.txt:1534–1542).",
+    "Ten pat, 26.2.3 Augalai — ekskursija į mokyklos kiemą ir lapų lyginimas kaip tiriamosios veiklos metodas (sources/pradinio-bp-rekomendacijos-2024.txt:1534–1539)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena sąvoka: stebėjimas yra įrašas; modelis turi vieną kintamąjį (mėnesį) ir du objektus.",
+    "2 žingsnis — vertinamas perkėlimas: beržas, kurio modelyje nėra, ir žiema, kai klevas jau be lapų.",
+    "3 žingsnis — pagalba laiku: neteisingas įrašas neįrašomas ir nebaudžiamas, o žurnalas rodo tik tai, ką vaikas tikrai matė.",
+    "8 žingsnis — veikla be ekrano su trimis stulpeliais ir dviem piešiniais tinka klasei be kompiuterių."
+  ]
+}

@@ -398,6 +398,14 @@
      "file": "grade-01/pasaulio-pazinimas/34-bendruomenes.json",
      "minutes": 9,
      "sim": "bendruomenes"
+    },
+    {
+     "id": "33-stebejimas",
+     "title": "Ką pastebėjau kieme?",
+     "subtitle": "Stebėjimas — tai įrašai, kuriuos gali palyginti",
+     "file": "grade-01/pasaulio-pazinimas/33-stebejimas.json",
+     "minutes": 9,
+     "sim": "stebejimo-zurnalas"
     }
    ]
   },

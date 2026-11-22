@@ -1,14 +1,14 @@
 {
  "grade": 1,
- "generated": "2026-11-23T00:31:24",
+ "generated": "2026-11-23T01:16:38",
  "source_hash": "a95e59a5741f37ce",
  "curriculum_positions": 47,
  "counts": {
-  "covered": 31,
+  "covered": 34,
   "partial": 7,
-  "missing": 9
+  "missing": 6
  },
- "modules_now": 55,
+ "modules_now": 58,
  "rows": [
   {
    "key": "26.2.3",
@@ -24,7 +24,8 @@
    "modules": [
     "22-medziai-krumai-zoles",
     "02-medziagu-bandymas",
-    "08-metu-laikai"
+    "08-metu-laikai",
+    "33-stebejimas"
    ],
    "status": "covered",
    "target": "",
@@ -45,7 +46,7 @@
     "21-kas-sukure-dailka"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/31-gamtos-istekliai-tarsa-tausojimas.json",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/35-gamtos-istekliai-tarsa-tausojimas.json",
    "hours": "2"
   },
   {
@@ -60,10 +61,11 @@
    "svietimas": "",
    "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:171",
    "modules": [
-    "08-metu-laikai"
+    "08-metu-laikai",
+    "34-bendruomenes"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/32-zmoniu-ivairove.json",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/36-zmoniu-ivairove.json",
    "hours": "3"
   },
   {
@@ -83,7 +85,7 @@
     "10-gyvunu-grupes"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/33-energijos-reikia-visiems.json",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/37-energijos-reikia-visiems.json",
    "hours": "2"
   },
   {
@@ -121,7 +123,7 @@
     "19-dumai-ir-isejimas"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/34-traumu-prevencija.json",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/38-traumu-prevencija.json",
    "hours": "3"
   },
   {
@@ -156,12 +158,12 @@
    "strand": "pasaulio-pazinimas",
    "modules": [
     "10-gyvunu-grupes",
+    "34-bendruomenes",
     "12-bendradarbiavimo-tiltas",
-    "08-metu-laikai",
-    "01-susitarimas-ir-zaidimas"
+    "08-metu-laikai"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/35-bendri-gyvu-organizmu-pozymiai.json"
+   "target": "content/lt/grade-01/pasaulio-pazinimas/39-bendri-gyvu-organizmu-pozymiai.json"
   },
   {
    "key": "26.3.2",
@@ -445,7 +447,7 @@
     "16-lygybe-svarstykles"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/matematika/31-trukstamas-demuo.json"
+   "target": "content/lt/grade-01/matematika/33-trukstamas-demuo.json"
   },
   {
    "key": "B:pinigai",
@@ -510,9 +512,11 @@
    "svietimas": "#1",
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:46",
    "strand": "matematika",
-   "modules": [],
-   "status": "missing",
-   "target": "content/lt/grade-01/matematika/32-transformacijos-konstravimas.json"
+   "modules": [
+    "32-transformacijos-konstravimas"
+   ],
+   "status": "covered",
+   "target": ""
   },
   {
    "key": "B:erdvines-figuros",
@@ -657,9 +661,11 @@
    "svietimas": "#3",
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:63",
    "strand": "pasaulio-pazinimas",
-   "modules": [],
-   "status": "missing",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/36-stebejimas.json"
+   "modules": [
+    "33-stebejimas"
+   ],
+   "status": "covered",
+   "target": ""
   },
   {
    "key": "C:bendruomenes",
@@ -672,9 +678,11 @@
    "svietimas": "#2",
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:64",
    "strand": "pasaulio-pazinimas",
-   "modules": [],
-   "status": "missing",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/37-bendruomenes.json"
+   "modules": [
+    "34-bendruomenes"
+   ],
+   "status": "covered",
+   "target": ""
   },
   {
    "key": "C:as-ir-mano-seima",
@@ -691,7 +699,7 @@
     "17-kryptys-ir-vieta"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/38-as-ir-mano-seima.json"
+   "target": "content/lt/grade-01/pasaulio-pazinimas/40-as-ir-mano-seima.json"
   },
   {
    "key": "D:erdvines-raides",

@@ -274,6 +274,29 @@ export const art = {
         ${blob(0, -76, 18, "#e9a13a")}${blob(-24, -44, 10, "#c96a1c")}${blob(24, -46, 10, "#c96a1c")}
         ${blob(-6, -70, 7, "#f3b552", 0.9)}`;
     }
+    /* Du papildomi rudens etapai. Rugsėjį vainikas dar žalias su keliais
+       geltonais lapais, lapkritį — beveik plikas. Be jų trys rudens
+       mėnesiai rodė tą patį oranžinį medį, todėl „be lapų“ lapkritį
+       prieštarautų paveikslui (LL-13). „ziema“ tam netinka: ji piešia
+       sniego gniūžtes ant šakų, o lapkritį sniego dar nebūna. */
+    if (season === "ruduo-anksti") {
+      return `${trunk}${branches}
+        ${blob(-16, -58, 15, "#5aa954")}${blob(16, -60, 16, "#63b45b")}
+        ${blob(0, -76, 18, "#6fbe63")}${blob(-24, -44, 10, "#e0a52e")}${blob(24, -46, 10, "#d99328")}
+        ${blob(-6, -70, 7, "#e9b93a", 0.9)}`;
+    }
+    if (season === "ruduo-velai") {
+      const fallingLeaf = (lx, ly, rot, col) => `<path d="M${lx} ${ly}`
+        + ` c 3 -3 6 -1 7 0 c -1 2 -4 4 -7 0 z" fill="${col}"`
+        + ` transform="rotate(${rot} ${lx} ${ly})"/>`;
+      return `${trunk}${branches}
+        ${blob(-18, -58, 6, "#e08a2e", 0.9)}${blob(19, -52, 5, "#d9791f", 0.85)}
+        ${blob(2, -70, 4, "#e9a13a", 0.8)}
+        ${fallingLeaf(x - 34, baseY - 30, 30, "#d9791f")}
+        ${fallingLeaf(x + 38, baseY - 20, -24, "#e08a2e")}
+        ${fallingLeaf(x - 20, baseY - 8, 48, "#e9a13a")}
+        ${fallingLeaf(x + 24, baseY - 6, -36, "#c96a1c")}`;
+    }
     /* Spygliuotis (eglė). Skirtingai nuo lapuočio, jo išvaizda NEpriklauso
        nuo sezono — būtent todėl jis reikalingas metų laikų scenai: lapuotis
        numeta lapus, o eglė lieka žalia (LL-28 — modelis be prieštaraujančio

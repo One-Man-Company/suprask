@@ -236,6 +236,26 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   HEAD užklausos (`check_audio()`). Šis įrašas tą skaičių pataiso, o ne
   kartoja (LL-21 — skaičius dokumente, kurio niekas neperskaičiuoja).
 
+2026-11-22 (paleidimas #433): vardo PRIEKIS pagaliau tikrinamas — antrasis teiginys.
+  #426/#428 patikrino, kad `n/<sha(tekstas)>-<sha(baitai)>.mp3` galas sutampa su
+  baitais, bet **priekio** nepalietė nė karto: `audio_paths()` grąžindavo vien
+  kelius, teksto, kurį failas įsipareigoja ištarti, sąraše nebuvo. Realus
+  scenarijus: modulyje pataisoma rašyba ar kirčiavimas, manifestas lieka tas
+  pats raktas, garsas nepergeneruojamas — `check_audio.py` mato `exists()`,
+  HEAD mato 200, galo maišas sutampa (baitai tie patys), o vaikas girdi žodį,
+  kurio ekrane jau nebėra. Dabar:
+  - `audio_entries()` grąžina **(kelias, tekstas)** poras, `audio_paths()` lieka
+    kaip apvalkalas HEAD patikrai;
+  - `audio_name_digest()` turi penktą būseną `text_mismatch` (baitai savi,
+    priekis rodo kitą tekstą), ir visos penkios sumuojasi į `total`;
+  - `verdict()` turi atskirą priežastį „vardas rodo kitą TEKSTĄ“, o pranešimas —
+    atskirą eilutę (būsena be savo šakos būtų LL-129).
+  Išmatuota 2026-11-22: 1 486/1 486 priekis = `sha(manifesto raktas)[:16]`,
+  `text_mismatch` 0, `mismatch` 0, `absent` 0, 0,2 s (vietinis skaitymas).
+  Neigiama kontrolė (`scratch/pub433/probe.py`): manifeste pakeistas vienas
+  raktas → `text_mismatch` 1, `verdict` „1 garso failo vardas rodo kitą TEKSTĄ“,
+  rc 1; atkūrus — vėl 0 ir rc 0.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -332,8 +352,23 @@ AUDIO_URL_PREFIX = "assets/audio/lt/"
 AUDIO_SAMPLE = 48
 
 
-def audio_paths(sample: int | None = None) -> tuple[list[str], int]:
-    """(tikrinimi garso kelių sąrašas, kiek jų iš viso manifeste).
+def audio_entries(sample: int | None = None) -> tuple[list[tuple[str, str]], int]:
+    """(tikrinamos (kelias, tekstas) poros, kiek jų iš viso manifeste).
+
+    **Kodėl poros, o ne vien keliai (#433).** Garso failo vardas
+    (`scripts/generate_audio.py:381`) yra `<sha256(tekstas)[:16]>-<sha256(baitai)[:8]>.mp3`,
+    t. y. jis neša **du** teiginius: „šis failas ištaria BŪTENT šį tekstą“ ir
+    „šio failo baitai yra būtent šie“. #426/#428 patikrino tik antrąjį, nes
+    `audio_paths()` grąžindavo vien kelius — teksto, kurį failas turi ištarti,
+    sąraše nebuvo, tad pirmo teiginio net nebuvo su kuo palyginti (LL-106:
+    vardas su dviem tvirtinimais, tikrinamas vienas). Pasekmė vaikui girdima:
+    pakeitus teksto raktą ir nepergeneravus garso, vaikas girdi **seną žodį**,
+    o visi vartai žali.
+
+    Poros, o ne du atskiri sąrašai: manifeste du skirtingi tekstai gali rodyti
+    į tą patį failą (kol kas taip nėra, bet formatas to nedraudžia). Tada vienas
+    įrašas bus `checked`, kitas — `text_mismatch`, ir abu turi būti įskaityti,
+    kad sumos sutaptų su `total` (LL-37).
 
     `sample=None` — visi įrašai. Mėginys imamas tolygiai (kas n-tas), ne iš
     pradžios: pirmi įrašai yra seniausi ir paskelbti seniausiai, tad pradžios
@@ -343,19 +378,26 @@ def audio_paths(sample: int | None = None) -> tuple[list[str], int]:
         data = json.loads(AUDIO_MANIFEST.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return [], 0
-    paths: list[str] = []
-    for value in data.values():
+    pairs: list[tuple[str, str]] = []
+    for text, value in data.items():
         if isinstance(value, dict):
-            paths += [str(p) for p in value.values() if p]
+            pairs += [(str(p), text) for p in value.values() if p]
         elif isinstance(value, str) and value:
-            paths.append(value)
-    paths.sort()
-    total = len(paths)
+            pairs.append((value, text))
+    pairs.sort()
+    total = len(pairs)
     if sample is None or sample <= 0 or total <= sample:
-        return paths, total
+        return pairs, total
     step = total / sample
-    picked = [paths[min(total - 1, int(i * step))] for i in range(sample)]
+    picked = [pairs[min(total - 1, int(i * step))] for i in range(sample)]
     return list(dict.fromkeys(picked)), total
+
+
+def audio_paths(sample: int | None = None) -> tuple[list[str], int]:
+    """Tik keliai (`audio_entries()` be tekstų). Palikta HEAD patikrai ir
+    seniems skaitytojams; vardo maišo patikra ima `audio_entries()`."""
+    pairs, total = audio_entries(sample)
+    return [rel for rel, _ in pairs], total
 
 
 def head_state(url_rel: str) -> tuple[str, int]:
@@ -418,21 +460,31 @@ def check_audio(sample: int | None = None) -> dict:
 
 
 def audio_name_digest() -> dict:
-    """Ar garso failo vardas sutampa su jo baitais — be jokios tinklo užklausos.
+    """Ar garso failo vardas sutampa su tuo, ką jis žada — be tinklo užklausos.
 
-    `scripts/generate_audio.py:380-381` mp3 vardą sudaro
-    `<sha256(tekstas)[:16]>-<sha256(baitai)[:8]>`, tad **URL neša turinio
-    maišą**. Dėl to `check_audio()` HEAD patikra yra prasminga: jei failas
-    svetainėje yra, tai jau tie baitai, kurių vardas nurodytas. Bet ši grandis
-    laikosi tik tol, kol repo failas atitinka savo vardą — ir to iki #426
-    netikrino niekas. Nukirptas (bet ne 0 B) ar perrašytas mp3 su senu vardu
-    praeidavo ir `check_audio.py` (`exists()`), ir HEAD patikrą, o vaikas
-    girdėjo tylą ar pusę žodžio (LL-37: riba buvo sąraše, ne svetainėje).
+    `scripts/generate_audio.py:367-385` mp3 vardą sudaro
+    `<sha256(tekstas)[:16]>-<sha256(baitai)[:8]>`, tad **URL neša du teiginius**:
 
-    Būsenos:
-      - `mismatch` — vardo maišas ≠ baitų maišas. Taisymas: pergeneruoti garsą,
-        o ne publikuoti (`scripts/generate_audio.py`).
-      - `unverified` — vardas be turinio maišo (senas formatas, `<sha>.mp3`).
+      1. priekis (`sha(tekstas)[:16]`) — „šis failas ištaria BŪTENT šį tekstą“;
+      2. galas (`sha(baitai)[:8]`) — „šio failo baitai yra būtent šie“.
+
+    #426/#428 patikrino tik antrąjį, nes sąraše buvo vien keliai, o ne
+    (kelias, tekstas). Dėl to pirmasis teiginys buvo nepatikrintas nė karto:
+    pakeitus teksto raktą (pataisius rašybą, kirčiavimą, perrašius sakinį
+    modulyje) ir nepergeneravus garso, failo vardas toliau rodo į **seną
+    tekstą**, `check_audio.py` mato `exists()`, HEAD mato 200, galo maišas
+    sutampa (baitai tie patys) — ir vaikas girdi žodį, kurio ekrane jau nebėra.
+    Tai ta pati šeima kaip #426 (vardas teigia daugiau, negu tikrinama), tik
+    trečias teiginys: **tekstas**, kurį vardas įsipareigoja ištarti (LL-106).
+
+    Būsenos (visos kartu sudaro `total`, kad suma nemeluotų — LL-37):
+      - `checked` — abu vardo teiginiai sutampa.
+      - `mismatch` — baitų maišas ≠ vardas. Taisymas: pergeneruoti garsą, o ne
+        publikuoti (`scripts/generate_audio.py`).
+      - `text_mismatch` — baitai savi, bet priekis rodo **kitą tekstą**, negu
+        manifestas. Taisymas tas pats (pergeneruoti), bet priežastis kita:
+        failo baitai sveiki, todėl vien `mismatch` patikra jo nematė.
+      - `unverified` — vardas be priekio ar be galo (senas formatas, `<sha>.mp3`).
         Toks URL negali įrodyti turinio, todėl jis nėra „ok“ — bet ir ne
         „sugedęs baitas“. Skaičiuojamas atskirai, kad pranešimas nemeluotų.
       - `absent` — manifesto įrašas, kurio failo repo nėra. Ši aibė atsirado
@@ -443,17 +495,18 @@ def audio_name_digest() -> dict:
         svetainėje jau matuoja `check_audio()`, tad čia jis tik įvardijamas,
         o ne dubliuojamas kaip antra klaida.
     """
-    rels, total = audio_paths(None)
+    pairs, total = audio_entries(None)
     if not total:
-        return {"total": 0, "checked": 0, "mismatch": [], "unverified": [],
-                "absent": [], "note": "manifestas neperskaitytas — vardo maišo "
-                                      "patikra neįvyko"}
+        return {"total": 0, "checked": 0, "mismatch": [], "text_mismatch": [],
+                "unverified": [], "absent": [],
+                "note": "manifestas neperskaitytas — vardo maišo patikra neįvyko"}
     base = AUDIO_MANIFEST.parent
     mismatch: list[str] = []
+    text_mismatch: list[str] = []
     unverified: list[str] = []
     absent: list[str] = []
     checked = 0
-    for rel in rels:
+    for rel, text in pairs:
         path = base / rel
         try:
             data = path.read_bytes()
@@ -466,14 +519,21 @@ def audio_name_digest() -> dict:
         if "-" not in stem:
             unverified.append(rel)
             continue
-        claimed = stem.rsplit("-", 1)[1]
-        if hashlib.sha256(data).hexdigest()[:8] == claimed:
-            checked += 1
-        else:
+        # `rsplit`, ne `split`: tekstų maišas ir baitų maišas atskirti BŪTENT
+        # paskutiniu brūkšniu, o priekis yra viskas iki jo.
+        claimed_text, claimed_bytes = stem.rsplit("-", 1)
+        if hashlib.sha256(data).hexdigest()[:8] != claimed_bytes:
             mismatch.append(rel)
+            continue
+        # Baitai savi. Dabar antrasis teiginys: ar priekis — šio teksto maišas?
+        # `generate_audio.sha()` ima tuos pačius 16 simbolių ta pačia tvarka.
+        if hashlib.sha256(text.encode("utf-8")).hexdigest()[:16] != claimed_text:
+            text_mismatch.append(rel)
+            continue
+        checked += 1
     return {"total": total, "checked": checked,
-            "mismatch": mismatch, "unverified": unverified,
-            "absent": absent, "note": ""}
+            "mismatch": mismatch, "text_mismatch": text_mismatch,
+            "unverified": unverified, "absent": absent, "note": ""}
 
 
 def grade_dir(grade: int) -> str:
@@ -1382,6 +1442,13 @@ def verdict(data: dict) -> dict:
     if name.get("mismatch"):
         reasons.append(f"{len(name['mismatch'])} garso failo vardas rodo kitą "
                        f"turinį (pergeneruoti, ne publikuoti)")
+    if name.get("text_mismatch"):
+        # Baitai savi, bet vardo priekis rodo KITĄ tekstą. Atskira priežastis:
+        # jei ši būsena susilietų su `mismatch`, pranešimas kaltintų failo
+        # baitus, nors jie sveiki — o taisymas kitas (pergeneruoti tekstui,
+        # ne atkurti baitams). LL-129: būsena be savo šakos virsta „kita“.
+        reasons.append(f"{len(name['text_mismatch'])} garso failo vardas rodo "
+                       f"kitą TEKSTĄ (garsas senesnis už tekstą, pergeneruoti)")
     if name.get("absent"):
         # Įrašas manifeste, failo repo nėra. `check_audio()` tai jau mato kaip
         # „dangling“, bet būtent šis laukas pasako, kad vardo maišo patikra
@@ -1599,10 +1666,11 @@ def main() -> int:
     if name.get("note"):
         print(f"Garso vardai: {name['note']}")
     elif name.get("total"):
-        bad = len(name.get("mismatch", [])) + len(name.get("absent", []))
+        bad = (len(name.get("mismatch", [])) + len(name.get("text_mismatch", []))
+               + len(name.get("absent", [])))
         unverified = len(name.get("unverified", []))
         line = (f"Garso vardai: {name.get('checked', 0)} iš {name['total']} — "
-                f"vardo maišas = baitų maišas")
+                f"vardo maišas = baitų maišas IR priekis = teksto maišas")
         if bad:
             line += f" — NEATITINKA {bad}"
         if unverified:
@@ -1610,6 +1678,9 @@ def main() -> int:
         print(line)
         for rel in name.get("mismatch", [])[:10]:
             print(f"  - {rel} — vardas rodo kitą turinį, pergeneruok garsą")
+        for rel in name.get("text_mismatch", [])[:10]:
+            print(f"  - {rel} — vardas rodo kitą TEKSTĄ, garsas senesnis už "
+                  f"tekstą — pergeneruok")
         for rel in name.get("absent", [])[:10]:
             print(f"  - {rel} — manifesto įrašas, failo repo nėra "
                   f"(vardo maišas nepatikrintas)")
@@ -1631,7 +1702,7 @@ def main() -> int:
         name_tail = ""
         if name.get("total"):
             name_tail = (f", garso vardai {name.get('checked', 0)}/{name['total']}"
-                         f" = baitai")
+                         f" = baitai ir tekstas")
         if data.get("bytes_checked", True):
             print(f"✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai, "
                   f"svetainės kodas {data.get('shell_count', 0)} failų"

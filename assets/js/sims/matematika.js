@@ -4363,8 +4363,162 @@ const desimtukasIrAtimtis = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 15. Sukamas ratas: ketvirtis rato pagal / prieš laikrodžio rodyklę  */
+/*                                                                    */
+/* Modelis: kortelė su rodykle guli ant rato. Vaikas sukа po ketvirtį  */
+/* į abi puses ir stebi, į kurią vietą ratu keliauja raudona žymė.     */
+/* Būtent judėjimas (o ne viena pusė) atskleidžia klaidingą nuostatą   */
+/* „prieš laikrodžio rodyklę — tai į kairę“: nuo apačios ta pati       */
+/* kryptis veda į dešinę. Sąmoningai nėra pusės rato posūkio ir        */
+/* simetrijos — tai kitos sąvokos (T1.2).                              */
+/* ------------------------------------------------------------------ */
+const sukamasRatas = {
+  mount({ stage, controls, api, config }) {
+    const say = config.sentences || {};
+    // LL-42: sakinys gyvena TIK config.sentences, kode atsarginio literalo nėra.
+    const line = (key) => (typeof say[key] === "string" ? say[key] : "");
+    const tell = (key) => { const t = line(key); if (t) api.speak(t); };
+
+    // 0 — viršus, 1 — dešinė, 2 — apačia, 3 — kairė (pagal laikrodžio rodyklę).
+    const PLACE = [
+      { loc: "viršuje", dir: "į viršų" },
+      { loc: "dešinėje", dir: "į dešinę" },
+      { loc: "apačioje", dir: "į apačią" },
+      { loc: "kairėje", dir: "į kairę" },
+    ];
+    const CX = 160;
+    const CY = 160;
+
+    let quarter = 0;
+    let visited = new Set([0]);
+    let reported = false;
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:100%;min-width:0;display:grid;justify-items:center;gap:.6rem">
+        <svg id="sr-svg" viewBox="0 0 320 320" width="100%" role="img"
+             style="display:block;width:100%;max-width:22rem;height:auto"
+             aria-label="Ratas su kortele ir rodykle"></svg>
+      </div>`;
+
+    const svg = stage.querySelector("#sr-svg");
+
+    /* --- nejudanti lėkštė ---------------------------------------------- */
+    svg.appendChild(svgEl("circle", {
+      cx: CX, cy: CY, r: 132, fill: "var(--paper-2)", stroke: "var(--line)", "stroke-width": 3,
+    }));
+    // Keturi taškai žymi tas pačias vietas, kuriomis keliauja žymė.
+    [[CX, CY - 118], [CX + 118, CY], [CX, CY + 118], [CX - 118, CY]].forEach(([x, y]) => {
+      svg.appendChild(svgEl("circle", {
+        cx: x, cy: y, r: 4.5, fill: "var(--ink)", "fill-opacity": 0.28,
+      }));
+    });
+    // Rodyklė ant lėkštės parodo, kuria kryptimi sukasi laikrodžio rodyklė.
+    svg.appendChild(svgEl("path", {
+      d: "M231 89 A100 100 0 0 1 260 160",
+      fill: "none", stroke: "var(--ink)", "stroke-opacity": 0.32,
+      "stroke-width": 4, "stroke-linecap": "round",
+    }));
+    svg.appendChild(svgEl("path", {
+      d: "M260 160 L250 141 L270 143 Z",
+      fill: "var(--ink)", "fill-opacity": 0.32,
+    }));
+
+    /* --- sukama kortelė ----------------------------------------------- */
+    const card = svgEl("g", { id: "sr-card" });
+    card.appendChild(svgEl("rect", {
+      x: CX - 58, y: CY - 58, width: 116, height: 116, rx: 16,
+      fill: "var(--sun)", "fill-opacity": 0.55, stroke: "var(--ink)", "stroke-width": 3,
+    }));
+    card.appendChild(svgEl("line", {
+      x1: CX, y1: CY + 16, x2: CX, y2: CY - 34,
+      stroke: "var(--ink)", "stroke-width": 9, "stroke-linecap": "round",
+    }));
+    // Raudonas antgalis — tai žymė, kurią vaikas seka.
+    card.appendChild(svgEl("path", {
+      d: `M${CX} ${CY - 54} L${CX + 13} ${CY - 34} L${CX - 13} ${CY - 34} Z`,
+      fill: "var(--accent)", stroke: "var(--ink)", "stroke-width": 2.5, "stroke-linejoin": "round",
+    }));
+    svg.appendChild(card);
+
+    function paint() {
+      // Sukama SVG atributu, o ne CSS `transform`, kad būsena būtų ta pati
+      // ir be perėjimo (prefers-reduced-motion), ir DOM skaitytojui.
+      card.setAttribute("transform", `rotate(${quarter * 90} ${CX} ${CY})`);
+      svg.setAttribute("aria-label",
+        `Ratas su kortele. Žymė ${PLACE[quarter].loc}. Rodyklė rodo ${PLACE[quarter].dir}.`);
+    }
+
+    /* --- valdikliai ---------------------------------------------------- */
+    // `flex-wrap: wrap` ir `max-width: 100%` — ilgas užrašas 360 px ekrane
+    // lūžta savo dėžutėje, o ne išstumia simuliaciją (LL-30, LL-40).
+    const BTN = "padding:.65rem clamp(.5rem,2.2vw,1.2rem);flex-wrap:wrap;max-width:100%;"
+      + "text-align:center;line-height:1.2";
+    controls.innerHTML = `
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;width:100%;min-width:0">
+        <button class="btn secondary" type="button" id="sr-cw" style="${BTN}"
+                aria-label="Sukti ketvirtį rato pagal laikrodžio rodyklę">
+          <span><span aria-hidden="true">↻</span> Ketvirtis pagal laikrodžio rodyklę</span>
+        </button>
+        <button class="btn secondary" type="button" id="sr-ccw" style="${BTN}"
+                aria-label="Sukti ketvirtį rato prieš laikrodžio rodyklę">
+          <span><span aria-hidden="true">↺</span> Ketvirtis prieš laikrodžio rodyklę</span>
+        </button>
+        <button class="btn ghost" type="button" id="sr-reset" style="${BTN}">Iš naujo</button>
+      </div>`;
+
+    function turn(step) {
+      quarter = (quarter + step + 4) % 4;
+      visited.add(quarter);
+      paint();
+
+      // Didelis užrašas keičiasi tik po veiksmo (LL-14), o balsas taria
+      // statinį sakinį iš config — dinaminis tekstas lieka ekrane.
+      api.readout(`Žymė ${PLACE[quarter].loc}.`);
+      tell(step === 1 ? "pagal" : "pries");
+
+      if (step === -1 && quarter === 2) {
+        // Būtent čia griūva nuostata „prieš laikrodžio rodyklę = į kairę“.
+        api.note(line("toliau"));
+        tell("toliau");
+      } else if (quarter === 0 && visited.size === 4) {
+        api.note(line("ratas"));
+        tell("ratas");
+      } else {
+        api.note("");
+      }
+
+      if (visited.size === 4 && !reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    function reset() {
+      quarter = 0;
+      visited = new Set([0]);
+      paint();
+      api.readout(`Žymė ${PLACE[0].loc}.`);
+      api.note("");
+      tell("isnaujo");
+    }
+
+    controls.querySelector("#sr-cw").addEventListener("click", () => turn(1));
+    controls.querySelector("#sr-ccw").addEventListener("click", () => turn(-1));
+    controls.querySelector("#sr-reset").addEventListener("click", reset);
+
+    paint();
+    api.readout(`Žymė ${PLACE[0].loc}.`);
+    api.note("");
+    tell("pradzia");
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "skaiciu-tiese": skaiciuTiese,
+  "sukamas-ratas": sukamasRatas,
   desimtukas,
   figuros,
   desningumai,

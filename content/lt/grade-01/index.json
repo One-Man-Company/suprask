@@ -261,6 +261,14 @@
      "file": "grade-01/matematika/30-skaiciavimas-atgal-per-desimti.json",
      "minutes": 9,
      "sim": "skaiciavimas-per-desimti"
+    },
+    {
+     "id": "32-transformacijos-konstravimas",
+     "title": "Ketvirtis rato pagal laikrodžio rodyklę",
+     "subtitle": "Vienas ketvirtis perkelia žymę viena vieta, keturi — grąžina į pradžią",
+     "file": "grade-01/matematika/32-transformacijos-konstravimas.json",
+     "minutes": 9,
+     "sim": "sukamas-ratas"
     }
    ]
   },

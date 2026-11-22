@@ -1283,6 +1283,10 @@
   "n": "n/1e051d58fe0e58f6-bb1cd972.mp3",
   "s": "s/1e051d58fe0e58f6-4e6d5162.mp3"
  },
+ "Keturi ketvirčiai rato. Žymė grįžo į viršų.": {
+  "n": "n/7cd27370b5145149-2ea304c2.mp3",
+  "s": "s/7cd27370b5145149-961e577d.mp3"
+ },
  "Keturi trintukai": {
   "n": "n/3eb66ac94d4b6d16-02bc7d41.mp3",
   "s": "s/3eb66ac94d4b6d16-43105f01.mp3"
@@ -1294,6 +1298,14 @@
  "Keturkampis": {
   "n": "n/1c68c529e0dee2d1-8c0ac07a.mp3",
   "s": "s/1c68c529e0dee2d1-dd4ecd72.mp3"
+ },
+ "Ketvirtis rato pagal laikrodžio rodyklę.": {
+  "n": "n/6622a4c663e49b0c-a9b2cafa.mp3",
+  "s": "s/6622a4c663e49b0c-dab397df.mp3"
+ },
+ "Ketvirtis rato prieš laikrodžio rodyklę.": {
+  "n": "n/705ad7165703cb63-710f0f9a.mp3",
+  "s": "s/705ad7165703cb63-c29c4100.mp3"
  },
  "Kiek atšvaitų turi berniukas?": {
   "n": "n/6e57d8e4d1eb04ae-d2eed0e6.mp3",
@@ -1959,6 +1971,10 @@
   "n": "n/b875e35c2d3350b1-0a1e5a42.mp3",
   "s": "s/b875e35c2d3350b1-e7374b1a.mp3"
  },
+ "Pradedam iš naujo. Žymė vėl viršuje.": {
+  "n": "n/075dde4122881f4e-3b97ad01.mp3",
+  "s": "s/075dde4122881f4e-0e76d9df.mp3"
+ },
  "Pradedam. Prijunk laidus ir pažiūrėk, ar lemputė šviečia.": {
   "n": "n/cbe1d27c52bcf99c-cbd96c13.mp3",
   "s": "s/cbe1d27c52bcf99c-38cd0008.mp3"
@@ -1974,6 +1990,10 @@
  "Prie vartų jie sutiko Joną.": {
   "n": "n/9da815f3b1283795-624bc796.mp3",
   "s": "s/9da815f3b1283795-32877c86.mp3"
+ },
+ "Prieš laikrodžio rodyklę žymė nuėjo į kairę, paskui į apačią. Ji sukasi ratu, o ne į vieną pusę.": {
+  "n": "n/86a54338118d131d-072d9531.mp3",
+  "s": "s/86a54338118d131d-165c1c61.mp3"
  },
  "Prieš pietus abu vardai tokie patys.": {
   "n": "n/b493f224483334f9-2792defd.mp3",
@@ -3194,6 +3214,10 @@
  "Žydi!": {
   "n": "n/cdfe993b8d2eb096-20ff13d0.mp3",
   "s": "s/cdfe993b8d2eb096-9eb9807f.mp3"
+ },
+ "Žymė yra viršuje. Suk ratą ketvirtį ir stebėk, kur ji keliauja.": {
+  "n": "n/48dda5565a9f9bda-b6bc787c.mp3",
+  "s": "s/48dda5565a9f9bda-60c3cb98.mp3"
  },
  "ž": {
   "n": "n/4b6877a9d48058e5-2f50e91b.mp3",

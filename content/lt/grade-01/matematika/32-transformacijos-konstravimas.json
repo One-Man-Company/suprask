@@ -1,0 +1,119 @@
+{
+  "id": "32-transformacijos-konstravimas",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Ketvirtis rato pagal laikrodžio rodyklę",
+  "subtitle": "Vienas ketvirtis perkelia žymę viena vieta, keturi — grąžina į pradžią",
+  "minutes": 9,
+  "outcomes": [
+    "Nusakau, į kurią pusę sukasi laikrodžio rodyklė.",
+    "Pasakau, kur atsidurs žymė po ketvirčio rato.",
+    "Paaiškinu, kodėl keturi ketvirčiai grąžina žymę į pradžią."
+  ],
+  "concept": {
+    "title": "Ketvirtis rato suka visą kortelę",
+    "big_idea": "Posūkis suka visą kortelę apie centrą. Pagal laikrodžio rodyklę žymė keliauja taip: viršus, dešinė, apačia, kairė. Prieš laikrodžio rodyklę — atvirkščiai. Keturi ketvirčiai grąžina ją į pradžią.",
+    "steps": [
+      "Suk ratą po vieną ketvirtį ir žiūrėk, kur eina žymė.",
+      "Pagal laikrodžio rodyklę žymė eina: viršus, dešinė, apačia, kairė.",
+      "Prieš laikrodžio rodyklę ta pati tvarka eina atbulai.",
+      "Skaičiuok ketvirčius: po keturių žymė vėl viršuje."
+    ],
+    "example": "Stiklainio dangtelį atsuki prieš laikrodžio rodyklę. Dangtelio viršus juda į kairę."
+  },
+  "sim": {
+    "component": "sukamas-ratas",
+    "config": {
+      "sentences": {
+        "pradzia": "Žymė yra viršuje. Suk ratą ketvirtį ir stebėk, kur ji keliauja.",
+        "pagal": "Ketvirtis rato pagal laikrodžio rodyklę.",
+        "pries": "Ketvirtis rato prieš laikrodžio rodyklę.",
+        "toliau": "Prieš laikrodžio rodyklę žymė nuėjo į kairę, paskui į apačią. Ji sukasi ratu, o ne į vieną pusę.",
+        "ratas": "Keturi ketvirčiai rato. Žymė grįžo į viršų.",
+        "isnaujo": "Pradedam iš naujo. Žymė vėl viršuje."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Žymė yra viršuje. Sukai ketvirtį rato pagal laikrodžio rodyklę. Kur ji dabar?",
+      "options": [
+        "Kairėje",
+        "Apačioje",
+        "Dešinėje"
+      ],
+      "answer": 2,
+      "hint": "Suk ratą simuliacijoje ir stebėk, į kurią pusę pajuda žymė.",
+      "why": "Pagal laikrodžio rodyklę žymė iš viršaus eina į dešinę."
+    },
+    {
+      "q": "Žymė dabar apačioje. Sukai ketvirtį rato prieš laikrodžio rodyklę. Kur ji dabar?",
+      "options": [
+        "Dešinėje",
+        "Kairėje",
+        "Apačioje"
+      ],
+      "answer": 0,
+      "hint": "Suk ratą prieš laikrodžio rodyklę du ketvirčius.",
+      "why": "Prieš laikrodžio rodyklę nuo apačios žymė eina į dešinę."
+    },
+    {
+      "q": "Durų rankena sukama prieš laikrodžio rodyklę. Į kurią pusę juda rankenos viršus?",
+      "options": [
+        "Į dešinę",
+        "Į kairę",
+        "Žemyn"
+      ],
+      "answer": 1,
+      "hint": "Įsivaizduok ratą, kuris sukasi priešingai negu laikrodžio rodyklė.",
+      "why": "Prieš laikrodžio rodyklę viršus eina į kairę, kaip atsukant dangtelį."
+    },
+    {
+      "q": "Kortelė su rodykle pasukta ketvirtį rato. Kas pasikeitė?",
+      "options": [
+        "Rodyklė tapo trumpesnė",
+        "Pasikeitė tik kryptis",
+        "Kortelė tapo apvali"
+      ],
+      "answer": 1,
+      "hint": "Palygink rodyklės ilgį prieš posūkį ir po jo.",
+      "why": "Posūkis keičia kryptį, o forma lieka ta pati."
+    },
+    {
+      "q": "Kiek ketvirčių rato reikia, kad žymė grįžtų į viršų?",
+      "options": [
+        "Du",
+        "Tris",
+        "Keturis"
+      ],
+      "answer": 2,
+      "hint": "Skaičiuok kiekvieną ketvirtį simuliacijoje, kol žymė vėl bus viršuje.",
+      "why": "Keturi ketvirčiai sudaro visą ratą, todėl žymė grįžta į pradžią.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip žinai, į kurią pusę sukasi laikrodžio rodyklė? Pasakyk savais žodžiais.",
+  "teacher": {
+    "goal": "Suprasti, kad ketvirtis rato suka visą kortelę apie centrą, o kryptis (pagal / prieš laikrodžio rodyklę) nusako, į kurią vietą ratu keliauja žymė.",
+    "prompt": "Kur atsidūrė žymė po pirmo ketvirčio? O po antro?",
+    "offline": "Ant popierinės lėkštės uždėkite kvadratinį kartono lapą su nupiešta rodykle ir raudonu tašku ties jos galu. Vaikas lėkštę suka po ketvirtį rato pagal laikrodžio rodyklę ir kiekvieną kartą pasako, kur dabar taškas. Tada sukama prieš laikrodžio rodyklę. Galiausiai vaikas pats sugalvoja, kiek ketvirčių reikia, kad taškas grįžtų į viršų, ir patikrina sukdamas.",
+    "misconceptions": [
+      "„Prieš laikrodžio rodyklę reiškia į kairę“ — vaikas kryptį sieja su viena puse, o ne su judėjimu ratu. Modelis rodo: prieš rodyklę žymė iš viršaus eina į kairę, bet toliau — į apačią, o iš apačios — į dešinę.",
+      "„Posūkis pakeičia figūrą“ — vaikas mano, kad pasukta kortelė jau kitokia. Modelyje lieka ta pati rodyklė, tik pasukta, todėl forma ir ilgis nepakinta.",
+      "„Ketvirtis rato yra pusė“ — pirmokai dažnai pervertina posūkį. Modelis leidžia sukti po vieną ketvirtį ir matyti, kad du ketvirčiai dar nėra visas ratas.",
+      "„Vaikui per sunku, kol nemoka laikrodžio“ — 5–6 metų vaikai jau planuoja, kaip sukti diską pagal ar prieš laikrodžio rodyklę (Herbort ir kt., 2018). Todėl veikla pradedama nuo sukimosi ranka, o ne nuo laikrodžio ciferblato."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, „Geometrija ir matavimai. Konstravimas. Transformacijos“: apibūdinti objektų ar žmonių vietą vienas kito atžvilgiu (pasisukti kairėn/dešinėn, pagal/prieš laikrodžio rodyklę), atlikti pusės ar ketvirčio apskritimo posūkius.",
+    "Matematikos bendroji programa (2022), „Geometrija, matavimai ir statistika“, 1–2 klasė: orientacija erdvėje ir plokštumoje, objektų padėties ir judėjimo apibūdinimas.",
+    "Herbort, O., Büschelberger, J., & Janczyk, M. (2018). Preschool children adapt grasping movements to upcoming object manipulations: Evidence from a dial rotation task. Journal of Experimental Child Psychology, 167, 62–77. https://doi.org/10.1016/j.jecp.2017.09.025",
+    "Pedrett, S., Chavaillaz, A., & Frick, A. (2023). Age-related changes in how 3.5- to 5.5-year-olds observe and imagine rotational object motion. Spatial Cognition & Computation, 23(2), 83–111. https://doi.org/10.1080/13875868.2022.2095276"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (ketvirtis rato ir jo kryptis); pusės rato posūkis ir simetrija sąmoningai palikti kitam moduliui",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina kryptį naujoje situacijoje (kita pradinė vieta, durų rankena), o ne kartoja modulio sakinį",
+    "3 žingsnis — pagalba laiku: kiekviena užduotis turi užuominą į modelį, klaida nieko nebaudžia, ratą galima sukti be ėjimų limito",
+    "8 žingsnis — veikla be ekrano su popierine lėkšte, kartono rodykle ir raudonu tašku"
+  ]
+}

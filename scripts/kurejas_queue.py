@@ -365,6 +365,27 @@ def main() -> int:
                   f"Pasiūlymas lieka new (bandymas {attempt}/{EXHAUST_MAX_ATTEMPTS}), stabdau eilę.")
             break
 
+        if run_status == "timeout":
+            # Laiko limitas, o ne turinio gedimas — ir darbas gali būti JAU
+            # padarytas: 2026-11-22 #447 parašė visą modulį
+            # (`10-garsine-sandara.json`), o po 3600 s `run.py` įrašė tik
+            # „Baigėsi laikas", todėl sąrašo taisyklė pažymėjo #36234
+            # `blocked`, nors failas buvo vietoje. Todėl PIRMIAU tikriname, ar
+            # tikslas dabar yra: jei taip — darbas padarytas.
+            target = (prop.get("target") or "").strip()
+            if runner.target_paths(target) and all((ROOT / p).exists() for p in runner.target_paths(target)):
+                db.set_proposal_status(int(prop["id"]), "done",
+                                       f"įgyvendinta, nors paleidimas baigėsi laiko limitu ({duration}s)")
+                done += 1
+                print(f"   Laiko limitas ({duration}s), bet tikslas {target} JAU yra — laikoma įgyvendinta.")
+                continue
+            db.set_proposal_status(int(prop["id"]), "new",
+                                   f"laiko limitas po {duration}s, tikslo dar nėra")
+            blocked += 1
+            print(f"   Paleidimas baigėsi laiko limitu ({duration}s), o tikslo dar nėra — "
+                  f"pasiūlymas lieka new, stabdau eilę (naujas laiko limitas 4× didesnis).")
+            break
+
         if run_status == "published":
             # Darbas paskelbtas, bet pasiūlymas neuždarytas: tikslas nepaliestas
             # arba jo nesutvarkė `mark_implemented`. Tai PERŽIŪROS, o ne eilės

@@ -276,3 +276,44 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   "error"`), jau įgyvendintas ir kabo eilėje kaip #4455; to neįrodžiau, todėl
   numerio nedeklaravau (LL-36). #4455/#22168 — ta pati priežastis kaip #414.
   `agents/scope.json`, `content/`, `assets/js/sims/` neliesti.
+
+## 2026-11-22 21:15 · našumo tyrimas ir pataisymai (ne agento)
+
+- **Mačiau (išmatuota `runs.db`, `git log`, `journalctl`):** per 24 h sistema sukūrė
+  **1 naują modulį** (11-22 09:28, #435), nors `curriculum/backlog.json` rodo
+  **12 programos pozicijų be jokio modulio** ir 14 „iš dalies". Kūrėjas paleistas
+  3× (2098 s, 2938 s, 1660 s → visi trys baigėsi `published`), bet jo eilėje
+  buvo **3 įrašai ir visi trys `kritika`** (esamų modulių taisymas) — nė vieno
+  `tema`. Ideatorius 2× baigėsi ėjimų limitu (420 s, 879 s) su **0 darbo failų**:
+  900 wiki eilučių grep'as, o pasiūlymo failo neįrašė. Vienas modulis = 10–13 min.
+- **Priežastis (3, ne viena):**
+  1. **Pasiūla.** Spragas turėjo rasti modelis, o jo paleidimai baigėsi limitu be
+     failo → eilė tuščia → kūrėjas taisė tai, kas jau yra.
+  2. **Eilės tvarka.** `queue()` rūšiavo tik pagal `priority`; `kritika/high`
+     aplenkdavo `tema/normal`, nors eilė imama iš galvos.
+  3. **Laikas.** Vienas kūrėjo langas per dieną (09:00), o jis realiai baigdavosi
+     po 76 min, nes eilė tuščėjo.
+- **Keičiau:**
+  - `scripts/curriculum_backlog.py` (naujas) — generuoja
+    `research/wiki/curriculum/backlog.{json,md}` iš `research/wiki/curriculum/*.md`:
+    47 programos pozicijos su kodais (26.1.1 …), būsena
+    `covered / partial / missing`, tikras `target` failas ir šaltinio eilutė.
+  - `scripts/backlog_proposals.py` (naujas) — kiekvieną nepadengtą poziciją
+    (su tikru `target`) paverčia `tema` pasiūlymu (idempotentiškai, failo vardas
+    be datos). Paleista: **8 nauji temos pasiūlymai**.
+  - `agents/run.py::scope_brief()` — promptas dabar įterpia
+    **PROGRAMOS PADENGTIS** bloką (ne tik 29 žmogaus surašytas temas).
+  - `scripts/kurejas_queue.py` — `CONTENT_FIRST`: `tema` prieš `kritika`/`ux`/
+    `atitiktis`; eilė pati sinchronizuoja backlog → pasiūlymai prieš imdama darbą.
+  - `agents/roles/ideator.md` — darbų eilė = prompto blokas (ne grep per wiki),
+    „rašyk PIRMA, tyrinėk paskui", rezultatas — failas, ne ataskaita.
+  - Grafikai: `kurejas` 3 langai (09:00, 10:20, 20:50), `ideator` 2 (07:10, 07:40).
+    `deploy/gen_timers.py --install`.
+- **Patikra:** `curriculum_backlog.py --check` — suderinta (47 poz., 12 be modulio);
+  `backlog_proposals.py` — 8 failai; kūrėjo eilė **3 → 11**, iš jų 8 `tema` galvoje;
+  `check_agents.py` — 15 vaidmenų, 1 senas įspėjimas; timeriai įdiegti
+  (`systemctl --user list-timers`), 21:13 vakarinis langas realiai paėmė
+  `#36233 „26.1.2 — dienos režimas, mityba"` (run #446 `running`).
+- **Neišspręsta sąmoningai:** `D:funkciniai-judesiai` neturi srauto (1 klasei
+  fizinis ugdymas integruotas) — tai struktūrinė spraga, palikta
+  `(be srauto)` ir žmogaus sprendimui. 2–12 klasės neįjungtos (`scope.json`).

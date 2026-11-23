@@ -1,0 +1,16 @@
+{
+  "role": "kurejas",
+  "run_id": 490,
+  "created": "2026-11-23T23:05:00+02:00",
+  "type": "struktura",
+  "title": "Užuomina gali pavadinti daiktą, kurio modelyje nėra — nė vienas vartas to nemato",
+  "body": "Modulyje `23-ismestas-daiktas-nedingsta` užuomina kalbėjo apie flomasterį, o klausimas ir modelis — apie pieštuką. Tai ne vienas atsitikimas: kai užduotis perrašoma iš ankstesnės versijos, senas daikto pavadinimas gali likti `hint` ar `why` lauke, o `sim.config.objects` jau jo neturi. Vaikas tada ieško ekrane daikto, kurio niekada nebuvo, ir užuomina vietoj klaidos taisymo duoda klaidingą nuorodą. Šiandien to nepagauna nė vienas įrankis: `validate_content.py` tikrina laukų buvimą ir ilgį, `check_language.py` — sakinio sandarą, `check_audio.py` — įrašų pilnumą, `check_view.py` — geometriją. Siūloma pridėti `scripts/check_objects.py`: nedidelis duomenų failas `scripts/object_lexicon.json` su konkrečių daiktų kamienais (flomaster, pieštuk, trintuk, sąvaržėl, liniuot, žirkl, teptuk, …), ir vartai, kurie moduliuose su `sim.config.objects` tikrina, ar `tasks[].q`, `hint`, `why` minimas leksikos daiktas tikrai yra to modulio objektų sąraše arba jo `concept`/`teacher` tekstuose. Patikra pigi: leksika — duomenys, ne spėjimas, o kiekvienas radinys rodomas su failu ir lauku, todėl taisymas vienas. Priėmus vartus, jie įtraukiami į CI greta `validate_content.py`.",
+  "target": "scripts/validate_content.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/23-ismestas-daiktas-nedingsta.json:134 — buvusi užuomina „Flomasteris dar rašo, juo galima piešti toliau.“, o `sim.config.objects` turi tik popierius, piestukas, deze, butelis, liniuote",
+    "research/wiki/guidelines/pamokos.md — LL-34 (sąvoka liko simuliacijos tekste) ir nauja LL-166 (daiktas liko užuominoje): abi rodo, kad tekstas ir modelis šiandien lyginami tik žmogaus",
+    "scripts/validate_content.py, scripts/check_language.py — esami vartai tikrina laukus ir sakinio sandarą, bet ne daiktų sąrašo dermę su `tasks[]`"
+  ]
+}

@@ -161,6 +161,21 @@ export const art = {
     </g>`;
   },
 
+  /**
+   * Gyvūno lėkštė su ėdalu. `x, y` — lėkštės dugno vidurys.
+   *
+   * Reikia modeliui, kuriame ėdimas parodomas daiktu, o ne žodžiu: tuščia
+   * lėkštė ir pilna lėkštė skiriasi iš karto, be paaiškinimo.
+   */
+  bowl(x, y, s = 1, color = "#c9dbe6") {
+    return `<g transform="translate(${x} ${y}) scale(${s})">
+      <ellipse cx="0" cy="0" rx="14" ry="3.4" fill="#8a8f96" opacity=".25"/>
+      <path d="M-14 -8 A14 8 0 0 0 14 -8 Z" fill="${color}"/>
+      <ellipse cx="0" cy="-8" rx="14" ry="4" fill="#e6f0f6"/>
+      <ellipse cx="0" cy="-7.4" rx="10" ry="2.8" fill="#b8865a"/>
+    </g>`;
+  },
+
   /** Sėkla su blizgesiu. */
   seed(x, y, s = 1) {
     return `<g transform="translate(${x} ${y}) scale(${s})">
@@ -474,6 +489,53 @@ export const art = {
       <path d="M18 -27 L28 -24 L18 -21 Z" fill="${beak}"/>
       <circle cx="13" cy="-28" r="1.7" fill="#22303a"/>
       <path d="M-3 -6 L-3 -1 M3 -6 L3 -1" stroke="${beak}" stroke-width="1.8" stroke-linecap="round"/>
+    </g>`;
+  },
+
+  /**
+   * Katė — sėdinti, atsigręžusi į dešinę. `x, y` — letenų taškas.
+   *
+   * Reikėjo atskiro piešinio, nes šiame modelyje gyvūnas lyginamas su augalu
+   * ir su mašina: dėmė ar piktograma čia netiktų, vaikas turi atpažinti, kad
+   * tai tas pats katinas, kuris kvėpuoja, ėda ir auga (LL-13). Kūnas — elipsė,
+   * nes katė ir yra apvali; draudimas elipsėms taikomas lapams, ne gyvūnams.
+   */
+  cat(x, baseY, s = 1, color = "#8a6a4f", light = "#a9885f") {
+    return `<g transform="translate(${x} ${baseY}) scale(${s})">
+      <ellipse cx="0" cy="-20" rx="15" ry="20" fill="${color}"/>
+      <ellipse cx="2" cy="-16" rx="9" ry="14" fill="${light}"/>
+      <path d="M-13 -6 C-24 -4 -28 -16 -22 -18 C-17 -20 -16 -10 -11 -8 Z" fill="${color}"/>
+      <circle cx="4" cy="-42" r="12" fill="${color}"/>
+      <path d="M-6 -50 L-8 -61 L2 -54 Z" fill="${color}"/>
+      <path d="M14 -50 L16 -61 L6 -54 Z" fill="${color}"/>
+      <circle cx="1" cy="-44" r="1.9" fill="#2c2620"/>
+      <circle cx="10" cy="-44" r="1.9" fill="#2c2620"/>
+      <path d="M5 -39 L8 -39 L6.5 -37 Z" fill="#c9757a"/>
+      <g stroke="${light}" stroke-width="1.1" stroke-linecap="round" opacity=".9">
+        <line x1="7" y1="-38" x2="17" y2="-40"/><line x1="7" y1="-36" x2="17" y2="-35"/>
+      </g>
+      <rect x="-9" y="-3" width="7" height="4" rx="2" fill="${light}"/>
+      <rect x="4" y="-3" width="7" height="4" rx="2" fill="${light}"/>
+    </g>`;
+  },
+
+  /**
+   * Robotas dulkių siurblys — žemas diskas su šviesomis. `x, y` — grindų taškas.
+   *
+   * Brėžiamas kaip mašina, ne kaip būtybė: jokių akių, jokios burnos. Būtent
+   * todėl modelis gali rodyti, kad jis juda, bet neauga ir neturi mažų.
+   */
+  robot(x, baseY, s = 1) {
+    return `<g transform="translate(${x} ${baseY}) scale(${s})">
+      <ellipse cx="0" cy="-2" rx="24" ry="6" fill="#3d4650" opacity=".35"/>
+      <path d="M-24 -8 A24 12 0 0 1 24 -8 L24 -6 A24 6 0 0 1 -24 -6 Z" fill="#5b6673"/>
+      <ellipse cx="0" cy="-8" rx="24" ry="11" fill="#6d7885"/>
+      <ellipse cx="0" cy="-10" rx="18" ry="8" fill="#7f8b98"/>
+      <ellipse cx="0" cy="-11" rx="7" ry="4" fill="#96a2ae"/>
+      <circle cx="-13" cy="-13" r="2.6" fill="#8fd3a8"/>
+      <circle cx="13" cy="-13" r="2.6" fill="#e0b45e"/>
+      <path d="M-6 -18 L6 -18 L4 -22 L-4 -22 Z" fill="#4b555f"/>
+      <rect x="-3" y="-24" width="6" height="3" rx="1.5" fill="#b7c1cb"/>
     </g>`;
   },
 

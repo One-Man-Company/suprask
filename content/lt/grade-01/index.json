@@ -464,6 +464,14 @@
      "sim": "stebejimo-zurnalas"
     },
     {
+     "id": "39-bendri-gyvu-organizmu-pozymiai",
+     "title": "Tie patys penki ženklai",
+     "subtitle": "Gėlė ir katė turi visus penkis, robotas — vieną",
+     "file": "grade-01/pasaulio-pazinimas/39-bendri-gyvu-organizmu-pozymiai.json",
+     "minutes": 9,
+     "sim": "gyvybes-zenklai"
+    },
+    {
      "id": "40-as-ir-mano-seima",
      "title": "Kas kam giminė?",
      "subtitle": "Močiutė atpažįstama iš ryšio, o ne iš žilų plaukų",

@@ -1,0 +1,183 @@
+{
+  "id": "39-bendri-gyvu-organizmu-pozymiai",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Tie patys penki ženklai",
+  "subtitle": "Gėlė ir katė turi visus penkis, robotas — vieną",
+  "minutes": 9,
+  "outcomes": [
+    "Įvardiju penkis ženklus, kuriuos turi gyvas organizmas.",
+    "Rodu, kad gėlė ir katė turi tuos pačius ženklus.",
+    "Paaiškinu, kodėl robotas juda, bet nėra gyvas organizmas."
+  ],
+  "concept": {
+    "title": "Gyvybę rodo penki ženklai",
+    "big_idea": "Gyvas organizmas turi penkis ženklus. Jis juda, kvėpuoja, maitinasi, auga ir dauginasi. Gėlė juda lėtai, katė greitai. Vis dėlto abi turi visus penkis. Robotas juda, bet kitų keturių neturi.",
+    "steps": [
+      "Pasirink vieną: gėlę, katę ar robotą.",
+      "Spausk po vieną ženklą ir žiūrėk, ką jis parodo.",
+      "Suskaičiuok, kiek ženklų rado gėlė, o kiek robotas.",
+      "Palygink gėlę ir katę: ženklai tie patys, kūnai skirtingi."
+    ],
+    "example": "Sode obelis stovi vietoje, o katinas bėga. Abiem reikia oro, vandens ir maisto. Abu auga ir turi savo mažus."
+  },
+  "sim": {
+    "component": "gyvybes-zenklai",
+    "config": {
+      "signs": [
+        {
+          "id": "juda",
+          "label": "Juda"
+        },
+        {
+          "id": "kvepuoja",
+          "label": "Kvėpuoja"
+        },
+        {
+          "id": "maitinasi",
+          "label": "Maitinasi"
+        },
+        {
+          "id": "auga",
+          "label": "Auga"
+        },
+        {
+          "id": "dauginasi",
+          "label": "Dauginasi"
+        }
+      ],
+      "beings": [
+        {
+          "id": "gele",
+          "label": "Gėlė",
+          "art": "gele",
+          "yes": [
+            "juda",
+            "kvepuoja",
+            "maitinasi",
+            "auga",
+            "dauginasi"
+          ],
+          "sentences": {
+            "juda": "Gėlė stovi vietoje. Jos lapai lėtai pasisuka į šviesą.",
+            "kvepuoja": "Lape yra oro. Įdėk lapą į vandenį ir pamatysi burbuliukus.",
+            "maitinasi": "Šaknys ima vandenį ir maisto medžiagas iš žemės.",
+            "auga": "Po savaitės išaugo naujas lapas.",
+            "dauginasi": "Iš žiedo sunoksta sėklos. Iš sėklų augs naujos gėlės."
+          }
+        },
+        {
+          "id": "kate",
+          "label": "Katė",
+          "art": "kate",
+          "yes": [
+            "juda",
+            "kvepuoja",
+            "maitinasi",
+            "auga",
+            "dauginasi"
+          ],
+          "sentences": {
+            "juda": "Katė eina per kambarį.",
+            "kvepuoja": "Katė kvėpuoja nosimi. Jos šonai kilnojasi.",
+            "maitinasi": "Katė ėda iš savo lėkštės.",
+            "auga": "Mažas kačiukas per metus tampa didele kate.",
+            "dauginasi": "Katė atsiveda kačiukus."
+          }
+        },
+        {
+          "id": "robotas",
+          "label": "Robotas",
+          "art": "robotas",
+          "yes": [
+            "juda"
+          ],
+          "sentences": {
+            "juda": "Robotas važiuoja pats. Jis apeina kėdes.",
+            "kvepuoja": "Robotas pučia orą, bet jo nenaudoja. Jis nekvėpuoja.",
+            "maitinasi": "Robotas ima elektrą iš baterijos. Jis nevalgo.",
+            "auga": "Robotas neauga. Po savaitės jis toks pat.",
+            "dauginasi": "Robotas negamina mažų robotų."
+          }
+        }
+      ],
+      "sentences": {
+        "ask": "Pasirink būtybę ir tikrink po vieną ženklą.",
+        "first": "Ženklas patikrintas. Skaičius po būtybe rodo, kiek rasta.",
+        "done": "Tie patys ženklai, skirtingi kūnai.",
+        "again": "Pradedam iš naujo."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Draugas sako, kad gėlė nekvėpuoja, nes neturi nosies. Kaip jam paaiškintum?",
+      "options": [
+        "Gėlei oro visai nereikia",
+        "Kvėpuoja tik gyvūnai, o gėlė ne",
+        "Gėlė kvėpuoja lapais, todėl jai nosies nereikia"
+      ],
+      "answer": 2,
+      "hint": "Prisimink bandymą su stikline vandens.",
+      "why": "Gėlė orą ima per lapus, o nosies jai nereikia."
+    },
+    {
+      "q": "Robotas dulkių siurblys važiuoja pats. Kiek ženklų iš penkių jis turi?",
+      "options": [
+        "Penkis, nes juda ir pats važiuoja",
+        "Vieną: juda, o kitų keturių neturi",
+        "Nė vieno, nes jis iš plastiko"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, ką robotas daro be važiavimo.",
+      "why": "Judėjimas yra vienas ženklas, o kitų keturių robotas neturi."
+    },
+    {
+      "q": "Sode obelis stovi vietoje. Katinas bėga. Kuris turi visus penkis ženklus?",
+      "options": [
+        "Abu: ir obelis, ir katinas",
+        "Tik katinas",
+        "Nė vienas, nes obelis nejuda"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok apie obels žiedus, sėklas ir lapus.",
+      "why": "Obelis turi visus ženklus, nors stovi vietoje."
+    },
+    {
+      "q": "Žiemą medis be lapų ir nejuda. Kodėl jis vis dar gyvas organizmas?",
+      "options": [
+        "Nes jį judina vėjas",
+        "Nes jis ilsisi ir pavasarį vėl auga",
+        "Nes žiemą jis nekvėpuoja"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kas nutinka pumpurams po žiemos.",
+      "why": "Medis žiemą ilsisi, o pavasarį vėl augina lapus.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kurį ženklą parodytum draugui, kad gėlė kvėpuoja?",
+  "teacher": {
+    "goal": "Suprasti, kad gyvi organizmai turi tuos pačius penkis ženklus — juda, kvėpuoja, maitinasi, auga, dauginasi — ir kad vienas ženklas dar nieko neįrodo. Modelis laiko tris būtybes viename kadre: gėlę, katę ir robotą dulkių siurblį. Vaikas tikrina po vieną ženklą ir mato, kad gėlė surenka penkis, katė penkis, o robotas vieną (jis juda). Gėlės ženklai parodomi taip, kaip juos galima pamatyti: lapai pasisuka į šviesą, oras eina per lapą, šaknys ima vandenį, išauga naujas lapas, iš žiedo sunoksta sėklos. Robotui atėjus eilė neatimama — jis lieka scenoje toks pat, ir tai yra atsakymas.",
+    "prompt": "Ką gėlė daro su oru, vandeniu ir sėklomis?",
+    "offline": "Įmeskite į stiklinę šilto vandens vieną gėlės lapą ir palaukite minutę: ant lapo krašto ir paviršiaus renkasi maži burbuliukai, o lapas vandenyje tamsėja. Tai oras, kuris buvo lape — gėlė kvėpuoja visu lapu, ne nosimi. Paskui žaiskite „Gyvas–negyvas“: ant stalo padėkite penkias korteles su ženklais (juda, kvėpuoja, maitinasi, auga, dauginasi) ir po vieną daiktą — puodą su gėle, žaislinį šunį, akmenį, obuolį, nufotografuotą robotą. Vaikai prie kiekvieno daikto deda tik tas korteles, kurias gali parodyti pirštu. Laimi ne tas, kas greičiau, o tas, kas parodo požymį: „Žaislinis šuo neauga — pažiūrėk, jis toks pat kaip pernai“.",
+    "misconceptions": [
+      "„Augalas nekvėpuoja, nes neturi nosies.“ Modelis rodo oro judėjimą ties lapu ir burbuliukus, o mokytojo veikla leidžia tai patikrinti stikline vandens: oras yra lape, nors burnos nėra.",
+      "„Kas juda, tas gyvas; kas nejuda, tas negyvas.“ Robotas juda ir teturi vieną ženklą, o gėlė juda vos pastebimai (lapai pasisuka į šviesą) ir turi visus penkis. Judėjimas atskiria ne gyvus nuo negyvų, o greitus nuo lėtų.",
+      "„Gėlei užtenka vandens, ji nevalgo.“ Modelis rodo, kad šaknys ima vandenį ir maisto medžiagas iš žemės: vanduo yra tik viena maisto dalis.",
+      "„Robotas kvėpuoja, nes pučia orą.“ Jis orą judina, bet jo nenaudoja: po savaitės robotas toks pat, o gėlė per tą savaitę išaugo lapą.",
+      "Modelio riba: scena rodo penkis ženklus, o ne visą gyvybės apibrėžimą. Grybas, dumbliai ir žiemą besiilsintis medis lieka mokytojo pokalbiui, o burbuliukų bandymas rodo, kad lape yra oro, o ne kad gėlė išskiria anglies dioksidą — pastaroji sąvoka 1 klasėje nesakoma."
+    ]
+  },
+  "sources": [
+    "NŠA (2024). Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos, Gamtos mokslai, 1 klasės ilgalaikis planas — 26.2.4 „Bendri gyvų organizmų požymiai“ (1 val.). Veiklos: demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“, žaidimas „Gyvas–negyvas“ (sources/pradinio-bp-rekomendacijos-2024.txt:8445–8448, :17645–17648). Bendra 1–2 klasės nuostata — „išskirti bendrus gyvo organizmo požymius (juda, kvėpuoja, auga, maitinasi, dauginasi)“ (:12629–12632).",
+    "Villarroel, J. D. (2013). Environmental judgment in early childhood and its relationship with the understanding of the concept of living beings. SpringerPlus, 2, 87. https://doi.org/10.1186/2193-1801-2-87 — 6–7 m. grupėje augalus teisingai priskyrė 79,1 %, o visus objektus — 39,5 % vaikų; augalas yra sunkiausias atvejis, nes nejuda.",
+    "Leddon, E. M., Waxman, S. R., & Medin, D. L. (2009). Unmasking „Alive“: Children's appreciation of a concept linking all living things. Journal of Cognition and Development, 9(4), 461–473. https://doi.org/10.1080/15248370802678463 — klausiama „gyvas organizmas“, ne „ar tai gyva“, nes pats žodis užstoja sąvoką."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (visi gyvi organizmai turi tuos pačius penkis ženklus), be augalo dalių funkcijų ir be gyvenimo ciklo — tai atskiri 26.2.3 moduliai.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (obelis sode, medis žiemą, robotas dulkių siurblys), o ne pakartoja modelio sakinį.",
+    "3 žingsnis — pagalba laiku: kiekvienas ženklas atidaromas atskirai ir iškart parodo, kas nutinka būtybei; skaičius „3 / 5“ auga prieš akis, nieko nereikia atsiminti.",
+    "8 žingsnis — mokytojas lieka mokytoju: lapo bandymas stiklinėje ir kortelių žaidimas „Gyvas–negyvas“ atliekami be ekrano, o burbuliukai parodo tą patį, ką modelis rodo oro kreivėmis."
+  ]
+}

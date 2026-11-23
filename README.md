@@ -9,13 +9,13 @@ Ne įsiminti — suprasti. Simuliacijos, modeliai ir žaidimai, kurie paaiškina
 
 ## Kas yra viduje (šiandien)
 
-**1 klasė — 9 kryptys, 71 modulių, 71 interaktyvių simuliacijų:**
+**1 klasė — 9 kryptys, 72 modulių, 72 interaktyvių simuliacijų:**
 
 | Kryptis | Moduliai |
 |---|---|
 | 🔤 Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Kas? Ką veikia? · Kaip žmonės sveikinasi · Plakatas: kur ieškoti atsakymo · Atsakymas: kuriame sakinyje? · Garsas, kurį gali tempti · Kas garsui užstoja kelią · Du balsiai, vienas balsas · Pasakojimo vidurys · Žinutė, kurią skaitytojas supranta |
 | 🔢 Matematika | Skaičių tiesė · Dešimtukas · Sudėtis per dešimtį · Atimtis per dešimtį · Po 30 eina 29, o ne 20 · Uždavinys: klausimas pasako, ką daryti · Šimto lentelė · Skaičius ir skaitmuo · Figūros · Dėsningumai · Pinigai · Laikas: vienas ratas · Laikas: 2 val. ir 14:00 · Lygybė · Tas pats 18, keli užrašai · Kryptys · Taškas, tiesė, spindulys, atkarpa · Ilgis · Masė · Erdvinės figūros · Piktograma ir stulpelis · Komandų seka · Ketvirtis rato pagal laikrodžio rodyklę |
-| 🌍 Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Kas gyvas: auga ir reaguoja, ne tik juda · Kas sukūrė šį daiktą: kelias iki gamtos · Medžiai, krūmai, žolės: grupę rodo stiebas · Išmestas daiktas nedingsta · Kas lieka pievoje po metų · Vienas vanduo, trys formos · Kas gyvena tvarte? · Kur dingsta vanduo · Nuožulnioji plokštuma · Kuprinė: tas pats svoris · Dūmai: žemai ir lauk · Trauma turi priežastį · Apsauga dengia tik savo vietą · Vėliau keltis — trumpesni pusryčiai · Kas priklauso bendruomenei? · Kiekvienas moka ką nors · Ką pastebėjau kieme? · Kas kam giminė? · Kiekvienas turi savo energijos šaltinį |
+| 🌍 Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Kas gyvas: auga ir reaguoja, ne tik juda · Kas sukūrė šį daiktą: kelias iki gamtos · Medžiai, krūmai, žolės: grupę rodo stiebas · Išmestas daiktas nedingsta · Kas lieka pievoje po metų · Vienas vanduo, trys formos · Kas gyvena tvarte? · Kur dingsta vanduo · Nuožulnioji plokštuma · Kuprinė: tas pats svoris · Dūmai: žemai ir lauk · Trauma turi priežastį · Apsauga dengia tik savo vietą · Vėliau keltis — trumpesni pusryčiai · Kas priklauso bendruomenei? · Kiekvienas moka ką nors · Ką pastebėjau kieme? · Kas kam giminė? · Kiekvienas turi savo energijos šaltinį · Tie patys penki ženklai |
 | 🎵 Muzika | Aukštas garsas ne visada garsus · Ritmas: plojimai ant pulso · Ta pati melodija, kitas atlikėjas |
 | 🤝 Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius |
 | 🔌 Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas · Vienas kirpimas — kelios skylės · Balti skalbsis atskirai nuo spalvotų · Kodėl šviesa užgęsta atleidus mygtuką |
@@ -109,7 +109,7 @@ HTTP prieiga ribojama Tailscale tinklu — jokio prisijungimo ekrano. Žr. [`das
 
 ## Garsas
 
-Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 1022 tekstų po du variantus (sakinys ir skiemuo) — 2044 įrašai, ~71 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
+Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 1047 tekstų po du variantus (sakinys ir skiemuo) — 2094 įrašai, ~73 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
 
 ## Licencijos
 
@@ -122,6 +122,6 @@ Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė
 | | |
 |---|---|
 | Versija | 0.1 (2026-11) |
-| Parengta | 1 klasė — 9 kryptys, 71 modulių, 71 simuliacijų, 312 užduočių |
+| Parengta | 1 klasė — 9 kryptys, 72 modulių, 72 simuliacijų, 316 užduočių |
 | Toliau | 2 klasė, tada 3–4 |
 | Kalbos | lietuvių (struktūra paruošta kitoms) |

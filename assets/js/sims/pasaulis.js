@@ -6545,7 +6545,312 @@ const energijosSaltiniai = {
   },
 };
 
+/* ------------------------------------------------------------------------
+ * Gyvybės ženklai (26.2.4 „Bendri gyvų organizmų požymiai“).
+ *
+ * Ko vaikas negali pamatyti viename paveikslėlyje: kad gėlė, katė ir tu
+ * turite TUOS PAČIUS penkis ženklus, o mašina — ne. Modelis laiko tris
+ * būtybes viename kadre ir leidžia tikrinti po vieną ženklą, todėl žymos
+ * „5 / 5“ ir „1 / 5“ atsiranda tame pačiame ekrane, o ne dviejuose
+ * puslapiuose. Skaičius skaičiuojamas iš `yes` sąrašo, o ne įrašytas tekste:
+ * jei pasikeistų konfigūracija, tekstas nepradėtų meluoti (LL-21).
+ *
+ * Veiksmas yra tikras modelio parametras: vaikas keičia TIKRINAMĄ ŽENKLĄ ir
+ * mato pasekmę toje pačioje scenoje (gėlė išauga lapą, katė gauna lėkštę,
+ * robotas nepakinta). Todėl „neauga“ yra rodoma, o ne parašyta.
+ * ---------------------------------------------------------------------- */
+const GYZ_ARTS = ["gele", "kate", "robotas"];
+
+const gyvybesZenklai = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const esc = (t) => String(t).replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const signs = (Array.isArray(config.signs) ? config.signs : []).filter(Boolean);
+    const beings = (Array.isArray(config.beings) ? config.beings : []).filter(Boolean);
+
+    /* --- Sutarties vartai: nesuderinta konfigūracija pasakoma žodžiais,
+       o ne tyliai pakeičiama (LL-33). --- */
+    const problems = [];
+    if (signs.length !== 5) problems.push("reikia penkių ženklų");
+    if (beings.length !== 3) problems.push("reikia trijų būtybių");
+    const signIds = signs.map((s) => s.id).filter(Boolean);
+    if (signIds.length !== signs.length) problems.push("ženklas be id");
+    if (new Set(signIds).size !== signIds.length) problems.push("ženklų id kartojasi");
+    signs.forEach((s) => { if (!s.label) problems.push(`ženklas „${s.id}“ be užrašo`); });
+    const arts = new Set();
+    beings.forEach((b) => {
+      if (!b.id || !b.label) { problems.push("būtybė be id ar užrašo"); return; }
+      if (!GYZ_ARTS.includes(b.art)) problems.push(`būtybė „${b.id}“ turi nežinomą piešinį „${b.art}“`);
+      if (arts.has(b.art)) problems.push(`piešinys „${b.art}“ kartojasi`);
+      arts.add(b.art);
+      const has = Array.isArray(b.yes) ? b.yes : [];
+      has.forEach((id) => {
+        if (!signIds.includes(id)) problems.push(`būtybė „${b.id}“ turi nežinomą ženklą „${id}“`);
+      });
+      signs.forEach((s) => {
+        const line = (b.sentences || {})[s.id];
+        if (typeof line !== "string" || !line.trim()) {
+          problems.push(`būtybė „${b.id}“ neturi sakinio „${s.id}“`);
+        } else if (line.length > 120) {
+          problems.push(`būtybės „${b.id}“ sakinys „${s.id}“ ilgesnis nei 120 simbolių`);
+        }
+      });
+    });
+    ["ask", "first", "done", "again"].forEach((k) => {
+      if (!S[k]) problems.push(`sakinio „${k}“ nėra`);
+    });
+    if (problems.length) {
+      console.error(`gyvybes-zenklai: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="error-box">Scena nesuderinta su ženklais.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const GROUND = 238;
+    const XS = [56, 164, 272];
+    const stations = beings.map((b, i) => ({ b, x: XS[i] }));
+    const open = new Map(beings.map((b) => [b.id, new Set()]));
+    const state = { current: beings[0].id, line: S.ask, note: "", reported: false };
+
+    const beingOf = (id) => beings.find((b) => b.id === id) || beings[0];
+    const has = (b, signId) => Array.isArray(b.yes) && b.yes.includes(signId);
+    const ticks = (b) => signs.filter((s) => has(b, s.id) && open.get(b.id).has(s.id)).length;
+    const checked = (b) => open.get(b.id).size;
+    const complete = () => beings.every((b) => checked(b) === signs.length);
+
+    /* Oro judėjimas: dvi trumpos kreivės. Tai ne puošmena — jomis rodomas
+       vienintelis nematomas ženklas, kurio vaikas negali pamatyti. */
+    const airArcs = (x, y, dir = 1) => `<g stroke="#5f9fbf" stroke-width="2.2" fill="none"
+      stroke-linecap="round" opacity=".9">
+      <path d="M${x} ${y} q ${8 * dir} -6 ${16 * dir} 0"/>
+      <path d="M${x} ${y + 9} q ${8 * dir} -6 ${16 * dir} 0"/>
+    </g>`;
+
+    const bubbles = (x, y) => `<g fill="none" stroke="#5fb3e0" stroke-width="1.6" opacity=".9">
+      <circle cx="${x}" cy="${y}" r="3.4"/><circle cx="${x + 7}" cy="${y - 8}" r="2.4"/>
+      <circle cx="${x - 5}" cy="${y - 13}" r="1.8"/>
+    </g>`;
+
+    function flower(x, o) {
+      const grown = o.has("auga");
+      const h = grown ? 62 : 40;
+      const head = 206 - h;
+      const tilt = o.has("juda") ? -9 : 0;
+      const leaves = `<g transform="rotate(${tilt} ${x} 206)">
+          ${art.leaf(x, 206 - h * 0.45, grown ? 13 : 11, -1, false, "#59b95a")}
+          ${art.leaf(x, 206 - h * 0.64, grown ? 12 : 10, 1, false, "#4c9a45")}
+          ${grown ? art.leaf(x, 206 - h * 0.84, 9, -1, false, "#6ec46b") : ""}
+        </g>`;
+      const headMark = o.has("dauginasi")
+        ? `${art.seed(x - 5, head - 2, 0.55)}${art.seed(x + 6, head - 8, 0.5)}
+           ${art.seed(x + 1, head + 5, 0.45)}`
+        : art.flower(x, head - 2, grown ? 0.8 : 0.62);
+      const turn = o.has("juda")
+        ? `<path d="M${x + 28} ${head - 16} q -16 -10 -28 -2" fill="none" stroke="#c08a2e"
+             stroke-width="2" stroke-dasharray="4 3"/>
+           <path d="M${x - 2} ${head - 20} l 6 -2 l -2 6" fill="#c08a2e"/>`
+        : "";
+      return `<g>
+        ${art.pot(x - 18, 208, 36, 28, "gz-pot")}
+        ${art.stem(x, 204, h, 4, "#4c8b3a", false)}
+        ${leaves}${headMark}${turn}
+        ${o.has("maitinasi") ? art.drops(x - 15, 196, 3) : ""}
+        ${o.has("kvepuoja") ? `${airArcs(x + 22, 206 - h * 0.5)}${bubbles(x + 16, 206 - h * 0.7)}` : ""}
+      </g>`;
+    }
+
+    function cat(x, o) {
+      const parts = [art.cat(x, GROUND, 1)];
+      if (o.has("kvepuoja")) parts.push(airArcs(x + 20, 186, 1));
+      if (o.has("maitinasi")) parts.push(art.bowl(x + 36, GROUND, 0.95));
+      if (o.has("auga")) {
+        parts.push(`<g stroke="#6f8a52" stroke-width="2" fill="none">
+          <path d="M${x - 34} ${GROUND - 2} L${x - 34} ${GROUND - 52}" stroke-dasharray="4 3"/>
+          <path d="M${x - 39} ${GROUND - 46} l 5 -8 l 5 8"/>
+        </g>`);
+      }
+      if (o.has("dauginasi")) {
+        parts.push(art.cat(x - 30, GROUND, 0.34, "#a9885f", "#c2a37c"));
+        parts.push(art.cat(x - 45, GROUND, 0.28, "#b5946a", "#c9ab84"));
+      }
+      return parts.join("");
+    }
+
+    function robot(x, o) {
+      const puffs = o.has("kvepuoja")
+        ? `<g fill="#c3ccd4" opacity=".95">
+             <circle cx="${x + 26}" cy="${GROUND - 22}" r="2.8"/>
+             <circle cx="${x + 31}" cy="${GROUND - 32}" r="2.2"/>
+             <circle cx="${x + 25}" cy="${GROUND - 40}" r="1.7"/>
+           </g>`
+        : "";
+      return `${art.robot(x, GROUND, 1)}${puffs}`;
+    }
+
+    function drawBeing(st) {
+      const o = open.get(st.b.id);
+      if (st.b.art === "gele") return flower(st.x, o);
+      if (st.b.art === "kate") return cat(st.x, o);
+      return robot(st.x, o);
+    }
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:32rem;margin:0 auto;min-width:0">
+        <p id="gz-line" style="margin:0 0 .3rem;min-width:0;text-align:center;font-weight:800;
+           font-size:.92rem;line-height:1.25;overflow-wrap:anywhere"></p>
+        <svg id="gz-scene" viewBox="0 0 328 272" width="100%"
+             style="display:block;max-width:360px;height:auto;margin:0 auto" role="img"></svg>
+        <p id="gz-state" style="margin:.35rem 0 0;min-width:0;text-align:center;font-weight:800;
+           font-size:.95rem;line-height:1.25;overflow-wrap:anywhere"></p>
+        <p class="sim-note" style="margin:.25rem 0 0;font-size:.8rem;line-height:1.3">
+          Scena rodo tris būtybes, ne visą gamtą. Kirmėlė ir medis turi tuos pačius ženklus.
+        </p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.5rem;width:100%;max-width:34rem;margin:0 auto;min-width:0">
+        <p id="gz-ask" style="margin:0;min-width:0;font-size:.95rem;line-height:1.25;font-weight:800;
+           text-align:center;overflow-wrap:anywhere"></p>
+        <div id="gz-beings" role="group" aria-label="Pasirink būtybę"
+             style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem;min-width:0">
+          ${beings.map((b) => `<button type="button" class="btn secondary" data-being="${esc(b.id)}"
+             aria-pressed="false"
+             style="min-width:0;min-height:56px;height:auto;padding:.3rem .2rem;font-size:.9rem;
+             line-height:1.15;overflow-wrap:anywhere">${esc(b.label)}</button>`).join("")}
+        </div>
+        <div id="gz-signs" role="group" aria-label="Tikrinami ženklai"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,8rem),1fr));
+             gap:.35rem;min-width:0">
+          ${signs.map((s) => `<button type="button" class="btn secondary" data-sign="${esc(s.id)}"
+             aria-pressed="false"
+             style="min-width:0;min-height:56px;height:auto;padding:.3rem .2rem;font-size:.9rem;
+             line-height:1.15;overflow-wrap:anywhere">${esc(s.label)}</button>`).join("")}
+        </div>
+        <button type="button" class="btn ghost" id="gz-reset"
+                style="min-height:48px;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
+    const sceneEl = stage.querySelector("#gz-scene");
+    const lineEl = stage.querySelector("#gz-line");
+    const stateEl = stage.querySelector("#gz-state");
+    const askEl = controls.querySelector("#gz-ask");
+    const beingBtns = [...controls.querySelectorAll("[data-being]")];
+    const signBtns = [...controls.querySelectorAll("[data-sign]")];
+    const resetBtn = controls.querySelector("#gz-reset");
+
+    const paint = (btn, on) => {
+      btn.style.background = on ? "var(--ink)" : "var(--paper-2)";
+      btn.style.color = on ? "var(--paper)" : "var(--ink)";
+      btn.style.borderColor = on ? "var(--ink)" : "var(--line)";
+    };
+
+    function sceneMarkup() {
+      return `${art.defs("gz")}
+        ${art.plank(8, GROUND, 312, 10)}
+        ${stations.map((st) => {
+    const sel = st.b.id === state.current;
+    const label = esc(st.b.label);
+    return `<path d="M${st.x - 6} 8 L${st.x + 6} 8 L${st.x} 15 Z"
+              fill="${sel ? "#3a342b" : "transparent"}"/>
+            <text x="${st.x}" y="32" text-anchor="middle" font-family="system-ui, sans-serif"
+                  font-size="14" font-weight="${sel ? 800 : 600}"
+                  fill="${sel ? "#2f2a23" : "#5f574d"}">${label}</text>
+            <text x="${st.x}" y="48" text-anchor="middle" font-family="system-ui, sans-serif"
+                  font-size="13" font-weight="700" fill="#6b6357">✓ ${ticks(st.b)} / ${signs.length}</text>
+            ${drawBeing(st)}`;
+  }).join("")}`;
+    }
+
+    function sceneLabel() {
+      return `Ant palangės vazoninė gėlė, katė ir robotas dulkių siurblys. `
+        + stations.map((st) => `${st.b.label}: ${ticks(st.b)} iš ${signs.length} ženklų.`).join(" ");
+    }
+
+    function render() {
+      sceneEl.innerHTML = sceneMarkup();
+      sceneEl.setAttribute("aria-label", sceneLabel());
+
+      lineEl.textContent = state.line;
+      stateEl.textContent = `Rasta ženklų: ${stations.map((st) => `${st.b.label} ${ticks(st.b)}`).join(" · ")}`;
+      askEl.textContent = `${beingOf(state.current).label}: patikrinta `
+        + `${checked(beingOf(state.current))} iš ${signs.length} ženklų.`;
+
+      beingBtns.forEach((btn) => {
+        const on = btn.dataset.being === state.current;
+        paint(btn, on);
+        btn.setAttribute("aria-pressed", String(on));
+      });
+
+      const b = beingOf(state.current);
+      signBtns.forEach((btn) => {
+        const id = btn.dataset.sign;
+        const done = open.get(b.id).has(id);
+        const label = (signs.find((s) => s.id === id) || {}).label || id;
+        paint(btn, done);
+        btn.textContent = `${done ? "✓ " : ""}${label}`;
+        btn.setAttribute("aria-pressed", String(done));
+        btn.setAttribute("aria-label", done
+          ? `${label}: jau patikrinta. Paliesk, kad išgirstum dar kartą.`
+          : `${label}: dar nepatikrinta. Tikrink ${b.label.toLowerCase()}.`);
+      });
+
+      api.readout(state.line);
+      api.note(state.note);
+    }
+
+    /* Užbaigus ciklą rodoma išvada, o paskutinio ženklo sakinys lieka
+       pastaboje — kitaip balsas sakytų viena, o ekranas rodytų kita (LL-33).
+       Vėlesnis paspaudimas vėl rodo tik to ženklo sakinį. */
+    function openSign(id) {
+      const b = beingOf(state.current);
+      const set = open.get(b.id);
+      const first = !set.has(id);
+      set.add(id);
+      const said = (b.sentences || {})[id] || "";
+      if (complete() && !state.reported) {
+        state.reported = true;
+        state.line = S.done;
+        state.note = said;
+        api.speak(S.done);
+        api.progress({ correct: true });
+      } else {
+        state.line = said;
+        state.note = first && !complete() ? S.first : "";
+        api.speak(said);
+      }
+      render();
+    }
+
+    controls.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn || btn.disabled) return;
+      if (btn.dataset.being) {
+        state.current = btn.dataset.being;
+        state.line = S.ask;
+        state.note = "";
+        render();
+        return;
+      }
+      if (btn.dataset.sign) { openSign(btn.dataset.sign); return; }
+      if (btn.id === "gz-reset") {
+        beings.forEach((b) => open.get(b.id).clear());
+        state.current = beings[0].id;
+        state.line = S.again;
+        state.note = "";
+        api.speak(S.again);
+        render();
+        resetBtn.focus();
+      }
+    });
+
+    render();
+    return null;
+  },
+};
+
 export const SIMS = {
+  "gyvybes-zenklai": gyvybesZenklai,
   "energijos-saltiniai": energijosSaltiniai,
   "dienos-juosta": dienosJuosta,
   "metu-laikai": metuLaikai,

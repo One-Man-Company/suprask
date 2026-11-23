@@ -731,6 +731,10 @@
   "n": "n/b30a200f32c93a65-bdf116ed.mp3",
   "s": "s/b30a200f32c93a65-d4668ca3.mp3"
  },
+ "Auga": {
+  "n": "n/bf25153e80ec0294-67027070.mp3",
+  "s": "s/bf25153e80ec0294-ae35f554.mp3"
+ },
  "Augalas": {
   "n": "n/fe1dd9f0591249d6-2930b6e3.mp3",
   "s": "s/fe1dd9f0591249d6-30e94e7b.mp3"
@@ -938,6 +942,10 @@
  "Daugiau netelpa. Lenta baigėsi.": {
   "n": "n/237847f39258af0d-d504f68b.mp3",
   "s": "s/237847f39258af0d-3622516b.mp3"
+ },
+ "Dauginasi": {
+  "n": "n/8c995c4129c298f1-84d4eb00.mp3",
+  "s": "s/8c995c4129c298f1-d38da2a0.mp3"
  },
  "Delfinas": {
   "n": "n/9876039e0dd3dcb0-e2b5db09.mp3",
@@ -1311,6 +1319,14 @@
   "n": "n/3b7d70d5ad3f7025-e518050a.mp3",
   "s": "s/3b7d70d5ad3f7025-e2b6db98.mp3"
  },
+ "Gėlė": {
+  "n": "n/d0fc37996ebceea1-b45433ba.mp3",
+  "s": "s/d0fc37996ebceea1-9a6dad7c.mp3"
+ },
+ "Gėlė stovi vietoje. Jos lapai lėtai pasisuka į šviesą.": {
+  "n": "n/5911ab5bb5d551a9-80731bae.mp3",
+  "s": "s/5911ab5bb5d551a9-b019914f.mp3"
+ },
  "H": {
   "n": "n/44bd7ae60f478fae-2a69b4b5.mp3",
   "s": "s/44bd7ae60f478fae-d14b26a3.mp3"
@@ -1363,6 +1379,10 @@
   "n": "n/eeb24791c5438b9f-a12346c2.mp3",
   "s": "s/eeb24791c5438b9f-7f3455d0.mp3"
  },
+ "Iš žiedo sunoksta sėklos. Iš sėklų augs naujos gėlės.": {
+  "n": "n/419d0c76191bff85-9a37ed87.mp3",
+  "s": "s/419d0c76191bff85-29f56444.mp3"
+ },
  "Išbandyk ir kitus daiktus.": {
   "n": "n/70bee4d3d244838c-5ee449a2.mp3",
   "s": "s/70bee4d3d244838c-921433ad.mp3"
@@ -1410,6 +1430,10 @@
  "Jokūbui siūlas per smulkus.": {
   "n": "n/f7a57a0225943407-fed34153.mp3",
   "s": "s/f7a57a0225943407-54a0a806.mp3"
+ },
+ "Juda": {
+  "n": "n/3b7aa6c88c1a5fb7-e0c3417c.mp3",
+  "s": "s/3b7aa6c88c1a5fb7-95939895.mp3"
  },
  "Jungiklis šviesą palieka. Mygtukas dega tik kol laikai.": {
   "n": "n/fe88abbcdcfbccea-955f65f1.mp3",
@@ -1531,9 +1555,25 @@
   "n": "n/7b398e085664430c-868e9634.mp3",
   "s": "s/7b398e085664430c-0f654fa7.mp3"
  },
+ "Katė atsiveda kačiukus.": {
+  "n": "n/5a0f4c7eb3f0035c-62304226.mp3",
+  "s": "s/5a0f4c7eb3f0035c-58cc3b45.mp3"
+ },
+ "Katė eina per kambarį.": {
+  "n": "n/12201943eeccde84-11ded6cb.mp3",
+  "s": "s/12201943eeccde84-e565de1e.mp3"
+ },
  "Katė geria pieną": {
   "n": "n/84b87a10530b2560-6bfb479a.mp3",
   "s": "s/84b87a10530b2560-f5445df1.mp3"
+ },
+ "Katė kvėpuoja nosimi. Jos šonai kilnojasi.": {
+  "n": "n/ad9539701905406c-172505fb.mp3",
+  "s": "s/ad9539701905406c-0b3ee197.mp3"
+ },
+ "Katė ėda iš savo lėkštės.": {
+  "n": "n/8b8b412d30eb00b7-20fc83c9.mp3",
+  "s": "s/8b8b412d30eb00b7-dd5cc86b.mp3"
  },
  "Keli stiebai nuo žemės, todėl krūmas.": {
   "n": "n/9b337ffbd084d72a-1e96eb0b.mp3",
@@ -1759,6 +1799,10 @@
   "n": "n/2604dbae09165b63-51fa9a25.mp3",
   "s": "s/2604dbae09165b63-f89814b5.mp3"
  },
+ "Kvėpuoja": {
+  "n": "n/261471b17ebf54eb-e5a75e73.mp3",
+  "s": "s/261471b17ebf54eb-5e8a9639.mp3"
+ },
  "Ką darysi su šiuo daiktu?": {
   "n": "n/73af747a8f52a274-4058a487.mp3",
   "s": "s/73af747a8f52a274-0b079706.mp3"
@@ -1859,6 +1903,10 @@
   "n": "n/255123887f79d358-9b6a40b1.mp3",
   "s": "s/255123887f79d358-81e61873.mp3"
  },
+ "Lape yra oro. Įdėk lapą į vandenį ir pamatysi burbuliukus.": {
+  "n": "n/f37baf5a3e6a3a8a-3028bd50.mp3",
+  "s": "s/f37baf5a3e6a3a8a-3aaacc3a.mp3"
+ },
  "Lapkritis": {
   "n": "n/0f959dbd67209e46-3192f592.mp3",
   "s": "s/0f959dbd67209e46-0a5f52cf.mp3"
@@ -1939,6 +1987,10 @@
   "n": "n/9ab19ec14d02bcc2-390d207c.mp3",
   "s": "s/9ab19ec14d02bcc2-61eb293c.mp3"
  },
+ "Maitinasi": {
+  "n": "n/731483447b536fea-548aa8b4.mp3",
+  "s": "s/731483447b536fea-249a5ef6.mp3"
+ },
  "Mama": {
   "n": "n/fb9aa9a7b3d837e7-7772dc1c.mp3",
   "s": "s/fb9aa9a7b3d837e7-e163b19a.mp3"
@@ -1958,6 +2010,10 @@
  "Mašinėlė vėl važiuoja. Jai energiją duoda baterija.": {
   "n": "n/7870550fae9fe0e4-a7c631f6.mp3",
   "s": "s/7870550fae9fe0e4-d25b6bf3.mp3"
+ },
+ "Mažas kačiukas per metus tampa didele kate.": {
+  "n": "n/3534c97bd76a679c-c2d92976.mp3",
+  "s": "s/3534c97bd76a679c-87f6b596.mp3"
  },
  "Mažas metalas dugne.": {
   "n": "n/343c8f5bfbe1f97c-565e1b9a.mp3",
@@ -2211,6 +2267,10 @@
   "n": "n/275639077a24abba-1c44dffa.mp3",
   "s": "s/275639077a24abba-a07b4bec.mp3"
  },
+ "Pasirink būtybę ir tikrink po vieną ženklą.": {
+  "n": "n/e3699e467728c7ab-2306f6db.mp3",
+  "s": "s/e3699e467728c7ab-a0d2f0e2.mp3"
+ },
  "Pasirink dėžutę, tada spėk.": {
   "n": "n/46fc1f119b037d5c-e1d0409f.mp3",
   "s": "s/46fc1f119b037d5c-dfa25c4e.mp3"
@@ -2455,6 +2515,10 @@
   "n": "n/802a0444994b8bf4-ff20e94c.mp3",
   "s": "s/802a0444994b8bf4-3c355d3f.mp3"
  },
+ "Po savaitės išaugo naujas lapas.": {
+  "n": "n/1c8517fa3bc8e402-7e8d1cfd.mp3",
+  "s": "s/1c8517fa3bc8e402-fad09c04.mp3"
+ },
  "Popieriaus lapas liko ant lentynos. Krūva nepaaugo.": {
   "n": "n/8b213f020619d3e6-fb54b24a.mp3",
   "s": "s/8b213f020619d3e6-1af0a067.mp3"
@@ -2627,6 +2691,22 @@
   "n": "n/e9cabf259699edc6-32a35ea9.mp3",
   "s": "s/e9cabf259699edc6-fc618e78.mp3"
  },
+ "Robotas": {
+  "n": "n/4e44805da7b8701b-2bf2a786.mp3",
+  "s": "s/4e44805da7b8701b-13ffc9e1.mp3"
+ },
+ "Robotas ima elektrą iš baterijos. Jis nevalgo.": {
+  "n": "n/4648a640e68d3aa9-2ee6d452.mp3",
+  "s": "s/4648a640e68d3aa9-3c9fae92.mp3"
+ },
+ "Robotas neauga. Po savaitės jis toks pat.": {
+  "n": "n/95bed95895aa5e1d-43afe02e.mp3",
+  "s": "s/95bed95895aa5e1d-11bef352.mp3"
+ },
+ "Robotas negamina mažų robotų.": {
+  "n": "n/3dcf60b68fd95924-9cda11aa.mp3",
+  "s": "s/3dcf60b68fd95924-84af8d90.mp3"
+ },
  "Robotas pasiekė vėliavą. Seka tinka.": {
   "n": "n/31c8282a711422b2-fe126ee0.mp3",
   "s": "s/31c8282a711422b2-717f8941.mp3"
@@ -2635,9 +2715,17 @@
   "n": "n/10000d86b8050a8a-5cd0df67.mp3",
   "s": "s/10000d86b8050a8a-6595c8b0.mp3"
  },
+ "Robotas pučia orą, bet jo nenaudoja. Jis nekvėpuoja.": {
+  "n": "n/d314d9869223d8ed-b6f52d40.mp3",
+  "s": "s/d314d9869223d8ed-b0d7556d.mp3"
+ },
  "Robotas sustojo prie tinklelio krašto.": {
   "n": "n/3fc7bd270cd62fb5-233f8ae1.mp3",
   "s": "s/3fc7bd270cd62fb5-248789d4.mp3"
+ },
+ "Robotas važiuoja pats. Jis apeina kėdes.": {
+  "n": "n/a2c9a4a148d817c4-2359882d.mp3",
+  "s": "s/a2c9a4a148d817c4-5e5b04b3.mp3"
  },
  "Robotas vykdo komandas po vieną.": {
   "n": "n/991a65cf5a067def-323a8348.mp3",
@@ -3062,6 +3150,10 @@
  "Ti-ti": {
   "n": "n/1baf299ac2cf8410-a997cf2f.mp3",
   "s": "s/1baf299ac2cf8410-ca8e8e89.mp3"
+ },
+ "Tie patys ženklai, skirtingi kūnai.": {
+  "n": "n/f2c1b7e08667e4a8-22c49139.mp3",
+  "s": "s/f2c1b7e08667e4a8-fc03f468.mp3"
  },
  "Tiltas pastatytas — perėjo abu!": {
   "n": "n/2e8cb9ac1abdb1f9-e3cafef7.mp3",
@@ -3919,6 +4011,10 @@
   "n": "n/bf025552078f496f-98965553.mp3",
   "s": "s/bf025552078f496f-13eec595.mp3"
  },
+ "Šaknys ima vandenį ir maisto medžiagas iš žemės.": {
+  "n": "n/52281d2823777789-0eb5b11b.mp3",
+  "s": "s/52281d2823777789-0d010dac.mp3"
+ },
  "Šalta, sniegas, medžiai be lapų, vanduo užšąla.": {
   "n": "n/2cb3683e3c35df4c-a7a95b8d.mp3",
   "s": "s/2cb3683e3c35df4c-4ec89bf3.mp3"
@@ -4034,6 +4130,10 @@
  "Žengė vieną langelį į priekį.": {
   "n": "n/5168057a6ebe5692-7169577a.mp3",
   "s": "s/5168057a6ebe5692-14b9f7a4.mp3"
+ },
+ "Ženklas patikrintas. Skaičius po būtybe rodo, kiek rasta.": {
+  "n": "n/118acd3e07ed56c4-42b4fb61.mp3",
+  "s": "s/118acd3e07ed56c4-c25ae71a.mp3"
  },
  "Žiema": {
   "n": "n/8c0846000ca22d18-ba6f7baa.mp3",

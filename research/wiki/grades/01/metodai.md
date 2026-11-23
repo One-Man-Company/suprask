@@ -3,7 +3,7 @@ title: "1 klasės metodai"
 tipas: metodai
 klase: 1
 amzius: "6–7"
-atnaujinta: 2026-11-14
+atnaujinta: 2026-11-23
 ---
 
 # 1 klasės metodai
@@ -1175,6 +1175,120 @@ Atsakymų indeksai 1 / 2 / 0 / 2 — ne visi tame pačiame indekse (`validate_co
 **Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, gamtos mokslai, 26.1.1 (`sources/pradinio-bp-rekomendacijos-2024.txt:14960–14966`, `:17618–17626`, `:8390–8392`). Schwebel, D. C. (2019). Why “accidents” are not accidental: Using psychological science to understand and prevent unintentional child injuries. *American Psychologist, 74*(9), 1137–1147. https://doi.org/10.1037/amp0000487 · Zhuravlev, P., Mueller, C., & St. Vil, D. (2024). Just my luck: How children’s causal attributions contribute to injury prevention. *European Journal of Trauma and Emergency Surgery, 50*, 3095–3098. https://doi.org/10.1007/s00068-023-02425-3 · Hillier, L. M., & Morrongiello, B. A. (1998). Age and gender differences in school-age children’s appraisals of injury risk. *Journal of Pediatric Psychology, 23*(4), 229–238. https://doi.org/10.1093/jpepsy/23.4.229
 
 **Pastaba dėl pasiūlymo.** Ideatorius (#433) temą parengė, bet paleidimas baigėsi prieš įrašant failą, todėl `tema` pasiūlymo `agents/proposals/` kataloge nėra (`agents/log/ideator-2026-11-22T0743.md:41–43`). Metodas idėją palieka, bet **susiaurina**: ideatorius siūlė „tą pačią vietą su matoma priežastimi (šlapios grindys, bėgimas, atsegta kuprinė)“, o čia iš trijų priežasčių pašalintas **bėgimas** — jis priklauso vaikui, o ne vietai, ir tame pačiame kadre būtų antra sąvoka (T1.2). Bėgimas lieka mokytojo veiklai, o modelis laiko vaiko ėjimą nepajudinamą būtent todėl, kad priežastis būtų galima priskirti vietai.
+
+### M-14 — Virtualumas: žodis pasiekia žmogų abiem keliais
+
+**Data:** 2026-11-23 · **Tema:** 1 klasės etika, D:virtualumas „Aš ir virtualumas“ (`research/wiki/curriculum/1-klases-temų-žemėlapis.md:80`, `research/wiki/curriculum/backlog.json`) · **Tikslas:** `content/lt/grade-01/dorinis-ugdymas/02-virtualumas.json`
+
+**Viena didelė idėja.** Ekrane žmogus yra tikras žmogus. Tas pats žodis jį pasiekia ir tada, kai jis pasakytas gyvai, ir tada, kai parašytas. Keičiasi kelias, ne pasekmė: gavėjo jausmas priklauso nuo žodžio prasmės, o ne nuo to, ar jis girdėjo balsą, ar skaitė raidžių eilutę.
+
+**Ką sako programa.** Etikos programoje virtualumas yra **nauja sritis**: „Naujame turinyje skiriama daugiau dėmesio virtualumo, saugaus elgesio ir komunikacijos virtualioje tikrovėje temai“, o vertybinės nuostatos įvardija „saugų elgesį virtualioje erdvėje, savo ir kito asmens duomenų saugojimą, laiko planavimą dirbant ar žaidžiant virtualioje erdvėje“ (`sources/pradinio-bp-rekomendacijos-2024.txt:105–106`; `research/wiki/curriculum/kti-dalykai-1-klase.md:133`). Konkreti 1–2 kl. veikla yra pavadinta būtent taip: „**ETIKA. Aš ir virtualumas.** Sumaketuoti **draugiško elgesio internete taisykles**, naudojant, pvz., Canva“ (`sources/pradinio-bp-rekomendacijos-2024.txt:12271–12273`). Ilgalaikiame plane ta tema stovi kaip „4 savaitė A4 Aš ir virtualumas“ (`:16434`), o jos kompetencijų aprašas remiasi jausmų įvardijimu ir „savo skirtingumo nuo kitų“ suvokimu (`:16435–16442`) — todėl modelis remiasi žodžio jausmu, o ne taisyklės sąrašu. Platforma šios pozicijos neturėjo nė vieno modulio (`backlog.json` būsena `missing`).
+
+**Kodėl modelis, o ne paveikslėlis ar taisyklių sąrašas.** Draugiško elgesio taisyklės, surašytos kaip sąrašas, vaikui yra suaugusiojo taisyklės, kurių laikomasi tol, kol suaugusysis žiūri (Piaget, 1932 — ta pati išvada, kuria remiasi `01-susitarimas-ir-zaidimas`). Paveikslėlis parodo žmogų prie ekrano, bet ne tai, **kas pasikeičia** nuo žodžio. Skirtumas, kurį vaikas turi suprasti, yra pasekmės tapatumas dviem keliais, o ne ekrano išvaizda: tam reikia to paties žodžio du kartus, tuo pačiu gavėju ir pasikeitusiu tik keliu. Modelis duoda ir tai, ko sąrašas neturi: vaikas pats pasiunčia žodį abiem keliais ir pamato, kad veidas liko toks pat.
+
+**Ką rodo tyrimai.**
+Suler (2004) „online disinhibition“ efekte įvardija šešis veiksnius, iš kurių du svarbiausi šiam amžiui: **nematomumas** („you can't see me“) ir **asimchroniškumas** (žodis lieka, o atsakymo nereikia iš karto). Vaikas ekrane jaučiasi nepastebimas, todėl rašo tai, ko nepasakytų gyvai — nors gavėjas yra tas pats žmogus. Iš to metodui išeina reikalavimas: modelis turi rodyti **gavėjo pasekmę**, o ne aiškinti, kad „taip daryti negalima“.
+Widen ir Russell (2008) rodo, kad 6–7 m. vaiko jausmo žodynas dar platus — vienas žodis dengia kelis jausmus, o jausmas atpažįstamas iš **veido ir situacijos**, ne iš aprašymo. Todėl modelyje jausmą neša gavėjo veidas, o žodis, ne ilga formuluotė.
+Piaget (1932) paaiškina, kodėl taisyklė be pasekmės nelimpa: 6–7 m. vaikas taisyklę linkęs laikyti suaugusiojo nustatytu dalyku, o ne susitarimu. Modelis taisyklę padaro pasekmės stebėjimu.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Ekrane aš nesu matomas, todėl mano žodis žmogaus nepasiekia.“** Paneigiama tuo pačiu žodžiu du kartus: gyvai ir per ekraną. Gavėjo veidas abiem atvejais toks pat, o `config.sentences.both.*` tai pasako žodžiu („Abiem keliais Tomui linksma.“).
+2. **„Ekrane galima rašyti bet ką — tai ne tikra.“** Modelis turi **priešpriešinį pavyzdį** tame pačiame kadre (LL-28): nemalonus žodis „Tu man netrugink“ duoda liūdną veidą abiem keliais, taigi rašyti galima, bet pasekmė lieka.
+3. **„Jei nematau veido, nematau ir pasekmės.“** Veido modelis nerodo gavėjui atgal, bet jausmas ekrane lieka; `readout` sako „Tomui liūdna“, o ne „klaida“. Modelis niekada nevaidina gavėjo atsakymo — tik jo jausmą.
+4. **„Kanalas keičia žodžio prasmę.“** Tas pats žodis abiem keliais duoda tą patį veidą; kintamasis yra žodis, ne kelias. Tai matoma palyginimo eilutėje `#zv-compare`.
+5. **„Rašyti saugiau nei sakyti.“** Rašyti lengviau — nereikia matyti kito akių, — bet pasekmė ta pati. Todėl modelis nesislepia už „rašyk mandagiai“ patarimo, o rodo veidą.
+
+**Seka (konkretumas → pusiau abstraktus modelis → simbolis → perkėlimas).**
+
+1. **Du veidai prieš klasę.** Ekrane du vaikai, bet kurių žodis dar nepasakytas. Vaikas pasirenka, ką pasakys: „Ačiū, kad padėjai“ ar „Tu man netrugink“. Tikslas: žodis atsiranda tik tada, kai jį pasirenki.
+2. **Kanalas kaip atskiras pasirinkimas.** Vaikas pasirenka „Gyvai“ arba „Per ekraną“ ir spaudžia „Siųsti“. Scena parodo kelią: trys arkos (balsas) arba kortelė su eilutėmis (raštas). Tikslas: kelias matomas kaip atskiras dalykas, ne kaip žodžio savybė.
+3. **Tas pats žodis antru keliu.** Vaikas siunčia tą patį žodį likusiu keliu. Veidas nepakinta; palyginimo eilutė užsipildo abiem pusėmis. Tikslas: pasekmės tapatumas, ne kelių skirtumas.
+4. **Priešpriešinis žodis.** Vaikas pasirenka antrą žodį; abu keliai išvalomi (LL-17: sena būsena nebepasakoja nieko apie naują žodį) ir siunčia juo abiem keliais. Veidas liūdnas abiem. Tikslas: taisyklė apie žodį, ne apie malonų atvejį.
+5. **Perkėlimas į tris vietas.** Be modelio: laiškas draugui, klasės pokalbis, žaidimas. Vaikas pasako, kurį žodį pasirinktų ir kodėl. Tikslas: taisyklė ne apie šį ekraną, o apie bet kurį.
+
+**Privalomas spėjimo žingsnis — sąmoningai NĖRA.** Tai sąmoningas šio modelio sprendimas, ne spraga (LL-15). Spėjimas reikalauja, kad vaikas **turėtų prognozę** prieš įvykį; čia pasekmė yra tai, ką jis pats pasirinko pasakyti, todėl spėjimas būtų „ką aš pasakysiu“ — ne prognozė, o to paties pasirinkimo kartojimas. Modelio klaidinga nuostata („mano žodis nepasiekia“) paneigiama **palyginimu**, o ne prognoze: prieš pirmą siuntimą palyginimo eilutė rodo „Gyvai: — · Per ekraną: —“, ir būtent tas trūkumas kviečia siųsti antrą kartą. Todėl vietoj spėjimo modelis turi privalomą **antrą siuntimą tuo pačiu žodžiu**, be kurio `api.progress` neįrašomas — pirmas siuntimas pažangos nežymi (LL-29).
+
+**Simuliacijos specifikacija.** Komponentas `zodis-per-ekrana`, failas `assets/js/sims/dorinis.js` (importuoja `art.js`, naudoja `art.defs`, `art.sun`, `art.cloud`, `art.hills`, `art.grass`, `art.kid` — `scripts/check_art.py` 0 klaidų, LEGACY sąrašo liesti negalima). Registracija: `SIMS` bloke (`dorinis.js:749`) eilutė `"zodis-per-ekrana": zodisPerEkrana,`. `config`:
+
+```json
+{ "kids": [ { "id": "a", "name": "Rūta", "color": "#f0b45a" },
+            { "id": "b", "name": "Tomas", "color": "#7cc0ea" } ],
+  "words": [ "Ačiū, kad padėjai", "Tu man netrugink" ],
+  "tones": [ "siltas", "saltas" ],
+  "toneLabels": { "siltas": "Tomui linksma", "saltas": "Tomui liūdna" },
+  "sentences": { "ask": "…", "prompt": "…", "channel": "…", "send": "…", "pick": "…",
+                 "carry": "…", "say": { "live": { "warm": "…", "cold": "…" },
+                                        "screen": { "warm": "…", "cold": "…" } },
+                 "both": { "warm": "…", "cold": "…" } } }
+```
+
+**Pasekmė išvedama, o ne įrašyta.** `config.tones[]` nurodo tik jausmo rūšį, o veido išraiška išvedama: `MOOD = { siltas: "happy", saltas: "sad" }`. Jei žodis neturi `tones[i]`, komponentas rašo `console.error` ir rodo „Žodžiai nesuderinti su jausmais.“, o ne tyliai praleidžia pasekmę. Tai ta pati taisyklė kaip M-07 (`kiekis = board.px / unit.px`) ir M-13 (`outcome(key) = key === "nieko" ? "safe" : "fall"`).
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | du vaikai, neutralūs veidai, tuščia palyginimo eilutė | „Ką pasakysi Tomui?“ | „Pasirink žodį ir kelia, kuriuo jis nueis pas Tomą.“ |
+| žodis pasirinktas | žodis pažymėtas, kanalas „Gyvai“ | „Ką pasakysi Tomui?“ | „Pasirinkta: „Ačiū, kad padėjai““ |
+| siuntimas | arkos brūkšniuotos, žodis keliauja | „Žodis keliauja.“ | „Palauk, kol žodis nueis.“ |
+| po 1 siuntimo, malonus | gavėjas šypsosi, palyginime viena pusė | „Rūta pasakė gyvai. Tomui linksma.“ | „… Dabar pasiųsk tą patį žodį per ekraną.“ |
+| po 2 siuntimų | gavėjas šypsosi, palyginime abi pusės | „Abiem keliais Tomui linksma.“ | tas pats sakinys |
+| nemalonus žodis, 1 siuntimas | gavėjas liūdnas, antakiai nuleisti | „Rūta parašė ekrane. Tomui liūdna.“ | „… Dabar pasakyk tą patį žodį gyvai.“ |
+| nemalonus, 2 siuntimai | gavėjas liūdnas, abi pusės | „Abiem keliais Tomui liūdna.“ | tas pats sakinys |
+| „Iš naujo“ | scena atstatyta, palyginimas tuščias | „Ką pasakysi Tomui?“ | „Pirma pasirink žodį.“ |
+
+Septynios savybės, kurių negalima praleisti:
+
+- **Vienas kintamasis:** `word` — ką vaikas pasako. Gavėjas, jų vieta ir veidų piešimas nesikeičia niekada; `channel` yra **kelias**, ne antras kintamasis, ir jis sąmoningai neturi jokios įtakos veidui — tai yra modelio teiginys, o ne dekoracija.
+- **Geometrija 360 px:** scena `viewBox="0 0 360 308"`, `max-width:360px`; vaikai `art.kid(62, 240, 3.4)` ir `art.kid(298, 240, 3.4)`, galvos spindulys 27,2 px — 360 px ekrane veidas ~28 × 20 px, pakankamas šypsenai atskirti (LL-06). Balsas — trys arkos nuo galvos kraštų, kortelė — 64 × 42 px ties `translate(148 56)`, **virš galvų**, nes kortelė, užklojusi veidą, paslėptų būtent tą pasekmę, kurią modelis turi parodyti (LL-24). Matuota viewBox koordinatėmis: už `viewBox` niekas neišeina, kortelė neužkloja nė vieno veido.
+- **Įėjimai ir klaviatūra:** `<button>` visi elementai, `Tab` per žodžius, kanalus ir „Siųsti“, `Enter`/`Space` aktyvuoja, `aria-pressed` žymi pasirinkimą, `aria-labelledby` grupuoja. Visi taikiniai ≥ 48 px (`min-height:3rem`).
+- **Fokusas** (LL-32): „Siųsti“ be pasirinkto žodžio ne užrakinamas, o `focus()` eina į pirmą žodį ir `api.note` pasako, kodėl; uždėti valdikliai žymimi `aria-disabled`, ne `disabled`, kad fokusas neprapultų.
+- **Grįžtamasis ryšys** — `readout` po siuntimo, `api.note` sako **kodėl**; `api.progress({ correct: true })` kviečiamas tik tada, kai `shown.gyvai && shown.ekranas` — t. y. kai abu keliai išbandyti **su tuo pačiu žodžiu** (dabartis, ne istorija — LL-17), ir ne po pirmo siuntimo (LL-29). Žodžio keitimas išvalo `shown` ir `reportedFor`, taigi pažanga negali būti „paveldėta“ iš kito žodžio. „Iš naujo“ pažangos netrina (LL-16).
+- **Garsas:** vienas `api.speak` kvietimas vienam siuntimui, o sakinys imamas iš `config.sentences` **kaip visuma** (`say.live.warm`, `screen.cold`, `both.warm` …), ne sujungiamas kode — `speech.js` turi vieną `<audio>` ir `playToken`, todėl antras kvietimas nutrauktų pirmą, o sulipdytas sakinys manifeste neegzistuotų (LL-145). Vietoj rodyklės `#zv-compare` atnaujinamas tik po siuntimo, ne kas kadrą (LL-14).
+- **Be laikmačių, be ėjimų limito, be „game over“.** Siuntimas kartojamas tiek, kiek vaikas nori.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Kaip jaučiasi draugas, perskaitęs žodį „Ačiū“ ekrane?“ — „Liūdna“ / „Linksma“ / „Neramu“ | 1 | „Liūdna“ — raidės laikomos atšaldančiomis žodį | „Pagalvok, ar raidės keičia žodžio prasmę.“ |
+| 2 | taikymas | „Kuo skiriasi žodis ekrane nuo to paties žodžio gyvai?“ — „Niekuo, žodis pasiekia taip pat“ / „Ekrane žodis žmogaus nepasiekia“ / „Ekrane žodis netenka prasmės“ | 0 | „Ekrane žodis žmogaus nepasiekia“ — būtent modelio klaidinga nuostata | „Prisimink modelį: keitėsi kelias, o kas liko?“ |
+| 3 | perkėlimas | „Kas nutinka žmogui, kai jis perskaito nemalonų žodį?“ — „Nieko, tai tik raidės“ / „Jis jaučiasi įskaudintas“ / „Ekranas jį apsaugo“ | 1 | „Nieko, tai tik raidės“ — ekranas laikomas apsauga | „Kas sėdi anapus ekrano?“ |
+| 4 | perkėlimas | „Kaip padėti draugui, gavusiam nemalonų laišką?“ — „Atsakyti tuo pačiu“ / „Nustoti rašyti visiems“ / „Parašyti jam gerą žodį“ | 2 | „Atsakyti tuo pačiu“ — atsakymas kartoja žodį, o ne keičia jausmą | „Prisimink, kaip jis jaučiasi dabar.“ |
+| 5 | perkėlimas (`optional: true`) | „Kodėl taisyklė „rašyk kaip pasakytum gyvai“ padeda?“ — „Nes ekrane žodis nepasiekia“ / „Nes anapus ekrano yra žmogus“ / „Nes ekranas apsaugo nuo jausmų“ | 1 | „Nes ekranas apsaugo nuo jausmų“ — modelio nuostata apversta | „Prisimink, ką matei modelyje su veidais.“ |
+
+Atsakymų indeksai 1 / 0 / 1 / 2 / 1 — ne visi tame pačiame indekse (`validate_content.py` tikrina pasiskirstymą). Nė viena užuomina nekartoja teisingo varianto žodžių (tikrinta `hint_leaks_option`).
+
+**Refleksija.** „Ką parašytum draugui, kad jis nusišypsotų?“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — vaikas įvardija **žodį**, o ne kanalą.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Modelis rodo du žodžius, o tikrovėje jų būna daug.** Todėl `readout` sako „linksma“ / „liūdna“, o ne „teisingai“ / „neteisingai“; modelis nepretenduoja išmokyti viso mandagumo sąrašo.
+2. **Gavėjo atsakymo nėra.** Modelis parodo jausmą, o ne tai, ką žmogus atsakys; tikras pokalbis lieka mokytojui.
+3. **Kanalas supaprastintas iki dviejų.** Tikrovėje yra balsas, vaizdo įrašas, grupė, ženklas; modelis ima du, nes du pakanka pasekmės tapatumui parodyti (T1.2).
+4. **„Savo ir kito asmens duomenų saugojimas“ neparodomas.** Programa jį įvardija (`:105–106`), bet tai **antra sąvoka**; modelyje jos nėra, kad tame pačiame kadre neliktų dviejų idėjų. Ji lieka mokytojo veiklai ir atskiram moduliui.
+5. **„Laiko planavimas virtualioje erdvėje“ neparodomas.** Ta pati priežastis: atskira sąvoka, atskiras modulis.
+
+**Ką tai reiškia modulio autoriui.** `id` — `02-virtualumas` (dorinio ugdymo 02 eilė, nes 01 jau užimtas); `title` — „Ekranas žmogaus nepaslepia“ (26 simboliai); `subtitle` — „Per ekraną žodis pasiekia žmogų taip pat, kaip gyvai“; `minutes` — 9; trys `outcomes` veiksmažodžiu („Pasakau, kad žmogus kitoje ekrano pusėje jaučia taip pat.“, „Pasirenku draugišką žodį ir paaiškinu, kodėl jis padeda.“, „Atskiriu, ką galima rašyti draugui, o ko ne.“); `concept.title` — „Žodis per ekraną“; `concept.big_idea` — „Ekrane žmogus yra tikras žmogus. Žodis jį pasiekia taip pat, kaip gyvai. Jis jaučia tą patį.“ (92 simboliai); `concept.steps` — keturi žingsniai po ≤10 žodžių; `concept.example` — „Rūta parašė Tomui: „Ačiū, kad padėjai“. Tomas perskaitė ir nusišypsojo. Jei ji būtų parašiusi „Tu man netrugink“, Tomas būtų nuliūdęs.“ — pavyzdys mini **abiejus** modelio žodžius, todėl neprieštarauja simuliacijai (LL-142). Įrašytas į `content/lt/grade-01/index.json` (dorinis ugdymas, po `01-susitarimas-ir-zaidimas`) ir į `path.json` — **po `01-susitarimas-ir-zaidimas`**, nes ten vaikas mokosi, kad susitarimas galioja visiems, o čia — kad žodis pasiekia žmogų ir per ekraną.
+
+**Patikra.** Šis paleidimas (2026-11-23, #458) paleido visus vartus, kuriuos kartoja CI:
+
+```
+validate_content.py (visi)   -> 0 klaidų, 0 įspėjimų
+check_language.py --grade 1  -> 0 klaidų, 0 įspėjimų (riba 10 ž.)
+check_audio.py               -> 880 tekstų, 1760/1760 įrašų, visi Piper
+check_art.py                 -> 0 klaidų (9 sims naudoja art.js)
+check_docs_facts.py          -> 0 klaidų, „Sutampa su failais“
+check_registry.py            -> 62/62/62/273/62/62, našlaičių 0
+check_view.py --module 02-virtualumas --viewports desktop,phone,small --json
+                             -> checked 3, problems: []
+   1440 / 390 / 360: ovf 0, tasks 5/5, small 0, ctl 6, eyebrow 1/1, errors []
+check_view.py --text-scale 200 (phone,small) -> scaled_problems: [], unapplied: []
+check_svg_fit.py             -> 0 apkarpymų virš tolerancijos
+```
+
+Elgsenos zondas 360 px: po 1 siuntimo `#sim-readout` = „Rūta pasakė gyvai. Tomui linksma.“, palyginimas „Gyvai: Tomui linksma · Per ekraną: —“, gavėjo `data-mood="happy"`; po 2-o (tas pats žodis, kitas kelias) — „Abiem keliais Tomui linksma.“, palyginime abi pusės, `simDone: true`; su nemaloniu žodžiu — „Tomui liūdna“ ir `data-mood="sad"` abiem keliais; per siuntimą **vienas** `api.speak` kvietimas (vienas `src` priskyrimas); konsolės klaidų 0. Veido geometrija matuota viewBox koordinatėmis: už `viewBox` neišeina nė vienas elementas, kortelė neužkloja veido (`cardHitsGavejas: false`).
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, etika ir skaitmeninio turinio kūrimas (`sources/pradinio-bp-rekomendacijos-2024.txt:105–106`, `:12271–12273`, `:16434–16442`). Suler, J. (2004). The online disinhibition effect. *CyberPsychology & Behavior, 7*(3), 321–326. https://doi.org/10.1089/1094931041291295 · Widen, S. C., & Russell, J. A. (2008). Children acquire emotion categories gradually. *Cognitive Development, 23*(2), 291–312. https://doi.org/10.1016/j.cogdev.2008.01.002 · Piaget, J. (1932). *The Moral Judgment of the Child*. London: Kegan Paul.
 
 ## Atviros prielaidos
 

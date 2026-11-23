@@ -555,6 +555,14 @@
   "n": "n/4fda2a8ac2744188-abef7bd7.mp3",
   "s": "s/4fda2a8ac2744188-bd821a6b.mp3"
  },
+ "Abiem keliais Tomui linksma.": {
+  "n": "n/27ba58305f785f78-f77f3f09.mp3",
+  "s": "s/27ba58305f785f78-70590540.mp3"
+ },
+ "Abiem keliais Tomui liūdna.": {
+  "n": "n/ba743292d674eedb-b6b15df4.mp3",
+  "s": "s/ba743292d674eedb-509cf0ad.mp3"
+ },
  "Abu kartu": {
   "n": "n/33b9b9c23825b7b4-3ed6d89a.mp3",
   "s": "s/33b9b9c23825b7b4-023c3b5f.mp3"
@@ -682,6 +690,10 @@
  "Aukštyn skaičius mažėja dešimčia.": {
   "n": "n/8771ad44a23fe671-01bc7581.mp3",
   "s": "s/8771ad44a23fe671-dc120609.mp3"
+ },
+ "Ačiū, kad padėjai": {
+  "n": "n/3437475a63d3bcc2-5cc340b1.mp3",
+  "s": "s/3437475a63d3bcc2-9631f0cc.mp3"
  },
  "Aštuoni ir keturi yra dvylika.": {
   "n": "n/d72621a20deaef02-f2091c70.mp3",
@@ -1547,6 +1559,14 @@
   "n": "n/2b495d4a7d0785ec-a22eedd1.mp3",
   "s": "s/2b495d4a7d0785ec-ec3697f1.mp3"
  },
+ "Ką pasakysi Tomui?": {
+  "n": "n/9849c924638f929f-87517b85.mp3",
+  "s": "s/9849c924638f929f-bfa7bd0a.mp3"
+ },
+ "Ką pasakysi?": {
+  "n": "n/71986cc44dd3c1bb-e5fe1a20.mp3",
+  "s": "s/71986cc44dd3c1bb-ba17b8c4.mp3"
+ },
  "Ką suprasi": {
   "n": "n/6ed7616494dc4ee2-b0c27f98.mp3",
   "s": "s/6ed7616494dc4ee2-cfa088fa.mp3"
@@ -1975,6 +1995,10 @@
   "n": "n/432afa070cceea11-9cf15bfe.mp3",
   "s": "s/432afa070cceea11-3e66e30b.mp3"
  },
+ "Per ką pasakysi?": {
+  "n": "n/7af2da16656022d6-87e5dfb3.mp3",
+  "s": "s/7af2da16656022d6-807f607d.mp3"
+ },
  "Perėjai dešimtį į abi puses.": {
   "n": "n/eaa754620147ec79-144cc542.mp3",
   "s": "s/eaa754620147ec79-213feec4.mp3"
@@ -2034,6 +2058,10 @@
  "Pirma pasirink klausimą viršuje, tada veiksmą.": {
   "n": "n/8e2fbed9a06630c0-4db885da.mp3",
   "s": "s/8e2fbed9a06630c0-0316a2de.mp3"
+ },
+ "Pirma pasirink žodį.": {
+  "n": "n/290261f561bf6ff0-b65dffa2.mp3",
+  "s": "s/290261f561bf6ff0-3269216f.mp3"
  },
  "Pirma spėk, ar liks laiko pusryčiams.": {
   "n": "n/cfec274b298571db-f3d309ce.mp3",
@@ -2279,6 +2307,22 @@
   "n": "n/b140820bf377005a-34e1286a.mp3",
   "s": "s/b140820bf377005a-5fe912a5.mp3"
  },
+ "Rūta parašė ekrane. Tomui linksma.": {
+  "n": "n/0c438c121caf2b58-0c597bd0.mp3",
+  "s": "s/0c438c121caf2b58-6afc346b.mp3"
+ },
+ "Rūta parašė ekrane. Tomui liūdna.": {
+  "n": "n/2f4b6c4473173416-9ad797cf.mp3",
+  "s": "s/2f4b6c4473173416-981501a3.mp3"
+ },
+ "Rūta pasakė gyvai. Tomui linksma.": {
+  "n": "n/753f891153413d52-8d33ec3d.mp3",
+  "s": "s/753f891153413d52-ac9db9f6.mp3"
+ },
+ "Rūta pasakė gyvai. Tomui liūdna.": {
+  "n": "n/dc58dc1b7b801d5b-a7a6f03d.mp3",
+  "s": "s/dc58dc1b7b801d5b-dec2006e.mp3"
+ },
  "Rūta sako: „Bijau, kad visi juoksis.“ Jos jausmas – baikštus.": {
   "n": "n/1387e2d09f2001e6-4f7c986d.mp3",
   "s": "s/1387e2d09f2001e6-6c0156e5.mp3"
@@ -2314,6 +2358,10 @@
  "Septyni ir šeši yra trylika.": {
   "n": "n/a2cd3c8462e58aed-7e4d2ded.mp3",
   "s": "s/a2cd3c8462e58aed-f06879d2.mp3"
+ },
+ "Siųsti": {
+  "n": "n/841608273eeb83d3-184d2029.mp3",
+  "s": "s/841608273eeb83d3-702fa2af.mp3"
  },
  "Skaitmenys tie patys, o skaičius kitas.": {
   "n": "n/1412022ef462b730-13e3ddbd.mp3",
@@ -2662,6 +2710,10 @@
  "Trys vienodo dydžio kaladėlės. Kuri plauks?": {
   "n": "n/da3c514821c976da-86f549a5.mp3",
   "s": "s/da3c514821c976da-278d796c.mp3"
+ },
+ "Tu man netrugink": {
+  "n": "n/e13f6e62cc91f803-2c61515e.mp3",
+  "s": "s/e13f6e62cc91f803-c3dedb49.mp3"
  },
  "Tu matei abu petnešų ilgius ir vieną petį.": {
   "n": "n/30ef59c8ede62335-bf69072d.mp3",
@@ -3434,6 +3486,10 @@
  "Žirklės": {
   "n": "n/29108178601c894d-99c88dea.mp3",
   "s": "s/29108178601c894d-6c479d88.mp3"
+ },
+ "Žodis keliauja.": {
+  "n": "n/90bc0a5f0a39c399-99f302db.mp3",
+  "s": "s/90bc0a5f0a39c399-83c4d348.mp3"
  },
  "Žodžiu": {
   "n": "n/ba7ae0cc6626d97e-3a6c4a13.mp3",

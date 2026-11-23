@@ -11,8 +11,8 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **61**
-- Padengta / iš dalies / nėra: **37 / 7 / 3**
+- Modulių dabar: **62**
+- Padengta / iš dalies / nėra: **38 / 7 / 2**
 
 ## Ko dar nėra (prioritetas)
 
@@ -20,7 +20,6 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 |---|---|---|---|---|
 | missing | Elektronika | D:elektronika | 23.4.1: elektros srovė, šaltiniai, jungiklis, saugus elgesys | `1-klases-temų-žemėlapis.md:74` |
 | missing | Funkciniai judesiai | D:funkciniai-judesiai | „Susipažinimas su mokinių turimais ir trūkstamais judėjimo gebėjimais“; „abi kūno pusės tolygiai“ | `1-klases-temų-žemėlapis.md:77` |
-| missing | Virtualumas | D:virtualumas | „Draugiško elgesio internete taisyklės“ („Aš ir virtualumas“) | `1-klases-temų-žemėlapis.md:80` |
 | partial | Trūkstamas dėmuo | B:trukstamas-demuo | „Lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“ | `1-klases-temų-žemėlapis.md:42` |
 | partial | Aš ir mano šeima | C:as-ir-mano-seima | Prisistatymas, šeimos istorijos pasakojimas (projektas „Mano šeimos istorija“) | `1-klases-temų-žemėlapis.md:65` |
 | partial | Bendri gyvų organizmų požymiai | 26.2.4 | demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“; žaidimas „Gyvas–negyvas“ (:8445–8448) | `pasaulio-pazinimas-1-klase.md:90` |
@@ -61,6 +60,7 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Klausymasis | D:klausymasis | Žanrų ir atlikėjų pažinimas (1–2 kl.) | `1-klases-temų-žemėlapis.md:73` |
 | covered | Komandų seka | D:komandu-seka | „Sudaro ir vykdo komandų sekas, naudojasi žaidybinėmis programavimo priemonėmis“ (B3.3) | `1-klases-temų-žemėlapis.md:79` |
 | covered | Medžiagų savybės | D:medziagu-savybes | 23.3.1: „kieti, minkšti, plastiški, blizgūs“; tinkamumas darbui | `1-klases-temų-žemėlapis.md:75` |
+| covered | Virtualumas | D:virtualumas | „Draugiško elgesio internete taisyklės“ („Aš ir virtualumas“) | `1-klases-temų-žemėlapis.md:80` |
 | covered | Teksto skaitymas su supratimu (B.1.2 tiesiogine prasme) | gap:teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p | 05-plakatas-ir-informacija randa informaciją plakate, bet nė vienas modulis nepateikia kelių sakinių teksto, a | `lietuviu-kalba-1-klase.md:145` |
 | covered | dienos režimas, mityba | 26.1.2 | yra tik kuprinės dalis (18); režimo ir mitybos nėra | `pasaulio-pazinimas-1-klase.md:175` |
 | covered | medžiai, krūmai, žolės | 26.2.3 | modulio nėra; pasiūlymai 2026-11-16-ideator-medziai-krumai-zoles.json ir 2026-11-16-metodininkas-medziai-kruma | `pasaulio-pazinimas-1-klase.md:169` |

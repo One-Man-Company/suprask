@@ -1,0 +1,147 @@
+{
+  "id": "02-virtualumas",
+  "grade": 1,
+  "strand": "dorinis-ugdymas",
+  "title": "Ekranas žmogaus nepaslepia",
+  "subtitle": "Per ekraną žodis pasiekia žmogų taip pat, kaip gyvai",
+  "minutes": 9,
+  "outcomes": [
+    "Pasakau, kad žmogus kitoje ekrano pusėje jaučia taip pat.",
+    "Pasirenku draugišką žodį ir paaiškinu, kodėl jis padeda.",
+    "Atskiriu, ką galima rašyti draugui, o ko ne."
+  ],
+  "concept": {
+    "title": "Žodis per ekraną",
+    "big_idea": "Ekrane žmogus yra tikras žmogus. Žodis jį pasiekia taip pat, kaip gyvai. Jis jaučia tą patį.",
+    "steps": [
+      "Pasirink vieną žodį: „Ačiū, kad padėjai“.",
+      "Pirma pasakyk jį gyvai. Pažiūrėk į draugo veidą.",
+      "Tada pasiųsk tą patį žodį per ekraną.",
+      "Palygink: keitėsi kelias, o veidas liko toks pat."
+    ],
+    "example": "Rūta parašė Tomui: „Ačiū, kad padėjai“. Tomas perskaitė ir nusišypsojo. Jei ji būtų parašiusi „Tu man netrugink“, Tomas būtų nuliūdęs."
+  },
+  "sim": {
+    "component": "zodis-per-ekrana",
+    "config": {
+      "kids": [
+        { "id": "a", "name": "Rūta", "color": "#f0b45a" },
+        { "id": "b", "name": "Tomas", "color": "#7cc0ea" }
+      ],
+      "words": [
+        "Ačiū, kad padėjai",
+        "Tu man netrugink"
+      ],
+      "tones": [
+        "siltas",
+        "saltas"
+      ],
+      "toneLabels": {
+        "siltas": "Tomui linksma",
+        "saltas": "Tomui liūdna"
+      },
+      "sentences": {
+        "ask": "Ką pasakysi Tomui?",
+        "prompt": "Ką pasakysi?",
+        "channel": "Per ką pasakysi?",
+        "send": "Siųsti",
+        "pick": "Pirma pasirink žodį.",
+        "carry": "Žodis keliauja.",
+        "say": {
+          "live": {
+            "warm": "Rūta pasakė gyvai. Tomui linksma.",
+            "cold": "Rūta pasakė gyvai. Tomui liūdna."
+          },
+          "screen": {
+            "warm": "Rūta parašė ekrane. Tomui linksma.",
+            "cold": "Rūta parašė ekrane. Tomui liūdna."
+          }
+        },
+        "both": {
+          "warm": "Abiem keliais Tomui linksma.",
+          "cold": "Abiem keliais Tomui liūdna."
+        }
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Kaip jaučiasi draugas, perskaitęs žodį „Ačiū“ ekrane?",
+      "options": [
+        "Liūdna",
+        "Linksma",
+        "Neramu"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, ar raidės keičia žodžio prasmę.",
+      "why": "Žodis „ačiū“ džiugina ir tada, kai jį perskaito ekrane."
+    },
+    {
+      "q": "Kuo skiriasi žodis ekrane nuo to paties žodžio gyvai?",
+      "options": [
+        "Niekuo, žodis pasiekia taip pat",
+        "Ekrane žodis žmogaus nepasiekia",
+        "Ekrane žodis netenka prasmės"
+      ],
+      "answer": 0,
+      "hint": "Prisimink modelį: keitėsi kelias, o kas liko?",
+      "why": "Tas pats žodis pasiekia žmogų abiem keliais."
+    },
+    {
+      "q": "Kas nutinka žmogui, kai jis perskaito nemalonų žodį?",
+      "options": [
+        "Nieko, tai tik raidės",
+        "Jis jaučiasi įskaudintas",
+        "Ekranas jį apsaugo"
+      ],
+      "answer": 1,
+      "hint": "Kas sėdi anapus ekrano?",
+      "why": "Anapus ekrano sėdi žmogus, todėl žodis jį pasiekia."
+    },
+    {
+      "q": "Kaip padėti draugui, gavusiam nemalonų laišką?",
+      "options": [
+        "Atsakyti tuo pačiu",
+        "Nustoti rašyti visiems",
+        "Parašyti jam gerą žodį"
+      ],
+      "answer": 2,
+      "hint": "Prisimink, kaip jis jaučiasi dabar.",
+      "why": "Geras žodis pasiekia žmogų ir padeda jam."
+    },
+    {
+      "q": "Kodėl taisyklė „rašyk kaip pasakytum gyvai“ padeda?",
+      "options": [
+        "Nes ekrane žodis nepasiekia",
+        "Nes anapus ekrano yra žmogus",
+        "Nes ekranas apsaugo nuo jausmų"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, ką matei modelyje su veidais.",
+      "why": "Taisyklė saugo žmogų, kuris sėdi anapus ekrano.",
+      "optional": true
+    }
+  ],
+  "reflect": "Ką parašytum draugui, kad jis nusišypsotų?",
+  "teacher": {
+    "goal": "Suprasti, kad virtualioje erdvėje kitoje pusėje sėdi tas pats žmogus, todėl žodis jį pasiekia ir jo jausmą keičia taip pat, kaip pasakytas gyvai.",
+    "prompt": "Kas sėdi kitoje ekrano pusėje? Ar ekranas jį apsaugo nuo tavo žodžio?",
+    "offline": "Duokite dviem vaikams po lapą ir sutarkite, kad jie „kalbasi“ raštu per tarpinį lapą. Pirmą kartą vienas rašo „Ačiū, kad padėjai“, antrą kartą — „Tu man netrugink“. Po kiekvieno karto paklauskite gavėjo, kaip jis jautėsi, ir palyginkite su tuo pačiu žodžiu, pasakytu gyvai. Tada paklauskite, ar raidės ant popieriaus apsaugojo nuo jausmo, ir kartu suformuluokite dvi bendras taisykles.",
+    "misconceptions": [
+      "„Ekrane aš nesu matomas, todėl mano žodis žmogaus nepasiekia.“ Modelyje tas pats žodis gyvai ir ekrane duoda tą patį veidą — kanalas keičia kelią, ne pasekmę.",
+      "„Ekrane galima rašyti bet ką, tai ne tikra.“ Kitoje pusėje yra tas pats vaikas, kuris laišką perskaito ir jaučiasi įskaudintas.",
+      "„Jei nematau veido, nematau ir pasekmės.“ Veido nematome, bet jausmas lieka; modelis rodo, kad pasekmė yra ta pati, nors kelias kitas."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), etika: „Naujame turinyje skiriama daugiau dėmesio virtualumo, saugaus elgesio ir komunikacijos virtualioje tikrovėje temai“.",
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), skaitmeninio turinio kūrimas: „ETIKA. Aš ir virtualumas. Sumaketuoti draugiško elgesio internete taisykles“.",
+    "Suler, J. (2004). The online disinhibition effect. CyberPsychology & Behavior, 7(3), 321–326. https://doi.org/10.1089/1094931041291295 (kodėl ekrane žmogus pasako tai, ko nepasakytų gyvai: nematomumas atrodo saugus, nors gavėjas lieka tas pats).",
+    "Widen, S. C., & Russell, J. A. (2008). Children acquire emotion categories gradually. Cognitive Development, 23(2), 291–312. https://doi.org/10.1016/j.cogdev.2008.01.002 (6–7 m. vaikas jausmą atpažįsta iš veido ir situacijos, todėl modelis rodo veidą)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (žodis pasiekia žmogų), o modelis turi du kintamuosius: žodį ir kelią.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo perkelti sąvoką į laišką, klasės taisyklę ir pagalbos draugui situacijas, ne atkartoti sakinį.",
+    "3 žingsnis — pagalba laiku: kiekviena klaida turi užuominą, modelis leidžia siųsti dar kartą, o palyginimas rodo abu kelius viename ekrane."
+  ]
+}

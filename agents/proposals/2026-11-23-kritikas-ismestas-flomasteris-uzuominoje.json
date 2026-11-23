@@ -1,0 +1,16 @@
+{
+  "role": "kritikas",
+  "run_id": 482,
+  "created": "2026-11-23T14:15:40+02:00",
+  "type": "kritika",
+  "title": "23-išmestas daiktas: užuomina kalba apie flomasterį, o klausimas — apie pieštuką",
+  "body": "Modulio `23-ismestas-daiktas-nedingsta` 3 užduotis klausia „Pieštukas dar rašo. Kur dėti seną pieštuką?“, o užuomina sako „Flomasteris dar rašo, juo galima piešti toliau.“ Vaikas, paspaudęs neteisingai, ieško ekrane flomasterio — jo nėra nei scenoje, nei kituose dviejuose daiktuose (`popierius`, `piestukas`), todėl užuomina ne nukreipia į klaidą, o siunčia ieškoti daikto, kurio modelyje nebuvo. Tai LL-34 šeima (sąvoka išimta, o tekstas liko iš senos versijos), tik pjūvis užuominoje: tekstas liko iš ankstesnio varianto su flomasteriu ir nebuvo perskaitytas kartu su `sim.config.objects`. Taisymas — vienas žodis (`Flomasteris` → `Pieštukas`), bet jis keičia tai, ką vaikas girdi po klaidos, todėl jo negalima palikti „kosmetikai“.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/23-ismestas-daiktas-nedingsta.json",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/23-ismestas-daiktas-nedingsta.json:134 — hint „Flomasteris dar rašo, juo galima piešti toliau.“",
+    "content/lt/grade-01/pasaulio-pazinimas/23-ismestas-daiktas-nedingsta.json — tasks[3].q „Pieštukas dar rašo. Kur dėti seną pieštuką?“",
+    "content/lt/grade-01/pasaulio-pazinimas/23-ismestas-daiktas-nedingsta.json — sim.config.objects: [`popierius`, `piestukas`]; flomasterio modelyje nėra"
+  ]
+}

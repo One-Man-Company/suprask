@@ -1,0 +1,17 @@
+{
+  "role": "kritikas",
+  "run_id": 482,
+  "created": "2026-11-23T14:14:02+02:00",
+  "type": "kritika",
+  "title": "25-ilgis: užduotis prašo tikslaus skaičiaus, bet sąlyga sako tik „ilgesnis“ — 2 ir 4 vienodai atitinka užuominą",
+  "body": "Modulio `25-ilgis-ir-vienetas` 2 užduotis klausia: „Lenta yra 6 sąvaržėlės. Trintukas ilgesnis už sąvaržėlę. Kiek trintukų telpa?“ Teisingas variantas — 4, bet sąlyga nepasako, kiek ilgesnis trintukas; santykis 1,5 (lenta 240 px, sąvaržėlė 40 px, trintukas 60 px) gyvena tik `sim.config` ir jo vaikas užduoties tekste nemato. Užuomina „Skaičius turi būti mažesnis už 6“ (eil. 110) vienodai pateisina ir 4 (`['6','2','4']` indeksas 2), ir neteisingą variantą 2 — o 2 yra ne atsitiktinis skaičius: tiek pat telpa pieštukų (120 px) tame pačiame modelyje, todėl vaikas, prisiminęs pieštukų matavimą, turi pagrindą rinktis 2. Tai LL-01 šeima (trūkstamas kiekis sąlygoje), tik pjūvis kitas: trūksta ne pradinio kiekio, o vieneto santykio, be kurio skaičius negalimas. Taisymas pigus ir nekeičia modelio: arba sąlyga įvardija santykį („trintukas pusantro karto ilgesnis“), arba užduotis klausia kokybiškai („Ar trintukų bus mažiau, ar daugiau?“), kaip jau daro simuliacijos `sentences.ask` eilutė 55.",
+  "target": "content/lt/grade-01/matematika/25-ilgis-ir-vienetas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/25-ilgis-ir-vienetas.json:103 — „Lenta yra 6 sąvaržėlės. Trintukas ilgesnis už sąvaržėlę. Kiek trintukų telpa?“, options [`2`,`8`,`4`], answer → `4`",
+    "content/lt/grade-01/matematika/25-ilgis-ir-vienetas.json:110 — hint „Trintukas didesnis už sąvaržėlę. Skaičius turi būti mažesnis už 6.“ (tinka ir 2, ir 4)",
+    "content/lt/grade-01/matematika/25-ilgis-ir-vienetas.json — sim.config: board 240 px, savarzele 40 px, trintukas 60 px, piestukas 120 px (4 = 240/60, 2 = 240/120)",
+    "content/lt/grade-01/matematika/25-ilgis-ir-vienetas.json:55 — simuliacijos klausimas jau formuluojamas kokybiškai („Ar trintukų bus daugiau, ar mažiau?“)"
+  ]
+}

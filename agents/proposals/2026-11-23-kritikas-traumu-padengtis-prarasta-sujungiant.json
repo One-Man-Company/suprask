@@ -1,0 +1,20 @@
+{
+  "role": "kritikas",
+  "run_id": 482,
+  "created": "2026-11-23T14:11:23+02:00",
+  "type": "kritika",
+  "title": "26.1.1 traumų prevencija rodoma kaip nepadengta, nors du moduliai ją moko: sujungimas ima blogesnę būseną ir numeta įrodytą modulį",
+  "body": "`research/wiki/curriculum/backlog.json` (sugeneruotas 2026-11-23T12:17) 26.1.1 poziciją rodo kaip `partial`, modulius [`08-metu-laikai`, `19-dumai-ir-isejimas`] ir `target` `content/lt/grade-01/pasaulio-pazinimas/41-traumu-prevencija.json` — failą, kurio nėra. Tikrovėje tą pačią poziciją jau moko `25-traumu-prevencija.json` („Trauma turi priežastį“) ir `38-traumu-prevencija.json` („Apsauga dengia tik savo vietą“); abiejų `sources` cituoja 26.1.1. Priežastis patikrinta paleidus generatorių: iš dviejų eilučių, turinčių tą patį kodą, „traumų prevencija“ iš spragų lentelės gauna `covered` [`25-traumu-prevencija`, `38-traumu-prevencija`], o „Saugus elgesys“ iš žemėlapio — `partial` [`08-metu-laikai`, `19-dumai-ir-isejimas`]; `_merge()` (scripts/curriculum_backlog.py:291–293) sąmoningai ima griežtesnę būseną ir kartu jos modulių sąrašą, todėl padengties įrodymas numetamas. Pasekmė: šio paleidimo programa visiems agentams skelbia „partial 26.1.1 → 41-traumu-prevencija.json“, o `agents/proposals/backlog-26-1-1-traumu-prevencija.json` tebėra `new`, nors jo `target` (38-traumu-prevencija.json) jau sukurtas. Tai ta pati šeima kaip #22168, tik čia darbas atsiranda ne iš pasibaigusios eilutės, o iš sugeneruotos padengties: jei kūrėjas paims eilę, jis statys trečią traumų modulį vietoje to, kad eitų prie tikros spragos (D:funkciniai-judesiai).",
+  "target": "scripts/curriculum_backlog.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/backlog.json — 26.1.1: status `partial`, modules [`08-metu-laikai`, `19-dumai-ir-isejimas`], target `content/lt/grade-01/pasaulio-pazinimas/41-traumu-prevencija.json`",
+    "scripts/curriculum_backlog.py:291–293 — `_merge()`: `if order[src['status']] < order[dst['status']]` perima blogesnę būseną kartu su `src['modules']`",
+    "content/lt/grade-01/pasaulio-pazinimas/25-traumu-prevencija.json — sources cituoja NŠA 26.1.1 „Saugus elgesys“ (sources/pradinio-bp-rekomendacijos-2024.txt:14960–14966)",
+    "content/lt/grade-01/pasaulio-pazinimas/38-traumu-prevencija.json — sources cituoja tą pačią 26.1.1 poziciją",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:174 — „26.1.1 traumų prevencija | yra tik gaisro dalis (19); traumų temos nėra“ (pasenę)",
+    "agents/proposals/backlog-26-1-1-traumu-prevencija.json — status `new`, target `38-traumu-prevencija.json`, kuris jau egzistuoja",
+    "Patikra: `python3 -c \"import curriculum_backlog as cb; cb.enrich(cb._gaps()+cb._code_rows()+cb._map_rows(),1)\"` → 26.1.1 „traumų prevencija“ `covered` [`25-traumu-prevencija`,`38-traumu-prevencija`], 26.1.1 „Saugus elgesys“ `partial` [`08-metu-laikai`,`19-dumai-ir-isejimas`]"
+  ]
+}

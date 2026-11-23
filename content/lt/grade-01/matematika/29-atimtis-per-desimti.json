@@ -54,11 +54,11 @@
       "why": "Keturios laisvos ir keturios iš dešimtuko — aštuonios. Liko šešios."
     },
     {
-      "q": "Vaikas atidarė visą dešimtuką, o dėmių neatėmė. Kiek dėmių dabar?",
-      "options": ["10", "3", "13"],
+      "q": "Dešimtuke dešimt dėmių, šalia penkios. Vaikas atidarė visą dešimtuką, o dėmių neatėmė. Kiek dėmių dabar matai?",
+      "options": ["10", "5", "15"],
       "answer": 2,
-      "hint": "Atidarymas dėmių neprideda ir neatima.",
-      "why": "Dešimtukas yra dešimt dėmių. Kai nieko neatimi, lieka trylika."
+      "hint": "Skaičiuok ir dešimtuką, ir šalia buvusias dėmes.",
+      "why": "Nieko neatėmus, dešimt dėmių ir penkios šalia sudaro penkiolika."
     },
     {
       "q": "Šešiolika dėmių: dešimtukas ir šešios šalia. Atimk devynias. Kiek liks?",

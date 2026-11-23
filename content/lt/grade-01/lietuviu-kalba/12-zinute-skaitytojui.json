@@ -1,0 +1,160 @@
+{
+  "id": "12-zinute-skaitytojui",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Žinutė, kurią skaitytojas supranta",
+  "subtitle": "Skaitytojas žino tik tai, kas parašyta žinutėje",
+  "minutes": 9,
+  "outcomes": [
+    "Suprantu, kad skaitytojas žino tik tai, kas žinutėje parašyta.",
+    "Pastebiu, kokios informacijos žinutei trūksta, ir ją pridedu.",
+    "Paaiškinu, kodėl „ten“ ar „kada nors“ nepasako vietos ar laiko."
+  ],
+  "concept": {
+    "title": "Kas parašyta, tą ir supranta",
+    "big_idea": "Žinutė veikia tik tada, kai parašyta, kam, kada ir kur. Skaitytojas negali atspėti to, ko popieriuje nėra.",
+    "steps": [
+      "Parašyk, kam skirta žinutė.",
+      "Pridėk, kada ateiti.",
+      "Pridėk, kur ateiti.",
+      "Perskaityk žinutę kaip svetimas žmogus: ar viską suprastum?"
+    ],
+    "example": "Ant durų pakabintas lapelis „Ateik!“ Mamai kyla du klausimai: kada? kur? Ji niekur neina, kol lapelyje to nėra."
+  },
+  "sim": {
+    "component": "zinute-skaitytojui",
+    "config": {
+      "title": "Žinutė ant durų",
+      "note": "Ateik!",
+      "cards": [
+        {
+          "id": "kam-mama",
+          "label": "Mamai",
+          "slot": "kam"
+        },
+        {
+          "id": "kada-siandien",
+          "label": "šiandien po pietų",
+          "slot": "kada"
+        },
+        {
+          "id": "kur-kiemas",
+          "label": "į kiemą",
+          "slot": "kur"
+        },
+        {
+          "id": "kada-nors",
+          "label": "kada nors",
+          "slot": "kada",
+          "vague": true
+        },
+        {
+          "id": "kur-ten",
+          "label": "ten",
+          "slot": "kur",
+          "vague": true
+        },
+        {
+          "id": "kepure",
+          "label": "Turiu mėlyną kepurę"
+        }
+      ],
+      "sentences": {
+        "askKam": "Ateik! Bet aš nežinau, kam tai parašyta.",
+        "askKada": "Gerai, man. Bet kada ateiti? Dabar negaliu.",
+        "askKur": "Šiandien po pietų. O kur ateiti?",
+        "vagueKada": "Kada nors? Tai ne šiandien. Nežinau, kada ateiti.",
+        "vagueKur": "Ten? Aš nežinau, kur ten.",
+        "go": "Dabar aišku. Šiandien po pietų einu į kiemą.",
+        "start": "Mama daro tik tai, kas parašyta. Ko jai trūksta?",
+        "hint": "Perskaityk žinutę ir paklausyk, ką mama sako."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Ant durų pakabintas lapelis „Ateik!“ Mama jį perskaitė ir neėjo. Kodėl ji liko namie?",
+      "options": [
+        "Nes lapelyje neparašyta, kam, kada ir kur",
+        "Nes mama neskaito lapelių",
+        "Nes lapelis buvo per mažas"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, ką mama sužinojo perskaičiusi lapelį.",
+      "why": "Mama suprato kvietimą, bet laiko ir vietos lapelyje nebuvo.",
+      "optional": false
+    },
+    {
+      "q": "Žinutė: „Ateik į kiemą!“ Mama klausia: „Kada?“ Ko žinutėje trūksta?",
+      "options": [
+        "Ką mama turi daryti",
+        "Kada ateiti",
+        "Kur ateiti"
+      ],
+      "answer": 1,
+      "hint": "Perskaityk žinutę mamai balsu. Į kurį jos klausimą ji nerado atsakymo?",
+      "why": "Žinutė pasakė vietą ir veiksmą, bet ne laiką.",
+      "optional": false
+    },
+    {
+      "q": "Draugas parašė: „Palauk manęs ten.“ Tu ten nebuvai. Kur jo laukti?",
+      "options": [
+        "Prie mokyklos vartų",
+        "Ten, kur jis paprastai eina",
+        "Neaišku, nes „ten“ nepasako vietos"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, ką žodis „ten“ pasakytų žmogui, kuris ten nebuvo.",
+      "why": "„Ten“ reiškia vietą tik tam, kas ten buvo. Kitam tai tuščias žodis.",
+      "optional": false
+    },
+    {
+      "q": "Senelis paliko lapelį: „Duok katinui pieno.“ Močiutė vis klausia. Kodėl?",
+      "options": [
+        "Nes neparašyta, kam duoti pieno",
+        "Nes neparašyta, kada ir kur duoti",
+        "Nes neparašyta, ko duoti katinui"
+      ],
+      "answer": 1,
+      "hint": "Perskaityk lapelį kaip močiutė. Kurios informacijos jame nėra?",
+      "why": "Pasakyta, kam ir ką duoti. Trūksta kada ir kur.",
+      "optional": false
+    },
+    {
+      "q": "Žinutė: „Mamai. Šiandien po pietų. Į kiemą.“ Kodėl mama vis tiek stovi?",
+      "options": [
+        "Nes žinutėje nėra veiksmo",
+        "Nes žinutėje nėra laiko",
+        "Nes žinutėje nėra vietos"
+      ],
+      "answer": 0,
+      "hint": "Yra kam, kada ir kur. Ko dar reikia, kad mama pajudėtų?",
+      "why": "Yra kam, kada ir kur. Bet nėra veiksmo, todėl mama nežino, ką daryti.",
+      "optional": true
+    }
+  ],
+  "reflect": "Mama perskaitė tavo žinutę. Ką jai reikėjo parašyti, kad ji tikrai ateitų?",
+  "teacher": {
+    "goal": "Lietuvių kalbos C.1 sritis, slenkstinis 1–2 kl. pasiekimas C.1.2.1: naudodamasis pagalba arba pavyzdžiu rašo taip, kad skaitytojas gali suprasti parašytas mintis. Vaikas mokosi rašyti žinutę, kurioje yra kam, kada ir kur, o skaitytojo supratimas yra pats kriterijus, ne priedas.",
+    "prompt": "Kodėl mama neėjo, kai perskaitė „Ateik!“? Ko jai trūko?",
+    "offline": "Duokite vaikui tris popieriaus lapelius. Ant durų pakabinkite didelį lapelį „Ateik!“, o vaikas teat ant atskirų lapelių užrašo (arba jums padiktuoja), kam, kada ir kur. Jūs vaidinkite mamą: skaitykite tik tai, kas parašyta, ir darykite tik tai, kas parašyta. Jei lapelyje nėra laiko, sakykite „Kada?“ ir likite vietoje. Nuėmę lapelį parodykite, kad klausimas grįžta.",
+    "misconceptions": [
+      "„Skaitytojas jau žino, ką turiu galvoje.“ Savas ketinimas atrodo akivaizdus, o kitas žmogus jo nemato. Modelyje mama klausia būtent to, ko žinutėje nėra.",
+      "„Pakanka vieno svarbaus žodžio.“ „Ten“ ir „kada nors“ atrodo kaip informacija, bet nepasako nei vietos, nei laiko, todėl mama negali jais vadovautis.",
+      "„Jei parašyta daug, tai jau aišku.“ Kortelė „Turiu mėlyną kepurę“ nieko nepasako apie kvietimą; svarbu ne kiekis, o ar atsakyta į klausimus kam, kada, kur."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“, C.1.2.1 (slenkstinis, 1–2 kl.): „Naudodamasis pagalba arba pavyzdžiu rašo taip, kad skaitytojas gali suprasti parašytas mintis; laikosi vieno-kito susitarimo arba užduoties reikalavimo“ (sources/pradinio-bp-rekomendacijos-2024.txt:33185–33189).",
+    "Ten pat, C.1.2.2 (patenkinamas, 1–2 kl.): „Rašo taip, kad skaitytojas (bendraamžis, suaugęs) jį suprastų, laikydamasis elementarių susitarimų / užduoties reikalavimų“ (sources/pradinio-bp-rekomendacijos-2024.txt:33147–33149).",
+    "Ten pat, veiklos „Kokias žinutes siunčiame telefonu?“ kriterijai: nurodomas asmuo, kam parašyta; informacija pateikiama atsakymų į klausimus (kas? kur? kada?) forma (sources/pradinio-bp-rekomendacijos-2024.txt:517–524). Pats pavyzdys priskirtas 2 klasei (:477–478), todėl 1 klasei imama tik informacijos branduolio dalis.",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), kalbėjimo ir rašymo sritis C.1, 1–2 klasė.",
+    "Glucksberg, S., Krauss, R. M., & Weisberg, R. (1966). Referential communication in nursery school children: Method and some preliminary findings. Journal of Experimental Child Psychology, 3(4), 333–342. https://doi.org/10.1016/0022-0965(66)90077-4 — mažų vaikų žinutės būna per mažai informatyvios, bet su klausytojo klausimais jos taisomos."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena didelė idėja: žinutė veikia tik tiek, kiek joje parašyta, todėl skaitytojas nepildo spragų iš savo galvos.",
+    "2 žingsnis — užduotys perkelia taisyklę į kitas situacijas (lapelis ant durų, kvietimas į kiemą, „palauk ten“, senelio lapelis katinui), o ne kartoja modulio pavyzdį (T2.2).",
+    "3 žingsnis — mama klausia būtent to, ko trūksta, bet kortelės neįvardija; klaidinga kortelė nuimama arba pakeičiama be baudos (T3.1, T3.2).",
+    "8 žingsnis — veikla be ekrano su trimis lapeliais ir suaugusiuoju, kuris skaito tik tai, kas parašyta (T8.3)."
+  ]
+}

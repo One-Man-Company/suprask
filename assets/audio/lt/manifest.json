@@ -691,6 +691,10 @@
   "n": "n/ed482fbd6864674f-732c4efa.mp3",
   "s": "s/ed482fbd6864674f-f12e5241.mp3"
  },
+ "Ateik! Bet aš nežinau, kam tai parašyta.": {
+  "n": "n/5844a030202b157b-deda1c44.mp3",
+  "s": "s/5844a030202b157b-6dfb4409.mp3"
+ },
  "Atiduosiu kitam": {
   "n": "n/2ea09df3be307a0a-70965cd5.mp3",
   "s": "s/2ea09df3be307a0a-9f0f22e6.mp3"
@@ -850,6 +854,10 @@
  "Dabar abu nusimena.": {
   "n": "n/3141d5e53863c11a-830b9222.mp3",
   "s": "s/3141d5e53863c11a-3f4b3f6f.mp3"
+ },
+ "Dabar aišku. Šiandien po pietų einu į kiemą.": {
+  "n": "n/cdaf44a71351d012-b03275c3.mp3",
+  "s": "s/cdaf44a71351d012-1a0890a3.mp3"
  },
  "Dabar eik pirmyn ir pažiūrėk, kas bus nuo 29.": {
   "n": "n/4e18577cf775f330-dca35c2a.mp3",
@@ -1227,6 +1235,10 @@
   "n": "n/68b5994a2d8b869e-159b3c97.mp3",
   "s": "s/68b5994a2d8b869e-97f53b18.mp3"
  },
+ "Gerai, man. Bet kada ateiti? Dabar negaliu.": {
+  "n": "n/10d00e2802d2d4eb-079ccdc3.mp3",
+  "s": "s/10d00e2802d2d4eb-d74e6884.mp3"
+ },
  "Gerai. Dabar ieškok kito.": {
   "n": "n/109b484d4ee35b71-c1d6cdb6.mp3",
   "s": "s/109b484d4ee35b71-18ef90ba.mp3"
@@ -1374,6 +1386,10 @@
  "K": {
   "n": "n/86be9a55762d316a-5317057b.mp3",
   "s": "s/86be9a55762d316a-9982aa77.mp3"
+ },
+ "Kada nors? Tai ne šiandien. Nežinau, kada ateiti.": {
+  "n": "n/f75f8908490212af-b716348b.mp3",
+  "s": "s/f75f8908490212af-3fe39059.mp3"
  },
  "Kai daiktas išmetamas, kas jam nutinka?": {
   "n": "n/718146207842687a-cad84ccf.mp3",
@@ -1867,6 +1883,14 @@
   "n": "n/fb9aa9a7b3d837e7-7772dc1c.mp3",
   "s": "s/fb9aa9a7b3d837e7-e163b19a.mp3"
  },
+ "Mama daro tik tai, kas parašyta. Ko jai trūksta?": {
+  "n": "n/8764196ab0219f5c-cf6b0510.mp3",
+  "s": "s/8764196ab0219f5c-d496da4a.mp3"
+ },
+ "Mamai": {
+  "n": "n/9773842e3bc62a21-d470cfcb.mp3",
+  "s": "s/9773842e3bc62a21-85918c52.mp3"
+ },
  "Mažas metalas dugne.": {
   "n": "n/343c8f5bfbe1f97c-565e1b9a.mp3",
   "s": "s/343c8f5bfbe1f97c-567eb694.mp3"
@@ -2230,6 +2254,10 @@
  "Perkelk kubelį ir rask kitus užrašus.": {
   "n": "n/7e639dbefe9f2d6f-a4f2ba2e.mp3",
   "s": "s/7e639dbefe9f2d6f-8e77b5f8.mp3"
+ },
+ "Perskaityk žinutę ir paklausyk, ką mama sako.": {
+  "n": "n/c4cb82d9e5ad01e9-84881477.mp3",
+  "s": "s/c4cb82d9e5ad01e9-b48657a9.mp3"
  },
  "Perėjai dešimtį į abi puses.": {
   "n": "n/eaa754620147ec79-144cc542.mp3",
@@ -2899,6 +2927,10 @@
   "n": "n/3d4e2b06ffc71b06-490fd930.mp3",
   "s": "s/3d4e2b06ffc71b06-e65d91d6.mp3"
  },
+ "Ten? Aš nežinau, kur ten.": {
+  "n": "n/af1efb990fca005d-0fa23d3b.mp3",
+  "s": "s/af1efb990fca005d-6eda247c.mp3"
+ },
  "Ti-ti": {
   "n": "n/1baf299ac2cf8410-a997cf2f.mp3",
   "s": "s/1baf299ac2cf8410-ca8e8e89.mp3"
@@ -3138,6 +3170,10 @@
  "Tu taip ir sakei.": {
   "n": "n/b7ff6d050e8d9d9d-00d5e0fd.mp3",
   "s": "s/b7ff6d050e8d9d9d-4b9b9542.mp3"
+ },
+ "Turiu mėlyną kepurę": {
+  "n": "n/2a4a6afa282a38b6-a037dcb5.mp3",
+  "s": "s/2a4a6afa282a38b6-9d0c636f.mp3"
  },
  "Tyla": {
   "n": "n/170ba9b291bd200a-0c170880.mp3",
@@ -3459,6 +3495,10 @@
   "n": "n/8254c329a92850f6-1f2cbcfa.mp3",
   "s": "s/8254c329a92850f6-1f3e3cee.mp3"
  },
+ "kada nors": {
+  "n": "n/9e4212f40ff05aaf-ec060060.mp3",
+  "s": "s/9e4212f40ff05aaf-00ba91fb.mp3"
+ },
  "kas": {
   "n": "n/04ead045b10c1a7f-429142f8.mp3",
   "s": "s/04ead045b10c1a7f-a218db88.mp3"
@@ -3623,6 +3663,10 @@
   "n": "n/e3b98a4da31a127d-2c148cc0.mp3",
   "s": "s/e3b98a4da31a127d-d9ee2c00.mp3"
  },
+ "ten": {
+  "n": "n/e4432baa90819aae-c9d3ee33.mp3",
+  "s": "s/e4432baa90819aae-e3d13e87.mp3"
+ },
  "tis": {
   "n": "n/cd8336b83b08f00a-1220bc9a.mp3",
   "s": "s/cd8336b83b08f00a-282072c8.mp3"
@@ -3727,6 +3771,10 @@
   "n": "n/53274be64bc5ff6a-5d267384.mp3",
   "s": "s/53274be64bc5ff6a-86812622.mp3"
  },
+ "į kiemą": {
+  "n": "n/bf025552078f496f-98965553.mp3",
+  "s": "s/bf025552078f496f-13eec595.mp3"
+ },
  "Šalta, sniegas, medžiai be lapų, vanduo užšąla.": {
   "n": "n/2cb3683e3c35df4c-a7a95b8d.mp3",
   "s": "s/2cb3683e3c35df4c-4ec89bf3.mp3"
@@ -3763,6 +3811,10 @@
   "n": "n/4a9765d2028c9650-d277e61b.mp3",
   "s": "s/4a9765d2028c9650-aaf4740e.mp3"
  },
+ "Šiandien po pietų. O kur ateiti?": {
+  "n": "n/9c1fa95dd74c3e7c-b8717015.mp3",
+  "s": "s/9c1fa95dd74c3e7c-2abfc649.mp3"
+ },
  "Šilta, daug lapų, obuoliai noksta, bitės dūzgia.": {
   "n": "n/d37d19f4b16ea501-556a5c3f.mp3",
   "s": "s/d37d19f4b16ea501-3edceabe.mp3"
@@ -3786,6 +3838,10 @@
  "Šviesa užgęsta. Jungiklis liko pasuktoje padėtyje.": {
   "n": "n/598cca069367980b-69aef955.mp3",
   "s": "s/598cca069367980b-91582875.mp3"
+ },
+ "šiandien po pietų": {
+  "n": "n/d3bcd1e45f81ea90-542487fc.mp3",
+  "s": "s/d3bcd1e45f81ea90-cdd2bc1c.mp3"
  },
  "šviečia": {
   "n": "n/d67909131777db70-8baf1359.mp3",

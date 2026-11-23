@@ -86,6 +86,14 @@
      "sim": "teksto-klausimas"
     },
     {
+     "id": "12-zinute-skaitytojui",
+     "title": "Žinutė, kurią skaitytojas supranta",
+     "subtitle": "Skaitytojas žino tik tai, kas parašyta žinutėje",
+     "file": "grade-01/lietuviu-kalba/12-zinute-skaitytojui.json",
+     "minutes": 9,
+     "sim": "zinute-skaitytojui"
+    },
+    {
      "id": "13-pasakojimo-vidurys",
      "title": "Pasakojimo vidurys: kas nutiko tarp?",
      "subtitle": "Be vidurinio įvykio pabaiga nepaaiškinama",

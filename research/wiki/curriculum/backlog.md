@@ -11,22 +11,18 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **62**
-- Padengta / iš dalies / nėra: **38 / 7 / 2**
+- Modulių dabar: **69**
+- Padengta / iš dalies / nėra: **42 / 4 / 1**
 
 ## Ko dar nėra (prioritetas)
 
 | Būsena | Tema | Kodas | Rezultatas | Šaltinis |
 |---|---|---|---|---|
-| missing | Elektronika | D:elektronika | 23.4.1: elektros srovė, šaltiniai, jungiklis, saugus elgesys | `1-klases-temų-žemėlapis.md:74` |
 | missing | Funkciniai judesiai | D:funkciniai-judesiai | „Susipažinimas su mokinių turimais ir trūkstamais judėjimo gebėjimais“; „abi kūno pusės tolygiai“ | `1-klases-temų-žemėlapis.md:77` |
-| partial | Trūkstamas dėmuo | B:trukstamas-demuo | „Lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“ | `1-klases-temų-žemėlapis.md:42` |
-| partial | Aš ir mano šeima | C:as-ir-mano-seima | Prisistatymas, šeimos istorijos pasakojimas (projektas „Mano šeimos istorija“) | `1-klases-temų-žemėlapis.md:65` |
 | partial | Bendri gyvų organizmų požymiai | 26.2.4 | demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“; žaidimas „Gyvas–negyvas“ (:8445–8448) | `pasaulio-pazinimas-1-klase.md:90` |
 | partial | energijos reikia visiems | 26.5.1 | atskiro modulio nėra; atmesta guidelines/klausimai.md:70 (gairių 2 klausimas) | `pasaulio-pazinimas-1-klase.md:172` |
 | partial | gamtos ištekliai, tarša, tausojimas | 26.3.1 | modulio nėra; pasiūlymas 2026-11-14-ideator-kas-sukure-dailka.json (target 21) | `pasaulio-pazinimas-1-klase.md:170` |
 | partial | traumų prevencija | 26.1.1 | yra tik gaisro dalis (19); traumų temos nėra | `pasaulio-pazinimas-1-klase.md:174` |
-| partial | žmonių įvairovė | 26.2.1 | modulio nėra; atmesta guidelines/klausimai.md:71 (asmens duomenys) | `pasaulio-pazinimas-1-klase.md:171` |
 | covered | Garsas kalbos sraute | A:garsas-kalbos-sraute | „Skiria lietuvių kalbos garsus kalbos sraute“ (D.1.1) | `1-klases-temų-žemėlapis.md:26` |
 | covered | Garsas vs raidė | A:garsas-vs-raide | „Paaiškina, kuo raidė skiriasi nuo garso“ (D.1.1) | `1-klases-temų-žemėlapis.md:27` |
 | covered | Garsinė sandara | A:garsine-sandara | „Žino garsinę sandarą: balsius, priebalsius, dvibalsius“ (1 lentelė) | `1-klases-temų-žemėlapis.md:28` |
@@ -46,14 +42,17 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Sudėtis/atimtis iki 100 | B:sudetis-atimtis-iki-100 | „Dviženklio ir vienaženklio… peržengiant dešimtį“; „dviženklių… neperžengiant dešimties“ | `1-klases-temų-žemėlapis.md:41` |
 | covered | Taškas, tiesė, spindulys, atkarpa | B:taskas-tiese-spindulys-atkarpa | „Vaizdavimas brėžinyje ir padėties vienas kito atžvilgiu apibūdinimas“ | `1-klases-temų-žemėlapis.md:45` |
 | covered | Transformacijos / Konstravimas | B:transformacijos-konstravimas | „Apibūdinti objektų ar žmonių vietą… kairėn/dešinėn, pagal/prieš laikrodžio rodyklę“ | `1-klases-temų-žemėlapis.md:46` |
+| covered | Trūkstamas dėmuo | B:trukstamas-demuo | „Lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“ | `1-klases-temų-žemėlapis.md:42` |
 | covered | Augalai: medžiai, krūmai, žolės | C:augalai-medziai-krumai-zoles | „Skirti medžius, krūmus ir žoles; atpažinti klevą, ąžuolą, beržą, eglę, pušį“ | `1-klases-temų-žemėlapis.md:56` |
 | covered | Augalo dalys | C:augalo-dalys | „Atpažinti augalo dalis (šaknys, stiebas/kamienas, lapai, žiedas, vaisius, sėkla)“ | `1-klases-temų-žemėlapis.md:57` |
 | covered | Augalo gyvenimo ciklas | C:augalo-gyvenimo-ciklas | „Nagrinėjamas augalo gyvenimo ciklas (dygimas, augimas, vaisių brandinimas)“ | `1-klases-temų-žemėlapis.md:58` |
+| covered | Aš ir mano šeima | C:as-ir-mano-seima | Prisistatymas, šeimos istorijos pasakojimas (projektas „Mano šeimos istorija“) | `1-klases-temų-žemėlapis.md:65` |
 | covered | Bendruomenės | C:bendruomenes | „Mokosi atpažinti skirtingas bendruomenes, religijas, aplinkas… tolerancijos kitybei“ | `1-klases-temų-žemėlapis.md:64` |
 | covered | Judėjimas | 26.4.1 | tyrimas „Daiktų judėjimo greičio tyrimas“; nuožulnioji plokštuma (:1557–1565, :8483–8484) | `pasaulio-pazinimas-1-klase.md:93` |
 | covered | Stebėjimas | C:stebejimas | „Savais žodžiais papasakoti apie… užfiksuotus gamtos objektus“ („Rudens požymiai mokyklos kieme“) | `1-klases-temų-žemėlapis.md:63` |
 | covered | Vandens būsenos | 26.3.2 | „Ledo papuošalo gamyba“; kietosios būsenos formos (:1547–1552, :8472–8474) | `pasaulio-pazinimas-1-klase.md:92` |
 | covered | Drabužių priežiūra | D:drabuziu-prieziura | „1 klasė. Drabužių, avalynės priežiūra“ | `1-klases-temų-žemėlapis.md:76` |
+| covered | Elektronika | D:elektronika | 23.4.1: elektros srovė, šaltiniai, jungiklis, saugus elgesys | `1-klases-temų-žemėlapis.md:74` |
 | covered | Emocijų žodynas | D:emociju-zodynas | „Atpažįsta, įvardija ir valdo emocijas, elgesį“ | `1-klases-temų-žemėlapis.md:78` |
 | covered | Erdvinės raidės | D:erdvines-raides | 1 kl. pavyzdys „Dekoruotos ir erdvinės raidės“ (erdvinė raiška, kompozicija) | `1-klases-temų-žemėlapis.md:71` |
 | covered | Garso savybės | D:garso-savybes | „Eksperimentavimas garsais leidžia pažinti keturias garso savybes: trukmę…“ | `1-klases-temų-žemėlapis.md:72` |
@@ -65,6 +64,7 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | dienos režimas, mityba | 26.1.2 | yra tik kuprinės dalis (18); režimo ir mitybos nėra | `pasaulio-pazinimas-1-klase.md:175` |
 | covered | medžiai, krūmai, žolės | 26.2.3 | modulio nėra; pasiūlymai 2026-11-16-ideator-medziai-krumai-zoles.json ir 2026-11-16-metodininkas-medziai-kruma | `pasaulio-pazinimas-1-klase.md:169` |
 | covered | naminiai ir laukiniai gyvūnai | 26.2.2 | padengta 10-gyvunu-grupes (perrašytas 2026-11-18, #348: kriterijus — kas duoda maistą, ne vieta) | `pasaulio-pazinimas-1-klase.md:173` |
+| covered | žmonių įvairovė | 26.2.1 | modulio nėra; atmesta guidelines/klausimai.md:71 (asmens duomenys) | `pasaulio-pazinimas-1-klase.md:171` |
 
 ## Kaip tai naudoti
 

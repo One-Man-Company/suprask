@@ -2592,6 +2592,217 @@ const pasakojimoVidurys = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 11. Žinutė: skaitytojas žino tik tai, kas parašyta                  */
+/* ------------------------------------------------------------------ */
+/* Modelis: ant durų pakabintas lapelis „Ateik!“, o mama (skaitytoja)
+   daro TIK tai, kas jame parašyta. Ji negali atspėti, kad kvietimas
+   skirtas jai, kad laikas — šiandien po pietų, o vieta — kiemas.
+   Todėl kiekviena trūkstama dalis paverčiama KLAUSIMU, o ne paaiškinimu
+   (LL-33: kiekviena būsena turi savo eilutę). Nuėmus kortelę klausimas
+   grįžta — sėkmės sąlyga tikrinama dabartinę būseną, o ne praeitį
+   (LL-17). Kortelės su „ten“ ir „kada nors“ atrodo kaip informacija,
+   bet skaitytojui nepasako nei vietos, nei laiko (LL-28: modelis turi
+   prieštaraujančių pavyzdžių). Jokio teksto lauko: 6–7 m. vaikui
+   nereikia klaviatūros, visos kortelės yra ištisi žodžiai su garsu. */
+const ZS_SLOTS = ["kam", "kada", "kur"];
+
+function zsScene(moved) {
+  const mx = moved ? 240 : 74;
+  return `${art.defs("zs")}
+    <rect x="0" y="0" width="320" height="170" rx="14" fill="url(#zs-sky)"/>
+    ${art.sun(268, 36, 12, "zs", 0.95)}
+    ${art.cloud(58, 34, 0.7)}
+    ${art.hills(320, 118)}
+    ${art.plank(46, 158, 78, 12, 90)}
+    ${art.plank(114, 158, 78, 12, 90)}
+    ${art.plank(30, 80, 84, 12, 0)}
+    <rect x="46" y="80" width="56" height="78" fill="#e8d3ae"/>
+    ${art.plank(30, 164, 90, 8, 0)}
+    ${art.grass(24, 156, 1)}
+    ${art.grass(150, 158, 0.9)}
+    ${art.grass(196, 155, 0.95)}
+    ${art.tree(300, 132, 1.05, "vasara")}
+    ${art.kid(mx, 158, 1.2, "#6c5bb0", "#f2c9a0")}
+    ${art.birds(200, 56)}`;
+}
+
+const zinuteSkaitytojui = {
+  mount({ stage, controls, api, config }) {
+    const esc = (s) => String(s ?? "").replace(/[&<>\"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const noteText = String(config.note ?? "").trim();
+    const cards = (Array.isArray(config.cards) ? config.cards : [])
+      .filter((c) => c && c.id && c.label)
+      .map((c) => ({ id: String(c.id), label: String(c.label), slot: c.slot ? String(c.slot) : "", vague: c.vague === true }));
+    const S = config.sentences && typeof config.sentences === "object" ? config.sentences : {};
+    const title = String(config.title ?? "").trim();
+    const byId = new Map(cards.map((c) => [c.id, c]));
+
+    const need = { kam: S.askKam, kada: S.askKada, kur: S.askKur };
+    const vagueLine = { kada: S.vagueKada, kur: S.vagueKur };
+    const valid = noteText
+      && cards.length >= 3
+      && ZS_SLOTS.every((slot) => cards.some((c) => c.slot === slot))
+      && ZS_SLOTS.every((slot) => String(need[slot] ?? "").trim())
+      && String(S.go ?? "").trim();
+
+    if (!valid) {
+      console.error("[zinute-skaitytojui] reikia „note“, bent 3 kortelių su „slot“ ir sentences.askKam/askKada/askKur/go", config);
+      stage.innerHTML = `<p class="error-box">Žinutės duomenys nesuderinti.</p>`;
+      controls.innerHTML = "";
+      api.readout("Žinutės duomenys nesuderinti.");
+      api.note("");
+      return () => {};
+    }
+
+    let placed = [];              // kortelių id įdėjimo tvarka
+    let reported = false;
+
+    const placedCards = () => placed.map((id) => byId.get(id)).filter(Boolean);
+    const inSlot = (slot) => placedCards().find((c) => c.slot === slot) || null;
+
+    /* Skaitytoja atsako į TAI, ko žinutėje nėra, ir tik tokia tvarka,
+       kokia skaitydama susiduria: kam → kada → kur. Būsena skaičiuojama
+       iš dabartinės `placed` būsenos, todėl nuėmus kortelę klausimas
+       grįžta pats (LL-17). */
+    function state() {
+      for (const slot of ZS_SLOTS) {
+        const card = inSlot(slot);
+        if (!card) return { key: slot, text: String(need[slot] ?? "").trim(), ok: false };
+        if (card.vague) {
+          return { key: `${slot}-vague`, text: String(vagueLine[slot] ?? need[slot] ?? "").trim(), ok: false };
+        }
+      }
+      return { key: "go", text: String(S.go ?? "").trim(), ok: true };
+    }
+
+    /* Žinutėje eilutės rikiuojamos ne pagal spaudimo tvarką, o pagal
+       tai, kaip žinutė skaitoma: kam → kada → kur, o po to visi kiti
+       priedai. Taip ta pati žinutė atrodo taip pat, nesvarbu, kuria
+       kortele vaikas pradėjo. */
+    function noteLines() {
+      const out = [];
+      ZS_SLOTS.forEach((slot) => {
+        const card = inSlot(slot);
+        if (card) out.push(card.label);
+      });
+      placedCards().filter((c) => !ZS_SLOTS.includes(c.slot)).forEach((c) => out.push(c.label));
+      return out;
+    }
+
+    function sceneAlt(ok) {
+      return ok
+        ? "Mama su lapeliu rankoje išeina iš namų ir eina per kiemą."
+        : "Mama stovi namų durų angoje su lapeliu rankoje ir laukia.";
+    }
+
+    function paint(focusId) {
+      const st = state();
+      const lines = noteLines();
+      stage.innerHTML = `
+        <div style="width:100%;min-width:0;max-width:40rem">
+          <div style="border:3px solid var(--line);border-radius:14px;overflow:hidden;line-height:0">
+            <svg viewBox="0 0 320 170" role="img" aria-label="${esc(sceneAlt(st.ok))}" style="display:block;width:100%;height:auto">${zsScene(st.ok)}</svg>
+          </div>
+          <div style="margin-top:.6rem;border:3px solid var(--line);border-radius:12px;background:#fffdf6;padding:.6rem .75rem;min-width:0">
+            <p style="margin:0 0 .25rem;font-size:clamp(.76rem,3vw,.88rem);font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft)">Mama sako</p>
+            <p id="zs-say" style="margin:0;font-size:clamp(.98rem,3.8vw,1.12rem);line-height:1.4;overflow-wrap:anywhere">${esc(st.text)}</p>
+          </div>
+          <div style="margin-top:.6rem;border:3px solid var(--line);border-radius:12px;background:#fff;padding:.6rem .75rem;min-width:0">
+            <p style="margin:0 0 .3rem;font-size:clamp(.76rem,3vw,.88rem);font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft)">${esc(title || "Žinutė")}</p>
+            <p style="margin:0;font-family:var(--font-head);font-weight:900;font-size:clamp(1.05rem,4.4vw,1.3rem);line-height:1.3;overflow-wrap:anywhere">${esc(noteText)}</p>
+            ${lines.length
+              ? `<ul style="list-style:none;margin:.35rem 0 0;padding:0;display:grid;gap:.2rem">
+                  ${lines.map((l) => `<li style="font-size:clamp(.95rem,3.7vw,1.08rem);line-height:1.35;overflow-wrap:anywhere">${esc(l)}</li>`).join("")}
+                </ul>`
+              : `<p class="sim-note" style="margin:.3rem 0 0">Kol kas parašyta tik tai.</p>`}
+          </div>
+        </div>`;
+
+      controls.innerHTML = `
+        <div role="group" aria-label="Kortelės žinutei" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.5rem;width:100%;max-width:40rem;margin-inline:auto">
+          ${cards.map((c) => {
+            const on = placed.includes(c.id);
+            return `<button class="btn secondary" type="button" data-card="${esc(c.id)}" aria-pressed="${on ? "true" : "false"}"
+              aria-label="${on ? "Nuimti kortelę" : "Pridėti kortelę"}: ${esc(c.label)}"
+              style="min-height:52px;height:auto;white-space:normal;line-height:1.3;font-size:clamp(.9rem,3.4vw,1rem);${on ? "box-shadow:inset 0 0 0 3px var(--ok)" : ""}">${esc(c.label)}</button>`;
+          }).join("")}
+        </div>
+        <button class="btn secondary" id="zs-hear" type="button" style="min-height:48px">Paklausyk mamos</button>
+        <button class="btn secondary" id="zs-clear" type="button" style="min-height:48px">Nuimti visas korteles</button>`;
+
+      controls.querySelectorAll("[data-card]").forEach((b) => {
+        b.addEventListener("click", () => toggle(byId.get(b.dataset.card), b.dataset.card));
+      });
+      controls.querySelector("#zs-hear").addEventListener("click", () => api.speak(state().text, { rate: .9 }));
+      controls.querySelector("#zs-clear").addEventListener("click", clearAll);
+
+      if (focusId) {
+        const again = controls.querySelector(`[data-card="${focusId}"]`);
+        if (again && typeof again.focus === "function") again.focus({ preventScroll: true });
+      }
+    }
+
+    function toggle(card, focusId) {
+      if (!card) return;
+      let swapped = "";
+      if (placed.includes(card.id)) {
+        placed = placed.filter((id) => id !== card.id);
+      } else {
+        /* Vienoje vietoje — viena kortelė: nauja tos pačios rūšies kortelė
+           pakeičia senąją. Priešingu atveju žinutėje atsirastų ir „šiandien
+           po pietų“, ir „kada nors“, ir skaitytojos elgesys taptų
+           nepaaiškinamas. Apie pakeitimą pasakoma žodžiu, kad sena eilutė
+           nepradingtų tyliai (LL-27). */
+        if (card.slot) {
+          const old = inSlot(card.slot);
+          if (old && old.id !== card.id) swapped = " Ankstesnė tokia kortelė nuimta.";
+          placed = placed.filter((id) => {
+            const other = byId.get(id);
+            return !(other && other.slot === card.slot);
+          });
+        }
+        placed.push(card.id);
+      }
+      paint(focusId);
+      announce(swapped);
+      const st = state();
+      if (st.ok && !reported) {
+        reported = true;
+        api.progress({ slots: ZS_SLOTS.length });
+      }
+    }
+
+    /* Grįžtamasis ryšys — apie veiksmą ir apie skaitytojos klausimą, ne
+       apie vaiką (T5.1). Teisinga kortelė neįvardijama: sakoma, ką mama
+       dar nori sužinoti, o ne ką pridėti (T3.1, T3.2). */
+    function announce(suffix = "") {
+      const st = state();
+      const extra = placedCards().find((c) => !c.slot) ? " Kortelė, kuri nepasako nei kam, nei kada, nei kur, mamai nepadėjo." : "";
+      api.readout(st.text);
+      api.speak(st.text, { rate: .9 });
+      api.note(`${st.ok
+        ? "Mama suprato žinutę ir išeina. Pabandyk nuimti vieną kortelę — pamatysi, kada klausimas grįžta."
+        : `${String(S.hint ?? "Mama daro tik tai, kas parašyta.")}${extra}`}${suffix}`);
+    }
+
+    function clearAll() {
+      placed = [];
+      paint(null);
+      announce();
+      const first = controls.querySelector("[data-card]");
+      if (first && typeof first.focus === "function") first.focus({ preventScroll: true });
+    }
+
+    paint(null);
+    const first = state();
+    api.readout(first.text);
+    api.note(String(S.start ?? "Mama daro tik tai, kas parašyta. Pridėk kortelę ir paklausyk, ar ji suprato."));
+    api.speak(first.text, { rate: .9 });
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
@@ -2603,4 +2814,5 @@ export const SIMS = {
   "dvibalsiu-takas": dvibalsiuTakas,
   "teksto-klausimas": tekstoKlausimas,
   "pasakojimo-vidurys": pasakojimoVidurys,
+  "zinute-skaitytojui": zinuteSkaitytojui,
 };

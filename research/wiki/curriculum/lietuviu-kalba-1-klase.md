@@ -139,7 +139,7 @@ Tikrinti **visi šeši** 1 klasės lietuvių kalbos moduliai (#250 patikra 2026-
 
 ### 9.2. Ko platformoje nėra (1 klasė, lietuvių kalba)
 
-- **C sritis (rašymas ir teksto kūrimas) — nė vieno modulio.** Visi šeši moduliai yra B ir D srityse. Tai didžiausia šio dalyko spraga, bet ne šio paleidimo darbas: reikia atskiro ideatoriaus pasiūlymo su patikrintu 1–2 kl. C pasiekimo kodu.
+- **C sritis (rašymas ir teksto kūrimas) — nė vieno modulio.** Visi šeši moduliai yra B ir D srityse. Tai didžiausia šio dalyko spraga, bet ne šio paleidimo darbas: reikia atskiro ideatoriaus pasiūlymo su patikrintu 1–2 kl. C pasiekimo kodu. *(2026-11-23, paleidimas #475: spraga uždaryta moduliu `12-zinute-skaitytojui`, C.1.2.1 — žr. §9.4.)*
 - **D.1.3.1 tikrąja prasme (balsiai ≠ priebalsiai be terminų) — nė vieno modulio.** `06-garso-trukme` į jį pretenduoja, bet modelis skirsto pagal trukmę (§9.3).
 - **B.2 (veikėjo įvardijimas ir apibūdinimas) — nė vieno modulio.** `03-sakinio-zodziai` randa veikėją, bet neapibūdina jo; B.2 srities slenkstinis lygis („Įvardija ir apibūdina bent vieną veikėją“) lieka neuždengtas.
 - **Teksto skaitymas su supratimu (B.1.2 tiesiogine prasme)** — `05-plakatas-ir-informacija` randa informaciją plakate, bet nė vienas modulis nepateikia kelių sakinių teksto, apie kurį būtų klausiama.
@@ -148,6 +148,10 @@ Tikrinti **visi šeši** 1 klasės lietuvių kalbos moduliai (#250 patikra 2026-
 
 1. **`02-skiemenu-jungimas` — trys skirtingos „mokykla“ skaidymo versijos tame pačiame faile.** `sim.config` skaido `mo / ky / kla` (:64–69), `teacher.misconceptions[3]` sako „mokykla tariama mo-ky-kla“ ir baigiasi bešakniu „(klaida)“ (:130), o `sources[3]` cituoja šaltinį, kuriame `mo-ky-kla` pažymėta kaip **klaida** (:137). Garso manifeste jau yra atskiri „ky“ ir „kla“ įrašai, tad vaikas girdi būtent tą skaidymą. Pasiūlymas: `agents/proposals/2026-11-19-programos-derintojas-skiemens-riba-mokykla.json`.
 2. **`06-garso-trukme` — pasiekimo priskyrimas, kurio modelis nepateisina.** `teacher.goal` žada D.1.3.1 (balsiai / priebalsiai be terminų), o modelis skirsto pagal trukmę, kur m, s, š patenka į „ilgųjų“ pusę (:83–88). Rezultatai nepriskiriami jokiam lygiui (T2.1). Pasiūlymas: `agents/proposals/2026-11-19-programos-derintojas-garso-trukme-d131.json`.
+
+### 9.4. Papildyta po patikros (2026-11-23, paleidimas #475)
+
+Sukurtas modulis `12-zinute-skaitytojui` — pirma C srities vieta platformoje. Jis remiasi C.1.2.1 (slenkstinis, 1–2 kl.): „Naudodamasis pagalba arba pavyzdžiu rašo taip, kad skaitytojas gali suprasti parašytas mintis; laikosi vieno-kito susitarimo arba užduoties reikalavimo“ (:33185–:33189). Informacijos karkasas („kam? kada? kur?“) imtas iš veiklos „Kokias žinutes siunčiame telefonu?“ kriterijų (:517–524), bet pats pavyzdys ten priskirtas 2 klasei (:477–478), todėl 1 klasei imta tik informacijos branduolio dalis: pasirašymas, skyryba ir vardų rašyba palikti veiklai be ekrano. Modelis: lapelis „Ateik!“ ir mama, kuri elgiasi tik pagal tai, kas parašyta; kol nėra kam, kada ir kur, ji klausia ir niekur neina, o nuėmus kortelę klausimas grįžta.
 
 Susiję: [[matematika-1-klase]] · [[pasaulio-pazinimas-1-klase]] · [[kti-dalykai-1-klase]] · [[1-klases-temų-žemėlapis]]
 

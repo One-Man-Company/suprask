@@ -1607,10 +1607,6 @@
   "n": "n/22397a64c1d1443e-c83e755f.mp3",
   "s": "s/22397a64c1d1443e-1818e017.mp3"
  },
- "Keturi ketvirčiai rato. Žymė grįžo į viršų.": {
-  "n": "n/7cd27370b5145149-2ea304c2.mp3",
-  "s": "s/7cd27370b5145149-961e577d.mp3"
- },
  "Keturi trintukai": {
   "n": "n/3eb66ac94d4b6d16-02bc7d41.mp3",
   "s": "s/3eb66ac94d4b6d16-43105f01.mp3"
@@ -1622,14 +1618,6 @@
  "Keturkampis": {
   "n": "n/1c68c529e0dee2d1-8c0ac07a.mp3",
   "s": "s/1c68c529e0dee2d1-dd4ecd72.mp3"
- },
- "Ketvirtis rato pagal laikrodžio rodyklę.": {
-  "n": "n/6622a4c663e49b0c-a9b2cafa.mp3",
-  "s": "s/6622a4c663e49b0c-dab397df.mp3"
- },
- "Ketvirtis rato prieš laikrodžio rodyklę.": {
-  "n": "n/705ad7165703cb63-710f0f9a.mp3",
-  "s": "s/705ad7165703cb63-c29c4100.mp3"
  },
  "Kiek atšvaitų turi berniukas?": {
   "n": "n/6e57d8e4d1eb04ae-d2eed0e6.mp3",
@@ -2655,9 +2643,9 @@
   "n": "n/9da815f3b1283795-624bc796.mp3",
   "s": "s/9da815f3b1283795-32877c86.mp3"
  },
- "Prieš laikrodžio rodyklę žymė nuėjo į kairę, paskui į apačią. Ji sukasi ratu, o ne į vieną pusę.": {
-  "n": "n/86a54338118d131d-072d9531.mp3",
-  "s": "s/86a54338118d131d-165c1c61.mp3"
+ "Prieš laikrodžio rodyklę žymė eina atbulai: kairė, apačia, dešinė.": {
+  "n": "n/576b4a86c419c6c4-8b09a4ba.mp3",
+  "s": "s/576b4a86c419c6c4-b31e52d1.mp3"
  },
  "Prieš pietus abu vardai tokie patys.": {
   "n": "n/b493f224483334f9-2792defd.mp3",
@@ -3078,6 +3066,14 @@
  "Sudėk komandas ir spausk Vykdyti. Vėliava yra viršuje.": {
   "n": "n/0fa754c7be689c79-c9b98710.mp3",
   "s": "s/0fa754c7be689c79-df42c392.mp3"
+ },
+ "Sukai pagal laikrodžio rodyklę. Žymė keliauja ratu pagal rodyklę.": {
+  "n": "n/e982e3ce11262b87-e431a53b.mp3",
+  "s": "s/e982e3ce11262b87-ff808b0d.mp3"
+ },
+ "Sukai prieš laikrodžio rodyklę. Žymė keliauja ratu prieš rodyklę.": {
+  "n": "n/42a80e25644233cb-e6fe26ed.mp3",
+  "s": "s/42a80e25644233cb-d8bbe90f.mp3"
  },
  "Sunkesnis medis plaukia. Lengvesnis metalas dugne.": {
   "n": "n/b5bcf1521dbe8fda-37f6b285.mp3",
@@ -4231,9 +4227,13 @@
   "n": "n/cdfe993b8d2eb096-20ff13d0.mp3",
   "s": "s/cdfe993b8d2eb096-9eb9807f.mp3"
  },
- "Žymė yra viršuje. Suk ratą ketvirtį ir stebėk, kur ji keliauja.": {
-  "n": "n/48dda5565a9f9bda-b6bc787c.mp3",
-  "s": "s/48dda5565a9f9bda-60c3cb98.mp3"
+ "Žymė apkeliavo keturis taškus ir grįžo į viršų.": {
+  "n": "n/afb59e75f4344fb7-77af16b9.mp3",
+  "s": "s/afb59e75f4344fb7-59c3f650.mp3"
+ },
+ "Žymė viršuje. Suk kortelę ir stebėk, kur ji keliauja.": {
+  "n": "n/38dbcbdfe20bc59d-24284611.mp3",
+  "s": "s/38dbcbdfe20bc59d-6843b56b.mp3"
  },
  "ž": {
   "n": "n/4b6877a9d48058e5-2f50e91b.mp3",

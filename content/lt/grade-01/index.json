@@ -280,8 +280,8 @@
     },
     {
      "id": "32-transformacijos-konstravimas",
-     "title": "Ketvirtis rato pagal laikrodžio rodyklę",
-     "subtitle": "Vienas ketvirtis perkelia žymę viena vieta, keturi — grąžina į pradžią",
+     "title": "Pasisukimas pagal laikrodžio rodyklę",
+     "subtitle": "Pagal rodyklę viršus eina į dešinę, prieš rodyklę — į kairę",
      "file": "grade-01/matematika/32-transformacijos-konstravimas.json",
      "minutes": 9,
      "sim": "sukamas-ratas"

@@ -250,6 +250,12 @@ ketvirčių grįžimą. 1 klasės programos sakinys (`:34017–34019`) ketvirči
 sakinys priklauso 2 kl. pastraipai. Taisymo kryptis — susiaurinti branduolį iki 1 kl. krypties ir padėties pokyčio,
 o ketvirčių aritmetiką atidėti 2 klasei.
 
+> **2026-11-23 (#492, #42208):** sutvarkyta. Modulis dabar vadinasi „Pasisukimas pagal laikrodžio rodyklę“, o
+> branduolys — kryptis (pagal / prieš laikrodžio rodyklę) ir padėties pokytis. Ketvirčių skaičiavimo užduotis
+> pakeista krypties perkėlimo užduotimi, simuliacijos mygtukai vadina posūkį „iki kito taško“, `sources` 1 kl. ir
+> 2 kl. teiginiai išskirti į atskirus įrašus. Ta proga pataisytas ir `17-kryptys-ir-vieta` `why`, kuriame buvo likęs
+> „po ketvirčio rato“.
+
 Naujausi pasiūlymai: `agents/proposals/2026-11-23-programos-derintojas-*.json` (3).
 
 Susiję: [[lietuviu-kalba-1-klase]] · [[pasaulio-pazinimas-1-klase]] · [[kti-dalykai-1-klase]] · [[1-klases-temų-žemėlapis]]

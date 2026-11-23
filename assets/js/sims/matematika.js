@@ -4364,10 +4364,12 @@ const desimtukasIrAtimtis = {
 };
 
 /* ------------------------------------------------------------------ */
-/* 15. Sukamas ratas: ketvirtis rato pagal / prieš laikrodžio rodyklę  */
+/* 15. Sukamas ratas: posūkis pagal / prieš laikrodžio rodyklę         */
 /*                                                                    */
-/* Modelis: kortelė su rodykle guli ant rato. Vaikas sukа po ketvirtį  */
-/* į abi puses ir stebi, į kurią vietą ratu keliauja raudona žymė.     */
+/* Modelis: kortelė su rodykle guli ant rato. Vaikas suka ja po vieną  */
+/* tašką į abi puses ir stebi, į kurią vietą ratu keliauja raudona     */
+/* žymė. Posūkio dydis vadinamas „iki kito taško“ (ne ketvirčiu) —     */
+/* 1 klasės programa posūkio dydžio neskaičiuoja, tai 2 klasės turinys.*/
 /* Būtent judėjimas (o ne viena pusė) atskleidžia klaidingą nuostatą   */
 /* „prieš laikrodžio rodyklę — tai į kairę“: nuo apačios ta pati       */
 /* kryptis veda į dešinę. Sąmoningai nėra pusės rato posūkio ir        */
@@ -4457,12 +4459,12 @@ const sukamasRatas = {
     controls.innerHTML = `
       <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;width:100%;min-width:0">
         <button class="btn secondary" type="button" id="sr-cw" style="${BTN}"
-                aria-label="Sukti ketvirtį rato pagal laikrodžio rodyklę">
-          <span><span aria-hidden="true">↻</span> Ketvirtis pagal laikrodžio rodyklę</span>
+                aria-label="Suk iki kito taško pagal laikrodžio rodyklę">
+          <span><span aria-hidden="true">↻</span> Pagal laikrodžio rodyklę</span>
         </button>
         <button class="btn secondary" type="button" id="sr-ccw" style="${BTN}"
-                aria-label="Sukti ketvirtį rato prieš laikrodžio rodyklę">
-          <span><span aria-hidden="true">↺</span> Ketvirtis prieš laikrodžio rodyklę</span>
+                aria-label="Suk iki kito taško prieš laikrodžio rodyklę">
+          <span><span aria-hidden="true">↺</span> Prieš laikrodžio rodyklę</span>
         </button>
         <button class="btn ghost" type="button" id="sr-reset" style="${BTN}">Iš naujo</button>
       </div>`;

@@ -11,17 +11,14 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **69**
-- Padengta / iš dalies / nėra: **42 / 4 / 1**
+- Modulių dabar: **72**
+- Padengta / iš dalies / nėra: **45 / 1 / 1**
 
 ## Ko dar nėra (prioritetas)
 
 | Būsena | Tema | Kodas | Rezultatas | Šaltinis |
 |---|---|---|---|---|
 | missing | Funkciniai judesiai | D:funkciniai-judesiai | „Susipažinimas su mokinių turimais ir trūkstamais judėjimo gebėjimais“; „abi kūno pusės tolygiai“ | `1-klases-temų-žemėlapis.md:77` |
-| partial | Bendri gyvų organizmų požymiai | 26.2.4 | demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“; žaidimas „Gyvas–negyvas“ (:8445–8448) | `pasaulio-pazinimas-1-klase.md:90` |
-| partial | energijos reikia visiems | 26.5.1 | atskiro modulio nėra; atmesta guidelines/klausimai.md:70 (gairių 2 klausimas) | `pasaulio-pazinimas-1-klase.md:172` |
-| partial | gamtos ištekliai, tarša, tausojimas | 26.3.1 | modulio nėra; pasiūlymas 2026-11-14-ideator-kas-sukure-dailka.json (target 21) | `pasaulio-pazinimas-1-klase.md:170` |
 | partial | traumų prevencija | 26.1.1 | yra tik gaisro dalis (19); traumų temos nėra | `pasaulio-pazinimas-1-klase.md:174` |
 | covered | Garsas kalbos sraute | A:garsas-kalbos-sraute | „Skiria lietuvių kalbos garsus kalbos sraute“ (D.1.1) | `1-klases-temų-žemėlapis.md:26` |
 | covered | Garsas vs raidė | A:garsas-vs-raide | „Paaiškina, kuo raidė skiriasi nuo garso“ (D.1.1) | `1-klases-temų-žemėlapis.md:27` |
@@ -47,6 +44,7 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Augalo dalys | C:augalo-dalys | „Atpažinti augalo dalis (šaknys, stiebas/kamienas, lapai, žiedas, vaisius, sėkla)“ | `1-klases-temų-žemėlapis.md:57` |
 | covered | Augalo gyvenimo ciklas | C:augalo-gyvenimo-ciklas | „Nagrinėjamas augalo gyvenimo ciklas (dygimas, augimas, vaisių brandinimas)“ | `1-klases-temų-žemėlapis.md:58` |
 | covered | Aš ir mano šeima | C:as-ir-mano-seima | Prisistatymas, šeimos istorijos pasakojimas (projektas „Mano šeimos istorija“) | `1-klases-temų-žemėlapis.md:65` |
+| covered | Bendri gyvų organizmų požymiai | 26.2.4 | demonstracinis bandymas „Ar vazoninė gėlė kvėpuoja?“; žaidimas „Gyvas–negyvas“ (:8445–8448) | `pasaulio-pazinimas-1-klase.md:90` |
 | covered | Bendruomenės | C:bendruomenes | „Mokosi atpažinti skirtingas bendruomenes, religijas, aplinkas… tolerancijos kitybei“ | `1-klases-temų-žemėlapis.md:64` |
 | covered | Judėjimas | 26.4.1 | tyrimas „Daiktų judėjimo greičio tyrimas“; nuožulnioji plokštuma (:1557–1565, :8483–8484) | `pasaulio-pazinimas-1-klase.md:93` |
 | covered | Stebėjimas | C:stebejimas | „Savais žodžiais papasakoti apie… užfiksuotus gamtos objektus“ („Rudens požymiai mokyklos kieme“) | `1-klases-temų-žemėlapis.md:63` |
@@ -62,6 +60,8 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Virtualumas | D:virtualumas | „Draugiško elgesio internete taisyklės“ („Aš ir virtualumas“) | `1-klases-temų-žemėlapis.md:80` |
 | covered | Teksto skaitymas su supratimu (B.1.2 tiesiogine prasme) | gap:teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p | 05-plakatas-ir-informacija randa informaciją plakate, bet nė vienas modulis nepateikia kelių sakinių teksto, a | `lietuviu-kalba-1-klase.md:145` |
 | covered | dienos režimas, mityba | 26.1.2 | yra tik kuprinės dalis (18); režimo ir mitybos nėra | `pasaulio-pazinimas-1-klase.md:175` |
+| covered | energijos reikia visiems | 26.5.1 | atskiro modulio nėra; atmesta guidelines/klausimai.md:70 (gairių 2 klausimas) | `pasaulio-pazinimas-1-klase.md:172` |
+| covered | gamtos ištekliai, tarša, tausojimas | 26.3.1 | modulio nėra; pasiūlymas 2026-11-14-ideator-kas-sukure-dailka.json (target 21) | `pasaulio-pazinimas-1-klase.md:170` |
 | covered | medžiai, krūmai, žolės | 26.2.3 | modulio nėra; pasiūlymai 2026-11-16-ideator-medziai-krumai-zoles.json ir 2026-11-16-metodininkas-medziai-kruma | `pasaulio-pazinimas-1-klase.md:169` |
 | covered | naminiai ir laukiniai gyvūnai | 26.2.2 | padengta 10-gyvunu-grupes (perrašytas 2026-11-18, #348: kriterijus — kas duoda maistą, ne vieta) | `pasaulio-pazinimas-1-klase.md:173` |
 | covered | žmonių įvairovė | 26.2.1 | modulio nėra; atmesta guidelines/klausimai.md:71 (asmens duomenys) | `pasaulio-pazinimas-1-klase.md:171` |

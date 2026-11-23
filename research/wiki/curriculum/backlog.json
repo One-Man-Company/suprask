@@ -1,14 +1,14 @@
 {
  "grade": 1,
- "generated": "2026-11-23T10:47:57",
+ "generated": "2026-11-23T12:17:00",
  "source_hash": "aa7d60479741e871",
  "curriculum_positions": 47,
  "counts": {
-  "covered": 42,
-  "partial": 4,
+  "covered": 45,
+  "partial": 1,
   "missing": 1
  },
- "modules_now": 69,
+ "modules_now": 72,
  "rows": [
   {
    "key": "26.2.3",
@@ -43,10 +43,11 @@
    "svietimas": "",
    "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:170",
    "modules": [
+    "35-gamtos-istekliai-tarsa-tausojimas",
     "21-kas-sukure-dailka"
    ],
-   "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/41-gamtos-istekliai-tarsa-tausojimas.json",
+   "status": "covered",
+   "target": "",
    "hours": "2"
   },
   {
@@ -81,13 +82,13 @@
    "svietimas": "",
    "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:172",
    "modules": [
+    "37-energijos-reikia-visiems",
     "01-susitarimas-ir-zaidimas",
     "02-emociju-zodynas",
-    "09-augalo-gyvenimas",
-    "10-gyvunu-grupes"
+    "09-augalo-gyvenimas"
    ],
-   "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/42-energijos-reikia-visiems.json",
+   "status": "covered",
+   "target": "",
    "hours": "2"
   },
   {
@@ -125,7 +126,7 @@
     "19-dumai-ir-isejimas"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/43-traumu-prevencija.json",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/41-traumu-prevencija.json",
    "hours": "3"
   },
   {
@@ -159,13 +160,13 @@
    "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:90",
    "strand": "pasaulio-pazinimas",
    "modules": [
+    "39-bendri-gyvu-organizmu-pozymiai",
     "10-gyvunu-grupes",
     "34-bendruomenes",
-    "12-bendradarbiavimo-tiltas",
-    "08-metu-laikai"
+    "12-bendradarbiavimo-tiltas"
    ],
-   "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/44-bendri-gyvu-organizmu-pozymiai.json"
+   "status": "covered",
+   "target": ""
   },
   {
    "key": "26.3.2",
@@ -571,7 +572,7 @@
     "08-metu-laikai",
     "15-laikas",
     "20-laikas-12-ir-24-val",
-    "07-elektronika"
+    "30-dienos-rezimas-mityba"
    ],
    "status": "covered",
    "target": ""

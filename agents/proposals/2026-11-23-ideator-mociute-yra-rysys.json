@@ -1,0 +1,21 @@
+{
+  "role": "ideator",
+  "run_id": 466,
+  "created": "2026-11-23T07:52:00+02:00",
+  "type": "tema",
+  "title": "Močiutė atpažįstama iš ryšio, o ne iš žilų plaukų",
+  "body": "1 klasės visuomeninio ugdymo pozicija C.1.2 (1–2 kl.) prašo: „Paaiškina, kas yra karta… Sudaro giminės medį (vaikai, tėvai, seneliai), nusako šeimos narių giminystės ryšius“ (sources/pradinio-bp-rekomendacijos-2024.txt:39663; slenkstinis lygis :40013–40016), o platformoje šios temos nėra — `34-bendruomenes` sprendžia „kas priklauso būriui“, ne „kas kam kas“. Siūlomas vienas modelis su vienu kintamuoju: trys išgalvoti žmonės vienoje kortelėje, vaikas spaudžia tą, kuri yra Adomo močiutė, o modelis keičia tik ryšį (Rūta yra Adomo mamos mama), ne veidą. Klaidinga nuostata, kurią modelis parodo, — „močiutė yra ta, kuri atrodo sena“: pakeitus ryšį teisinga kortelė pasikeičia, nors žilaplaukė kaimynė Ona tebelieka žilaplaukė ir anūkų neturi. Tyrimai rodo, kad 5 m. vaikai giminystės terminus taiko pagal išvaizdą, o ne pagal kriterijų „turi anūką“ (Landau, 1982). Asmens duomenų modelis nerenka: visi vardai išgalvoti, užduotys klausia apie kortelę, o ne apie vaiko šeimą, refleksija — „ką pastebėjai apie ryšį“. Tai antras bandymas šiai temai: 2026-11-13 atmetimas (guidelines/klausimai.md:67) buvo teisingas tol, kol modelio nebuvo; dabar jis yra ir duomenų rinkimo nereikia. Modulio riba pasakoma atvirai: rodomos tik trys kartos ir kraujo ryšys, o įvaikinimas, du namai ir netradicinės šeimos lieka nevaizduojami — tai 6–7 m. amžiaus riba, o ne nutylėjimas.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/40-as-ir-mano-seima.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/backlog.json — eilutė C:as-ir-mano-seima, būsena partial, target content/lt/grade-01/pasaulio-pazinimas/40-as-ir-mano-seima.json, šaltinis research/wiki/curriculum/1-klases-temų-žemėlapis.md:65",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:39663 — „C.1.2. Paaiškina, kas yra karta… Sudaro giminės medį (vaikai, tėvai, seneliai), nusako šeimos narių giminystės ryšius“ (Visuomeninis ugdymas, 1–2 klasės)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:40013–40016 — slenkstinis 1–2 kl. lygis: „Mokytojui padedant sudaro giminės medį (vaikai, tėvai), nurodo tėvų, senelių vardus, įvardija giminystės ryšius“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:14948–14952 — projektas „Aš ir mano šeimos istorija“ (pokalbis su tėvais, seneliais): lieka veiklai be ekrano, ne modeliui",
+    "Landau, B. (1982). Will the real grandmother please stand up? The psychological reality of dual meaning representations. Journal of Psycholinguistic Research, 11, 47–62. https://doi.org/10.1007/BF01067501 — 5 m. vaikai terminą „močiutė“ taiko pagal amžiaus požymį, o ne pagal kriterijų „turi anūką“; vyresni vaikai ir suaugusieji pereina prie kriterijaus",
+    "Spokes, A. C., & Spelke, E. S. (2016). Children's expectations and understanding of kinship as a social category. Frontiers in Psychology, 7, 440. https://doi.org/10.3389/fpsyg.2016.00440 — apibendrina Landau (1982) radinį: eksplicitinis giminystės supratimas formuojasi palaipsniui",
+    "Patikra, kad temos nėra: content/lt/grade-01/index.json — pasaulio pažinime 16 modulių (08–25, 30, 33, 34); grep „gimin“ visame content/lt/grade-01 → 0 atvejų; „kartos/kartų“ atvejai kalba apie kartojimą, ne apie giminystės kartą",
+    "Ankstesnis atmetimas: research/wiki/guidelines/klausimai.md:67 „Šeima ir giminės — modelis silpnas, o klausimai apie šeimą liečia asmens duomenis“ — šis pasiūlymas jį atsako modeliu ir išgalvotais vardais"
+  ]
+}

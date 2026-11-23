@@ -1,0 +1,20 @@
+{
+  "role": "ideator",
+  "run_id": 466,
+  "created": "2026-11-23T08:05:00+02:00",
+  "type": "tema",
+  "title": "Tas pats rėmelis, keli teisingi atsakymai: 18 = ▢ + ▢",
+  "body": "1 klasės matematikos programoje po lygybių sakiniu (:33521) duotas ne vienas uždavinys su viena spraga, o toks, kuriame spragų dvi ir atsakymų keli: „Į langelius įrašykite tinkamus skaičius. Pasiūlykite tris skirtingus variantus. ▢ + ▢ = 18“ (sources/pradinio-bp-rekomendacijos-2024.txt:33531–33535). Platformoje tai nepanaudota: `16-lygybe-svarstykles` sim konfigūracija yra `known: 5, whole: 8`, t. y. vienas trūkstamas skaičius ir vienas sprendinys, o grep „visi teisingi|keli sprendiniai|kelis variantus“ visame grade-01 → 0. Siūlomas modelis: tie patys 18 kubelių ir du rėmeliai, vaikas perkelia vieną kubelį iš kairės į dešinę ir pamato, kad abiejų pusių suma vis dar 18, nors skaičiai kiti, o modelis skaičiuoja, kiek skirtingų porų jau rasta. Klaidinga nuostata, kurią modelis parodo: „uždavinyje visada vienas teisingas atsakymas — radau vieną ir baigta“. Tai ne smulkmena: Jimenez ir Verschaffel (2014) rado, kad 1–6 kl. mokiniai iš uždavinių su keliais sprendiniais teisingai atsakė tik 30,3 %, o bendras pirmokų teisingumas tebuvo 15,5 % — būtent todėl, kad mokyklinė patirtis formuoja nuostatą „vienas skaičius, vienas veiksmas“. Modulis sąmoningai neturi nė vieno klausimo „kiek yra 7 + 6“: jo vienintelė idėja — kad užrašas su dviem langeliais turi daugiau negu vieną sprendinį ir kad radus vieną darbas nesibaigia.",
+  "target": "content/lt/grade-01/matematika/33-trukstamas-demuo.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/backlog.json — eilutė B:trukstamas-demuo, būsena partial, target content/lt/grade-01/matematika/33-trukstamas-demuo.json, šaltinis research/wiki/curriculum/1-klases-temų-žemėlapis.md:42",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33521 — „1 klasė. Sudėtis ir atimtis… Mokomasi lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių (žymimą, pvz., langeliu), kai kiti du skaičiai žinomi“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33531–33535 — „Į langelius įrašykite tinkamus skaičius. Pasiūlykite tris skirtingus variantus. ▢ + ▢ = 18“ (trys eilutės) — programos pavyzdys, kurio platforma dar neperėmė",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33524–33529 — to paties pavyzdžio kita dalis: 16 + ▢ = 24, t. y. darbas šimto ribose, o ne tik iki 10",
+    "Jimenez, L., & Verschaffel, L. (2014). Development of children's solutions of non-standard arithmetic word problem solving. Revista de Psicodidáctica, 19(1), 93–123. https://doi.org/10.1387/RevPsicodidact.7865 — uždaviniai su keliais sprendiniais: teisingai 30,3 % (1–6 kl.), bendras pirmokų teisingumas 15,5 %",
+    "Patikra, kad temos nėra: content/lt/grade-01/index.json — matematikoje 22 moduliai; `16-lygybe-svarstykles` sim konfigūracija `known: 5, whole: 8` — vienas trūkstamas skaičius, vienas teisingas sprendinys; grep „visi teisingi|keli sprendiniai|kelis variantus“ content/lt/grade-01 → 0 atvejų",
+    "Nedubliuojama su `16`: ten idėja „= reiškia abi pusės lygios“, čia — „tas pats užrašas turi kelis sprendinius“; modelyje svarstyklių nėra, yra du rėmeliai ir perkeliamas kubelis"
+  ]
+}

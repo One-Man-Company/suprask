@@ -1,0 +1,20 @@
+{
+  "role": "ideator",
+  "run_id": 466,
+  "created": "2026-11-23T08:14:00+02:00",
+  "type": "tema",
+  "title": "Mygtukas veikia tik kol laikai, jungiklis lieka įjungtas",
+  "body": "Technologijų programos 23.4.1 punktas 1–2 klasei prašo ne tik grandinės, bet ir „prietaisų… valdymo ypatumų – jungiklio, mygtuko panaudojimas“ (sources/pradinio-bp-rekomendacijos-2024.txt:9788–9796). Platformoje grandinė jau yra (`01-elektros-grandine`), bet valdymo skirtumo nėra: tame modulyje jungiklis tepertraukia kelią, o mygtukas nepasirodo nė vienoje užduotyje. Siūlomas vienas modelis su vienu kintamuoju: tas pats šviestuvas su dviem valdymo būdais — jungikliu ant sienos ir mygtuku ant laido. Vaikas paspaudžia ir paleidžia; su jungikliu šviesa lieka, su mygtuku ji užgęsta iškart paleidus. Klaidinga nuostata, kurią modelis parodo: „mygtukas ir jungiklis daro tą patį, tik atrodo kitaip“ — vaikas, įpratęs prie durų skambučio ar lifto mygtuko, laiko, kad paspaudimas „įsimena“ ir šviesa liks. Modelis skirtumo neišaiškina žodžiais, o parodo vienintelį skirtumą: ar paspaudimas palieka prietaisą įjungtą, ar tik kol pirštas laiko. Modulis turi vieną sąvoką (momentinis ir išliekantis valdymas, be terminų) ir nei karto nevaizduoja elektros kaip matomos medžiagos, todėl neprieštarauja atviram klausimui guidelines/klausimai.md:21. Jis taip pat nedubliuoja `01-elektros-grandine`: ten klausiama, ar kelias vientisas, čia — kas nutinka po to, kai pirštą atleidi; abu modeliai naudoja tą patį prietaisą, bet keičia skirtingą dalyką, todėl gali būti mokomi iš eilės.",
+  "target": "content/lt/grade-01/technologijos/07-elektronika.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/backlog.json — eilutė D:elektronika (būsena missing), target content/lt/grade-01/technologijos/07-elektronika.json, šaltinis research/wiki/curriculum/1-klases-temų-žemėlapis.md:74",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:9788–9796 — „23.4.1. Elektros, elektronikos prietaisai… aiškinamasi jų paskirtis, funkcijos, valdymo ypatumai – jungiklio, mygtuko panaudojimas ir pan.“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:9809–9815 — „23.4.2. Elektros, elektronikos prietaisų saugi eksploatacija… kaip tinkamai įjungti/išjungti prietaisą“ (saugaus naudojimo dalis, kuri lieka šiam moduliui kaip `teacher` pastaba)",
+    "content/lt/grade-01/technologijos/01-elektros-grandine.json:8–11 — trečiasis rezultatas „Parodau, kad jungiklis pertraukia tą patį kelią“: grandinė jau yra, valdymo skirtumo nėra",
+    "content/lt/grade-01/technologijos/01-elektros-grandine.json — 4 užduotys; grep „mygtuk“ visame content/lt/grade-01 → 8 atvejai, visi vartotojo sąsajos mygtukai, `hint` tekstai arba citata `sources` lauke, nė vieno apie mygtuko ir jungiklio skirtumą",
+    "Patikra, kad temos nėra: content/lt/grade-01/index.json — technologijose 4 moduliai (01-elektros-grandine, 02-medziagu-bandymas, 03-lankstymas-ir-karpiniai, 06-drabuziu-prieziura); nė vienas neturi užduoties apie valdiklio elgesį po atleidimo",
+    "research/wiki/guidelines/klausimai.md:21 — atviras klausimas „Kaip 1 klasėje parodyti elektros grandinę, nepavaizdavus elektros kaip matomos medžiagos?“; modelyje joks srautas nepiešiamas, grįžtamasis ryšys — šviesa, kaip ir `01` modulyje"
+  ]
+}

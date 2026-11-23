@@ -335,6 +335,123 @@ Minučių skaičius šiame metode nemokomas. Programa 1 klasei prašo „nusakyt
 
 **Šaltiniai.** Pons, F., Harris, P. L., & de Rosnay, M. (2004). Emotion comprehension between 3 and 11 years: Developmental periods and hierarchical organization. *European Journal of Developmental Psychology, 1*(2), 127–152. https://doi.org/10.1080/17405620344000022 · Rieffe, C., Terwogt, M. M., & Cowan, R. (2005). Children's understanding of mental states as causes of emotions. *Infant and Child Development, 14*(3), 259–272. https://doi.org/10.1002/icd.391 · Widen, S. C., & Russell, J. A. (2008). Children acquire emotion categories gradually. *Cognitive Development, 23*(2), 291–312. https://doi.org/10.1016/j.cogdev.2008.01.002 · Saarni, C. (1979). Children's understanding of display rules for expressive behavior. *Developmental Psychology, 15*(4), 424–429. https://doi.org/10.1037/0012-1649.15.4.424 · Harris, P. L., Donnelly, K., Guz, G. R., & Pitt-Watson, R. (1986). Children's understanding of the distinction between real and apparent emotion. *Child Development, 57*(4), 895–909. https://doi.org/10.2307/1130366
 
+### M-05a — Emocijų žodynas: jausmą pasako pats žmogus
+
+**Data:** 2026-11-23 · **Tema:** 1 klasės gyvenimo įgūdžiai, D:emociju-zodynas (`research/wiki/curriculum/backlog.json`; programa — `research/wiki/curriculum/kti-dalykai-1-klase.md:96`) · **Tikslas:** `content/lt/grade-01/gyvenimo-igudziai/02-emociju-zodynas.json` · **Pasiūlymas:** #37590
+
+**Viena didelė idėja.** Toje pačioje vietoje skirtingi vaikai jaučiasi skirtingai, o tikslų jausmo žodį pasako pats žmogus. Veidas ir vieta padeda, bet žodžio neduoda: kol niekas nekalba, jausmo vardo nežinome — lieka tik klausimas.
+
+**Ką sako programa.** Rekomendacijų gyvenimo įgūdžių skyrius remiasi tuo, kad „1 klasėje mokiniai pirmomis dienomis patiria labai stiprias emocijas, kurios daro įtaką elgsenai“ (`sources/pradinio-bp-rekomendacijos-2024.txt:22250`), todėl klasėje rekomenduojamas „Klasės draugas (žaislas)“ (`:22257`). Pasiekimas formuluojamas veiksmais: „**Atpažįsta, įvardija ir valdo emocijas, elgesį**“, potemė — „Emocijų atpažinimas ir žodyno plėtojimas“ / „Patiriamų emocijų atpažinimas ir įvardijimas“, o plėtojamas žodynas įvardytas uždaru sąrašu: „**piktas, baikštus, patenkintas, pakylėtas, susijaudinęs**“ (`:22275–22281`). Pamokos pavyzdys „Mano jausmai dienos metu“ trunka 30 min. (`research/wiki/curriculum/kti-dalykai-1-klase.md:96`, `:150`).
+
+Platforma šios pozicijos neturėjo nė vieno modulio: vienintelis emocijų modulis `01-dovana-ir-noras` sprendė **priežastį** (noras), ne **įvardijimą**. Užduotyje `backlog.json` siūloma forma „Situacija → kuri emocija?“ (`:832`) metodas sąmoningai atmetama — ji pati kurtų nuostatą „vienas įvykis, vienas teisingas jausmas“ (`research/wiki/guidelines/klausimai.md:31`). Modelyje naudojami trys iš penkių programos žodžių — *baikštus*, *piktas*, *pakylėtas* — ir tyla kaip ketvirta būsena. *Patenkintas* jau buvo M-05 modelyje (dovanos atvejis), o *susijaudinęs* sąmoningai paliktas kitam žingsniui: 6–7 metų vaikui jo riba su *pakylėtas* dar plati, o vienu metu du beveik sutampantys žodžiai tik drumstų (Widen ir Russell, 2008). Todėl modulis nepretenduoja išmokyti viso sąrašo — jis parodo, **iš kur** žodis ateina.
+
+**Kodėl tai antras tos pačios temos žingsnis, o ne pakartojimas.** M-05 laiko įvykį (dovaną) pastovų ir keičia norą — taip parodo, nuo ko jausmas priklauso. M-05a laiko pastovią **vietą** (ta pati lenta, tos pačios grindys, ta pati vieta prieš klasę) ir keičia tik tai, kas joje kalba. Pirmas modelis atsako į klausimą „kodėl jis jaučiasi būtent taip?“, antras — „kas žino tikslų to jausmo žodį?“. Abu remiasi ta pačia uždrausta forma: „situacija → viena teisinga emocija“ (`research/wiki/guidelines/klausimai.md:31–32`). M-05a jos nepakartoja, nes toje pačioje situacijoje trys vaikai pasako tris skirtingus žodžius, o ketvirtoje būsenoje žodžio nėra visai.
+
+**Kodėl modelis, o ne paveikslėlis.** Geras paveikslas su trimis vaikais ir trimis burbulais jau turi žodžius — juos galima perskaityti, ir modelis neprideda nieko, ką vaikas galėtų patikrinti. Modelis žodį atskiria nuo vaizdo: jis atsiranda tik tada, kai vaikas pasirenka, kas kalba, o ketvirta būsena („Niekas nekalba“) palieka tą pačią vietą ir tą patį veidą **be žodžio**. Būtent šis trūkumas parodo, kad žodis ateina su žmogumi, o ne su vieta ar veido išraiška. Antras interaktyvumo argumentas — spėjimas prieš veiksmą: be jo modelis virsta vardų sąrašu, kuriame bakstelėjimas nieko nepatikrina.
+
+**Ką rodo tyrimai.**
+Widen ir Russell (2008) parodė, kad vaikų emocijų kategorijos siaurėja palaipsniui: mažesnis vaikas vienu žodžiu dengia kelis jausmus ir tik vėliau pradeda skirti, pavyzdžiui, susijaudinimą nuo džiaugsmo. Iš to metodui išeina du reikalavimai: žodžių turi būti nedaug, o žodis turi ateiti **kartu su žmogumi**, o ne būti priskirtas iš šalies pagal veidą.
+Pons, Harris ir de Rosnay (2004), ištyrę 100 vaikų nuo 3 iki 11 metų, emocijų supratimą skaidė į devynis komponentus ir parodė tris hierarchinius tarpsnius: vėlesnis remiasi ankstesniu. Ankstyvieji komponentai — jausmo atpažinimas ir išorinė jo priežastis; slepiamas ir mišrus jausmas — vėlesni. Todėl modelyje sąmoningai nėra nei mišrių jausmų, nei „apsimestinės“ šypsenos.
+Harris, Donnelly, Guz ir Pitt-Watson (1986) atskyrė tikrą ir rodomą jausmą: 6 metų vaikai šį skirtumą jau pradeda skirti, 4-mečiai — dar ne. Tai pagrindžia ketvirtą būseną ir taisyklę „nespėk iš veido — paklausk“: veidas yra vienas signalas, o ne liudininkas.
+NŠA (2024) rekomendacijos rodo, kad pirmokui emocijų tema yra ne abstrakti, o kasdienė: pirmosios dienos pačios kelia stipriausias emocijas (`:22250`).
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Iš veido visada matau, ką žmogus jaučia.“** Paneigiama ketvirta būsena: veidas ir vieta matomi, o žodžio nėra; `readout` sako „Iš veido ir vietos tikslaus žodžio nežinome.“ Užduotys 1 ir 4 klausia ne „ką jaučia“, o „kaip sužinosi“ ir „kaip paklausti“.
+2. **„Ta pati situacija visiems kelia tą patį jausmą.“** Vieta nesikeičia nė karto: ta pati lenta, tos pačios grindys, ta pati vieta prieš klasę. Keičiasi tik tai, kas kalba, ir trys žodžiai skiriasi.
+3. **„Jei vaikas sako, kad jam baisu, jis silpnas.“** Jausmo žodis modeliuose pateikiamas kaip informacija, ne kaip vaiko savybė: `api.note` sako „Rūta pasakė savo jausmą, todėl žinome žodį“, o ne „Rūta baikštė“. Tai ir T5.1 reikalavimas — grįžtamasis ryšys apie veiksmą, ne apie vaiką.
+4. **„Vienas žodis turi reikšti viską.“** Modelis vartoja tris žodžius ir tylą, o mokytojo bloke pasakyta, kad 6–7 metų žodynas dar platus (Widen ir Russell, 2008). Todėl modulis nemoko „teisingo“ žodžio visam jausmų sąrašui.
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas).**
+
+1. **Klasė be ekrano.** Trys vaikai iš eilės tyliai pasako mokytojui vieną žodį — *baikštus*, *piktas* arba *pakylėtas* — apie tą pačią situaciją (rytoj bus ekskursija). Kiti spėja, o paskui paklausia: „Kaip tu jautiesi?“ Aptariama, kada spėjimas buvo neteisingas ir kad tai normalu. Niekas nieko neįrašo ir nelygina.
+2. **Ekranas: ta pati vieta, pasirinkimas, kas kalba.** Vaikas pirmiausia pasirenka spėjimą („Vienodai“ arba „Skirtingai“), tada — vieną iš trijų vaikų arba tylą. Vieta ir lenta nejuda; keičiasi tik tai, kas joje kalba.
+3. **Simbolis: žodis sakinyje.** Po pasirinkimo virš scenos pasirodo vaiko sakinys su jausmo žodžiu („Rūta sako: „Bijau, kad visi juoksis.“ Jos jausmas – baikštus.“). Žodis nėra etiketė po veidu — jis yra tai, ką žmogus pasakė.
+4. **Tyla.** Ketvirta būsena rodo tą pačią vietą ir neutralų veidą, bet žodžio nėra: „Niekas nieko nesako. Iš veido ir vietos tikslaus žodžio nežinome.“
+5. **Perkėlimas.** Trys užduotys be modelio (tyli Emilija, Tomas „išdrįsau“, du vaikai prie filmo) ir praplėtimo klausimas apie tai, kaip draugo paklausti.
+
+**Privalomas spėjimo žingsnis ir jo palyginimas.** Spėjimas yra ne durys, o duomuo (LL-15): vaikas pasirenka „Vienodai“ arba „Skirtingai“, o modelis, išgirdęs **antrą skirtingą** vaiką, pasako rezultatą — „Taip ir yra: jie jaučiasi skirtingai.“ arba „Tu sakei, kad jie jaučiasi vienodai. O jie jaučiasi skirtingai.“ Vienas vaikas palyginimo neįjungia: vienas žodis dar neįrodo, kad kitas jausis kitaip. Pasirinkimas prieš spėjimą nėra tyliai užrakintas (LL-04): vardo mygtukas paaiškina „Pirmiausia pasirink spėjimą. Tada rinkis, kas kalba.“ ir perkelia fokusą į pirmą vardą. Spėjimas niekada nevadinamas klaida ir niekada neištrinamas — jis tik palyginamas.
+
+**Simuliacijos specifikacija.** Komponentas `jausmo-vardas`, failas `assets/js/sims/gyvenimas.js` (tas pats failas kaip M-05; registracija `SIMS` bloke eilute `"jausmo-vardas": jausmoVardas,`). `config`:
+
+```json
+{ "silentName": "Niekas nekalba",
+  "labels": { "same": "Vienodai", "diff": "Skirtingai" },
+  "states": [ { "key": "ruta",  "name": "Rūta",  "face": "fear" },
+              { "key": "tomas", "name": "Tomas", "face": "angry" },
+              { "key": "ieva",  "name": "Ieva",  "face": "happy" } ],
+  "sentences": { "predict": "…", "choose": "…", "right": "…", "wrong": "…",
+                 "ruta": "…", "tomas": "…", "ieva": "…", "silent": "…" } }
+```
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` / scenos pastaba |
+|---|---|---|---|
+| pradžia | vienas vaikas prie lentos, neutralus veidas, keturi vardai, du spėjimo mygtukai | „Trys vaikai prieš tą pačią lentą. Ar jie jaučiasi vienodai? Pasirink spėjimą.“ | pastaba paslėpta; palietus vardą — „Pirmiausia pasirink spėjimą. Tada rinkis, kas kalba.“ |
+| spėjimas pasirinktas | tas pats vaizdas, vienas spėjimo mygtukas `aria-pressed="true"` | „Dabar rinkis vaikus ir paklausyk, ką jie sako.“ | „Spėjai, kad jie jaučiasi skirtingai.“ (arba „…vienodai.“) |
+| Rūta | vaikas su baikštu veidu, virš scenos jos sakinys | „Rūta sako: „Bijau, kad visi juoksis.“ Jos jausmas – baikštus.“ | „Rūta pasakė savo jausmą, todėl žinome žodį.“ |
+| Tomas | vaikas piktų antakių, jo sakinys | „Tomas sako: „Noriu, kad jie nustotų!“ Jo jausmas – piktas.“ | „Tomas pasakė savo jausmą, todėl žinome žodį.“ |
+| Ieva | vaikas su šypsena, jos sakinys | „Ieva sako: „Aš išdrįsau!“ Jos jausmas – pakylėtas.“ | „Ieva pasakė savo jausmą, todėl žinome žodį.“ |
+| antras skirtingas vaikas | tas pats kadras, `readout` tampa palyginimu | „Taip ir yra: jie jaučiasi skirtingai.“ arba „Tu sakei, kad jie jaučiasi vienodai. O jie jaučiasi skirtingai.“ | „Palygink savo spėjimą su tuo, ką pasakė vaikai.“ |
+| tyla | neutralus vaikas, jokio žodžio | „Niekas nieko nesako. Iš veido ir vietos tikslaus žodžio nežinome.“ | „Niekas nieko nepasakė, todėl tikslaus žodžio neturime.“ |
+| visos keturios būsenos matytos | paskutinė pasirinkta būsena lieka | tas pats sakinys | `api.progress({ correct: true })` — vieną kartą |
+| „Iš naujo“ | pradžia | spėjimo klausimas | pastaba paslėpta, spėjimas išvalytas |
+
+Septynios savybės, kurių negalima praleisti:
+
+- **Vienas kintamasis:** kas kalba (`ruta`, `tomas`, `ieva`, `silent`). Lenta, grindys ir vieta prieš klasę nekeičiamos nė karto; kūno spalva tik atskiria vaikus, o ne ką nors reiškia.
+- **Geometrija 360 px:** scena `viewBox="0 0 320 210"`, kortelės turinys `max-width:26rem`; viewBox koordinatėmis lenta 136 vnt. pločio, veidas 35,2 vnt. skersmens (spindulys 17,6) — 360 px ekrane šypsena ir antakiai atskiriami (LL-06). Keturi vardai — dvi kolonos po ≥48 px (`min-height:3rem`), trys valdikliai („Vienodai“, „Skirtingai“, „Iš naujo“) telpa į 328 px juostą ir laužiasi į antrą eilutę, o ne išlipa (LL-30).
+- **Įėjimai ir klaviatūra:** visi elementai `<button>`; `Tab` per vardus ir valdiklius, `Enter`/`Space` aktyvuoja, `aria-pressed` žymi spėjimą ir pasirinktą vaiką; `#sim-readout` turi `aria-live="polite"`.
+- **Fokusas** (LL-32): vardo mygtukai niekada ne `disabled` — prieš spėjimą jie paaiškina ir perkelia fokusą į pirmą vardą, todėl klaviatūros naudotojas nepraranda vietos.
+- **Grįžtamasis ryšys:** `readout` įvardija vaiko sakinį arba palyginimą, scenos pastaba sako **kodėl**; `api.progress` — vieną kartą, kai matytos visos keturios būsenos, o ne po pirmo pasirinkimo (LL-29). Spėjimo keitimas išvalo palyginimą ir girdėtus vaikus, bet ne pažangą (LL-16, LL-17).
+- **Garsas:** vienas `api.speak` kvietimas vienam pasirinkimui, sakinys imamas iš `config.sentences` kaip visuma; palyginimas lieka ekrane ir garsiai nesakomas, nes `speech.js` turi vieną `<audio>` kanalą ir antras kvietimas nutrauktų vaiko sakinį, o suklijuoto sakinio manifeste nebūtų (LL-145).
+- **Be laikmačių, be ėjimų limito, be „game over“.** Tylos būsena ir neteisingas spėjimas niekada nėra baudžiami.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Emilija prieš klasę tyli ir žiūri į grindis. Kaip sužinosi, ką ji jaučia?“ — Kad ji baikštė / Kad ji pikta / Kad tiksliai nežinome, reikia paklausti | 2 | „Kad ji baikštė“ — veidas laikomas žodžiu | „Ar ji pasakė bent vieną žodį apie savo jausmą?“ |
+| 2 | taikymas | „Tomas sako: „Man taip gera, kad išdrįsau!“ Kuris žodis tinka?“ — Pakylėtas / Piktas / Baikštus | 0 | „Baikštus“ — viešas kalbėjimas painiojamas su baime | „Ar jis džiaugiasi, ar ko nors bijo?“ |
+| 3 | perkėlimas | „Du vaikai žiūri tą patį filmą. Vienas juokiasi, kitas užsidengia akis. Kuris sakinys tinka?“ — Filmas visiems juokingas / Jie jaučiasi skirtingai / Vienas vaikas blogesnis | 1 | „Filmas visiems juokingas“ — situacija priskiriama visiems | „Pažiūrėk, ar abu vaikai daro tą patį.“ |
+| 4 | perkėlimas (`optional: true`) | „Draugas sėdi tyliai ir nieko nepasako. Kaip jo paklausti apie jausmą?“ — „Kodėl tu toks piktas?“ / „Kaip tu jautiesi?“ / „Ar tau baikštu?“ | 1 | „Ar tau baikštu?“ — klausimas jau pasako jausmą už kitą | „Kuris klausimas nepasako jausmo už jį?“ |
+
+Atsakymų indeksai 2 / 0 / 1 / 1 — ne visi tame pačiame indekse (`validate_content.py` tikrina pasiskirstymą). Nė viena užuomina nekartoja teisingo varianto žodžių ir nepasako atsakymo.
+
+**Refleksija.** „Kaip pasakytum suaugusiam, ką jauti, kai pats nežinai žodžio?“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — vaikas įvardija būdą (papasakoti situaciją, parodyti, paklausti žodžio), o ne „teisingą“ jausmą. Tai patikrinimas be ekrano ir be balo.
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Vienas kalbantysis vienu metu.** Ekrane rodomas tas vaikas, kuris kalba, toje pačioje vietoje; trys vaikai nėra matomi vienu metu. Todėl palyginimas vyksta per būsenas ir sakinius, o ne per tris figūras.
+2. **Trys žodžiai iš penkių.** *Patenkintas* jau buvo M-05, *susijaudinęs* paliktas vėlesniam žingsniui (Widen ir Russell, 2008). Modelis nepretenduoja išmokyti viso programos sąrašo.
+3. **Veidas yra supaprastintas.** Jis padeda atskirti vaikus, bet niekada nėra vienintelis informacijos nešėjas: šalia visada yra vaiko sakinys, o ketvirtoje būsenoje žodžio nėra.
+4. **Mišrūs ir slepiami jausmai neparodomi.** Tai vėlesni Pons ir kt. (2004) komponentai; modelyje jų nėra, kad tame pačiame kadre neliktų dviejų idėjų (T1.2).
+5. **Modelis neklausia vaiko apie jo paties jausmus.** Užduotys ir refleksija kalba apie veikėją arba apie tai, ko paklausti; taip nepatenkama į asmens duomenų sritį ir neišugdoma nuostata, kad yra „teisingas“ jausmas.
+6. **Tai ne įgūdžio įrodymas.** Teisingas atsakymas reiškia, kad vaikas atpažino ryšį „žodis ateina su žmogumi“, o ne kad jis visada teisingai įvardys kito jausmą; tikras pokalbis lieka mokytojui.
+
+**Ką tai reiškia modulio autoriui.** Modulis jau įrašytas (paleidimas #457) ir metodas jį dokumentuoja tokį, koks jis yra po šio žingsnio: `id` — `02-emociju-zodynas`; `title` — „Jausmas turi savo vardą“; `subtitle` — „Ta pati situacija, o jausmai skirtingi: žodį pasako pats vaikas“; `minutes` — 9; trys `outcomes` („Įvardiju jausmą vienu iš trijų žodžių: baikštus, piktas, pakylėtas.“, „Paaiškinu, kodėl toje pačioje situacijoje vaikai jaučiasi skirtingai.“, „Pasakau, kad tylaus žmogaus jausmo spėti negalima – jo reikia paklausti.“); `concept.title` — „Jausmą pasako pats žmogus“; `concept.big_idea` — „Trys vaikai toje pačioje vietoje jaučiasi skirtingai. Tikslų jausmo žodį žino pats žmogus, todėl paklausk jo.“; `concept.steps` — keturi žingsniai; `concept.example` — „Brolis grįžo iš varžybų ir nieko nepasakojo. Mama nesprendžia iš veido – ji paklausia: „Kaip tu jautiesi?““; `teacher.offline` — trys vaikai iš eilės tyliai pasako mokytojui po vieną žodį apie tą pačią situaciją, kiti spėja, paskui paklausia; `teacher.misconceptions` — keturios nuostatos iš šio skyriaus; `sim` — `{ "component": "jausmo-vardas", "config": { … } }`. Modulis įrašytas į `content/lt/grade-01/index.json` (gyvenimo įgūdžiai, po `01-dovana-ir-noras`) ir į `path.json` 45 eilutėje. Metodo numeris `M-05a` reiškia tik tai, kad tai antra tos pačios temos pakopa — atskiro modulio jis neprideda.
+
+**Patikra.** Šis žingsnis paleido tuos pačius vartus, kuriuos kartoja CI (tikra išvestis):
+
+```
+validate_content.py (visi)          -> 0 klaidų, 0 įspėjimų
+check_language.py --grade 1         -> 0 klaidų, 0 įspėjimų (45 pastabos, riba 10 ž.)
+check_audio.py                      -> 883 tekstai, 1766/1766 įrašų, visi Piper
+check_art.py                        -> 0 klaidų (9 sims naudoja art.js, legacy 1)
+check_docs_facts.py                 -> 0 klaidų, „Sutampa su failais“
+check_registry.py                   -> 62/62/62/273/62/62, našlaičių 0
+check_ui.py                         -> 0 klaidų, 0 įspėjimų
+check_lessons.py                    -> 145 įrašai, visi su 4 laukais
+curriculum_backlog.py --check       -> suderinta (47 pozicijų, 2 be modulio)
+check_view.py --module 02-emociju-zodynas --viewports desktop,phone,small --json
+                                    -> checked 3, problems: []
+   1440 / 390 / 360: ovf 0, tasks 4/4, small 0, ctl 7, eyebrow 1/1, errors []
+check_view.py --text-scale 200 (phone,small) -> scaled_problems: [], unapplied: []
+```
+
+Elgsenos zondas 360 px (vietinis serveris, tas pats kodas): prieš spėjimą vardo paspaudimas duoda „Pirmiausia pasirink spėjimą. Tada rinkis, kas kalba.“ ir fokusas lieka pirmame varde; pasirinkus „Skirtingai“ — `readout` „Dabar rinkis vaikus ir paklausyk, ką jie sako.“; po Rūtos — „Rūta sako: „Bijau, kad visi juoksis.“ Jos jausmas – baikštus.“; po Tomo — palyginimas „Taip ir yra: jie jaučiasi skirtingai.“, o burbule lieka Tomo sakinys; su spėjimu „Vienodai“ — „Tu sakei, kad jie jaučiasi vienodai. O jie jaučiasi skirtingai.“; po keturių būsenų `simDone: true`; „Iš naujo“ grąžina pradžią; konsolės klaidų 0.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, gyvenimo įgūdžiai (`sources/pradinio-bp-rekomendacijos-2024.txt:22250`, `:22257`, `:22275–22281`). Widen, S. C., & Russell, J. A. (2008). Children acquire emotion categories gradually. *Cognitive Development, 23*(2), 291–312. https://doi.org/10.1016/j.cogdev.2008.01.002 · Pons, F., Harris, P. L., & de Rosnay, M. (2004). Emotion comprehension between 3 and 11 years: Developmental periods and hierarchical organization. *European Journal of Developmental Psychology, 1*(2), 127–152. https://doi.org/10.1080/17405620344000022 · Harris, P. L., Donnelly, K., Guz, G. R., & Pitt-Watson, R. (1986). Children's understanding of the distinction between real and apparent emotion. *Child Development, 57*(4), 895–909. https://doi.org/10.2307/1130366
+
 ### M-06 — Dailė: ta pati forma, kita spalva
 
 **Data:** 2026-11-09 · **Tema:** `agents/proposals/2026-11-08-ideator-dailes-spalva-ir-nuotaika.json` (#6539) · **Tikslas:** `content/lt/grade-01/daile/01-spalva-ir-nuotaika.json` · **Šaltinis:** `research/wiki/foundations/forma-ir-spalva.md`

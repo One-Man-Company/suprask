@@ -787,6 +787,10 @@
   "n": "n/4e18577cf775f330-dca35c2a.mp3",
   "s": "s/4e18577cf775f330-cb8ab447.mp3"
  },
+ "Dabar rinkis vaikus ir paklausyk, ką jie sako.": {
+  "n": "n/958924bc709163cf-6d4b8a03.mp3",
+  "s": "s/958924bc709163cf-99bc827a.mp3"
+ },
  "Dabar spausk „Eik“.": {
   "n": "n/4d4d65ccf59bb3f5-03f1af0d.mp3",
   "s": "s/4d4d65ccf59bb3f5-d4f2b451.mp3"
@@ -2583,6 +2587,10 @@
   "n": "n/24f35faa30bbd472-f19af8db.mp3",
   "s": "s/24f35faa30bbd472-53e9058b.mp3"
  },
+ "Taip ir yra: jie jaučiasi skirtingai.": {
+  "n": "n/ba8cb74f673436c8-53fc588c.mp3",
+  "s": "s/ba8cb74f673436c8-5c89699d.mp3"
+ },
  "Tam": {
   "n": "n/085baa1d3c064c31-23510c12.mp3",
   "s": "s/085baa1d3c064c31-6022b5d4.mp3"
@@ -2703,9 +2711,9 @@
   "n": "n/f7f0f61bfcd44263-806425f3.mp3",
   "s": "s/f7f0f61bfcd44263-aeb9fa84.mp3"
  },
- "Trys vaikai prieš klasę. Ar jie jaučiasi vienodai? Pasakyk, tada rinkis.": {
-  "n": "n/d33f07c46f40aa99-2d38b556.mp3",
-  "s": "s/d33f07c46f40aa99-c73b4b73.mp3"
+ "Trys vaikai prieš tą pačią lentą. Ar jie jaučiasi vienodai? Pasirink spėjimą.": {
+  "n": "n/baf35fc7db3bf6e4-f2a866ad.mp3",
+  "s": "s/baf35fc7db3bf6e4-8ed10ea0.mp3"
  },
  "Trys vienodo dydžio kaladėlės. Kuri plauks?": {
   "n": "n/da3c514821c976da-86f549a5.mp3",
@@ -2806,6 +2814,10 @@
  "Tu sakei, kad daiktas lieka krūvoje. Taip ir yra.": {
   "n": "n/350c8d9100b79045-2ddf0144.mp3",
   "s": "s/350c8d9100b79045-85dea136.mp3"
+ },
+ "Tu sakei, kad jie jaučiasi vienodai. O jie jaučiasi skirtingai.": {
+  "n": "n/f7ccec9cd95a9a0e-b8ea9314.mp3",
+  "s": "s/f7ccec9cd95a9a0e-7ae78799.mp3"
  },
  "Tu sakei, kad lengvesnė. Dabar pasverk.": {
   "n": "n/3119ef4af3a0be83-e209274e.mp3",

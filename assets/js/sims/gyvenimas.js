@@ -278,13 +278,18 @@ const dovanIrNoras = {
 
 /**
  * `jausmo-vardas` — emocijų žodyno modelis 1 klasei (gyvenimo įgūdžiai),
- * M-05 krypties tęsinys: M-05 aiškino, nuo ko jausmas priklauso, o šis
- * modelis klausia, kas jį pavadina.
+ * M-05a metodas (research/wiki/grades/01/metodai.md#M-05a): M-05 aiškino,
+ * nuo ko jausmas priklauso, o šis modelis klausia, kas jį pavadina.
  *
  * Ta pati scena (vaikas prieš klasę) laikoma pastovi, o keičiamas TIK tas,
  * kuris kalba. Kiekvienas vaikas pasako savo jausmą savais žodžiais, ir
  * jausmo žodis ateina kartu su juo. Ketvirta būsena — niekas nieko nesako:
  * tada žodžio neturime, nors veidas ir vieta matomi.
+ *
+ * Spėjimas yra du mygtukai, o ne tik durys (LL-15): vaikas pasirenka
+ * „Vienodai“ arba „Skirtingai“, ir kai suskamba antras skirtingas jausmas,
+ * modelis pasako, ar spėjimas pasitvirtino. Be palyginimo spėjimas būtų
+ * dekoracija.
  *
  * Kodėl būtent taip: 6–7 metų vaiko jausmo žodis dar platus — vienas žodis
  * dengia kelis jausmus (Widen & Russell, 2008, žr. modulio `sources`). Todėl
@@ -303,6 +308,7 @@ const jausmoVardas = {
     const S = config.sentences || {};
     const states = Array.isArray(config.states) ? config.states : [];
     const silentName = config.silentName || "Niekas nekalba";
+    const L = config.labels || { same: "Vienodai", diff: "Skirtingai" };
 
     /* Duomenų vientisumas: kiekvienas vaikas turi vardą, veidą ir sakinį.
        Jei sakinio nėra, modelis tylėtų ten, kur turėjo kalbėti, ir vaikas
@@ -317,10 +323,12 @@ const jausmoVardas = {
     }
 
     const BODY = ["#c98b5e", "#5aa58a", "#7fa8d8"];
-    let predicted = false;
+    let guess = null; /* null | "same" | "diff" — spėjimas prieš pirmą pasirinkimą */
+    let compared = false;
     let selected = null; /* states raktas arba "silent" */
     let reported = false;
     const seen = new Set();
+    const heard = new Set(); /* skirtingi vaikai be tylos — palyginimui */
 
     stage.innerHTML = `
       <div style="width:100%;min-width:0;max-width:26rem">
@@ -348,9 +356,13 @@ const jausmoVardas = {
         style="min-height:3rem;height:auto;padding:.45rem .5rem;font-size:1rem;line-height:1.25;white-space:normal;overflow-wrap:anywhere">${o.name}</button>`).join("");
 
     controls.innerHTML = `
-      <button class="btn" id="jv-say" aria-label="Sakau savo spėjimą.">Sakau</button>
+      <button class="btn" id="jv-guess-same" aria-pressed="false"
+        aria-label="Spėju, kad vaikai jaučiasi vienodai.">${L.same}</button>
+      <button class="btn" id="jv-guess-diff" aria-pressed="false"
+        aria-label="Spėju, kad vaikai jaučiasi skirtingai.">${L.diff}</button>
       <button class="btn ghost" id="jv-reset" aria-label="Pradėti iš naujo">Iš naujo</button>`;
-    const sayBtn = controls.querySelector("#jv-say");
+    const sameBtn = controls.querySelector("#jv-guess-same");
+    const diffBtn = controls.querySelector("#jv-guess-diff");
     const resetBtn = controls.querySelector("#jv-reset");
 
     function drawScene(mood, body) {
@@ -365,7 +377,7 @@ const jausmoVardas = {
       return key === "silent" ? S.silent : S[key];
     }
 
-    function paint({ speak = false } = {}) {
+    function paint({ speak = false, showVerdict = false } = {}) {
       const chosen = options.find((o) => o.key === selected) || null;
       const mood = chosen ? chosen.face : "neutral";
       const body = chosen && chosen.key !== "silent"
@@ -373,63 +385,91 @@ const jausmoVardas = {
         : "#b8b2a6";
       drawScene(mood, body);
 
-      const text = selected ? sentenceOf(selected) : (S.predict || "");
-      bubble.textContent = selected ? text : "—";
+      /* Spėjimas palyginamas pirmos baigties metu ir tik vieną kartą (LL-15):
+         du skirtingi jausmai prie tos pačios lentos parodo, kad vaikai
+         jaučiasi ne vienodai. Vienas vaikas dar nieko neįrodo. */
+      const verdict = showVerdict ? (guess === "diff" ? (S.right || "") : (S.wrong || "")) : null;
+
+      const text = verdict || (selected ? sentenceOf(selected) : (guess ? (S.choose || "") : (S.predict || "")));
+      bubble.textContent = selected ? sentenceOf(selected) : "—";
       svg.setAttribute("aria-label", chosen && chosen.key !== "silent"
         ? `${chosen.name} prieš klasę.`
-        : chosen ? "Vaikas prieš klasę tyli." : "Trys vaikai prieš klasę.");
+        : chosen ? "Vaikas prieš klasę tyli." : "Vienas vaikas prieš klasę. Pasirink, kas kalba.");
 
       options.forEach((o, i) => {
         const b = pick.querySelector(`#jv-opt-${i}`);
         b.setAttribute("aria-pressed", String(o.key === selected));
-        b.dataset.locked = String(!predicted);
+        b.dataset.locked = String(!guess);
       });
+      sameBtn.setAttribute("aria-pressed", String(guess === "same"));
+      diffBtn.setAttribute("aria-pressed", String(guess === "diff"));
 
-      api.readout(selected ? text : (S.predict || ""));
-      if (speak && text) api.speak(text, { rate: 0.9 });
+      api.readout(text);
+      /* Tariamas visada vaiko sakinys: jo žodis yra temos branduolys, o
+         palyginimas lieka ekrane. `speech.js` turi vieną `<audio>` kanalą,
+         tad antras `api.speak` nutrauktų pirmą (LL-145), o suklijuotas
+         sakinys manifeste neegzistuotų. */
+      if (speak) {
+        const spoken = selected ? sentenceOf(selected) : text;
+        if (spoken) api.speak(spoken, { rate: 0.9 });
+      }
 
       let note;
-      if (!predicted) note = "Pasakyk savo spėjimą. Tada rinkis, kas kalba.";
-      else if (!selected) note = "Pasirink vaiką ir paklausyk, ką jis sako.";
+      if (!guess) note = "Pirma pasirink spėjimą: vienodai ar skirtingai?";
+      else if (!selected) note = guess === "diff" ? "Spėjai, kad jie jaučiasi skirtingai." : "Spėjai, kad jie jaučiasi vienodai.";
+      else if (verdict) note = "Palygink savo spėjimą su tuo, ką pasakė vaikai.";
       else if (selected === "silent") note = "Niekas nieko nepasakė, todėl tikslaus žodžio neturime.";
       else note = `${chosen.name} pasakė savo jausmą, todėl žinome žodį.`;
-      noteEl.hidden = !predicted;
-      noteEl.textContent = predicted ? note : "";
+      noteEl.hidden = !guess;
+      noteEl.textContent = guess ? note : "";
 
-      if (predicted && seen.size >= options.length && !reported) {
+      if (guess && seen.size >= options.length && !reported) {
         reported = true;
         api.progress({ correct: true });
       }
     }
 
     function choose(key) {
-      if (!predicted) {
-        api.note("Pirmiausia pasakyk spėjimą. Tada rinkis.");
+      if (!guess) {
+        api.note("Pirmiausia pasirink spėjimą. Tada rinkis, kas kalba.");
+        pick.querySelector("#jv-opt-0").focus();
         return;
       }
+      api.note("");
       selected = key;
       seen.add(key);
-      paint({ speak: true });
+      if (key !== "silent") heard.add(key);
+      const fresh = !compared && heard.size >= 2;
+      if (fresh) compared = true;
+      paint({ speak: true, showVerdict: fresh });
     }
 
     options.forEach((o, i) => {
       pick.querySelector(`#jv-opt-${i}`).addEventListener("click", () => choose(o.key));
     });
 
-    sayBtn.addEventListener("click", () => {
-      if (!predicted) {
-        predicted = true;
-        paint({ speak: true });
-        return;
-      }
-      api.note(seen.size ? "Spėjimas pasakytas. Rinkis kitą vaiką." : "Pasirink vaiką ir paklausyk, ką jis sako.");
-    });
+    function makeGuess(kind) {
+      guess = kind;
+      api.note("");
+      /* Būsena valoma sąmoningai (LL-17): spėjimas apie jau girdėtus vaikus
+         nieko nesako apie naują spėjimą, o palyginimas turi būti apie
+         dabartinį spėjimą, ne apie praeitą. */
+      compared = false;
+      selected = null;
+      heard.clear();
+      paint({ speak: true });
+    }
+
+    sameBtn.addEventListener("click", () => makeGuess("same"));
+    diffBtn.addEventListener("click", () => makeGuess("diff"));
 
     resetBtn.addEventListener("click", () => {
-      predicted = false;
+      guess = null;
+      compared = false;
       selected = null;
       reported = false;
       seen.clear();
+      heard.clear();
       paint();
     });
 

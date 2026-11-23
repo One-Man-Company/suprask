@@ -25,13 +25,20 @@
     "component": "jausmo-vardas",
     "config": {
       "silentName": "Niekas nekalba",
+      "labels": {
+        "same": "Vienodai",
+        "diff": "Skirtingai"
+      },
       "states": [
         { "key": "ruta", "name": "Rūta", "face": "fear" },
         { "key": "tomas", "name": "Tomas", "face": "angry" },
         { "key": "ieva", "name": "Ieva", "face": "happy" }
       ],
       "sentences": {
-        "predict": "Trys vaikai prieš klasę. Ar jie jaučiasi vienodai? Pasakyk, tada rinkis.",
+        "predict": "Trys vaikai prieš tą pačią lentą. Ar jie jaučiasi vienodai? Pasirink spėjimą.",
+        "choose": "Dabar rinkis vaikus ir paklausyk, ką jie sako.",
+        "right": "Taip ir yra: jie jaučiasi skirtingai.",
+        "wrong": "Tu sakei, kad jie jaučiasi vienodai. O jie jaučiasi skirtingai.",
         "ruta": "Rūta sako: „Bijau, kad visi juoksis.“ Jos jausmas – baikštus.",
         "tomas": "Tomas sako: „Noriu, kad jie nustotų!“ Jo jausmas – piktas.",
         "ieva": "Ieva sako: „Aš išdrįsau!“ Jos jausmas – pakylėtas.",

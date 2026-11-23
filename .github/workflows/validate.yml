@@ -32,6 +32,16 @@ jobs:
       - name: Registrų sankirta
         run: python3 scripts/check_registry.py
 
+      # Maršruto tvarka. `check_registry.py` lygina `path.json` **aibę** su
+      # indeksu, bet ne senų ID santykinę tvarką: perstatymas praeidavo visus
+      # vartus, nors vaiko „Tęsk nuo čia“ žingsnis persikeldavo (gairės T3.6).
+      # #481 atvejis (`07-elektronika` iš 70 į 48) buvo rastas tik tada, kai
+      # jau buvo svetainėje, ir beliko konstatuoti. Režimas yra be tinklo ir be
+      # `git show`: lygina su užfiksuota `scripts/known_path_order.json` seka,
+      # tad sąmoningas perstatymas lieka galimas, bet matomas `git diff`.
+      - name: Maršruto tvarka
+        run: python3 scripts/check_published.py --path-order
+
       - name: Dokumentų skaičiai
         run: python3 scripts/check_docs_facts.py
 

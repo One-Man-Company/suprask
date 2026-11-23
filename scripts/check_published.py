@@ -313,11 +313,26 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   `07-elektronika`. Teigiama: numatytasis bėgimas → rc 0, 72/72, o sėkmės
   eilutė pasako, su kuo lyginta.
 
+2026-11-23 (paleidimas #486, pasiūlymas #42399): tvarkos patikra perkelta į CI vartus.
+  #484 sukūrė matavimą, bet jis gyveno vien publikavimo agente, kuris paleidžiamas
+  **po** to, kai bėgikas išstūmė backlog'ą. #481 perkėlimas buvo rastas tik tada,
+  kai jau buvo svetainėje: beliko konstatuoti. Dabar yra `--path-order` režimas —
+  be tinklo, be `git show` (šviežiame CI klone `HEAD` **yra** darbinė kopija, tad
+  lyginimas su `HEAD` visada būtų žalias: tyli žalia, LL-37), lyginama išimtinai
+  su `scripts/known_path_order.json`. Su tuo pačiu failu lygina ir `.github/workflows/`
+  `validate.yml` žingsnis, todėl kūrimo commit'as, perstatantis esamą modulį,
+  krenta PR vartuose su įvardytu ID. Sąmoningas perstatymas lieka galimas: jis
+  keičia `known_path_order.json` tame pačiame commit'e ir matomas `git diff`.
+  Įrodymas repo: `scripts/probe_path_order.py` → **18/18** (A–J buvę 12; K1–K6 —
+  pats režimas, įskaitant „nėra užfiksuotos sekos → rc 1, o ne žalia“ ir
+  „režimas nepaliečia git ar tinklo“).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
     python3 scripts/check_published.py --grade 1     # viena klasė
     python3 scripts/check_published.py --no-bytes    # greita: tik ID ir seka
+    python3 scripts/check_published.py --path-order   # be tinklo: tik maršruto tvarka (CI)
     python3 scripts/check_published.py --audio-full  # tas pats kaip numatyta
     python3 scripts/check_published.py --audio-sample 48   # greitas, aklas
 """
@@ -889,6 +904,96 @@ def path_order_check(grade: int, current_seq: list[str]) -> dict:
     out["path_reordered"] = reordered_ids(current_seq, base)
     out["path_inserted_midsequence"] = inserted_midsequence(current_seq, base)
     return out
+
+
+def path_order_gate(grade: int) -> dict:
+    """`--path-order` režimas: santykinė `path.json` tvarka be tinklo, CI vartams.
+
+    Kodėl atskiras režimas, o ne `--no-bytes`. Du dalykai jame neveikia CI:
+
+    1. tinklas — `report()` lygina su gyva svetaine, o PR vartuose svetainė
+       dar nerodo šio commit'o, tad atsakymas būtų apie praeitą publikavimą;
+    2. `git show HEAD:path.json` — šviežiame CI klone `HEAD` **yra** darbinė
+       kopija, tad `path_order_baseline()` fallback'as visada grąžintų
+       „sutampa“: vartai, kurie žali bet kokiu atveju, yra blogesni už jokių
+       (LL-37). Todėl čia lyginama **tik** su `scripts/known_path_order.json`,
+       o jei įrašo nėra — tai ne „tvarka gera“, o „neišmatuota“, ir rc 1.
+
+    `inserted_midsequence` lieka geltona ir rc nekeičia: naują modulį dėti prie
+    temos kaimyno yra teisinga, tik tai turi būti matoma pranešime, o ne
+    atrandama vaiko ekrane.
+
+    Grąžina dict su `ok` — vieninteliu lauku, kuriuo remiasi `main()`.
+    """
+    gd = grade_dir(grade)
+    out: dict = {
+        "grade": grade, "file": f"content/lt/{gd}/path.json", "ok": False,
+        "checked": False, "baseline": "", "reordered": [], "inserted": [],
+        "sequence_len": 0, "error": "", "note": "",
+    }
+    try:
+        seq = list(json.loads((CONTENT / gd / "path.json")
+                              .read_text(encoding="utf-8")).get("sequence", []))
+    except (OSError, json.JSONDecodeError) as exc:
+        # Neperskaitytas kelias nėra „tvarka gera“: be jo negalima pasakyti
+        # nieko apie vaiko „Tęsk nuo čia“. rc 1 ir priežastis žodžiais.
+        out["error"] = f"path.json neperskaitytas ({type(exc).__name__}: {exc})"
+        return out
+    out["sequence_len"] = len(seq)
+    if not seq:
+        out["error"] = "path.json seka tuščia"
+        return out
+
+    pin = pinned_sequence(grade)
+    if not pin:
+        out["note"] = ("nėra užfiksuotos sekos `scripts/known_path_order.json` — "
+                       "tvarka NEIŠMATUOTA (tai ne „nepajudėta“)")
+        return out
+
+    out["checked"] = True
+    out["baseline"] = pin["label"]
+    base = pin["seq"]
+    out["reordered"] = reordered_ids(seq, base)
+    out["inserted"] = inserted_midsequence(seq, base)
+    out["ok"] = not out["reordered"]
+    return out
+
+
+def path_order_main(grade: int, as_json: bool) -> int:
+    """Išveda `path_order_gate()` rezultatą žmogui arba JSON'u. rc 1 — raudona."""
+    grades = [grade] if grade else live_grades()
+    rows = [path_order_gate(g) for g in grades]
+    ok = all(r["ok"] for r in rows)
+    if as_json:
+        print(json.dumps({"ok": ok, "grades": rows}, ensure_ascii=False))
+        return 0 if ok else 1
+
+    for r in rows:
+        name = grade_dir(r["grade"])
+        if r["error"]:
+            print(f"MARŠRUTO TVARKA NEIŠMATUOTA — {name}: {r['error']}")
+            continue
+        if not r["checked"]:
+            print(f"MARŠRUTO TVARKA NEIŠMATUOTA — {name}: {r['note']}")
+            continue
+        if r["reordered"]:
+            print(f"SEKOS TVARKA PAJUDĖTA — {name}: {len(r['reordered'])} senų ID "
+                  f"santykinė tvarka skiriasi nuo {r['baseline']}: "
+                  f"{', '.join(r['reordered'])}.")
+            print("  Pašalinus šiuos ID likusi tvarka atitinka ankstesnę, tad "
+                  "vaiko „Tęsk nuo čia“ žingsnis persikėlė.")
+            print("  Taisyk `path.json`: grąžink seną tvarką, o naujus modulius "
+                  "įrašyk į pabaigą. Jei perstatymas sąmoningas — atnaujink "
+                  "`scripts/known_path_order.json` tame pačiame commit'e "
+                  "(tada jis matomas `git diff`).")
+        else:
+            print(f"✔ Maršruto tvarka nepajudėta — {name}: {r['sequence_len']} "
+                  f"žingsnių, lyginta su {r['baseline']}.")
+        if r["inserted"]:
+            print(f"  Nauji moduliai įterpti į vidurį (ne į pabaigą): "
+                  f"{', '.join(r['inserted'])} — leidžiama, bet „kitas žingsnis“ "
+                  f"pasikeitė po jų einantiems.")
+    return 0 if ok else 1
 
 
 def live_grades() -> list[int]:
@@ -1726,6 +1831,9 @@ def main() -> int:
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--grade", type=int, default=0, help="tikrinti vieną klasę")
     ap.add_argument("--no-bytes", action="store_true", help="greita: tik ID ir seka")
+    ap.add_argument("--path-order", action="store_true",
+                    help="be tinklo ir be git: tik maršruto tvarka prieš "
+                         "scripts/known_path_order.json (CI vartams)")
     ap.add_argument("--audio-full", action="store_true",
                     help="tikrinti visus garso įrašus (tai yra ir numatytasis režimas)")
     ap.add_argument("--audio-sample", type=int, default=0,
@@ -1733,6 +1841,12 @@ def main() -> int:
                          f"(pvz. --audio-sample {AUDIO_SAMPLE}; toks mėginys nemato "
                          f"pavienių 404 — tik rankiniam bėgimui)")
     args = ap.parse_args()
+
+    # Tvarkos vartai pirmi: jie be tinklo ir be `git show`, tad CI klone matuoja
+    # tą patį, ką vietoje. Visi kiti režimai lygina su gyva svetaine, kuri PR
+    # metu dar nerodo šio commit'o.
+    if args.path_order:
+        return path_order_main(args.grade, args.json)
 
     grades = [args.grade] if args.grade else None
     # Numatytai — visi garso įrašai (#303: mėginys duoda žalią šalia 404 mp3).

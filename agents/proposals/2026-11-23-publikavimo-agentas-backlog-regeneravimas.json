@@ -1,0 +1,20 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 486,
+  "created": "2026-11-23T19:45:00+02:00",
+  "type": "struktura",
+  "title": "`backlog.json` pasenęs trečią paleidimą: vartai, kurie raudoni dėl svetimo žingsnio, paslepia naujus vartus",
+  "body": "`python3 scripts/curriculum_backlog.py --check` grąžina rc 1 („backlog.json pasenęs (pasikeitė curriculum/*.md)“) jau trečią paleidimą iš eilės (#484, #485, #486). Priežastis išmatuota: `research/wiki/curriculum/backlog.json` paskutinį kartą keistas `bf08958` (14:01), o `research/wiki/curriculum/matematika-1-klase.md` — `973a2b9` (15:13, programos-derintojas #483). Tai reiškia, kad `.github/workflows/validate.yml` `validate` job'as šiandien baigiasi raudonai **nepriklausomai nuo to, ką atneša PR**, tad naujas žingsnis („Maršruto tvarka“, #42399) savo signalą praranda triukšme — o raudoni vartai, kurių negalima uždaryti teisingu veiksmu, moko juos apeiti (LL-159/LL-160 šeima). Siūloma: `curriculum_backlog.py --check` turėtų ne tik pasakyti „pasenęs“, bet ir įvardyti, kuris `curriculum/*.md` failas ir kuri data skiriasi, o CI žingsnis turėtų būti paleidžiamas taip, kad jo rezultatas būtų matomas net tada, kai kitas žingsnis jau krito (atskiras job'as arba `continue-on-error` su aiškiu žymesniu). Alternatyva, paprastesnė: PR, keičiantis `curriculum/*.md`, privalo tame pačiame commit'e turėti ir pergeneruotą `backlog.json` — tada generatoriaus niekas nepamiršta, o eilė agentams visada atitinka programą. Šio vaidmens riba — `scripts/` ir `.github/workflows/`, bet `research/wiki/curriculum/backlog.json` yra programos-derintojo generuojamas turinys, todėl pats jo nepaleidau.",
+  "target": "scripts/curriculum_backlog.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "python3 scripts/curriculum_backlog.py --check → rc 1 „KLAIDA: backlog.json pasenęs (pasikeitė curriculum/*.md)“ (2026-11-23 19:39)",
+    "git log --oneline -1 -- research/wiki/curriculum/backlog.json → bf08958 (2026-11-23 14:01)",
+    "973a2b9 — programos-derintojas #483 (15:13) pakeitė research/wiki/curriculum/matematika-1-klase.md",
+    ".github/workflows/validate.yml:41–42 — žingsnis „Programos padengties eilė“ krenta ir sustabdo job'ą prieš likusius žingsnius",
+    "research/wiki/changelog.md — ta pati priežastis užfiksuota #484 ir #485 įrašuose, ne kartą „sutvarkyta“",
+    "research/wiki/guidelines/pamokos.md LL-159, LL-160 — vartai, kurių negalima uždaryti / atidaryti teisingu veiksmu, moko juos apeiti",
+    "docs/SVIETIMAS-1-GAIRES.md T1.1 / T2.1 — modulio rezultatas turi būti susietas su programos pasiekimu, tad eilė turi būti iš programos, o ne iš pasenusio failo"
+  ]
+}

@@ -1378,440 +1378,469 @@ const drabuziuPrieziura = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Mygtukas ir jungiklis: kas lieka įjungta, kai nuimi pirštą          */
+/* Valdiklis: jungiklis lieka, mygtukas grįžta (M-15)                  */
 /*                                                                     */
-/* Kodėl toks modelis: 1 klasėje valdiklio skirtumas aiškinamas ne    */
-/* žodžiais, o ranka. Tas pats šviestuvas, tas pats kelias, vienas     */
-/* skirtumas — kelyje arba jungiklis (įsimena padėtį), arba mygtukas  */
-/* (veikia tik laikomas). Vaikas pats atranda, kad atleidus pirštą    */
-/* šviesa užgęsta, ir tik tada tekstas tai įvardija. Elektros srauto  */
-/* nepiešiame, kaip ir 01-elektros-grandine (žr. failo įžangą).       */
+/* Kodėl toks modelis: 1 klasėje valdiklio skirtumą vaikas pamato po   */
+/* paleidimo, o ne iš paveikslėlio. Abu valdikliai vienodo dydžio ir    */
+/* viename aukštyje, veiksmas tas pats (paspaudimas ir paleidimas), o   */
+/* keičiasi vienintelis dalykas — kuris valdiklis laiko šviesą. Šviesos */
+/* būsena išvedama iš valdiklio elgsenos (`behaviour`), o ne įrašoma    */
+/* atskirai: jungiklio atveju šviesą laiko jo padėtis, mygtuko — tik    */
+/* pirštas. Todėl „paspaudžiau“ dar nepasako, kas bus atleidus.          */
+/* Elektros srovės nepiešiame (žr. failo įžangą).                        */
 /* ------------------------------------------------------------------ */
 
-const VJ_STYLE_ID = "cc-valdiklis-style";
+const VD_STYLE_ID = "cc-valdiklis-style";
 
-const VJ_CSS = `
-.vj-board {
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  height: 240px;
-  margin: 0 auto;
-  border-radius: var(--r-m);
-  background: var(--paper);
-  background: color-mix(in srgb, var(--sky) 7%, var(--paper-2));
-}
-.vj-part {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 68px;
-  height: 92px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 4px;
-  border: 3px solid var(--ink);
-  border-radius: 12px;
-  background: var(--paper-2);
-  text-align: center;
-}
-.vj-battery { left: 0; }
-.vj-lamp { right: 0; }
-.vj-sign { font-size: 1.1rem; font-weight: 900; line-height: 1; color: var(--ink); }
-.vj-name { font-size: .78rem; font-weight: 800; line-height: 1.1; color: var(--ink-soft); }
-.vj-bulb {
-  display: block;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 3px solid var(--ink);
-  background: var(--paper);
-}
-.vj-lamp.is-on .vj-bulb {
-  background: var(--sun);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--sun) 38%, transparent),
-              0 0 18px 6px color-mix(in srgb, var(--sun) 45%, transparent);
-}
-.vj-wire {
-  position: absolute;
-  height: 9px;
-  border-radius: 5px;
-  background: var(--ink);
-  transition: background-color .18s ease;
-}
-.vj-top { left: 68px; right: 68px; top: 84px; }
-.vj-left { left: 68px; right: calc(50% + 42px); top: 156px; }
-.vj-right { left: calc(50% + 42px); right: 68px; top: 156px; }
-.vj-wire.is-off {
-  background: repeating-linear-gradient(90deg, var(--ink-faint) 0 9px, transparent 9px 15px);
-}
-.vj-slot {
-  position: absolute;
-  left: 50%;
-  top: 118px;
-  transform: translateX(-50%);
-  width: 84px;
-  height: 76px;
-  margin: 0;
-  padding: 0;
-  border: 3px solid var(--ink);
-  border-radius: 12px;
-  background: var(--paper-2);
-  cursor: pointer;
-  touch-action: manipulation;
-}
-.vj-slot:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.vj-slot-name {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 200px;
-  font-size: .82rem;
-  font-weight: 800;
-  color: var(--ink-soft);
-  white-space: nowrap;
-}
-.vj-switch {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 46px;
-  height: 46px;
-}
-.vj-pivot {
-  position: absolute;
-  left: 7px;
-  top: 50%;
-  margin-top: -5px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--ink);
-}
-.vj-lever {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  width: 30px;
-  height: 8px;
-  margin-top: -4px;
-  border-radius: 4px;
-  background: var(--ink-faint);
-  transform-origin: 0 50%;
-  transform: rotate(-32deg);
-  transition: transform .18s ease, background-color .18s ease;
-}
-.vj-slot.is-on .vj-lever { background: var(--accent); transform: rotate(0deg); }
-.vj-push {
+const VD_CSS = `
+.vd-guess {
   display: none;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 46px;
-  height: 46px;
-  box-sizing: border-box;
-  border: 3px solid var(--ink);
-  border-radius: 50%;
-  background: var(--paper);
-  box-shadow: inset 0 -4px 0 var(--line);
-}
-.vj-slot.is-button .vj-switch { display: none; }
-.vj-slot.is-button .vj-push { display: block; }
-.vj-slot.is-down .vj-push {
-  background: var(--sun);
-  box-shadow: inset 0 3px 0 var(--line);
-  transform: translate(-50%, calc(-50% + 3px));
-}
-.vj-pick {
-  display: flex;
   flex-wrap: wrap;
-  gap: .5rem;
+  align-items: center;
   justify-content: center;
-}
-.vj-chip {
-  min-height: 48px;
-  min-width: 7.5rem;
-  padding: .5rem .8rem;
-  border: 2px solid var(--line);
+  gap: .4rem .5rem;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto .5rem;
+  padding: .5rem .55rem;
+  border: 2px dashed var(--line);
   border-radius: var(--r-s);
   background: var(--paper-2);
+}
+.vd-guess.is-on { display: flex; }
+.vd-guess p {
+  flex-basis: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: .95rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.vd-guess button {
+  min-width: 6rem;
+  min-height: 48px;
+  padding: .4rem .7rem;
+  border: 2px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--paper);
   color: var(--ink);
   font: inherit;
   font-size: 1rem;
   font-weight: 800;
   cursor: pointer;
+  touch-action: manipulation;
 }
-.vj-chip[aria-pressed="true"] {
+.vd-guess button[aria-pressed="true"] {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
 }
-.vj-chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) {
-  .vj-wire, .vj-lever, .vj-push { transition: none; }
+.vd-guess button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.vd-made { font-weight: 800; color: var(--ink-soft); }
+.vd-scene-wrap {
+  max-width: 340px;
+  margin: 0 auto;
+  border-radius: var(--r-m);
+  background: color-mix(in srgb, var(--sky) 8%, var(--paper-2));
 }
+.vd-scene { display: block; width: 100%; height: auto; }
+.vd-row {
+  display: grid;
+  /* minmax(0, 1fr) ir min-width: 0 — kitaip ilgesnis būsenos žodis
+     („Knopkė aukštyn“) išpučia stulpelį ir 200 % tekste atsiranda
+     horizontali slinktis (WCAG 1.4.4, LL-39). */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+  width: 100%;
+  max-width: 340px;
+  margin: .55rem auto .5rem;
+}
+.vd-ctl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .1rem;
+  min-width: 0;
+  min-height: 104px;
+  padding: .35rem .25rem .45rem;
+  border: 3px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--paper-2);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.vd-ctl.is-active { border-color: var(--accent); }
+.vd-ctl:not(.is-active) svg.vd-icon { opacity: .45; }
+.vd-ctl:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.vd-ctl svg.vd-icon { display: block; width: 64px; height: 64px; }
+.vd-name { max-width: 100%; font-size: .95rem; font-weight: 800; line-height: 1.1; overflow-wrap: break-word; }
+.vd-state {
+  max-width: 100%;
+  /* Dvi eilutės rezervuotos iš anksto: kitaip būsenos žodis („Knopkė
+     nuspausta“) perkelia dėžutę į antrą eilutę ir visos scenos aukštis
+     šokinėja po pirštu (LL-151 šeima — išdėstymo poslinkis per būseną). */
+  min-height: 2.3em;
+  font-size: .8rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--ink-soft);
+  overflow-wrap: break-word;
+}
+.vd-actions { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; width: 100%; }
+.vd-table { width: 100%; max-width: 340px; margin: .6rem auto 0; padding: 0; list-style: none; }
+.vd-table li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .35rem .1rem;
+  border-bottom: 1px dashed var(--line);
+  font-size: .95rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+.vd-table .vd-empty { border-bottom: 0; font-weight: 700; color: var(--ink-soft); }
 `;
 
-const VJ_SAY = {
-  pradzia: "Pradėk nuo jungiklio. Pasuk jį ir nuimk pirštą.",
-  "jungiklis-ijungtas": "Šviesa dega. Nuimk pirštą ir pažiūrėk, ar dega toliau.",
-  "jungiklis-isjungtas": "Šviesa užgęsta. Jungiklis liko pasuktoje padėtyje.",
-  "mygtukas-nepaspaustas": "Mygtukas nepaspaustas, todėl šviesa nešviečia. Spausk ir laikyk.",
-  "mygtukas-laikomas": "Šviesa dega, kol laikai mygtuką.",
-  "mygtukas-atleistas": "Atleidai pirštą — šviesa užgęsta. Mygtukas nieko neįsimena.",
-  "abu-bandyti": "Jungiklis šviesą palieka. Mygtukas dega tik kol laikai.",
-  "is-naujo": "Pradedam iš naujo. Įdėtas jungiklis, šviesa neuždegta.",
-};
+const VD_ARROW = { lieka: "↓", grizta: "↑" };
+const VD_DONE = { lieka: "liko", grizta: "grįžta" };
 
-const VJ_NOTES = {
-  pradzia: "Bakstelėk jungiklį — jis dabar išjungtas.",
-  "jungiklis-ijungtas": "Pirštas jau nebe ant jungiklio. Šviesa vis tiek dega.",
-  "jungiklis-isjungtas": "Dabar įdėk mygtuką ir palaikyk jį.",
-  "mygtukas-nepaspaustas": "Laikyk pirštą ant mygtuko, o tada atleisk.",
-  "mygtukas-laikomas": "Laikyk, kol suskaičiuosi iki trijų. Tada atleisk.",
-  "mygtukas-atleistas": "Paliesk mygtuką dar kartą ir vėl atleisk — šviesa vėl užges.",
-};
-
-function ensureVjStyle() {
-  if (document.getElementById(VJ_STYLE_ID)) return;
+function ensureVdStyle() {
+  if (document.getElementById(VD_STYLE_ID)) return;
   const style = document.createElement("style");
-  style.id = VJ_STYLE_ID;
-  style.textContent = VJ_CSS;
+  style.id = VD_STYLE_ID;
+  style.textContent = VD_CSS;
   document.head.appendChild(style);
 }
 
-const mygtukasIrJungiklis = {
+const valdiklis = {
   mount({ stage, controls, api, config }) {
-    ensureVjStyle();
+    ensureVdStyle();
 
-    const say = config.sentences || {};
-    const line = (key) => say[key] || VJ_SAY[key] || "";
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const LAMP = config.lamp || {};
+    const valdikliai = Array.isArray(config.controls) ? config.controls.slice() : [];
+    const line = (key) => (typeof S[key] === "string" ? S[key] : "");
+    const label = (key, fallback) => (typeof L[key] === "string" ? L[key] : fallback);
+
+    // `behaviour` yra modelio šaltinis: iš jo išvedama, kas laiko šviesą.
+    // Nežinoma reikšmė negali tyliai virsti „užgesusios lempos“ modeliu.
+    const broken = valdikliai.filter((c) => !c || (c.behaviour !== "lieka" && c.behaviour !== "grizta"));
+    if (valdikliai.length < 2 || broken.length) {
+      console.error("[valdiklis] config.controls nesuderintas:", config.controls);
+      stage.innerHTML = `<p class="error-box">Valdiklis nesuderintas.</p>`;
+      return null;
+    }
+
+    const byKey = (key) => valdikliai.find((c) => c.key === key) || null;
+    const lower = (key) => (byKey(key) ? byKey(key).label.toLowerCase() : "");
+
+    const st = {
+      active: valdikliai[0].key,
+      holder: null,       // kuris valdiklis dabar laiko šviesą
+      down: {},           // judanti dalis: svirtis žemyn / knopkė nuspausta
+      pressed: {},        // ar pirštas dar laiko
+      guess: {},          // spėjimas: "stay" | "goes"
+      rows: {},           // lentelės eilutės (išlieka ir po „Iš naujo“)
+      phase: "idle",      // idle | pressed
+      spoken: "",
+      reported: false,
+    };
+
+    // Viena taisyklė visam modeliui (M-15): šviesą laiko valdiklio padėtis.
+    // Jungiklis po paleidimo lieka žemyn, todėl dega; mygtukas grįžta, todėl
+    // šviesą laiko tik pirštas (`pressed`).
+    function litBy(c) {
+      if (!c) return false;
+      return c.behaviour === "lieka" ? !!st.down[c.key] : !!st.pressed[c.key];
+    }
+    const lit = () => litBy(byKey(st.holder));
+
+    function stateText(c) {
+      const down = !!st.down[c.key];
+      if (c.behaviour === "lieka") return down ? "Svirtis žemyn" : "Svirtis aukštyn";
+      return down ? "Knopkė nuspausta" : "Knopkė aukštyn";
+    }
+
+    function iconOf(c) {
+      const down = !!st.down[c.key];
+      if (c.behaviour === "lieka") {
+        return `${art.block(0, 0, 64, "#eef3f7", "", "#9aa4ae")}
+          ${art.ball(24, 48, 4.5, "#5c6168", "#3a4046")}
+          ${art.plank(24, 48, 24, 7, down ? -18 : 62)}`;
+      }
+      return `${art.block(0, 0, 64, "#eef3f7", "", "#9aa4ae")}
+        ${art.spot(15, down ? 17 : 13, 34, 34, "#c3ccd5", "apvali", 2.5)}
+        ${art.ball(32, down ? 38 : 32, 12, down ? "#f6c86e" : "#e6ebf0", "#8a8f96")}`;
+    }
+
+    const guessQ = label("guess", "Kas bus atleidus?");
+    const tableTitle = label("tableTitle", "Ką paliko pirštas");
 
     stage.innerHTML = `
-      <div class="vj-board" id="vj-board" role="group" aria-label="Baterija ir lemputė, kelyje vienas valdiklis">
-        <span class="vj-wire vj-top" aria-hidden="true"></span>
-        <span class="vj-wire vj-left is-off" id="vj-left" aria-hidden="true"></span>
-        <span class="vj-wire vj-right is-off" id="vj-right" aria-hidden="true"></span>
-        <div class="vj-part vj-battery" role="img" aria-label="Baterija su pliuso ir minuso galais">
-          <span class="vj-sign" aria-hidden="true">+</span>
-          <span class="vj-name">Baterija</span>
-          <span class="vj-sign" aria-hidden="true">−</span>
-        </div>
-        <div class="vj-part vj-lamp" id="vj-lamp" role="img" aria-label="Lemputė nešviečia">
-          <span class="vj-bulb" aria-hidden="true"></span>
-          <span class="vj-name">Lemputė</span>
-        </div>
-        <button type="button" class="vj-slot" id="vj-slot" aria-pressed="false">
-          <span class="vj-switch" aria-hidden="true">
-            <span class="vj-pivot"></span>
-            <span class="vj-lever"></span>
-          </span>
-          <span class="vj-push" aria-hidden="true"></span>
-        </button>
-        <span class="vj-slot-name" id="vj-slot-name" aria-hidden="true">Jungiklis</span>
+      <div class="vd-guess" id="vd-guess" role="group" aria-label="${guessQ}">
+        <p id="vd-guess-q">${guessQ}</p>
+        <button type="button" id="vd-guess-stay" aria-pressed="false">${label("stay", "Liks")}</button>
+        <button type="button" id="vd-guess-goes" aria-pressed="false">${label("goes", "Užgęs")}</button>
+        <p class="vd-made" id="vd-made"></p>
+      </div>
+      <div class="vd-scene-wrap">
+        <svg class="vd-scene" id="vd-scene" viewBox="0 0 328 196" role="img" aria-label=""></svg>
       </div>`;
 
     controls.innerHTML = `
-      <div class="vj-pick">
-        <button type="button" class="vj-chip" id="vj-pick-switch" aria-pressed="true">Jungiklis</button>
-        <button type="button" class="vj-chip" id="vj-pick-button" aria-pressed="false">Mygtukas</button>
+      <div class="vd-row" role="group" aria-label="Valdikliai">
+        ${valdikliai.map((c) => `
+          <button type="button" class="vd-ctl" id="vd-ctl-${c.key}" aria-pressed="false">
+            <svg class="vd-icon" viewBox="0 0 64 64" aria-hidden="true" id="vd-icon-${c.key}"></svg>
+            <span class="vd-name">${c.label}</span>
+            <span class="vd-state" id="vd-state-${c.key}"></span>
+          </button>`).join("")}
       </div>
-      <button type="button" class="btn ghost" id="vj-reset">Iš naujo</button>`;
+      <div class="vd-actions">
+        <button type="button" class="btn" id="vd-press">${label("press", "Paspausk")}</button>
+        <button type="button" class="btn" id="vd-release">${label("release", "Atleisk")}</button>
+        <button type="button" class="btn ghost" id="vd-reset">${label("again", "Iš naujo")}</button>
+      </div>
+      <ul class="vd-table" id="vd-table" aria-label="${tableTitle}"></ul>`;
 
-    const board = stage.querySelector("#vj-board");
-    const lamp = stage.querySelector("#vj-lamp");
-    const slot = stage.querySelector("#vj-slot");
-    const slotName = stage.querySelector("#vj-slot-name");
-    const leftWire = stage.querySelector("#vj-left");
-    const rightWire = stage.querySelector("#vj-right");
-    const pickSwitch = controls.querySelector("#vj-pick-switch");
-    const pickButton = controls.querySelector("#vj-pick-button");
+    const scene = stage.querySelector("#vd-scene");
+    const guessBar = stage.querySelector("#vd-guess");
+    const guessStay = stage.querySelector("#vd-guess-stay");
+    const guessGoes = stage.querySelector("#vd-guess-goes");
+    const madeLine = stage.querySelector("#vd-made");
+    const pressBtn = controls.querySelector("#vd-press");
+    const releaseBtn = controls.querySelector("#vd-release");
+    const resetBtn = controls.querySelector("#vd-reset");
 
-    // Būsena: kelyje vienas valdiklis. Jungiklis turi padėtį, mygtukas — ne.
-    let device = "jungiklis";
-    let switchOn = false;
-    let buttonDown = false;
-    let buttonTested = false;
-    let switchTested = false;
-    let firstTouch = true;
-    let progressed = false;
-    let lastSpoken = "";
-    let pulseTimer = null;
-
-    function lit() {
-      return device === "jungiklis" ? switchOn : buttonDown;
-    }
-
-    function stateKey() {
-      if (firstTouch) return "pradzia";
-      if (device === "jungiklis") return switchOn ? "jungiklis-ijungtas" : "jungiklis-isjungtas";
-      if (buttonDown) return "mygtukas-laikomas";
-      return buttonTested ? "mygtukas-atleistas" : "mygtukas-nepaspaustas";
-    }
-
-    function slotLabel() {
-      if (device === "jungiklis") {
-        return switchOn
-          ? "Jungiklis. Įjungtas: šviesa dega. Pasuk, kad išjungtum."
-          : "Jungiklis. Išjungtas: šviesa nešviečia. Pasuk, kad uždegtum.";
-      }
-      return buttonDown
-        ? "Mygtukas. Laikai paspaudęs: šviesa dega. Atleisk pirštą."
-        : "Mygtukas. Nepaspaustas: šviesa nešviečia. Spausk ir laikyk.";
-    }
-
-    function render() {
-      const key = stateKey();
+    function paintScene() {
       const on = lit();
-      const both = switchTested && buttonTested;
-
-      slot.classList.toggle("is-button", device === "mygtukas");
-      slot.classList.toggle("is-on", device === "jungiklis" && switchOn);
-      slot.classList.toggle("is-down", device === "mygtukas" && buttonDown);
-      slot.setAttribute("aria-pressed", String(on));
-      slot.setAttribute("aria-label", slotLabel());
-
-      lamp.classList.toggle("is-on", on);
-      lamp.setAttribute("aria-label", on ? "Lemputė šviečia" : "Lemputė nešviečia");
-      leftWire.classList.toggle("is-off", !on);
-      rightWire.classList.toggle("is-off", !on);
-      slotName.textContent = device === "jungiklis" ? "Jungiklis" : "Mygtukas";
-
-      pickSwitch.setAttribute("aria-pressed", String(device === "jungiklis"));
-      pickButton.setAttribute("aria-pressed", String(device === "mygtukas"));
-      board.setAttribute(
+      const holder = byKey(st.holder);
+      const lampSay = on ? (LAMP.on || "Šviesa dega.") : (LAMP.off || "Šviesa užgęsta.");
+      const glow = on
+        ? `<circle cx="166" cy="106" r="60" fill="url(#vd-glow)"/>
+           ${art.spot(52, 176, 228, 12, "#ffe9a8")}`
+        : "";
+      scene.innerHTML = `${art.defs("vd")}${glow}
+        ${art.plank(24, 188, 280, 14)}
+        ${art.plank(170, 174, 66, 8, 90)}
+        ${art.block(148, 144, 30, "#8a8f96", "", "#5c6168")}
+        ${art.ball(166, 106, 24, on ? "#ffe08a" : "#cfd6dd", "#8a8f96")}
+        <text x="166" y="62" text-anchor="middle"
+          style="font-family:var(--font-head);font-size:13px;font-weight:800;fill:#5b4a2f">Lemputė</text>`;
+      // Aprašas atsako į tą patį klausimą, kurį rodo paveikslas: dega ar ne.
+      scene.setAttribute(
         "aria-label",
-        `Baterija kairėje, lemputė dešinėje. Kelyje ${device === "jungiklis" ? "jungiklis" : "mygtukas"}. `
-          + `Lemputė ${on ? "šviečia" : "nešviečia"}.`,
+        `${lampSay} `
+          + (holder ? `Šviesą laiko ${holder.label.toLowerCase()}.` : "Dabar nė vienas valdiklis nelaiko šviesos."),
       );
-
-      api.readout(line(key));
-      // Kai abu valdikliai jau išbandyti, užuominos nebereikia: lieka pati
-      // išvada, kurią vaikas ką tik pamatė savo rankomis.
-      api.note(both ? line("abu-bandyti") : (VJ_NOTES[key] || ""));
-
-      if (key !== lastSpoken) {
-        lastSpoken = key;
-        api.speak(line(key));
-      }
-
-      // Rezultatas — abi patirtys iš eilės: jungiklis paliko šviesą degti,
-      // mygtukas užgeso atleidus. Vienas prisilietimas pažangos nežymi.
-      if (both && !progressed) {
-        progressed = true;
-        api.progress({ correct: true });
-      }
     }
 
-    function touch(fn) {
-      firstTouch = false;
-      fn();
-      lastSpoken = "";
-      render();
+    function paintTable() {
+      const host = controls.querySelector("#vd-table");
+      const keys = valdikliai.map((c) => c.key).filter((k) => st.rows[k]);
+      if (!keys.length) {
+        host.innerHTML = `<li class="vd-empty">Kol kas tuščia.</li>`;
+        return;
+      }
+      host.innerHTML = keys.map((k) => {
+        const c = byKey(k);
+        return `<li><span>${c.label}</span><span><span aria-hidden="true">${VD_ARROW[c.behaviour]}</span> `
+          + `${VD_DONE[c.behaviour]}</span></li>`;
+      }).join("");
+    }
+
+    function paint() {
+      valdikliai.forEach((c) => {
+        const box = controls.querySelector(`#vd-ctl-${c.key}`);
+        const isActive = c.key === st.active;
+        box.classList.toggle("is-active", isActive);
+        box.setAttribute("aria-pressed", String(isActive));
+        box.setAttribute(
+          "aria-label",
+          `${c.label}. ${stateText(c)}. `
+            + (isActive ? "Šis valdiklis pasirinktas." : "Bakstelėk, kad pasirinktum."),
+        );
+        controls.querySelector(`#vd-state-${c.key}`).textContent = stateText(c);
+        controls.querySelector(`#vd-icon-${c.key}`).innerHTML = iconOf(c);
+      });
+
+      // Spėjimo eilutė lieka virš scenos iki paleidimo (M-15), o ne išnyksta
+      // pasirinkus: vaikas turi matyti, ką spėjo, tada kai atleidžia.
+      const guessing = st.phase === "pressed";
+      guessBar.classList.toggle("is-on", guessing);
+      // LL-154: slėpiama klasė, kuri tikrai keičia `display`, o ne `hidden`.
+      guessBar.style.display = guessing ? "flex" : "none";
+      madeLine.textContent = st.phase === "pressed" && st.guess[st.active]
+        ? `Tavo spėjimas: ${st.guess[st.active] === "stay" ? label("stay", "Liks") : label("goes", "Užgęs")}.`
+        : "";
+      guessStay.setAttribute("aria-pressed", String(st.guess[st.active] === "stay"));
+      guessGoes.setAttribute("aria-pressed", String(st.guess[st.active] === "goes"));
+
+      // Neišjungiame (`disabled`), kad fokusas neprapultų (LL-32); būsena
+      // pasakoma `aria-disabled`, o paaiškinimas — `readout` tekste.
+      pressBtn.setAttribute("aria-disabled", String(st.phase === "pressed"));
+      releaseBtn.setAttribute("aria-disabled", String(st.phase !== "pressed" || !st.guess[st.active]));
+
+      paintScene();
+      paintTable();
+    }
+
+    function announce(text) {
+      if (!text || text === st.spoken) return;
+      st.spoken = text;
+      api.speak(text);
     }
 
     function press() {
-      if (device !== "mygtukas" || buttonDown) return;
-      touch(() => { buttonDown = true; });
+      const c = byKey(st.active);
+      if (st.phase === "pressed") {
+        const msg = `Pirma atleisk ${lower(st.active)}.`;
+        api.readout(msg);
+        api.note("Kol valdiklis paspaustas, kito pasirinkti negalima.");
+        releaseBtn.focus();
+        return;
+      }
+      st.holder = c.key;
+      st.pressed[c.key] = true;
+      st.down[c.key] = true;
+      st.phase = "pressed";
+      paint();
+
+      const text = line("press");
+      api.readout(text);
+      announce(text);
+      if (!st.guess[c.key]) {
+        api.note(line("guess") || "Pirma spėk, tada atleisk.");
+        guessStay.focus();
+      } else {
+        api.note(`Spausk „${label("release", "Atleisk")}“.`);
+        releaseBtn.focus();
+      }
+    }
+
+    function chooseGuess(value) {
+      if (st.phase !== "pressed") return;
+      st.guess[st.active] = value;
+      paint();
+      api.note(`Spausk „${label("release", "Atleisk")}“.`);
+      releaseBtn.focus();
     }
 
     function release() {
-      if (device !== "mygtukas" || !buttonDown) return;
-      touch(() => {
-        buttonDown = false;
-        buttonTested = true;
-      });
-    }
-
-    function choose(next) {
-      if (device === next) return;
-      touch(() => {
-        device = next;
-        buttonDown = false;
-      });
-    }
-
-    // Jungiklis: pasukimas išlieka. Mygtukas: veikia tik laikomas.
-    slot.addEventListener("click", (e) => {
-      if (device === "jungiklis") {
-        touch(() => {
-          switchOn = !switchOn;
-          if (switchOn) switchTested = true;
-        });
+      const c = byKey(st.active);
+      if (st.phase !== "pressed") {
+        api.readout(`Pirma paspausk ${lower(st.active)}.`);
+        api.note(`Spausk „${label("press", "Paspausk")}“.`);
+        pressBtn.focus();
         return;
       }
-      // Klaviatūros ar pagalbinių technologijų paleistas paspaudimas neturi
-      // „laikymo“, todėl parodomas trumpas paspaudimas ir atleidimas.
-      if (e.detail === 0) {
-        press();
-        if (pulseTimer) clearTimeout(pulseTimer);
-        pulseTimer = setTimeout(() => { pulseTimer = null; release(); }, 500);
+      if (!st.guess[c.key]) {
+        api.readout(line("guess") || "Pirma spėk, tada atleisk.");
+        guessStay.focus();
+        return;
       }
-    });
 
-    // Piršto nutraukimas nuo mygtuko neturi užgesti vien todėl, kad tekstas
-    // virš simuliacijos pasikeitė ir scena trumpam pasislinko po pirštu.
-    // Todėl paspaudimas „pažymimas“ (pointer capture): atleidimas įskaitomas
-    // tik tikru pointerup ar pointercancel, o ne pointerleave dėl išdėstymo.
-    slot.addEventListener("pointerdown", (e) => {
-      if (device !== "mygtukas" || e.button > 0) return;
-      try { slot.setPointerCapture(e.pointerId); } catch { /* senos naršyklės */ }
-      press();
-    });
-    slot.addEventListener("pointerup", (e) => {
-      try {
-        if (slot.hasPointerCapture(e.pointerId)) slot.releasePointerCapture(e.pointerId);
-      } catch { /* senos naršyklės */ }
-      release();
-    });
-    slot.addEventListener("pointercancel", () => release());
-    slot.addEventListener("blur", () => release());
+      st.pressed[c.key] = false;
+      // Mygtukas grįžta atgal; jungiklis lieka ten, kur buvo nustumtas.
+      if (c.behaviour !== "lieka") st.down[c.key] = false;
+      st.phase = "idle";
+      // Ar tai pirmas šio valdiklio paleidimas — nuo to priklauso, ar
+      // sakome padarinį, ar jau visą išvadą. Po „Iš naujo“ lentelė lieka
+      // pilna, bet vaikas vėl daro VIENĄ bandymą, todėl jam priklauso
+      // padarinys, o ne santrauka (LL-17).
+      const firstTime = !st.rows[c.key];
+      st.rows[c.key] = true;
 
-    slot.addEventListener("keydown", (e) => {
-      if (device !== "mygtukas") return;
-      if (e.key !== " " && e.key !== "Enter") return;
-      e.preventDefault();
-      if (e.repeat) return;
-      press();
-    });
-    slot.addEventListener("keyup", (e) => {
-      if (device !== "mygtukas") return;
-      if (e.key !== " " && e.key !== "Enter") return;
-      e.preventDefault();
-      release();
-    });
+      const both = valdikliai.every((x) => st.rows[x.key]);
+      const outcome = c.behaviour === "lieka" ? line("stay") : line("goes");
+      paint();
 
-    pickSwitch.addEventListener("click", () => choose("jungiklis"));
-    pickButton.addEventListener("click", () => choose("mygtukas"));
-
-    controls.querySelector("#vj-reset").addEventListener("click", () => {
-      if (pulseTimer) { clearTimeout(pulseTimer); pulseTimer = null; }
-      device = "jungiklis";
-      switchOn = false;
-      buttonDown = false;
-      buttonTested = false;
-      switchTested = false;
-      firstTouch = false;
-      progressed = false;
-      lastSpoken = "is-naujo";
-      render();
-      const text = line("is-naujo");
+      const text = firstTime && both ? line("table") : outcome;
       api.readout(text);
-      api.note(VJ_NOTES["pradzia"]);
-      api.speak(text);
+      announce(text);
+      api.note(
+        (c.behaviour === "lieka"
+          ? "Svirtis liko žemyn, todėl šviesa dega be piršto."
+          : "Knopkė grįžo aukštyn, todėl šviesa užgęsta.")
+          + (firstTime && both
+            ? " Abu valdikliai išbandyti."
+            : (both ? "" : " Dabar pabandyk kitą valdiklį.")),
+      );
+
+      // Pažanga — tik kai abu valdikliai išbandyti ir abi eilutės lentelėje (LL-17).
+      if (both && !st.reported) {
+        st.reported = true;
+        api.progress({ correct: true });
+      }
+      // Fokusas eina ten, kur vaikui toliau verta žiūrėti: į kito valdiklio
+      // dėžutę, o kai abu išbandyti — į „Iš naujo“.
+      const next = valdikliai.find((x) => !st.rows[x.key]);
+      if (next) controls.querySelector(`#vd-ctl-${next.key}`).focus();
+      else resetBtn.focus();
+    }
+
+    function selectControl(key) {
+      if (st.phase === "pressed") {
+        if (key === st.active) {
+          releaseBtn.focus();
+          return;
+        }
+        const msg = `Pirma atleisk ${lower(st.active)}.`;
+        api.readout(msg);
+        api.note("Kol valdiklis paspaustas, kito pasirinkti negalima.");
+        releaseBtn.focus();
+        return;
+      }
+      if (key === st.active) {
+        press();
+        return;
+      }
+      st.active = key;
+      st.spoken = "";
+      paint();
+      api.readout(`${byKey(key).label} parinktas.`);
+      api.note(`Dabar pasirinktas ${lower(key)}. Spausk „${label("press", "Paspausk")}“.`);
+      pressBtn.focus();
+    }
+
+    function reset() {
+      st.active = valdikliai[0].key;
+      st.holder = null;
+      st.down = {};
+      st.pressed = {};
+      st.guess = {};
+      st.phase = "idle";
+      st.spoken = "";
+      paint();
+      const text = line("reset");
+      api.readout(text);
+      announce(text);
+      api.note(`Spausk „${label("press", "Paspausk")}“ ir pažiūrėk, kas bus atleidus.`);
+      const first = controls.querySelector(`#vd-ctl-${valdikliai[0].key}`);
+      if (first) first.focus();
+    }
+
+    valdikliai.forEach((c) => {
+      controls.querySelector(`#vd-ctl-${c.key}`).addEventListener("click", () => selectControl(c.key));
     });
+    pressBtn.addEventListener("click", press);
+    releaseBtn.addEventListener("click", release);
+    resetBtn.addEventListener("click", reset);
+    guessStay.addEventListener("click", () => chooseGuess("stay"));
+    guessGoes.addEventListener("click", () => chooseGuess("goes"));
 
-    // Pirmas ekrano tekstas kviečia veikti, o ne aprašo būseną.
-    // Garsas paleidžiamas tik po pirmo vaiko prisilietimo, ne įkeliant modulį.
-    lastSpoken = stateKey();
-    render();
+    paint();
+    api.readout(line("start"));
+    api.note(`Spausk „${label("press", "Paspausk")}“ ir pažiūrėk, kas bus atleidus.`);
 
-    return () => {
-      if (pulseTimer) clearTimeout(pulseTimer);
-    };
+    // Garsas paleidžiamas tik po pirmo vaiko veiksmo: įkeliant modulį
+    // skamba tik instrukcija, kuri jau parašyta `readout` lauke.
+    return null;
   },
 };
 
@@ -1820,5 +1849,5 @@ export const SIMS = {
   "medziagu-bandymas": medziaguBandymas,
   "lankstymas-ir-karpiniai": lankstymasIrKarpiniai,
   "drabuziu-prieziura": drabuziuPrieziura,
-  "mygtukas-ir-jungiklis": mygtukasIrJungiklis,
+  "valdiklis": valdiklis,
 };

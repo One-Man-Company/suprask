@@ -588,11 +588,11 @@
     },
     {
      "id": "07-elektronika",
-     "title": "Kodėl šviesa užgęsta atleidus mygtuką",
-     "subtitle": "Skambutis skamba, kol laikai. Sienos jungiklis lieka įjungtas",
+     "title": "Mygtukas grįžta, jungiklis lieka",
+     "subtitle": "Padėtis laiko šviesą, o ne pirštas",
      "file": "grade-01/technologijos/07-elektronika.json",
      "minutes": 9,
-     "sim": "mygtukas-ir-jungiklis"
+     "sim": "valdiklis"
     }
    ]
   },

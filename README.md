@@ -18,7 +18,7 @@ Ne įsiminti — suprasti. Simuliacijos, modeliai ir žaidimai, kurie paaiškina
 | 🌍 Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Kas gyvas: auga ir reaguoja, ne tik juda · Kas sukūrė šį daiktą: kelias iki gamtos · Medžiai, krūmai, žolės: grupę rodo stiebas · Išmestas daiktas nedingsta · Kas lieka pievoje po metų · Vienas vanduo, trys formos · Kas gyvena tvarte? · Kur dingsta vanduo · Nuožulnioji plokštuma · Kuprinė: tas pats svoris · Dūmai: žemai ir lauk · Trauma turi priežastį · Apsauga dengia tik savo vietą · Vėliau keltis — trumpesni pusryčiai · Kas priklauso bendruomenei? · Kiekvienas moka ką nors · Ką pastebėjau kieme? · Kas kam giminė? · Kiekvienas turi savo energijos šaltinį · Tie patys penki ženklai |
 | 🎵 Muzika | Aukštas garsas ne visada garsus · Ritmas: plojimai ant pulso · Ta pati melodija, kitas atlikėjas |
 | 🤝 Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius |
-| 🔌 Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas · Vienas kirpimas — kelios skylės · Balti skalbsis atskirai nuo spalvotų · Kodėl šviesa užgęsta atleidus mygtuką |
+| 🔌 Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas · Vienas kirpimas — kelios skylės · Balti skalbsis atskirai nuo spalvotų · Mygtukas grįžta, jungiklis lieka |
 | 💛 Gyvenimo įgūdžiai | Dovana: kodėl vienas džiaugiasi, kitas ne · Jausmas turi savo vardą |
 | 🕊️ Dorinis ugdymas | Kai vienas nustoja, nukenčia visi · Ekranas žmogaus nepaslepia |
 | 🎨 Dailė | Dailė: ta pati forma, kita spalva |
@@ -109,7 +109,7 @@ HTTP prieiga ribojama Tailscale tinklu — jokio prisijungimo ekrano. Žr. [`das
 
 ## Garsas
 
-Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 1047 tekstų po du variantus (sakinys ir skiemuo) — 2094 įrašai, ~73 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
+Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 1048 tekstų po du variantus (sakinys ir skiemuo) — 2096 įrašai, ~73 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
 
 ## Licencijos
 

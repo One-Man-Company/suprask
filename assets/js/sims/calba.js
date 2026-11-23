@@ -2427,6 +2427,171 @@ const tekstoKlausimas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 10. Pasakojimo vidurys: įvykis, kuris sujungia pradžią ir pabaigą   */
+/* ------------------------------------------------------------------ */
+/* Modelis: trys kadrai, bet vidurinis yra TUŠČIAS. Vaikas įdeda vieną
+   iš trijų kortelių arba ją išima, o močiutė telefonu perpasakoja TIK
+   tai, kas kadruose yra. Kai vidurinio įvykio nėra, jos perpasakojimas
+   nutrūksta klausimu „O kaip?“ — pasekmė matoma ir girdima, o ne
+   paaiškinama tekste (LL-13: piešinys ir sakinys sutaria).
+   Klaidingos kortelės sąmoningai mini tuos pačius daiktus (stiklinę,
+   kamuolį), todėl atsakyti vien pagal žodį negalima — reikia suprasti,
+   kas paaiškina pasikeitimą (LL-18, LL-28). Jokios baudos: kortelę
+   galima išimti ir įdėti kitą be galo, laikmačių nėra. */
+const PV_PICTURES = {
+  "berniukas-su-kamuoliu": () => `
+    ${art.kid(34, 86, 1.2, "#3f5d8a", "#f2c9a0")}
+    ${art.ball(94, 76, 11, "#f2cf94", "#a9793f")}`,
+  "stikline-nuvirtusi": () => `
+    ${art.plank(8, 72, 104, 9)}
+    ${art.plank(20, 98, 7, 26)}
+    ${art.plank(93, 98, 7, 26)}
+    <g transform="rotate(76 48 62)">${art.pictogram("stikline", 28, 42, 1)}</g>
+    ${art.spot(58, 58, 54, 14, "#7cc6ec")}
+    ${art.drops(84, 72, 4, "#5fb3e0")}`,
+};
+
+const pasakojimoVidurys = {
+  mount({ stage, controls, api, config }) {
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const start = config.start && typeof config.start === "object" ? config.start : null;
+    const end = config.end && typeof config.end === "object" ? config.end : null;
+    const cards = shuffle((Array.isArray(config.cards) ? config.cards : []).filter((c) => c && c.id && c.label));
+    const S = config.sentences && typeof config.sentences === "object" ? config.sentences : {};
+    const title = String(config.title ?? "").trim();
+    const correct = cards.find((c) => c.ok === true) || null;
+
+    if (!start || !end || cards.length < 2 || !correct || !S.gap) {
+      stage.innerHTML = `<p class="error-box">Pasakojimo kadrų duomenys nesuderinti.</p>`;
+      controls.innerHTML = "";
+      api.readout("Pasakojimo kadrų duomenys nesuderinti.");
+      api.note("");
+      return () => {};
+    }
+
+    let placed = null;
+    let reported = false;
+
+    /* Močiutė perpasakoja VIENU sakiniu: garso įrašas groja vieną failą,
+       o keli `api.speak` kvietimai vienas kitą nutrauktų (tik paskutinis
+       būtų girdimas). Todėl kiekvienos būsenos tekstas yra viena eilutė. */
+    const lineOf = (card) => {
+      const key = card ? String(card.line ?? "") : "";
+      const text = key ? String(S[key] ?? "") : "";
+      return (text || String(S.gap)).trim();
+    };
+
+    function frameHtml(f) {
+      const pic = PV_PICTURES[String(f.picture ?? "")];
+      return `<figure style="margin:0;display:flex;flex-direction:column;gap:.3rem;min-width:0">
+        <div style="border:3px solid var(--line);border-radius:12px;overflow:hidden;background:#fffdf6;line-height:0">
+          <svg viewBox="0 0 120 100" role="img" aria-label="${esc(f.alt || f.label)}" style="display:block;width:100%;height:auto">${pic ? pic() : ""}</svg>
+        </div>
+        <figcaption style="font-size:clamp(.86rem,3.4vw,1rem);line-height:1.3;overflow-wrap:anywhere">${esc(f.label)}</figcaption>
+      </figure>`;
+    }
+
+    function slotHtml() {
+      if (!placed) {
+        return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;min-width:0;min-height:88px;padding:.4rem;border:3px dashed var(--line);border-radius:12px;background:#fff">
+          <p style="margin:0;text-align:center;font-weight:800;font-size:clamp(.86rem,3.4vw,1rem);line-height:1.3;overflow-wrap:anywhere">Kas čia nutiko?</p>
+          <p style="margin:0;text-align:center;color:var(--ink-soft);font-size:clamp(.82rem,3.1vw,.9rem);line-height:1.25">Trūksta vidurinio kadro</p>
+        </div>`;
+      }
+      return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:88px;padding:.4rem;border:3px solid var(--ok);border-radius:12px;background:#f2faf0">
+        <p style="margin:0;text-align:center;font-weight:800;font-size:clamp(.86rem,3.4vw,1rem);line-height:1.3;overflow-wrap:anywhere">${esc(placed.label)}</p>
+      </div>`;
+    }
+
+    function paint(focusId) {
+      stage.innerHTML = `
+        <div style="width:100%;min-width:0;max-width:44rem">
+          ${title ? `<p style="margin:0 0 .55rem;text-align:center;font-family:var(--font-head);font-weight:900;letter-spacing:.03em;font-size:clamp(.76rem,3vw,.9rem);text-transform:uppercase;color:var(--ink-soft);overflow-wrap:anywhere">${esc(title)}</p>` : ""}
+          <div id="pv-strip" role="group" aria-label="Trys pasakojimo kadrai" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45rem;align-items:stretch">
+            ${frameHtml(start)}
+            ${slotHtml()}
+            ${frameHtml(end)}
+          </div>
+          <div style="margin-top:.7rem;border:3px solid var(--line);border-radius:12px;background:#fffdf6;padding:.6rem .7rem;min-width:0">
+            <p style="margin:0 0 .2rem;font-size:clamp(.76rem,3vw,.88rem);font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft)">Močiutė klauso telefono</p>
+            <p id="pv-say" style="margin:0;font-size:clamp(.95rem,3.6vw,1.08rem);line-height:1.4;overflow-wrap:anywhere">${esc(lineOf(placed))}</p>
+          </div>
+        </div>`;
+
+      controls.innerHTML = `
+        <div id="pv-tray" role="group" aria-label="Vidurinio kadro kortelės" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.5rem;width:100%;max-width:44rem;margin-inline:auto">
+          ${cards.map((c) => {
+            const on = placed && placed.id === c.id;
+            return `<button class="btn secondary" type="button" data-card="${esc(c.id)}" aria-pressed="${on ? "true" : "false"}"
+              aria-label="${on ? "Išimti vidurinį kadrą" : "Įdėti vidurinį kadrą"}: ${esc(c.label)}"
+              style="min-height:52px;height:auto;white-space:normal;line-height:1.35;font-size:clamp(.9rem,3.4vw,1rem);${on ? "box-shadow:inset 0 0 0 3px var(--ok)" : ""}">${esc(c.label)}</button>`;
+          }).join("")}
+        </div>
+        <button class="btn secondary" id="pv-again" type="button" style="min-height:48px">Paklausyk vėl</button>
+        <button class="btn" id="pv-out" type="button" style="min-height:48px;${placed ? "" : "display:none"}">Išimti vidurinį kadrą</button>`;
+
+      controls.querySelectorAll("[data-card]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const card = cards.find((c) => c.id === b.dataset.card);
+          if (!card) return;
+          if (placed && placed.id === card.id) removeMiddle();
+          else placeMiddle(card);
+        });
+      });
+      controls.querySelector("#pv-again").addEventListener("click", () => api.speak(lineOf(placed)));
+      controls.querySelector("#pv-out").addEventListener("click", removeMiddle);
+
+      const target = focusId ? controls.querySelector(`#${focusId}`) : null;
+      if (target && typeof target.focus === "function") target.focus({ preventScroll: true });
+    }
+
+    /* Grįžtamasis ryšys apie VEIKSMA, ne apie vaiką (T5.1): pasakoma, ko
+       močiutė negirdėjo, bet teisinga kortelė neįvardijama (T3.1–T3.2). */
+    function announce() {
+      const holds = placed && placed.id === correct.id;
+      api.speak(lineOf(placed));
+      if (holds) {
+        api.readout("Močiutė suprato pasakojimą.");
+        api.note("Vidurinis įvykis paaiškino, kaip pradžia virto pabaiga. Todėl perpasakojimas sueina.");
+      } else {
+        api.readout("Močiutė vėl klausia: o kaip?");
+        api.note(placed
+          ? "Ši kortelė pasakoja įvykį, bet nepaaiškina pabaigos. Klausk savęs: kas pasikeitė tarp pirmo ir trečio kadro?"
+          : "Vidurinio kadro nėra, todėl močiutė girdi tik pradžią ir pabaigą. Įdėk kortelę į vidurį.");
+      }
+    }
+
+    function placeMiddle(card) {
+      placed = card;
+      paint("pv-out");
+      announce();
+      /* Tikslas pasiektas DABAR: kai vidurinis įvykis paaiškina pabaigą,
+         perpasakojimas sueina (KURINIO-STANDARTAS §4). Užrašoma kartą. */
+      if (!reported && placed.id === correct.id) {
+        reported = true;
+        api.progress({ middle: placed.id });
+      }
+    }
+
+    function removeMiddle() {
+      placed = null;
+      paint("pv-out");
+      const first = controls.querySelector("[data-card]");
+      if (first && typeof first.focus === "function") first.focus({ preventScroll: true });
+      announce();
+    }
+
+    paint(null);
+    api.readout("Trys kadrai, o vidurio nėra.");
+    api.note("Močiutė girdi tik tai, kas kadruose yra. Paklausyk, ko jai trūksta.");
+    /* Nepilnas perpasakojimas tariamas iškart: 6–7 metų vaikas ilgo sakinio
+       ekrane neskaito sklandžiai, o būtent jo klausymas yra modelio pradžia. */
+    api.speak(lineOf(null));
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
@@ -2437,4 +2602,5 @@ export const SIMS = {
   "oro-kelias": oroKelias,
   "dvibalsiu-takas": dvibalsiuTakas,
   "teksto-klausimas": tekstoKlausimas,
+  "pasakojimo-vidurys": pasakojimoVidurys,
 };

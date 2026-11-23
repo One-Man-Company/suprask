@@ -1403,6 +1403,14 @@
   "n": "n/ae9e0b98fa70df84-faaefe4b.mp3",
   "s": "s/ae9e0b98fa70df84-899817cc.mp3"
  },
+ "Kamuolys nuriedėjo po lova.": {
+  "n": "n/2928fc214e7f5991-b275d518.mp3",
+  "s": "s/2928fc214e7f5991-4c8ac59f.mp3"
+ },
+ "Kamuolys trenkė į stiklinę.": {
+  "n": "n/b063253be639f01a-dc1433f6.mp3",
+  "s": "s/b063253be639f01a-398afb08.mp3"
+ },
  "Karosas": {
   "n": "n/f7523c580e0248c6-81d5ea90.mp3",
   "s": "s/f7523c580e0248c6-2ee7ff89.mp3"
@@ -2923,6 +2931,30 @@
   "n": "n/86c496b088a575d6-c0860daf.mp3",
   "s": "s/86c496b088a575d6-71b2f6bc.mp3"
  },
+ "Tomas bėgo su kamuoliu.": {
+  "n": "n/6bb2100626c3fd3a-deb8c637.mp3",
+  "s": "s/6bb2100626c3fd3a-7ff0bac6.mp3"
+ },
+ "Tomas bėgo su kamuoliu. Ir staiga vanduo išsiliejo. O kaip? Nežinau.": {
+  "n": "n/48bd5c9a6b4d5cbb-e898e9d1.mp3",
+  "s": "s/48bd5c9a6b4d5cbb-eb4b3260.mp3"
+ },
+ "Tomas bėgo su kamuoliu. Kamuolys nuriedėjo po lova. Bet kaip vanduo išsiliejo? Nežinau.": {
+  "n": "n/1dc3c957307b4ed8-de2decea.mp3",
+  "s": "s/1dc3c957307b4ed8-bcd3d86a.mp3"
+ },
+ "Tomas bėgo su kamuoliu. Kamuolys trenkė į stiklinę. Todėl stiklinė nuvirto ir vanduo išsiliejo. Dabar suprantu.": {
+  "n": "n/0581d6702e7838d4-4c2c6d9e.mp3",
+  "s": "s/0581d6702e7838d4-c4d760cc.mp3"
+ },
+ "Tomas bėgo su kamuoliu. Tomas pastatė stiklinę ant stalo. Bet kaip vanduo išsiliejo? Nežinau.": {
+  "n": "n/45615421b3ecfef1-e8fd82f6.mp3",
+  "s": "s/45615421b3ecfef1-a69bccb2.mp3"
+ },
+ "Tomas pastatė stiklinę ant stalo.": {
+  "n": "n/402d1c1c3666f2c5-63993db4.mp3",
+  "s": "s/402d1c1c3666f2c5-56f2820d.mp3"
+ },
  "Tomas sako: „Noriu, kad jie nustotų!“ Jo jausmas – piktas.": {
   "n": "n/470788d9fd725932-5c8d345e.mp3",
   "s": "s/470788d9fd725932-957b394f.mp3"
@@ -3194,6 +3226,10 @@
  "Vanduo grįžo į puodelius. Lygis toks pat.": {
   "n": "n/963089fbc655e042-2e540c15.mp3",
   "s": "s/963089fbc655e042-f8f64cbb.mp3"
+ },
+ "Vanduo išsiliejo.": {
+  "n": "n/9ee8db39e8d034e1-6407ea59.mp3",
+  "s": "s/9ee8db39e8d034e1-3f331b75.mp3"
  },
  "Varnas": {
   "n": "n/681b474220302821-fff742db.mp3",

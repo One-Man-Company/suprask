@@ -84,6 +84,14 @@
      "file": "grade-01/lietuviu-kalba/11-teksto-supratimas.json",
      "minutes": 10,
      "sim": "teksto-klausimas"
+    },
+    {
+     "id": "13-pasakojimo-vidurys",
+     "title": "Pasakojimo vidurys: kas nutiko tarp?",
+     "subtitle": "Be vidurinio įvykio pabaiga nepaaiškinama",
+     "file": "grade-01/lietuviu-kalba/13-pasakojimo-vidurys.json",
+     "minutes": 9,
+     "sim": "pasakojimo-vidurys"
     }
    ]
   },

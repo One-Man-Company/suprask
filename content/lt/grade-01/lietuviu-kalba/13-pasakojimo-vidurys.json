@@ -1,0 +1,137 @@
+{
+  "id": "13-pasakojimo-vidurys",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Pasakojimo vidurys: kas nutiko tarp?",
+  "subtitle": "Be vidurinio įvykio pabaiga nepaaiškinama",
+  "minutes": 9,
+  "outcomes": [
+    "Pasakau, kas nutiko tarp pradžios ir pabaigos.",
+    "Įdedu vidurinį įvykį, kad pasakojimas būtų suprantamas.",
+    "Paaiškinu, kodėl be vidurinio įvykio pabaiga atrodo staigi."
+  ],
+  "concept": {
+    "title": "Vidurys paaiškina, kaip buvo pereita",
+    "big_idea": "Pradžia ir pabaiga dar nėra pasakojimas. Tarp jų turi būti įvykis. Jis paaiškina, kaip vienas virto kitu. Be jo klausytojas klausia: „O kaip?“",
+    "steps": [
+      "Pažiūrėk į pirmą ir paskutinį kadrą. Ar matai, kaip vienas virto kitu?",
+      "Įdėk kortelę į vidurį ir paklausyk, ką močiutė perpasakoja telefonu.",
+      "Jei ji klausia „O kaip?“, išimk kortelę ir įdėk kitą.",
+      "Kai pasakojimas sueina, pasakyk, kuris įvykis jį sujungė."
+    ],
+    "example": "„Tomas bėgo su kamuoliu. Vanduo išsiliejo.“ Kas nutiko tarp? Be vidurinio įvykio atrodo, kad vanduo išsiliejo pats."
+  },
+  "sim": {
+    "component": "pasakojimo-vidurys",
+    "config": {
+      "title": "Trys kadrai, o vidurio nėra",
+      "start": {
+        "label": "Tomas bėgo su kamuoliu.",
+        "picture": "berniukas-su-kamuoliu",
+        "alt": "Berniukas, o šalia jo kamuolys"
+      },
+      "end": {
+        "label": "Vanduo išsiliejo.",
+        "picture": "stikline-nuvirtusi",
+        "alt": "Ant stalo nuvirtusi stiklinė ir vandens bala"
+      },
+      "cards": [
+        {
+          "id": "trenke",
+          "label": "Kamuolys trenkė į stiklinę.",
+          "ok": true,
+          "line": "su-trenke"
+        },
+        {
+          "id": "nurieda",
+          "label": "Kamuolys nuriedėjo po lova.",
+          "line": "su-nurieda"
+        },
+        {
+          "id": "pastate",
+          "label": "Tomas pastatė stiklinę ant stalo.",
+          "line": "su-pastate"
+        }
+      ],
+      "sentences": {
+        "gap": "Tomas bėgo su kamuoliu. Ir staiga vanduo išsiliejo. O kaip? Nežinau.",
+        "su-trenke": "Tomas bėgo su kamuoliu. Kamuolys trenkė į stiklinę. Todėl stiklinė nuvirto ir vanduo išsiliejo. Dabar suprantu.",
+        "su-nurieda": "Tomas bėgo su kamuoliu. Kamuolys nuriedėjo po lova. Bet kaip vanduo išsiliejo? Nežinau.",
+        "su-pastate": "Tomas bėgo su kamuoliu. Tomas pastatė stiklinę ant stalo. Bet kaip vanduo išsiliejo? Nežinau."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Pasakojimas: „Rūta pasėjo sėklą. Sėkla sudygo.“ Kas turi būti tarp jų, kad pasakojimas sueitų?",
+      "options": [
+        "Sėkla buvo ruda ir apvali.",
+        "Rūta laistė žemę kelias dienas.",
+        "Rūta turėjo mėlyną kastuvėlį."
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kas turėjo vykti tarp sėjos ir mažo daigelio.",
+      "why": "Žemė buvo laistoma — todėl sėkla sudygo.",
+      "optional": false
+    },
+    {
+      "q": "Tomas nupiešė piešinį ir padėjo jį ant stalo. Vakare piešinys buvo suplyšęs. Kuris įvykis trūksta šiame pasakojime?",
+      "options": [
+        "Popierius buvo didelis ir baltas.",
+        "Tomas piešė mėlynu pieštuku.",
+        "Brolis užlipo ant piešinio."
+      ],
+      "answer": 2,
+      "hint": "Klausk savęs, kuris sakinys paaiškina suplyšusį lapą.",
+      "why": "Brolis užlipo ant piešinio — todėl lapas suplyšo.",
+      "optional": false
+    },
+    {
+      "q": "Močiutė įdėjo tešlą į orkaitę. Vakare pyragas buvo juodas. Kas paaiškina, kodėl?",
+      "options": [
+        "Pyragas orkaitėje kepė per ilgai.",
+        "Močiutė turėjo baltą prijuostę.",
+        "Tešla buvo iš kvietinių miltų."
+      ],
+      "answer": 0,
+      "hint": "Kuri kortelė pasakoja įvykį, o kuri tik apibūdina daiktą?",
+      "why": "Juodas pyragas turi priežastį: jis orkaitėje išbuvo per ilgai.",
+      "optional": false
+    },
+    {
+      "q": "Kuris pasakojimas turi vidurinį įvykį, kuris paaiškina pabaigą?",
+      "options": [
+        "Tomas išbėgo į kiemą. Tomas turėjo mėlyną striukę. Tomas grįžo šlapias.",
+        "Tomas išbėgo į kiemą. Pradėjo lyti. Tomas grįžo šlapias.",
+        "Tomas išbėgo į kiemą. Lauke buvo šilta. Tomas grįžo šlapias."
+      ],
+      "answer": 1,
+      "hint": "Visuose trijuose yra trys sakiniai. Klausk savęs, kuris vidurys paaiškina pabaigą.",
+      "why": "Lietus paaiškina, kodėl berniukas grįžo šlapias. Striukė ir šiluma to nepaaiškina.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kodėl močiutei nepakako pradžios ir pabaigos? Pasakyk savais žodžiais.",
+  "teacher": {
+    "goal": "Rašymo sritis C, pasiekimas C.2.1.1 (slenkstinis, 1–2 kl.): „Sukuria kelių sakinių pagrindinę pasakojimo dalį – įvykio(ų) raidą. Pradžia ir pabaiga sunkiai įžvelgiamos.“ Modulis liečia būtent įvykio raidą: vaikas renkasi įvykį, kuris paaiškina perėjimą tarp dviejų duotų kadrų. Pradžios ir pabaigos karkaso modulis sąmoningai nereikalauja — visas tris dalis (pradžia – įvykių raida – pabaiga) programa priskiria aukštesniam lygiui C.2.1.2, o vienos dalies išplėtimą — 2 klasei (C.2.2.1). Todėl ir užduotys klausia tik apie vidurį.",
+    "prompt": "Kas nutiko tarp pradžios ir pabaigos? Kodėl be to įvykio pabaiga nesuprantama?",
+    "offline": "Užrašykite ant trijų popieriaus lapelių po vieną sakinį: pradžią („Tomas bėgo su kamuoliu“), pabaigą („Vanduo išsiliejo“) ir vidurį („Kamuolys trenkė į stiklinę“). Padėkite pradžią ir pabaigą į šalis, o vidurį laikykite rankoje. Papasakokite vaikui pasakojimą be vidurio ir paklauskite: „Ar supratai, kaip tai atsitiko?“ Kai vaikas įdeda vidurinį lapelį, papasakokite dar kartą. Paskui pakeiskite vidurį neįvykusiu sakiniu („Tomas turėjo mėlyną kepurę“) ir vėl paklauskite, ar pabaiga paaiškinta. Veikla telpa ant vieno stalo, be interneto ir be ekrano.",
+    "misconceptions": [
+      "„Pakanka pasakyti pradžią ir pabaigą, o vidurį klausytojas supras pats.“ Simuliacijoje močiutė girdi tik tai, kas įdėta į kadrus, ir pirmoji klausia „O kaip?“ — vidurys neatsiranda savaime.",
+      "„Svarbu paminėti tuos pačius daiktus.“ Kortelė „Tomas pastatė stiklinę ant stalo“ mini stiklinę, bet perpasakojimas vis tiek nutrūksta: vidurys turi paaiškinti, kas pasikeitė, o ne tik paminėti daiktą.",
+      "„Vidurys yra apibūdinimas.“ Jei tarp pradžios ir pabaigos įrašoma, kokia stiklinė buvo (švari, aukšta), močiutė vis tiek klausia „O kaip?“ — jai reikia įvykio, o apibūdinimas įvykiu nevirsta."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“, C.2.1.1 (slenkstinis, 1–2 kl.): „Sukuria kelių sakinių pagrindinę pasakojimo dalį – įvykio(ų) raidą. Pradžia ir pabaiga sunkiai įžvelgiamos“ (sources/pradinio-bp-rekomendacijos-2024.txt:33153–33155).",
+    "Ten pat, C.2.1.2 (patenkinamas lygis): „Rašo pasakojimą, kuriame ryškėja pagrindinės struktūrinės dalys (pradžia – įvykių raida – pabaiga)“ (sources/pradinio-bp-rekomendacijos-2024.txt:33119–33121) — tai jau aukštesnis lygis, todėl 1 klasės modulis lieka ties įvykio raida.",
+    "Ten pat, C.2.2.1 (2 kl. slenkstinis): „Sukuria kelių sakinių pasakojimo dalį, išplėtodamas pradžią arba įvykį arba pabaigą“ (sources/pradinio-bp-rekomendacijos-2024.txt:33191–33193) — rodo, kad 1–2 klasei pakanka vienos dalies, o ne viso trijų dalių karkaso.",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), rašymo ir teksto kūrimo sritis C.2, 1–2 klasė."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena didelė idėja: pasakojimą laiko vidurinis įvykis, o ne pradžios ir pabaigos pora.",
+    "2 žingsnis — užduotys perkelia taisyklę į kitas situacijas (sėkla, piešinys, pyragas, lietus), o ne kartoja modulio sakinį (T2.2).",
+    "3 žingsnis — močiutė kiekvieną kartą pasako, ko jai trūksta, bet teisingos kortelės neįvardija; korteles galima dėti ir išimti be galo, laikmačių nėra (T3.1–T3.3).",
+    "8 žingsnis — veikla be ekrano su trimis popieriaus lapeliais ir suaugusiojo perpasakojimu (T8.3)."
+  ]
+}

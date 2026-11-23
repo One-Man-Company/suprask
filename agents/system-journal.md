@@ -395,3 +395,53 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   serializuoja rašymą, o kitas agentas palaukia (iki 900 s) arba praleidžia
   paleidimą. Jei tai ims kirstis, teisinga priemonė — ne grąžinti lubas, o
   išdėstyti langus.
+
+## 2026-11-23 20:40 · sistemos-architektas #487
+
+- **Mačiau (prieš):** 164 paleidimai / 7 d.; nenaudingų — `kritikas` 50 % (2 tušti iš 6),
+  `dizaineris` 50 %, `kalbu-redaktorius` 40 %, `ideator` 28 %, `simuliaciju-inzinierius` 33 %,
+  `sistemos-architektas` 25 %. Pasiūlymai: 192 (new 21, blocked 4, done 158, obsolete 9);
+  **16 sisteminių** `new`, seniausi laukia 15 d. `system_report` pats įvardijo eilę: #4455,
+  #4516, #5342, **#5400**, #16338 … — ėmiau **seniausią aiškiai įgyvendinamą vienu failu:
+  #5400** (`scripts/sync_docs_facts.py` neegzistavo, 0 commit'ų per 15 d.).
+  Išmatavau defektą, ne tik jo aprašymą: `run_checks()` (`agents/run.py:1006–1045`) paleidžia
+  `validate_content`, `check_audio`, `check_language`, `check_agents`, `check_ui`, `check_art`,
+  bet **ne** `check_docs_facts.py`, nors CI (`.github/workflows/validate.yml:45–46`) jį turi.
+  Antra, platesnė aklumo vieta: `check_wiki()` tikrino TIK `**Live.**` eilutę, o wiki krypties
+  lentelė skelbė **39 modulius iš 72** (Matematika 15/23, Pasaulio pažinimas 6/22, Muzika 1/3) —
+  jokių vartų tam nebuvo. Trečia: šaknies `AGENTS.md` deklaruoja 7 vaikų DOX failus, kurių
+  nė vieno nėra diske (`find . -name AGENTS.md` → 1).
+- **Keičiau:**
+  - `scripts/sync_docs_facts.py` (naujas) — perima `facts()` iš `check_docs_facts.py` ir
+    perrašo TIK skaičius bei modulių sąrašus: README (pajėgumo sakinys, krypties lentelės,
+    garso eilutė, „Parengta“, agentų skaičius žodžiu), `ARCHITEKTURA.md` `**Live:**`,
+    `content/lt/grades.json`, wiki `index.md` (`**Live.**` + lentelė), wiki `README.md`.
+    Yra `--apply`, sausa eiga ir `--json`; po perrašymo paleidžia TIKRUS vartus ir išvardija,
+    ko netaiso (rc 1), o ne tyli „pataisyta“. Esama modulių eiliškumas ir žmogaus sutrumpinti
+    užrašai nekeičiami — pridedama tik tai, ko dokumente nėra.
+  - `scripts/check_docs_facts.py` — naujas `check_wiki_table()`: kiekvienos krypties
+    „N — gyva“ ir modulių sąrašas lyginamas su `index.json`; šablonas `krypt` → `krypt\w*`.
+  - `agents/run.py` — `DOC_TARGETS`, `sync_docs()` ir `check_docs_facts.py` `run_checks()`
+    sąraše: dokumentai atnaujinami PRIEŠ vartus ir pridedami prie publikuojamų failų, kad
+    commit'as būtų vientisas (ir `--publish-only` kelyje). Svetimo vaidmens atveju (`foreign`)
+    neliečiama — tada `README.md` gali būti jo nebaigtas darbas (LL-49).
+  - `research/wiki/guidelines/pamokos.md` — **LL-161** (šablonas, kuris užkabina savo
+    paties išvestį: vartai matavo skaitmenį, o žodžio liekana liko nematoma).
+  - `agents/proposals/2026-11-23-sistemos-architektas-dox-vaikai.json` — pasiūlymas sukurti
+    7 deklaruotus `AGENTS.md` (šįkart neliečiau, nes tai atskiras darbas).
+- **Kodėl:** #5400 buvo vienintelis sisteminis pasiūlymas, įgyvendinamas vienu failu, ir jo
+  nauda matuojama: 5 skaičių vietos keičiasi su kiekvienu moduliu, o bėgiklio vartai jo
+  nematė — žalias publikavimas su pasenusiais skaičiais buvo laiko klausimas. Wiki lentelė
+  (39/72) įrodo, kad ta spraga jau buvo išnaudota.
+- **Patikra (po):** `check_docs_facts.py` → **0 klaidų**; prieš naujus wiki lentelės vartus
+  toje pačioje byloje buvo **32 klaidos** (įrodyta `git show HEAD:` kopija). `sync_docs_facts.py`
+  antrą kartą → „keisti nereikia“ (idempotentiška). Zondas su dirbtiniu 73-uoju moduliu:
+  `run_checks()` prieš sinchronizavimą → `dokumentai: KLAIDA — 10 klaidų`, po → `dokumentai:
+  OK — 0 klaidų`. `--json` → validus JSON. `sync_docs()` su nešvariu `README.md` prieš
+  paleidimą → README į publikuojamų sąrašą NEPATENKA (svetimo pakeitimo apsauga).
+  Visi vartai: `validate_content` ✔, `check_agents` ✔ (1 senas įspėjimas apie sisteminius
+  pasiūlymus), `check_lessons` ✔ 161, `check_language --grade 1 --strict` ✔, `check_ui` ✔,
+  `check_art` ✔, `check_registry` 0, `check_audio` ✔.
+- **Neliesta sąmoningai:** `content/`, `assets/js/sims/`, `agents/scope.json`, kitų vaidmenų
+  failai, `AGENTS.md`, `.github/workflows/` (CI žingsnis jau buvo). `queue_repair.py` →
+  grąžintinų 0: blokuoti 4, visi dėl turinio, ne infrastruktūros.

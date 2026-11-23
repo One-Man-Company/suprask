@@ -171,6 +171,17 @@ INFRA_MAX_ATTEMPTS = 3
 # apsauga („0 failų = ne bandymas“) niekada negalėjo suveikti.
 LOG_PREFIX = "agents/log/"
 
+# Dokumentai, kuriuose kiekvienas modulis keičia skaičių (#5400). Juos perrašo
+# `scripts/sync_docs_facts.py`; bėgiklis prideda juos prie publikuojamų failų,
+# kad commit'as būtų vientisas (modulis + teisingi skaičiai).
+DOC_TARGETS = (
+    "README.md",
+    "docs/ARCHITEKTURA.md",
+    "content/lt/grades.json",
+    "research/wiki/grades/01/index.md",
+    "research/wiki/grades/README.md",
+)
+
 # Ataskaitos dydžio riba (#4455). Iki šios datos ataskaita buvo VISAS modelio
 # stdout su įrankių išklotinėmis: 2026-11-08 — 139 failai / 2,9 MB, 2026-11-17 —
 # 399 failai / 8,0 MB (mediana 14 KB, didžiausias 83 KB). Kadangi ataskaitos
@@ -1003,6 +1014,39 @@ def venv_python() -> str:
     return str(candidate) if candidate.exists() else sys.executable
 
 
+def sync_docs(files: list[str]) -> tuple[list[str], str]:
+    """Sugeneruoja dokumentų skaičius prieš juos tikrinant (#5400).
+
+    Kodėl ne atskiras vaidmuo: `check_docs_facts.py` yra CI vartuose
+    (`.github/workflows/validate.yml`), bet ne bėgiklyje, todėl kiekvienas
+    modulio commit'as galėjo išstumti pasenusius skaičius ir palikti raudoną CI.
+    Įtraukti vartus be sinchronizavimo reikštų ką kita: kūrėjas, kuris neturi
+    teisės rašyti `README.md`, būtų atmetamas dėl failo, kurio nelietė (LL-19
+    šeima — pataisa grupės viduje, kuri negali pakeisti grupės būsenos).
+    """
+    if not files or not any(f.startswith(("content/", "assets/js/sims/")) for f in files):
+        return files, ""
+    before = set(parse_porcelain(git_snapshot()))
+    try:
+        proc = subprocess.run([sys.executable, "scripts/sync_docs_facts.py", "--apply"],
+                              cwd=ROOT, capture_output=True, text=True, timeout=120)
+    except Exception as exc:  # noqa: BLE001
+        return files, f"dokumentų sinchronizavimas nepavyko: {exc}"
+    # Tik tai, ką pakeitė SINCHRONIZAVIMAS. Jei `README.md` jau buvo nešvarus
+    # prieš jį (žmogaus nebaigtas darbas), jis nepatenka į sąrašą — kitaip
+    # agento commit'as pasisavintų svetimą pakeitimą (LL-45 šeima, ta pati
+    # priežastis, dėl kurios `_publish` nenaudoja `git add -A`).
+    touched = [f for f in parse_porcelain(git_snapshot())
+               if f in DOC_TARGETS and f not in files and f not in before]
+    note = ""
+    if proc.returncode != 0:
+        tail = (proc.stdout or proc.stderr).strip().splitlines()[-1:] or [""]
+        note = f"dokumentų sinchronizavimas baigėsi klaida ({tail[0][:120]})"
+    if touched:
+        note = (note + "; " if note else "") + f"dokumentai atnaujinti: {', '.join(touched)}"
+    return files + touched, note
+
+
 def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool, str]:
     """Paleidžia validatorius, susijusius su pakeistais failais.
 
@@ -1029,6 +1073,14 @@ def run_checks(files: list[str], allow_audio_repair: bool = True) -> tuple[bool,
         # Sistemos vientisumas: po architekto pakeitimų neturi likti vaidmens be
         # timer'io, modelio ar baigties sąlygos.
         checks.append(("agentai", [sys.executable, "scripts/check_agents.py"]))
+    if any(f.startswith(("content/", "assets/js/sims/")) for f in files) or not files:
+        # #5400: dokumentų skaičiai (README, ARCHITEKTURA, wiki, grades.json)
+        # atsilieka po KIEKVIENO modulio, o CI šis žingsnis yra
+        # (`.github/workflows/validate.yml`) — bėgiklyje jo nebuvo, todėl
+        # publikavimas galėjo išstumti commit'ą su pasenusiais skaičiais ir
+        # raudoną CI. Dokumentus prieš tai atnaujina `sync_docs()`; šis vartas
+        # tikrina tai, kas tikrai bus išstumta.
+        checks.append(("dokumentai", [sys.executable, "scripts/check_docs_facts.py"]))
     if any(f.startswith("assets/") for f in files) or not files:
         checks.append(("sąsaja", [sys.executable, "scripts/check_ui.py"]))
         # LL-13: iliustracijos scenos privalo naudoti art.js — be šito agentas
@@ -1806,6 +1858,13 @@ def main() -> int:
 
     if args.publish_only:
         files = changed_list()
+        # #5400: tas pats sinchronizavimas kaip įprastame kelyje. Be jo
+        # `--publish-only` (publikavimo agento atkūrimo kelias) atsimuštų į
+        # dokumentų vartus dėl skaičių, kurių niekas neatnaujino — ir paruoštas
+        # modulis liktų nepaskelbtas (LL-09).
+        files, doc_note = sync_docs(files)
+        if doc_note:
+            print(f"{args.role}: {doc_note}")
         result = publish(args.role, run_id, files, f"atkurtas {args.role} darbas", allow_revert=False)
         db.upsert_proposals(sorted(PROPOSALS.glob("*.json")))
         db.finish_run(run_id, result["status"], 0, 0, "", result["detail"], files,
@@ -1962,6 +2021,13 @@ def main() -> int:
         watch.stop()
         foreign = watch.roles()
         files, foreign_files, notes = publication_plan(files, args.role, foreign)
+        # #5400: dokumentų skaičiai atnaujinami PRIEŠ publikavimą, kad vartai
+        # tikrintų tai, kas bus išstumta. Svetimo vaidmens atveju neliečiama —
+        # tada shared failas gali būti jo nebaigtas darbas (LL-49).
+        if not foreign:
+            files, doc_note = sync_docs(files)
+            if doc_note:
+                notes = notes + [doc_note]
         work = work_files(files)
         if foreign_files or foreign:
             print(f"{args.role}: " + "; ".join(notes))

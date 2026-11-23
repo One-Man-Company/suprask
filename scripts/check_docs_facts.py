@@ -313,12 +313,14 @@ def check_wiki(check: Check, f: dict) -> None:
     """Wiki klasių puslapiai taip pat kartoja skaičių — 2026-11-07 jie tebėjo „13 modulių“."""
     grade_page = "research/wiki/grades/01/index.md"
     text = (ROOT / grade_page).read_text(encoding="utf-8")
-    live = re.search(r"\*\*Live\.\*\* (\d+) modul\w*, (\d+) krypt", text)
+    live = re.search(r"\*\*Live\.\*\* (\d+) modul\w*, (\d+) krypt\w*", text)
     if not live:
         check.fail(f"{grade_page}: nerastas „Live.“ statuso sakinys")
     else:
         check.expect(f"{grade_page}:{line_of(text, '**Live.**')}", "modulių", int(live.group(1)), f["module_count"])
         check.expect(f"{grade_page}:{line_of(text, '**Live.**')}", "krypčių", int(live.group(2)), f["strand_count"])
+
+    check_wiki_table(check, grade_page, text, f)
 
     list_page = "research/wiki/grades/README.md"
     text = (ROOT / list_page).read_text(encoding="utf-8")
@@ -331,6 +333,42 @@ def check_wiki(check: Check, f: dict) -> None:
         check.fail(f"{list_page}:{line_of(text, '[[01/index')}: 1 klasės eilutėje nėra „Live — N modulių“")
     else:
         check.expect(f"{list_page}:{line_of(text, '[[01/index')}", "modulių", int(found.group(1)), f["module_count"])
+
+
+def check_wiki_table(check: Check, where: str, text: str, f: dict) -> None:
+    """Wiki krypties lentelė: modulių sąrašas ir „N — gyva“ turi atitikti indeksą.
+
+    2026-11-23 matuota: lentelė skelbė 39 modulius iš 72 (Matematika 15/23,
+    Pasaulio pažinimas 6/22), o `check_wiki()` tikrino TIK `**Live.**` eilutę.
+    Tai ta pati aklumo klasė kaip LL-52 (laukas, kurio vartai neskaito): skaičius
+    yra, jis kartoja indeksą, bet jo niekas nelygina. Pasekmė ne kosmetinė —
+    wiki yra vieta, kur žmogus ir agentas ieško, „kas jau padaryta“, todėl
+    trūkstamas modulis atrodo kaip nepadarytas darbas ir eilė kuria jį antrą
+    kartą (LL-19, #19519 atvejis).
+    """
+    row_re = re.compile(r"^\|\s*(?P<title>[^|]+?)\s*\|\s*(?P<items>.+?)\s*\|\s*(?P<count>\d+)\s*—\s*gyva\s*\|")
+    rows = {}
+    for line in text.splitlines():
+        m = row_re.match(line)
+        if m:
+            rows[m.group("title").strip()] = (m.group("items"), int(m.group("count")), line)
+
+    for strand in f["strands"]:
+        title = strand["title"]
+        if title not in rows:
+            check.fail(f"{where}: krypties lentelėje nėra „{title}“")
+            continue
+        items, count, line = rows[title]
+        listed = [x.strip() for x in items.split("·") if x.strip()]
+        at = line_of(text, line.strip())
+        check.expect(f"{where}:{at}", f"„{title}“ modulių lentelėje", count, len(strand["modules"]))
+        for module in strand["modules"]:
+            needle = re.split(r"[:\s,]", module)[0].rstrip(":").lower()
+            if not any(needle in item.lower() for item in listed):
+                check.fail(
+                    f"{where}:{at}: „{title}“ eilutėje trūksta modulio „{module}“ "
+                    f"(laukiama bent žodžio „{needle}“)"
+                )
 
 
 def main() -> int:

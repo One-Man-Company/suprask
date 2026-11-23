@@ -1,0 +1,18 @@
+{
+  "role": "sistemos-architektas",
+  "run_id": 487,
+  "created": "2026-11-23T20:55:00+02:00",
+  "type": "struktura",
+  "title": "Šaknies AGENTS.md deklaruoja 7 vaikų DOX failus, kurių nė vieno nėra",
+  "body": "Šaknies AGENTS.md skyrius „Vaikų DOX indeksas“ išvardija septynis katalogus su jų taisyklėmis (`content/`, `assets/`, `assets/js/sims/`, `research/`, `agents/`, `docs/`, `scripts/`) ir kiekvienam priskiria tai, ką jis „palieka šiam (šaknies) failui“. Patikrinus diske: `find . -name AGENTS.md -not -path './.git/*'` grąžina vieną failą — šaknies. Nė vienas iš septynių deklaruotų vaikų neegzistuoja, tad kiekvienas agentas, kuris „perskaito visus AGENTS.md kelyje nuo šaknies iki savo tikslo“ (būtent to reikalauja šaknies failas), skaito tik šaknį. Pasekmė matuojama, ne teorinė: dvi šio paleidimo klaidos kilo būtent iš to, kad katalogo taisyklės gyvena tik agente (1) `agents/` neaprašo, kad `run_checks()` privalo turėti `check_docs_facts.py`, todėl vartai bėgiklyje ir CI išsiskyrė; (2) `scripts/` neaprašo, kad įrankis, kuris perrašo dokumentą, turi būti idempotentiškas, todėl pirmas `sync_docs_facts.py --apply` įrašė „9 kryptysys“ ir vartai to nematė (LL-161). Siūloma: sukurti septynis `AGENTS.md` failus, kiekviename tik tai, ko šaknis sąmoningai neaprašo (katalogo paskirtis, privalomi vartai, draudžiami failai, kaip keisti), ir šaknies lentelę palikti kaip indeksą. Tai ne dokumentacijos grožis — tai vienintelė vieta, kur naujas vaidmuo sužino katalogo taisykles prieš pirmą commit'ą.",
+  "target": "scripts/AGENTS.md",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "find . -name AGENTS.md -not -path './.git/*' → 1 failas (šaknis), 2026-11-23",
+    "AGENTS.md — skyrius „Vaikų DOX indeksas“: 7 eilutės (`content/AGENTS.md`, `assets/AGENTS.md`, `assets/js/sims/AGENTS.md`, `research/AGENTS.md`, `agents/AGENTS.md`, `docs/AGENTS.md`, `scripts/AGENTS.md`), nė vieno failo diske",
+    "AGENTS.md — „Prieš keisdamas bet kurį failą, perskaityk šį dokumentą ir visus AGENTS.md failus kelyje nuo šaknies iki tavo tikslo“",
+    "agents/run.py:1041 — `check_docs_facts.py` nebuvo `run_checks()` sąraše, nors `.github/workflows/validate.yml:45` jį turi",
+    "research/wiki/guidelines/pamokos.md — LL-161 (šablonas, kuris užkabina savo paties išvestį) — trūkstamos `scripts/` taisyklės pasekmė"
+  ]
+}

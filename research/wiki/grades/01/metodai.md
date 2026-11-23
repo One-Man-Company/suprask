@@ -1407,6 +1407,116 @@ Elgsenos zondas 360 px: po 1 siuntimo `#sim-readout` = „Rūta pasakė gyvai. T
 
 **Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, etika ir skaitmeninio turinio kūrimas (`sources/pradinio-bp-rekomendacijos-2024.txt:105–106`, `:12271–12273`, `:16434–16442`). Suler, J. (2004). The online disinhibition effect. *CyberPsychology & Behavior, 7*(3), 321–326. https://doi.org/10.1089/1094931041291295 · Widen, S. C., & Russell, J. A. (2008). Children acquire emotion categories gradually. *Cognitive Development, 23*(2), 291–312. https://doi.org/10.1016/j.cogdev.2008.01.002 · Piaget, J. (1932). *The Moral Judgment of the Child*. London: Kegan Paul.
 
+### M-15 — Jungiklis lieka, mygtukas grįžta: šviesą laiko padėtis, o ne pirštas
+
+**Data:** 2026-11-23 · **Tema:** 1 klasės technologijos, 23.4.1 „Elektros, elektronikos prietaisai… valdymo ypatumai — jungiklio, mygtuko panaudojimas“ (`sources/pradinio-bp-rekomendacijos-2024.txt:9788–9796`), programos pozicija `D:elektronika`, būsena `missing` (`research/wiki/curriculum/backlog.json`) · **Tikslas:** `content/lt/grade-01/technologijos/07-elektronika.json`
+
+**Viena didelė idėja.** Tas pats veiksmas — paspaudimas ir paleidimas — baigiasi dviem būdais, ir skirtumą nuleidžia ne pirštas, o pats įtaisas. Jungiklis po paleidimo lieka nuspaustas, todėl šviesa dega toliau. Mygtukas grįžta atgal, todėl šviesa užgęsta iškart. Todėl „paspaudžiau“ dar nepasako, kas bus toliau: pasakyti gali tik valdiklio padėtis, o ne vaiko noras.
+
+**Ką sako programa.** 23.4.1 punktas 1–2 klasei prašo ne vien grandinės: „Nagrinėjami elektros prietaisai artimiausioje aplinkoje (pvz. šviestuvas…), aiškinamasi jų paskirtis, funkcijos, valdymas ypatumai – jungiklio, mygtuko panaudojimas ir pan.“ (`sources/pradinio-bp-rekomendacijos-2024.txt:9788–9796`; tas pats kartojama `:2094–2101`). Platformoje grandinės vientisumas jau yra: `01-elektros-grandine` trečias rezultatas sako „Parodau, kad jungiklis pertraukia tą patį kelią“, o `concept.steps` trečias žingsnis — „Uždaryk ir atidaryk jungiklį“. Mygtukas ten nepasirodo nė vienoje užduotyje: `grep -rin "mygtuk" content/lt/grade-01/technologijos/` randa **vieną** eilutę ir ji yra `01-elektros-grandine.json` `sources` tekste, o `grep -rin "atleis\|atleid" content/lt/grade-01/` — **0** eilučių (tikrinta 2026-11-23). Taigi skirtumas, kurį vaikas gyvenime daro kiekvieną dieną, platformoje neegzistuoja. 23.4.2 (saugus įjungimas ir išjungimas, baterijų surinkimas) sąmoningai **neimamas**: tai antra sąvoka tame pačiame kadre (T1.2) ir lieka mokytojo veiklai bei atskiram moduliui.
+
+**Kodėl modelis, o ne paveikslėlis.** Paveikslėlis parodo jungiklį ir mygtuką, bet ne tai, kas nutinka **paleidus**. Nuoseklumas čia yra laiko, o ne formos dalykas: dviejų kadrų pora („paspausta / paleista“) vis tiek neparodo, kad vienu atveju šviesa dega be piršto, o kitu — ne. Modelis laiko veiksmą tapatų (paspaudimas → paleidimas) ir keičia tik vieną dalyką — kurį valdiklį vaikas paspaudė; tada vaikas mato lemputę ir valdiklio padėtį, kai piršto jau nebėra. Tai vienintelis būdas atskirti „aš laikau šviesą“ nuo „įtaisas laiko šviesą“ — ir vienintelis būdas parodyti, kad šviesos likimas priklauso nuo padėties, o ne nuo vaiko ketinimo.
+
+**Ką rodo tyrimai.**
+Osborne (1983) rodo, kad vaikai į pamoką ateina su savo kasdieniais elektros modeliais ir žodinis pataisymas jų nepakeičia; kaita vyksta per spėjimą, stebėjimą ir sąmoningą prieštarą. Iš to metodui išeina reikalavimas: modelis neturi nė vieno sakinio „elektra teka ratu“ ir nė vienos judančios srovės, o taisyklę vaikas sudaro po savo paties bandymo.
+Chinn ir Brewer (1993), išnagrinėję, kaip keičiasi įsitikinimai susidūrus su prieštaraujančiu stebėjimu, parodė, kad vienas netikėtas atvejis modelį keičia retai: prieštara turi būti suprantama, kartojama ir ryški. Todėl modelis reikalauja **abiejų** valdiklių, spėjimo prieš kiekvieną pirmą paleidimą ir palyginimo eilutės — vienas bandymas dar nėra pamoka.
+Bonawitz ir kt. (2011) parodė, kad tiesioginis paaiškinimas prieš veiklą susiaurina vaiko tyrinėjimą: vaikas nusprendžia, kad daugiau sužinoti nėra ko. Todėl pirmas žingsnis yra užduotis („paspausk ir pažiūrėk“), o ne taisyklė, ir paaiškinimas ateina po palyginimo (P2 — veiksmas prieš paaiškinimą).
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Mygtukas ir jungiklis skiriasi tik išvaizda.“** Modelyje abi dėžutės vienodo dydžio (64 × 64), viename aukštyje, toje pačioje palangėje, o veiksmas tas pats. Skiriasi tik pasekmė — taigi skirtumas yra elgesyje, ne išvaizdoje.
+2. **„Skirtumą lemia valdiklio dydis ar forma.“** Tai ta pati nuostata iš kitos pusės, ir ji paneigiama sąmoningu dizainu: dydis ir padėtis vienodi, skiriasi tik judanti dalis (svirtis, kuri lieka, ir knopkė, kuri grįžta). Vaikas, ieškodamas paaiškinimo „didesnis įsimena“, tokio pagrindo ekrane neranda.
+3. **„Jei paspaudžiau ir užsidegė, šviesa liks.“** Tai ne vaiko fantazija: telefonas, televizorius ir lifto mygtukas tikrai „įsimena“, nes sprendžia prietaiso vidus. Modelis rodo paprastą lempą, kurioje sprendžia pati padėtis, ir **pats įvardija** šią ribą (žr. modelio ribas). Todėl modelis neįrodo, kad visi mygtukai tokie patys; jis rodo, kad be atminties lieka tik padėtis.
+4. **„Šviesa dega, kol aš jos noriu.“** Jungiklis lieka nuspaustas, o pirštas jau nuimtas: šviesa dega toliau. Vaikas negali šviesos „nutraukti“ noru — tik pasukti jungiklį atgal. Tai matoma abiejose būsenose be teksto: šviečianti lemputė ir nuleista svirtis (LL-143 — abi būsenos turi savo įrodymą paveiksle).
+5. **„Mygtukas sugedęs, nes šviesa užgęsta.“** Mygtukas veikė: šviesa degė, kol pirštas laikė, ir užgęsta būtent tą akimirką, kai knopkė grįžta aukštyn. Priežastis matoma tame pačiame kadre, todėl grįžtamasis ryšys sako „Mygtukas grįžo atgal. Šviesa užgęsta.“, o ne „nepavyko“ (T2.3, T5.1).
+
+**Seka (konkretumas → pusiau abstraktus modelis → simbolis → perkėlimas).**
+
+1. **Tikri du įtaisai klasėje.** Mokytojas duoda paspausti tikrą šviesos jungiklį ir tikrą durų skambutį (arba žibintuvėlio mygtuką). Vaikas paspaudžia, paleidžia ir pasako, kas liko, o kas grįžo. Tikslas: skirtumą pirma pajusti ranka, o ne perskaityti ekrane (T8.3).
+2. **Ekranas, vienas valdiklis.** Ta pati lempa, jungiklis. Vaikas spaudžia „Paspausk“, tada spėja („Liks“ / „Užgęs“), tada „Atleisk“. Pamato: šviesa dega, svirtis liko žemyn. Tikslas: pirmas susidūrimas su tuo, kad pasekmė ateina **po** paleidimo.
+3. **Antras valdiklis, ta pati lempa, tas pats veiksmas.** Mygtukas: „Paspausk“ → spėjimas → „Atleisk“. Pamato: knopkė grįžo, šviesa užgeso. Tikslas: skirtumą priskirti pačiam valdikliui, o ne nuotaikai ar atsitiktinumui.
+4. **Simbolis — palyginimo eilutė.** Po abiejų bandymų atsiranda dvi eilutės: „Jungiklis ↓ liko“ ir „Mygtukas ↑ grįžo“, o po jomis — sakinys „Vienas lieka, kitas grįžta“. Tikslas: taisyklę pasakyti savais žodžiais tada, kai ji jau matyta du kartus ir abi eilutės yra ekrane.
+5. **Perkėlimas į tris vietas.** Be modelio: kambario šviesa, durų skambutis, lifto mygtukas. Vaikas kiekvieną priskiria prie „lieka“ arba „grįžta“ ir pasako, kurį valdiklį rinktųsi, jei nori, kad šviesa degtų, kol jis grįš. Tikslas: taisyklė apie padėtį, o ne apie šią lempą.
+
+**Privalomas spėjimo žingsnis prieš kiekvieną pirmą paleidimą.** Du spėjimai per visą modulį — po vieną kiekvienam valdikliui. Spėjimas turi lygiai du variantus („Liks“ / „Užgęs“), lieka matomas virš scenos iki paleidimo ir po jo niekada nevadinamas klaida (LL-15). Be spėjimo modelis virsta animacija: vaikas žiūri, kaip lemputė keičiasi, bet nepastebi, kas nutiko valdikliui. Spėjimas taip pat yra vienintelis būdas pamatyti nuostatą „paspaudžiau → liks“ **prieš** ją paneigiant, o ne po to, kai vaikas jau žino atsakymą.
+
+**Simuliacijos specifikacija.** Komponentas `valdiklis`, failas `assets/js/sims/technologijos.js` (`art.js` jau turi visas reikalingas dalis — `art.defs`, `art.plank`, `art.block`, `art.ball`, `art.spot`, o pats failas jau kviečia `art.plank` 6 kartus, `art.defs`, `art.spot`, `art.flatShape`, `art.materialCube`, todėl `scripts/check_art.py` reikalavimas „≥3 `art.*` kvietimai“ tenkinamas ir LEGACY sąrašo liesti negalima). Registracija: `SIMS` bloke (`technologijos.js:1380–1385`) pridedama eilutė `"valdiklis": valdiklis,` po `"drabuziu-prieziura"`. `config`:
+
+```json
+{ "lamp": { "on": "Šviesa dega", "off": "Šviesa užgęsta" },
+  "controls": [ { "key": "jungiklis", "label": "Jungiklis", "behaviour": "lieka" },
+                { "key": "mygtukas",  "label": "Mygtukas",  "behaviour": "grizta" } ],
+  "labels": { "press": "Paspausk", "release": "Atleisk", "guess": "Kas bus atleidus?",
+              "stay": "Liks", "goes": "Užgęs", "again": "Iš naujo",
+              "tableTitle": "Ką paliko pirštas" },
+  "sentences": { "start": "Paspausk jungiklį arba mygtuką.",
+                 "press": "Šviesa dega. Pirštas dar laiko.",
+                 "guess": "Pirma spėk, tada atleisk.",
+                 "stay":  "Jungiklis liko nuspaustas. Šviesa dega toliau.",
+                 "goes":  "Mygtukas grįžo atgal. Šviesa užgęsta.",
+                 "table": "Abu veikia. Vienas lieka, kitas grįžta.",
+                 "reset": "Pradedam iš naujo. Jungiklis ir mygtukas atstatyti." } }
+```
+
+**Būsena išvedama, o ne įrašyta.** `config.controls[]` sąmoningai neturi lauko, ar po paleidimo šviesa dega. Tai vienintelė taisyklė komponente: `lit = c.behaviour === "lieka" ? c.down : c.pressed` — jungiklio atveju šviesą laiko jo padėtis (`down`), mygtuko — tik pirštas (`pressed`). Jei `behaviour` nežinomas, komponentas rašo `console.error` ir rodo „Valdiklis nesuderintas.“, o ne tyliai rodo užgesusią lempą. Tai ta pati taisyklė kaip M-07 (`kiekis = board.px / unit.px`), M-13 (`outcome(key) = key === "nieko" ? "safe" : "fall"`) ir M-14 (`MOOD[tones[i]]`): teiginys ekrane išvedamas iš tų pačių duomenų, kuriuos mato vaikas.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` (= tariamas sakinys) |
+|---|---|---|---|
+| pradžia | lempa tamsi, jungiklio svirtis aukštyn, mygtuko knopkė aukštyn, tuščia palyginimo lentelė | „Kas laiko šviesą?“ | `sentences.start` |
+| paspausta | lemputė šviečia, pasirinkto valdiklio judanti dalis nuspausta | „Šviesa dega.“ | `sentences.press` |
+| spėjimas | virš scenos spėjimo eilutė, du mygtukai „Liks“ / „Užgęs“ | `labels.guess` | `sentences.guess` |
+| atleista, jungiklis | svirtis liko žemyn, lemputė šviečia, lentelėje „Jungiklis ↓ liko“ | „Jungiklis liko. Šviesa dega.“ | `sentences.stay` |
+| atleista, mygtukas | knopkė grįžo aukštyn, lemputė tamsi, lentelėje „Mygtukas ↑ grįžo“ | „Mygtukas grįžo. Šviesa užgęsta.“ | `sentences.goes` |
+| lentelė pilna | abi eilutės ir abi rodyklės, spėjimas palygintas su dviejų eilučių lentele | „Vienas lieka, kitas grįžta.“ | `sentences.table` |
+| „Iš naujo“ | scena atstatyta, lentelė su abiem eilutėmis lieka | „Pradedam iš naujo.“ | `sentences.reset` |
+
+Septynios savybės, kurių negalima praleisti:
+
+- **Vienas kintamasis:** `control` — kurį valdiklį vaikas paspaudė. Lempą, palangę, abiejų dėžučių dydį ir veiksmą (paspaudimas → paleidimas) laiko tas pats; tai yra modelio teiginys, o ne dekoracija, todėl dėžutės privalo būti vienodo dydžio ir viename aukštyje.
+- **Geometrija 360 px:** scena `viewBox="0 0 328 300"`, `max-width:328px`; palangė `art.plank(10, 250, 308, 12)`; lempos pagrindas `art.block(150, 226, 0.9, "#8a8f96", "", "#5c6168")`, lemputė `art.ball(166, 168, 18, "#fff6d8", "#8a8f96")`; jungiklio dėžutė x 26–90, mygtuko dėžutė x 238–302, abi y 220–284 (64 × 64 ≈ 70 px 360 px ekrane, taikinys ≥ 48 px); svirtis `art.plank(40, 238, 36, 9, ±18)`, knopkė `art.ball(270, 246, 13)` (nuspausta — y 254). Švytėjimas — radialinis gradientas iš `art.defs("vd")`, kūgis — vienas `path`; išjungta lemputė `#cfd6dd`. Jokio horizontalaus slinkimo; 200 % tekste didėja tik užrašai (`min-width:0` ant tėvų).
+- **Įėjimai ir klaviatūra:** visi elementai `<button>`; `Tab` eilė — jungiklis → mygtukas → „Paspausk“ → „Atleisk“ → „Iš naujo“; `Enter` / `Space` aktyvuoja; `aria-pressed` žymi nuspaustą valdiklį, `aria-live="polite"` — `readout`. `aria-label` pasako būseną žodžiais („Jungiklis nuspaustas, šviesa dega“), ne vien spalvą.
+- **Fokusas** (LL-32): pasirinkus valdiklį fokusas eina į „Paspausk“; po paspaudimo — į spėjimo mygtukus; po spėjimo — į „Atleisk“; po paleidimo — į kito valdiklio „Paspausk“, o kai abu išbandyti — į „Iš naujo“. Nenaudojami valdikliai žymimi `aria-disabled` ir `focus()`, o ne `disabled`, kad fokusas neprapultų.
+- **Grįžtamasis ryšys** — `readout` po paleidimo įvardija **padėtį**, `api.note` sako **kodėl**, ir niekada „teisingai“ (T2.3, T5.1). `api.progress({ correct: true })` kviečiamas vieną kartą, kai abu valdikliai turi `released === true` **dabartinėje** būsenoje ir lentelėje yra abi eilutės (LL-17), o ne po pirmo paleidimo (LL-29). „Iš naujo“ pažangos netrina (LL-16).
+- **Garsas:** tariamos tik instrukcijos ir paaiškinimai iš `config.sentences` (7 frazės; kiekviena gauna po du įrašus — `n` ir `s` — tad manifestas išaugs iki 14 įrašų, jei tų pačių sakinių dar neturi), o `api.note` rodo **tą patį** sakinį, kuris tariamas — todėl ekranas ir balsas negali išsiskirti. Eilutės lentelėje ir `readout` netariamos kiekvieną kartą (LL-14).
+- **Be laikmačių, be ėjimų limito, be „game over“.** Paleidimą galima kartoti tiek, kiek vaikas nori, ir abi būsenos turi savo įrodymą paveiksle: dega — švytėjimas ir nuleista svirtis, ne — tamsi lemputė ir grįžusi knopkė (LL-143).
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Paspausei mygtuką ir paleidai. Kas nutiko šviesai?“ — „Šviesa liko degti“ / „Šviesa užgeso“ / „Šviesa tapo ryškesnė“ | 1 | „Šviesa liko degti“ — paspaudimas laikomas įsiminimu | „Pažiūrėk į mygtuką po paleidimo.“ |
+| 2 | taikymas | „Šviesą įjungi jungikliu ir išeini iš kambario. Kas bus?“ — „Šviesa degs toliau“ / „Šviesa užges iškart“ / „Šviesa degs tik minutę“ | 0 | „Šviesa užges iškart“ — šviesa priskiriama vaikui, ne padėčiai | „Pažiūrėk, ar jungiklis liko žemyn.“ |
+| 3 | perkėlimas | „Durų skambutis nutyla paleidus mygtuką. Kodėl?“ — „Nes skambutis turi laikmatį“ / „Nes garsas nueina per sieną“ / „Nes mygtukas grįžta į vietą“ | 2 | „Nes skambutis turi laikmatį“ — pabaiga priskiriama prietaiso atminčiai, ne valdiklio padėčiai | „Skambutis neturi laikmačio — kas jį išjungia?“ |
+| 4 | perkėlimas (`optional: true`) | „Jungiklis liko įjungtas visą naktį. Kas nutiks, jei jo neliesi?“ — „Šviesa degs iki ryto“ / „Šviesa užges po valandos“ / „Šviesa užges, kai visi užmigs“ | 0 | „Šviesa užges po valandos“ — laikas laikomas išjungėju | „Kas turi pasikeisti, kad šviesa užgestų?“ |
+
+Atsakymų indeksai 1 / 0 / 2 / 0 — ne visi tame pačiame indekse (`validate_content.py` tikrina pasiskirstymą). Nė viena užuomina nekartoja teisingo varianto žodžių ir nė viena nepasako atsakymo: 3 užduoties užuomina mini „laikmatį“ — būtent **neteisingą** variantą.
+
+**Refleksija.** „Kur namuose yra jungiklis, kuris lieka, ir mygtukas, kuris grįžta? Pasakyk abu.“ Klausiama žodžiu, nevertinama; laukiamas atsakymas — du daiktai, o ne taisyklės kartojimas. Tai patikrinimas be ekrano ir be balo (T5.3).
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Modelio lempa neturi atminties.** Telefone, televizoriuje ir lifte mygtuką paspaudus, prietaisas pats prisimena ir lieka įjungtas — ten sprendžia prietaiso vidus, o ne knopkė. Modelis rodo paprasčiausią atvejį ir tą ribą įvardija `teacher.offline` bei pokalbyje, o ne slepia.
+2. **Paspaudimas ir paleidimas ekrane yra du bakstelėjimai**, o gyvenime — vienas judesys. Tai sąmoningas supaprastinimas: jis leidžia paleidimą padaryti atskiru, aiškiu žingsniu ir nereikalauja laikyti piršto (kas 6–7 m. vaikui ir klaviatūros naudotojui būtų sunku).
+3. **Elektros neparodome.** Modelyje nėra jokios srovės, laidų spindėjimo ar judančių taškų; grįžtamasis ryšys yra tik šviesa (`research/wiki/guidelines/klausimai.md:21` — atviras klausimas apie elektrą kaip matomą medžiagą lieka atviras, o modelis jo neliečia).
+4. **Nepasakoma, kada šviesą reikia išjungti.** Taupymas ir saugus naudojimasis (23.4.1 pabaiga, 23.4.2) yra atskira sąvoka (26.5.1 „energijos reikia visiems“) ir atskiras modulis.
+5. **Valdiklių rūšių daugiau.** Ekrane yra du; tikrovėje yra sukamosios rankenėlės, jutikliai, laikmačiai. Modelis nepretenduoja aprėpti visų — jis atskiria tik „lieka“ ir „grįžta“.
+
+**Ką tai reiškia modulio autoriui.** `id` — `07-elektronika` (technologijose 07 laisvas: užimti 01, 02, 03, 06; `backlog.json` eilutė `D:elektronika` nurodo būtent šį taką); `title` — „Mygtukas grįžta, jungiklis lieka“ (31 simbolis); `subtitle` — „Padėtis laiko šviesą, o ne pirštas“; `minutes` — 9; trys `outcomes` („Parodau, kad po paspaudimo jungiklis lieka, o mygtukas grįžta atgal.“, „Nuspėju, ar šviesa liks degti atleidus, ir pasitikrinu modelyje.“, „Paaiškinu, kas laiko šviesą įjungtą, o kas ją išjungia.“); `concept.title` — „Kas laiko šviesą?“; `concept.big_idea` — „Jungiklis ir mygtukas įjungia tą pačią šviesą. Skirtumas ryškus paleidus: jungiklis lieka nuspaustas, o mygtukas grįžta. Šviesa dega tol, kol jie lieka įjungti.“; `concept.steps` — keturi žingsniai po ≤8 žodžius; `concept.example` — „Namuose jungiklis lieka įjungtas. Durų skambutis skamba tik kol laikai.“ (pavyzdys mini **tuos pačius** du valdiklius kaip modelis ir neprieštarauja jam — LL-142); `sim` — `{ "component": "valdiklis", "config": { … } }`. Įrašius modulį jis turi patekti į `content/lt/grade-01/index.json` (technologijos, po `01-elektros-grandine`) ir į `path.json` — **po `01-elektros-grandine`**, nes ten vaikas mokosi, kad jungiklis pertraukia kelią, o čia — kad jo padėtis laiko šviesą.
+
+**Patikra.** Metodo specifikacija surašyta kaip juodraštinis modulis (scratch kataloge, ne `content/`, todėl `git status` lieka švarus) ir paleisti abu vartai tuo pačiu keliu, kuriuo tikrina CI:
+
+```
+validate_content.check_module   -> 0 klaidų, 1 įspėjimas
+   (įspėjimas: „nepavyko perskaityti simuliacijos „valdiklis“ kūno — sim.config gyvumas nepatikrintas“)
+check_language.check_module     -> 0 radinių (1 kl. riba — 10 žodžių sakinyje)
+```
+
+Įspėjimas paliktas sąmoningai ir neapeitas: komponento dar nėra, todėl `sim.config` gyvumo (LL-61) patikrinti negalima. Jį privalo paleisti tas, kas rašys `valdiklis` į `technologijos.js` — su tikru komponento kūnu tas pats vartas turi duoti 0 įspėjimų. Rankinė patikra, kurią galima atlikti be modulio: kiekvienas `config` raktas (`lamp`, `controls`, `labels`, `sentences` ir jų vidus) turi atsirasti komponento kūne, o `behaviour` reikšmė turi būti lyginama su `"lieka"`, ne su `"jungiklis"`.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, technologijos 23.4.1 (`sources/pradinio-bp-rekomendacijos-2024.txt:9788–9796`, `:2094–2101`). Osborne, R. (1983). Towards modifying children's ideas about electric current. *Research in Science & Technological Education, 1*(1), 73–82. https://doi.org/10.1080/0263514830010108 · Chinn, C. A., & Brewer, W. F. (1993). The role of anomalous data in knowledge acquisition: A theoretical framework and implications for science instruction. *Review of Educational Research, 63*(1), 1–49. https://doi.org/10.3102/00346543063001001 · Bonawitz, E., Shafto, P., Gweon, H., Goodman, N. D., Spelke, E., & Schulz, L. (2011). The double-edged sword of pedagogy: Instruction limits spontaneous exploration and discovery. *Cognition, 120*(3), 322–330. https://doi.org/10.1016/j.cognition.2010.10.001 · Shipstone, D. M. (1984). A study of children's understanding of electricity in simple DC circuits. *European Journal of Science Education, 6*(2), 185–198. https://doi.org/10.1080/0140528840060208 (naudotas tik kaip krypties patvirtinimas: vaikai grandinę aiškina vietiniais, nuosekliais modeliais, todėl ne „srovė“, o matoma pasekmė).
+
+**Pastaba dėl pasiūlymo.** Ideatorius (#466) temą jau įrašė (`agents/proposals/2026-11-23-ideator-mygtukas-ir-jungiklis.json`), ir šis metodas ją **siaurina bei taiso**: (1) ideatorius durų skambutį priskyrė prie įtaisų, kurie „įsimena“, o iš tikrųjų skambutis kaip tik neturi atminties — jis yra **priešpriešinis** mygtuko pavyzdys, todėl metode jis perkeltas į 3-ą užduotį, o „įsimenantys“ prietaisai (telefonas, liftas) liko modelio riboje, ne užduotyje (LL-18 — variantas, kuris gyvenime teisingas, negali būti neteisingas atsakymas); (2) ideatorius rėmėsi vien lempa, o metodas įveda **matomą valdiklio padėtį** kaip antrą įrodymą tame pačiame kadre (LL-143); (3) ideatorius siūlė „paspaudžia ir paleidžia“ vienu judesiu, o metodas skaido į du bakstelėjimus, kad paleidimas būtų atskiras žingsnis ir nereikėtų laikyti piršto. Senesnis sistemos pasiūlymas `agents/proposals/backlog-d-elektronika-elektronika.json` tą pačią programos poziciją vadina `04-elektronika`; laikomasi `backlog.json` (ir žmogaus padengties bloko) tako `07-elektronika`, o 04 lieka laisvas.
+
 ## Atviros prielaidos
 
 

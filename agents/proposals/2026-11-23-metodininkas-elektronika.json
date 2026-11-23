@@ -1,0 +1,26 @@
+{
+  "role": "metodininkas",
+  "run_id": 468,
+  "created": "2026-11-23T08:35:00+02:00",
+  "type": "metodas",
+  "title": "M-15 — Jungiklis lieka, mygtukas grįžta: šviesą laiko padėtis, o ne pirštas",
+  "body": "1 klasės technologijų programos 23.4.1 punktas prašo aiškintis prietaisų „valdymo ypatumus – jungiklio, mygtuko panaudojimą“ (sources/pradinio-bp-rekomendacijos-2024.txt:9788–9796), tačiau platformoje grandinė mokoma tik kaip vientisas kelias (01-elektros-grandine), o skirtumas tarp mygtuko ir jungiklio neegzistuoja: technologijų turinyje žodis „mygtuk“ sutinkamas vieną kartą ir tik sources lauke, o „atleis/atleid“ — 0 kartų. Metodas ima vieną kintamąjį — kurį valdiklį vaikas paspaudė — ir laiko viską kita tą patį: tą pačią lempą, tą patį veiksmą (paspaudimas → paleidimas), abi dėžutes vienodo dydžio tame pačiame aukštyje. Jungiklis po paleidimo lieka nuspaustas, todėl šviesa dega; mygtukas grįžta, todėl šviesa užgęsta. Būsena išvedama iš vieno lauko: lit = behaviour === 'lieka' ? down : pressed; config neturi lauko, kuo baigiasi paleidimas. Prieš kiekvieną pirmą paleidimą vaikas spėja (Liks / Užgęs), o po abiejų valdiklių atsiranda palyginimo eilutė „Jungiklis ↓ liko · Mygtukas ↑ grįžta“. Klaidinga nuostata „paspaudžiau → liks“ kyla ne iš fantazijos, o iš įtaisų su atmintimi (telefonas, liftas); todėl ta riba įvardijama, o durų skambutis — kuris kaip tik neturi atminties — tampa perkėlimo užduotimi. Metodas taip pat taiso ideatoriaus (#466) tekstą, kuriame durų skambutis klaidingai priskirtas prie „įsimenančių“ įtaisų. Specifikacija paruošta taip, kad kūrėjas neklausytų nė vieno papildomo klausimo: 7 simuliacijos būsenos, geometrija 360 px, fokaso taisyklės, 4 užduotys su tipinėmis klaidomis, 5 modelio ribos, 4 šaltiniai su DOI.",
+  "target": "content/lt/grade-01/technologijos/07-elektronika.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md — M-15 (šis paleidimas): seka, būsenų lentelė, užduotys, modelio ribos",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:9788–9796 — 23.4.1 „…aiškinamasi jų paskirtis, funkcijos, valdymas ypatumai – jungiklio, mygtuko panaudojimas ir pan.“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2094–2101 — tas pats reikalavimas kartojamas technologijų srities apraše",
+    "research/wiki/curriculum/backlog.json — eilutė D:elektronika, status missing, target content/lt/grade-01/technologijos/07-elektronika.json",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:74 — programos pozicija D:elektronika",
+    "content/lt/grade-01/technologijos/01-elektros-grandine.json:8–11 — trečias rezultatas „Parodau, kad jungiklis pertraukia tą patį kelią“: grandinė yra, valdymo po paleidimo nėra",
+    "grep -rin 'mygtuk' content/lt/grade-01/technologijos/ → 1 eilutė (01-elektros-grandine.json:98, sources laukas); grep -rin 'atleis\\|atleid' content/lt/grade-01/ → 0 eilučių (tikrinta 2026-11-23)",
+    "content/lt/grade-01/index.json — technologijose 4 moduliai (01, 02, 03, 06), 07 laisvas",
+    "research/wiki/guidelines/klausimai.md:21 — atviras klausimas apie elektrą kaip matomą medžiagą; modelyje jokios srovės nėra",
+    "agents/proposals/2026-11-23-ideator-mygtukas-ir-jungiklis.json — ideatoriaus tema, kurią šis metodas susiaurina ir taiso (durų skambutis yra priešpriešinis pavyzdys, ne įsimenantis įtaisas)",
+    "Osborne, R. (1983). Towards modifying children's ideas about electric current. Research in Science & Technological Education, 1(1), 73–82. https://doi.org/10.1080/0263514830010108",
+    "Chinn, C. A., & Brewer, W. F. (1993). The role of anomalous data in knowledge acquisition. Review of Educational Research, 63(1), 1–49. https://doi.org/10.3102/00346543063001001",
+    "Bonawitz, E., ir kt. (2011). The double-edged sword of pedagogy. Cognition, 120(3), 322–330. https://doi.org/10.1016/j.cognition.2010.10.001"
+  ]
+}

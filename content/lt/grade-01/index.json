@@ -408,6 +408,14 @@
      "sim": "bendruomenes"
     },
     {
+     "id": "36-zmoniu-ivairove",
+     "title": "Kiekvienas moka ką nors",
+     "subtitle": "Skirtingi vaikai moka skirtingus darbus",
+     "file": "grade-01/pasaulio-pazinimas/36-zmoniu-ivairove.json",
+     "minutes": 9,
+     "sim": "zmoniu-ivairove"
+    },
+    {
      "id": "33-stebejimas",
      "title": "Ką pastebėjau kieme?",
      "subtitle": "Stebėjimas — tai įrašai, kuriuos gali palyginti",

@@ -5548,6 +5548,211 @@ const stebejimoZurnalas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 18. Žmonių įvairovė — kas ką moka                                  */
+/* ------------------------------------------------------------------ */
+/* Klaidinga nuostata: „jei draugas nemoka to, ką moku aš, jis nemoka
+   nieko“. Modelis turi vieną kintamąjį — kurį vaiką paskirsi darbui.
+   Iš jo kyla dvi pasekmės, kurių sąrašas vienas neparodo:
+     1) tas pats vaikas viename darbe pavyksta, kitame — ne;
+     2) visi trys darbai atliekami, ir kiekvieną atlieka KITAS vaikas.
+   Todėl kiekvienas moka ką nors, ir nė vienas nemoka visko: trūkumas
+   viename darbe nėra „nemokantis žmogus“.
+   Vartai reikalauja, kad kiekvieną darbą mokėtų LYGIAI vienas vaikas —
+   simetrija ir yra modelio teiginys. Be jos lentelėje atsirastų vaikas,
+   kuris atlieka du darbus, ir teiginys „nė vienas nemoka visko“ liktų
+   neįrodytas (LL-28). */
+const zmoniuIvairove = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const kids = Array.isArray(config.children) ? config.children.filter(Boolean) : [];
+    const jobs = Array.isArray(config.jobs) ? config.jobs.filter(Boolean) : [];
+    const cells = S.cells && typeof S.cells === "object" ? S.cells : {};
+
+    const esc = (t) => String(t).replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai ------------------------------------------- */
+    const problems = [];
+    const jobIds = jobs.map((j) => j && j.id);
+    if (kids.length < 3) problems.push("reikia bent trijų vaikų");
+    if (jobs.length < 3) problems.push("reikia bent trijų darbų");
+    if (new Set(jobIds).size !== jobIds.length) problems.push("pasikartojantis darbo id");
+    if (new Set(kids.map((k) => k && k.id)).size !== kids.length) problems.push("pasikartojantis vaiko id");
+    kids.forEach((k) => {
+      if (!k.id || !k.label || !k.emoji) {
+        problems.push(`vaikas „${(k && k.id) || "?"}“ be id/label/emoji`);
+        return;
+      }
+      if (!jobIds.includes(k.can)) {
+        problems.push(`vaikui „${k.id}“ nepriskirtas nė vienas žinomas darbas`);
+      }
+    });
+    jobs.forEach((j) => {
+      if (!j.id || !j.label || !j.emoji) {
+        problems.push(`darbas „${(j && j.id) || "?"}“ be id/label/emoji`);
+        return;
+      }
+      const owners = kids.filter((k) => k.can === j.id);
+      if (owners.length !== 1) {
+        problems.push(`darbą „${j.id}“ moka ${owners.length} vaikų — turi mokėti lygiai vienas (LL-28)`);
+      }
+    });
+    kids.forEach((k) => jobs.forEach((j) => {
+      const key = `${j && j.id}-${k && k.id}`;
+      if (typeof cells[key] !== "string" || !cells[key].trim()) {
+        problems.push(`trūksta sakinio „${key}“ (sentences.cells)`);
+      }
+    }));
+    ["jobTitle", "pickTitle", "okWord", "failWord", "again", "doneTitle"].forEach((k) => {
+      if (!L[k]) problems.push(`užrašo „${k}“ nėra`);
+    });
+    ["start", "startNote", "pick", "next", "done", "doneNote", "rule", "tableNote"]
+      .forEach((k) => { if (!S[k]) problems.push(`sakinio „${k}“ nėra`); });
+    if (problems.length) {
+      console.error(`zmoniu-ivairove: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="error-box">Vaikai ir darbai nesuderinti.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const solved = new Set();
+    let jobId = jobs[0].id;
+    let reported = false;      // api.progress — vieną kartą, atlikus visus darbus (LL-29)
+
+    const jobOf = (id) => jobs.find((j) => j.id === id) || null;
+    const kidOf = (id) => kids.find((k) => k.id === id) || null;
+
+    stage.innerHTML = `
+      <div style="width:100%;min-width:0;max-width:min(30rem,100%);margin:0 auto">
+        <p id="zi-job" style="margin:0 0 .35rem;text-align:center;font-family:var(--font-head);
+            font-size:1rem;font-weight:800;line-height:1.25;overflow-wrap:anywhere"></p>
+        <p id="zi-pick" class="sim-note" style="margin:0 0 .35rem;text-align:center"></p>
+        <div id="zi-kids" role="group" aria-label="Vaikai, kurie gali padėti"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.4rem),1fr));gap:.45rem"></div>
+        <p id="zi-result" class="sim-note" style="margin:.6rem 0 0;text-align:center;
+            min-height:2.9em;overflow-wrap:anywhere"></p>
+        <div id="zi-summary" style="margin-top:.3rem;min-width:0"></div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.4rem;width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <p style="margin:0;font-weight:800;text-align:center;font-size:.92rem;line-height:1.25">${esc(L.jobTitle)}</p>
+        <div id="zi-jobs" role="group" aria-label="${esc(L.jobTitle)}"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));gap:.45rem;min-width:0">
+          ${jobs.map((j) => `<button class="btn secondary" type="button" data-job="${esc(j.id)}"
+              aria-pressed="false" style="min-width:0;min-height:52px;height:auto;padding:.35rem .4rem;
+              font-size:.95rem;line-height:1.2;overflow-wrap:anywhere">${esc(j.label)}</button>`).join("")}
+        </div>
+        <button class="btn ghost" type="button" id="zi-reset"
+                style="min-height:48px;font-size:.95rem">${esc(L.again)}</button>
+      </div>`;
+
+    const jobEl = stage.querySelector("#zi-job");
+    const pickEl = stage.querySelector("#zi-pick");
+    const kidsEl = stage.querySelector("#zi-kids");
+    const resultEl = stage.querySelector("#zi-result");
+    const summaryEl = stage.querySelector("#zi-summary");
+    const jobBtns = [...controls.querySelectorAll("button[data-job]")];
+
+    kidsEl.innerHTML = kids.map((k) => `<button class="btn secondary" type="button" data-kid="${esc(k.id)}"
+        aria-label="${esc(k.label)} — pasirinkti"
+        style="min-width:0;min-height:64px;height:auto;padding:.4rem .25rem;display:grid;
+        justify-items:center;gap:.15rem;line-height:1.15">
+        <span aria-hidden="true" style="font-size:1.9rem;line-height:1.05">${esc(k.emoji)}</span>
+        <span style="max-width:100%;overflow-wrap:break-word;font-size:.9rem;font-weight:800">${esc(k.label)}</span>
+      </button>`).join("");
+    const kidBtns = [...kidsEl.querySelectorAll("button[data-kid]")];
+
+    /* Santrauka rodoma TIK atlikus visus darbus: kiekvienas vaikas skaitomas
+       atskirai eilute, o ne vienu sakiniu (LL-35), ir skaičius imamas iš to,
+       kas tikrai atlikta, o ne iš to, kas turėjo būti (LL-17). */
+    function summaryMarkup() {
+      if (solved.size < jobs.length) return "";
+      const counts = kids.map((k) => ({
+        label: k.label,
+        n: jobs.filter((j) => solved.has(j.id) && k.can === j.id).length,
+      }));
+      return `<p style="margin:.2rem 0 .15rem;text-align:center;font-size:.9rem;font-weight:800">${esc(L.doneTitle)}</p>`
+        + `<ul style="list-style:none;margin:0 0 .3rem;padding:0;display:flex;flex-wrap:wrap;`
+        + `justify-content:center;gap:.1rem .9rem;font-size:.9rem">`
+        + counts.map((c) => `<li>${esc(c.label)} — <strong>${c.n}</strong></li>`).join("")
+        + `</ul>`
+        + `<p class="sim-note" style="margin:0;text-align:center;overflow-wrap:anywhere">${esc(S.rule)}</p>`;
+    }
+
+    function paint() {
+      const j = jobOf(jobId);
+      jobEl.textContent = j ? `${j.emoji} ${j.label}` : "";
+      jobBtns.forEach((b) => {
+        const job = jobOf(b.dataset.job);
+        const done = solved.has(b.dataset.job);
+        b.setAttribute("aria-pressed", String(b.dataset.job === jobId));
+        // Būsena pasakoma ir žodžiu, ne vien spalva (prieinamumas, T5.5).
+        b.innerHTML = `<span aria-hidden="true" style="font-size:1.15rem">${esc(job.emoji)}</span> `
+          + `${esc(job.label)}${done ? " ✓" : ""}`;
+        b.setAttribute("aria-label", `${job.label}${done ? ", atlikta" : ""}`);
+      });
+      pickEl.textContent = L.pickTitle;
+      summaryEl.innerHTML = summaryMarkup();
+    }
+
+    jobBtns.forEach((b) => {
+      b.addEventListener("click", () => {
+        jobId = b.dataset.job;
+        paint();
+        const j = jobOf(jobId);
+        api.readout(`${L.jobTitle} ${j.label}.`);
+        api.speak(j.label);
+      });
+    });
+
+    kidBtns.forEach((b) => {
+      b.addEventListener("click", () => {
+        const j = jobOf(jobId);
+        const k = kidOf(b.dataset.kid);
+        if (!j || !k) return;
+        const ok = k.can === j.id;
+        const sentence = cells[`${j.id}-${k.id}`];
+        const head = ok ? L.okWord : L.failWord;
+        if (ok) solved.add(j.id);
+
+        const finished = solved.size === jobs.length;
+        resultEl.textContent = `${head} ${sentence}${finished ? ` ${S.done}` : ""}`;
+        api.readout(resultEl.textContent);
+        api.speak(sentence);
+
+        if (finished) {
+          api.note(`${S.doneNote} ${S.rule}`);
+          if (!reported) { reported = true; api.progress({ correct: true }); }
+        } else if (ok) {
+          const nextJob = jobs.find((x) => !solved.has(x.id));
+          if (nextJob) jobId = nextJob.id;
+          api.note(S.next);
+        } else {
+          api.note(S.tableNote);
+        }
+        paint();
+      });
+    });
+
+    controls.querySelector("#zi-reset").addEventListener("click", () => {
+      stage.innerHTML = "";
+      controls.innerHTML = "";
+      zmoniuIvairove.mount({ stage, controls, api, config });
+    });
+
+    // Pastaba yra už scenos ribų — be šios eilutės po perkrovimo liktų
+    // ankstesnio bandymo sakinys (LL-16).
+    api.note("");
+    paint();
+    api.readout(S.start);
+    api.speak(S.startNote);
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "dienos-juosta": dienosJuosta,
   "metu-laikai": metuLaikai,
@@ -5565,5 +5770,6 @@ export const SIMS = {
   "traumos-priezastis": traumosPriezastis,
   "traumos-apsauga": traumosApsauga,
   "bendruomenes": bendruomenes,
+  "zmoniu-ivairove": zmoniuIvairove,
   "stebejimo-zurnalas": stebejimoZurnalas,
 };

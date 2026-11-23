@@ -1,0 +1,166 @@
+{
+  "id": "36-zmoniu-ivairove",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Kiekvienas moka ką nors",
+  "subtitle": "Skirtingi vaikai moka skirtingus darbus",
+  "minutes": 9,
+  "outcomes": [
+    "Pasirenku, kuris vaikas atliks konkretų darbą.",
+    "Paaiškinu, kodėl žmogus, kuris vieno darbo nemoka, moka kitą.",
+    "Nurodau, kad skirtingi žmonės moka skirtingus dalykus."
+  ],
+  "concept": {
+    "title": "Kas ką moka",
+    "big_idea": "Trys vaikai moka po vieną darbą. Nė vienas nemoka visų trijų. Todėl vaikas, kuris vieno darbo nemoka, kitą moka.",
+    "steps": [
+      "Pasirink darbą, kurį reikia atlikti.",
+      "Paskirk, kuris vaikas padės.",
+      "Pabandyk kitą vaiką, jei nepavyko.",
+      "Apžiūrėk visus tris darbus ir palygink."
+    ],
+    "example": "Per šventę kiekvienas vaikas daro savo darbą."
+  },
+  "sim": {
+    "component": "zmoniu-ivairove",
+    "config": {
+      "labels": {
+        "jobTitle": "Kurį darbą reikia atlikti?",
+        "pickTitle": "Kas padės?",
+        "okWord": "Pavyko.",
+        "failWord": "Nepavyko.",
+        "again": "Iš naujo",
+        "doneTitle": "Kiek darbų atlieka kiekvienas:"
+      },
+      "children": [
+        {
+          "id": "morta",
+          "label": "Morta",
+          "emoji": "👧",
+          "can": "lentyna"
+        },
+        {
+          "id": "jokubas",
+          "label": "Jokūbas",
+          "emoji": "🧒",
+          "can": "stiklainis"
+        },
+        {
+          "id": "nojus",
+          "label": "Nojus",
+          "emoji": "👦",
+          "can": "adata"
+        }
+      ],
+      "jobs": [
+        {
+          "id": "lentyna",
+          "label": "Nukelti lėkštes",
+          "emoji": "🍽️"
+        },
+        {
+          "id": "stiklainis",
+          "label": "Atsukti stiklainį",
+          "emoji": "🍯"
+        },
+        {
+          "id": "adata",
+          "label": "Įverti siūlą",
+          "emoji": "🧵"
+        }
+      ],
+      "sentences": {
+        "start": "Kurį darbą dabar atliksime?",
+        "startNote": "Trys vaikai ruošia klasės šventę.",
+        "pick": "Paskirk, kuris vaikas padės.",
+        "next": "Pasirink kitą darbą.",
+        "done": "Visi trys darbai atlikti.",
+        "doneNote": "Kiekvienas vaikas atliko po vieną darbą.",
+        "rule": "Nė vienas nemoka visko. Kiekvienas moka ką nors.",
+        "tableNote": "Pabandyk kitą vaiką.",
+        "cells": {
+          "lentyna-morta": "Morta aukščiausia, todėl pasiekia lentyną.",
+          "lentyna-jokubas": "Jokūbas pasiekia tik vidurinę lentyną.",
+          "lentyna-nojus": "Nojus žemiausias, jam lentyna per aukštai.",
+          "stiklainis-morta": "Mortai dangtelis per standus, ji neatsuka.",
+          "stiklainis-jokubas": "Jokūbas atsuka, jo rankos stiprios.",
+          "stiklainis-nojus": "Nojaus rankos per silpnos dangteliui.",
+          "adata-morta": "Mortai siūlas slysta iš rankų.",
+          "adata-jokubas": "Jokūbui siūlas per smulkus.",
+          "adata-nojus": "Nojus įveria, jo pirštai smulkūs."
+        }
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Nojus nemoka nukelti lėkščių. Kodėl jis vis tiek moka ką nors?",
+      "options": [
+        "Kad jis nemoka nieko",
+        "Kad jis moka kitą darbą",
+        "Kad jam nereikia padėti"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, ką Nojus padarė prie adatos.",
+      "why": "Tas pats Nojus įveria siūlą, todėl jis moka ką nors."
+    },
+    {
+      "q": "Lėkštes reikia nukelti nuo aukštos lentynos. Kurį vaiką pasikviesti?",
+      "options": [
+        "Mortą",
+        "Jokūbą",
+        "Nojų"
+      ],
+      "answer": 0,
+      "hint": "Pažiūrėk, kas jau nukėlė tas lėkštes.",
+      "why": "Lėkštes nukelia Morta, nes pasiekia aukštą lentyną."
+    },
+    {
+      "q": "Naujas vaikas nemoka skaityti. Jis moka piešti. Ar jis moka ką nors?",
+      "options": [
+        "Ne, jis nemoka nieko",
+        "Taip, jis moka piešti",
+        "Ne, kol neišmoks skaityti"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok apie tris vaikus: ar kas nors mokėjo viską?",
+      "why": "Piešti — irgi mokėjimas, nors skaityti jis dar nemoka."
+    },
+    {
+      "q": "Visi trys mokėtų tik nukelti lėkštes. Kas tada liktų nepadaryta?",
+      "options": [
+        "Stiklainis liktų neatsuktas",
+        "Šventė būtų paruošta greičiau",
+        "Niekas nepasikeistų"
+      ],
+      "answer": 0,
+      "hint": "Kiek darbų reikia šventei? Ar juos atlieka tas pats vaikas?",
+      "why": "Kai visi moka tą patį, trūksta to, ką moka kiti.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kokį darbą moki tu, o ko nemoka tavo draugas?",
+  "teacher": {
+    "goal": "Sąvoką „įvairovė“ sieti su tuo, ką žmogus moka, o ne su tuo, ko jam trūksta. Modelyje kinta vienas dalykas — kurį vaiką paskirsi darbui: trys vaikai ir trys darbai, devyni langeliai. Kiekvieną darbą atlieka lygiai vienas vaikas, todėl lentelė baigiasi trimis po vieną — nė vienas neatlieka visų trijų ir nė vienas nelieka be nė vieno. Simetrija sąmoninga: ji ir yra modelio teiginys, o ne gyvenimo statistika. Sąmoningos ribos: modelis nepasako, kad gebėjimas nekinta — jis rodo tik šiandienį vaizdą; jis nevertina, kuris vaikas „geresnis“, ir nelygina mokinių tarpusavyje. Modulis papildo 34 „Kas priklauso bendruomenei?“ (bendruomenę sieja bendras reikalas, o ne vienodumas): ten klausiama, kas priklauso būriui, čia — ką žmogus, kuris ko nors nemoka, vis tiek moka. Su 08 „Metų laikai“ nesikerta: ten kinta mėnuo, čia — paskirtas žmogus.",
+    "prompt": "Paklausk: „Ką Nojus moka, ko nemoka Morta? Kodėl jiems abiem reikia vienas kito?“",
+    "offline": "Ant trijų stalų padėkite po vieną užduotį: knygą ant aukštos lentynos, sandariai užsuktą stiklainį ir didelę plastikinę adatą su storu siūlu. Vaikai bando po porą: vienas laiko, kitas daro. Po kiekvieno darbo klauskite: „Kuris įgūdis čia pravertė?“ Užrašų ir lentelių nepildykite ir neklauskite, kas geriau — tik skaičiuokite, kiek skirtingų įgūdžių prireikė trims darbams atlikti. Tikros adatos neduokite; suaugusiojo darbas — paruošti saugias priemones ir laikyti laiką, o ne aiškinti išvadą.",
+    "misconceptions": [
+      "„Kas nemoka to, ką moku aš, tas nemoka nieko.“ Modelyje Nojus nepasiekia lentynos, bet vienintelis įveria siūlą. Tas pats vaikas ir tas pats metas — kitas darbas.",
+      "„Mažiausias vaikas nieko negali.“ Būtent žemiausias Nojus įveria siūlą, o aukščiausia Morta — ne. Ūgis pasako vieną dalyką, o ne visus įgūdžius.",
+      "„Vienas vaikas padarys viską, kiti tik trukdys.“ Modelyje niekas neatlieka dviejų darbų: kiekvieną darbą atlieka kitas vaikas, todėl be kitų šventė liktų neparuošta.",
+      "„Skirtumas reiškia, kad vienas geresnis.“ Modelyje nė vienas neatlieka daugiau darbų už kitą. Skirtingumas čia yra ne trūkumas, o skirtingi įgūdžiai.",
+      "„Jei nemoku, man nereikia bandyti.“ Nepavykęs bandymas modelyje nieko neuždaro: galima rinktis kitą vaiką arba kitą darbą tiek pat kartų, kiek nori."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Pasaulio pažinimas“, 26.2.1 „Žmonių įvairovė“: 1 klasei skiriamos 3 val., veikla — atvejo analizė ir kūrybinė užduotis (sources/pradinio-bp-rekomendacijos-2024.txt:8408–8413; 1 klasės ilgalaikis planas :17632–17635). Modulyje imama atvejo analizės dalis, o draugų apibūdinimo atsisakyta sąmoningai — jis liečia asmens duomenis (research/wiki/guidelines/klausimai.md:71).",
+    "Jungtinių Tautų Vaiko teisių konvencija (1989), 2 straipsnis: vaikas apsaugomas nuo diskriminacijos dėl jo paties ar jo šeimos savybių. https://www.ohchr.org/en/instruments-mechanisms/instruments/convention-rights-child — modelyje skirtumas tarp vaikų parodomas kaip skirtingi įgūdžiai, o ne kaip vieno jų trūkumas.",
+    "NŠA, ten pat — bendroji „Pasaulio pažinimo“ dalis 1–2 klasei: vaikas pažįsta save ir kitus per konkrečią veiklą, o ne per sąvokų sąrašą (sources/pradinio-bp-rekomendacijos-2024.txt:1317–1328)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena sąvoka: žmogaus trūkumas viename darbe nėra „nemokantis žmogus“; modelyje vienas kintamasis (paskirtas vaikas), trys darbai ir devyni langeliai.",
+    "2 žingsnis — vertinamas perkėlimas: tos pačios sąvokos klausiama apie naują vaiką, kuris nemoka skaityti, ir apie situaciją, kai visi moka tą patį darbą.",
+    "3 žingsnis — pagalba laiku: veiksmas prieš paaiškinimą, kiekvienas nepavykęs bandymas duoda užuominą, kuri nukreipia į kitą vaiką ar darbą, o ne į atsakymą; nėra laikmačio, o ketvirta užduotis — praplėtimas.",
+    "P2 / T1.2 / T3.1 / T5.5: pirma paskyrimas ir pasekmė, paskui paaiškinimas; grįžtamasis ryšys sako, kas pavyko ar nepavyko, o ne koks vaikas; būsena pasakoma žodžiu ir ženklu, ne vien spalva; 52–64 px taikiniai."
+  ]
+}

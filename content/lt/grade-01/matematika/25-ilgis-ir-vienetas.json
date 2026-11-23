@@ -100,15 +100,15 @@
       "why": "Skaičius be vieneto nepasako, kuo matuota."
     },
     {
-      "q": "Lenta yra 6 sąvaržėlės. Trintukas ilgesnis už sąvaržėlę. Kiek trintukų telpa?",
+      "q": "Ant lentos telpa 6 sąvaržėlės ir 2 pieštukai. Trintukas ilgesnis už sąvaržėlę, bet trumpesnis už pieštuką. Kuris iš šių skaičių gali būti trintukų?",
       "options": [
         "2",
         "8",
         "4"
       ],
       "answer": 2,
-      "hint": "Trintukas didesnis už sąvaržėlę. Skaičius turi būti mažesnis už 6.",
-      "why": "Didesnis vienetas telpa mažiau kartų, todėl trintukų yra 4."
+      "hint": "Palygink trintuką su sąvaržėle ir su pieštuku. Ilgesnis vienetas telpa mažiau kartų.",
+      "why": "Trintukų mažiau nei sąvaržėlių, bet daugiau nei pieštukų — todėl 4."
     },
     {
       "q": "Močiutė kilimą išmatavo 8 pėdomis. Anūko pėdos mažesnės. Kiek pėdų gaus anūkas?",

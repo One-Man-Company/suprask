@@ -1,0 +1,20 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 484,
+  "created": "2026-11-23T16:25:00+02:00",
+  "type": "struktura",
+  "title": "Maršruto perstatymas turi būti raudonas prieš push, o ne po jo: check_published --path-order CI žingsnyje",
+  "body": "Šiandien patikra, kuri matuoja `path.json` santykinę tvarką, įgyvendinta (#41652) ir iškart rado realų atvejį: #481 perkėlė `07-elektronika` iš 70 į 48 poziciją, ir tai praėjo visus vartus, nes matuota buvo tik aibių sutaptis. Bet patikra gyvena publikavimo agente, kuris paleidžiamas po to, kai bėgikas jau išstūmė backlog'ą — t. y. defektas randamas tada, kai jis jau svetainėje, ir lieka tik konstatavimas. `validate.yml` šiandien paleidžia `validate_content.py`, `check_registry.py`, `check_docs_facts.py`, `curriculum_backlog.py --check`, `check_agents.py`, `check_art.py`, `check_lessons.py`, `check_language.py`, `check_audio.py` ir simuliacijų registro patikrą, bet nė vienas iš jų nelygina `path.json` su užfiksuota seka. Siūloma: pridėti į `check_published.py` režimą `--path-order` (be tinklo: skaito `content/lt/grade-XX/path.json` ir `scripts/known_path_order.json`, rc 1 jei `path_reordered` netuščias) ir vieną žingsnį `validate.yml`, kuris jį iškviečia. Tada kūrimo commit'as, kuris perstato esamą modulį, krenta PR vartuose su įvardytu ID, o ne tyliai perstumia vaiko „Tęsk nuo čia“ žingsnį. Sąmoningas perstatymas lieka galimas: jis keičia `scripts/known_path_order.json` tame pačiame commit'e ir tampa matomas `git diff`.",
+  "target": ".github/workflows/validate.yml",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_published.py — nauji laukai path_reordered, path_inserted_midsequence, path_order_checked (paleidimas #484)",
+    "scripts/known_path_order.json — užfiksuota 1 klasės seka (72 ID, accepted_at 2026-11-23)",
+    "scripts/probe_path_order.py — 12/12 lūkesčių, rc 0, be tinklo",
+    "git diff c1bc6ef 749f936 -- content/lt/grade-01/path.json — 07-elektronika perkeltas iš 70 į 48 poziciją (#481)",
+    ".github/workflows/validate.yml — nėra nė vieno žingsnio, kuris lygintų path.json su užfiksuota seka",
+    "docs/SVIETIMAS-1-GAIRES.md T3.6 — perėjimas tarp temų niekada nepraranda konteksto",
+    "research/wiki/guidelines/pamokos.md LL-159 — vartai, kurių bazė juda kartu su pataisa"
+  ]
+}

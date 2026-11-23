@@ -278,6 +278,41 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   režimu — repo 52 / paskelbta 52, garsas 1 514/1 514, vardo maišas
   1 514/1 514, svetainės kodas 19 failų, rc 0.
 
+2026-11-23 (paleidimas #484): `path.json` santykinė tvarka pagaliau matuojama (#41652).
+  #480 ataskaita tvarką patvirtino **rankiniu skriptu** (`git show 7f346d9:…`
+  → „visi 62 seni ID, santykinė tvarka True“), o įrankis, kuriuo remiamasi
+  publikavimo sprendime, to nemokėjo: `not_in_path` matuoja aibę, `path_differs`
+  — ar seka tokia pati kaip svetainėje. Todėl modulio perkėlimas į kitą vietą
+  (aibė ta pati, visi skaičiai sutampa) praeidavo žalias, nors vaiko „Tęsk nuo
+  čia“ žingsnis persikeldavo (gairės T3.6; AGENTS.md „esama tvarka nesikeistų“).
+  Šiandien tai ne teorija: pirmas šios patikros bėgimas parodė, kad #481
+  perkėlė `07-elektronika` iš 70 į 48 poziciją (prie `01-elektros-grandine`).
+  Perkėlimas jau buvo paskelbtas, todėl jis **priimtas** ir užfiksuotas, o ne
+  atšauktas: atšaukimas vėl pajudintų tą patį žingsnį. Dabar:
+  - `scripts/known_path_order.json` — užfiksuota kiekvienos klasės tvarka
+    (`sequence`, `accepted_at`, `note`). Tai tos pačios rūšies įrankio duomenys
+    kaip `known_renames.json`: sąmoningas perkėlimas keičia failą matomai, o ne
+    tyliai. Bazė būtent tokia, o ne „vakarykštė `path.json` versija“, nes
+    priimtas perstatymas kitaip liktų raudonas tol, kol kas nors vėl palies
+    failą, ir vartai mokytų juos apeiti (LL-37 atvirkštinė pusė);
+  - `check_grade()` rašo `path_reordered` (senų ID santykinė tvarka pajudėta —
+    raudona) ir `path_inserted_midsequence` (naujas įrašytas į vidurį, ne į
+    pabaigą — geltona, bet įvardijama, nes perstumia „kitą žingsnį“);
+  - `path_reordered` yra minimali aibė: LIS papildinys, t. y. „pašalinus šiuos
+    ID likusi tvarka atitinka ankstesnę“. Viso sąrašo rašyti negalima — jis
+    kaltintų ir tuos ID, kurie savo vietoje (LL-21);
+  - `path_order_checked` saugo nuo tylios žalios: be užfiksuotos sekos ir be
+    HEAD failo `verdict()` sako „sekos tvarkos patikra neįvyko“;
+  - be užfiksuotos sekos lieka HEAD patikra, tad necommitintas perstatymas
+    matomas ir tada, kai įrašo dar nėra.
+  Įrodymas repo: `scripts/probe_path_order.py` → **12/12**, rc 0, be tinklo
+  (laikinas sekos failas; A–F būsenos, G invariantas, H1–H3 ribos, I sugadintas
+  JSON, J tikras repo). Neigiama kontrolė per patį įrankį:
+  `SUPRASK_PATH_ORDER=<perstatyta seka> python3 scripts/check_published.py
+  --no-bytes` → rc 1, `verdict` „1 senų ID tvarka pajudėta“, įvardytas
+  `07-elektronika`. Teigiama: numatytasis bėgimas → rc 0, 72/72, o sėkmės
+  eilutė pasako, su kuo lyginta.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -290,6 +325,7 @@ Naudojimas:
 from __future__ import annotations
 
 import argparse
+import bisect
 import hashlib
 import json
 import os
@@ -354,6 +390,12 @@ DEPLOY_POLL = max(1, int(os.environ.get("SUPRASK_DEPLOY_POLL", "10")))
 # sprendimas buvo peržiūrėtas. Be jo kiekvienas sąmoningas pervadinimas darytų
 # vartus amžinai raudonus, o amžinai raudoni vartai — tas pats kaip jokių (LL-37).
 RENAMES = ROOT / "scripts" / "known_renames.json"
+# Užfiksuota ėjimo tvarka (`path.json` santykinė ID seka). Tai tos pačios
+# rūšies įrankio duomenys kaip `known_renames.json`: failas sako, kokia tvarka
+# jau yra sutartis su vaiku. Be jo „ar senų ID tvarka nepajudėta“ gali būti
+# matuojama tik vieno commit'o atžvilgiu — t. y. viena diena, o ne sutartis.
+PATH_ORDER = pathlib.Path(os.environ.get("SUPRASK_PATH_ORDER")
+                          or (ROOT / "scripts" / "known_path_order.json"))
 HISTORY_LIMIT = 400
 
 # Garsas. Manifestas jau lyginamas kaip `AUX_FILES` įrašas, bet baitų lygybė
@@ -687,6 +729,166 @@ def vanished(grade: int, current_ids: list[str]) -> dict:
             "alias_ok": bool(successor) and alias == successor,
         })
     return {"items": items, "note": note, "checked": checked}
+
+
+def sequence_at(rel: str, rev: str) -> list[str] | None:
+    """`<rev>:<rel>` failo `sequence`; `None`, jei revizijoje jo nėra arba jis ne JSON.
+
+    `None` čia reiškia „nėra su kuo lyginti“, o ne „tuščia seka“ — tuščia seka
+    būtų teiginys apie turinį, kurio neperskaitėme (LL-37).
+    """
+    try:
+        blob = subprocess.run(
+            ["git", "show", f"{rev}:{rel}"],
+            cwd=ROOT, capture_output=True, text=True, timeout=30,
+        ).stdout
+        if not blob.strip():
+            return None
+        return list(json.loads(blob).get("sequence", []))
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def pinned_sequence(grade: int) -> dict | None:
+    """Užfiksuota klasės ėjimo tvarka iš `scripts/known_path_order.json`.
+
+    Kodėl atskiras failas, o ne „vakarykštė `path.json` versija“. Pirmoji
+    mintis buvo lyginti su paskutiniu commit'u, palietusiu `path.json`. Bet
+    tada sąmoningas (priimtas) perstatymas liktų raudonas tol, kol kas nors
+    vėl palies failą — o priėmus naują tvarką ji **yra** sutartis su vaiku,
+    tad vartai, kurie to nemato, moko juos apeiti (LL-37 atvirkštinė pusė).
+    Užfiksuota seka yra ta pati sutartis kaip `known_renames.json`: ji
+    keičiama sąmoningu failo pakeitimu, matomu `git diff`, o ne tyliai.
+
+    Grąžinama `None`, jei įrašo nėra arba jis tuščias — tada žemiau lieka tik
+    necommitinto pakeitimo patikra.
+    """
+    try:
+        data = json.loads(PATH_ORDER.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    entry = (data.get("grades") or {}).get(str(grade))
+    if not isinstance(entry, dict):
+        return None
+    seq = [m for m in entry.get("sequence") or [] if isinstance(m, str) and m]
+    if not seq:
+        return None
+    when = entry.get("accepted_at") or "?"
+    return {"seq": seq, "label": f"scripts/known_path_order.json ({when})",
+            "note": entry.get("note", "")}
+
+
+def path_order_baseline(grade: int, current_seq: list[str]) -> dict:
+    """Seka, su kuria lyginama **santykinė** `path.json` tvarka, ir jos šaltinis.
+
+    `not_in_path` ir `path_differs` atsako į klausimą „ar visi ID yra“ ir „ar
+    seka tokia pati kaip svetainėje“. Nė vienas nemato to, kas nutinka, kai
+    naujas modulis įterpiamas ne į pabaigą: aibė ta pati, o kiekvieno po jo
+    einančio žingsnio vieta pasislenka, tad vaiko „Tęsk nuo čia“ taškas tyliai
+    persikelia (gairės T3.6; AGENTS.md reikalavimas „esama tvarka nesikeistų“).
+
+    Pirmenybė — užfiksuotai sekai (`scripts/known_path_order.json`), nes ji
+    gyvena ilgiau nei vienas commit'as. Jei įrašo nėra, matuojamas bent
+    **nepaskelbtas** pakeitimas: darbinė `path.json` kopija prieš `HEAD`.
+    Trečias raktas `checked` saugo nuo tylios „tvarka gera“: jei nėra nei
+    užfiksuotos sekos, nei su kuo lyginti, tai nėra švarus rezultatas, o
+    `verdict()` apie tai pasako atskirai (LL-37).
+    """
+    out: dict = {"seq": [], "label": "", "checked": False, "note": ""}
+    pin = pinned_sequence(grade)
+    if pin:
+        out.update(seq=pin["seq"], label=pin["label"],
+                   note=pin.get("note", ""), checked=True)
+        return out
+
+    rel = f"content/lt/{grade_dir(grade)}/path.json"
+    head = sequence_at(rel, "HEAD")
+    if head is None:
+        out["note"] = ("nėra `scripts/known_path_order.json` įrašo ir nėra "
+                       "su kuo lyginti — tvarka neužfiksuota")
+        return out
+    if head == current_seq:
+        out["checked"] = True
+        out["label"] = "HEAD (nepaskelbtų pakeitimų nėra)"
+        out["note"] = ("nėra `scripts/known_path_order.json` įrašo — "
+                       "ilgalaikė apsauga neįjungta, matuotas tik HEAD")
+        return out
+    out.update(seq=head, label="HEAD (darbinė kopija dar nepaskelbta)", checked=True)
+    return out
+
+
+
+def reordered_ids(current: list[str], baseline: list[str]) -> list[str]:
+    """ID, kurių pašalinus likusių santykinė tvarka sutampa su ankstesne.
+
+    Tai ilgiausios didėjančios bazinės tvarkos posekės papildinys (LIS), t. y.
+    mažiausia aibė, kuria galima pagrįsti teiginį „tvarka pajudėta“. Viso
+    sąrašo rašyti negalima: jis kaltintų ir tuos ID, kurie savo vietoje
+    (LL-21 — teiginys turi atitikti matavimą).
+    """
+    pos = {mid: i for i, mid in enumerate(current)}
+    pairs = [(pos[mid], mid) for mid in baseline if mid in pos]
+    if len(pairs) < 2:
+        return []
+    tails: list[int] = []
+    tail_at: list[int] = []
+    prev = [-1] * len(pairs)
+    for i, (p, _) in enumerate(pairs):
+        k = bisect.bisect_left(tails, p)
+        if k == len(tails):
+            tails.append(p)
+            tail_at.append(i)
+        else:
+            tails[k] = p
+            tail_at[k] = i
+        prev[i] = tail_at[k - 1] if k else -1
+    keep: set[int] = set()
+    i = tail_at[-1]
+    while i != -1:
+        keep.add(i)
+        i = prev[i]
+    return [mid for i, (_, mid) in enumerate(pairs) if i not in keep]
+
+
+def inserted_midsequence(current: list[str], baseline: list[str]) -> list[str]:
+    """Nauji ID, įterpti **ne į pabaigą** — prieš kurį nors seną žingsnį.
+
+    Tai ne klaida: naują modulį pedagogiškai teisinga dėti šalia temos
+    kaimyno. Bet jis perstumia kiekvieną po jo einantį žingsnį, tad žmogus
+    turi matyti, kam pasikeitė „kitas žingsnis“ (gairės T3.6), o ne atrasti
+    tai vaiko ekrane.
+    """
+    pos = {mid: i for i, mid in enumerate(current)}
+    base_pos = [pos[mid] for mid in baseline if mid in pos]
+    if not base_pos:
+        return []
+    last_base = max(base_pos)
+    base_set = set(baseline)
+    return [mid for i, mid in enumerate(current) if mid not in base_set and i < last_base]
+
+
+def path_order_check(grade: int, current_seq: list[str]) -> dict:
+    """Santykinės `path.json` tvarkos patikra vienam klasiui.
+
+    Grąžina `path_reordered` (raudona: senų ID tvarka pajudėta), o
+    `path_inserted_midsequence` (geltona: nauji įterpti į vidurį),
+    `path_order_baseline` (su kuo lyginta) ir `path_order_checked`.
+    """
+    baseline = path_order_baseline(grade, current_seq)
+    out: dict = {
+        "path_reordered": [],
+        "path_inserted_midsequence": [],
+        "path_order_baseline": baseline.get("label", ""),
+        "path_order_checked": bool(baseline.get("checked")),
+    }
+    if baseline.get("note"):
+        out["path_order_note"] = baseline["note"]
+    base = baseline.get("seq") or []
+    if not base:
+        return out
+    out["path_reordered"] = reordered_ids(current_seq, base)
+    out["path_inserted_midsequence"] = inserted_midsequence(current_seq, base)
+    return out
 
 
 def live_grades() -> list[int]:
@@ -1083,6 +1285,12 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     if out["path_differs"]:
         out["path_missing"] = [m for m in local_seq if m not in live_seq]
         out["path_extra"] = [m for m in live_seq if m not in local_seq]
+    # Santykinė senų ID tvarka. Aibė gali būti teisinga (`not_in_path` 0), o
+    # žingsnių tvarka pajudėta — tada vaiko „Tęsk nuo čia“ rodo į kitą vietą,
+    # nors kiekvienas skaičius pranešime sutampa (AGENTS.md: „esama tvarka
+    # nesikeistų“; gairės T3.6). Matuojama prieš HEAD / paskutinį path.json
+    # commit'ą, ne prieš šiandieninį failą, nes kitaip skirtumo nebūtų.
+    out.update(path_order_check(grade, local_seq))
 
     stale: list[dict] = []
     stale_unknown: list[str] = []
@@ -1333,6 +1541,16 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "deploy_live_version": live_v,
         "deploy_waited": deploy_waited,
         "path_differs": [g["grade"] for g in per_grade if g.get("path_differs")],
+        # Santykinė `path.json` tvarka: atskiri sąrašai, nes taisymas kitas nei
+        # „įrašyk trūkstamą ID“ (`not_in_path`) ar „seka pasenusi“ (`path_differs`).
+        "path_reordered": merge("path_reordered"),
+        "path_inserted_midsequence": merge("path_inserted_midsequence"),
+        "path_order_baseline": "; ".join(
+            f"{grade_dir(g['grade'])} {g['path_order_baseline']}"
+            for g in per_grade if g.get("path_order_baseline")),
+        "path_order_checked": all(g.get("path_order_checked", False) for g in per_grade),
+        "path_order_note": "; ".join(
+            g["path_order_note"] for g in per_grade if g.get("path_order_note")),
         "unpushed_commits": len(unpushed_list),
         "unpushed_checked": unpushed_ok,
         "retried_requests": RETRIES["count"],
@@ -1422,6 +1640,10 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(orphan)} pervadintas ID be alias (žyma liktų našlaite)")
     if data.get("history_unchecked"):
         reasons.append("dingusių ID patikra neįvyko")
+    # Tyli riba: git istorijos neperskaičius, „tvarka nepajudėta“ būtų
+    # teiginys apie matavimą, kurio nebuvo (LL-37).
+    if data.get("path_order_checked") is False:
+        reasons.append("sekos tvarkos patikra neįvyko")
     if data.get("stale"):
         reasons.append(f"{len(data['stale'])} pasenęs modulis")
     if data.get("live_missing"):
@@ -1438,6 +1660,11 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(data['missing_in_repo'])} indekso įrašas be failo repo")
     if data.get("path_differs"):
         reasons.append("kelio seka skiriasi")
+    # Senų ID tvarka pajudėta: kiekvienas ID yra, bet vaiko „Tęsk nuo čia“
+    # rodo į kitą žingsnį nei vakar. Tai ne tas pats kaip „trūksta ID“ ar
+    # „seka pasenusi“, todėl ir priežastis sava (LL-21).
+    if data.get("path_reordered"):
+        reasons.append(f"{len(data['path_reordered'])} senų ID tvarka pajudėta")
     if data.get("aux_stale"):
         reasons.append(f"{len(data['aux_stale'])} pasenęs pagrindinis failas")
     if data.get("aux_absent"):
@@ -1636,6 +1863,26 @@ def main() -> int:
         print(f"Dingusių ID patikros riba: {data['history_note']}")
     if data["path_differs"]:
         print(f"path.json seka skiriasi: klasė {', '.join(map(str, data['path_differs']))}")
+    if data.get("path_reordered"):
+        # Aibė sutampa, tvarka — ne. Taisymas yra kitas nei „įrašyk trūkstamą
+        # ID“, todėl ir eilutė sava: grąžink seną tvarką ir naujus įrašyk gale.
+        base = data.get("path_order_baseline") or "?"
+        print(f"SEKOS TVARKA PAJUDĖTA — senų ID santykinė tvarka skiriasi nuo "
+              f"{base} ({len(data['path_reordered'])}): "
+              f"{', '.join(data['path_reordered'])}. Pašalinus šiuos ID likusi "
+              f"tvarka atitinka ankstesnę. Vaiko „Tęsk nuo čia“ žingsnis persikėlė.")
+    inserted = data.get("path_inserted_midsequence") or []
+    if inserted:
+        # Ne klaida, bet ne tyla: įterpimas viduryje perstumia visus po jo
+        # einančius žingsnius, o tai žmogus turi žinoti iš įrankio, ne iš vaiko.
+        print(f"Nauji moduliai įterpti į maršruto vidurį (ne į pabaigą) "
+              f"({len(inserted)}): {', '.join(inserted)} — tai leidžiama, bet "
+              f"„kitas žingsnis“ pasikeitė jiems ir po jų einantiems.")
+    if data.get("path_order_note"):
+        print(f"Sekos tvarka: {data['path_order_note']}")
+    if data.get("path_order_checked") is False:
+        print("SEKOS TVARKOS PATIKRA NEĮVYKO — „tvarka nepajudėta“ nebuvo "
+              "išmatuota (git istorija neperskaityta). Tai ne „0 pajudėta“.")
     if data["aux_stale"]:
         print(f"PASENĘS PAGRINDINIS FAILAS — moduliai 200, bet svetainė skaito kitą ({len(data['aux_stale'])}):")
         for s in data["aux_stale"]:
@@ -1725,10 +1972,22 @@ def main() -> int:
         if name.get("total"):
             name_tail = (f", garso vardai {name.get('checked', 0)}/{name['total']}"
                          f" = baitai ir tekstas")
+        # Tvarka — matavimas, o ne prielaida: sėkmės eilutė turi pasakyti, su
+        # kuo lyginta, kitaip „sutampa“ apie 72 ID nieko nesako apie jų eilę.
+        order_tail = ""
+        if data.get("path_order_checked"):
+            order_tail = (f" (senų ID tvarka nepajudėta, lyginta su "
+                          f"{data.get('path_order_baseline') or '?'})")
+            inserted_n = len(data.get("path_inserted_midsequence") or [])
+            if inserted_n:
+                order_tail = (f" (senų ID tvarka nepajudėta, lyginta su "
+                              f"{data.get('path_order_baseline') or '?'}, "
+                              f"{inserted_n} naujas įterptas į vidurį)")
         if data.get("bytes_checked", True):
             print(f"✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai, "
                   f"svetainės kodas {data.get('shell_count', 0)} failų"
                   f"{name_tail}"
+                  f"{order_tail}"
                   f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
         else:
             # `--no-bytes` sąmoningai nelygina baitų, kodo ir garso. Iki #374
@@ -1736,7 +1995,7 @@ def main() -> int:
             # t. y. pranešdavo apie matavimą, kurio nebuvo (LL-37).
             print("✔ ID ir seka sutampa — DALINĖ PATIKRA: modulių baitai, pagrindinių failų baitai, "
                   "svetainės kodas ir garsas svetainėje NETIKRINTI (--no-bytes)"
-                  f"{name_tail}.")
+                  f"{name_tail}{order_tail}.")
 
     return 1 if problems(data) else 0
 

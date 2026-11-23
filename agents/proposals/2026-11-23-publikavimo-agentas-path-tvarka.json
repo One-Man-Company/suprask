@@ -7,13 +7,13 @@
   "body": "Šiandien per keturis kūrėjo paleidimus į 1 klasę atėjo 10 modulių, ir 4 iš jų buvo įterpti ne į pabaigą, o į maršruto vidurį: 13-pasakojimo-vidurys ir 12-zinute-skaitytojui iškart po 11-teksto-supratimas (12–13 poz.), 38-traumu-prevencija po 25-traumu-prevencija (56), 36-zmoniu-ivairove po 34-bendruomenes (59). Tai teisingas pedagoginis sprendimas, bet jis tyliai perstumia kiekvieną po jo einantį žingsnį, o vaiko „Tęsk nuo čia“ taškas nustatomas pagal poziciją sekoje. check_published.py šiandien tikrina aibę (not_in_path, path_differs) — ar visi ID yra, — bet ne santykinę tvarką, todėl maršruto perstatymas, priešingas AGENTS.md taisyklei „esama tvarka nesikeistų“, praeitų vartus žalias. Šiandien tvarka tikrai nepajudyta (išmatuota `git show 7f346d9:content/lt/grade-01/path.json` → visi 62 seni ID, santykinė tvarka `True`), bet tai patvirtino rankinis skriptas, o ne įrankis, kuriuo remiasi publikavimo sprendimas. Siūloma: check_published pridėti patikrą, kuri lygina `path.json` su paskutine paskelbta versija (ar su `origin/main`) ir į `--json` išveda `path_reordered: [id, ...]` bei `path_inserted_midsequence: [id, ...]`; perstatymas — raudonas, įterpimas viduryje — geltonas su sąrašu, kad žmogus matytų, kam pasikeitė „kitas žingsnis“. Tai uždaro LL-19 šeimos defektą publikavimo pusėje: grupės viduje tvarka keičiasi ne dėl turinio, o dėl leidimo tvarkos.",
   "target": "scripts/check_published.py",
   "priority": "normal",
-  "status": "new",
+  "status": "done",
   "evidence": [
     "content/lt/grade-01/path.json — 72 įrašai, 10 naujų: poz. 12, 13, 56, 59, 65, 68–72 (2026-11-23)",
     "git show 7f346d9:content/lt/grade-01/path.json — 62 įrašai, visi yra naujame, santykinė tvarka nepakitusi",
-    "scripts/check_published.py --json — laukai not_in_path, path_differs, stale; santykinės tvarkos lauko nėra",
     "docs/SVIETIMAS-1-GAIRES.md T3.6 — perėjimas tarp temų niekada nepraranda konteksto",
     "AGENTS.md — „Naują modulį pradėk nuo index.json įrašo…“ ir publikavimo vaidmens taisyklė „esama tvarka nesikeistų“",
-    "research/wiki/changelog.md — 2026-11-23 (11:56) Publikavimo patikra #480, seka išmatuota rankiniu skriptu"
+    "research/wiki/changelog.md — 2026-11-23 (11:56) Publikavimo patikra #480, seka išmatuota rankiniu skriptu",
+    "ĮGYVENDINTA paleidime #484: scripts/check_published.py laukai path_reordered, path_inserted_midsequence, path_order_checked; bazė — scripts/known_path_order.json (ne paskutinis commit'as, žr. LL-159); įrodymas scripts/probe_path_order.py 12/12"
   ]
 }

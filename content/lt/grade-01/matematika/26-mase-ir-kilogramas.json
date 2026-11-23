@@ -78,13 +78,13 @@
     {
       "q": "Dvi vienodos dėžės: viena pilna vatos, kita — vinių. Kuri sunkesnė?",
       "options": [
-        "Ta, kurioje konservai",
-        "Ta, kurioje tušti indeliai",
-        "Abi vienodos, nes vienodo dydžio"
+        "Sunkesnė dėžė su vinimis",
+        "Sunkesnė dėžė su vata",
+        "Abi dėžės vienodos, nes vienodo dydžio"
       ],
       "answer": 0,
-      "hint": "Dydis nepasako. Pagalvok, kas rankinės viduje.",
-      "why": "Masę lemia tai, kas viduje. Konservų skardinės sunkesnės už tuščius indelius."
+      "hint": "Dydis nepasako. Pagalvok, kuri medžiaga sunki, o kuri lengva.",
+      "why": "Masę lemia tai, kas viduje. Vinys sunkios, o vata lengva, nors dėžės vienodo dydžio."
     },
     {
       "q": "Kurių daiktų masę patogu pasakyti kilogramais?",
@@ -126,14 +126,14 @@
     "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), matematikos programa 1 klasei, „Masė, laikas“: „Susipažįstama su pagrindiniu masės matavimo vienetu kilogramu (kg). Atliekant įvairias praktines užduotis, mokomasi pajausti, kokių artimoje aplinkoje esančių daiktų masę tinka/netinka apibūdinti šiuo matavimo vienetu, kokie prietaisai gali būti tam naudojami“, sources/pradinio-bp-rekomendacijos-2024.txt:33783–33784.",
     "NŠA (2024), ten pat, sources/pradinio-bp-rekomendacijos-2024.txt:1010–1014 — „mato jausmo“ ugdymas ir metodas „spėti ir tikrinti“: pirmiausia vertinama „iš akies“, paskui matuojama skirtu prietaisu ir rezultatas aptariamas su mokytoju.",
     "NŠA (2024), ten pat, sources/pradinio-bp-rekomendacijos-2024.txt:17299 — 1 klasės metų planas: temai „Masė, laikas“ skiriamos 5 pamokos.",
-    "NŠA (2024), ten pat, sources/pradinio-bp-rekomendacijos-2024.txt:33801–33806 — vadovėlio užduotis „Rankinės yra vienodo dydžio, tačiau jų masė skirtinga“ ir palyginimas „Mažiau negu 1 kg / Daugiau negu 1 kg“.",
+    "NŠA (2024), ten pat, sources/pradinio-bp-rekomendacijos-2024.txt:33801–33806 — vadovėlio užduotis „Rankinės yra vienodo dydžio, tačiau jų masė skirtinga“ ir palyginimas „Mažiau negu 1 kg / Daugiau negu 1 kg“. Modulyje ta pati idėja perteikta dėžėmis su vata ir vinimis.",
     "Chouinard, P. A., Matheson, K. G., Royals, K. A., Landry, O., Buckingham, G., Saccone, E. J., & Hocking, D. R. (2019). The development of the size–weight illusion in children coincides with the development of nonverbal cognition rather than motor skills. Journal of Experimental Child Psychology, 184, 48–64. https://www.sciencedirect.com/science/article/pii/S0022096518307045 — dydžio ir svorio iliuzija nustatyta ir vaikams, todėl išvaizda tikrai klaidina ir pasikliauti ja negalima.",
     "Buckingham, G. (2014). Getting a grip on heaviness perception: a review of weight illusions and their probable causes. Experimental Brain Research, 232(6), 1623–1629. https://doi.org/10.1007/s00221-014-3926-9 — numatomas svoris (iš dydžio, medžiagos, formos) keičia pajuntamą svorį, todėl „iš akies“ spėjimas yra natūralus, bet nepakankamas.",
     "Metodas M-07 — research/wiki/grades/01/metodai.md (spėjimo prieš matavimą seka, taikyta ilgio moduliui ir pakartota čia)."
   ],
   "svietimas1": [
     "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (dydis masės nepasako), o gramai, tona ir vienetų sąryšiai sąmoningai neįtraukti — tai 2 klasės turinys.",
-    "2 žingsnis — vienodas vertinimas: užduotys prašo tos pačios taisyklės naujoje situacijoje (rankinės, miltų pakelis, kamuolys), o ne atkartoti modulio sakinį.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo tos pačios taisyklės naujoje situacijoje (dėžės su vata ir vinimis, miltų pakelis, kamuolys), o ne atkartoti modulio sakinį.",
     "3 žingsnis — pagalba laiku: spėjimas prieš kiekvieną matavimą palyginamas su rezultatu ir niekada nevadinamas klaida, kiekviena užduotis turi užuominą, yra praplėtimo užduotis.",
     "P2 / T2.3 / T5.5: veiksmas prieš paaiškinimą, grįžtamasis ryšys apie veiksmą („Taip parodė svarstyklės“), rezultatas rodomas ir žodžiu, o ne vien lėkštės pakrypimu."
   ]

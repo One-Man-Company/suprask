@@ -703,6 +703,10 @@
   "n": "n/850358511b12a071-dbb36792.mp3",
   "s": "s/850358511b12a071-5964052b.mp3"
  },
+ "Atleidai pirštą — šviesa užgęsta. Mygtukas nieko neįsimena.": {
+  "n": "n/a95e58a016454f00-3472a2db.mp3",
+  "s": "s/a95e58a016454f00-7b1ab64b.mp3"
+ },
  "Atsukti stiklainį": {
   "n": "n/a7e694b435a3d645-49ef5d0e.mp3",
   "s": "s/a7e694b435a3d645-f303ffc4.mp3"
@@ -1351,6 +1355,10 @@
   "n": "n/f7a57a0225943407-fed34153.mp3",
   "s": "s/f7a57a0225943407-54a0a806.mp3"
  },
+ "Jungiklis šviesą palieka. Mygtukas dega tik kol laikai.": {
+  "n": "n/fe88abbcdcfbccea-955f65f1.mp3",
+  "s": "s/fe88abbcdcfbccea-f5b22cf8.mp3"
+ },
  "Juosta pilna. Šį garsą gali tempti.": {
   "n": "n/860d84e6e8b491e5-906f8e15.mp3",
   "s": "s/860d84e6e8b491e5-d3c9dbad.mp3"
@@ -1915,6 +1923,10 @@
   "n": "n/2eeef62caabfcd5d-c1838a8b.mp3",
   "s": "s/2eeef62caabfcd5d-e115c8f2.mp3"
  },
+ "Mygtukas nepaspaustas, todėl šviesa nešviečia. Spausk ir laikyk.": {
+  "n": "n/abc04fed2c9142db-11ed676e.mp3",
+  "s": "s/abc04fed2c9142db-5494639b.mp3"
+ },
  "Mėlyna dėmė. Formos tos pačios.": {
   "n": "n/089a75b857dc98a2-810d65f5.mp3",
   "s": "s/089a75b857dc98a2-17a97773.mp3"
@@ -2375,6 +2387,10 @@
   "n": "n/b875e35c2d3350b1-0a1e5a42.mp3",
   "s": "s/b875e35c2d3350b1-e7374b1a.mp3"
  },
+ "Pradedam iš naujo. Įdėtas jungiklis, šviesa neuždegta.": {
+  "n": "n/e5b1bfb8319a7465-b5343286.mp3",
+  "s": "s/e5b1bfb8319a7465-72909dd3.mp3"
+ },
  "Pradedam iš naujo. Žymė vėl viršuje.": {
   "n": "n/075dde4122881f4e-3b97ad01.mp3",
   "s": "s/075dde4122881f4e-0e76d9df.mp3"
@@ -2382,6 +2398,10 @@
  "Pradedam. Prijunk laidus ir pažiūrėk, ar lemputė šviečia.": {
   "n": "n/cbe1d27c52bcf99c-cbd96c13.mp3",
   "s": "s/cbe1d27c52bcf99c-38cd0008.mp3"
+ },
+ "Pradėk nuo jungiklio. Pasuk jį ir nuimk pirštą.": {
+  "n": "n/643694f7d69ce991-a490be01.mp3",
+  "s": "s/643694f7d69ce991-e0c532e8.mp3"
  },
  "Pralaimėjai": {
   "n": "n/1b4ed9470469a710-03f84c32.mp3",
@@ -3718,6 +3738,18 @@
  "Šlapios grindys": {
   "n": "n/310e5aa3d68ec76f-e21f548d.mp3",
   "s": "s/310e5aa3d68ec76f-d0f6c2f8.mp3"
+ },
+ "Šviesa dega, kol laikai mygtuką.": {
+  "n": "n/c06db59dd1c26d0b-57458e61.mp3",
+  "s": "s/c06db59dd1c26d0b-793cda3b.mp3"
+ },
+ "Šviesa dega. Nuimk pirštą ir pažiūrėk, ar dega toliau.": {
+  "n": "n/5477c60dc76c09ff-ad0a30f9.mp3",
+  "s": "s/5477c60dc76c09ff-e7bd3aba.mp3"
+ },
+ "Šviesa užgęsta. Jungiklis liko pasuktoje padėtyje.": {
+  "n": "n/598cca069367980b-69aef955.mp3",
+  "s": "s/598cca069367980b-91582875.mp3"
  },
  "šviečia": {
   "n": "n/d67909131777db70-8baf1359.mp3",

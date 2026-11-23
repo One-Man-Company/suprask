@@ -545,6 +545,14 @@
      "file": "grade-01/technologijos/06-drabuziu-prieziura.json",
      "minutes": 9,
      "sim": "drabuziu-prieziura"
+    },
+    {
+     "id": "07-elektronika",
+     "title": "Kodėl šviesa užgęsta atleidus mygtuką",
+     "subtitle": "Skambutis skamba, kol laikai. Sienos jungiklis lieka įjungtas",
+     "file": "grade-01/technologijos/07-elektronika.json",
+     "minutes": 9,
+     "sim": "mygtukas-ir-jungiklis"
     }
    ]
   },

@@ -1,0 +1,107 @@
+{
+  "id": "33-trukstamas-demuo",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Tas pats 18, keli užrašai",
+  "subtitle": "Perkeli kubelį — keičiasi skaičiai, suma lieka",
+  "minutes": 9,
+  "outcomes": [
+    "Parodau, kad tas pats kiekis turi kelis užrašus.",
+    "Paaiškinu, kodėl 10 + 8 ir 9 + 9 duoda 18.",
+    "Radęs vieną užrašą, ieškau dar kito."
+  ],
+  "concept": {
+    "title": "Keli keliai į tą patį skaičių",
+    "big_idea": "Tas pats kiekis turi ne vieną užrašą. Perkėlus kubelį keičiasi skaičiai, o suma lieka ta pati.",
+    "steps": [
+      "Paspausk mygtuką ir perkelk vieną kubelį.",
+      "Pažiūrėk, kas atsitiko abiem skaičiams.",
+      "Įrašyk užrašą ir ieškok kito."
+    ],
+    "example": "Rėmeliuose 9 ir 9 kubeliai. Rašai 9 + 9 = 18. Perkeli vieną kubelį: 8 + 10 = 18."
+  },
+  "sim": {
+    "component": "du-remeliai-demuo",
+    "config": {
+      "whole": 18,
+      "start": 9,
+      "target": 3,
+      "sentences": {
+        "pradzia": "Perkelk kubelį ir rask kitus užrašus.",
+        "perkelta": "Kubelis perėjo į kitą rėmelį. Iš viso vis dar 18.",
+        "rasta": "Užrašas įrašytas. Rask dar kitą.",
+        "kartojasi": "Toks užrašas jau įrašytas. Perkelk kubelį.",
+        "visi": "Visi užrašai įrašyti. Jų suma 18.",
+        "isnaujo": "Pradedam iš naujo. Sąrašas tuščias."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Kairiame rėmelyje 8 kubeliai, dešiniame 10. Kuris kitas užrašas rodo 18?",
+      "options": [
+        "9 + 10",
+        "9 + 9",
+        "8 + 9"
+      ],
+      "answer": 1,
+      "hint": "Abi pusės turi duoti 18. Suskaičiuok kiekvieną užrašą.",
+      "why": "9 + 9 = 18. Skaičiai kiti, bet kiekis tas pats."
+    },
+    {
+      "q": "Jau radai užrašą 10 + 8 = 18. Pasirink, ką daryti toliau.",
+      "options": [
+        "Baigti, nes atsakymas rastas",
+        "Perkelti kubelį ir ieškoti kito",
+        "Perrašyti tą patį užrašą"
+      ],
+      "answer": 1,
+      "hint": "Užduotis prašė trijų skirtingų užrašų.",
+      "why": "18 turi dar kitų užrašų. Pavyzdžiui, 9 + 9."
+    },
+    {
+      "q": "12 = ▢ + ▢. Kuris užrašas tinka?",
+      "options": [
+        "7 + 6",
+        "5 + 6",
+        "6 + 6"
+      ],
+      "answer": 2,
+      "hint": "Suskaičiuok kiekvieną porą. Kurios suma 12?",
+      "why": "6 + 6 = 12. Yra ir daugiau porų, kurių suma 12."
+    },
+    {
+      "q": "Ar užrašas 0 + 18 = 18 tinka?",
+      "options": [
+        "Taip, abi pusės rodo 18",
+        "Ne, 0 nieko nereiškia",
+        "Ne, reikia dviejų skaičių"
+      ],
+      "answer": 0,
+      "hint": "Viename rėmelyje gali būti ir nulis kubelių.",
+      "why": "0 + 18 = 18. Tuščias rėmelis taip pat tinka.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip dar galima sudėti 18? Pasakyk savo užrašą.",
+  "teacher": {
+    "goal": "Suprasti, kad tas pats kiekis turi kelis užrašus, o radus vieną teisingą atsakymą darbas nesibaigia (programa: trūkstamas dėmuo lygybėje, keli sprendiniai).",
+    "prompt": "Kiek kubelių kairiame rėmelyje? Kiek dešiniame? Kiek abiejuose kartu?",
+    "offline": "Padėkite du dubenėlius ir 18 sagų. Vaikas sagas paskirsto, o jūs užrašote porą lapelyje. Po kiekvieno perkėlimo garsiai pasakykite sumą. Tikslas — trys skirtingos poros tame pačiame lapelyje.",
+    "misconceptions": [
+      "„Radau 10 + 8, darbas baigtas“ — vaikas parašo vieną užrašą ir sustoja. Padeda sąrašas: simuliacija prašo trijų skirtingų užrašų, o jau įrašytą atmeta.",
+      "„Kiekvienas užrašas turi savo atsakymą“ — 9 + 9 = 18 vaikui atrodo visai kitas uždavinys nei 10 + 8 = 18. Padeda perkėlimas po vieną kubelį: skaičiai keičiasi, suma ne.",
+      "„Nulis netinka“ — 0 + 18 vaikui atrodo kaip klaida. Padeda tuščias rėmelis simuliacijoje ir praplėtimo užduotis apie nulį."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“: lygybėse a + b = c, a – b = c nustatomas trūkstamas skaičius; pavyzdys „Į langelius įrašykite tinkamus skaičius. Pasiūlykite tris skirtingus variantus. ▢ + ▢ = 18“.",
+    "Matematikos bendroji programa (2022), „Skaičiai ir skaičiavimai“, 1–2 klasė: sudėtis ir atimtis šimto ribose, trūkstamas dėmuo.",
+    "Jimenez, L., & Verschaffel, L. (2014). Development of children's solutions of non-standard arithmetic word problem solving. Revista de Psicodidáctica, 19(1), 93–123. https://doi.org/10.1387/RevPsicodidact.7865"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (tas pats kiekis, keli užrašai), jokių gretutinių veiksmų",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina supratimą naujoje situacijoje (12 = ▢ + ▢, 0 + 18), ne įsimintą porą",
+    "3 žingsnis — pagalba laiku: pradinis užrašas duotas, užuomina kiekvienoje užduotyje, praplėtimo užduotis apie nulį"
+  ]
+}

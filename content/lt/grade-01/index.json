@@ -269,6 +269,14 @@
      "file": "grade-01/matematika/32-transformacijos-konstravimas.json",
      "minutes": 9,
      "sim": "sukamas-ratas"
+    },
+    {
+     "id": "33-trukstamas-demuo",
+     "title": "Tas pats 18, keli užrašai",
+     "subtitle": "Perkeli kubelį — keičiasi skaičiai, suma lieka",
+     "file": "grade-01/matematika/33-trukstamas-demuo.json",
+     "minutes": 9,
+     "sim": "du-remeliai-demuo"
     }
    ]
   },

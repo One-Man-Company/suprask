@@ -4516,7 +4516,215 @@ const sukamasRatas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 18. Du rėmeliai: tas pats kiekis, keli užrašai                      */
+/*                                                                    */
+/* Modelis: 18 kubelių visada telpa į du rėmelius. Perkėlus vieną      */
+/* kubelį pasikeičia ABU skaičiai, o suma lieka ta pati. Todėl         */
+/* nuostata „uždavinyje vienas atsakymas — radau ir baigiau“ tampa     */
+/* matoma klaida: sąrašas prašo trijų skirtingų užrašų, o jau įrašytą  */
+/* atmeta. Būtent ši nuostata paaiškina, kodėl 1–6 kl. mokiniai iš      */
+/* uždavinių su keliais sprendiniais teisingai atsako tik 30,3 %       */
+/* (Jimenez ir Verschaffel, 2014).                                     */
+/*                                                                    */
+/* Konfigūracija (visi laukai neprivalomi):                            */
+/*   whole     — kiek kubelių iš viso (18);                            */
+/*   start     — kiek jų pradžioje kairiame rėmelyje (9);              */
+/*   target    — kiek skirtingų užrašų reikia įrašyti (3);             */
+/*   sentences — tariami sakiniai (perkelta, rasta, kartojasi, visi,   */
+/*               isnaujo, pradzia).                                    */
+/* ------------------------------------------------------------------ */
+const duRemeliaiDemuo = {
+  mount({ stage, controls, api, config }) {
+    const whole = Math.max(4, Math.min(20, Number(config.whole ?? 18)));
+    const start = Math.max(0, Math.min(whole, Number(config.start ?? Math.floor(whole / 2))));
+    const target = Math.max(2, Math.min(5, Number(config.target ?? 3)));
+    const say = config.sentences || {};
+
+    // Rėmelio vidus turi sutilpti VISUS kubelius: jei visi persikeltų į vieną
+    // pusę, nė vienas kubelis neturi išlipti iš rėmelio.
+    const COLS = Math.max(4, Math.ceil(whole / 3));
+    const ROWS = Math.ceil(whole / COLS);
+    const FRAME_W = 152;
+    const PAD = 12;
+    const PITCH = Math.max(10, Math.min(22, Math.floor((FRAME_W - PAD * 2) / COLS)));
+    const CUBE = PITCH - 4;
+    const FRAME_H = ROWS * PITCH - 4 + PAD * 2;
+    const FRAME_Y = 10;
+    const FX = [8, 200];
+    const VIEW_H = FRAME_Y + FRAME_H + 44;
+
+    let left = start;          // kubeliai kairiame rėmelyje
+    let found = [start];       // įrašyti užrašai (kairiojo rėmelio skaičiai)
+    let reported = false;
+    let movesSaid = false;
+    let lastSaid = "";
+
+    const right = () => whole - left;
+
+    stage.innerHTML = `
+      <div id="dr-wrap" tabindex="0" role="group" aria-label="Du rėmeliai su kubeliais"
+           style="width:100%;max-width:24rem;margin:0 auto;text-align:center;outline-offset:4px">
+        <svg id="dr-svg" viewBox="0 0 360 ${VIEW_H}" width="100%" role="img"
+             aria-label="Du rėmeliai su kubeliais"></svg>
+        <p id="dr-card" style="font-family:var(--font-head);font-weight:900;font-size:1.8rem;margin:.45rem 0 0;letter-spacing:.02em">${start} + ${whole - start} = ${whole}</p>
+        <p id="dr-found" style="font-size:var(--fs-s,1rem);color:var(--ink-soft);margin:.25rem 0 0"></p>
+        <p class="sim-note" id="dr-msg"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div id="dr-tools" style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        <button class="btn" id="dr-right">Perkelk kubelį į dešinį</button>
+        <button class="btn secondary" id="dr-left">Perkelk kubelį į kairį</button>
+        <button class="btn" id="dr-save">Įrašau užrašą</button>
+        <button class="btn ghost" id="dr-reset">Iš naujo</button>
+      </div>`;
+
+    const wrap = stage.querySelector("#dr-wrap");
+    const svg = stage.querySelector("#dr-svg");
+    const card = stage.querySelector("#dr-card");
+    const foundEl = stage.querySelector("#dr-found");
+    const msg = stage.querySelector("#dr-msg");
+
+    /* --- pastatymas --------------------------------------------------- */
+    const frame = (fx) => svgEl("rect", {
+      x: fx, y: FRAME_Y, width: FRAME_W, height: FRAME_H, rx: 14,
+      fill: "var(--paper-2)", stroke: "var(--line)", "stroke-width": 3,
+    });
+    const counter = (fx) => svgEl("text", {
+      x: fx + FRAME_W / 2, y: FRAME_Y + FRAME_H + 32, "text-anchor": "middle",
+      "font-family": "system-ui, sans-serif", "font-size": 28, "font-weight": 800,
+      fill: "var(--ink)",
+    });
+
+    const groups = [];
+    const counters = [];
+    FX.forEach((fx) => {
+      svg.appendChild(frame(fx));
+      const g = svgEl("g", {});
+      svg.appendChild(g);
+      groups.push(g);
+      const c = counter(fx);
+      svg.appendChild(c);
+      counters.push(c);
+    });
+
+    function drawInto(g, n, fx) {
+      while (g.firstChild) g.removeChild(g.firstChild);
+      for (let i = 0; i < n; i += 1) {
+        g.appendChild(svgEl("rect", {
+          x: fx + PAD + (i % COLS) * PITCH,
+          y: FRAME_Y + PAD + Math.floor(i / COLS) * PITCH,
+          width: CUBE, height: CUBE, rx: 3, fill: "var(--sky)",
+        }));
+      }
+    }
+
+    /* --- būsena ------------------------------------------------------- */
+    // Ekrane rodomas TAS PATS sakinys, kurį ištaria balsas (LL-42): vienas
+    // šaltinis yra config, todėl negali atsirasti dviejų nuomonių apie tą
+    // patį įvykį, o check_audio.py mato būtent šiuos tekstus.
+    const line = (key) => String(say[key] || "").trim();
+
+    function tell(key) {
+      const t = line(key);
+      if (!t || lastSaid === key) return;
+      lastSaid = key;
+      api.speak(t);
+    }
+
+    function paint() {
+      drawInto(groups[0], left, FX[0]);
+      drawInto(groups[1], right(), FX[1]);
+      counters[0].textContent = String(left);
+      counters[1].textContent = String(right());
+      card.textContent = `${left} + ${right()} = ${whole}`;
+      svg.setAttribute("aria-label",
+        `Kairiame rėmelyje ${left} kubelių, dešiniame ${right()}. Iš viso ${whole}.`);
+      foundEl.textContent = found.length
+        ? `Rasti užrašai (${found.length} iš ${target}): ${found.map((n) => `${n} + ${whole - n}`).join(", ")}.`
+        : "Rastų užrašų dar nėra.";
+    }
+
+    function move(toRight) {
+      // `toRight` — kubelis KELIAUJA į dešinį rėmelį, todėl kairiajame mažėja.
+      if (toRight && left === 0) {
+        msg.textContent = "Kairys rėmelis tuščias. Perkelti nėra ko.";
+        return;
+      }
+      if (!toRight && right() === 0) {
+        msg.textContent = "Dešinys rėmelis tuščias. Perkelti nėra ko.";
+        return;
+      }
+      left += toRight ? -1 : 1;
+      paint();
+      api.readout(`${left} ir ${right()}. Iš viso ${whole}.`);
+      msg.textContent = line("perkelta");
+      if (!movesSaid) {
+        movesSaid = true;
+        tell("perkelta");
+      }
+    }
+
+    function save() {
+      if (found.includes(left)) {
+        msg.textContent = line("kartojasi");
+        tell("kartojasi");
+        return;
+      }
+      found.push(left);
+      paint();
+      if (found.length >= target) {
+        // Paaiškinimas pagal tai, kas įvyko DABAR, o ne pagal pirmą įrašą (LL-33).
+        msg.textContent = line("visi");
+        api.readout(`Įrašyti ${found.length} užrašai. Visų suma ${whole}.`);
+        api.note(line("visi"));
+        tell("visi");
+        if (!reported) {
+          reported = true;
+          api.progress({ correct: true });
+        }
+      } else {
+        msg.textContent = line("rasta");
+        api.readout(`Įrašytas užrašas. Iš viso ${found.length} iš ${target}.`);
+        tell("rasta");
+      }
+    }
+
+    function reset() {
+      left = start;
+      found = [start];
+      reported = false;
+      movesSaid = false;
+      paint();
+      api.readout(`${left} ir ${right()}. Iš viso ${whole}.`);
+      msg.textContent = line("isnaujo");
+      tell("isnaujo");
+    }
+
+    /* --- įėjimai ------------------------------------------------------ */
+    controls.querySelector("#dr-right").addEventListener("click", () => move(true));
+    controls.querySelector("#dr-left").addEventListener("click", () => move(false));
+    controls.querySelector("#dr-save").addEventListener("click", save);
+    controls.querySelector("#dr-reset").addEventListener("click", reset);
+
+    wrap.addEventListener("keydown", (evt) => {
+      if (evt.key === "ArrowRight") { evt.preventDefault(); move(true); }
+      else if (evt.key === "ArrowLeft") { evt.preventDefault(); move(false); }
+    });
+
+    paint();
+    msg.textContent = line("pradzia");
+    api.readout(`${left} ir ${right()}. Iš viso ${whole}.`);
+    tell("pradzia");
+
+    // Laikmačių nėra, bet sutartis reikalauja grąžinti valymo funkciją.
+    return () => {};
+  },
+};
+
 export const SIMS = {
+  "du-remeliai-demuo": duRemeliaiDemuo,
   "skaiciu-tiese": skaiciuTiese,
   "sukamas-ratas": sukamasRatas,
   desimtukas,

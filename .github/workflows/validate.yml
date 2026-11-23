@@ -42,6 +42,14 @@ jobs:
       - name: Maršruto tvarka
         run: python3 scripts/check_published.py --path-order
 
+      # Vidinės nuorodos. `check_published.py` lygina **failus, kurie repo
+      # yra**; importas į failą, kurio niekas nesukūrė (ar su rašybos klaida),
+      # nelyginamas su niekuo, tad deploy žalias, o vaikui lūžta visas JS
+      # grafas — baltas puslapis. Tas pats galioja CSS `url(...)` ir `404.html`
+      # nuorodoms. Patikra yra be tinklo: tik repo failų egzistavimas.
+      - name: Vidaus nuorodos
+        run: python3 scripts/check_refs.py
+
       - name: Dokumentų skaičiai
         run: python3 scripts/check_docs_facts.py
 

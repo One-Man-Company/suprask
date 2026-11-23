@@ -53,6 +53,14 @@ jobs:
           fi
           echo "versija: $SHA"; grep -o "main.css?v=[a-f0-9]*" _site/index.html | head -1
 
+      # Vidinės nuorodos — **surinktame artefakte**, ne repo. `check_published`
+      # lygina failus, kurie yra; importas į nieką neturi su kuo lygintis, tad
+      # praeitų visus vartus, o vaikui lūžtų JS grafas (baltas puslapis, LL-167).
+      # Tikrinama po `?v=` injekcijos, nes būtent šį katalogą įkelia Pages:
+      # jei žyma kada nors pakeistų nuorodos formą, vartas tai pamatys.
+      - name: Vidaus nuorodos
+        run: python3 scripts/check_refs.py --root _site
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3

@@ -392,6 +392,14 @@
      "sim": "ismesto-daikto-kelias"
     },
     {
+     "id": "35-gamtos-istekliai-tarsa-tausojimas",
+     "title": "Kas lieka pievoje po metų",
+     "subtitle": "Lapas suyra, o butelis ir stiklinė lieka",
+     "file": "grade-01/pasaulio-pazinimas/35-gamtos-istekliai-tarsa-tausojimas.json",
+     "minutes": 9,
+     "sim": "kas-lieka-pievoje"
+    },
+    {
      "id": "24-kieta-vandens-forma",
      "title": "Vienas vanduo, trys formos",
      "subtitle": "Ledas, snaigė ir šerkšnas — tas pats vanduo",

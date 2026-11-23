@@ -1,0 +1,172 @@
+{
+  "id": "35-gamtos-istekliai-tarsa-tausojimas",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Kas lieka pievoje po metų",
+  "subtitle": "Lapas suyra, o butelis ir stiklinė lieka",
+  "minutes": 9,
+  "outcomes": [
+    "Nurodau, kuriuos daiktus gamta suyra, o kuriuos palieka.",
+    "Paaiškinu, kodėl butelį ir stiklinę reikia išsinešti.",
+    "Pasirenku, ką daryti su daiktu, kad jis neliktų gamtoje."
+  ],
+  "concept": {
+    "title": "Gamta suyra savo, o ne svetimą",
+    "big_idea": "Lapas ir obuolio graužas išaugo, todėl gamta juos suyra. Butelis ir stiklinė pagaminti, todėl jie pievoje lieka.",
+    "steps": [
+      "Pažymėk daiktus, kurie, tavo manymu, liks pievoje.",
+      "Pasuk laiką: paspausk „Po metų“.",
+      "Pažiūrėk, kas liko: lapo nebėra, butelis tebeguli.",
+      "Surink daiktus, kurie nesuyra. Pieva vėl tuščia."
+    ],
+    "example": "Po pikniko pievoje liko lapas, obuolio graužas, butelis ir stiklinė. Po metų butelis ir stiklinė tebeguli."
+  },
+  "sim": {
+    "component": "kas-lieka-pievoje",
+    "config": {
+      "items": [
+        {
+          "id": "lapas",
+          "label": "Lapas",
+          "icon": "lapas",
+          "decays": true,
+          "sentences": {
+            "year": "Lapo nebėra. Jis suiro.",
+            "decade": "Lapo vis dar nebėra."
+          }
+        },
+        {
+          "id": "grauzas",
+          "label": "Obuolio graužas",
+          "icon": "grauzas",
+          "decays": true,
+          "sentences": {
+            "year": "Graužo nebėra. Jis suiro.",
+            "decade": "Graužo vis dar nebėra."
+          }
+        },
+        {
+          "id": "butelis",
+          "label": "Butelis",
+          "icon": "butelis",
+          "decays": false,
+          "takeLabel": "Surink butelį",
+          "sentences": {
+            "year": "Butelis tebeguli. Jis tik apblukęs.",
+            "decade": "Butelis vis dar guli pievoje.",
+            "take": "Butelį pasiėmei. Dabar jis ne pievoje."
+          }
+        },
+        {
+          "id": "stikline",
+          "label": "Stiklinė",
+          "icon": "stikline",
+          "decays": false,
+          "takeLabel": "Surink stiklinę",
+          "sentences": {
+            "year": "Stiklinė tebeguli tokia pat.",
+            "decade": "Stiklinė vis dar tokia pat.",
+            "take": "Stiklinę pasiėmei. Dabar ji ne pievoje."
+          }
+        }
+      ],
+      "times": [
+        { "id": "metai", "label": "Po metų", "say": "t1" },
+        { "id": "desimt", "label": "Po dešimt metų", "say": "t2" }
+      ],
+      "sentences": {
+        "ask": "Pažymėk, kurie daiktai liks po metų.",
+        "markDone": "Pažymėta.",
+        "markOff": "Nuimta.",
+        "none": "Nepažymėjai nė vieno daikto.",
+        "t1": "Praėjo metai. Pažiūrėk, kas liko.",
+        "t2": "Praėjo dešimt metų. Kas pasikeitė?",
+        "cleanAsk": "Surink daiktus, kurie nesuyra.",
+        "cleanNote": "Kol šie daiktai guli, jie teršia pievą.",
+        "done": "Pieva vėl tuščia. Daiktus išsinešei.",
+        "again": "Pradedam iš naujo."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Kas lieka vietoj obuolio graužo po metų?",
+      "options": [
+        "Tą patį graužą",
+        "Nieko — graužas suiro",
+        "Graužą, jau stiklinį"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kas nutinka obuoliui, kuris ilgai guli žolėje.",
+      "why": "Graužas išaugo, todėl gamta jį suyra per metus."
+    },
+    {
+      "q": "Kodėl butelį ir stiklinę reikia išsinešti iš pievos?",
+      "options": [
+        "Nes jie nesuyra ir lieka ilgai",
+        "Nes juos suės paukščiai",
+        "Nes jie ištirps per lietų"
+      ],
+      "answer": 0,
+      "hint": "Pažiūrėk į sceną po dešimt metų: kas ten tebeguli?",
+      "why": "Butelis ir stiklinė gamtoje nesuyra, todėl lieka."
+    },
+    {
+      "q": "Po pietų tau lieka plastikinis butelis. Kaip jį sutvarkyti?",
+      "options": [
+        "Palikti ant žolės — jis greitai suirs",
+        "Užkasti po medžiu, kad nesimatytų",
+        "Išpilti vandenį ir pasiimti butelį"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, ar butelis suirs iki rytojaus.",
+      "why": "Butelis nesuyra, todėl jį reikia pasiimti ir naudoti dar kartą."
+    },
+    {
+      "q": "Kuris daiktas išaugo, o ne buvo pagamintas?",
+      "options": [
+        "Stiklinė virtuvėje",
+        "Butelis gamykloje",
+        "Obuolys sode"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kuris daiktas turi sėklą.",
+      "why": "Obuolys išaugo sode, o stiklą ir plastiką pagamina žmonės."
+    },
+    {
+      "q": "Senelis pamiršo butelį miške. Po dešimt metų jį rado. Kas tai rodo?",
+      "options": [
+        "Kad plastikas gamtoje nesuyra greitai",
+        "Kad plastikas suyra per vasarą",
+        "Kad plastikas virsta medžiu"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kiek laiko butelis guli pievoje modelyje.",
+      "why": "Butelis tebeguli, nors praėjo dešimt metų.",
+      "optional": true
+    }
+  ],
+  "reflect": "Ką darytum su stikline, kurią randi pievoje?",
+  "teacher": {
+    "goal": "Suprasti, kad gamta suyra tai, kas išaugo, o žmogaus pagaminti daiktai lieka. Modelis leidžia vaikui pačiam pažymėti, kas, jo manymu, liks, ir pasukti laiką: po metų lapo ir graužo nebėra, o butelis ir stiklinė tebeguli. Tada vaikas juos surenka — tai ir yra tausojimas. Palikimas nebaudžiamas: parodoma vieta, ne kaltė.",
+    "prompt": "Ką manai, kas pievoje liks po metų?",
+    "offline": "Padėkite ant stalo keturis daiktus: sausą lapą, obuolio graužą, plastikinį butelį ir stiklinę. Vaikai pirma spėja, kurie išnyks. Tada lapą ir graužą įkasite į drėgną žemę, o butelį ir stiklinę palikite šalia. Po dviejų–trijų savaičių apžiūrėkite: lapas jau tamsus ir minkštas, o butelis ir stiklinė tokie pat. Užbaikite klausimu „Kodėl vienus daiktus gamta paima, o kitus ne?“ ir klasės taisyklių aptarimu, kaip numatyta programoje.",
+    "misconceptions": [
+      "„Palikau gamoje — suirs.“ Modelis to nepaneigia žodžiais: vaikas pažymi, kas liks, tada pasuka laiką ir pamato, kad butelis ir stiklinė tebeguli, o lapo ir graužo nebėra.",
+      "„Šiukšlė dingsta, kai jos nebesimato.“ Po pirmo laiko žingsnio butelis lieka toje pačioje vietoje — scena nešluoja jo į šalį, o rodo tą pačią pievą.",
+      "„Viskas, kas iš gamtos, suyra.“ Stiklas gaminamas iš smėlio, plastikas — iš naftos, bet pagamina juos žmogus. Modelis skiria ne medžiagos kilmę, o tai, ar daiktas išaugo, ar pagamintas.",
+      "„Lapas suyra per dieną.“ Laikas modelyje matuojamas metais: pirmas žingsnis yra „Po metų“, todėl suirimas suprantamas kaip lėtas, o ne akimirksnio.",
+      "Modelio riba: butelis po dešimt metų nupieštas toks pat. Tikrovėje jis trapus ir skyla į gabalus, bet nedingsta. Tai pasakoma žodžiu, kad vaikas nepainiotų modelio su tikru skilimu."
+    ]
+  },
+  "sources": [
+    "NŠA (2024). Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos, Gamtos mokslai, 1 klasės ilgalaikis planas — 26.3.1 „Gamtos ištekliai, jų tarša ir tausojimas“ (2 val.). Veiklos: praktinė veikla, darbas grupėse ar porose (pvz., žaidimas „Kas sukūrė šį daiktą?“), mini diskusija „Kaip tausoti daiktus klasėje?“ ir klasės taisyklių aptarimas „Kokios taisyklės padeda tausoti gamtos išteklius?“ sources/pradinio-bp-rekomendacijos-2024.txt:8452–8463; ilgalaikio plano pavyzdys :17649–17656.",
+    "NŠA (2024). Ten pat, bendroji dalis: „Tikimasi sąmoningesnio santykio su gamta ugdymosi, tvaresnio vartojimo įgūdžių stiprinimo“ (:78–80) ir „ugdomi praktiniai tvaresnio vartojimo įgūdžiai (D3)“ (:127–131) — todėl modulis baigiamas veiksmu (surinkti), o ne pamokymu."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (gamta suyra tai, kas išaugo), be rūšiavimo, perdirbimo ir skilimo trukmės lentelių.",
+    "2 žingsnis — vienodas vertinimas: užduotys klausia apie pasekmę naujoje situacijoje (graužas, butelis po pietų), o ne kartoja modelio sakinį.",
+    "3 žingsnis — pagalba laiku: vaikas pirma spėja pats, o laiką pasuka savo ranka; spėjimas lieka matomas ir palyginamas su tuo, kas liko. Klaida nebaudžiama.",
+    "8 žingsnis — mokytojas lieka mokytoju: veikla be ekrano (lapas ir graužas žemėje, butelis ir stiklinė šalia) parodo tą patį per dvi savaites, be ekrano."
+  ]
+}

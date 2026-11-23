@@ -5968,6 +5968,317 @@ const giminesGrandine = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Kas lieka pievoje po metų                                           */
+/* ------------------------------------------------------------------ */
+/*
+ * Viena sąvoka: gamta suyra tai, kas išaugo (lapas, obuolys), o žmogaus
+ * pagaminti daiktai (stiklas, plastikas) lieka. Modelis skirtas nuostatai
+ * „palikau gamoje — suirs“: vaikas pirma pažymi, kas, jo manymu, liks,
+ * tada pats pasuka laiką ir pamato, kad butelis ir stiklinė tebeguli, o
+ * lapo ir graužo nebėra.
+ *
+ * Kodėl laikas yra mygtukas, o ne animacija: pasekmė turi būti susieta su
+ * vaiko veiksmu, o ne su tuo, kiek jis žiūrėjo. Todėl jokių laikmačių, o
+ * du aiškūs žingsniai („Po metų“, „Po dešimt metų“), kuriuos galima kartoti.
+ *
+ * Ko modelis sąmoningai nedaro: nekalba apie mikrobus, rūšiavimą ir
+ * perdirbimą; butelis po dešimt metų rodomas toks pat, nors tikrovėje jis
+ * trapus ir skyla. Tai modelio riba, pasakyta žodžiu, o ne nutylėta.
+ */
+const kasLiekaPievoje = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const items = (Array.isArray(config.items) ? config.items : []).filter(Boolean);
+    const times = (Array.isArray(config.times) ? config.times : []).filter(Boolean);
+    const esc = (t) => String(t).replace(/[&<>\"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai: nesuderinta konfigūracija pasakoma žodžiais,
+       o ne tyliai pakeičiama bendru sakiniu (LL-33). --- */
+    const problems = [];
+    if (items.length < 3) problems.push("reikia bent trijų daiktų");
+    if (items.length > 4) problems.push("scena telpa keturiems daiktams");
+    const seen = new Set();
+    items.forEach((it) => {
+      if (!it.id || !it.label || !it.icon) problems.push("daiktas be id, užrašo ar piktogramos");
+      else if (seen.has(it.id)) problems.push(`daiktas „${it.id}“ kartojasi`);
+      else seen.add(it.id);
+      if (typeof it.decays !== "boolean") problems.push(`daiktas „${it.id}“ neturi „decays“`);
+      ["year", "decade"].forEach((k) => {
+        if (!it.sentences || typeof it.sentences[k] !== "string" || !it.sentences[k].trim()) {
+          problems.push(`daiktas „${it.id}“ neturi sakinio „${k}“`);
+        }
+      });
+      if (it.decays === false) {
+        if (!it.takeLabel) problems.push(`daiktas „${it.id}“ neturi „takeLabel“`);
+        if (!it.sentences || typeof it.sentences.take !== "string" || !it.sentences.take.trim()) {
+          problems.push(`daiktas „${it.id}“ neturi pasiėmimo sakinio`);
+        }
+      }
+    });
+    if (!items.some((it) => it.decays === true) || !items.some((it) => it.decays === false)) {
+      problems.push("reikia ir daikto, kuris suyra, ir daikto, kuris lieka");
+    }
+    if (times.length !== 2) problems.push("reikia dviejų laiko žingsnių");
+    times.forEach((t) => {
+      if (!t.id || !t.label) problems.push("laiko žingsnis be id ar užrašo");
+      else if (!t.say || !S[t.say]) problems.push(`laiko žingsnio „${t.label}“ sakinio nėra`);
+    });
+    ["ask", "markDone", "markOff", "none", "cleanAsk", "cleanNote", "done", "again"]
+      .forEach((k) => { if (!S[k]) problems.push(`sakinio „${k}“ nėra`); });
+    if (problems.length) {
+      console.error(`kas-lieka-pievoje: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="error-box">Pievos scena nesuderinta su daiktais.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const GROUND = 236;      // pievos paviršius
+    const ICON_Y = GROUND - 44;  // piktogramos viršus (40 × 40 laukas × 1,15)
+    const ICON_S = 1.15;
+
+    /* Daiktai išdėstomi tolygiai, todėl scena lieka ta pati ir tada, kai
+       modulyje daiktų mažiau (LL-33: kodas neturi spėlioti vieno skaičiaus). */
+    const xs = items.map((_, i) => 56 + i * (250 / Math.max(1, items.length - 1)));
+
+    const state = { t: 0, marks: new Set(), taken: new Set(), reported: false, msg: null };
+
+    const dWord = (n) => (n === 1 ? "daiktas" : n >= 2 && n <= 4 ? "daiktai" : "daiktų");
+    const decayed = (it) => it.decays === true && state.t > 0;
+    const gone = (it) => decayed(it) || state.taken.has(it.id);
+    const staying = () => items.filter((it) => it.decays === false && !state.taken.has(it.id));
+    const inClearing = () => items.filter((it) => !gone(it));
+    const timeStep = () => (state.t < times.length ? times[state.t] : null);
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <p id="klp-line" style="margin:0 0 .35rem;min-width:0;text-align:center;font-weight:800;
+           font-size:.9rem;line-height:1.25;overflow-wrap:anywhere;color:var(--ink-soft)"></p>
+        <svg id="klp-scene" viewBox="0 0 360 260" width="100%"
+             style="display:block;max-width:360px;height:auto;margin:0 auto"
+             role="img" aria-label="Pieva su daiktais po pikniko."></svg>
+        <p id="klp-count" style="margin:.4rem 0 0;min-width:0;text-align:center;font-weight:800;
+           font-size:.95rem;line-height:1.25;overflow-wrap:anywhere"></p>
+        <p id="klp-fate" class="sim-note" style="margin:.2rem 0 0;font-size:.82rem;line-height:1.3"></p>
+        <p style="margin:.1rem 0 0;text-align:center;font-size:.78rem;line-height:1.3;color:var(--ink-soft)">
+          Scena rodo pievą, ne visą mišką.
+        </p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.55rem;width:100%;max-width:34rem;margin:0 auto;min-width:0">
+        <p id="klp-ask" style="margin:0;min-width:0;font-size:.95rem;line-height:1.25;font-weight:800;
+           text-align:center;overflow-wrap:anywhere"></p>
+        <div id="klp-mark" role="group" aria-label="Pažymėk daiktus, kurie liks"
+             style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;min-width:0"></div>
+        <div id="klp-time" role="group" aria-label="Laikas"
+             style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;min-width:0"></div>
+        <div id="klp-take" role="group" aria-label="Surink daiktus"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:.4rem;min-width:0"></div>
+        <button type="button" class="btn ghost" id="klp-reset"
+                style="min-height:48px;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
+    const scene = stage.querySelector("#klp-scene");
+    const line = stage.querySelector("#klp-line");
+    const countEl = stage.querySelector("#klp-count");
+    const fateEl = stage.querySelector("#klp-fate");
+    const askEl = controls.querySelector("#klp-ask");
+    const markGroup = controls.querySelector("#klp-mark");
+    const timeGroup = controls.querySelector("#klp-time");
+    const takeGroup = controls.querySelector("#klp-take");
+    const resetBtn = controls.querySelector("#klp-reset");
+
+    function sceneMarkup() {
+      const marks = items.map((it, i) => (state.marks.has(it.id)
+        ? art.spot(xs[i] - 7, 176, 54, 68, "#2f6f4f", "apvali", 2.5)
+        : "")).join("");
+      const shown = items.map((it, i) => {
+        if (state.taken.has(it.id)) return "";
+        if (decayed(it)) {
+          /* Tai, ką gamta suėmė, lieka kaip tamsi žemės dėmė — ne tuščia
+             vieta, kuri atrodytų kaip „dingo“ (LL-18 priešprieša). */
+          return `<g opacity=".85">${art.spot(xs[i] + 3, 226, 34, 13, "#8a6a4a", "apvali")}
+            ${art.grass(xs[i] + 10, 232, 0.7, "#6f8f4e")}</g>`;
+        }
+        return art.pictogram(it.icon, xs[i], ICON_Y, ICON_S);
+      }).join("");
+      return `${art.defs("klp")}
+        ${art.sun(318, 34, 11, "klp", 0.85)}
+        ${art.cloud(66, 40, 0.72)}
+        ${art.hills(360, 170)}
+        ${art.tree(22, 232, 0.5, "vasara")}
+        ${art.tree(340, 230, 0.4, "vasara")}
+        ${art.grass(40, 242, 1)}${art.grass(150, 244, 0.9)}${art.grass(262, 243, 0.95)}
+        ${marks}${shown}`;
+    }
+
+    function sceneLabel() {
+      const now = inClearing().map((it) => it.label);
+      const marked = items.filter((it) => state.marks.has(it.id)).map((it) => it.label);
+      const when = state.t ? ` ${times[state.t - 1].label.toLowerCase()}` : "";
+      const parts = [now.length ? `Pievoje${when}: ${now.join(", ")}.` : `Pievoje${when} nieko nėra.`];
+      if (marked.length) {
+        parts.push(`${state.t ? "Spėjimas buvo" : "Spėjimas"}: liks ${marked.join(", ")}.`);
+      }
+      return parts.join(" ");
+    }
+
+    const markLine = () => {
+      const m = items.filter((it) => state.marks.has(it.id)).map((it) => it.label);
+      return m.length ? `Tu pažymėjai: ${m.join(", ")}.` : S.none;
+    };
+
+    const fateLine = () => {
+      if (state.t === 0) return "";
+      return items.map((it) => {
+        if (state.taken.has(it.id)) return "";
+        return it.sentences[state.t === 1 ? "year" : "decade"];
+      }).filter(Boolean).join(" ");
+    };
+
+    function render(focusSel) {
+      scene.innerHTML = sceneMarkup();
+      scene.setAttribute("aria-label", sceneLabel());
+
+      const count = inClearing().length;
+      countEl.textContent = state.t === 0
+        ? `Pievoje yra ${count} ${dWord(count)}.`
+        : count === 0 ? "Pievoje nieko neliko." : `Pievoje liko ${count} ${dWord(count)}.`;
+      fateEl.textContent = fateLine();
+      line.textContent = state.marks.size ? markLine() : "";
+
+      askEl.textContent = state.t === 0 ? S.ask
+        : staying().length ? S.cleanAsk : S.done;
+
+      /* Pažymėti galima tik prieš laiką: po jo spėjimas lieka matomas, bet
+         nebetaisomas — kitaip vaikas „atspėtų“ jau matęs atsakymą. */
+      markGroup.innerHTML = items.map((it) => {
+        const on = state.marks.has(it.id);
+        const off = state.t > 0;
+        return `<button type="button" class="btn secondary" data-mark="${esc(it.id)}"
+          aria-pressed="${on ? "true" : "false"}" ${off ? "disabled" : ""}
+          aria-label="${esc(it.label)}${on ? ", pažymėta" : ""}${off ? ", spėjimas nebekeičiamas" : ""}"
+          style="display:grid;justify-items:center;gap:.15rem;min-width:0;min-height:60px;height:auto;
+          padding:.3rem .25rem;font-size:.9rem;line-height:1.15;overflow-wrap:anywhere;
+          ${on ? "background:var(--ink);color:var(--paper);border-color:var(--ink);" : ""}">
+          <span aria-hidden="true" style="font-size:.8rem;font-weight:800;min-height:.9rem">${on ? "✓" : " "}</span>
+          <span style="min-width:0">${esc(it.label)}</span>
+        </button>`;
+      }).join("");
+
+      timeGroup.innerHTML = times.map((t, i) => {
+        const off = state.t !== i;
+        return `<button type="button" class="btn secondary" data-time="${esc(t.id)}" ${off ? "disabled" : ""}
+          aria-label="${off
+            ? (state.t > i ? "Šis laiko žingsnis jau praėjęs" : "Pirma paspausk ankstesnį laiko žingsnį")
+            : `Pasuk laiką: ${esc(t.label)}`}"
+          style="min-width:0;min-height:56px;height:auto;padding:.35rem .3rem;font-size:.92rem;
+          line-height:1.15;overflow-wrap:anywhere">${esc(t.label)}</button>`;
+      }).join("");
+
+      takeGroup.innerHTML = state.t === 0 ? "" : items.filter((it) => it.decays === false).map((it) => {
+        const taken = state.taken.has(it.id);
+        return `<button type="button" class="btn secondary" data-take="${esc(it.id)}" ${taken ? "disabled" : ""}
+          aria-label="${taken ? `${esc(it.label)} jau pasiimtas` : esc(it.takeLabel)}"
+          style="min-width:0;min-height:56px;height:auto;padding:.35rem .3rem;font-size:.92rem;
+          line-height:1.15;overflow-wrap:anywhere">${esc(taken ? "Pasiimta" : it.takeLabel)}</button>`;
+      }).join("");
+
+      resetBtn.setAttribute("aria-label", "Pradėk iš naujo nuo pikniko dienos");
+
+      api.readout(state.msg ? state.msg.readout : askEl.textContent);
+      api.note(state.msg ? state.msg.note : (state.t === 0 ? S.ask : ""));
+
+      if (focusSel) {
+        const el = controls.querySelector(focusSel);
+        const fallback = controls.querySelector("#klp-reset");
+        const target = el && !el.disabled ? el : fallback;
+        if (target) target.focus();
+      }
+    }
+
+    function toggleMark(id) {
+      if (state.t > 0) return;
+      const it = items.find((x) => x.id === id);
+      if (!it) return;
+      const on = !state.marks.has(id);
+      if (on) state.marks.add(id); else state.marks.delete(id);
+      state.msg = { readout: markLine(), note: on ? S.markDone : S.markOff };
+      api.speak(on ? S.markDone : S.markOff);
+      render(`[data-mark="${id}"]`);
+    }
+
+    function advance() {
+      const step = timeStep();
+      if (!step) return;
+      state.t += 1;
+      const said = S[step.say];
+      state.msg = { readout: `${said} ${fateLine()}`.trim(), note: "" };
+      api.speak(said);
+      /* Po laiko žingsnio tas pats mygtukas tampa neaktyvus, todėl fokusas
+         keliamas į kitą veiksmą — kitaip naršyklė jį numestų (LL-32). */
+      const nextTime = timeStep();
+      render(nextTime ? `[data-time="${nextTime.id}"]` : (staying().length ? "[data-take]" : "#klp-reset"));
+    }
+
+    function take(id) {
+      const it = items.find((x) => x.id === id);
+      if (!it || it.decays !== false || state.taken.has(id) || state.t === 0) return;
+      state.taken.add(id);
+      state.msg = { readout: it.sentences.take, note: S.cleanNote };
+      api.speak(it.sentences.take);
+      if (staying().length === 0) {
+        if (!state.reported) {
+          state.reported = true;
+          api.progress({ correct: true });
+        }
+        state.msg = { readout: S.done, note: S.cleanNote };
+        api.speak(S.done);
+        render("#klp-reset");
+        return;
+      }
+      render("[data-take]");
+    }
+
+    function reset() {
+      state.t = 0;
+      state.marks.clear();
+      state.taken.clear();
+      state.msg = { readout: S.again, note: S.ask };
+      api.speak(S.again);
+      render("[data-mark]");
+    }
+
+    controls.addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b || b.disabled) return;
+      if (b.dataset.mark) { toggleMark(b.dataset.mark); return; }
+      if (b.dataset.time) { advance(); return; }
+      if (b.dataset.take) { take(b.dataset.take); return; }
+      if (b.id === "klp-reset") reset();
+    });
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const group = e.target.closest("#klp-mark, #klp-time, #klp-take");
+      if (!group) return;
+      const btns = [...group.querySelectorAll("button")].filter((b) => !b.disabled);
+      if (btns.length < 2) return;
+      const idx = btns.indexOf(document.activeElement);
+      if (idx < 0) return;
+      e.preventDefault();
+      const to = (idx + (e.key === "ArrowRight" ? 1 : btns.length - 1)) % btns.length;
+      btns[to].focus();
+    });
+
+    render();
+    return null;
+  },
+};
+
 export const SIMS = {
   "dienos-juosta": dienosJuosta,
   "metu-laikai": metuLaikai,
@@ -5988,4 +6299,5 @@ export const SIMS = {
   "zmoniu-ivairove": zmoniuIvairove,
   "gimines-grandine": giminesGrandine,
   "stebejimo-zurnalas": stebejimoZurnalas,
+  "kas-lieka-pievoje": kasLiekaPievoje,
 };

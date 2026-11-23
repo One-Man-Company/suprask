@@ -831,6 +831,10 @@
   "n": "n/f4835c5ea1477713-e99e2e5b.mp3",
   "s": "s/f4835c5ea1477713-da54920e.mp3"
  },
+ "Butelis": {
+  "n": "n/a882a17d10ebf195-b455bf5f.mp3",
+  "s": "s/a882a17d10ebf195-8bd6a260.mp3"
+ },
  "Butelis atiteko draugui. Krūva nepaaugo.": {
   "n": "n/a8f5e059f6b5bca3-e6399089.mp3",
   "s": "s/a8f5e059f6b5bca3-1a0a0f93.mp3"
@@ -842,6 +846,18 @@
  "Butelis pripiltas vandens. Krūva nepaaugo.": {
   "n": "n/ce49f0e8ebff971b-e9ed0171.mp3",
   "s": "s/ce49f0e8ebff971b-ba1c9493.mp3"
+ },
+ "Butelis tebeguli. Jis tik apblukęs.": {
+  "n": "n/7fa7a2f03e1f410a-eb263eda.mp3",
+  "s": "s/7fa7a2f03e1f410a-98189ef7.mp3"
+ },
+ "Butelis vis dar guli pievoje.": {
+  "n": "n/becf892403c489e9-200e63ab.mp3",
+  "s": "s/becf892403c489e9-205f0ab1.mp3"
+ },
+ "Butelį pasiėmei. Dabar jis ne pievoje.": {
+  "n": "n/68eeeae1e0ded5fd-1d9bca3b.mp3",
+  "s": "s/68eeeae1e0ded5fd-f2ea65f5.mp3"
  },
  "C": {
   "n": "n/6b23c0d5f35d1b11-9538f709.mp3",
@@ -1247,6 +1263,14 @@
   "n": "n/ec096faf23873b85-8c8770cb.mp3",
   "s": "s/ec096faf23873b85-b1414db0.mp3"
  },
+ "Graužo nebėra. Jis suiro.": {
+  "n": "n/e3ad643308da8a09-d7481d8e.mp3",
+  "s": "s/e3ad643308da8a09-be703a13.mp3"
+ },
+ "Graužo vis dar nebėra.": {
+  "n": "n/ed500f8d85b1cd4a-c735157e.mp3",
+  "s": "s/ed500f8d85b1cd4a-3b045bb2.mp3"
+ },
  "Greičiau": {
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
   "s": "s/60d89cb04b7054d4-58e113db.mp3"
@@ -1627,6 +1651,10 @@
   "n": "n/c656b904c286d223-391da1aa.mp3",
   "s": "s/c656b904c286d223-28bc38d1.mp3"
  },
+ "Kol šie daiktai guli, jie teršia pievą.": {
+  "n": "n/6337e477ccd1cb45-065036cf.mp3",
+  "s": "s/6337e477ccd1cb45-c229a63f.mp3"
+ },
  "Komanda išbraukta. Likusios lieka savo vietose.": {
   "n": "n/819d393f28d0e197-0682aca2.mp3",
   "s": "s/819d393f28d0e197-c9ec711a.mp3"
@@ -1795,6 +1823,10 @@
   "n": "n/6a85a9d270a6532b-094aab62.mp3",
   "s": "s/6a85a9d270a6532b-24eec50e.mp3"
  },
+ "Lapas": {
+  "n": "n/bf9c50102af9c0b3-d1dc072f.mp3",
+  "s": "s/bf9c50102af9c0b3-07e69102.mp3"
+ },
  "Lapas atiteko draugui. Krūva nepaaugo.": {
   "n": "n/d30fd2071ffa29d3-e21255a4.mp3",
   "s": "s/d30fd2071ffa29d3-d7d38f39.mp3"
@@ -1810,6 +1842,14 @@
  "Lapkritis": {
   "n": "n/0f959dbd67209e46-3192f592.mp3",
   "s": "s/0f959dbd67209e46-0a5f52cf.mp3"
+ },
+ "Lapo nebėra. Jis suiro.": {
+  "n": "n/b5d99bc2bd32d001-8c851bb7.mp3",
+  "s": "s/b5d99bc2bd32d001-35123e3e.mp3"
+ },
+ "Lapo vis dar nebėra.": {
+  "n": "n/f6380edb462ba15b-95daa47b.mp3",
+  "s": "s/f6380edb462ba15b-de9b2f3a.mp3"
  },
  "Lapė": {
   "n": "n/554e0a133245fe50-2ceabdf8.mp3",
@@ -1983,6 +2023,10 @@
   "n": "n/38cebf4836a918cb-65706811.mp3",
   "s": "s/38cebf4836a918cb-7211c8dd.mp3"
  },
+ "Nepažymėjai nė vieno daikto.": {
+  "n": "n/163cf2eac22f1bab-6cc5f5b0.mp3",
+  "s": "s/163cf2eac22f1bab-b50db6fb.mp3"
+ },
  "Nesutapo. Dešimtis sumažėjo, vienetai prasidėjo nuo devynių.": {
   "n": "n/ab51257ba581ae9d-23b738d3.mp3",
   "s": "s/ab51257ba581ae9d-8a98c7a8.mp3"
@@ -2011,6 +2055,10 @@
   "n": "n/003cecfa5f5fcc11-901c970a.mp3",
   "s": "s/003cecfa5f5fcc11-c0a33655.mp3"
  },
+ "Nuimta.": {
+  "n": "n/95da47e524770627-0b0b3783.mp3",
+  "s": "s/95da47e524770627-549c9118.mp3"
+ },
  "Nukelti lėkštes": {
   "n": "n/b3abd75f78cd3c55-07448602.mp3",
   "s": "s/b3abd75f78cd3c55-5a01e15c.mp3"
@@ -2026,6 +2074,10 @@
  "O": {
   "n": "n/c4694f2e93d5c4e7-2a2461c3.mp3",
   "s": "s/c4694f2e93d5c4e7-9f069b13.mp3"
+ },
+ "Obuolio graužas": {
+  "n": "n/5afaa56f46a60473-dabaa2b2.mp3",
+  "s": "s/5afaa56f46a60473-ec9273e4.mp3"
  },
  "Ona": {
   "n": "n/76ba276527159e50-d4cbe830.mp3",
@@ -2227,6 +2279,14 @@
   "n": "n/91d5001bb77913fe-b2e9ab2f.mp3",
   "s": "s/91d5001bb77913fe-fa81c0a7.mp3"
  },
+ "Pažymėk, kurie daiktai liks po metų.": {
+  "n": "n/e4f0abcd75e8ef59-e6e40890.mp3",
+  "s": "s/e4f0abcd75e8ef59-99fc6673.mp3"
+ },
+ "Pažymėta.": {
+  "n": "n/e77340f10dbcac24-40e71d23.mp3",
+  "s": "s/e77340f10dbcac24-1d583ece.mp3"
+ },
  "Pelėda": {
   "n": "n/9f5897c7a3b79e29-125b8a6f.mp3",
   "s": "s/9f5897c7a3b79e29-df222f4d.mp3"
@@ -2274,6 +2334,10 @@
  "Peržiūrėjai visus žodžius. Viena pora sulimpa, kita ne.": {
   "n": "n/6c377b5b0499b6eb-d5842a27.mp3",
   "s": "s/6c377b5b0499b6eb-b20f0739.mp3"
+ },
+ "Pieva vėl tuščia. Daiktus išsinešei.": {
+  "n": "n/9cf17a7acf6c974a-2f393f3c.mp3",
+  "s": "s/9cf17a7acf6c974a-93acad9f.mp3"
  },
  "Piešinys su berniuku": {
   "n": "n/ecf4b0d268d2d5e7-c3c4e646.mp3",
@@ -2350,6 +2414,14 @@
  "Pirmas skaičius jau dešimtuke, o antras laukia ant stalo.": {
   "n": "n/be1b948182521b61-abb7ba9c.mp3",
   "s": "s/be1b948182521b61-4c74d3a7.mp3"
+ },
+ "Po dešimt metų": {
+  "n": "n/1e6ea9cc81344768-656b5e47.mp3",
+  "s": "s/1e6ea9cc81344768-3d4ee5f8.mp3"
+ },
+ "Po metų": {
+  "n": "n/86e7238c16c844f9-e1754eea.mp3",
+  "s": "s/86e7238c16c844f9-ce12fd14.mp3"
  },
  "Po pietų tas pats laikas turi antrą vardą.": {
   "n": "n/802a0444994b8bf4-ff20e94c.mp3",
@@ -2442,6 +2514,14 @@
  "Pralaimėjai": {
   "n": "n/1b4ed9470469a710-03f84c32.mp3",
   "s": "s/1b4ed9470469a710-113fad5f.mp3"
+ },
+ "Praėjo dešimt metų. Kas pasikeitė?": {
+  "n": "n/f68be0afef2d9532-2fa58d15.mp3",
+  "s": "s/f68be0afef2d9532-0630db3a.mp3"
+ },
+ "Praėjo metai. Pažiūrėk, kas liko.": {
+  "n": "n/1cb4c9229c9eed30-031f64e8.mp3",
+  "s": "s/1cb4c9229c9eed30-7ca84c8c.mp3"
  },
  "Pridėjai komandą. Ji bus vykdoma paskutinė.": {
   "n": "n/4cc9444d441a9ee7-1545d22c.mp3",
@@ -2787,6 +2867,10 @@
   "n": "n/a990ce122c2b7cb8-2b810e67.mp3",
   "s": "s/a990ce122c2b7cb8-7703cac3.mp3"
  },
+ "Stiklinė": {
+  "n": "n/48c319a87128afc1-144a8900.mp3",
+  "s": "s/48c319a87128afc1-3a2e631c.mp3"
+ },
  "Stiklinė atvežama į parduotuvę.": {
   "n": "n/a7bdd974d2ad4b20-1bd8b608.mp3",
   "s": "s/a7bdd974d2ad4b20-8f229138.mp3"
@@ -2794,6 +2878,18 @@
  "Stiklinė prasideda smėlyje.": {
   "n": "n/b8591597a8da9f09-393f1ef1.mp3",
   "s": "s/b8591597a8da9f09-a167b47d.mp3"
+ },
+ "Stiklinė tebeguli tokia pat.": {
+  "n": "n/45ac134b9e574359-36c7d215.mp3",
+  "s": "s/45ac134b9e574359-40b80953.mp3"
+ },
+ "Stiklinė vis dar tokia pat.": {
+  "n": "n/b613d8a95e6259f7-ae88c71b.mp3",
+  "s": "s/b613d8a95e6259f7-08fba18a.mp3"
+ },
+ "Stiklinę pasiėmei. Dabar ji ne pievoje.": {
+  "n": "n/55b604eb44d59d1a-b6f5f28d.mp3",
+  "s": "s/55b604eb44d59d1a-74f3513b.mp3"
  },
  "Stulpelio aukštis rodo skaičių.": {
   "n": "n/9a2915bce2544c16-cea31696.mp3",
@@ -2822,6 +2918,10 @@
  "Surask Adomo močiutę.": {
   "n": "n/c1abae562ebccded-6efbdf62.mp3",
   "s": "s/c1abae562ebccded-9624c597.mp3"
+ },
+ "Surink daiktus, kurie nesuyra.": {
+  "n": "n/4dd65cd2a0c4560a-4baca9e8.mp3",
+  "s": "s/4dd65cd2a0c4560a-5db404d3.mp3"
  },
  "Suskaičiavai visas figūras. Apskritimų daugiau, nors jie mažesni.": {
   "n": "n/bf35e2dc555cc020-03cd6819.mp3",

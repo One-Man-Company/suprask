@@ -946,6 +946,31 @@ export const art = {
           <g stroke="#8a6239" stroke-width="1.3" stroke-linecap="round">${ticks}</g>
         </g>`;
       }
+      if (kind === "lapas") {
+        /* Vienas nukritęs lapas, o ne du (tie yra `lapai`). Skiriasi ir
+           spalva, ir kryptis: rudens lapas guli, o ne styro — todėl
+           korta „lapas“ neatrodys kaip augalo lapų pora. */
+        return `<g>
+          ${art.leaf(20, 20, 8.5, -1, true, "#d9a13c")}
+          <path d="M20 20 L20 30" stroke="#8a6a2e" stroke-width="2" stroke-linecap="round"/>
+          <path d="M20 30 q4 1.5 6 0" stroke="#8a6a2e" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        </g>`;
+      }
+      if (kind === "grauzas") {
+        /* Obuolio graužas: siaurėjantis vidurys su sėklomis ir dviem
+           žievelės lopinėliais viršuje. Be jų tai būtų tiesiog šviesi
+           dėmė, kurią vaikas palaikytų akmeniu. */
+        return `<g stroke-linejoin="round">
+          <path d="M14 10 Q19 14 19 19 Q19 14 26 10 Q28 21 22 34 Q20 37.5 18 34 Q12 21 14 10 Z"
+                fill="#f6e7c6" stroke="#a98a52" stroke-width="1.8"/>
+          <path d="M14 10 Q12.4 6.6 15.6 5.4" fill="none" stroke="#7d5a2e" stroke-width="1.8"
+                stroke-linecap="round"/>
+          <path d="M14 10 Q16.4 7.6 17.8 10.2" fill="#c0564a" opacity=".9"/>
+          <path d="M26 10 Q23.6 7.6 22.2 10.2" fill="#c0564a" opacity=".9"/>
+          <ellipse cx="18.1" cy="18.4" rx="1.15" ry="1.7" fill="#5a4326" transform="rotate(-14 18.1 18.4)"/>
+          <ellipse cx="21.6" cy="25.2" rx="1.05" ry="1.6" fill="#5a4326" transform="rotate(12 21.6 25.2)"/>
+        </g>`;
+      }
       /* nafta */
       return `<g>
         <path d="M20 5 C24 12 29 17 29 23 A 9 9 0 0 1 11 23 C 11 17 16 12 20 5 Z"

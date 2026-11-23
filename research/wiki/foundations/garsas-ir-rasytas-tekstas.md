@@ -3,7 +3,7 @@ title: "Garsas ir rašytas tekstas: kada tas pats sakinys padeda, o kada trukdo"
 tipas: fundamentai
 temos: [garsas, naracija, perteklius, pradedantieji skaitytojai, simuliacijos]
 amzius: "6-8"
-atnaujinta: 2026-11-16
+atnaujinta: 2026-11-23
 saltiniai: 4
 ---
 
@@ -19,27 +19,27 @@ Antras klausimas literatūroje vadinamas **pertekliaus principu**. Jo formuluot�
 
 **Apžvalga skiria du pertekliaus tipus.** Trypke, Stebner ir Wirth (2023) išanalizavo 54 straipsnius su 63 tyrimais (1991–2021) ir atskyrė **turinio perteklių** (ta pati informacija keliuose šaltiniuose) nuo **kanalo pertekliaus** (ta pati informacija ateina ir akimis, ir ausimis). Poveikis priklauso nuo tipo.
 
-**Identiškas rašytas tekstas prie įgarsinto paveikslo — neigiamas.** Keturių tyrimų serijos (Mayer ir kt., 2001; Bohec ir Jamet, 2008; Sombatteera ir Kalyuga, 2012; Yue ir kt., 2013) rodo, kad paveikslas + balsas + tas pats raštas duoda prastesnius rezultatus negu paveikslas + balsas. Kai tekstas pateiktas sutrumpintai, rezultatas geresnis negu su identišku (Sombatteera ir Kalyuga; Yue ir kt.). Bet trys tyrimai (Wu, 2011; Roscoe ir kt., 2015; Dooley, 2015) didelio ir mažo sutapimo neatskyrė — kryptis nuosekli, dydis ne.
+**Identiškas rašytas tekstas prie įgarsinto paveikslo — neigiamas.** Keturi tyrimai (Mayer ir kt., 2001; Bohec ir Jamet, 2008; Sombatteera ir Kalyuga, 2012; Yue ir kt., 2013) rodo, kad paveikslas + balsas + tas pats raštas duoda prastesnius rezultatus negu paveikslas + balsas. Kai tekstas pateiktas sutrumpintai, rezultatas geresnis negu su identišku (Sombatteera ir Kalyuga; Yue ir kt.). Trys tyrimai (Wu, 2011; Roscoe ir kt., 2015; Dooley, 2015) didelio ir mažo sutapimo neatskyrė — kryptis nuosekli, dydis ne.
 
 **Balsas + raštas be paveikslo — teigiamas.** Adesope ir Nesbit (2012) apibendrino 57 tyrimus (daugiausia studentai): balsas su rašytu tekstu neatsiliko nuo vien rašyto teksto ir lenkė vien balsą. Pranašumas didžiausias mažai žinantiems, sisteminio tempo medžiagai ir medžiagai be paveikslo; raktiniai žodžiai, ne perrašytas sakinys, paaiškino didžiąją jo dalį.
 
-**Mažai žinantiems turinio perteklius gali padėti.** Trypke ir kt. (2023) rekomenduoja turinio perteklių, kai medžiaga sudėtinga, o besimokantysis — naujokas; neigiami atvejai siejami su didesnėmis žiniomis. Tai atsargos kryptis mūsų atvejui.
+**Mažai žinantiems turinio perteklius gali padėti.** Trypke ir kt. (2023) rekomenduoja turinio perteklių, kai medžiaga sudėtinga, o besimokantysis — naujokas; neigiami atvejai siejami su didesnėmis žiniomis. Tai mūsų atvejo kryptis.
 
-**Pradedantiesiems skaitytojams tiesioginių duomenų beveik nėra.** Torcasio ir Sweller (2010) atliko tris eksperimentus būtent su pradedančiaisiais: informatyvios iliustracijos prie paprasto teksto skaitymo įgūdį blogino labiau negu jokios iliustracijos, o neinformatyvios netrukdė. Bet ten nebuvo balso — tik iliustracija ir tekstas.
+**Pradedantiesiems skaitytojams duomenų beveik nėra.** Torcasio ir Sweller (2010) atliko tris eksperimentus būtent su pradedančiaisiais: informatyvios iliustracijos prie paprasto teksto skaitymo įgūdį blogino labiau negu jokios iliustracijos, o neinformatyvios netrukdė. Ten nebuvo balso — tik iliustracija ir tekstas.
 
 ## Ką tai reiškia SUPRASK platformai
 
-1. **Balsas lieka ir nėra „perteklius“.** Vaikui, kuris skaito lėtai, rašytas tekstas vienas neprieinamas. Žala rodoma tik ten, kur balsas ir tekstas dubliuoja vienas kitą prie paveikslo.
-2. **Netariamas tas pats sakinys, kuris rodomas prie paveikslo.** Tariama trumpiausia prasminga atkarpa — terminas, skaičius, vienas veiksmas. Du tekstų lygiai (`say` — girdima, `display` — rodoma) leidžiami, jei kiekvienas turi vieną šaltinį.
+1. **Balsas lieka ir nėra „perteklius“.** Vaikui, kuris skaito lėtai, rašytas tekstas vienas neprieinamas. Žala — tik ten, kur balsas ir tekstas dubliuoja vienas kitą prie paveikslo.
+2. **Netariamas tas pats sakinys, kuris rodomas prie paveikslo.** Tariama trumpiausia prasminga atkarpa — terminas, skaičius, vienas veiksmas. Du tekstų lygiai (`say`, `display`) leidžiami, jei kiekvienas turi vieną šaltinį.
 3. **Ekrano tekstas trumpesnis, ne ilgesnis už tariamą.** Jei balsas sako vieną sakinį, ekrane telpa 2–4 žodžiai.
-4. **Vienas teiginys — vienas kanalas.** Šiandien `21-erdvines-figuros` tame pačiame kadre siunčia tą patį teiginį dviem kanalais: `geometrija.js:334` skaityklė rašo „Kūgis iš viršaus: matai apskritimą“, o `:345` balsas taria „Kūgis iš viršaus atrodo kaip apskritimas“. Abu teiginiai teisingi ir kiekvienas turi savo šaltinį (`sim.config`), todėl „vieno šaltinio“ taisyklė jų nemato.
+4. **Vienas teiginys — vienas kanalas.** Šiandien `21-erdvines-figuros` tame pačiame kadre siunčia tą patį teiginį dviem kanalais: `geometrija.js:329–331` skaityklė rašo „Kūgis iš viršaus: matai apskritimą“, o `:345` balsas taria „Kūgis iš viršaus atrodo kaip apskritimas“ (sakinys iš `21-erdvines-figuros.json`, `sim.config.sentences`). Abu teiginiai teisingi ir kiekvienas turi savo šaltinį — kodą ir JSON — todėl „vieno šaltinio“ taisyklė jų nemato.
 5. **Pastaba papildo, o ne kartoja.** Jei `api.readout` pasakė rezultatą, `api.note` turi pasakyti priežastį.
-6. **Skaičiai, kuriuos turime (2026-11-16).** Garso takelyje 569 tekstai: 355 (62 %) yra 1–2 žodžių etiketės, 66 (12 %) — 7 ir daugiau žodžių sakiniai; bent vieną sakinio ilgumo garsą turi 18 iš 39 modulių. Ilgesnį garsą prie paveikslo tikriname atskirai.
-7. **Visą sakinį balsas gali sakyti,** kai ekrane nėra paveikslo, į kurį reikia žiūrėti (refleksijos klausimas, įvadas), arba kai modelis nejuda ir vaikas pats valdo tempą.
+6. **Skaičiai, kuriuos turime (2026-11-23).** Garso takelyje 883 tekstai (tiek pat, kiek 1 766 garso failų ÷ 2 balsai): 427 (48 %) yra 1–2 žodžių etiketės, 149 (17 %) — 7 ir daugiau žodžių sakiniai; bent vieną sakinio ilgumo `sim.config` garsą turi 39 iš 62 modulių. Matuota `scripts/generate_audio.py` `collect()`, todėl skaičius apima ir `api.speak()` literales. Ilgesnį garsą prie paveikslo tikriname atskirai.
+7. **Visą sakinį balsas gali sakyti,** kai ekrane nėra paveikslo (refleksijos klausimas, įvadas), arba kai modelis nejuda ir vaikas pats valdo tempą.
 
 ## Ko šis įrašas nedaro
 
-Jis nepagrindžia rašyto teksto šalinimo: garsas gali būti išjungtas, o kurčias vaikas privalo gauti tą pačią informaciją (T5.5). Jis neatsako, ar lietuviškas sintezės balsas tokiu tempu suprantamas 6–7 metų vaikui — tam reikia piloto su vaikais. Ir neįrodo, kad trys tekstinės eilutės savaime per daug: tai darbinės atminties klausimas.
+Jis nepagrindžia rašyto teksto šalinimo: garsas gali būti išjungtas, o kurčias vaikas privalo gauti tą pačią informaciją (T5.5). Jis neatsako, ar lietuviškas sintezės balsas 6–7 metų vaikui suprantamas — tam reikia piloto.
 
 ## Susieti
 

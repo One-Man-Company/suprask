@@ -20,6 +20,10 @@
 | [[garsas-ir-laikas]] | laike vykstanti savybė neturi formos; fonologinis sąmoningumas ir garsų lygmens sunkumas | trukmė rodoma laiko ašimi, ne dydžiu; pavienis garsas netariamas sintezatoriumi; savybė, o ne pastanga |
 | [[jausmas-ir-noras]] | jausmo priežastis yra noras, o noro nesimato; emocijų komponentai | įvykis fiksuotas, noras keičiamas; antras veikėjas kaip kontrolė; nieko neklausiama apie vaiko jausmus |
 | [[ivertinimas-ir-growth-mindset]] | grįžtamasis ryšys, augimo mąstysena ir jos ribos | `hint` + `why` privalomi, jokių balų |
+| [[modulio-ritmas-ir-demesys]] | dėmesio kritimas kaip užduoties savybė, segmentavimo metaanalizė | 8–12 min. — biudžetas su kaitos taškais, ne „dėmesio talpa“ |
+| [[garsas-ir-rasytas-tekstas]] | du pertekliaus tipai, pradinio skaitymo duomenys | balsas lieka, bet prie paveikslo netariamas rodomas sakinys |
+| [[kilme-ir-grandine]] | kilmė kaip grandinė atgal nuo daikto; savybė kaip paaiškinimas | grandinė trumpa, baigiama konkrečia vieta, spėjimas prieš pirmą žingsnį |
+| [[sujungti-dydziai]] | sujungti rodikliai modelyje; teisingas rezultatas be supratimo | modelis su jungtimi reikalauja spėjimo ir perkėlimo užduoties |
 
 ## Žaidimų teorijos dalis
 

@@ -1,0 +1,139 @@
+{
+  "id": "03-klausymasis",
+  "grade": 1,
+  "strand": "muzika",
+  "title": "Ta pati melodija, kitas atlikėjas",
+  "subtitle": "Melodija lieka ta pati, nors balsų vis daugėja",
+  "minutes": 9,
+  "outcomes": [
+    "Atpažįstu tą pačią melodiją, kai keičiasi atlikėjai.",
+    "Pasakau, kuris balsas veda melodiją, o kuris pritaria.",
+    "Paaiškinu, kodėl daug balsų nepaverčia melodijos kita daina."
+  ],
+  "concept": {
+    "title": "Melodija ir pritarimas",
+    "big_idea": "Melodija yra viena linija, kurią lengva atpažinti. Kiti balsai jai pritaria, bet linija nesikeičia.",
+    "steps": [
+      "Pasakyk, kas pasikeis, kai groja daugiau atlikėjų.",
+      "Paleisk vieną atlikėją ir klausyk melodijos linijos.",
+      "Paleisk ansamblį. Melodija ta pati, atsirado pritarimas.",
+      "Paleisk orkestrą ir vėl rask tą pačią liniją."
+    ],
+    "example": "Dainą gali dainuoti vienas vaikas, o choras gali jai pritarti."
+  },
+  "sim": {
+    "component": "melodija-ir-pritarimas",
+    "config": {
+      "melody": [392, 440, 494, 440, 392, 330, 294, 330],
+      "layers": [
+        { "id": "melodija", "label": "Melodija" },
+        { "id": "pritarimas", "label": "Pritarimas" },
+        { "id": "bosas", "label": "Bosas" }
+      ],
+      "performers": [
+        { "id": "vienas", "label": "Vienas atlikėjas", "layers": ["melodija"] },
+        { "id": "ansamblis", "label": "Ansamblis", "layers": ["melodija", "pritarimas"] },
+        { "id": "orkestras", "label": "Orkestras", "layers": ["melodija", "pritarimas", "bosas"] }
+      ],
+      "sentences": {
+        "ask": "Kas pasikeis, kai prisijungs daugiau atlikėjų?",
+        "guess": "Pirma pasakyk savo spėjimą, tada rinkis atlikėją.",
+        "select": "Dabar spausk „Paleisk“ ir klausyk.",
+        "start": "Melodija yra viena linija. Klausyk jos visą laiką.",
+        "vienas": "Groja vienas atlikėjas. Seki vieną liniją.",
+        "ansamblis": "Ansamblis. Melodija ta pati, prisijungė pritarimas.",
+        "orkestras": "Orkestras. Melodija ta pati, dar prisijungė bosas.",
+        "after": "Palygink su kitu atlikėju.",
+        "done": "Tris kartus skambėjo ta pati melodija.",
+        "same": "Vėl ta pati melodija.",
+        "nosound": "Garsas išjungtas. Įjunk garsą viršuje ir paleisk dar kartą.",
+        "nosupport": "Šiame įrenginyje garso groti nepavyko."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Grojo vienas atlikėjas. Paskui prisijungė ansamblis. Kas liko tas pats?",
+      "options": [
+        "Melodija",
+        "Pritarimas",
+        "Garsumas"
+      ],
+      "answer": 0,
+      "hint": "Palygink abi linijas ekrane: kuri atrodo vienodai?",
+      "why": "Pritarimas atsirado, o melodijos linija liko ta pati."
+    },
+    {
+      "q": "Orkestre groja daug žmonių. Ar daina tapo kita?",
+      "options": [
+        "Taip, tai kita daina",
+        "Ne, melodija ta pati",
+        "Nežinau, reikia paklausti"
+      ],
+      "answer": 1,
+      "hint": "Klausyk, ar linija kyla ir leidžiasi tuo pačiu keliu.",
+      "why": "Kai prisijungia balsai, melodija nepasikeičia."
+    },
+    {
+      "q": "Koncerte groja orkestras. Kaip rasti melodiją tarp daugybės garsų?",
+      "options": [
+        "Sekti liniją, kuri kyla ir leidžiasi",
+        "Klausyti tik būgnų",
+        "Žiūrėti į atlikėjų skaičių"
+      ],
+      "answer": 0,
+      "hint": "Kas ekrane juda aukštyn ir žemyn?",
+      "why": "Melodija juda aukštyn ir žemyn, o kiti balsai tik pritaria."
+    },
+    {
+      "q": "Kada sunkiau išgirsti melodiją?",
+      "options": [
+        "Kai groja vienas atlikėjas",
+        "Kai groja visas orkestras",
+        "Kai niekas negroja"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kiek balsų skamba kartu tuo pačiu metu.",
+      "why": "Daug balsų melodiją uždengia, bet ji tebėra ten pat."
+    },
+    {
+      "q": "Du vaikai groja tą pačią melodiją: vienas fleita, kitas pianinu. Kodėl skamba skirtingai?",
+      "options": [
+        "Skiriasi instrumento tembras",
+        "Skiriasi melodija",
+        "Skiriasi natų skaičius"
+      ],
+      "answer": 0,
+      "hint": "Palygink, kaip skamba tas pats kelias dviem daiktams.",
+      "why": "Ta pati melodija skirtingais instrumentais turi skirtingą tembrą.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kurį balsą lengviausia išgirsti, kai groja visas orkestras? Papasakok.",
+  "teacher": {
+    "goal": "Atskirti melodiją (vedančią liniją) nuo pritarimo: keičiantis atlikėjų sudėčiai melodija lieka ta pati. Modelis keičia tik tai, kas groja, o melodijos natas palieka nepajudintas, todėl priežastis matoma ir pasitikrinama, o ne išvedama iš paaiškinimo.",
+    "prompt": "Kodėl orkestras, kuriame groja dvidešimt žmonių, negroja kitos dainos negu vienas dainininkas?",
+    "offline": "Padainuokite trumpą keturių taktų dainelę. Pirma ją dainuoja vienas vaikas, kiti tik klauso. Paskui pusė klasės ploja tolygų pulsą, keturi vaikai ploja kas antrą pulsą, o vienas vėl dainuoja. Paklauskite: ar daina pasikeitė, ar tik prisidėjo balsų? Trečią kartą du vaikai dainuoja tą pačią dainelę, vienas aukščiau, kitas žemiau, ir vėl klausiama, ką atpažįstame. Pabaigoje vaikai ranka ore parodo melodijos judėjimą aukštyn ir žemyn, o mokytojas dainuoja lėčiau — kryptis lieka ta pati.",
+    "misconceptions": [
+      "„Kai groja daug atlikėjų, tai jau kita daina.“ Modelyje melodijos eilutė nepakinta: prisijungus ansambliui ir orkestrui kinta tik kitos eilutės, o melodijos taškai lieka toje pačioje vietoje.",
+      "„Orkestras groja garsiau, todėl groja kita melodija.“ Gerumas keičiasi, o linija ne; modelyje melodija sąmoningai garsiausias balsas, kad jos nebūtų galima supainioti su pritarimu.",
+      "„Melodija yra tas pats, kas ritmas.“ Ritmas yra kada skamba garsai, melodija — kokia tvarka jie kyla ir leidžiasi; šiame modelyje visos natos vienodo ilgio, todėl ritmas neįtraukiamas kaip atskiras kintamasis.",
+      "„Kas groja, tas ir dainuoja.“ Modelyje atlieka skirtingos sudėtys, o veda vis tą pačią melodiją; atlikėjo sudėtis nekeičia vedančios linijos."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Muzikos klausymas: „Klausydamiesi muzikos ir mokydamiesi ją pažinti, 1-2 kl. mokiniai susipažįsta su muzikos žanrų įvairove (pvz., klasikinė, populiarioji, liaudies, bažnytinė muzika), įvairiais muzikos stiliais, muzikos atlikėjais (solistas, choras, orkestras ansamblis)“ (failas sources/pradinio-bp-rekomendacijos-2024.txt, 3573–3577 eil.).",
+    "NŠA. Tos pačios rekomendacijos, to paties skyriaus kritinė pastaba: „Muzikos klausymasis – iš esmės kontempliatyvi (t. y. fiziškai pasyvi) veikla“, todėl taikytini aktyvieji metodai — „judėjimas erdvėje pagal skambančią muziką“, „dailės raiškos priemonių naudojimas“, „klausomos muzikos apibūdinimas ir vertinimas“ (3578–3592 eil.).",
+    "NŠA. Tos pačios rekomendacijos, Muzikos klausymasis, 1–2 klasė (veiklų lentelė): „Plaštakos ar rankos judesiu rodyti melodijos judėjimo kryptį“; „Judesiais imituoti grojimą įvairiais muzikos instrumentais“ (3295–3297 eil.).",
+    "NŠA. Tos pačios rekomendacijos, 1–2 klasės sąvokų sąrašas: „melodija; … tembras; … solistas ir choras, orkestras“ (13928–13930 eil.).",
+    "Muzikos bendroji programa (2022), Muzikos pažinimas ir vertinimas (C): 1–2 klasėje mokiniai klausosi muzikos pavyzdžių ir aptaria jų meninį įspūdį, kūrinio nuotaiką ir atlikimo būdą (sources/pradinio-bp-rekomendacijos-2024.txt, 3349–3352, 3656 eil.).",
+    "Weiss, M. W., Schellenberg, E. G., Trehub, S. E., & Dawber, E. J. (2015). Enhanced processing of vocal melodies in childhood. Developmental Psychology, 51(3), 370–377. https://doi.org/10.1037/a0038784 — 5–8 metų vaikai atskiria išgirstą melodiją nuo naujos, kai ji atliekama skirtingu tembru; melodijos atpažinimas yra atskiras gebėjimas nuo tembro atpažinimo, todėl modelis melodiją laiko nekintama, o keičia atlikėjų sudėtį.",
+    "Creel, S. C. (2019). The familiar-melody advantage in auditory perceptual development. Attention, Perception, & Psychophysics, 81, 948–957. https://doi.org/10.3758/s13414-018-01663-7 — iš vaikams pažįstamų melodijų atpažįstama geriau negu iš naujų, o didelis tembro skirtumas vaikui ryškesnis už melodijos kontūro skirtumą; todėl modelyje melodijos linija rodoma ir aukščiu, ir judėjimo kryptimi, ne vien garsu."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena nauja sąvoka (melodija kaip atskira vedanti linija), o tembras ir atlikėjų sudėtis lieka žinomi dydžiai, su kuriais lyginama.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo atpažinti melodiją naujoje situacijoje (koncertas, orkestras, du instrumentai), o ne pakartoti modulio sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas prieš pirmą pasirinkimą, kiekviena klaida turi užuominą, modelis nieko nebaudžia ir leidžia bandyti iš naujo; 5-a užduotis — praplėtimas.",
+    "P2 / T5.5: veiksmas prieš paaiškinimą (vaikas klausosi ir lygina pats), o sluoksniai skiriami ir žodžiu, ir taško aukščiu, ir punktyrine linija — niekada vien spalva."
+  ]
+}

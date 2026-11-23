@@ -11,17 +11,15 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **59**
-- Padengta / iš dalies / nėra: **35 / 7 / 5**
+- Modulių dabar: **61**
+- Padengta / iš dalies / nėra: **37 / 7 / 3**
 
 ## Ko dar nėra (prioritetas)
 
 | Būsena | Tema | Kodas | Rezultatas | Šaltinis |
 |---|---|---|---|---|
 | missing | Elektronika | D:elektronika | 23.4.1: elektros srovė, šaltiniai, jungiklis, saugus elgesys | `1-klases-temų-žemėlapis.md:74` |
-| missing | Emocijų žodynas | D:emociju-zodynas | „Atpažįsta, įvardija ir valdo emocijas, elgesį“ | `1-klases-temų-žemėlapis.md:78` |
 | missing | Funkciniai judesiai | D:funkciniai-judesiai | „Susipažinimas su mokinių turimais ir trūkstamais judėjimo gebėjimais“; „abi kūno pusės tolygiai“ | `1-klases-temų-žemėlapis.md:77` |
-| missing | Klausymasis | D:klausymasis | Žanrų ir atlikėjų pažinimas (1–2 kl.) | `1-klases-temų-žemėlapis.md:73` |
 | missing | Virtualumas | D:virtualumas | „Draugiško elgesio internete taisyklės“ („Aš ir virtualumas“) | `1-klases-temų-žemėlapis.md:80` |
 | partial | Trūkstamas dėmuo | B:trukstamas-demuo | „Lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“ | `1-klases-temų-žemėlapis.md:42` |
 | partial | Aš ir mano šeima | C:as-ir-mano-seima | Prisistatymas, šeimos istorijos pasakojimas (projektas „Mano šeimos istorija“) | `1-klases-temų-žemėlapis.md:65` |
@@ -57,8 +55,10 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Stebėjimas | C:stebejimas | „Savais žodžiais papasakoti apie… užfiksuotus gamtos objektus“ („Rudens požymiai mokyklos kieme“) | `1-klases-temų-žemėlapis.md:63` |
 | covered | Vandens būsenos | 26.3.2 | „Ledo papuošalo gamyba“; kietosios būsenos formos (:1547–1552, :8472–8474) | `pasaulio-pazinimas-1-klase.md:92` |
 | covered | Drabužių priežiūra | D:drabuziu-prieziura | „1 klasė. Drabužių, avalynės priežiūra“ | `1-klases-temų-žemėlapis.md:76` |
+| covered | Emocijų žodynas | D:emociju-zodynas | „Atpažįsta, įvardija ir valdo emocijas, elgesį“ | `1-klases-temų-žemėlapis.md:78` |
 | covered | Erdvinės raidės | D:erdvines-raides | 1 kl. pavyzdys „Dekoruotos ir erdvinės raidės“ (erdvinė raiška, kompozicija) | `1-klases-temų-žemėlapis.md:71` |
 | covered | Garso savybės | D:garso-savybes | „Eksperimentavimas garsais leidžia pažinti keturias garso savybes: trukmę…“ | `1-klases-temų-žemėlapis.md:72` |
+| covered | Klausymasis | D:klausymasis | Žanrų ir atlikėjų pažinimas (1–2 kl.) | `1-klases-temų-žemėlapis.md:73` |
 | covered | Komandų seka | D:komandu-seka | „Sudaro ir vykdo komandų sekas, naudojasi žaidybinėmis programavimo priemonėmis“ (B3.3) | `1-klases-temų-žemėlapis.md:79` |
 | covered | Medžiagų savybės | D:medziagu-savybes | 23.3.1: „kieti, minkšti, plastiški, blizgūs“; tinkamumas darbui | `1-klases-temų-žemėlapis.md:75` |
 | covered | Teksto skaitymas su supratimu (B.1.2 tiesiogine prasme) | gap:teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p | 05-plakatas-ir-informacija randa informaciją plakate, bet nė vienas modulis nepateikia kelių sakinių teksto, a | `lietuviu-kalba-1-klase.md:145` |

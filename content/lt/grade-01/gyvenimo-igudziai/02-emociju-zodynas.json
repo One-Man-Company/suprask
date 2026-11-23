@@ -1,0 +1,112 @@
+{
+  "id": "02-emociju-zodynas",
+  "grade": 1,
+  "strand": "gyvenimo-igudziai",
+  "title": "Jausmas turi savo vardą",
+  "subtitle": "Ta pati situacija, o jausmai skirtingi: žodį pasako pats vaikas",
+  "minutes": 9,
+  "outcomes": [
+    "Įvardiju jausmą vienu iš trijų žodžių: baikštus, piktas, pakylėtas.",
+    "Paaiškinu, kodėl toje pačioje situacijoje vaikai jaučiasi skirtingai.",
+    "Pasakau, kad tylaus žmogaus jausmo spėti negalima – jo reikia paklausti."
+  ],
+  "concept": {
+    "title": "Jausmą pasako pats žmogus",
+    "big_idea": "Trys vaikai toje pačioje vietoje jaučiasi skirtingai. Tikslų jausmo žodį žino pats žmogus, todėl paklausk jo.",
+    "steps": [
+      "Rūta, Tomas ir Ieva stovi prieš tą pačią lentą. Vieta ta pati.",
+      "Rūta sako: „Bijau, kad juoksis.“ Jos jausmas – baikštus.",
+      "Tomas sako: „Noriu, kad nustotų!“ Jo jausmas – piktas.",
+      "Todėl jausmo nespėk. Paklausk: „Kaip tu jautiesi?“"
+    ],
+    "example": "Brolis grįžo iš varžybų ir nieko nepasakojo. Mama nesprendžia iš veido – ji paklausia: „Kaip tu jautiesi?“"
+  },
+  "sim": {
+    "component": "jausmo-vardas",
+    "config": {
+      "silentName": "Niekas nekalba",
+      "states": [
+        { "key": "ruta", "name": "Rūta", "face": "fear" },
+        { "key": "tomas", "name": "Tomas", "face": "angry" },
+        { "key": "ieva", "name": "Ieva", "face": "happy" }
+      ],
+      "sentences": {
+        "predict": "Trys vaikai prieš klasę. Ar jie jaučiasi vienodai? Pasakyk, tada rinkis.",
+        "ruta": "Rūta sako: „Bijau, kad visi juoksis.“ Jos jausmas – baikštus.",
+        "tomas": "Tomas sako: „Noriu, kad jie nustotų!“ Jo jausmas – piktas.",
+        "ieva": "Ieva sako: „Aš išdrįsau!“ Jos jausmas – pakylėtas.",
+        "silent": "Niekas nieko nesako. Iš veido ir vietos tikslaus žodžio nežinome."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Emilija prieš klasę tyli ir žiūri į grindis. Kaip sužinosi, ką ji jaučia?",
+      "options": [
+        "Kad ji baikštė",
+        "Kad ji pikta",
+        "Kad tiksliai nežinome, reikia paklausti"
+      ],
+      "answer": 2,
+      "hint": "Ar ji pasakė bent vieną žodį apie savo jausmą?",
+      "why": "Ji nieko nepasakė, o vienodas veidas tinka keliems jausmams."
+    },
+    {
+      "q": "Tomas sako: „Man taip gera, kad išdrįsau!“ Kuris žodis tinka?",
+      "options": [
+        "Pakylėtas",
+        "Piktas",
+        "Baikštus"
+      ],
+      "answer": 0,
+      "hint": "Ar jis džiaugiasi, ar ko nors bijo?",
+      "why": "Jis džiaugiasi tuo, ką padarė, todėl jo jausmas – pakylėtas."
+    },
+    {
+      "q": "Du vaikai žiūri tą patį filmą. Vienas juokiasi, kitas užsidengia akis. Kuris sakinys tinka?",
+      "options": [
+        "Filmas visiems juokingas",
+        "Jie jaučiasi skirtingai",
+        "Vienas vaikas blogesnis"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, ar abu vaikai daro tą patį.",
+      "why": "Tas pats filmas, o jausmai skirtingi. Juos pasako patys vaikai."
+    },
+    {
+      "q": "Draugas sėdi tyliai ir nieko nepasako. Kaip jo paklausti apie jausmą?",
+      "options": [
+        "„Kodėl tu toks piktas?“",
+        "„Kaip tu jautiesi?“",
+        "„Ar tau baikštu?“"
+      ],
+      "answer": 1,
+      "hint": "Kuris klausimas nepasako jausmo už jį?",
+      "why": "Klausimas „Kaip tu jautiesi?“ leidžia jam pačiam pasakyti jausmą.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip pasakytum suaugusiam, ką jauti, kai pats nežinai žodžio?",
+  "teacher": {
+    "goal": "Vienas įgūdis: jausmo žodis priklauso tam, kuris jį jaučia, o ne įvykiui. Modelis laiko tą pačią sceną ir keičia tik tai, kas kalba; ketvirta būsena tyli, todėl žodžio nėra.",
+    "prompt": "Kodėl trys vaikai prieš tą pačią lentą jaučiasi skirtingai?",
+    "offline": "Trys vaikai iš eilės tyliai pasako mokytojui vieną žodį – baikštus, piktas arba pakylėtas – apie tą pačią situaciją: rytoj bus ekskursija. Kiti spėja, o paskui paklausia: „Kaip tu jautiesi?“ Aptariama, kada spėjimas buvo neteisingas ir kad tai normalu. Niekas nieko neįrašo ir nelygina.",
+    "misconceptions": [
+      "„Iš veido visada matau, ką žmogus jaučia.“ Veidas padeda, bet keli jausmai atrodo panašiai; tikslų žodį žino pats žmogus.",
+      "„Ta pati situacija visiems kelia tą patį jausmą.“ Du vaikai prie tos pačios lentos gali jaustis priešingai, ir abu teisūs.",
+      "„Jei vaikas sako, kad jam baisu, jis silpnas.“ Jausmo žodis yra informacija, o ne vaiko savybė: jis padeda suaugusiajam padėti.",
+      "„Vienas žodis turi reikšti viską.“ 6–7 metų žodynas dar platus – vienas žodis dengia kelis jausmus (Widen & Russell, 2008)."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Gyvenimo įgūdžiai“: atpažįsta, įvardija ir valdo emocijas, elgesį; plėtojamas žodynas „piktas, baikštus, patenkintas, pakylėtas, susijaudinęs“.",
+    "Widen, S. C., & Russell, J. A. (2008). Children acquire emotion categories gradually. Cognitive Development, 23(2), 291–312. https://doi.org/10.1016/j.cogdev.2008.01.002",
+    "Pons, F., Harris, P. L., & de Rosnay, M. (2004). Emotion comprehension between 3 and 11 years. European Journal of Developmental Psychology, 1(2), 127–152. https://doi.org/10.1080/17405620344000022",
+    "Harris, P. L., Donnelly, K., Guz, G. R., & Pitt-Watson, R. (1986). Children's understanding of the distinction between real and apparent emotion. Child Development, 57(4), 895–909. https://doi.org/10.2307/1130366"
+  ],
+  "svietimas1": [
+    "1 žingsnis — gylis: viena sąvoka (jausmo žodį pasako pats žmogus) ir vienas kintamasis modelyje",
+    "2 žingsnis — vertinimas: užduotys prašo įvardyti jausmą pagal vaiko žodį, o ne spėti jį iš veido",
+    "5 žingsnis — pozityvi aplinka: jausmo žodis pateikiamas kaip informacija, o ne kaip vaiko savybė"
+  ]
+}

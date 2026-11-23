@@ -605,7 +605,432 @@ const ritmasIrPulsas = {
   },
 };
 
+/* ---------- klausymasis: melodija ir pritarimas ---------- */
+
+/**
+ * Modelis: TAS PATS aštuonių natų motyvas atliekamas trimis būdais —
+ * vienas atlikėjas, ansamblis (melodija + pritarimas), orkestras (melodija +
+ * pritarimas + bosas). Melodijos linija visais atvejais ta pati, o po ja
+ * atsiranda vis daugiau balsų, todėl vaikas girdi ir mato: dainos nekeičia
+ * atlikėjų skaičius (klaidinga nuostata „groja daug — tai jau kita daina“).
+ *
+ * Kodėl tai modelis, o ne iliustracija: kintamasis yra atlikėjų sudėtis, o
+ * melodija fiksuota. Jei melodija keistųsi kartu, palyginimas nieko neįrodytų.
+ *
+ * Kodėl schema, o ne scena: čia nėra dangaus, žemės ar veikėjų, kuriems
+ * reikėtų `art.js` dalių — rodomas garso sluoksnių vaizdas (trys eilutės po
+ * aštuonis taškus), ne piešinys (LL-13). Todėl paveikslas lieka prasmingas ir
+ * be garso: melodijos eilutė atrodo vienodai visais trimis atvejais.
+ *
+ * Garsas sintetinamas `AudioContext` laikrodžiu, o šviesos — atskirai: lėtas
+ * įrenginys negroja „plaukiojančio“ metro, o be garso modelis vis tiek rodo,
+ * kas skamba, o kas tyli.
+ */
+
+const KL_BEAT_MS = 560;                 // vienas pulsas ≈ 107 dūžių per minutę
+const KL_NOTE_S = 0.5;                  // kiek skamba viena nata
+const DEFAULT_MELODY = [392, 440, 494, 440, 392, 330, 294, 330];
+
+const DEFAULT_LAYERS = [
+  { id: "melodija", label: "Melodija" },
+  { id: "pritarimas", label: "Pritarimas" },
+  { id: "bosas", label: "Bosas" },
+];
+
+const DEFAULT_PERFORMERS = [
+  { id: "vienas", label: "Vienas atlikėjas", layers: ["melodija"] },
+  { id: "ansamblis", label: "Ansamblis", layers: ["melodija", "pritarimas"] },
+  { id: "orkestras", label: "Orkestras", layers: ["melodija", "pritarimas", "bosas"] },
+];
+
+/* Skirtingų sluoksnių tembrai ir stipriai. Melodija sąmoningai GARSIAUSIA:
+ * jei orkestras ją užgožtų, vaikas negalėtų įsitikinti, kad ji nepakito. */
+const KL_VOICE = {
+  melodija: { wave: "triangle", gain: 0.11, ratio: 1 },
+  pritarimas: { wave: "sine", gain: 0.045, ratio: 0.7937 }, // tercija žemiau
+  bosas: { wave: "sine", gain: 0.065, ratio: 0.25 },        // dvi oktavos žemiau
+};
+
+const klausymas = {
+  mount({ stage, controls, api, config }) {
+    const PERFORMERS = Array.isArray(config.performers) && config.performers.length
+      ? config.performers : DEFAULT_PERFORMERS;
+    const LAYERS = Array.isArray(config.layers) && config.layers.length
+      ? config.layers : DEFAULT_LAYERS;
+    const MELODY = (Array.isArray(config.melody) ? config.melody : DEFAULT_MELODY)
+      .filter((n) => typeof n === "number" && n > 0);
+    const SENT = config.sentences || {};
+    const NOTES = MELODY.length ? MELODY : DEFAULT_MELODY;
+
+    let unlocked = false;
+    let selected = PERFORMERS[0].id;
+    let playing = false;
+    let reported = false;
+    const heard = new Set();
+    let timers = [];
+    let ctx = null;
+    const live = new Set();
+
+    stage.innerHTML = `
+      <div style="display:grid;gap:.45rem;width:100%;max-width:30rem;min-width:0">
+        <p id="kl-who" style="margin:0;font-family:var(--font-head);font-weight:900;font-size:1.05rem;text-align:center">
+          Rinkis atlikėją
+        </p>
+        <div id="kl-rows" style="display:grid;gap:.4rem;min-width:0"></div>
+      </div>`;
+
+    const rows = stage.querySelector("#kl-rows");
+    const who = stage.querySelector("#kl-who");
+    const rowEls = new Map();
+
+    /* Trys eilutės = trys garso sluoksniai. Taško aukštis — natos aukštis,
+       todėl eilutė rodo melodijos judėjimo kryptį (programa prašo būtent to:
+       „plaštakos judesiu rodyti melodijos judėjimo kryptį“). Tai ir yra
+       aktyvusis klausymasis: vaikas seka liniją, o ne sėdi prie įrašo.
+       Kiekviena eilutė normalizuojama savo diapazone: melodija lieka ta pati
+       visais trimis atvejais, o bosas yra atskiras, retesnis balsas. */
+    function heights(freqs) {
+      const lo = Math.min(...freqs);
+      const hi = Math.max(...freqs);
+      const span = Math.max(1, hi - lo);
+      return freqs.map((f) => Math.round(((f - lo) / span) * 45));
+    }
+
+    const layerFreqs = (id) => {
+      if (id === "pritarimas") return NOTES.map((f) => f * KL_VOICE.pritarimas.ratio);
+      if (id === "bosas") return NOTES.filter((_, i) => i % 2 === 0).map((f) => f * KL_VOICE.bosas.ratio);
+      return NOTES.slice();
+    };
+
+    LAYERS.forEach((layer) => {
+      const freqs = layerFreqs(layer.id);
+      const tops = heights(freqs);
+
+      const row = document.createElement("div");
+      row.dataset.layer = layer.id;
+      row.style.cssText = "display:grid;grid-template-columns:minmax(4.4rem,auto) minmax(0,1fr);align-items:end;gap:.45rem;min-width:0";
+
+      const name = document.createElement("span");
+      name.textContent = layer.label;
+      name.style.cssText = "font-size:.8rem;font-weight:800;color:var(--ink-soft);text-align:right;overflow-wrap:anywhere;padding-bottom:.2rem";
+
+      const strip = document.createElement("span");
+      strip.style.cssText = "display:flex;align-items:flex-end;gap:.22rem;min-width:0;height:4rem";
+      strip.setAttribute("role", "img");
+
+      const dots = [];
+      for (let i = 0; i < NOTES.length; i += 1) {
+        const cell = document.createElement("span");
+        /* Aukštis imamas iš juostos, o ne iš jos pločio: procentinis
+           `margin-bottom` šioje vietoje skaičiuojamas pagal TĖVO PLOTĮ, todėl
+           tame pačiame modelyje natos „kildavo“ skirtingai priklausomai nuo
+           ekrano pločio (LL-40 — matuok tai, ką vaikas gauna, ne kas patogu).
+           Todėl tarpas yra atskiras flex vaikas su procentiniu `flex-basis`,
+           o juosta turi fiksuotą `rem` aukštį — procentas tada reiškia juostos
+           aukštį ir auga kartu su šriftu. */
+        cell.style.cssText = "flex:1 1 0;min-width:0;display:flex;flex-direction:column;" +
+          "justify-content:flex-end;height:100%";
+
+        const spacer = document.createElement("span");
+        spacer.style.cssText = "flex:0 0 auto;min-height:0";
+
+        const dot = document.createElement("span");
+        dot.className = "kl-dot";
+        dot.style.cssText = "width:100%;max-width:1.5rem;aspect-ratio:1;border-radius:50%;" +
+          "border:2px solid var(--line);background:transparent;flex:0 0 auto";
+
+        if (layer.id === "melodija") {
+          spacer.style.height = `${tops[i]}%`;
+        } else if (layer.id === "pritarimas") {
+          spacer.style.height = `${tops[i]}%`;
+          dot.style.maxWidth = "1.1rem";
+          dot.style.marginLeft = "auto";
+          dot.style.marginRight = "auto";
+        } else {
+          /* Bosas skamba kas antrą pulsą. Tuščias langelis rodo, kad natos
+             ten nėra, o ne kad ji pamesta. */
+          dot.style.maxWidth = "1.1rem";
+          dot.style.marginLeft = "auto";
+          dot.style.marginRight = "auto";
+          if (i % 2 !== 0) {
+            dot.style.visibility = "hidden";
+          } else {
+            spacer.style.height = `${tops[i / 2]}%`;
+          }
+        }
+
+        /* Taškas pirmas, tarpas antras: kolona lygiuojama į apačią, todėl
+           tarpas PO taško ir yra aukštis, kuriuo nata kyla virš juostos
+           apačios. Atvirkščia tvarka tarpą padėtų VIRŠ taško ir visos natos
+           liktų viename lygyje (LL-36: modelis turi rodyti tai, ką žada
+           užrašas). */
+        cell.append(dot, spacer);
+        strip.appendChild(cell);
+        dots.push(dot);
+      }
+
+      row.append(name, strip);
+      rows.appendChild(row);
+      rowEls.set(layer.id, { row, strip, dots });
+    });
+
+    function ensureCtx() {
+      if (ctx) return ctx;
+      if (!AC) return null;
+      try { ctx = new AC(); } catch { ctx = null; }
+      return ctx;
+    }
+
+    function after(ms, fn) {
+      timers.push(setTimeout(fn, ms));
+    }
+
+    function clearTimers() {
+      timers.forEach((id) => clearTimeout(id));
+      timers = [];
+    }
+
+    function speak(key) {
+      const text = SENT[key];
+      if (text) api.speak(text, { rate: 0.95 });
+    }
+
+    function layersOf(performerId) {
+      const perf = PERFORMERS.find((p) => p.id === performerId) || PERFORMERS[0];
+      return Array.isArray(perf.layers) && perf.layers.length ? perf.layers : ["melodija"];
+    }
+
+    /* Kurių sluoksnių šiame atlikime apskritai nėra — jie rodomi kaip
+       „tylūs“ (punktyriniai), o ne paslepiami: vaikas turi matyti, ko trūksta. */
+    function paint(active) {
+      LAYERS.forEach((layer) => {
+        const entry = rowEls.get(layer.id);
+        if (!entry) return;
+        const on = active.includes(layer.id);
+        entry.row.style.opacity = on ? "1" : ".45";
+        entry.strip.setAttribute("aria-label", `${layer.label}: ${on ? "skamba" : "tyli"}`);
+        entry.dots.forEach((dot) => {
+          dot.style.background = "transparent";
+          dot.style.borderStyle = on ? "solid" : "dashed";
+          dot.style.borderColor = "var(--line)";
+        });
+      });
+    }
+
+    function light(layerId, i, on) {
+      const entry = rowEls.get(layerId);
+      if (!entry || !entry.dots[i]) return;
+      const dot = entry.dots[i];
+      dot.style.background = on ? "var(--accent)" : "transparent";
+      dot.style.borderColor = on ? "var(--accent-press)" : "var(--line)";
+    }
+
+    function tone(when, freq, dur, peak, wave) {
+      const c = ctx;
+      if (!c) return;
+      let osc = null;
+      let gain = null;
+      try {
+        osc = c.createOscillator();
+        gain = c.createGain();
+        osc.type = wave;
+        osc.frequency.setValueAtTime(freq, when);
+        gain.gain.setValueAtTime(0.0001, when);
+        gain.gain.exponentialRampToValueAtTime(peak, when + 0.03);
+        gain.gain.setValueAtTime(peak, when + dur * 0.72);
+        gain.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(when);
+        osc.stop(when + dur + 0.02);
+      } catch {
+        return;
+      }
+      live.add(osc);
+      osc.onended = () => {
+        live.delete(osc);
+        try { osc.disconnect(); gain.disconnect(); } catch { /* jau atjungta */ }
+      };
+    }
+
+    function stopSound() {
+      clearTimers();
+      live.forEach((osc) => { try { osc.stop(); } catch { /* jau sustabdytas */ } });
+      live.clear();
+      playing = false;
+      paintPlay();
+      /* Sustabdžius lieka degančios natos, jei jų nenutriname: vaikas matytų
+         „groja toliau“, nors garsas jau nutilo (LL-17 — būsena turi rodyti
+         dabartį, ne praeitį). Todėl eilutės grąžinamos į ramią būseną. */
+      paint(layersOf(selected));
+    }
+
+    function paintPlay() {
+      playBtn.textContent = playing ? "Sustabdyk" : "Paleisk";
+      playBtn.setAttribute("aria-label", playing ? "Sustabdyk atlikimą" : "Paleisk pasirinktą atlikimą");
+    }
+
+    function paintPerformers() {
+      perfButtons.forEach((btn) => {
+        const on = btn.dataset.perf === selected;
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        btn.style.background = on ? "var(--accent)" : "var(--paper)";
+        btn.style.color = on ? "var(--ink)" : "inherit";
+        btn.style.borderColor = on ? "var(--accent-press)" : "var(--line)";
+      });
+    }
+
+    function unlock() {
+      unlocked = true;
+      guessBtn.hidden = true;
+      perfButtons.forEach((b) => b.removeAttribute("aria-disabled"));
+      paint(layersOf(selected));
+      const current = PERFORMERS.find((p) => p.id === selected);
+      who.textContent = current ? current.label : "Rinkis atlikėją";
+      api.readout(SENT.start || "Melodija yra viena linija. Klausyk jos visą laiką.");
+      api.note(SENT.after || "Palygink su kitu atlikėju.");
+      speak("start");
+      const active = perfButtons.find((b) => b.dataset.perf === selected) || perfButtons[0];
+      if (active) active.focus();
+    }
+
+    function finish() {
+      clearTimers();
+      playing = false;
+      paintPlay();
+      const active = layersOf(selected);
+      paint(active);
+      heard.add(selected);
+      if (heard.size >= PERFORMERS.length) {
+        if (!reported) {
+          reported = true;
+          api.progress({ correct: true });
+          api.readout(SENT.done || "Tris kartus skambėjo ta pati melodija.");
+          api.note("Keitėsi tik tai, kas grojo. Melodija liko ta pati.");
+          speak("done");
+        } else {
+          api.readout(SENT.same || "Vėl ta pati melodija.");
+          api.note(SENT.after || "Palygink su kitu atlikėju.");
+          speak("same");
+        }
+      } else {
+        api.readout(SENT.after || "Palygink su kitu atlikėju.");
+        api.note("Paklausyk kito atlikėjo ir palygink melodiją.");
+        speak("after");
+      }
+    }
+
+    function play() {
+      if (playing) {
+        stopSound();
+        return;
+      }
+      const perf = PERFORMERS.find((p) => p.id === selected) || PERFORMERS[0];
+      const active = layersOf(selected);
+      const c = ensureCtx();
+      const useSound = !!c && soundEnabled();
+      if (c && c.state === "suspended" && typeof c.resume === "function") c.resume().catch(() => {});
+
+      clearTimers();
+      paint(active);
+      playing = true;
+      paintPlay();
+      who.textContent = perf.label;
+      api.readout(SENT[perf.id] || perf.label);
+      speak(perf.id);
+
+      if (!useSound) {
+        api.note(c ? (SENT.nosound || "") : (SENT.nosupport || ""));
+      }
+
+      const base = useSound ? c.currentTime + 0.12 : 0;
+
+      NOTES.forEach((freq, i) => {
+        const at = i * KL_BEAT_MS;
+        const audioAt = base + at / 1000;
+
+        if (useSound) {
+          const mel = KL_VOICE.melodija;
+          tone(audioAt, freq * mel.ratio, KL_NOTE_S, mel.gain, mel.wave);
+          if (active.includes("pritarimas")) {
+            const p = KL_VOICE.pritarimas;
+            tone(audioAt, freq * p.ratio, KL_NOTE_S, p.gain, p.wave);
+          }
+          if (active.includes("bosas") && i % 2 === 0) {
+            const b = KL_VOICE.bosas;
+            tone(audioAt, freq * b.ratio, (KL_BEAT_MS * 2) / 1000, b.gain, b.wave);
+          }
+        }
+
+        after(at, () => light("melodija", i, true));
+        if (active.includes("pritarimas")) after(at, () => light("pritarimas", i, true));
+        if (active.includes("bosas") && i % 2 === 0) after(at, () => light("bosas", i, true));
+
+        const off = at + KL_NOTE_S * 1000 * 0.72;
+        after(off, () => {
+          light("melodija", i, false);
+          if (active.includes("pritarimas")) light("pritarimas", i, false);
+          if (active.includes("bosas") && i % 2 === 0) light("bosas", i, false);
+        });
+      });
+
+      after(NOTES.length * KL_BEAT_MS + 240, finish);
+    }
+
+    controls.innerHTML = `
+      <button class="btn" type="button" id="kl-guess" style="min-width:min(7rem,100%)">Sakau</button>
+      ${PERFORMERS.map((p) => `
+        <button class="btn secondary" type="button" data-perf="${p.id}" aria-disabled="true"
+          aria-pressed="false" style="min-width:min(8rem,100%)">${p.label}</button>`).join("")}
+      <button class="btn" type="button" id="kl-play" aria-label="Paleisk pasirinktą atlikimą"
+        style="min-width:min(7.5rem,100%)">Paleisk</button>`;
+
+    const guessBtn = controls.querySelector("#kl-guess");
+    const playBtn = controls.querySelector("#kl-play");
+    const perfButtons = [...controls.querySelectorAll("[data-perf]")];
+
+    perfButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!unlocked) {
+          api.note(SENT.guess || "Pirma pasakyk savo spėjimą, tada rinkis atlikėją.");
+          speak("guess");
+          guessBtn.focus();
+          return;
+        }
+        if (playing) stopSound();
+        selected = btn.dataset.perf;
+        paintPerformers();
+        paint(layersOf(selected));
+        const perf = PERFORMERS.find((p) => p.id === selected);
+        who.textContent = perf ? perf.label : btn.textContent;
+        api.readout(perf ? perf.label : btn.textContent);
+        api.note(SENT.select || "Dabar spausk „Paleisk“ ir klausyk.");
+        speak(selected);
+        playBtn.focus();
+      });
+    });
+
+    guessBtn.addEventListener("click", unlock);
+    playBtn.addEventListener("click", play);
+
+    paint([]);
+    paintPerformers();
+    paintPlay();
+    api.readout(SENT.ask || "Kas pasikeis, kai prisijungs daugiau atlikėjų?");
+    api.note("Pirma pasakyk savo spėjimą, tada rinkis atlikėją.");
+
+    return () => {
+      clearTimers();
+      live.forEach((osc) => { try { osc.stop(); } catch { /* jau sustabdytas */ } });
+      live.clear();
+      if (ctx && typeof ctx.close === "function") { try { ctx.close(); } catch { /* jau uždarytas */ } }
+      ctx = null;
+    };
+  },
+};
+
 export const SIMS = {
   "garso-aukstis": garsoAukstis,
   "ritmas-ir-pulsas": ritmasIrPulsas,
+  "melodija-ir-pritarimas": klausymas,
 };

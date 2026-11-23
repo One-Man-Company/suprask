@@ -1,14 +1,14 @@
 {
  "grade": 1,
- "generated": "2026-11-23T01:35:07",
+ "generated": "2026-11-23T02:51:01",
  "source_hash": "a95e59a5741f37ce",
  "curriculum_positions": 47,
  "counts": {
-  "covered": 35,
+  "covered": 37,
   "partial": 7,
-  "missing": 5
+  "missing": 3
  },
- "modules_now": 59,
+ "modules_now": 61,
  "rows": [
   {
    "key": "26.2.3",
@@ -81,6 +81,7 @@
    "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:172",
    "modules": [
     "01-susitarimas-ir-zaidimas",
+    "02-emociju-zodynas",
     "09-augalo-gyvenimas",
     "10-gyvunu-grupes"
    ],
@@ -644,8 +645,8 @@
    "modules": [
     "09-augalo-gyvenimas",
     "01-dovana-ir-noras",
-    "10-gyvunu-grupes",
-    "20-kas-gyvas"
+    "02-emociju-zodynas",
+    "10-gyvunu-grupes"
    ],
    "status": "covered",
    "target": ""
@@ -749,9 +750,11 @@
    "svietimas": "#1",
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:73",
    "strand": "muzika",
-   "modules": [],
-   "status": "missing",
-   "target": "content/lt/grade-01/muzika/03-klausymasis.json"
+   "modules": [
+    "03-klausymasis"
+   ],
+   "status": "covered",
+   "target": ""
   },
   {
    "key": "D:elektronika",
@@ -831,9 +834,11 @@
    "svietimas": "#3",
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:78",
    "strand": "gyvenimo-igudziai",
-   "modules": [],
-   "status": "missing",
-   "target": "content/lt/grade-01/gyvenimo-igudziai/02-emociju-zodynas.json"
+   "modules": [
+    "02-emociju-zodynas"
+   ],
+   "status": "covered",
+   "target": ""
   },
   {
    "key": "D:komandu-seka",

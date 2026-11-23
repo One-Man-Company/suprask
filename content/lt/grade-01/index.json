@@ -431,6 +431,14 @@
      "file": "grade-01/muzika/02-ritmas-ir-perkusija.json",
      "minutes": 10,
      "sim": "ritmas-ir-pulsas"
+    },
+    {
+     "id": "03-klausymasis",
+     "title": "Ta pati melodija, kitas atlikėjas",
+     "subtitle": "Melodija lieka ta pati, nors balsų vis daugėja",
+     "file": "grade-01/muzika/03-klausymasis.json",
+     "minutes": 9,
+     "sim": "melodija-ir-pritarimas"
     }
    ]
   },
@@ -522,6 +530,14 @@
      "file": "grade-01/gyvenimo-igudziai/01-dovana-ir-noras.json",
      "minutes": 9,
      "sim": "dovana-ir-noras"
+    },
+    {
+     "id": "02-emociju-zodynas",
+     "title": "Jausmas turi savo vardą",
+     "subtitle": "Ta pati situacija, o jausmai skirtingi: žodį pasako pats vaikas",
+     "file": "grade-01/gyvenimo-igudziai/02-emociju-zodynas.json",
+     "minutes": 9,
+     "sim": "jausmo-vardas"
     }
    ]
   },

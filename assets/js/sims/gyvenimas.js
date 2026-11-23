@@ -18,22 +18,40 @@
  */
 import { art } from "./art.js";
 
-/** Veido išraiška ant `art.kid` galvos. mood: happy | sad | neutral */
+/**
+ * Veido išraiška ant `art.kid` galvos.
+ * mood: happy | sad | neutral (M-05) ir angry | fear (`jausmo-vardas`).
+ * Baimės ir pykčio veidai piešiami čia pat, nes `art.js` veido neturi, o tai
+ * yra kintamoji būsena, kurią reikia parodyti toje pačioje scenoje.
+ */
 function face(cx, cy, r, mood) {
   const f = (v) => v.toFixed(1);
   const eyeY = cy - r * 0.2;
   const eyeDx = r * 0.38;
   const dot = (x) => `<circle cx="${f(x)}" cy="${f(eyeY)}" r="${f(r * 0.14)}" fill="#3a342b"/>`;
   const stroke = `fill="none" stroke="#3a342b" stroke-width="${f(r * 0.16)}" stroke-linecap="round"`;
+  let eyes = dot(cx - eyeDx) + dot(cx + eyeDx);
+  let brows = "";
   let mouth;
   if (mood === "happy") {
     mouth = `<path d="M${f(cx - r * 0.44)} ${f(cy + r * 0.26)} Q ${f(cx)} ${f(cy + r * 0.7)} ${f(cx + r * 0.44)} ${f(cy + r * 0.26)}" ${stroke}/>`;
   } else if (mood === "sad") {
     mouth = `<path d="M${f(cx - r * 0.44)} ${f(cy + r * 0.62)} Q ${f(cx)} ${f(cy + r * 0.18)} ${f(cx + r * 0.44)} ${f(cy + r * 0.62)}" ${stroke}/>`;
+  } else if (mood === "angry") {
+    /* Antakiai susitraukę į vidų — pyktis atpažįstamas ne tik iš burnos. */
+    brows = `<line x1="${f(cx - r * 0.64)}" y1="${f(eyeY - r * 0.52)}" x2="${f(cx - r * 0.16)}" y2="${f(eyeY - r * 0.28)}" ${stroke}/>`
+      + `<line x1="${f(cx + r * 0.64)}" y1="${f(eyeY - r * 0.52)}" x2="${f(cx + r * 0.16)}" y2="${f(eyeY - r * 0.28)}" ${stroke}/>`;
+    mouth = `<path d="M${f(cx - r * 0.44)} ${f(cy + r * 0.6)} Q ${f(cx)} ${f(cy + r * 0.22)} ${f(cx + r * 0.44)} ${f(cy + r * 0.6)}" ${stroke}/>`;
+  } else if (mood === "fear") {
+    /* Baimė: plačiai atmerktos akys ir maža apvali burna. */
+    const eye = (x) => `<circle cx="${f(x)}" cy="${f(eyeY)}" r="${f(r * 0.26)}" fill="#ffffff" stroke="#3a342b" stroke-width="${f(r * 0.1)}"/>`
+      + `<circle cx="${f(x)}" cy="${f(eyeY)}" r="${f(r * 0.1)}" fill="#3a342b"/>`;
+    eyes = eye(cx - eyeDx) + eye(cx + eyeDx);
+    mouth = `<ellipse cx="${f(cx)}" cy="${f(cy + r * 0.46)}" rx="${f(r * 0.2)}" ry="${f(r * 0.26)}" fill="#3a342b"/>`;
   } else {
     mouth = `<line x1="${f(cx - r * 0.36)}" y1="${f(cy + r * 0.4)}" x2="${f(cx + r * 0.36)}" y2="${f(cy + r * 0.4)}" ${stroke}/>`;
   }
-  return dot(cx - eyeDx) + dot(cx + eyeDx) + mouth;
+  return brows + eyes + mouth;
 }
 
 /**
@@ -258,6 +276,169 @@ const dovanIrNoras = {
   },
 };
 
+/**
+ * `jausmo-vardas` — emocijų žodyno modelis 1 klasei (gyvenimo įgūdžiai),
+ * M-05 krypties tęsinys: M-05 aiškino, nuo ko jausmas priklauso, o šis
+ * modelis klausia, kas jį pavadina.
+ *
+ * Ta pati scena (vaikas prieš klasę) laikoma pastovi, o keičiamas TIK tas,
+ * kuris kalba. Kiekvienas vaikas pasako savo jausmą savais žodžiais, ir
+ * jausmo žodis ateina kartu su juo. Ketvirta būsena — niekas nieko nesako:
+ * tada žodžio neturime, nors veidas ir vieta matomi.
+ *
+ * Kodėl būtent taip: 6–7 metų vaiko jausmo žodis dar platus — vienas žodis
+ * dengia kelis jausmus (Widen & Russell, 2008, žr. modulio `sources`). Todėl
+ * modelis nesiekia, kad vaikas atspėtų kito jausmą iš veido. Jis rodo, kad
+ * tikslų žodį pasako pats žmogus; kartu vaikas girdi ir pamato tris programos
+ * žodžius: baikštus, piktas, pakylėtas (ir tylą kaip ketvirtą atvejį).
+ *
+ * Scena surenkama iš art.js dalių (LL-13): lenta (block), grindys (plank),
+ * vaikas (kid). Veidas piešiamas `face()` — art.js veido neturi.
+ *
+ * Tekstas scenoje nerašomas: SVG mažinamas iki 300 px pločio, o mažas tekstas
+ * telefone yra atskiras defektas (LL-06). Vaiko sakinys yra HTML virš scenos.
+ */
+const jausmoVardas = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const states = Array.isArray(config.states) ? config.states : [];
+    const silentName = config.silentName || "Niekas nekalba";
+
+    /* Duomenų vientisumas: kiekvienas vaikas turi vardą, veidą ir sakinį.
+       Jei sakinio nėra, modelis tylėtų ten, kur turėjo kalbėti, ir vaikas
+       negirdėtų žodžio — todėl tai klaida, o ne tyli spraga (M-10/M-11/M-12
+       taisyklė: ekrano teiginys išvedamas iš tų pačių duomenų, kuriuos mato vaikas). */
+    const broken = states.length < 2 || states.some((s) => !s || !s.name || !s.face || !S[s.key]);
+    if (broken) {
+      console.error("Jausmai nesuderinti: kiekvienam vaikui reikia name, face ir sentences[keys].");
+      stage.innerHTML = `<p style="margin:0;font-weight:800">Jausmai nesuderinti su žodynu.</p>`;
+      api.readout("Jausmai nesuderinti.");
+      return null;
+    }
+
+    const BODY = ["#c98b5e", "#5aa58a", "#7fa8d8"];
+    let predicted = false;
+    let selected = null; /* states raktas arba "silent" */
+    let reported = false;
+    const seen = new Set();
+
+    stage.innerHTML = `
+      <div style="width:100%;min-width:0;max-width:26rem">
+        <p id="jv-bubble" aria-live="polite"
+           style="margin:0 0 .4rem;padding:.6rem .8rem;border-left:4px solid var(--sun);border-radius:.6rem;background:var(--paper-2);font-size:1rem;font-weight:800;line-height:1.35;min-height:3.6rem;overflow-wrap:anywhere"></p>
+
+        <svg id="jv-scene" viewBox="0 0 320 210" width="100%" role="img" style="display:block"
+             aria-label="Scena"></svg>
+
+        <div id="jv-pick" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.6rem;margin-top:.5rem"></div>
+
+        <p id="jv-note" hidden
+           style="margin:.6rem 0 0;padding:.6rem .8rem;border-left:4px solid var(--sun);background:var(--paper-2);border-radius:.5rem;font-size:1rem"></p>
+      </div>`;
+
+    const svg = stage.querySelector("#jv-scene");
+    const bubble = stage.querySelector("#jv-bubble");
+    const pick = stage.querySelector("#jv-pick");
+    const noteEl = stage.querySelector("#jv-note");
+
+    const options = states.concat([{ key: "silent", name: silentName, face: "neutral" }]);
+    pick.innerHTML = options.map((o, i) => `
+      <button type="button" class="btn secondary" data-key="${o.key}" id="jv-opt-${i}"
+        aria-pressed="false"
+        style="min-height:3rem;height:auto;padding:.45rem .5rem;font-size:1rem;line-height:1.25;white-space:normal;overflow-wrap:anywhere">${o.name}</button>`).join("");
+
+    controls.innerHTML = `
+      <button class="btn" id="jv-say" aria-label="Sakau savo spėjimą.">Sakau</button>
+      <button class="btn ghost" id="jv-reset" aria-label="Pradėti iš naujo">Iš naujo</button>`;
+    const sayBtn = controls.querySelector("#jv-say");
+    const resetBtn = controls.querySelector("#jv-reset");
+
+    function drawScene(mood, body) {
+      svg.innerHTML = `
+        ${art.block(92, 38, 136, "#cfe3d6", "", "#9dbfae")}
+        ${art.plank(20, 202, 280, 13)}
+        ${art.kid(160, 198, 2.2, body)}
+        ${face(160, 125.4, 17.6, mood)}`;
+    }
+
+    function sentenceOf(key) {
+      return key === "silent" ? S.silent : S[key];
+    }
+
+    function paint({ speak = false } = {}) {
+      const chosen = options.find((o) => o.key === selected) || null;
+      const mood = chosen ? chosen.face : "neutral";
+      const body = chosen && chosen.key !== "silent"
+        ? BODY[states.findIndex((s) => s.key === chosen.key) % BODY.length]
+        : "#b8b2a6";
+      drawScene(mood, body);
+
+      const text = selected ? sentenceOf(selected) : (S.predict || "");
+      bubble.textContent = selected ? text : "—";
+      svg.setAttribute("aria-label", chosen && chosen.key !== "silent"
+        ? `${chosen.name} prieš klasę.`
+        : chosen ? "Vaikas prieš klasę tyli." : "Trys vaikai prieš klasę.");
+
+      options.forEach((o, i) => {
+        const b = pick.querySelector(`#jv-opt-${i}`);
+        b.setAttribute("aria-pressed", String(o.key === selected));
+        b.dataset.locked = String(!predicted);
+      });
+
+      api.readout(selected ? text : (S.predict || ""));
+      if (speak && text) api.speak(text, { rate: 0.9 });
+
+      let note;
+      if (!predicted) note = "Pasakyk savo spėjimą. Tada rinkis, kas kalba.";
+      else if (!selected) note = "Pasirink vaiką ir paklausyk, ką jis sako.";
+      else if (selected === "silent") note = "Niekas nieko nepasakė, todėl tikslaus žodžio neturime.";
+      else note = `${chosen.name} pasakė savo jausmą, todėl žinome žodį.`;
+      noteEl.hidden = !predicted;
+      noteEl.textContent = predicted ? note : "";
+
+      if (predicted && seen.size >= options.length && !reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    function choose(key) {
+      if (!predicted) {
+        api.note("Pirmiausia pasakyk spėjimą. Tada rinkis.");
+        return;
+      }
+      selected = key;
+      seen.add(key);
+      paint({ speak: true });
+    }
+
+    options.forEach((o, i) => {
+      pick.querySelector(`#jv-opt-${i}`).addEventListener("click", () => choose(o.key));
+    });
+
+    sayBtn.addEventListener("click", () => {
+      if (!predicted) {
+        predicted = true;
+        paint({ speak: true });
+        return;
+      }
+      api.note(seen.size ? "Spėjimas pasakytas. Rinkis kitą vaiką." : "Pasirink vaiką ir paklausyk, ką jis sako.");
+    });
+
+    resetBtn.addEventListener("click", () => {
+      predicted = false;
+      selected = null;
+      reported = false;
+      seen.clear();
+      paint();
+    });
+
+    paint();
+    return null;
+  },
+};
+
 export const SIMS = {
   "dovana-ir-noras": dovanIrNoras,
+  "jausmo-vardas": jausmoVardas,
 };

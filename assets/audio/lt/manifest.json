@@ -579,6 +579,14 @@
   "n": "n/75327b43f1f0c46f-f37b3925.mp3",
   "s": "s/75327b43f1f0c46f-58e55a0c.mp3"
  },
+ "Ansamblis": {
+  "n": "n/ec40448b4df8ec47-f9660668.mp3",
+  "s": "s/ec40448b4df8ec47-63f1c9d0.mp3"
+ },
+ "Ansamblis. Melodija ta pati, prisijungė pritarimas.": {
+  "n": "n/350cd24a3f9c900f-fa8a7d99.mp3",
+  "s": "s/350cd24a3f9c900f-2c8a649c.mp3"
+ },
  "Ant tvoros buvo aštuoni paukščiai. Trys nuskrido.": {
   "n": "n/8c8856dac70a0171-3223418e.mp3",
   "s": "s/8c8856dac70a0171-f879ede3.mp3"
@@ -735,6 +743,10 @@
   "n": "n/8897cc3a91841130-977dd4f4.mp3",
   "s": "s/8897cc3a91841130-57174ec3.mp3"
  },
+ "Bosas": {
+  "n": "n/f4835c5ea1477713-e99e2e5b.mp3",
+  "s": "s/f4835c5ea1477713-da54920e.mp3"
+ },
  "Butelis atiteko draugui. Krūva nepaaugo.": {
   "n": "n/a8f5e059f6b5bca3-e6399089.mp3",
   "s": "s/a8f5e059f6b5bca3-1a0a0f93.mp3"
@@ -766,6 +778,10 @@
  "Dabar spausk „Eik“.": {
   "n": "n/4d4d65ccf59bb3f5-03f1af0d.mp3",
   "s": "s/4d4d65ccf59bb3f5-d4f2b451.mp3"
+ },
+ "Dabar spausk „Paleisk“ ir klausyk.": {
+  "n": "n/00eee96419252cbe-c255b14f.mp3",
+  "s": "s/00eee96419252cbe-65375f88.mp3"
  },
  "Dabar spausk „Rodyk rytą“.": {
   "n": "n/884b4c7076e26aba-f5aa5a91.mp3",
@@ -1127,6 +1143,10 @@
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
   "s": "s/60d89cb04b7054d4-58e113db.mp3"
  },
+ "Groja vienas atlikėjas. Seki vieną liniją.": {
+  "n": "n/dd5e5458a76b27a3-65e1e5c6.mp3",
+  "s": "s/dd5e5458a76b27a3-72e110e1.mp3"
+ },
  "Grupę parodo maistas, o ne vieta.": {
   "n": "n/87fad9ed599afa28-f0c56435.mp3",
   "s": "s/87fad9ed599afa28-176fead1.mp3"
@@ -1146,6 +1166,10 @@
  "I": {
   "n": "n/a83dd0ccbffe39d0-a2e801b9.mp3",
   "s": "s/a83dd0ccbffe39d0-f0ef1ae2.mp3"
+ },
+ "Ieva sako: „Aš išdrįsau!“ Jos jausmas – pakylėtas.": {
+  "n": "n/5a39457475eb562e-c0b7d8e1.mp3",
+  "s": "s/5a39457475eb562e-a35298d0.mp3"
  },
  "Imk daugiau dėmių iš dešimtuko.": {
   "n": "n/10a19b6e1d0e9bf9-127d9958.mp3",
@@ -1278,6 +1302,10 @@
  "Kas pasikeis, kai pakeisi korteles: pulsas ar ritmas?": {
   "n": "n/d9b40529fa3121c9-772cc6da.mp3",
   "s": "s/d9b40529fa3121c9-04a356d4.mp3"
+ },
+ "Kas pasikeis, kai prisijungs daugiau atlikėjų?": {
+  "n": "n/b96bcd36a283ba3f-70ab9fbd.mp3",
+  "s": "s/b96bcd36a283ba3f-943d8de7.mp3"
  },
  "Kas pasikeis: formos ar nuotaika? Pasakyk, tada keisk.": {
   "n": "n/4d4a059e036dc52a-2292c4c0.mp3",
@@ -1691,6 +1719,14 @@
   "n": "n/77d4cb61d83a42bc-6ba967c4.mp3",
   "s": "s/77d4cb61d83a42bc-a490a0d5.mp3"
  },
+ "Melodija": {
+  "n": "n/ba1616826a974136-bb16de0d.mp3",
+  "s": "s/ba1616826a974136-ae01ff16.mp3"
+ },
+ "Melodija yra viena linija. Klausyk jos visą laiką.": {
+  "n": "n/78812d3302626ba1-7f0e5da7.mp3",
+  "s": "s/78812d3302626ba1-632c416e.mp3"
+ },
  "Metalas dugne.": {
   "n": "n/2285765af1dbe56e-bc832664.mp3",
   "s": "s/2285765af1dbe56e-10f0e8c4.mp3"
@@ -1739,6 +1775,10 @@
   "n": "n/ab51257ba581ae9d-23b738d3.mp3",
   "s": "s/ab51257ba581ae9d-8a98c7a8.mp3"
  },
+ "Niekas nieko nesako. Iš veido ir vietos tikslaus žodžio nežinome.": {
+  "n": "n/eac22a803fe65ba4-27e02c4f.mp3",
+  "s": "s/eac22a803fe65ba4-79baff34.mp3"
+ },
  "Nieko nėra": {
   "n": "n/a538c11a135f32bc-d078ccb5.mp3",
   "s": "s/a538c11a135f32bc-8fd0f91b.mp3"
@@ -1758,6 +1798,14 @@
  "Oras sustojo. Kelyje yra kliūtis.": {
   "n": "n/371434ed72ca053e-c731d4bc.mp3",
   "s": "s/371434ed72ca053e-e005f725.mp3"
+ },
+ "Orkestras": {
+  "n": "n/694b492d4f1bcb37-89119013.mp3",
+  "s": "s/694b492d4f1bcb37-88185d09.mp3"
+ },
+ "Orkestras. Melodija ta pati, dar prisijungė bosas.": {
+  "n": "n/b6e07790bd7110b6-752678d8.mp3",
+  "s": "s/b6e07790bd7110b6-4b0bb8f3.mp3"
  },
  "P": {
   "n": "n/5c62e091b8c0565f-5df0e1a2.mp3",
@@ -1802,6 +1850,10 @@
  "Paliesk komandą, ir ji pasikeis į kitą.": {
   "n": "n/e2c3c41a3f0bb8ee-c7db9c56.mp3",
   "s": "s/e2c3c41a3f0bb8ee-58662b22.mp3"
+ },
+ "Palygink su kitu atlikėju.": {
+  "n": "n/a8022620320bfff9-d8925bf9.mp3",
+  "s": "s/a8022620320bfff9-af4d0e71.mp3"
  },
  "Parduotuvėje": {
   "n": "n/9605a89241aec31a-8ef8a250.mp3",
@@ -1971,6 +2023,10 @@
   "n": "n/bbbfb4885794d2cd-da6961e3.mp3",
   "s": "s/bbbfb4885794d2cd-0ea8cb4a.mp3"
  },
+ "Pirma pasakyk savo spėjimą, tada rinkis atlikėją.": {
+  "n": "n/bfc0094d6494c181-98448997.mp3",
+  "s": "s/bfc0094d6494c181-dec1d643.mp3"
+ },
  "Pirma pasakyk, tada keisk korteles.": {
   "n": "n/76e586fb66924d2d-c80bb9be.mp3",
   "s": "s/76e586fb66924d2d-3075cfef.mp3"
@@ -2103,6 +2159,10 @@
   "n": "n/b493f224483334f9-2792defd.mp3",
   "s": "s/b493f224483334f9-d72a250a.mp3"
  },
+ "Pritarimas": {
+  "n": "n/844334d3d04b1707-7cbfc17c.mp3",
+  "s": "s/844334d3d04b1707-d8a7102b.mp3"
+ },
  "Puiku!": {
   "n": "n/2d4f8241c3336b71-33c16e05.mp3",
   "s": "s/2d4f8241c3336b71-1cada9f0.mp3"
@@ -2218,6 +2278,10 @@
  "Rūta": {
   "n": "n/b140820bf377005a-34e1286a.mp3",
   "s": "s/b140820bf377005a-5fe912a5.mp3"
+ },
+ "Rūta sako: „Bijau, kad visi juoksis.“ Jos jausmas – baikštus.": {
+  "n": "n/1387e2d09f2001e6-4f7c986d.mp3",
+  "s": "s/1387e2d09f2001e6-6c0156e5.mp3"
  },
  "S": {
   "n": "n/8de0b3c47f112c59-db2f4c1a.mp3",
@@ -2535,6 +2599,10 @@
   "n": "n/86c496b088a575d6-c0860daf.mp3",
   "s": "s/86c496b088a575d6-71b2f6bc.mp3"
  },
+ "Tomas sako: „Noriu, kad jie nustotų!“ Jo jausmas – piktas.": {
+  "n": "n/470788d9fd725932-5c8d345e.mp3",
+  "s": "s/470788d9fd725932-957b394f.mp3"
+ },
  "Tomas turėjo mėlyną skėtį.": {
   "n": "n/c88217195c6f7e21-bfb3a3c5.mp3",
   "s": "s/c88217195c6f7e21-8f0b555c.mp3"
@@ -2550,6 +2618,10 @@
  "Trintukas ilgesnis už sąvaržėlę. Ar trintukų bus daugiau, ar mažiau?": {
   "n": "n/5649faf6bb1d075e-0574fb55.mp3",
   "s": "s/5649faf6bb1d075e-83e5f559.mp3"
+ },
+ "Tris kartus skambėjo ta pati melodija.": {
+  "n": "n/32633b855a5083ef-58f1835e.mp3",
+  "s": "s/32633b855a5083ef-5e196e8b.mp3"
  },
  "Trys augalai, trys grupės.": {
   "n": "n/2fcf03dd0d2711a7-762b96e1.mp3",
@@ -2582,6 +2654,10 @@
  "Trys trintukai": {
   "n": "n/f7f0f61bfcd44263-806425f3.mp3",
   "s": "s/f7f0f61bfcd44263-aeb9fa84.mp3"
+ },
+ "Trys vaikai prieš klasę. Ar jie jaučiasi vienodai? Pasakyk, tada rinkis.": {
+  "n": "n/d33f07c46f40aa99-2d38b556.mp3",
+  "s": "s/d33f07c46f40aa99-c73b4b73.mp3"
  },
  "Trys vienodo dydžio kaladėlės. Kuri plauks?": {
   "n": "n/da3c514821c976da-86f549a5.mp3",
@@ -2799,6 +2875,10 @@
   "n": "n/d4244a5ac9b74e8c-0f697101.mp3",
   "s": "s/d4244a5ac9b74e8c-ae97f632.mp3"
  },
+ "Vienas atlikėjas": {
+  "n": "n/f961cb1d039e3b6b-1c839c33.mp3",
+  "s": "s/f961cb1d039e3b6b-24de21cc.mp3"
+ },
  "Vienas banknotas atstojo kelias monetas.": {
   "n": "n/6c9af7476a67ef8e-d77aaffc.mp3",
   "s": "s/6c9af7476a67ef8e-9cef0004.mp3"
@@ -2894,6 +2974,10 @@
  "Vėl raudona. Paveikslas toks pat.": {
   "n": "n/dd9e3c8e97ae87e3-6b0275a9.mp3",
   "s": "s/dd9e3c8e97ae87e3-c24af0c8.mp3"
+ },
+ "Vėl ta pati melodija.": {
+  "n": "n/bdcef3bd34b76de9-e2bae482.mp3",
+  "s": "s/bdcef3bd34b76de9-2c90c1b2.mp3"
  },
  "Vėl žalia. Paveikslas toks pat.": {
   "n": "n/c46c25cb45cad82f-edbfd1d8.mp3",

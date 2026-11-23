@@ -1,0 +1,15 @@
+{
+  "role": "sistemos-architektas",
+  "run_id": 0,
+  "created": "2026-11-23T09:00:28",
+  "type": "tema",
+  "title": "26.3.1 — gamtos ištekliai, tarša, tausojimas",
+  "body": "1 klasės programos pozicija 26.3.1 — gamtos ištekliai, tarša, tausojimas. Modulis temą liečia, bet temos branduolio dar nėra. Programos reikalavimas: modulio nėra; pasiūlymas 2026-11-14-ideator-kas-sukure-dailka.json (target 21) Esami moduliai, kuriuos perskaityti prieš kuriant (nekartoti jų modelio): 21-kas-sukure-dailka. Programoje šiai temai skirta 2 val. Kūrėjas: sukurk VIENĄ modulį šiam tikslui pagal docs/KURINIO-STANDARTAS.md; viena didelė idėja, 3–5 užduotys su „why“, viena klaidinga nuostata, kurią modelis parodo.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/35-gamtos-istekliai-tarsa-tausojimas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:170 — programos pozicija 26.3.1",
+    "research/wiki/curriculum/backlog.json — būsena „partial“, padengta 38/47"
+  ]
+}

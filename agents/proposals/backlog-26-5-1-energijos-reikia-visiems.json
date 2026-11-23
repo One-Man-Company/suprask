@@ -1,0 +1,15 @@
+{
+  "role": "sistemos-architektas",
+  "run_id": 0,
+  "created": "2026-11-23T09:00:28",
+  "type": "tema",
+  "title": "26.5.1 — energijos reikia visiems",
+  "body": "1 klasės programos pozicija 26.5.1 — energijos reikia visiems. Modulis temą liečia, bet temos branduolio dar nėra. Programos reikalavimas: atskiro modulio nėra; atmesta guidelines/klausimai.md:70 (gairių 2 klausimas) Esami moduliai, kuriuos perskaityti prieš kuriant (nekartoti jų modelio): 01-susitarimas-ir-zaidimas, 02-emociju-zodynas, 09-augalo-gyvenimas. Programoje šiai temai skirta 2 val. Kūrėjas: sukurk VIENĄ modulį šiam tikslui pagal docs/KURINIO-STANDARTAS.md; viena didelė idėja, 3–5 užduotys su „why“, viena klaidinga nuostata, kurią modelis parodo.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/37-energijos-reikia-visiems.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:172 — programos pozicija 26.5.1",
+    "research/wiki/curriculum/backlog.json — būsena „partial“, padengta 38/47"
+  ]
+}

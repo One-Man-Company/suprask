@@ -12,7 +12,7 @@
   ],
   "concept": {
     "title": "Priežastis yra vietoje",
-    "big_idea": "Kelyje šlapios grindys, kuprinė ar tamsa. Tas pats ėjimas baigiasi kritimu. Kai to daikto nėra, jis baigiasi saugiai.",
+    "big_idea": "Kelyje šlapios grindys, kuprinė ar tamsa. Tokioje vietoje ėjimas gali baigtis kritimu. Kai daikto nėra, ten niekas nekliudo.",
     "steps": [
       "Pasirink, kas yra kelyje.",
       "Spėk, ar ėjimas baigsis saugiai.",
@@ -123,16 +123,16 @@
   ],
   "reflect": "Kokią priežastį rastum savo klasėje? Pasakyk, ką su ja darytum.",
   "teacher": {
-    "goal": "Suprasti, kad įvykis turi vietoje esančią priežastį, kurią galima rasti ir pašalinti, todėl „nepasisekė“ nėra paaiškinimas. Modelis keičia vieną dalyką — kas yra kelyje; vaikas, ėjimas ir vieta nesikeičia, todėl priežastis priskiriama vietai, o ne vaikui. Modelyje kritimas yra tikimybė, o ne garantija: figūrėlė nesužeidžiama ir niekada neverda.",
+    "goal": "Suprasti, kad įvykis turi vietoje esančią priežastį, kurią galima rasti ir pašalinti, todėl „nepasisekė“ nėra paaiškinimas. Modelis keičia vieną dalyką — kas yra kelyje; vaikas, ėjimas ir vieta nesikeičia, todėl priežastis priskiriama vietai, o ne vaikui. Atsitiktinumo modelis neturi: kortelė su daiktu visada sustabdo ėjimą ties juo, o „nieko“ — praeina. Tai sąmoninga riba: modelis rodo priežastį, o ne prognozę; gyvenime tas pats šlapias plotas gali baigtis ir be kritimo. Figūrėlė niekada nesužeidžiama ir neverda.",
     "prompt": "Paklausk: „Kas buvo kelyje? Kas pasikeitė, kai daikto nebeliko?“",
     "offline": "Ant lapo nupieškite mokyklos koridorių tiesia linija. Paprašykite vaiko apibraukti vietą, kur kas nors galėtų pakenkti — mokytojas neįvardija atsakymo ir neklausia, ar vaikas atsargus. Paskui ant tos vietos padėkite daiktą (kuprinę, liniuotę) ir paprašykite vedžioti pirštą tuo pačiu keliu: pirštas sustoja ties daiktu. Nuimkite daiktą ir pakartokite tą patį kelią — pirštas praeina. Pabaigoje paklauskite, kas pasikeitė: vaikas, kelias ar vieta. Suaugusiojo darbas lieka apšvietimas, grindų ir koridoriaus tvarka.",
     "misconceptions": [
-      "„Trauma atsitinka be priežasties, tiesiog nepasisekė.“ Modelyje tas pats ėjimas du kartus baigiasi skirtingai, nors vaikas ir vieta tie patys — skyrėsi tik daiktas kelyje.",
+      "„Trauma atsitinka be priežasties, tiesiog nepasisekė.“ Modelyje vaikas, ėjimas ir vieta nesikeičia nė karto: kai kelyje yra daiktas, ėjimas nutrūksta ties juo, o kai nieko nėra — praeina. Kinta tik vienas dalykas: kas yra kelyje.",
       "„Užteks būti atsargesniam, ir daiktas kelyje nebekliudys.“ Kintamasis yra daiktas, o ne atsargumas: kol priežastis yra, ėjimas baigiasi kritimu.",
       "„Kaltas vaikas, o ne vieta.“ Modelis sako, kas yra kelyje („Grindys šlapios toje vietoje“), o ne „bėgai per greitai“; žodis „kaltas“ nevartojamas nė karto.",
-      "„Kuprinė ant grindų — tik netvarka.“ Kritimas sustoja būtent ties kuprine, o paaiškinimas įvardija daiktą, ne tvarką.",
+      "„Kuprinė ant grindų — tik netvarka.“ Ėjimas nutrūksta būtent ties kuprine, o paaiškinimas įvardija daiktą, ne tvarką.",
       "„Pavojinga vieta yra visada pavojinga.“ Ta pati vieta su tuo pačiu vaiku yra saugi, kai kortelėje pasirenkama „nieko“.",
-      "„Jei gyvenime bėgau šlapiomis grindimis ir nenukritau, modelis melavo.“ Ne: kritimas yra tikimybė, o modelis rodo, kas ją padidina."
+      "„Jei gyvenime bėgau šlapiomis grindimis ir nenukritau, modelis melavo.“ Modelis neprognozuoja ir atsitiktinumo neturi: jis sąmoningai sustabdo ėjimą ties kiekvienu kelyje esančiu daiktu, kad priežastis būtų matoma. Gyvenime kritimas yra galimybė, o ne garantija — bet pavojus vietoje jau yra, kol grindys šlapios."
     ]
   },
   "sources": [

@@ -4100,10 +4100,13 @@ const ledoFormos = {
      outcome(key) = key === "nieko" ? "safe" : "fall".
    Jei konfigūracijoje trūksta rakto ar užrašo, komponentas sako žodžiais
    („Vieta nesuderinta.“) ir rašo console.error — tyliai nepraleidžia (LL-33).
-   Ribos: kritimas yra tikimybė, o ne garantija (todėl paaiškinimas sako
-   „gali kliudyti“, o ne „nukris“), figūrėlė niekada nesužeidžiama ir
-   neverda, o sąraše yra kontrolinė kortelė „nieko“ — be jos modelis
-   neturėtų nė vieno prieštaraujančio pavyzdžio (LL-28).
+   Sąmoninga riba: modelis atsitiktinumo NETURI — kiekviena kortelė su daiktu
+   baigiasi „fall“, o „nieko“ — „safe“. Tai priežasties demonstracija, o ne
+   prognozė: gyvenime tas pats šlapias plotas gali baigtis ir be kritimo,
+   todėl turinio tekstas sako „gali kliudyti“, o ne „visada nukris“, ir
+   mokytojo blokas turi sakyti tą patį (LL-147). Figūrėlė niekada
+   nesužeidžiama ir neverda, o sąraše yra kontrolinė kortelė „nieko“ — be
+   jos modelis neturėtų nė vieno prieštaraujančio pavyzdžio (LL-28).
    Tariniai tekstai yra `config.sentences` (juos renka
    `scripts/generate_audio.py`), o mygtukų užrašai — `config.labels`:
    mygtukų balsas netariamas, todėl jiems įrašų nereikia. */

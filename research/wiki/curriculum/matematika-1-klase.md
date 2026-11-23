@@ -2,7 +2,7 @@
 title: "Matematika, 1 klasė"
 tipas: curriculum
 klase: 1
-atnaujinta: 2026-11-03
+atnaujinta: 2026-11-23
 saltinis: "Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (NŠA, 2024)"
 ---
 
@@ -123,6 +123,14 @@ Kubas ir rutulys — atpažįstami; 1–2 klasėje papildomai „mokomasi įvard
 
 Dokumente pateiktas užduoties pavyzdys su **langelių tinkleliu**: „Varlytė nupiešta langelyje **B1**. Kuriame langelyje yra drugelis? … Kas pavaizduota **C3** langelyje?“ Tai **ikikoordinatinė** orientacija — ne koordinačių plokštuma (ji tik 4 klasėje), bet tinklelio adresas.
 
+> **Tikslumas (2026-11-23, paleidimas #483).** 1 klasės aprašas baigiasi padėties apibūdinimu ir judėjimo schema
+> (`sources/pradinio-bp-rekomendacijos-2024.txt:34017–34019`). **Pusės ar ketvirčio apskritimo posūkiai 1 klasei
+> nepriklauso** — jie įvardyti kaip 2 klasės plėtotė: „2-oje klasėje ši tema bus plėtojama plačiau: mokiniai mokysis
+> kurti tam tikrą vietą vaizduojančius planus, sukurti ir vykdyti kelių žingsnių instrukciją, susijusią su judėjimu
+> tame plane, įskaitant pusės ar ketvirčio apskritimo posūkius“ (`:1021–1022`; ta pati pastraipa kartojasi 2 kl.
+> lentelėje `:12347–12356`). 1 kl. metų plane yra „Transformacijos 4“ (`:17306`), bet be ketvirčių. Todėl
+> `32-transformacijos-konstravimas` su ketvirčio posūkių branduoliu yra 2 klasės turinys (žr. §9.3).
+
 Tai pats tinkamiausias 1 klasės interaktyvaus modelio tipas: **tinklelis + komandų seka + lobio paieška**.
 
 ## 5. Dydžiai ir matavimas
@@ -138,10 +146,13 @@ Bendras programos posūkis — nuo skaičiavimų su matiniais skaičiais prie **
 |---|---|---|
 | **Masė** | „Susipažįstama su pagrindiniu masės matavimo vienetu **kilogramu (kg)**… mokomasi **pajausti**, kokių artimoje aplinkoje esančių daiktų masę tinka/netinka apibūdinti šiuo matavimo vienetu, kokie prietaisai gali būti tam naudojami“ | *9 skyrius* |
 | **Laikas** | „Mokomasi suprasti **laikrodžio su rodyklėmis ir skaitmeninio laikrodžio** rodomą laiką… nusakant laiką **pilnomis valandomis (val., h)**, **12 val. ir 24 val. laiko sistemose**“ | *9 skyrius* |
-| **Ilgis** | 1 klasėje dokumente nenurodytas; 2 klasėje — „cm ir mm“, „iš akies“ vertinimas | *Geometriniai matavimai, 1–2 kl.* |
+| **Ilgis** | 1 kl. metų plane yra atskira tema „Ilgis 5“ valandos (`:17300`); matuojama **sąlyginiais vienetais**, taikomas „spėti ir tikrinti“ (`:1010–1017`). 2 klasėje — „cm ir mm“, gretimų vienetų sąryšiai | *Metų planas 1 kl.; Geometriniai matavimai, 1–2 kl.* |
 | **Talpa, temperatūra, para** | 2 klasė ir vėliau | *ten pat* |
 
-[PATIKRINTI] Ilgio matavimo priskyrimas 2 klasei — dokumente 1 klasės ilgio turinys neįvardytas, bet tai gali būti ištraukimo spraga, o ne programos sprendimas.
+**Išspręsta (2026-11-23, #483).** Ankstesnis [PATIKRINTI] („1 klasės ilgio turinys neįvardytas“) buvo ištraukimo spraga:
+1 kl. metų plane yra „Ilgis 5“ (`:17300`) ir integruota veikla „Kokio ilgio mano kuprinėje esantys daiktai?“
+(`:17301–17305`). Ilgio matavimas 1 klasei priklauso; skiriasi tik vienetas — 1 kl. sąlyginiai vienetai, 2 kl. cm ir mm
+su gretimų vienetų sąryšiais (`:1010–1017`, `:17300`).
 
 Platformos išvada: 1 klasėje matavimas — **ne skaičiavimas, o spėjimas + patikrinimas + vieneto pasirinkimas**. Tai interaktyvus modelis „kiek sveria / kiek valandų“, o ne konverteris.
 
@@ -150,7 +161,7 @@ Platformos išvada: 1 klasėje matavimas — **ne skaičiavimas, o spėjimas + p
 > „**1 klasė. Duomenys ir jų interpretavimas.** Mokomasi **perskaityti piktogramoje, stulpelinėje diagramoje** pateikiamą informaciją, ja remtis atsakant į pagrindinį tyrimo klausimą.“
 > — *9 skyrius*
 
-Naujovė: „Duomenis mokiniai mokysis pavaizduoti ne tik grafiškai (piktograma ar stulpeline diagrama), bet ir **dažnių lentele**“ (*Duomenys ir tikimybės, 1–2 klasė*), tačiau aiškinamasis tekstas dažnių lentelę priskiria **2 klasei** („jau 2-oje klasėje“). 1 klasei saugiausia laikyti: **piktograma + stulpelinė diagrama**, dažnių lentelė — [PATIKRINTI].
+Naujovė: „Duomenis mokiniai mokysis pavaizduoti ne tik grafiškai (piktograma ar stulpeline diagrama), bet ir **dažnių lentele**“ (*Duomenys ir tikimybės, 1–2 klasė*), tačiau aiškinamasis tekstas dažnių lentelę priskiria **2 klasei** („jau 2-oje klasėje“, `:1108–1111`). 1 klasei saugiausia laikyti: **piktograma + stulpelinė diagrama**; dažnių lentelė — 2 kl. (`:1108–1111`).
 
 ## 7. Ką 1-okas turi mokėti metų gale
 
@@ -176,21 +187,70 @@ Naujovė: „Duomenis mokiniai mokysis pavaizduoti ne tik grafiškai (piktograma
 4. **Matavimas = spėjimas prieš matavimą.** Kiekviename matavimo modelyje pirmas žingsnis: „tavo nuomone, kiek?“.
 5. **Laikas — tik pilnos valandos.** Minutės yra 2 klasės turinys.
 
-## 9. Modulių atitikties patikra — 2026-11-05
+## 9. Modulių atitikties patikra — 2026-11-23
 
-Patikrinti visi 6 gyvi matematikos moduliai (paleidimas #22, `programos-derintojas`). Nuorodos `:N` — eilutės
-faile `sources/pradinio-bp-rekomendacijos-2024.txt`; modulių eilutės — failo eilutės.
+Patikrinti visi 23 gyvi matematikos moduliai (paleidimas #483, `programos-derintojas`). Nuorodos `:N` — eilutės
+faile `sources/pradinio-bp-rekomendacijos-2024.txt`; modulių eilutės — failo eilutės. Patikros sritis — vienas
+dalykas (matematika, 1 kl.), kaip reikalauja vaidmens ribos.
 
 | Modulis | Verdiktas | Programa (`sources/…txt`) | Pastaba |
 |---|---|---|---|
-| `04-skaiciu-tiese` | **iš dalies** | „1 klasė. Skaičiai nuo 0 iki 100… Tyrinėjama, kaip sudaryta 100-o skaičių lentelė, skaičių tiesė“ (`:33739–33740`); trys sudėties/atimties atvejai (`:33520–33521`) | Tema teisinga, apimtis ne: sim `max: 20`, nė vienos užduoties su perėjimu per dešimtį (8 + 5; 16 + 7; 16 + 12) |
-| `05-desimtukas` | **iš dalies** | „2-oje klasėje mokiniai susipažins su vieneto sąvoka, aiškinsis, ką reiškia pusė, trečdalis…“ (`:795–800`) | Dešimtuko sandara 1 klasei tinka, bet „pusė dešimtuko“ (`concept.steps[2]`, `tasks[1]`) — 2 klasės sąvoka |
-| `06-figuros` | **atitinka 1 kl. atpažinimo lygį** (savybės — 2 kl.) | 1 kl.: „taško, tiesės, spindulio, atkarpos – vaizdavimo brėžinyje…“ (`:1030–1033`); 2 kl.: „uždara laužtė, kampas, daugiakampis, daugiakampio kampas, daugiakampio kraštinė… jis turi tiek kampų, kiek ir kraštinių“ (`:1033–1037`) | 2026-11-07 (paleidimas 95): kampų skaičiavimas ir kraštinių lyginimas išimti — tai 2 klasės turinys, perkeliamas į 2 kl. planą. Modulyje liko figūrų atpažinimas ir viena idėja: forma nepriklauso nuo padėties. 1 kl. geometrijos branduolys — `18-taskas-tiese-spindulys-atkarpa` |
-| `07-desningumai` | **iš esmės atitinka** | 1 kl.: „objektų sekos iš 2–3 pasikartojančių narių grupių“ (`:33563`); augančios sekos — 3–4 kl. (`:12321–12322`) | `tasks[3]` (2, 4, 6, 8…) yra auganti skaičių seka, ne 1 kl. tipas; trūksta „trūkstamo nario“ viduryje |
-| `15-laikas` | **neatitinka apimties** | „1 klasė. Masė, laikas… laiką pilnomis valandomis (val., h), 12 val. ir 24 val. laiko sistemose“ (`:33894–33895`) | 24 val. sistema programoje privaloma 1 klasei, o modulis `svietimas1` teigia ją „sąmoningai neįtraukusią“; ideator #135 jau siūlo temą |
-| `16-lygybe-svarstykles` | **atitinka** | „Mokomasi lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“ (`:33521`) | Svarstyklės — modelis tai pačiai sąvokai; visos užduotys ≤ 10, `optional` 4 + 3 = 5 + 2 neprieštarauja programai |
+| `04-skaiciu-tiese` | **iš dalies** | „1 klasė. Skaičiai nuo 0 iki 100… Tyrinėjama, kaip sudaryta 100-o skaičių lentelė, skaičių tiesė“ (`:33739–33740`); trys sudėties atvejai (`:33520–33521`) | Modelis teisingas, apimtis siauresnė: sim `max: 20` (failas `:26`), taikiniai 5–19, visos užduotys ≤ 19. Pats `teacher.goal` (`:85`) rašo „programoje — iki 100“. Pasiūlymas `2026-11-23-programos-derintojas-skaiciu-tiese-100.json` |
+| `05-desimtukas` | atitinka | Mintino skaičiavimo strategijos „paremtos skaičiaus sandaros… suvokimu“ (`:687–691`); 1 kl. skaičiai 0–100 (`:33739`) | 2026-11-05 pastaba apie „pusę dešimtuko“ nebegalioja — modulyje jos nebėra |
+| `06-figuros` | atitinka (atpažinimo lygis) | 1 kl. plokščios figūros pradedamos nuo taško, tiesės, spindulio, atkarpos (`:1030–1033`); kampas, daugiakampis, kraštinė — 2 kl. (`:1033–1036`); metų plane „Plokščios figūros 5“ (`:17307`) | Modulis moko formos pastovumo, o ne savybių; apskritimo, trikampio ir kvadrato atpažinimas yra ikimokyklinis pagrindas, ne 2 kl. savybės |
+| `07-desningumai` | atitinka | 1 kl. „objektų sekas iš 2–3 pasikartojančių narių grupių, jas pratęsti, rasti trūkstamus sekų narius“ (`:917–921`); metų plane „Sekos 5“ (`:17261`) | Sim ir trys užduotys — objektų sekos; T1 užrašyta skaitmenimis (1, 2, 1, 2). „Įvairios skaičių sekos“ programoje įvardytos 2 kl. (`:921–922`), todėl T1 verta keisti į objektų seką — branduolys vis tiek atitinka |
+| `14-pinigai` | atitinka | „1 klasė. Finansinis raštingumas… atpažinti euro banknotus ir monetas pagal vertę, norimą pinigų sumą sudėlioti keliais skirtingais… deriniais“ (`:33948–33949`); metų plane „Finansinis raštingumas 4“ (`:17259–17260`) | Visi uždaviniai su eurais be centų — 1 klasei pakanka vertei atpažinti |
+| `15-laikas` | atitinka | „laiką pilnomis valandomis (val., h), 12 val. ir 24 val. laiko sistemose“ (`:33894–33895`) | Modulis — viena idėja: valandas rodo trumpoji rodyklė. 24 val. sistema atskirai mokoma `20-laikas-12-ir-24-val` |
+| `16-lygybe-svarstykles` | atitinka | „lygybėse a + b = c, a – b = c nustatyti trūkstamą skaičių“ (`:33521–33522`) | Svarstyklės — tas pats modelis; užduotys ≤ 10, programos reikalavimas iki 100 neteikiamas kaip šio modulio tikslas |
+| `17-kryptys-ir-vieta` | atitinka | „1 klasė. Transformacijos… pasisukti kairėn/dešinėn, pagal/prieš laikrodžio rodyklę; paeiti 3 žingsnius pirmyn/atgal“ (`:34017–34019`) | Kryptis susieta su kūnu, ne su kambariu — programos sakinio esmė |
+| `18-taskas-tiese-spindulys-atkarpa` | atitinka | taškas, tiesė, spindulys, atkarpa, jų padėtis (`:1030–1033`); „Plokščios figūros 5“ (`:17307`) | 1 kl. geometrijos branduolys |
+| `19-simto-skaiciu-lentele` | atitinka | „Tyrinėjama, kaip sudaryta 100-o skaičių lentelė“ (`:33739–33740`) | 19 → 29 yra lentelės sandaros, ne papildoma tema |
+| `20-laikas-12-ir-24-val` | atitinka | 12 ir 24 val. sistemos (`:33894–33895`) | Modelis rodo tapatumą, ne atimtį iš 12 — 1 klasei tinkama forma |
+| `21-erdvines-figuros` | atitinka | „jau 1–2 klasėje… mokomasi įvardyti stačiakampį gretasienį, kūgį, ritinį… atpažinti paveikslėlyje, rasti panašių daiktų aplinkoje, rūšiuoti“ (`:1041–1043`); elementai — 3–4 kl. (`:1043–1044`); „Erdvės figūros 3“ (`:17308`) | Briaunos, viršūnės ir sienos sąmoningai neskaičiuojamos |
+| `22-sudetis-per-desimti` | atitinka | vienaženklis + vienaženklis per 10; dviženklis + vienaženklis per 10 (`:33520–33521`, `:692–699`) | Trečiasis atvejis (16 + 12) — ne šio modulio tikslas; jo platformoje nėra, žr. §9.2 |
+| `23-piktograma-ir-stulpelis` | atitinka | „registruoti renkamus duomenis, kai yra 2–3 stebimo požymio reikšmės, pavaizduoti piktograma ar stulpine diagrama“ (`:23028–23031`); 1 kl. perskaityti (`:34044`) | Dažnių lentelė sąmoningai palikta 2 klasei (`:1108–1111`) |
+| `24-komandu-seka` | atitinka | komandų sekos 1–2 kl. (B1.3–B4.3, `:12277–12291`); „schema, piešiniu pavaizduoti nuosekliai atliekamų komandų seką“ (`:925–926`); metų plane „Algoritmai ir programavimas 8“ (`:17262–17263`) | Informatika integruota per matematiką, kaip numato programa |
+| `25-ilgis-ir-vienetas` | atitinka | metų plane „Ilgis 5“ (`:17300`), integruota veikla `:17301–17305`; „mato jausmas“ ir „spėti ir tikrinti“ (`:1010–1017`) | 1 kl. — sąlyginiai vienetai; cm ir mm — 2 kl. (`:1010–1017`) |
+| `26-mase-ir-kilogramas` | atitinka | „Susipažįstama su pagrindiniu masės matavimo vienetu kilogramu (kg)… kokių daiktų masę tinka/netinka apibūdinti šiuo vienetu“ (`:33783–33784`) | Modelis keičia tik dėžutę, svarstis ir svarstyklės lieka — priežastis matoma |
+| `27-skaicius-ir-skaitmuo` | atitinka | „Aptariamos skaičiaus ir skaitmens sąvokos. Tyrinėjama, kaip sudaryta 100-o skaičių lentelė“ (`:33739–33740`) | „Dešimtys / vienetai“ dokumente 1 kl. neįvardyti tiesiogiai; jie kyla iš 100 lentelės sandaros (`19`) ir atgalinio skaičiavimo per dešimtį (`30`). T4 variantai suformuluoti „Taip / Ne“ į „kas daugiau“ klausimą — kalbos, ne programos defektas |
+| `28-uzdavinio-klausimas` | atitinka | vieno veiksmo uždaviniai: kiek iš viso, likutis, keliais mažiau (`:774–780`); dviejų žingsnių — 2 kl. (`:778–780`) | T3 („kiek nuskrido“ — jau parašyta) moko skaityti sąlygą, ne skaičiuoti |
+| `29-atimtis-per-desimti` | atitinka | dviženklis − vienaženklis per 10 (`:692–699`, `:33520–33521`) | 13 − 9, 12 − 8, 14 − 8 — programos atvejis |
+| `30-skaiciavimas-atgal-per-desimti` | atitinka | „skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus“ (`:33739`) | Po 30 eina 29 — būtent dešimčių skaitmens kaita |
+| `32-transformacijos-konstravimas` | **NEATITINKA** | 1 kl. Transformacijos — padėties apibūdinimas, kryptis, 3 žingsniai (`:34017–34019`); „pusės ar ketvirčio apskritimo posūkius“ — **2 kl.** plėtotė (`:1021–1022`, `:12347–12356`); 1 kl. plane „Transformacijos 4“ (`:17306`), bet be ketvirčių | Visas modelis ir visos 5 užduotys — ketvirčio posūkiai (failas `:5`, `:10–11`). `sources` (`:108`) paskutinį sakinį priskiria 1 kl., nors jis yra 2 kl. pastraipoje. Pasiūlymas `2026-11-23-programos-derintojas-ketvircio-posukiai-2-klase.json` |
+| `33-trukstamas-demuo` | atitinka | trūkstamas skaičius lygybėse; pavyzdys „▢ + ▢ = 18… tris skirtingus variantus“ (`:33521–33522`, `:33533`) | Keli sprendiniai — programos pavyzdžio esmė |
 
-Naujausi pasiūlymai: `agents/proposals/2026-11-05-programos-derintojas-*.json`.
+### 9.1. Trys taisyklės, kuriomis remiasi lentelė
+
+1. **1 kl. metų planas yra turinio liudininkas.** Plane (`:17218–17312`) 100 val. ir temos: „Skaičiai nuo 0 iki 100
+   12+3“, „Sudėtis ir atimtis 41“, „Sekos 5“, „Algoritmai ir programavimas 8“, „Finansinis raštingumas 4“,
+   „Masė, laikas 5“, „Ilgis 5“, „Transformacijos 4“, „Plokščios figūros 5“, „Erdvės figūros 3“, „Duomenys 8“.
+   Tema, kurios šiame plane nėra, 1 klasei nepriklauso.
+2. **Ketvirčio posūkiai — 2 kl., ne 1 kl.** Tas pats žodžių junginys kartojasi 2 kl. lentelėje (`:12356`), todėl
+   citatos paieška dokumente jo „neišduoda“: sakinys egzistuoja, tik ne toje klasėje.
+3. **1 kl. matematikoje pasiekimai aprašomi temomis, o ne kodais.** 9 skyriuje 1 kl. rašoma „1 klasė. Sudėtis ir
+   atimtis“, o ne „A1.1“ tipo kodu; kodų priskyrimas 1 kl. moduliui yra netikslus, jei jis nėra cituojamas iš kito dalyko
+   (pvz., informatikos B1.3–B4.3, kurie galioja 1–2 kl. juostai).
+
+### 9.2. Ko 1 kl. matematikos moduliai dar neapima
+
+- **Dviženklis + dviženklis neperžengiant dešimties** (16 + 12 = ▢, `:33520–33521`, `:33527`). Nė vienas modulis
+  šio atvejo nemoko; `22` sim dėmenys yra tik vienaženkliai (`22-sudetis-per-desimti.json:26–27`). Siūlomas
+  modulis `34-dvizenklis-plius-dvizenklis` (pasiūlymas `2026-11-23-programos-derintojas-dvizenklis-plius-dvizenklis.json`).
+- **Dviženklis − dviženklis neperžengiant dešimties** (28 − 12) — tas pats atvejis atimčiai; turėtų būti to paties
+  modulio `optional` užduotis.
+- **Skaičių tiesė iki 100** — `04` sim `max: 20`; 100 lentelė (`19`, `30`) ir sudėtis per dešimtį (`22`, `29`) jau
+  naudoja visą ruožą, todėl tiesė lieka vienintelė modelio spraga (§9 lentelė, `04`).
+
+### 9.3. Rastas neatitikimas
+
+**`32-transformacijos-konstravimas` moko 2 klasės turinio.** Modulio `title` — „Ketvirtis rato pagal laikrodžio
+rodyklę“, abu `outcomes` kalba apie ketvirčius (`:10–11`), visos penkios užduotys — apie ketvirčio posūkį ir keturių
+ketvirčių grįžimą. 1 klasės programos sakinys (`:34017–34019`) ketvirčių nemini; jie įvardyti kaip 2 klasės plėtotė
+(`:1021–1022`). Defektas nematomas citatos vartams: `sources` (`:108`) cituoja realų dokumento sakinį, tik tas
+sakinys priklauso 2 kl. pastraipai. Taisymo kryptis — susiaurinti branduolį iki 1 kl. krypties ir padėties pokyčio,
+o ketvirčių aritmetiką atidėti 2 klasei.
+
+Naujausi pasiūlymai: `agents/proposals/2026-11-23-programos-derintojas-*.json` (3).
 
 Susiję: [[lietuviu-kalba-1-klase]] · [[pasaulio-pazinimas-1-klase]] · [[kti-dalykai-1-klase]] · [[1-klases-temų-žemėlapis]]
 

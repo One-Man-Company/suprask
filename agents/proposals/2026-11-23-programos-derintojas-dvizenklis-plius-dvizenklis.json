@@ -1,0 +1,19 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 483,
+  "created": "2026-11-23T15:09:00+02:00",
+  "type": "tema",
+  "title": "Trūksta programos atvejo: dviženklis + dviženklis neperžengiant dešimties (16 + 12)",
+  "body": "Programa 1 klasei įvardija lygiai tris sudėties ir atimties atvejus: vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį ir dviženklių skaičių neperžengiant dešimties (sources/pradinio-bp-rekomendacijos-2024.txt:33520–33521). Trečiasis atvejis dokumente iliustruotas būtent pavyzdžiu „16 + 12 = ▢“ (:33527), o jo atitikmuo atimčiai yra 28 − 12. Platformoje pirmus du atvejus moko 22-sudetis-per-desimti, atimtį per dešimtį — 29-atimtis-per-desimti, bet trečiojo atvejo nemoko nė vienas modulis: 22 simuliacijos dėmenys yra tik vienaženkliai (config first [7, 8, 9], second [4, 5, 6]). Tema turi aiškų interaktyvumo potencialą: vaikas stato 16 ir 12 iš dešimčių strypelių ir vienetų kubelių, mato, kad susidaro dvi dešimtys ir aštuoni vienetai, o nauja dešimtis nesusidaro — tai priešingybė 22 modeliui, kuriame dešimtukas sąmoningai papildomas. Siūlomas modulis „Dviženklis plius dviženklis be perėjimo“: du rezultatai (sudedu dešimtis su dešimtimis ir vienetus su vienetais, kai vienetai neperžengia dešimties; paaiškinu, kodėl 16 + 12 = 28, o ne 218 ar 38), 4 užduotys su hint ir why, viena optional su atimtimi 28 − 12. Simuliacijos idėja — dvi strypelių-kubelių juostos, kurios liejasi į vieną; skaičius ant juostos atsiranda tik tada, kai abi dalys sudėtos.",
+  "target": "content/lt/grade-01/matematika/34-dvizenklis-plius-dvizenklis.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33520–33521 — trys privalomi 1 kl. sudėties ir atimties atvejai",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33527 — pavyzdys „16 + 12 = “",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17246 — 1 kl. metų plane „Sudėtis ir atimtis 41“ valanda",
+    "content/lt/grade-01/matematika/22-sudetis-per-desimti.json:26–27 — sim dėmenys tik vienaženkliai (first [7,8,9], second [4,5,6])",
+    "content/lt/grade-01/matematika/29-atimtis-per-desimti.json — atimties per dešimtį atvejis, ne dviženklis − dviženklis",
+    "research/wiki/curriculum/matematika-1-klase.md §2.2 ir §9.2 — atvejų lentelė ir šios patikros išvada"
+  ]
+}

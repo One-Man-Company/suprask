@@ -1,0 +1,20 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 483,
+  "created": "2026-11-23T15:08:00+02:00",
+  "type": "atitiktis",
+  "title": "Ketvirčio posūkiai — 2 klasės plėtotė, o modulis juos moko kaip 1 klasės branduolį",
+  "body": "Modulio 32-transformacijos-konstravimas visas modelis ir visos penkios užduotys moko ketvirčio apskritimo posūkių: žymė iš viršaus eina į dešinę, keturi ketvirčiai grąžina ją į pradžią. Programos 1 klasės Transformacijų aprašas ketvirčių nemini — jame lieka padėties apibūdinimas, pasisukimas kairėn/dešinėn, pagal/prieš laikrodžio rodyklę ir 3 žingsniai pirmyn/atgal (sources/pradinio-bp-rekomendacijos-2024.txt:34017–34019). Ketvirčio posūkiai įvardyti kaip 2 klasės plėtotė: „2-oje klasėje ši tema bus plėtojama plačiau: mokiniai mokysis kurti tam tikrą vietą vaizduojančius planus, sukurti ir vykdyti kelių žingsnių instrukciją, susijusią su judėjimu tame plane, įskaitant pusės ar ketvirčio apskritimo posūkius“ (:1021–1022). Modulio sources paskutinį sakinį priskiria 1 klasei, nors jis yra 2 kl. pastraipoje — citata dokumente egzistuoja, todėl joks vartas jos nepagauna. Siūloma: (a) perrašyti outcomes ir 1–2 užduotis taip, kad mokymosi tikslas būtų 1 kl. turinys — kryptis pagal/prieš laikrodžio rodyklę ir padėties pokytis, o ratas liktų stebėjimo priemonė, ne ketvirčių aritmetika; (b) „kiek ketvirčių grąžina į pradžią“ ir panašias užduotis atidėti 2 klasei; (c) sources citatą perskaidyti į du sakinius su klasių žymomis, kad 1 kl. ir 2 kl. teiginiai nebesilietų. Jei ketvirčiai paliekami branduolyje, modulis turi būti perkeliamas į 2 klasę, o ne lieka 1 klasėje.",
+  "target": "content/lt/grade-01/matematika/32-transformacijos-konstravimas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/32-transformacijos-konstravimas.json:5 — title „Ketvirtis rato pagal laikrodžio rodyklę“",
+    "content/lt/grade-01/matematika/32-transformacijos-konstravimas.json:10–11 — outcomes „Pasakau, kur atsidurs žymė po ketvirčio rato“ ir „kodėl keturi ketvirčiai grąžina žymę į pradžią“",
+    "content/lt/grade-01/matematika/32-transformacijos-konstravimas.json:108 — sources teiginys „atlikti pusės ar ketvirčio apskritimo posūkius“ priskirtas 1 klasei",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:34017–34019 — „1 klasė. Transformacijos… pasisukti kairėn/dešinėn, pagal/prieš laikrodžio rodyklę; paeiti 3 žingsnius pirmyn/atgal“ (ketvirčių nėra)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1021–1022 — „2-oje klasėje… įskaitant pusės ar ketvirčio apskritimo posūkius“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17306 — 1 kl. metų plane „Transformacijos 4“ (be ketvirčių)",
+    "research/wiki/curriculum/matematika-1-klase.md §4.3 ir §9 — šios patikros įrašas"
+  ]
+}

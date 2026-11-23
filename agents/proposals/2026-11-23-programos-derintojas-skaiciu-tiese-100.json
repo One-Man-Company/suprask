@@ -1,0 +1,18 @@
+{
+  "role": "programos-derintojas",
+  "run_id": 483,
+  "created": "2026-11-23T15:10:00+02:00",
+  "type": "atitiktis",
+  "title": "Skaičių tiesė apsiriboja 20, nors 1 klasės programa — 0–100",
+  "body": "Programa 1 klasei aprašo skaičius nuo 0 iki 100 ir kaip atskirą objektą — skaičių tiesę: „1 klasė. Skaičiai nuo 0 iki 100… Tyrinėjama, kaip sudaryta 100-o skaičių lentelė, skaičių tiesė“ (sources/pradinio-bp-rekomendacijos-2024.txt:33739–33740). Modulio 04-skaiciu-tiese simuliacijos config turi max: 20 ir taikinius 5, 8, 12, 15, 19, o visos keturios užduotys sprendžiamos iki 19 — nė viena neperžengia dvidešimties. Pats modulis tai pripažįsta: teacher.goal sako „iki 20 (programoje — iki 100)“, o metodinė dalis yra teisinga. Defektas ne klaidingas teiginys, o apimtis: vaikas, kuris mokosi šios temos, neturi progos padėti 47 ar 68 tiesėje, nors 100 lentelė (19, 30 moduliai) ir skaičiavimas per dešimtį (27, 30) tą patį skaičių diapazoną jau naudoja. Siūloma: (a) simuliacijai pridėti antrą mastelį arba režimą „iki 100“ su taikiniais, peržengiančiais dešimtį (pvz., 34, 47, 68, 92); (b) vieną užduotį pakeisti dvizenklio ir vienaženklio sudėtimi tiesėje (16 + 7 = 23), kuri programoje yra antras privalomas atvejis (:33520–33521); (c) iki 20 režimą palikti kaip įžangą, nes jis geras pirmam susidūrimui. Simuliacijos taisyklė „pridėti — į dešinę“ nesikeičia, keičiasi tik skaičių ruožas.",
+  "target": "content/lt/grade-01/matematika/04-skaiciu-tiese.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/04-skaiciu-tiese.json:26 — sim config „max“: 20",
+    "content/lt/grade-01/matematika/04-skaiciu-tiese.json:85 — teacher.goal „iki 20 (programoje — iki 100)“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33739–33740 — „Skaičiai nuo 0 iki 100… skaičių tiesė“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33520–33521 — dviženklio ir vienaženklio sudėtis peržengiant dešimtį",
+    "research/wiki/curriculum/matematika-1-klase.md §9 — 2026-11-23 patikros lentelė, verdiktas „iš dalies“"
+  ]
+}

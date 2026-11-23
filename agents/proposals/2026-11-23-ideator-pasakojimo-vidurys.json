@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 467,
+  "created": "2026-11-23T08:22:00+02:00",
+  "type": "tema",
+  "title": "Be vidurinio įvykio pasakojimas nutrūksta",
+  "body": "Tai antras siūlymas tai pačiai tuščiai C sričiai (rašymas), kuri platformoje neturi nė vieno modulio (research/wiki/curriculum/lietuviu-kalba-1-klase.md:142). Slenkstinis 1–2 kl. pasiekimas C.2.1.1 aprašo būtent tai, ko vaikas dar nemoka: „Sukuria kelių sakinių pagrindinę pasakojimo dalį – įvykio(ų) raidą. Pradžia ir pabaiga sunkiai įžvelgiamos“ (sources/pradinio-bp-rekomendacijos-2024.txt:33153–33155). Siūlomas modelis: vienas įvykis trimis kadrais (katė užšoka ant stalo → stiklinė nuvirsta → vanduo išsilieja), o vaikas įkelia arba išima vidurinį kadrą; močiutė telefonu perpasakoja tik tai, ką girdi. Kai vidurinio kadro nėra, perpasakojimas nutrūksta ties „o kaip?“ — pasekmė matoma ekrane, o ne paaiškinama tekste. Klaidinga nuostata — „pakanka pasakyti, kas buvo pradžioje ir kas pabaigoje; vidurys savaime aiškus“. Simuliacija nebaudžia ir neturi laiko limito: kadrus galima dėti ir išimti be galo, o prarastas kadras niekada nėra galutinis. Nuo 24-komandu-seka modulis skiriasi tuo, kad ten seka veda į tikslą tinklelyje, o čia seka yra pasakojimas, kurį kitas žmogus turi suprasti. Pradžios ir pabaigos modulis sąmoningai nereikalauja, nes pats pasiekimas jų 1 klasei nenumato — tai lieka 2 klasei ir modulio teacher.goal pasakoma žodžiais.",
+  "target": "content/lt/grade-01/lietuviu-kalba/13-pasakojimo-vidurys.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:142 — C sritis be nė vieno modulio; spragai reikia ideatoriaus pasiūlymo su patikrintu 1–2 kl. C kodu",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33153–33155 — C.2.1.1 (slenkstinis, 1–2 kl.): „Sukuria kelių sakinių pagrindinę pasakojimo dalį – įvykio(ų) raidą. Pradžia ir pabaiga sunkiai įžvelgiamos“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33119–33121 — C.2.1.2 (patenkinamas): „Rašo pasakojimą, kuriame ryškėja pagrindinės struktūrinės dalys (pradžia – įvykių raida – pabaiga)“ — tai jau aukštesnis lygis, todėl 1 kl. modulis lieka ties įvykio raida (LL-23)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33191–33193 — C. 2.2.1 (2 kl. slenkstinis): „Sukuria kelių sakinių pasakojimo dalį, išplėtodamas pradžią arba įvykį arba pabaigą“ — rodo, kad 1–2 kl. pakanka vienos dalies išplėtimo, ne viso trijų dalių karkaso",
+    "Patikra, kad temos nėra: content/lt/grade-01/index.json — lietuvių kalboje 9 moduliai, nė vienas apie pasakojimo struktūrą; `11-teksto-supratimas` ieško atsakymo skaitomame tekste, o ne kuria tekstą; `24-komandu-seka` (matematika) yra komandų seka tinklelyje, ne pasakojimas",
+    "Metodo riba: modulis nekuria laisvo teksto (platformoje nėra teksto lauko), o renka kadrus ir sakinius iš kortelių; tai atitinka C.1.2.1 formuluotę „naudodamasis pagalba arba pavyzdžiu“ (:33185)"
+  ]
+}

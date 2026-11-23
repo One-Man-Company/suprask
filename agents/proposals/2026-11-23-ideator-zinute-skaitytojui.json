@@ -1,0 +1,20 @@
+{
+  "role": "ideator",
+  "run_id": 467,
+  "created": "2026-11-23T08:20:00+02:00",
+  "type": "tema",
+  "title": "Žinutėje yra tik tai, kas parašyta",
+  "body": "Lietuvių kalbos C sritis (rašymas ir teksto kūrimas) neturi nė vieno modulio, ir tai pažymėta kaip didžiausia dalyko spraga, kuriai reikia ideatoriaus pasiūlymo su patikrintu 1–2 kl. C kodu (research/wiki/curriculum/lietuviu-kalba-1-klase.md:142). Slenkstinis 1–2 kl. pasiekimas C.1.2.1 sako: „Naudodamasis pagalba arba pavyzdžiu rašo taip, kad skaitytojas gali suprasti parašytas mintis“ (sources/pradinio-bp-rekomendacijos-2024.txt:33185). Siūlomas vienas modelis: kortelėje trumpa žinutė „Ateik!“ ir skaitytojas (mama), kuris elgiasi tik pagal tai, kas parašyta. Vaikas prie žinutės prideda po vieną kortelę (kam, kada, kur), o mama atsako tik tada, kai trūkstamos informacijos nebeliko; nuėmus kortelę, ji vėl klausia „Kada?“ ir niekur neina. Klaidinga nuostata, kurią modelis parodo, — „skaitytojas jau žino, ką turiu galvoje“: 4–5 m. vaikų žinutės turi privatią, bet ne viešą reikšmę, ir jie patys to nepastebi (Glucksberg, Krauss & Weisberg, 1966). Simuliacija neturi teksto lauko: visos kortelės yra vientisi žodžiai su garsu, todėl 6–7 m. vaikui nereikia klaviatūros nei rašybos įgūdžio. Nuo 03-sakinio-zodziai modulis skiriasi klausimu: ten ieškoma, kas sakinyje ką veikia, čia — ko trūksta, kad kitas suprastų. Riba pasakoma atvirai: programos pavyzdys „Kokias žinutes siunčiame telefonu?“ priskirtas 2 klasei (:477–478), todėl 1 klasei imamos tik trys informacijos kortelės, o pasirašymas ir skyryba lieka veiklai be ekrano.",
+  "target": "content/lt/grade-01/lietuviu-kalba/12-zinute-skaitytojui.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:142 — „C sritis (rašymas ir teksto kūrimas) — nė vieno modulio. Tai didžiausia šio dalyko spraga, bet ne šio paleidimo darbas: reikia atskiro ideatoriaus pasiūlymo su patikrintu 1–2 kl. C pasiekimo kodu“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33185 — C.1.2.1 (slenkstinis, 1–2 kl.): „Naudodamasis pagalba arba pavyzdžiu rašo taip, kad skaitytojas gali suprasti parašytas mintis; laikosi vieno-kito susitarimo arba užduoties reikalavimo“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33147–33149 — C.1.2.2 (1–2 kl. patenkinamas): „Rašo taip, kad skaitytojas (bendraamžis, suaugęs) jį suprastų“ — rodo, kad skaitytojo supratimas yra pats pasiekimo kriterijus, o ne priedas",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:517–524 — oficialios veiklos kriterijai: „Nurodomas asmuo, kam parašyta žinutė“; „Pateikiama svarbi informacija… atsakymų į klausimus (kas? kur? kada?) forma“; „Pasirašo asmuo, kuris rašė žinutę“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:477–478 — „3 pavyzdys / 2 klasė. Veikla „Kokias žinutes siunčiame telefonu?““ — pavyzdys priskirtas 2 klasei, todėl 1 klasei imama tik informacijos branduolio dalis",
+    "Glucksberg, S., Krauss, R. M., & Weisberg, R. (1966). Referential communication in nursery school children: Method and some preliminary findings. Journal of Experimental Child Psychology, 3(4), 333–342. https://doi.org/10.1016/0022-0965(66)90077-4 — mažų vaikų žinutės būna per mažai informatyvios, bet su klausytojo grįžtamuoju ryšiu jos taisomos; tai modelio „skaitytojas žino tik tai, kas parašyta“ pagrindas",
+    "Patikra, kad temos nėra: content/lt/grade-01/index.json — lietuvių kalboje 9 moduliai (01–07, 10, 11), nė vienas apie teksto kūrimą; grep „žinut|raštel“ per content/lt/grade-01 → 0 atvejų; assets/js/sims/calba.js registre 9 simuliacijos, nė viena apie žinutę"
+  ]
+}

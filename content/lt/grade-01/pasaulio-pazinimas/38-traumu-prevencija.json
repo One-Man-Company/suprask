@@ -1,0 +1,158 @@
+{
+  "id": "38-traumu-prevencija",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Apsauga dengia tik savo vietą",
+  "subtitle": "Antkeliai ant blauzdos kelio nebedengia",
+  "minutes": 9,
+  "outcomes": [
+    "Parodau, kuri kūno dalis krentant paliečia žemę.",
+    "Pasakau, kurią dalį dengia apsauga.",
+    "Paaiškinu, kodėl apsauga turi būti savo vietoje."
+  ],
+  "concept": {
+    "title": "Tarp kelio ir žemės",
+    "big_idea": "Krentant į priekį žemę pasiekia keliai. Antkeliai padeda tik tada, kai užsegti ant kelių. Užsegti žemiau, ant blauzdos, jie kelio nebedengia.",
+    "steps": [
+      "Pasirink, kur užsegti antkelius.",
+      "Spausk „Krentu“ ir žiūrėk, kuri dalis liečia žemę.",
+      "Bandyk kitą vietą ir palygink."
+    ],
+    "example": "Treneris pataiso antkelius, kol jie užsėda tiesiai ant kelio."
+  },
+  "sim": {
+    "component": "traumos-apsauga",
+    "config": {
+      "activity": {
+        "label": "Kiemo takas",
+        "contact": "keliai",
+        "contactLabel": "keliai"
+      },
+      "gear": [
+        {
+          "key": "keliai",
+          "label": "Antkeliai ant kelių",
+          "short": "ant kelių",
+          "place": "keliai"
+        },
+        {
+          "key": "blauzdos",
+          "label": "Antkeliai ant blauzdų",
+          "short": "ant blauzdų",
+          "place": "blauzdos"
+        },
+        {
+          "key": "grindys",
+          "label": "Antkeliai ant grindų",
+          "short": "ant grindų",
+          "place": "grindys"
+        },
+        {
+          "key": "nieko",
+          "label": "Be antkelių",
+          "short": "be antkelių",
+          "place": ""
+        }
+      ],
+      "labels": {
+        "cardTitle": "Kur antkeliai?",
+        "fall": "Krentu",
+        "again": "Iš naujo",
+        "foundTitle": "Ką bandei",
+        "coveredWord": "Dengta",
+        "openWord": "Be dangos",
+        "noChoice": "Apsauga dar nepasirinkta."
+      },
+      "sentences": {
+        "start": "Kur užsegti antkelius?",
+        "startNote": "Vaikas bėga taku ir krenta į priekį. Pasirink vietą ir spausk „Krentu“.",
+        "placed": "Apsauga vietoje.",
+        "placedNote": "Dabar spausk „Krentu“.",
+        "contact": "Žemę pasiekia keliai.",
+        "covered": "Dengta.",
+        "uncovered": "Be dangos.",
+        "notYet": "Vaikas dar nekrito.",
+        "tableNote": "Pabandyk ir kitą vietą.",
+        "full": "Visas vietas bandei. Taisyklė viena.",
+        "fullNote": "Apsauga dengia tik tą dalį, ant kurios užsegta.",
+        "reset": "Pradedam iš naujo.",
+        "gearNotes": {
+          "keliai": "Antkeliai užsegti tiesiai ant kelių.",
+          "blauzdos": "Antkeliai nuslydo žemiau kelio, ant blauzdų.",
+          "grindys": "Antkeliai guli ant grindų prie vaiko.",
+          "nieko": "Vaikas neužsidėjo antkelių."
+        }
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Antkeliai ant blauzdų. Kuri dalis krentant paliečia žemę be dangos?",
+      "options": [
+        "Blauzda",
+        "Kelis",
+        "Pėda"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, kuri vieta lenkiasi, kai koja sulinksta.",
+      "why": "Antkeliai dengia blauzdą, todėl kelis lieka be dangos."
+    },
+    {
+      "q": "Vaikas sako, kad su šalmu niekas negresia. Kurį kūno dalį dengia šalmas?",
+      "options": [
+        "Visą kūną",
+        "Tik galvą",
+        "Tik kelius"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kuri vieta uždengta, o kuri lieka atvira.",
+      "why": "Šalmas dengia galvą, o keliai lieka be dangos."
+    },
+    {
+      "q": "Vaikas krenta ant alkūnių, o apsaugai užsegti ant kelių. Kuri dalis atsitrenks be dangos?",
+      "options": [
+        "Keliai",
+        "Pėdos",
+        "Alkūnės"
+      ],
+      "answer": 2,
+      "hint": "Apsauga stovi ten, kur užsegta, o žemę pasiekia kita vieta.",
+      "why": "Apsaugai liko ant kelių, todėl alkūnės lieka be dangos."
+    },
+    {
+      "q": "Kurie antkeliai labiau apsaugojo kelį?",
+      "options": [
+        "Antkeliai ant kelio",
+        "Antkeliai ant blauzdos",
+        "Abu vienodai"
+      ],
+      "answer": 0,
+      "hint": "Palygink, kur apsauga stovi ir kur lenkiasi koja.",
+      "why": "Tik ant kelio užsegti antkeliai dengia kelį.",
+      "optional": true
+    }
+  ],
+  "reflect": "Ką užsidedi prieš važiuodamas dviračiu? Pasakyk, kur kiekviena apsauga turi būti.",
+  "teacher": {
+    "goal": "Suprasti, kad apsauga dengia tik tą kūno dalį, ant kurios ji užsegta, todėl „turiu apsaugą“ ir „apsauga savo vietoje“ nėra tas pats. Modelyje kinta vienas dalykas — antkelių vieta (ant kelio, ant blauzdos, ant grindų, niekur). Vaikas, takas ir kritimas nesikeičia, o žemę visada pasiekia tie patys keliai, todėl dangos skirtumą galima priskirti vietai, o ne vaikui. Dengimo išvada išvedama iš palyginimo: padengta tada ir tik tada, kai apsaugos vieta sutampa su ta dalimi, kurią pasiekia žemė. Sąmoningos ribos: modelis rodo, ar dalis uždengta, bet ne traumos sunkumą ir ne „visiškai saugu“; kritimo kryptis modelyje nustatyta (krentama į priekį), todėl jis neprognozuoja, kuri dalis atsitrenks gyvenime. Antkeliai čia yra pavyzdys, o ne vienintelė apsauga: šalmas, alkūnės ir riešo apsaugai dengia taip pat — savo vietą. Modulis papildo 25 „Trauma turi priežastį“ (priežastis vietoje) ir 19 „Dūmai ir išėjimas“ (dūmų kelias), nes parodo antrą 26.1.1 dalį — kaip kūno dalį apsaugoti.",
+    "prompt": "Paklausk: „Kur stovi apsauga? Ar ji tarp kelio ir žemės?“",
+    "offline": "Duokite vaikui kojinę arba sulankstytą šluostę ir paprašykite užsidėti ją ant kelio, tada ant blauzdos. Ant minkštos kilimėlio vietos paprašykite atsiklaupti: su koja kelias jaučia grindis, o su šluoste tarp kelio ir grindų jaučia šluostę. Paskui perkelkite šluostę ant blauzdos ir pakartokite — kelias vėl jaučia grindis. Klausimas vaikui: „Kur turi būti apsauga, kad ji būtų tarp kelio ir grindų?“ Suaugusiojo darbas — paruošti minkštą vietą ir švarią šluostę, o ne aiškinti atsakymą.",
+    "misconceptions": [
+      "„Užtenka turėti apsaugą, o kur ji uždėta — nesvarbu.“ Modelyje ta pati apsauga keliauja per tris vietas: ant kelio ji dengia, ant blauzdos ir ant grindų — ne. Kinta tik vieta, o žemę visada pasiekia keliai.",
+      "„Antkeliai ant blauzdos vis tiek šiek tiek saugo.“ Modelio piešinys rodo padus žemiau kelio: jie sėdi ant blauzdos, o žemę pasiekia kelis. Danga yra ne ten, kur įvyksta susidūrimas.",
+      "„Su šalmu esu saugus visur.“ Užduotis prašo pasakyti, ką dengia šalmas: galvą, o ne visą kūną. Tas pats galioja antkeliams.",
+      "„Apsauga reikalinga tik žiemą.“ Modelyje sezonas nekeičiamas. Kinta tik apsaugos vieta, o keliai žemę pasiekia ir šiltą dieną.",
+      "„Jei su apsauga vis tiek skaudėjo, apsauga neveikia.“ Modelis sako „dengta“, o ne „neskaudės“: apsauga uždengia kūno dalį, bet smūgio nepašalina. Todėl suaugusysis vis tiek rūpinasi, kad vieta būtų saugi."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Pasaulio pažinimas“, 26.1.1 „Saugus elgesys“ (sources/pradinio-bp-rekomendacijos-2024.txt, 14960–14966 eil.): „Projekto tikslas: Išsiaiškinti, kaip žmogaus kūno dalis galima apsaugoti nuo traumų ir kodėl tai svarbu (Susitikimas su sveikatos priežiūros specialistu, ekskursija po mokyklą, skrajučių, pvz., „Būk atsargus mokyklos koridoriuose, kiemo aikštelėje, sporto salėje“)“. Ten pat, 1 klasės ilgalaikis planas — tai temai 3 val., veiklos „atvejo analizė, situaciniai, vaidybiniai žaidimai“ (17616–17626 eil.).",
+    "Pasaulio sveikatos organizacija (2008). World report on child injury prevention. Ženeva: WHO. https://www.who.int/publications/i/item/9789241563574 — kūno apsaugos priemonės (šalmas ir kitos) mažina traumų riziką tada, kai naudojamos tinkamai, t. y. uždėtos ant tos kūno dalies, kurią turi dengti."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena sąvoka: apsauga dengia tik savo vietą; modelis turi vieną kintamąjį (antkelių vieta) ir keturias korteles, o ne saugaus elgesio taisyklių sąrašą.",
+    "2 žingsnis — vertinamas perkėlimas: tos pačios sąvokos klausiama apie šalmą, apie kritimą ant alkūnių ir apie dvi antkelių vietas, o ne apie modulio sakinį.",
+    "3 žingsnis — pagalba laiku: veiksmas prieš paaiškinimą, kiekviena klaida turi užuominą, kuri nukreipia į vietą, o ne į atsakymą; nėra laikmačio, o ketvirta užduotis — praplėtimas.",
+    "P2 / T3.1 / T3.4 / T5.1 / T5.5: vaikas pirma pasirenka vietą, tada mato pasekmę; grįžtamasis ryšys sako, kas dengta, o ne koks vaikas; yra praplėtimas; 48 px taikiniai, būsena pasakoma žodžiu, ne vien spalva."
+  ]
+}

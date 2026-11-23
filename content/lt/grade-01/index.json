@@ -384,6 +384,14 @@
      "sim": "traumos-priezastis"
     },
     {
+     "id": "38-traumu-prevencija",
+     "title": "Apsauga dengia tik savo vietą",
+     "subtitle": "Antkeliai ant blauzdos kelio nebedengia",
+     "file": "grade-01/pasaulio-pazinimas/38-traumu-prevencija.json",
+     "minutes": 9,
+     "sim": "traumos-apsauga"
+    },
+    {
      "id": "30-dienos-rezimas-mityba",
      "title": "Vėliau keltis — trumpesni pusryčiai",
      "subtitle": "Tas pats išėjimas, vėlesnis kėlimasis atima pusryčių laiką",

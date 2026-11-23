@@ -4465,6 +4465,366 @@ const traumosPriezastis = {
   },
 };
 
+/* --- Apsauga dengia tik savo vietą (1 klasė, 26.1.1) -------------------
+   Programa 26.1.1 „Saugus elgesys“ prašo projekto „Kaip išvengti traumų?“,
+   kurio tikslas — išsiaiškinti, kaip kūno dalį galima apsaugoti nuo traumų
+   (`sources/pradinio-bp-rekomendacijos-2024.txt:14960–14966`). Platformoje
+   priežastį jau rodo 25 „Trauma turi priežastį“; kaip apsauga priglunda prie
+   kūno, nerodė niekas.
+   Klaidinga nuostata, kurią modelis griauja: „svarbu turėti apsaugą, o kur ji
+   uždėta — nesvarbu“. Todėl kinta VIENAS dalykas — antkelių vieta
+   (`keliai | blauzdos | grindys | niekur`), o vaikas, takas ir kritimas
+   nesikeičia. Dengimo išvada IŠVEDAMA iš palyginimo, o ne įrašyta kortelėje:
+     covered(place) = place === activity.contact.
+   Žemę pasiekiantis taškas imamas iš TOS PAČIOS figūrėlės geometrijos
+   (`TA_KNEE`), todėl žvaigždė, kelio vieta ir tekstas sutampa (LL-03, LL-24):
+   jei padą nupieštume atskirai nuo taško, vaikas matytų žvaigždę šalia
+   apsaugos.
+   Vietos vardai yra komponento sutartis: `keliai` ir `blauzdos` — padai ant
+   kojos, `grindys` — padai guli prie vaiko, `""` — apsaugos nėra. Nežinomą
+   vietą komponentas sako žodžiais („Vieta nesuderinta.“) ir rašo
+   console.error, o ne tyliai nupiešia padą prie kelio (LL-33).
+   Sąmoninga riba: modelis rodo, ar dalis uždengta, bet ne traumos sunkumą;
+   kritimo kryptis (į priekį, žemę pasiekia keliai) yra modelio prielaida,
+   todėl tekstas sako „dengta“, o ne „visiškai saugu“ (LL-18, LL-147). */
+const TA_FLOOR = 252;                 // grindų viršus
+const TA_X = 124;                     // figūrėlės pėdų taškas
+const TA_S = 2.4;                     // figūrėlės mastelis
+const TA_TILT = 24;                   // kritimo pasvirimas (laipsniai)
+const TA_KNEE = { x: 7, y: -6.4 };    // priekinis kelio taškas figūrėlės koordinatėse
+const TA_PADS = { keliai: -6.4, blauzdos: -2.6, grindys: null, "": null };
+
+const traumosApsauga = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const act = config.activity || {};
+    const items = Array.isArray(config.gear) ? config.gear.filter(Boolean) : [];
+    /* Užrašai apie vietą laikomi `sentences.gearNotes` — tada juos renka
+       `generate_audio.py` ir vaikas girdi tą patį balsą, o ne naršyklės
+       sintezę. Atskira `gear[].note` kopija būtų antras to paties sakinio
+       šaltinis (LL-33). */
+    const notes = S.gearNotes || {};
+
+    const esc = (t) => String(t).replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai ------------------------------------------- */
+    const contact = typeof act.contact === "string" ? act.contact.trim() : "";
+    const problems = [];
+    if (!act.label) problems.push("nėra vietos pavadinimo");
+    if (!contact) problems.push("nėra kūno dalies, kurią pasiekia žemė (activity.contact)");
+    if (items.length < 3) problems.push("kortelių mažiau nei trys");
+    items.forEach((g) => {
+      if (!g || !g.key || !g.label || !g.short) {
+        problems.push(`kortelė „${(g && g.key) || "?"}“ be key/label/short`);
+      } else if (!(String(g.place) in TA_PADS)) {
+        problems.push(`kortelės „${g.key}“ vieta „${g.place}“ nežinoma (keliai | blauzdos | grindys | "")`);
+      } else if (typeof notes[g.key] !== "string" || !notes[g.key].trim()) {
+        problems.push(`kortelės „${g.key}“ užrašo nėra (sentences.gearNotes.${g.key})`);
+      }
+    });
+    if (!items.some((g) => g && g.place === contact)) {
+      problems.push("nėra kortelės, kuri dengtų tą dalį, kurią pasiekia žemė — be jos modelis neturi teigiamo pavyzdžio (LL-28)");
+    }
+    if (!items.some((g) => g && g.place !== contact)) {
+      problems.push("nėra kortelės, kuri nedengtų — be jos modelis neturi prieštaraujančio pavyzdžio (LL-28)");
+    }
+    ["cardTitle", "fall", "again", "foundTitle", "coveredWord", "openWord", "noChoice"].forEach((k) => {
+      if (!L[k]) problems.push(`užrašo „${k}“ nėra`);
+    });
+    ["start", "startNote", "placed", "placedNote", "contact", "covered", "uncovered",
+      "notYet", "tableNote", "full", "fullNote", "reset"].forEach((k) => {
+      if (!S[k]) problems.push(`sakinio „${k}“ nėra`);
+    });
+    if (problems.length) {
+      console.error(`traumos-apsauga: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="error-box">Vieta nesuderinta.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const state = { gearKey: null, angle: 0, fallen: false, animating: false };
+    const rows = new Map();        // raktas -> dengta (true) / be dangos (false)
+    let raf = 0;
+    let reported = false;
+
+    const gearOf = (key) => items.find((g) => g.key === key) || null;
+    const coveredBy = (g) => !!g && g.place === contact;
+
+    /* --- geometrija -------------------------------------------------- */
+
+    /* Kelio taškas pasaulyje. Pasukimas ir taškas imami iš tų pačių skaičių,
+       todėl žvaigždė nukrenta būtent ten, kur yra kelias (LL-03). */
+    function kneeAt(angle) {
+      const rad = (Math.PI / 180) * angle;
+      const kx = TA_KNEE.x * TA_S;
+      const ky = TA_KNEE.y * TA_S;
+      const c = Math.cos(rad);
+      const s = Math.sin(rad);
+      return { x: TA_X + kx * c - ky * s, y: TA_FLOOR + kx * s + ky * c };
+    }
+
+    function padShape(cx, cy) {
+      return `<g>
+        <rect x="${(cx - 2.8).toFixed(1)}" y="${(cy - 1.9).toFixed(1)}" width="5.6" height="3.8"
+              rx="1.8" fill="#3b4653" stroke="#20262e" stroke-width="0.9"/>
+        <path d="M${(cx - 1.8).toFixed(1)} ${(cy - 0.4).toFixed(1)} h3.6" stroke="#a8bccd"
+              stroke-width="0.9" stroke-linecap="round" opacity=".9"/>
+      </g>`;
+    }
+
+    /* Padai piešiami figūrėlės koordinatėse, todėl pasisuka kartu su kūnu.
+       Skirtumas tarp „ant kelio“ ir „ant blauzdos“ yra keli pikseliai — tai
+       ir yra modelio teiginys, todėl abi vietos turi girdrą atstumą
+       (kelias -6, blauzda -2), o ne vienas taškas. */
+    function gearMarkup(g) {
+      if (!g) return "";
+      const y = TA_PADS[g.place];
+      if (y === null || y === undefined) return "";
+      return padShape(-3.5, y) + padShape(3.5, y);
+    }
+
+    function floorPadsMarkup(g) {
+      if (!g || g.place !== "grindys") return "";
+      return `<g transform="translate(70 244) rotate(-8)">
+        <rect x="0" y="0" width="11" height="8" rx="3" fill="#3b4653" stroke="#20262e" stroke-width="1.1"/>
+        <rect x="13.5" y="1.5" width="11" height="8" rx="3" fill="#3b4653" stroke="#20262e" stroke-width="1.1"/>
+      </g>`;
+    }
+
+    function starMarkup(p, covered) {
+      const pts = [];
+      for (let i = 0; i < 8; i += 1) {
+        const ang = (Math.PI / 4) * i - Math.PI / 2;
+        const r = i % 2 ? 2.4 : 5.6;
+        pts.push(`${(p.x + r * Math.cos(ang)).toFixed(1)},${(p.y + r * Math.sin(ang)).toFixed(1)}`);
+      }
+      return `<polygon points="${pts.join(" ")}" fill="${covered ? "#2f6b45" : "#b23a2e"}"
+              stroke="#ffffff" stroke-width="1.2" opacity=".95"/>`;
+    }
+
+    stage.innerHTML = `
+      <div style="width:100%;min-width:0;max-width:min(20.5rem,100%);margin:0 auto">
+        <svg id="ta-scene" viewBox="0 0 328 300" width="100%"
+             style="display:block;max-width:328px;height:auto;margin:0 auto"
+             role="img" aria-label="Kiemo takas. Apsauga dar nepasirinkta."></svg>
+        <div id="ta-table" style="margin-top:.25rem;min-width:0"></div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.6rem;width:100%;max-width:34rem;margin:0 auto;min-width:0">
+        <div style="min-width:0">
+          <p style="margin:0 0 .3rem;font-weight:800;text-align:center;font-size:.92rem">${esc(L.cardTitle)}</p>
+          <div id="ta-cards" role="group" aria-label="${esc(L.cardTitle)}"
+               style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));
+               gap:.4rem;min-width:0"></div>
+        </div>
+        <div style="display:flex;gap:.45rem;justify-content:center;flex-wrap:wrap;min-width:0">
+          <button class="btn" type="button" id="ta-fall"
+                  style="flex:1 1 9rem;min-width:0;min-height:52px">${esc(L.fall)}</button>
+          <button class="btn ghost" type="button" id="ta-again"
+                  style="flex:0 1 8rem;min-width:0;min-height:52px">${esc(L.again)}</button>
+        </div>
+      </div>`;
+
+    const cardsEl = controls.querySelector("#ta-cards");
+    const fallBtn = controls.querySelector("#ta-fall");
+    const againBtn = controls.querySelector("#ta-again");
+    const svg = stage.querySelector("#ta-scene");
+    const tableEl = stage.querySelector("#ta-table");
+
+    cardsEl.innerHTML = items.map((g) =>
+      `<button type="button" class="btn secondary" data-gear="${esc(g.key)}" aria-pressed="false"
+        style="min-width:0;min-height:56px;height:auto;padding:.35rem .3rem;font-size:.92rem;
+        line-height:1.15;overflow-wrap:anywhere">${esc(g.label)}</button>`).join("");
+    const cardBtns = Array.from(cardsEl.querySelectorAll("button[data-gear]"));
+
+    /* --- piešinys ---------------------------------------------------- */
+
+    function sceneMarkup() {
+      const g = state.gearKey ? gearOf(state.gearKey) : null;
+      const covered = coveredBy(g);
+      const p = kneeAt(state.angle);
+      return `${art.defs("ta")}
+        ${art.plank(12, 266, 304, 14)}
+        ${floorPadsMarkup(g)}
+        <g transform="rotate(${state.angle.toFixed(2)} ${TA_X} ${TA_FLOOR})">
+          ${art.kid(TA_X, TA_FLOOR, TA_S)}
+          ${gearMarkup(g)}
+        </g>
+        ${state.fallen ? starMarkup(p, covered) : ""}
+        ${state.fallen ? `<text x="${(p.x + 12).toFixed(1)}" y="${(TA_FLOOR - 4).toFixed(1)}"
+              font-family="system-ui, sans-serif" font-size="14" font-weight="800"
+              fill="#3a342b">${esc(act.contactLabel)}</text>` : ""}`;
+    }
+
+    function drawScene() {
+      svg.innerHTML = sceneMarkup();
+    }
+
+    function sceneLabel() {
+      const g = state.gearKey ? gearOf(state.gearKey) : null;
+      const covered = coveredBy(g);
+      const where = g ? notes[g.key] : L.noChoice;
+      const end = state.fallen
+        ? `${S.contact} ${covered ? `${L.coveredWord}.` : `${L.openWord}.`}`
+        : S.notYet;
+      return `${act.label}. ${where} ${end}`;
+    }
+
+    function tableMarkup() {
+      const done = items.filter((g) => rows.has(g.key));
+      const list = done.map((g) => `<li style="margin:.1rem 0;overflow-wrap:anywhere">`
+        + `<strong>${esc(g.short)}</strong> — ${esc(rows.get(g.key) ? L.coveredWord : L.openWord)}</li>`).join("");
+      return `<p style="margin:.4rem 0 .15rem;font-size:.8rem;font-weight:800;text-align:center;
+          color:var(--ink-soft);overflow-wrap:anywhere">${esc(L.foundTitle)} · ${esc(act.contactLabel)}</p>`
+        + (list ? `<ul style="margin:0;padding-left:1.1rem;font-size:.86rem;line-height:1.3">${list}</ul>` : "");
+    }
+
+    /* --- būsena ------------------------------------------------------ */
+
+    function message() {
+      const g = state.gearKey ? gearOf(state.gearKey) : null;
+      if (!g) return { readout: S.start, note: S.startNote };
+      const covered = coveredBy(g);
+      if (!state.fallen) return { readout: S.placed, note: `${notes[g.key]} ${S.placedNote}` };
+      const word = covered ? S.covered : S.uncovered;
+      const full = rows.size >= items.length;
+      return {
+        readout: full ? `${word} ${S.full}` : word,
+        note: `${S.contact} ${notes[g.key]} ${full ? S.fullNote : S.tableNote}`,
+      };
+    }
+
+    function render(focusSel) {
+      const g = state.gearKey ? gearOf(state.gearKey) : null;
+      const covered = coveredBy(g);
+      drawScene();
+      svg.setAttribute("aria-label", sceneLabel());
+      tableEl.innerHTML = tableMarkup();
+
+      for (const b of cardBtns) {
+        const item = gearOf(b.dataset.gear);
+        const on = item.key === state.gearKey;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "";
+        b.setAttribute("aria-label", `${item.label}. ${rows.has(item.key)
+          ? "Šitą jau bandei, bet gali bandyti dar kartą." : "Pasirink šią vietą."}`);
+      }
+
+      /* LL-32: fokusas niekada nelieka ant išjungto valdiklio. */
+      fallBtn.disabled = !g || state.fallen || state.animating;
+      fallBtn.setAttribute("aria-label", !g
+        ? "Pirma pasirink, kur užsegti antkelius"
+        : state.fallen ? "Šis kritimas jau įrašytas — rinkis kitą vietą"
+          : "Krentu ir žiūrėk, kuri dalis liečia žemę");
+      againBtn.setAttribute("aria-label", "Pradėk iš naujo. Lentelė lieka.");
+
+      const m = message();
+      api.readout(m.readout);
+      api.note(m.note);
+
+      if (focusSel) {
+        const el = controls.querySelector(focusSel);
+        if (el && !el.disabled) el.focus();
+      }
+      return covered;
+    }
+
+    /* --- veiksmai ---------------------------------------------------- */
+
+    function chooseGear(key) {
+      if (state.animating || !gearOf(key)) return;
+      cancelAnimationFrame(raf);
+      state.gearKey = key;
+      state.fallen = false;
+      state.angle = 0;
+      const g = gearOf(key);
+      api.speak(notes[g.key], { rate: 0.92 });
+      render("#ta-fall");
+    }
+
+    function fall() {
+      if (state.animating || !state.gearKey || state.fallen) return;
+      const g = gearOf(state.gearKey);
+      const covered = coveredBy(g);
+
+      const finish = () => {
+        state.animating = false;
+        state.angle = TA_TILT;
+        state.fallen = true;
+        rows.set(g.key, covered);
+        /* Sėkmės sąlyga — DABARTINĖ lentelės būsena (visos eilutės), o ne
+           prisiminimas, kad kažkas kadaise buvo įrašyta (LL-17). */
+        if (rows.size >= items.length && !reported) {
+          reported = true;
+          api.progress({ correct: true });
+        }
+        api.speak(covered ? S.covered : S.uncovered, { rate: 0.92 });
+        render("#ta-again");
+      };
+
+      const reduce = typeof window.matchMedia === "function"
+        && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduce) { finish(); return; }
+
+      /* Per kadrą keičiamas TIK piešinys: `readout` ir `aria-label`
+         atnaujinami po kritimo, kad ekrano skaitytuvas nekalbėtų kiekvieno
+         kadro (LL-14). */
+      state.animating = true;
+      fallBtn.disabled = true;
+      const t0 = performance.now();
+      const DUR = 420;
+      const step = (now) => {
+        const k = Math.min(1, (now - t0) / DUR);
+        state.angle = TA_TILT * k;
+        drawScene();
+        if (k < 1) { raf = requestAnimationFrame(step); return; }
+        finish();
+      };
+      raf = requestAnimationFrame(step);
+    }
+
+    function reset() {
+      cancelAnimationFrame(raf);
+      state.animating = false;
+      state.gearKey = null;
+      state.fallen = false;
+      state.angle = 0;
+      api.speak(S.reset, { rate: 0.92 });
+      /* Lentelė sąmoningai NEBEtuštinama (LL-16): „Iš naujo“ atstato sceną,
+         o ne ištrina tai, ką vaikas jau sužinojo. */
+      const untried = items.find((g) => !rows.has(g.key));
+      render(untried ? `button[data-gear="${untried.key}"]` : "button[data-gear]");
+    }
+
+    cardsEl.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-gear]");
+      if (b && !b.disabled) chooseGear(b.dataset.gear);
+    });
+    fallBtn.addEventListener("click", fall);
+    againBtn.addEventListener("click", reset);
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "r" || e.key === "R") { e.preventDefault(); reset(); return; }
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const group = e.target.closest("#ta-cards");
+      if (!group) return;
+      const btns = [...group.querySelectorAll("button")].filter((b) => !b.disabled);
+      if (btns.length < 2) return;
+      const idx = btns.indexOf(document.activeElement);
+      if (idx < 0) return;
+      e.preventDefault();
+      btns[(idx + (e.key === "ArrowRight" ? 1 : btns.length - 1)) % btns.length].focus();
+    });
+
+    render();
+    return () => { cancelAnimationFrame(raf); state.animating = false; };
+  },
+};
+
 /* --- Dienos režimas ir mityba (1 klasė, 26.1.2) ------------------------
    Modelis: rytas nuo kėlimosi iki išėjimo į mokyklą. Vaikas keičia VIENĄ
    dalyką — kėlimosi laiką. Visi kiti dydžiai nekinta: pasiruošimas (5 min.),
@@ -5203,6 +5563,7 @@ export const SIMS = {
   "ismesto-daikto-kelias": ismestoDaiktoKelias,
   "ledo-formos": ledoFormos,
   "traumos-priezastis": traumosPriezastis,
+  "traumos-apsauga": traumosApsauga,
   "bendruomenes": bendruomenes,
   "stebejimo-zurnalas": stebejimoZurnalas,
 };

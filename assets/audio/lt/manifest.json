@@ -603,6 +603,30 @@
   "n": "n/335b43e664368642-a91fdbc2.mp3",
   "s": "s/335b43e664368642-e15bb75d.mp3"
  },
+ "Antkeliai ant blauzdų": {
+  "n": "n/302a7353b512b622-a76c783b.mp3",
+  "s": "s/302a7353b512b622-efa92172.mp3"
+ },
+ "Antkeliai ant grindų": {
+  "n": "n/12fe6cea42c3e7f5-6994ba94.mp3",
+  "s": "s/12fe6cea42c3e7f5-16927872.mp3"
+ },
+ "Antkeliai ant kelių": {
+  "n": "n/d7c8fb3039ee407c-5eca9e8c.mp3",
+  "s": "s/d7c8fb3039ee407c-4b0603be.mp3"
+ },
+ "Antkeliai guli ant grindų prie vaiko.": {
+  "n": "n/d76dd1051f7765d5-fd710d06.mp3",
+  "s": "s/d76dd1051f7765d5-9fa9986e.mp3"
+ },
+ "Antkeliai nuslydo žemiau kelio, ant blauzdų.": {
+  "n": "n/7980be78f75498b2-fbccded1.mp3",
+  "s": "s/7980be78f75498b2-9fe0459f.mp3"
+ },
+ "Antkeliai užsegti tiesiai ant kelių.": {
+  "n": "n/b362d42387b8961b-9efeff40.mp3",
+  "s": "s/b362d42387b8961b-d22fb11c.mp3"
+ },
  "Apatinis laidas yra. Viršutinio nėra, todėl kelias neužsidaro.": {
   "n": "n/fde3a3fddc606794-934e1f91.mp3",
   "s": "s/fde3a3fddc606794-7918621f.mp3"
@@ -610,6 +634,14 @@
  "Apmokėta.": {
   "n": "n/24d5e93000980e92-ec3867b5.mp3",
   "s": "s/24d5e93000980e92-4a828617.mp3"
+ },
+ "Apsauga dengia tik tą dalį, ant kurios užsegta.": {
+  "n": "n/1f29c8c670da81fb-422ef9b3.mp3",
+  "s": "s/1f29c8c670da81fb-443ec841.mp3"
+ },
+ "Apsauga vietoje.": {
+  "n": "n/c94d3664a2463006-21014071.mp3",
+  "s": "s/c94d3664a2463006-2e18b8a2.mp3"
  },
  "Apskritimas": {
   "n": "n/ef515f3cf179f20e-4afec982.mp3",
@@ -735,6 +767,14 @@
   "n": "n/261723f95a6ac5ca-bb0911c7.mp3",
   "s": "s/261723f95a6ac5ca-b22cbca6.mp3"
  },
+ "Be antkelių": {
+  "n": "n/98838ea222b126f1-5539ba23.mp3",
+  "s": "s/98838ea222b126f1-a4b1223e.mp3"
+ },
+ "Be dangos.": {
+  "n": "n/a98cef6872258d80-021ac182.mp3",
+  "s": "s/a98cef6872258d80-00e6aaf7.mp3"
+ },
  "Be lapų": {
   "n": "n/78406f4343040a86-90b59df8.mp3",
   "s": "s/78406f4343040a86-c0c39026.mp3"
@@ -795,6 +835,10 @@
   "n": "n/4d4d65ccf59bb3f5-03f1af0d.mp3",
   "s": "s/4d4d65ccf59bb3f5-d4f2b451.mp3"
  },
+ "Dabar spausk „Krentu“.": {
+  "n": "n/65bf2405390bfde2-cac09bc1.mp3",
+  "s": "s/65bf2405390bfde2-c7c1fe1c.mp3"
+ },
  "Dabar spausk „Paleisk“ ir klausyk.": {
   "n": "n/00eee96419252cbe-c255b14f.mp3",
   "s": "s/00eee96419252cbe-65375f88.mp3"
@@ -830,6 +874,10 @@
  "Delfinas": {
   "n": "n/9876039e0dd3dcb0-e2b5db09.mp3",
   "s": "s/9876039e0dd3dcb0-8321f789.mp3"
+ },
+ "Dengta.": {
+  "n": "n/8481d9550bdbcdb4-112898c5.mp3",
+  "s": "s/8481d9550bdbcdb4-c76dc569.mp3"
  },
  "Devyni ir keturi yra trylika.": {
   "n": "n/ddd12316aae4f2c1-a590b724.mp3",
@@ -1439,6 +1487,10 @@
   "n": "n/9e92cf6af2b42ca8-f7f58338.mp3",
   "s": "s/9e92cf6af2b42ca8-9ef8915c.mp3"
  },
+ "Kiemo takas": {
+  "n": "n/37982dd4e99f8d05-d131cd5a.mp3",
+  "s": "s/37982dd4e99f8d05-9709be79.mp3"
+ },
  "Kitas žodis": {
   "n": "n/ef09cee90b709c37-70eb381f.mp3",
   "s": "s/ef09cee90b709c37-82118aee.mp3"
@@ -1534,6 +1586,10 @@
  "Kur remsis svoris? Pirma spėk.": {
   "n": "n/571b562406a49d23-a8761906.mp3",
   "s": "s/571b562406a49d23-0094e045.mp3"
+ },
+ "Kur užsegti antkelius?": {
+  "n": "n/95cc7269dcc174a8-c1eeb201.mp3",
+  "s": "s/95cc7269dcc174a8-ba163194.mp3"
  },
  "Kurioje dviračio pusėje yra baltas žibintas?": {
   "n": "n/2a03abd8b8205149-4f2c558e.mp3",
@@ -1838,6 +1894,10 @@
  "Pabandyk dar kartą.": {
   "n": "n/cde614009bc30075-3ba3cb9a.mp3",
   "s": "s/cde614009bc30075-354de5f8.mp3"
+ },
+ "Pabandyk ir kitą vietą.": {
+  "n": "n/755781779155b4c7-d78eab3a.mp3",
+  "s": "s/755781779155b4c7-7cfbb64f.mp3"
  },
  "Pabandyk pats": {
   "n": "n/d2be6484e53549b5-663b34f1.mp3",
@@ -2891,6 +2951,18 @@
   "n": "n/c82b4dc6fa6e3cee-e2a3996a.mp3",
   "s": "s/c82b4dc6fa6e3cee-b73fa4d0.mp3"
  },
+ "Vaikas bėga taku ir krenta į priekį. Pasirink vietą ir spausk „Krentu“.": {
+  "n": "n/1a565b2170a6e223-3cc81dcc.mp3",
+  "s": "s/1a565b2170a6e223-1f938ad2.mp3"
+ },
+ "Vaikas dar nekrito.": {
+  "n": "n/a164530612662813-699f1656.mp3",
+  "s": "s/a164530612662813-125c3a7d.mp3"
+ },
+ "Vaikas neužsidėjo antkelių.": {
+  "n": "n/1cec0c52ed033d29-5fd803ab.mp3",
+  "s": "s/1cec0c52ed033d29-cc2e3351.mp3"
+ },
  "Vandens lygis puodeliuose pažymėtas linija.": {
   "n": "n/150b5f2232d16597-50dc6e7f.mp3",
   "s": "s/150b5f2232d16597-7118522c.mp3"
@@ -2986,6 +3058,10 @@
  "Viršutinis laidas yra. Apatinio nėra, todėl kelias neužsidaro.": {
   "n": "n/4523bd23cb838fb1-fe805551.mp3",
   "s": "s/4523bd23cb838fb1-4726d579.mp3"
+ },
+ "Visas vietas bandei. Taisyklė viena.": {
+  "n": "n/daefa9d960b4a7a1-a518fe7c.mp3",
+  "s": "s/daefa9d960b4a7a1-0cb5f638.mp3"
  },
  "Visi daiktai numatyti. Pažiūrėk į krūvą.": {
   "n": "n/34af930cf67a5dc9-e0d0f859.mp3",
@@ -3474,6 +3550,10 @@
  "Žemyn skaičius didėja dešimčia.": {
   "n": "n/03db13c5b770d9f8-0e29420d.mp3",
   "s": "s/03db13c5b770d9f8-ffb6e6ed.mp3"
+ },
+ "Žemę pasiekia keliai.": {
+  "n": "n/3627e0c5fb70c6c8-354d69f2.mp3",
+  "s": "s/3627e0c5fb70c6c8-6c182dbd.mp3"
  },
  "Žengė vieną langelį į priekį.": {
   "n": "n/5168057a6ebe5692-7169577a.mp3",

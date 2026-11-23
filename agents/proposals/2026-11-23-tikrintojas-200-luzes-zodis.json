@@ -1,0 +1,17 @@
+{
+  "role": "tikrintojas",
+  "run_id": 463,
+  "created": "2026-11-23T06:12:00+02:00",
+  "type": "struktura",
+  "title": "check_view --text-scale nematо žodžio, perlaužto viduryje: 0 problemų, kai mygtukas skyla į tris eilutes",
+  "body": "Šiandien 360 px @ 200 % zondas rado 06-drabuziu-prieziura mygtuką „Į spalvotus“ su 21 px puslapio slinktimi. Pritaikius vienintelį min-width:0 (ką siūlo LL-41), documentElement.scrollWidth tapo 360, t. y. check_view.py būtų paskelbęs „0 problemų“, nors žodis „spalvotus“ iš tikrųjų lūžo į du gabalus, o mygtukas išaugo iki trijų eilių (Range.getClientRects() → 3). Tikrasis taisymas buvo eilutės persirikiavimas (flex-wrap:wrap + flex:1 1 6rem), po kurio mygtukas 301,2 px pločio ir tekstas vienoje eilutėje. Tai ta pati aklumo šeima kaip LL-55: matuoklis matuoja puslapio slinktį, o ne tai, ar žodis liko sveikas. Siūloma check_scaled() papildyti: kiekvienam button/label teksto mazgui apvynioti po vieną žodį Range ir suskaičiuoti rect eilutes; jei vienas žodis užima daugiau nei vieną eilutę, tai problema su elemento selektoriumi ir žodžiu (ne klaida, o --text-scale diagnostikos problema, kad vartai nepradėtų kristi dėl 16 px atvejų).",
+  "target": "scripts/check_view.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_view.py check_scaled() — matuoja documentElement.scrollWidth ir elementų išsikišimą, bet ne žodžio eilučių skaičių",
+    "assets/js/sims/technologijos.js:1090–1101 (.dp-bins / .dp-bin) — taisymas, kuriuo įrodyta, kad min-width:0 vienas slepia slinktį, bet laužo žodį",
+    "Matavimas: 360 px @ 32 px šaknis — prieš: doc 381/360, .dp-bin 196,5 px, min-width auto; su min-width:0: doc 360/360, „Į spalvotus“ 3 eilutės (142,6 px); su flex-wrap + 6rem: doc 360/360, mygtukas 301,2 px, 1 eilutė",
+    "research/wiki/guidelines/pamokos.md LL-55 — „documentElement.scrollWidth tampa 0, ir slankties matuoklis rodo žalia“"
+  ]
+}

@@ -1089,11 +1089,13 @@ const DP_CSS = `
 .dp-item:focus-visible, .dp-bin:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .dp-bins {
   display: flex;
+  flex-wrap: wrap;
   gap: .5rem;
   width: 100%;
 }
 .dp-bin {
-  flex: 1 1 0;
+  flex: 1 1 6rem;
+  min-width: 0;
   min-height: 56px;
   padding: .4rem .5rem;
   border: 2px dashed var(--line);

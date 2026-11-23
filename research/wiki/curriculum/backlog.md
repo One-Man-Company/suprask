@@ -11,7 +11,7 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **72**
+- Modulių dabar: **73**
 - Padengta / iš dalies / nėra: **45 / 1 / 1**
 
 ## Ko dar nėra (prioritetas)

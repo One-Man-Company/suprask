@@ -1,0 +1,19 @@
+{
+  "role": "kurejas",
+  "run_id": 488,
+  "created": "2026-11-23T22:45:00+02:00",
+  "type": "ux",
+  "title": "Simuliacijų tekstas iki 9,7 px: 44 iš 73 modulių turi skaitomumo defektą, kurio nė vienas vartas nemato",
+  "body": "Kuriant 34-dvizenklis-plius-dvizenklis paaiškėjo, kad simuliacijos ašies etiketės buvo 11,5 px — mažiau už mažiausią platformos žetoną --fs-xs (13,1 px) ir mažiau už .sim-note (15,2 px), esantį tame pačiame kadre. Tą defektą ištaisiau savo modulyje (var(--fs-s)), bet sistema jį turi visur: paleidus zondą per visus 73 modulius 360 px pločiu, 44 moduliai turi bent vieną vaikui skaitomo teksto elementą simuliacijoje, mažesnį už 14 px — mažiausias 9,7 px (19-simto-skaiciu-lentele, „100“), 10,0 px (22-medziai-krumai-zoles), 10,5 px (30-dienos-rezimas-mityba, „rengtis“), 11,2 px (16-vandens-busenos, 02-ritmas-ir-perkusija). Priežastis sisteminė: check_view.py matuoja minTaskFont — UŽDUOTIES šriftą (taip buvo taisytas LL-06) — o #sim-stage, #sim-controls, #sim-readout ir #sim-note šrifto nemato nė vienas matuoklis. Todėl LL-06 taisyklė (tekstas ≥18 px telefone) galioja tik tai zonai, kurią matuoja jos vartas, o simuliacijų tekstas gali būti 9,7 px ir visi vartai lieka žali. Tai ne LL-06 (ten vartas matė, tik slenkstis buvo netinkamas) ir ne LL-37 (imtis pilna) — matuojama ne ta zona, kurioje vaikas skaito. Siūloma: (1) check_view.py MEASURE papildyti simFonts rinkiniu iš #sim-stage/#sim-controls/#sim-readout/#sim-note ir į ok sąlygą įtraukti slenkstį 14 px (1 kl.), (2) simuliacijų kode savo ranka rašytą font-size keisti žetonais (var(--fs-s), var(--fs-xs)), o ne rem trupmenomis, (3) mažesnis už --fs-xs tekstas turi būti aria-hidden iliustracijos dalis, ne vaikui skaitomas tekstas. Be vartų pataisymo 44 modulių taisymas bus nematomas ir grįš su kitu moduliu.",
+  "target": "scripts/check_view.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "Zondas per 73 modulius (360 px, chromium), renkantis visus #sim-stage/#sim-controls/#sim-readout/#sim-note lapinius mazgus: 44 moduliai su min font-size < 14 px; mažiausi — 19-simto-skaiciu-lentele 9,7 px, 22-medziai-krumai-zoles 10,0 px, 30-dienos-rezimas-mityba 10,5 px, 16-vandens-busenos 11,2 px, 02-ritmas-ir-perkusija 11,2 px",
+    "scripts/check_view.py MEASURE: taskFonts renkamas tik iš .task-q (minTaskFont), #sim-stage elemento šrifto nėra nė viename lauke",
+    "docs/KURINIO-STANDARTAS.md §4.6 — simuliacija turi veikti 360 px; §6 — sakinio ilgis 1–2 klasei iki 10 žodžių (skaitomumo reikalavimas, kurio dydis neatskirtas)",
+    "research/wiki/guidelines/pamokos.md LL-06 — „Patikra: check_view.py (minTaskFont)“: taisyklė siejama su vartu, kuris matuoja vieną zoną",
+    "research/wiki/guidelines/pamokos.md LL-164 (nauja, šis paleidimas) — to paties defekto aprašas ir įrodymas viename modulyje",
+    "assets/css/*.css:33–38 — žetonų lentelė (--fs-xs 0.82rem = 13,1 px, --fs-s 0.95rem = 15,2 px), su kuria simuliacijų .72rem/.6rem reikšmės nesulyginamos"
+  ]
+}

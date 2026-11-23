@@ -1,14 +1,14 @@
 {
  "grade": 1,
- "generated": "2026-11-23T12:17:00",
- "source_hash": "aa7d60479741e871",
+ "generated": "2026-11-23T22:08:46",
+ "source_hash": "3348bffe85b05f4a",
  "curriculum_positions": 47,
  "counts": {
   "covered": 45,
   "partial": 1,
   "missing": 1
  },
- "modules_now": 72,
+ "modules_now": 73,
  "rows": [
   {
    "key": "26.2.3",

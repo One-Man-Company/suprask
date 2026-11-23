@@ -1,0 +1,120 @@
+{
+  "id": "34-dvizenklis-plius-dvizenklis",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Dviženklis plius dviženklis",
+  "subtitle": "Dešimtys prie dešimčių, vienetai prie vienetų",
+  "minutes": 9,
+  "outcomes": [
+    "Sudedu du dviženklius skaičius: dešimtis prie dešimčių, vienetus prie vienetų.",
+    "Paaiškinu, kodėl 16 ir 12 yra 28.",
+    "Pasakau, kodėl šįkart nauja dešimtis nesusidaro."
+  ],
+  "concept": {
+    "title": "Dešimtys lieka dešimtimis",
+    "big_idea": "Dviženklį skaičių sudaro dešimtys ir vienetai. Sudėdamas dėk dešimtis prie dešimčių, o vienetus prie vienetų.",
+    "steps": [
+      "Šešiolika yra viena dešimtis ir šeši vienetai.",
+      "Dvylika yra viena dešimtis ir du vienetai.",
+      "Dešimtys sueina į dvi dešimtis, o vienetai — į aštuonis.",
+      "Aštuoni vienetai mažiau už dešimt. Nauja dešimtis nesusidaro."
+    ],
+    "example": "Dėžėje 16 sagų, kitame maišelyje 12. Dešimtys sueina į dvi, vienetai į aštuonis. Viso 28."
+  },
+  "sim": {
+    "component": "dvi-juostos",
+    "config": {
+      "pairs": [[16, 12], [23, 14], [41, 27]],
+      "labels": {
+        "tens": "Dešimtys",
+        "ones": "Vienetai",
+        "guess": "Kiek bus iš viso",
+        "merge": "Sudėk",
+        "next": "Kiti skaičiai",
+        "reset": "Iš naujo",
+        "rodsAria": "Dešimčių strypeliai, kiekvienas po dešimt kubelių",
+        "onesAria": "Vienetų kubeliai"
+      },
+      "sentences": {
+        "pradzia": "Du skaičiai iš dešimčių ir vienetų. Spėk, kiek bus.",
+        "spejimas": "Spėjimas įrašytas. Dabar spausk „Sudėk“.",
+        "suma_16_12": "Dvi dešimtys ir aštuoni vienetai. Nauja dešimtis nesusidaro. Viso dvidešimt aštuoni.",
+        "suma_16_12_sutapo": "Spėjai teisingai. Dvi dešimtys ir aštuoni vienetai. Viso dvidešimt aštuoni.",
+        "suma_16_12_kitaip": "Spėjai kitaip. Dvi dešimtys ir aštuoni vienetai. Viso dvidešimt aštuoni.",
+        "suma_23_14": "Trys dešimtys ir septyni vienetai. Nauja dešimtis nesusidaro. Viso trisdešimt septyni.",
+        "suma_23_14_sutapo": "Spėjai teisingai. Trys dešimtys ir septyni vienetai. Viso trisdešimt septyni.",
+        "suma_23_14_kitaip": "Spėjai kitaip. Trys dešimtys ir septyni vienetai. Viso trisdešimt septyni.",
+        "suma_41_27": "Šešios dešimtys ir aštuoni vienetai. Nauja dešimtis nesusidaro. Viso šešiasdešimt aštuoni.",
+        "suma_41_27_sutapo": "Spėjai teisingai. Šešios dešimtys ir aštuoni vienetai. Viso šešiasdešimt aštuoni.",
+        "suma_41_27_kitaip": "Spėjai kitaip. Šešios dešimtys ir aštuoni vienetai. Viso šešiasdešimt aštuoni.",
+        "jau": "Jau sudėta. Spausk kitus skaičius.",
+        "kiti": "Kiti skaičiai. Vėl spėk, kiek bus.",
+        "isnaujo": "Pradedam iš naujo. Vėl spėk."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Sudėk 16 ir 12. Kiek gausis dešimčių?",
+      "options": ["Dvi", "Trys", "Viena"],
+      "answer": 0,
+      "hint": "Suskaičiuok strypelius abiejuose skaičiuose.",
+      "why": "16 turi vieną dešimtį, 12 taip pat vieną. Viso dvi dešimtys."
+    },
+    {
+      "q": "Kaip greičiausiai sudėti 16 ir 12?",
+      "options": [
+        "Skaičiuoti po vieną iki galo",
+        "Dešimtis prie dešimčių, vienetus prie vienetų",
+        "Sujungti visus keturis skaitmenis"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, ką reiškia pirmas ir antras skaitmuo.",
+      "why": "Dešimtys ir vienetai skaičiuojami atskirai, tada surašomi kartu."
+    },
+    {
+      "q": "Maišelyje 23 sagos, kitame 14. Kiek sagų iš viso?",
+      "options": ["27", "47", "37"],
+      "answer": 2,
+      "hint": "Suskaičiuok, kiek strypelių turi abu skaičiai.",
+      "why": "20 + 10 = 30, o 3 + 4 = 7. Viso 37."
+    },
+    {
+      "q": "Dėžėje 52 pieštukai, kitoje 36. Kiek pieštukų iš viso?",
+      "options": ["88", "58", "98"],
+      "answer": 0,
+      "hint": "Pirma sudėk dešimtis, paskui atskirai vienetus.",
+      "why": "50 + 30 = 80, o 2 + 6 = 8. Viso 88."
+    },
+    {
+      "q": "Iš 28 atimk 12. Kiek liks?",
+      "options": ["10", "16", "26"],
+      "answer": 1,
+      "hint": "Pirma atimk dešimtis, paskui vienetus.",
+      "why": "28 turi dvi dešimtis ir aštuonis vienetus. Atėmus 12 lieka 16.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip žinai, kad 16 ir 12 yra 28, o ne 38?",
+  "teacher": {
+    "goal": "Suprasti, kad sudedant du dviženklius skaičius be perėjimo per dešimtį dešimtys sudedamos su dešimtimis, o vienetai su vienetais, ir kad vienetų suma, mažesnė už dešimt, naujos dešimties nesudaro (16 + 12 = 28).",
+    "prompt": "Pažiūrėk į savo spėjimą ir į strypelius. Kodėl atsakyme dvi dešimtys, o ne trys?",
+    "offline": "Suriškite po dešimt pagaliukų į du ryšulėlius. Duokite vaikui dar šešis atskirus pagaliukus (tai 16) ir paprašykite padėti šalia antrą skaičių: vienas ryšulėlis ir du pagaliukai (tai 12). Tegul vaikas ryšulėlius sudeda į vieną krūvą, o pagaliukus — į kitą. Suskaičiuokite: du ryšulėliai ir aštuoni pagaliukai. Paklauskite, ar aštuoni pagaliukai jau sudaro naują ryšulėlį. Tada užrašykite 16 + 12 = 28 ir pakartokite su 23 + 14.",
+    "misconceptions": [
+      "„Antras skaičius — tik vienetai“: vaikas prie 16 prideda tik 2 ir gauna 18. Modelyje antro skaičiaus strypelis matomas atskirai, todėl prieš sudedant aišku, kad jį irgi reikia pridėti.",
+      "„Vienetai visada sudaro naują dešimtį“: po ankstesnio modulio apie sudėtį per dešimtį vaikas laukia trečio strypelio ir atsako 38. Modelyje vienetų kubelių aštuoni, o iki dešimties trūksta dviejų — naujas strypelis nesusidaro.",
+      "„Skaitmenis reikia jungti iš eilės“: vaikas parašo 1 ir 6, paskui 1 ir 2 ir bando sudaryti vieną ilgą skaičių. Modelyje skaičius atsiranda tik tada, kai strypeliai ir kubeliai jau sudėti į savo vietas, todėl atsakymas turi dvi dalis — dešimtis ir vienetus."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, 1 klasė: „Atliekami sudėties ir atimties veiksmai šimto ribose: vienaženklių skaičių peržengiant dešimtį, dviženklio ir vienaženklio skaičių peržengiant dešimtį, dviženklių skaičių neperžengiant dešimties“; pavyzdys „16 + 12 = ▢“ (sources/pradinio-bp-rekomendacijos-2024.txt:33520–33521, :33527).",
+    "Matematikos bendroji programa (2022), „Skaičiai ir skaičiavimai“: 1 klasėje — mintinis sudėjimas ir atėmimas 100 ribose, remiantis skaičiaus sandara (dešimtimis ir vienetais).",
+    "research/wiki/curriculum/matematika-1-klase.md §2.2 ir §9.2 — trys privalomi 1 klasės sudėties ir atimties atvejai; trečiasis (dviženklis + dviženklis neperžengiant dešimties) iki šiol neturėjo modulio.",
+    "Fuson, K. C. (1990). Conceptual structures for multiunit numbers: Implications for learning and teaching multidigit addition, subtraction, and place value. Cognition and Instruction, 7(4), 343–403. https://doi.org/10.1207/s1532690xci0704_4"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (dešimtys prie dešimčių, vienetai prie vienetų), o ne sudėties stulpelis ar perėjimas per dešimtį; perėjimas paliekamas 22-sudetis-per-desimti",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę kituose skaičiuose (23 + 14, 52 + 36, 28 − 12), o ne atkartoja 16 + 12 pavyzdį",
+    "3 žingsnis — pagalba laiku: spėjimas įrašomas prieš sudedant ir palyginamas su tuo, ką vaikas mato; užuominos nukreipia į trūkstamą dešimtį ar vienetus, yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

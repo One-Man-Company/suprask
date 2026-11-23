@@ -207,7 +207,7 @@ dalykas (matematika, 1 kl.), kaip reikalauja vaidmens ribos.
 | `19-simto-skaiciu-lentele` | atitinka | „Tyrinėjama, kaip sudaryta 100-o skaičių lentelė“ (`:33739–33740`) | 19 → 29 yra lentelės sandaros, ne papildoma tema |
 | `20-laikas-12-ir-24-val` | atitinka | 12 ir 24 val. sistemos (`:33894–33895`) | Modelis rodo tapatumą, ne atimtį iš 12 — 1 klasei tinkama forma |
 | `21-erdvines-figuros` | atitinka | „jau 1–2 klasėje… mokomasi įvardyti stačiakampį gretasienį, kūgį, ritinį… atpažinti paveikslėlyje, rasti panašių daiktų aplinkoje, rūšiuoti“ (`:1041–1043`); elementai — 3–4 kl. (`:1043–1044`); „Erdvės figūros 3“ (`:17308`) | Briaunos, viršūnės ir sienos sąmoningai neskaičiuojamos |
-| `22-sudetis-per-desimti` | atitinka | vienaženklis + vienaženklis per 10; dviženklis + vienaženklis per 10 (`:33520–33521`, `:692–699`) | Trečiasis atvejis (16 + 12) — ne šio modulio tikslas; jo platformoje nėra, žr. §9.2 |
+| `22-sudetis-per-desimti` | atitinka | vienaženklis + vienaženklis per 10; dviženklis + vienaženklis per 10 (`:33520–33521`, `:692–699`) | Trečiasis atvejis (16 + 12) sąmoningai ne šio modulio tikslas — jį moko `34-dvizenklis-plius-dvizenklis` (§9.2) |
 | `23-piktograma-ir-stulpelis` | atitinka | „registruoti renkamus duomenis, kai yra 2–3 stebimo požymio reikšmės, pavaizduoti piktograma ar stulpine diagrama“ (`:23028–23031`); 1 kl. perskaityti (`:34044`) | Dažnių lentelė sąmoningai palikta 2 klasei (`:1108–1111`) |
 | `24-komandu-seka` | atitinka | komandų sekos 1–2 kl. (B1.3–B4.3, `:12277–12291`); „schema, piešiniu pavaizduoti nuosekliai atliekamų komandų seką“ (`:925–926`); metų plane „Algoritmai ir programavimas 8“ (`:17262–17263`) | Informatika integruota per matematiką, kaip numato programa |
 | `25-ilgis-ir-vienetas` | atitinka | metų plane „Ilgis 5“ (`:17300`), integruota veikla `:17301–17305`; „mato jausmas“ ir „spėti ir tikrinti“ (`:1010–1017`) | 1 kl. — sąlyginiai vienetai; cm ir mm — 2 kl. (`:1010–1017`) |
@@ -218,6 +218,7 @@ dalykas (matematika, 1 kl.), kaip reikalauja vaidmens ribos.
 | `30-skaiciavimas-atgal-per-desimti` | atitinka | „skaičiuoti pirmyn ir atgal nuo bet kurio skaičiaus“ (`:33739`) | Po 30 eina 29 — būtent dešimčių skaitmens kaita |
 | `32-transformacijos-konstravimas` | **NEATITINKA** | 1 kl. Transformacijos — padėties apibūdinimas, kryptis, 3 žingsniai (`:34017–34019`); „pusės ar ketvirčio apskritimo posūkius“ — **2 kl.** plėtotė (`:1021–1022`, `:12347–12356`); 1 kl. plane „Transformacijos 4“ (`:17306`), bet be ketvirčių | Visas modelis ir visos 5 užduotys — ketvirčio posūkiai (failas `:5`, `:10–11`). `sources` (`:108`) paskutinį sakinį priskiria 1 kl., nors jis yra 2 kl. pastraipoje. Pasiūlymas `2026-11-23-programos-derintojas-ketvircio-posukiai-2-klase.json` |
 | `33-trukstamas-demuo` | atitinka | trūkstamas skaičius lygybėse; pavyzdys „▢ + ▢ = 18… tris skirtingus variantus“ (`:33521–33522`, `:33533`) | Keli sprendiniai — programos pavyzdžio esmė |
+| `34-dvizenklis-plius-dvizenklis` | atitinka | dviženklis + dviženklis neperžengiant dešimties; dokumento pavyzdys „16 + 12 = ▢“ (`:33520–33521`, `:33527`); metų plane „Sudėtis ir atimtis 41“ (`:17246`) | Trečiasis programos atvejis. Perėjimas per dešimtį sąmoningai paliktas `22` ir `29`; atimties atitikmuo (28 − 12) — šio modulio `optional` užduotis |
 
 ### 9.1. Trys taisyklės, kuriomis remiasi lentelė
 
@@ -233,13 +234,12 @@ dalykas (matematika, 1 kl.), kaip reikalauja vaidmens ribos.
 
 ### 9.2. Ko 1 kl. matematikos moduliai dar neapima
 
-- **Dviženklis + dviženklis neperžengiant dešimties** (16 + 12 = ▢, `:33520–33521`, `:33527`). Nė vienas modulis
-  šio atvejo nemoko; `22` sim dėmenys yra tik vienaženkliai (`22-sudetis-per-desimti.json:26–27`). Siūlomas
-  modulis `34-dvizenklis-plius-dvizenklis` (pasiūlymas `2026-11-23-programos-derintojas-dvizenklis-plius-dvizenklis.json`).
-- **Dviženklis − dviženklis neperžengiant dešimties** (28 − 12) — tas pats atvejis atimčiai; turėtų būti to paties
-  modulio `optional` užduotis.
 - **Skaičių tiesė iki 100** — `04` sim `max: 20`; 100 lentelė (`19`, `30`) ir sudėtis per dešimtį (`22`, `29`) jau
   naudoja visą ruožą, todėl tiesė lieka vienintelė modelio spraga (§9 lentelė, `04`).
+
+> **2026-11-23 (#488):** dvi pozicijos iš šio sąrašo uždarytos. **Dviženklis + dviženklis neperžengiant dešimties**
+> (16 + 12 = ▢) turi modulį `34-dvizenklis-plius-dvizenklis` (simuliacija `dvi-juostos`). **Dviženklis − dviženklis
+> neperžengiant dešimties** (28 − 12) įgyvendintas to paties modulio `optional` užduotyje, kaip ir buvo numatyta.
 
 ### 9.3. Rastas neatitikimas
 

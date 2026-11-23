@@ -4023,7 +4023,7 @@ const skaiciusIrSkaitmuo = {
        šrifto: prie 200 % teksto kubelis neturi išstumti scenos iš kortelės.
        360 px ekrane --u = 14 px, 9 strypeliai ir 9 kubeliai telpa į 217 px. */
     stage.innerHTML = `
-      <div id="sk-wrap" style="container-type:inline-size;width:100%;max-width:34rem;margin:0 auto;box-sizing:border-box;--u:clamp(14px,3.8cqw,24px)">
+      <div id="sk-wrap" style="container-type:inline-size;width:100%;max-width:34rem;margin:0 auto;box-sizing:border-box;--u:clamp(16px,4.6cqw,22px)">
         <div style="display:flex;justify-content:center;align-items:flex-end;gap:.7rem">
           <div style="text-align:center">
             <div id="sk-t" style="width:2.7rem;min-height:2.9rem;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);border-radius:14px;background:var(--paper-2);font-family:var(--font-head);font-weight:900;font-size:2.1rem;line-height:1;font-variant-numeric:tabular-nums">1</div>
@@ -4723,7 +4723,320 @@ const duRemeliaiDemuo = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 19. Dvi juostos: dviženklis + dviženklis be perėjimo per dešimtį    */
+/*                                                                    */
+/* Modelis: du skaičiai išrikiuoti kaip dešimčių strypeliai ir vienetų */
+/* kubeliai. Vaikas pirma SPĖJA sumą, paskui spaudžia „Sudėk“ ir mato,  */
+/* kad strypeliai susideda į dešimtis, o kubeliai — į vienetus, ir kad */
+/* kubelių aštuoni, o ne dešimt.                                       */
+/*                                                                    */
+/* Klaidinga nuostata (LL-28), kurią modelis turi parodyti priešingai  */
+/* nei 22-sudetis-per-desimti: „vienetai visada sudaro naują dešimtį“. */
+/* Todėl po sudėjimo vienetai rodomi dešimties langelių rėmelyje —      */
+/* aštuoni pilni, du tušti, ir naujas strypelis NESUSIDARO. Antra      */
+/* klaidinga nuostata — „antras skaičius yra tik vienetai“ (16 + 2 =   */
+/* 18): abu skaičiai prieš sudėjimą rodomi vienodai išsamiai.           */
+/*                                                                    */
+/* Sąmoningai: be perėjimo per dešimtį (tą atvejį moko 22 ir 29) ir be */
+/* sudėties stulpeliu (2 klasė). Poros, kurių vienetai peržengia        */
+/* dešimtį, atmetamos su `console.warn`, o ne tyliai (LL-37).           */
+/* ------------------------------------------------------------------ */
+const DJ_ONES_W = ["", "vienas", "du", "trys", "keturi", "penki", "šeši", "septyni", "aštuoni", "devyni"];
+const DJ_TEEN_W = ["dešimt", "vienuolika", "dvylika", "trylika", "keturiolika", "penkiolika",
+  "šešiolika", "septyniolika", "aštuoniolika", "devyniolika"];
+const DJ_TENS_W = ["", "", "dvidešimt", "trisdešimt", "keturiasdešimt", "penkiasdešimt",
+  "šešiasdešimt", "septyniasdešimt", "aštuoniasdešimt", "devyniasdešimt"];
+
+/** Skaičius žodžiu (0–99) skaitytojui ir balsui skirtam tekstui. */
+function djWord(n) {
+  if (n < 10) return DJ_ONES_W[n];
+  if (n < 20) return DJ_TEEN_W[n - 10];
+  const t = Math.floor(n / 10);
+  const o = n % 10;
+  return o ? `${DJ_TENS_W[t]} ${DJ_ONES_W[o]}` : DJ_TENS_W[t];
+}
+
+/** Skaičius žodžiu sakiniui pradžioje (pirma raidė didžioji). */
+const djUpper = (text) => (text ? text[0].toUpperCase() + text.slice(1) : text);
+
+/** Dešimčių ir vienetų pavadinimai su derinamuoju žodžiu: „dvi dešimtys“. */
+const DJ_TENS_DECL = ["", "viena dešimtis", "dvi dešimtys", "trys dešimtys", "keturios dešimtys",
+  "penkios dešimtys", "šešios dešimtys", "septynios dešimtys", "aštuonios dešimtys", "devynios dešimtys"];
+const DJ_ONES_DECL = ["", "vienas vienetas", "du vienetai", "trys vienetai", "keturi vienetai",
+  "penki vienetai", "šeši vienetai", "septyni vienetai", "aštuoni vienetai", "devyni vienetai"];
+/* Kilmininkas: „trūksta dviejų“, o ne „trūksta 2“ (LL-80: skaičius be savo formos). */
+const DJ_ONES_GEN = ["", "vieno", "dviejų", "trijų", "keturių", "penkių",
+  "šešių", "septynių", "aštuonių", "devynių"];
+
+const dviJuostos = {
+  mount({ stage, controls, api, config }) {
+    const L = config.labels || {};
+    const S = config.sentences || {};
+
+    const wanted = (Array.isArray(config.pairs) && config.pairs.length ? config.pairs : [[16, 12]]);
+    const pairs = wanted
+      .map((p) => [Number(p && p[0]), Number(p && p[1])])
+      .filter((p) => {
+        const fits = Number.isInteger(p[0]) && Number.isInteger(p[1])
+          && p[0] >= 10 && p[1] >= 10 && p[0] < 100 && p[1] < 100
+          && (p[0] % 10) + (p[1] % 10) < 10;
+        if (!fits) console.warn("dvi-juostos: pora netinka (reikia dviejų dviženklių be perėjimo per dešimtį)", p);
+        return fits;
+      });
+    if (!pairs.length) pairs.push([16, 12]);
+
+    let at = 0;
+    let guess = null;        // vaiko spėjimas (null — dar nespėjo)
+    let merged = false;
+    let reported = false;
+
+    const ROB_ROWS = 10;
+    const rodHtml = () => {
+      let segs = "";
+      for (let i = 0; i < ROB_ROWS; i += 1) segs += "<span style=\"display:block;border-radius:1px;"
+        + "background:#f6c86e;border:1px solid #b9863a;box-sizing:border-box\"></span>";
+      return "<div aria-hidden=\"true\" style=\"width:var(--u);height:calc(var(--u) * 4.2);"
+        + `display:grid;grid-template-rows:repeat(${ROB_ROWS},minmax(0,1fr));gap:1px\">${segs}</div>`;
+    };
+    const cubeHtml = () => "<span aria-hidden=\"true\" style=\"display:block;width:var(--u);height:var(--u);"
+      + "border-radius:2px;background:#f6c86e;border:1px solid #b9863a;box-sizing:border-box\"></span>";
+
+    const num = (n) => String(n);
+    const tens = (n) => Math.floor(n / 10);
+    const ones = (n) => n % 10;
+
+    const juosta = (n, idx) => `
+      <div class="dj-item" style="display:flex;flex-direction:column;align-items:center;gap:.15rem;min-width:0">
+        <div style="font-family:var(--font-head);font-weight:900;font-size:1.6rem;line-height:1;font-variant-numeric:tabular-nums">${num(n)}</div>
+        <div role="img" data-role="be-${idx}" aria-label="${L.rodsAria || "Dešimčių strypeliai"}: ${tens(n)} · ${L.onesAria || "Vienetų kubeliai"}: ${ones(n)}"
+             style="display:flex;align-items:flex-end;justify-content:center;gap:calc(var(--u) * .35);min-height:calc(var(--u) * 4.2)">
+          ${Array.from({ length: tens(n) }, rodHtml).join("")}
+          ${Array.from({ length: ones(n) }, cubeHtml).join("")}
+        </div>
+      </div>`;
+
+    /* Sąrašas žodžiu po abiem skaičiais: skaitmenį vaikas jau perskaitė, o
+       „viena dešimtis ir šeši vienetai“ pasako, ką tie strypeliai reiškia.
+       Viename sakinyje — ne daugiau kaip du skaičiai (LL-155: du skaičiai
+       be daiktavardžio atrodo kaip prieštaravimas). */
+    const skaiciuZodziais = (n) => (ones(n) === 0
+      ? DJ_TENS_DECL[tens(n)]
+      : `${DJ_TENS_DECL[tens(n)]} ir ${DJ_ONES_DECL[ones(n)]}`);
+
+    stage.innerHTML = `
+      <div id="dj-wrap" style="container-type:inline-size;width:100%;max-width:32rem;margin:0 auto;box-sizing:border-box;--u:clamp(16px,4.6cqw,22px)">
+        <div id="dj-before" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem"></div>
+        <div id="dj-after" hidden></div>
+        <p class="sim-note" id="dj-room" style="margin:.35rem 0 0;text-align:center;min-height:1.3rem;font-weight:700"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div role="group" data-role="guess" aria-label="${L.guess || "Kiek bus iš viso"}"
+           style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;align-items:center;width:100%">
+        <span style="width:100%;text-align:center;font-weight:800;font-size:.95rem">${L.guess || "Kiek bus iš viso"}</span>
+      </div>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;width:100%">
+        <button type="button" class="btn" id="dj-merge" style="min-height:48px">${L.merge || "Sudėk"}</button>
+        <button type="button" class="btn secondary" id="dj-next" style="min-height:48px">${L.next || "Kiti skaičiai"}</button>
+        <button type="button" class="btn ghost" id="dj-reset" style="min-height:48px">${L.reset || "Iš naujo"}</button>
+      </div>`;
+
+    const beforeEl = stage.querySelector("#dj-before");
+    const afterEl = stage.querySelector("#dj-after");
+    const roomEl = stage.querySelector("#dj-room");
+    const guessBox = controls.querySelector("[data-role='guess']");
+    const mergeBtn = controls.querySelector("#dj-merge");
+
+    /* Spėjimas — trys būdingiausios klaidos tame pačiame skaičių poroje:
+       „pridėjau tik vienetus“ (+18), „vienetai sudarė naują dešimtį“ (+10)
+       ir teisinga suma. Tvarka sukama pagal poros numerį, kad teisingas
+       variantas nebūtų visada toje pačioje vietoje (standartas §3). */
+    function guessesFor(a, b) {
+      const sum = a + b;
+      const onlyOnes = a + (b % 10);
+      const extraTen = sum + 10;
+      const pool = [sum, onlyOnes, extraTen].filter((v, i, arr) => arr.indexOf(v) === i);
+      const shift = at % pool.length;
+      return pool.slice(shift).concat(pool.slice(0, shift));
+    }
+
+    /* Mygtukai statomi vieną kartą porai ir daugiau NElaužomi: jei juos
+       perrinktume po sudėjimo, naršyklė numestų fokusą nuo paspausto
+       valdiklio (LL-32), o vaikas nematytų, kur stovi. Todėl būsena keičiama
+       vietoje (`aria-pressed`, `aria-disabled`), o ne per `innerHTML`. */
+    function buildGuess() {
+      const [a, b] = pairs[at];
+      guessBox.querySelectorAll("button").forEach((n) => n.remove());
+      guessesFor(a, b).forEach((v) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn secondary dj-g";
+        btn.dataset.v = String(v);
+        btn.style.minHeight = "48px";
+        btn.style.minWidth = "3rem";
+        btn.textContent = String(v);
+        btn.addEventListener("click", () => {
+          // Po sudėjimo spėjimas nebekečiamas: kitaip jį būtų galima pataisyti
+          // pamąčius atsakymą, ir spėjimo palyginimas nieko nebereikštų (LL-17).
+          if (merged) return;
+          guess = v;
+          syncGuess();
+          api.note(S.spejimas || "");
+          api.speak(S.spejimas || "");
+        });
+        guessBox.appendChild(btn);
+      });
+      syncGuess();
+    }
+
+    function syncGuess() {
+      guessBox.querySelectorAll("button").forEach((btn) => {
+        const v = Number(btn.dataset.v);
+        const on = guess === v;
+        btn.className = on ? "btn dj-g" : "btn secondary dj-g";
+        btn.setAttribute("aria-pressed", String(on));
+        if (merged) {
+          // Užrakinimas paaiškinamas, o ne tyliai išjungiamas (LL-04).
+          btn.setAttribute("aria-disabled", "true");
+          btn.style.opacity = ".55";
+          btn.setAttribute("aria-label", `Spėjimas įrašytas prieš sudedant: ${v}. Spausk „Kiti skaičiai“.`);
+        } else {
+          btn.removeAttribute("aria-disabled");
+          btn.style.opacity = "1";
+          btn.setAttribute("aria-label", `${L.guess || "Kiek bus iš viso"}: ${v}`);
+        }
+      });
+    }
+
+    /* --- piešimas ------------------------------------------------------ */
+    function paint() {
+      const [a, b] = pairs[at];
+      const sum = a + b;
+      const onesSum = ones(a) + ones(b);
+      const tensSum = tens(a) + tens(b);
+
+      if (!merged) {
+        beforeEl.hidden = false;
+        afterEl.hidden = true;
+        beforeEl.innerHTML = `${juosta(a, 0)}
+          <div aria-hidden="true" style="font-family:var(--font-head);font-weight:900;font-size:1.6rem;line-height:1">+</div>
+          ${juosta(b, 1)}
+          <p class="sim-note" style="flex-basis:100%;margin:.15rem 0 0;text-align:center">
+            <span style="display:block">${a} — ${skaiciuZodziais(a)}.</span>
+            <span style="display:block">${b} — ${skaiciuZodziais(b)}.</span>
+          </p>`;
+        beforeEl.setAttribute("aria-label",
+          `${djUpper(djWord(a))} yra ${skaiciuZodziais(a)}. ${djUpper(djWord(b))} yra ${skaiciuZodziais(b)}.`);
+        roomEl.textContent = "";
+        return;
+      }
+
+      beforeEl.hidden = true;
+      afterEl.hidden = false;
+      const cells = Array.from({ length: 10 }, (_, i) =>
+        `<div style="aspect-ratio:1;min-width:0;border:2px solid var(--line);border-radius:8px;`
+        + `background:var(--paper-2);display:flex;align-items:center;justify-content:center;box-sizing:border-box">`
+        + `${i < onesSum ? cubeHtml() : ""}</div>`).join("");
+      afterEl.innerHTML = `
+        <div style="text-align:center;font-family:var(--font-head);font-weight:900;font-size:1.5rem;line-height:1.1;font-variant-numeric:tabular-nums">${a} + ${b} = ${sum}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center;align-items:flex-end;margin-top:.45rem">
+          <div style="text-align:center;min-width:0">
+            <div role="img" style="display:flex;align-items:flex-end;justify-content:center;gap:calc(var(--u) * .35);min-height:calc(var(--u) * 4.2)"
+                 aria-label="${L.tens || "Dešimtys"}: ${tensSum}">${Array.from({ length: tensSum }, rodHtml).join("")}</div>
+            <div style="font-size:var(--fs-s);font-weight:800;margin-top:.2rem">${L.tens || "Dešimtys"}: ${tensSum}</div>
+          </div>
+          <div style="text-align:center;min-width:0">
+            <div role="img" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:calc(var(--u) * .25);width:calc(var(--u) * 8.5);max-width:100%"
+                 aria-label="${L.ones || "Vienetai"}: ${onesSum} iš 10">${cells}</div>
+            <div style="font-size:var(--fs-s);font-weight:800;margin-top:.2rem">${L.ones || "Vienetai"}: ${onesSum}</div>
+          </div>
+        </div>
+        <p class="sim-note" style="margin:.3rem 0 0;text-align:center;font-weight:700">
+          ${onesSum >= 10
+            ? "Vienetų dešimt ar daugiau — susidaro nauja dešimtis."
+            : onesSum === 0
+              ? "Vienetų nėra. Nauja dešimtis nesusidaro."
+              : `Iki naujos dešimties trūksta ${DJ_ONES_GEN[10 - onesSum]}. Nauja dešimtis nesusidaro.`}
+        </p>`;
+      roomEl.textContent = onesSum === 0
+        ? `${djUpper(DJ_TENS_DECL[tensSum])}. Viso ${djWord(sum)}.`
+        : `${djUpper(DJ_TENS_DECL[tensSum])} ir ${DJ_ONES_DECL[onesSum]}. Viso ${djWord(sum)}.`;
+      afterEl.setAttribute("aria-label", `${a} ir ${b} yra ${sum}. ${djUpper(djWord(sum))}.`);
+    }
+
+    /* --- veiksmai ------------------------------------------------------ */
+    function merge() {
+      if (merged) {
+        api.note(S.jau || "");
+        api.speak(S.jau || "");
+        return;
+      }
+      const [a, b] = pairs[at];
+      const sum = a + b;
+      merged = true;
+      paint();
+      syncGuess();
+      const said = S[`suma_${a}_${b}`] || "";
+      /* Spėjimo palyginimas yra šio modelio pedagoginis branduolys, todėl jis
+         turi būti GIRDIMAS, ne tik skaitomas (LL-11 atvirkštinė pusė: tekstas
+         be garso). Kad būtų vienas `api.speak` kvietimas (antras nutrauktų
+         pirmą — LL-145), sakinys rašomas `sim.config` kaip visas statinis
+         variantas (`…_sutapo`, `…_kitaip`), o ne sujungiamas kode: tik taip
+         `generate_audio.py` jį randa ir įrašo (LL-42). */
+      const cmp = guess === null ? "" : guess === sum ? "_sutapo" : "_kitaip";
+      const spoken = S[`suma_${a}_${b}${cmp}`] || said;
+      api.readout(`${a} + ${b} = ${sum}. ${djUpper(djWord(sum))}.`);
+      api.note(spoken);
+      if (spoken) api.speak(spoken);
+      if (!reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    function next() {
+      at = (at + 1) % pairs.length;
+      merged = false;
+      guess = null;
+      paint();
+      buildGuess();
+      const [a, b] = pairs[at];
+      api.readout(`${a} ir ${b}.`);
+      api.note(S.kiti || "");
+      api.speak(S.kiti || "");
+    }
+
+    function reset() {
+      at = 0;
+      merged = false;
+      guess = null;
+      reported = false;
+      paint();
+      buildGuess();
+      const [a, b] = pairs[at];
+      api.readout(`${a} ir ${b}.`);
+      api.note(S.isnaujo || "");
+      api.speak(S.isnaujo || "");
+    }
+
+    mergeBtn.addEventListener("click", merge);
+    controls.querySelector("#dj-next").addEventListener("click", next);
+    controls.querySelector("#dj-reset").addEventListener("click", reset);
+
+    paint();
+    buildGuess();
+    const [a0, b0] = pairs[at];
+    api.readout(`${a0} ir ${b0}.`);
+    api.note(S.pradzia || "");
+    api.speak(S.pradzia || "");
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
+  "dvi-juostos": dviJuostos,
   "du-remeliai-demuo": duRemeliaiDemuo,
   "skaiciu-tiese": skaiciuTiese,
   "sukamas-ratas": sukamasRatas,

@@ -293,6 +293,14 @@
      "file": "grade-01/matematika/33-trukstamas-demuo.json",
      "minutes": 9,
      "sim": "du-remeliai-demuo"
+    },
+    {
+     "id": "34-dvizenklis-plius-dvizenklis",
+     "title": "Dviženklis plius dviženklis",
+     "subtitle": "Dešimtys prie dešimčių, vienetai prie vienetų",
+     "file": "grade-01/matematika/34-dvizenklis-plius-dvizenklis.json",
+     "minutes": 9,
+     "sim": "dvi-juostos"
     }
    ]
   },

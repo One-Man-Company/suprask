@@ -1131,9 +1131,17 @@
   "n": "n/43601bf7064ab95f-d9056be4.mp3",
   "s": "s/43601bf7064ab95f-b8a6ec6f.mp3"
  },
+ "Du skaičiai iš dešimčių ir vienetų. Spėk, kiek bus.": {
+  "n": "n/19febefa3c9434f9-8124c2da.mp3",
+  "s": "s/19febefa3c9434f9-7875a557.mp3"
+ },
  "Du trintukai": {
   "n": "n/442c5f55b789e782-81475ca4.mp3",
   "s": "s/442c5f55b789e782-3272b377.mp3"
+ },
+ "Dvi dešimtys ir aštuoni vienetai. Nauja dešimtis nesusidaro. Viso dvidešimt aštuoni.": {
+  "n": "n/0e7fd04576e2aa71-b5534ce5.mp3",
+  "s": "s/0e7fd04576e2aa71-1ed84c7a.mp3"
  },
  "Dvi naujos kaladėlės. Didelė medinė ir maža metalinė.": {
   "n": "n/e278741a836e576c-5454a6dd.mp3",
@@ -1402,6 +1410,10 @@
  "J": {
   "n": "n/6da43b944e494e88-b68b1146.mp3",
   "s": "s/6da43b944e494e88-339234f6.mp3"
+ },
+ "Jau sudėta. Spausk kitus skaičius.": {
+  "n": "n/aedb7077649b1055-803cd6b9.mp3",
+  "s": "s/aedb7077649b1055-096b807c.mp3"
  },
  "Jaunas augalas": {
   "n": "n/26c7dabd254a2784-d431e77b.mp3",
@@ -1674,6 +1686,10 @@
  "Kitas žodis": {
   "n": "n/ef09cee90b709c37-70eb381f.mp3",
   "s": "s/ef09cee90b709c37-82118aee.mp3"
+ },
+ "Kiti skaičiai. Vėl spėk, kiek bus.": {
+  "n": "n/4eb5bfa8082555cd-94579184.mp3",
+  "s": "s/4eb5bfa8082555cd-3950656f.mp3"
  },
  "Kiškis": {
   "n": "n/4e806f63471ec890-48d3820a.mp3",
@@ -2607,6 +2623,10 @@
   "n": "n/b875e35c2d3350b1-0a1e5a42.mp3",
   "s": "s/b875e35c2d3350b1-e7374b1a.mp3"
  },
+ "Pradedam iš naujo. Vėl spėk.": {
+  "n": "n/c011b7d02e3b1b0b-7f0ea4be.mp3",
+  "s": "s/c011b7d02e3b1b0b-49b6817b.mp3"
+ },
  "Pradedam iš naujo. Žymė vėl viršuje.": {
   "n": "n/075dde4122881f4e-3b97ad01.mp3",
   "s": "s/075dde4122881f4e-0e76d9df.mp3"
@@ -2935,9 +2955,33 @@
   "n": "n/e681cc5e761a505f-b67cb72d.mp3",
   "s": "s/e681cc5e761a505f-1fa6b07b.mp3"
  },
+ "Spėjai kitaip. Dvi dešimtys ir aštuoni vienetai. Viso dvidešimt aštuoni.": {
+  "n": "n/b6a1ba3b372a0ce5-38a6660a.mp3",
+  "s": "s/b6a1ba3b372a0ce5-17f7ae32.mp3"
+ },
  "Spėjai kitaip. Rodyklės liko vietoje, keitėsi tik užrašas.": {
   "n": "n/3237c9dcda911865-e3649eb8.mp3",
   "s": "s/3237c9dcda911865-e9ef8cd4.mp3"
+ },
+ "Spėjai kitaip. Trys dešimtys ir septyni vienetai. Viso trisdešimt septyni.": {
+  "n": "n/e66fb3de316eda3a-4f5907bf.mp3",
+  "s": "s/e66fb3de316eda3a-7fb451b3.mp3"
+ },
+ "Spėjai kitaip. Šešios dešimtys ir aštuoni vienetai. Viso šešiasdešimt aštuoni.": {
+  "n": "n/21f3ca46027de9b8-2f2aef03.mp3",
+  "s": "s/21f3ca46027de9b8-133a925b.mp3"
+ },
+ "Spėjai teisingai. Dvi dešimtys ir aštuoni vienetai. Viso dvidešimt aštuoni.": {
+  "n": "n/8046a3ea51b3e7ef-363b794d.mp3",
+  "s": "s/8046a3ea51b3e7ef-6efd9994.mp3"
+ },
+ "Spėjai teisingai. Trys dešimtys ir septyni vienetai. Viso trisdešimt septyni.": {
+  "n": "n/2bc1fd2f395f7965-415a16fe.mp3",
+  "s": "s/2bc1fd2f395f7965-2b7f3aac.mp3"
+ },
+ "Spėjai teisingai. Šešios dešimtys ir aštuoni vienetai. Viso šešiasdešimt aštuoni.": {
+  "n": "n/f224592d53ab2df9-30b0b05f.mp3",
+  "s": "s/f224592d53ab2df9-d7c10001.mp3"
  },
  "Spėjimas užrašytas. Dabar keisk aukštį.": {
   "n": "n/700bd3e769105a0e-7b28c95f.mp3",
@@ -2962,6 +3006,10 @@
  "Spėjimas įrašytas. Dabar spausk Žemyn.": {
   "n": "n/1aa2b230049497d2-167a73e5.mp3",
   "s": "s/1aa2b230049497d2-a7964439.mp3"
+ },
+ "Spėjimas įrašytas. Dabar spausk „Sudėk“.": {
+  "n": "n/fe2fc1e788a20a50-67cbf8b0.mp3",
+  "s": "s/fe2fc1e788a20a50-f683410c.mp3"
  },
  "Spėjimas įrašytas. Dabar statyk kelią.": {
   "n": "n/c26817a306408861-7ba30af5.mp3",
@@ -3250,6 +3298,10 @@
  "Trys daiktai, vienas pasikeitė.": {
   "n": "n/19477f386ec2e893-df5dac84.mp3",
   "s": "s/19477f386ec2e893-78d346f8.mp3"
+ },
+ "Trys dešimtys ir septyni vienetai. Nauja dešimtis nesusidaro. Viso trisdešimt septyni.": {
+  "n": "n/1fe1a3e843fe5d92-bf6b81fc.mp3",
+  "s": "s/1fe1a3e843fe5d92-88968da5.mp3"
  },
  "Trys formos, o vandens visur tiek pat.": {
   "n": "n/829873ff3b26558a-8027e634.mp3",
@@ -4038,6 +4090,10 @@
  "Šerkšnas": {
   "n": "n/4f3df3baa4843a89-8e50d9b1.mp3",
   "s": "s/4f3df3baa4843a89-e13e03de.mp3"
+ },
+ "Šešios dešimtys ir aštuoni vienetai. Nauja dešimtis nesusidaro. Viso šešiasdešimt aštuoni.": {
+  "n": "n/20fa489f02e5ac55-d686047b.mp3",
+  "s": "s/20fa489f02e5ac55-d6cf3762.mp3"
  },
  "Šešios sąvaržėlės": {
   "n": "n/0b02554737373e75-76eaee8e.mp3",

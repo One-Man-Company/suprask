@@ -195,7 +195,7 @@ dalykas (matematika, 1 kl.), kaip reikalauja vaidmens ribos.
 
 | Modulis | Verdiktas | Programa (`sources/…txt`) | Pastaba |
 |---|---|---|---|
-| `04-skaiciu-tiese` | **iš dalies** | „1 klasė. Skaičiai nuo 0 iki 100… Tyrinėjama, kaip sudaryta 100-o skaičių lentelė, skaičių tiesė“ (`:33739–33740`); trys sudėties atvejai (`:33520–33521`) | Modelis teisingas, apimtis siauresnė: sim `max: 20` (failas `:26`), taikiniai 5–19, visos užduotys ≤ 19. Pats `teacher.goal` (`:85`) rašo „programoje — iki 100“. Pasiūlymas `2026-11-23-programos-derintojas-skaiciu-tiese-100.json` |
+| `04-skaiciu-tiese` | atitinka | „1 klasė. Skaičiai nuo 0 iki 100… Tyrinėjama, kaip sudaryta 100-o skaičių lentelė, skaičių tiesė“ (`:33739–33740`); trys sudėties atvejai (`:33520–33521`) | 2026-11-23 (#493): apimtis uždaryta. Sim turi du mastelius — 0–20 įžangai ir 0–100 su taikiniais 34, 47, 68, 92; užduotis „nuo 16 septyni žingsniai“ peržengia dešimtį, o `teacher.goal` jau be išlygos „programoje — iki 100“ |
 | `05-desimtukas` | atitinka | Mintino skaičiavimo strategijos „paremtos skaičiaus sandaros… suvokimu“ (`:687–691`); 1 kl. skaičiai 0–100 (`:33739`) | 2026-11-05 pastaba apie „pusę dešimtuko“ nebegalioja — modulyje jos nebėra |
 | `06-figuros` | atitinka (atpažinimo lygis) | 1 kl. plokščios figūros pradedamos nuo taško, tiesės, spindulio, atkarpos (`:1030–1033`); kampas, daugiakampis, kraštinė — 2 kl. (`:1033–1036`); metų plane „Plokščios figūros 5“ (`:17307`) | Modulis moko formos pastovumo, o ne savybių; apskritimo, trikampio ir kvadrato atpažinimas yra ikimokyklinis pagrindas, ne 2 kl. savybės |
 | `07-desningumai` | atitinka | 1 kl. „objektų sekas iš 2–3 pasikartojančių narių grupių, jas pratęsti, rasti trūkstamus sekų narius“ (`:917–921`); metų plane „Sekos 5“ (`:17261`) | Sim ir trys užduotys — objektų sekos; T1 užrašyta skaitmenimis (1, 2, 1, 2). „Įvairios skaičių sekos“ programoje įvardytos 2 kl. (`:921–922`), todėl T1 verta keisti į objektų seką — branduolys vis tiek atitinka |
@@ -234,8 +234,10 @@ dalykas (matematika, 1 kl.), kaip reikalauja vaidmens ribos.
 
 ### 9.2. Ko 1 kl. matematikos moduliai dar neapima
 
-- **Skaičių tiesė iki 100** — `04` sim `max: 20`; 100 lentelė (`19`, `30`) ir sudėtis per dešimtį (`22`, `29`) jau
-  naudoja visą ruožą, todėl tiesė lieka vienintelė modelio spraga (§9 lentelė, `04`).
+> **2026-11-23 (#493):** sąrašas tuščias. **Skaičių tiesė iki 100** uždaryta — `04-skaiciu-tiese` sim turi du
+> mastelius (0–20 įžangai ir 0–100 su taikiniais 34, 47, 68, 92), o viena užduotis (16 + 7) peržengia dešimtį.
+> 100 lentelė (`19`, `30`) ir sudėtis per dešimtį (`22`, `29`) tą patį ruožą jau naudojo, todėl modelis dabar
+> tolygus.
 
 > **2026-11-23 (#488):** dvi pozicijos iš šio sąrašo uždarytos. **Dviženklis + dviženklis neperžengiant dešimties**
 > (16 + 12 = ▢) turi modulį `34-dvizenklis-plius-dvizenklis` (simuliacija `dvi-juostos`). **Dviženklis − dviženklis

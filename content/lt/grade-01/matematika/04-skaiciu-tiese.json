@@ -6,19 +6,20 @@
   "subtitle": "Sudėti ir atimti reiškia judėti tiese",
   "minutes": 9,
   "outcomes": [
-    "Parodau skaičiaus vietą skaičių tiesėje. Judu į dešinę ir į kairę.",
+    "Parodau skaičiaus vietą skaičių tiesėje iki 100. Judu į dešinę ir į kairę.",
     "Paaiškinu, kad pridėti reiškia judėti į dešinę. Atimti reiškia judėti į kairę.",
     "Suskaičiuoju, kiek žingsnių liko iki tikslo."
   ],
   "concept": {
     "title": "Skaičiai turi savo vietas",
-    "big_idea": "Skaičių tiesė — tai kelias, kuriame kiekvienas skaičius turi savo vietą. Pridėti reiškia eiti į dešinę, atimti reiškia eiti į kairę.",
+    "big_idea": "Skaičių tiesė — tai kelias, kuriame kiekvienas skaičius turi savo vietą. Pridėti reiškia eiti į dešinę, atimti — į kairę. Tiesė tęsiasi iki 100, o dešimtukai joje stovi tolygiai.",
     "steps": [
       "Rask skaičių 5. Jis yra tarp 4 ir 6.",
       "Pridėk 3 ir eik į dešinę tris kartus: 5 → 6 → 7 → 8.",
-      "Atimk 2 ir eik į kairę du kartus: 8 → 7 → 6."
+      "Ilgoje tiesėje ieškok dešimtukų: 10, 20, 30. Tarp jų stovi visi kiti skaičiai.",
+      "Nuo 40 eik septynis žingsnius į dešinę ir atsidursi ties 47."
     ],
-    "example": "Pradėk nuo 7 ir pridėk 3. Žingsniai: 7 → 8 → 9 → 10. Tiesė parodo kelią, todėl mintinai skaičiuoti nereikia."
+    "example": "Pradėk nuo 68 ir atimk 20. Du dešimtukai į kairę — ir esi ties 48. Tiesė parodo kelią, todėl mintinai skaičiuoti nereikia."
   },
   "sim": {
     "component": "skaiciu-tiese",
@@ -30,6 +31,13 @@
         12,
         15,
         19
+      ],
+      "big_max": 100,
+      "big_targets": [
+        34,
+        47,
+        68,
+        92
       ]
     }
   },
@@ -68,35 +76,48 @@
       "why": "12 yra tarp 11 ir 13."
     },
     {
-      "q": "Pradedi nuo 15 ir atimi 4. Kur atsidursi?",
+      "q": "Nuo 16 eini septynis žingsnius į dešinę. Kur atsidursi?",
       "options": [
-        "11",
-        "19",
-        "12"
+        "22",
+        "23",
+        "24"
+      ],
+      "answer": 1,
+      "hint": "Pirmiausia eik iki 20. Nuo 16 tai keturi žingsniai, o liko dar trys.",
+      "why": "16 + 7 = 23, o tiesėje 23 yra tarp 20 ir 30."
+    },
+    {
+      "q": "Nuo 92 eini tris dešimtukus į kairę. Kur atsidursi?",
+      "options": [
+        "62",
+        "89",
+        "72"
       ],
       "answer": 0,
-      "hint": "Skaičiuok keturis žingsnius į kairę nuo 15.",
-      "why": "15 − 4 = 11.",
+      "hint": "Trys dešimtukai — tai trys šuoliai po dešimt. Dešimtys mažėja.",
+      "why": "92 − 30 = 62, nes 62 yra tarp 60 ir 70.",
       "optional": true
     }
   ],
   "reflect": "Sugalvok savo kelią skaičių tiese ir papasakok jį draugui. Nuo kurio skaičiaus pradedi ir kur atsiduri?",
   "teacher": {
-    "goal": "Skaičių tiesės kaip modelio naudojimas sudėčiai ir atimčiai iki 20 (programoje — iki 100).",
-    "prompt": "Kodėl sudėdami einame į dešinę?",
-    "offline": "Ant grindų lipnia juosta padarykite skaičių tiesę 0–20. Vaikas vaikšto pagal jūsų sakomą veiksmą („nuo 6 pirmyn 4“).",
+    "goal": "Skaičių tiesės kaip modelio naudojimas sudėčiai ir atimčiai iki 100: vieta, kryptis ir dešimtukų žingsniai.",
+    "prompt": "Kodėl sudėdami einame į dešinę, o dešimtukai tiesėje stovi tolygiai?",
+    "offline": "Ant ilgos popieriaus juostos nupieškite skaičių tiesę 0–100 ir ryškiau pažymėkite dešimtukus. Vaikas pirštu rodo kelią pagal jūsų sakomą veiksmą („nuo 16 pirmyn septyni“), tada pasako, kur atsidūrė.",
     "misconceptions": [
       "Vaikai skaičiuoja įskaitant pradinį skaičių („8, 9“ vietoj „9, 10“) — padeda ėjimas pirštu nuo taško.",
       "Atimties negalima atlikti „į priekį“ — kryptis turi būti aiški.",
-      "Skaičiai tarp 10 ir 20 dažnai painiojami su jų skaitmenų tvarka."
+      "Skaičiai tarp 10 ir 20 dažnai painiojami su jų skaitmenų tvarka.",
+      "„Po 20 tiesė baigiasi“: vaikas, įpratęs prie trumpos tiesės, 47 ieško tik lentelėje. Ilgoji tiesė parodo, kad tas pats kelias tęsiasi toliau."
     ]
   },
   "sources": [
-    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, sritis „Skaičiai ir skaičiavimai“, 1–2 kl.",
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“: 1 klasėje mokomasi skaičių nuo 0 iki 100, tyrinėjama, kaip sudaryta 100-o skaičių lentelė ir skaičių tiesė.",
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“: dviženklio ir vienaženklio skaičių sudėtis peržengiant dešimtį yra antras privalomas 1 klasės atvejis.",
     "Matematikos bendroji programa (2022): 1 klasėje natūralieji skaičiai 100 ribose; sudėtis ir atimtis peržengiant dešimtį."
   ],
   "svietimas1": [
-    "1 žingsnis — mažiau temų, daugiau gylio: vienas modelis (tiesė), taikomas daugeliui uždavinių",
-    "3 žingsnis — pagalba laiku: kiekvienas žingsnis matomas, klaida iš karto parodoma"
+    "1 žingsnis — mažiau temų, daugiau gylio: vienas modelis (tiesė) dviejuose masteliuose — nuo 0 iki 20 ir nuo 0 iki 100, o ne atskira tema apie didelius skaičius",
+    "3 žingsnis — pagalba laiku: tikslas visada matomas, kryptis parodoma iš karto, jokių ėjimų limitų"
   ]
 }

@@ -11,88 +11,237 @@ const svgEl = (tag, attrs = {}) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* 1. Skaičių linija                                                   */
+/* 1. Skaičių tiesė                                                    */
+/*                                                                    */
+/* Du masteliai, vienas modelis (#42209). Programa 1 klasei reikalauja */
+/* skaičių 0–100 ir skaičių tiesės, todėl vaikas turi rasti vietą ir    */
+/* 47, o ne tik iki 20. Trumpoji tiesė lieka pirmu susidūrimu.          */
+/*                                                                    */
+/* Skaičiai piešiami PIKSELINIU masteliu: `viewBox` lygus tikrajam     */
+/* pločiui, todėl etiketė telefone išlieka 13–15 px, o ne susitraukia  */
+/* iki 6 px, kaip būdavo fiksuotame 720 vienetų `viewBox` (LL-06).      */
+/* Kiekvienas skaičius nepaženklinamas, kai ruožas tankus: etiketės     */
+/* retėja pagal žingsnį, o tikslią reikšmę visada rodo žymeklis.        */
 /* ------------------------------------------------------------------ */
 const skaiciuTiese = {
   mount({ stage, controls, api, config }) {
-    const max = config.max || 20;
-    const targets = config.targets || [5, 8, 12, 15];
-    let pos = 0;
-    let t = 0;
-    const reached = new Set(); // kuriuos taikinius vaikas jau pasiekė
-    let reported = false;      // api.progress — tik pasiekus visus taikinius (§4)
+    const smallMax = Math.max(5, Number(config.max) || 20);
+    const toTargets = (raw, max) => (Array.isArray(raw) ? raw : [])
+      .map(Number)
+      .filter((n) => Number.isInteger(n) && n >= 0 && n <= max);
 
-    stage.innerHTML = `<div style="width:100%"><svg id="sl-svg" viewBox="0 0 720 170" role="img" aria-label="Skaičių tiesė nuo 0 iki ${max}"></svg></div>`;
-    controls.innerHTML = `
-      <button class="btn secondary" id="sl-minus" style="font-size:1.4rem;min-width:4rem">− 1</button>
-      <button class="btn" id="sl-plus" style="font-size:1.4rem;min-width:4rem">+ 1</button>
-      <button class="btn ghost" id="sl-reset">Iš naujo</button>`;
+    const smallTargets = toTargets(config.targets, smallMax);
+    const bigMax = Math.max(0, Number(config.big_max) || 0);
+    const bigTargets = toTargets(config.big_targets, bigMax);
 
-    const svg = stage.querySelector("#sl-svg");
-    const pad = 34;
-    const step = (720 - pad * 2) / max;
-    const y = 92;
-
-    svg.appendChild(svgEl("line", { x1: pad, y1: y, x2: 720 - pad, y2: y, stroke: "var(--line)", "stroke-width": 6, "stroke-linecap": "round" }));
-
-    for (let i = 0; i <= max; i += 1) {
-      const x = pad + i * step;
-      svg.appendChild(svgEl("line", { x1: x, y1: y - 9, x2: x, y2: y + 9, stroke: "var(--ink-faint)", "stroke-width": 2 }));
-      const label = svgEl("text", {
-        x, y: y + 32, "text-anchor": "middle", fill: "var(--ink-soft)",
-        "font-size": max > 12 ? 13 : 15, "font-family": "system-ui", "font-weight": 700,
-      });
-      label.textContent = i;
-      svg.appendChild(label);
+    const ranges = [{
+      max: smallMax,
+      targets: smallTargets.length ? smallTargets : [smallMax],
+      label: `Iki ${smallMax}`,
+    }];
+    if (bigMax > smallMax && bigTargets.length) {
+      ranges.push({ max: bigMax, targets: bigTargets, label: `Iki ${bigMax}` });
     }
 
-    const marker = svgEl("g", {});
-    const bubble = svgEl("circle", { r: 22, fill: "var(--accent)" });
-    const num = svgEl("text", {
-      "text-anchor": "middle", y: 7, fill: "#fff", "font-size": 20, "font-weight": 900, "font-family": "system-ui",
+    let active = 0;
+    const pos = ranges.map(() => 0);
+    const reached = ranges.map(() => new Set());
+    let reported = false;   // api.progress — tik kai pasiekti VISI abiejų tiesių taikiniai (§4)
+    let width = 0;
+
+    stage.innerHTML = `
+      <div id="sl-wrap" style="width:100%;max-width:100%;min-width:0">
+        <svg id="sl-svg" role="img" aria-label="Skaičių tiesė" style="display:block;width:100%;height:auto"></svg>
+      </div>`;
+    controls.innerHTML = `
+      <div id="sl-ranges" role="group" aria-label="Tiesės ilgis"
+           style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center"></div>
+      <button class="btn secondary" id="sl-minus-ten" type="button" aria-label="Atgal dešimčia">− 10</button>
+      <button class="btn secondary" id="sl-minus" type="button" aria-label="Atgal vienu">− 1</button>
+      <button class="btn" id="sl-plus" type="button" aria-label="Pirmyn vienu">+ 1</button>
+      <button class="btn secondary" id="sl-plus-ten" type="button" aria-label="Pirmyn dešimčia">+ 10</button>
+      <button class="btn ghost" id="sl-reset" type="button">Iš naujo</button>`;
+
+    const svg = stage.querySelector("#sl-svg");
+    const wrap = stage.querySelector("#sl-wrap");
+    const rangeBar = controls.querySelector("#sl-ranges");
+    const tenUp = controls.querySelector("#sl-plus-ten");
+    const tenDown = controls.querySelector("#sl-minus-ten");
+
+    const range = () => ranges[active];
+    const rangeDone = (i) => ranges[i].targets.every((n) => reached[i].has(n));
+    const allDone = () => ranges.every((r, i) => rangeDone(i));
+    const nextTarget = () => range().targets.find((n) => !reached[active].has(n));
+
+    /* Dešimtukų šuoliai prasmingi tik ilgoje tiesėje: trumpojoje jie
+       peršoktų pusę tiesės ir atimtų ėjimo po vieną patirtį. */
+    function syncTen() {
+      const show = range().max > smallMax;
+      tenUp.hidden = !show;
+      tenDown.hidden = !show;
+    }
+
+    const rangeButtons = ranges.map((r, i) => {
+      if (ranges.length < 2) return null;
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "btn secondary";
+      b.textContent = r.label;
+      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+      b.addEventListener("click", () => {
+        if (active === i) return;
+        active = i;
+        rangeButtons.forEach((x, k) => x && x.setAttribute("aria-pressed", k === active ? "true" : "false"));
+        syncTen();
+        draw();
+        api.speak(r.label);
+        api.note(r.max > smallMax
+          ? "Ilga tiesė. Dešimtukai pažymėti, o tarp jų — visi kiti skaičiai."
+          : "Trumpa tiesė. Čia visi skaičiai pažymėti.");
+      });
+      rangeBar.appendChild(b);
+      return b;
     });
-    marker.appendChild(bubble);
-    marker.appendChild(num);
-    const goalRing = svgEl("circle", { r: 30, fill: "none", stroke: "var(--mint)", "stroke-width": 4, "stroke-dasharray": "5 6" });
-    svg.appendChild(goalRing);
-    svg.appendChild(marker);
+    if (ranges.length < 2) rangeBar.remove();
+
+    const H = 150;
+    const pad = 18;
+    const y = 84;
+    let marker = null;
+    let num = null;
+    let goalRing = null;
+
+    /* Etiketė rašoma rečiau, kai ruožas tankus: 101 skaičius telefone
+       netilptų net 10 px šriftu. Slenkstis 24 px — mažiausias tarpas tarp
+       dviejų dviejų skaitmenų etikečių. */
+    function labelEvery(step, max) {
+      const choices = max > 20 ? [5, 10, 20, 25] : [1, 5, 10];
+      for (const v of choices) if (step * v >= 24) return v;
+      return choices[choices.length - 1];
+    }
+
+    function draw() {
+      const r = range();
+      const box = Math.round(wrap.getBoundingClientRect().width || 0);
+      width = Math.max(240, Math.min(1000, box || 320));
+      const step = (width - pad * 2) / r.max;
+      const every = labelEvery(step, r.max);
+      const labelSize = r.max > 20 ? 13 : 15;
+
+      svg.setAttribute("viewBox", `0 0 ${width} ${H}`);
+      svg.setAttribute("aria-label", `Skaičių tiesė nuo 0 iki ${r.max}`);
+      svg.replaceChildren();
+
+      svg.appendChild(svgEl("line", {
+        x1: pad, y1: y, x2: width - pad, y2: y,
+        stroke: "var(--line)", "stroke-width": 5, "stroke-linecap": "round",
+      }));
+
+      for (let i = 0; i <= r.max; i += 1) {
+        const x = pad + i * step;
+        const major = i % every === 0;
+        svg.appendChild(svgEl("line", {
+          x1: x, y1: y - (major ? 8 : 4), x2: x, y2: y + (major ? 8 : 4),
+          stroke: "var(--ink-faint)", "stroke-opacity": major ? 1 : 0.45,
+          "stroke-width": major ? 2 : 1,
+        }));
+        if (!major) continue;
+        const label = svgEl("text", {
+          x, y: y + 27, "text-anchor": "middle", fill: "var(--ink-soft)",
+          "font-size": labelSize, "font-family": "system-ui", "font-weight": 700,
+        });
+        label.textContent = i;
+        svg.appendChild(label);
+      }
+
+      goalRing = svgEl("circle", {
+        r: 21, fill: "none", stroke: "var(--mint)", "stroke-width": 3, "stroke-dasharray": "5 5",
+      });
+      svg.appendChild(goalRing);
+
+      marker = svgEl("g", {});
+      marker.appendChild(svgEl("circle", { r: 17, fill: "var(--accent)" }));
+      num = svgEl("text", {
+        "text-anchor": "middle", y: 6, fill: "#fff", "font-size": 15,
+        "font-weight": 900, "font-family": "system-ui",
+      });
+      marker.appendChild(num);
+      svg.appendChild(marker);
+
+      paint();
+    }
 
     function paint() {
-      const x = pad + pos * step;
-      marker.setAttribute("transform", `translate(${x},${y - 34})`);
-      num.textContent = pos;
-      const gx = pad + targets[t] * step;
-      goalRing.setAttribute("cx", gx);
-      goalRing.setAttribute("cy", y - 34);
-      api.readout(`Tu esi ties ${pos}. Tikslas — ${targets[t]}.`);
+      const r = range();
+      const step = (width - pad * 2) / r.max;
+      const p = pos[active];
+      marker.setAttribute("transform", `translate(${pad + p * step},${y - 28})`);
+      num.textContent = p;
+
+      const goal = nextTarget();
+      if (goal === undefined) {
+        goalRing.style.display = "none";
+        api.readout(`Tu esi ties ${p}. Visi taikiniai pasiekti.`);
+      } else {
+        goalRing.style.display = "";
+        goalRing.setAttribute("cx", pad + goal * step);
+        goalRing.setAttribute("cy", y - 28);
+        api.readout(`Tu esi ties ${p}. Tikslas — ${goal}.`);
+      }
+    }
+
+    function afterReach(n) {
+      if (rangeDone(active)) {
+        if (allDone()) {
+          if (reported) return;
+          reported = true;
+          api.progress({ correct: true });
+          api.note(`Radai vietas abiejose tiesėse: ir iki ${ranges[0].max}, ir iki ${ranges[ranges.length - 1].max}.`);
+          api.speak("Visi taikiniai pasiekti!");
+          return;
+        }
+        const other = ranges.findIndex((x, i) => i !== active && !rangeDone(i));
+        api.note(`Šios tiesės taikiniai pasiekti. Spausk „${ranges[other].label}“ ir ieškok likusių taikinių.`);
+        return;
+      }
+      api.note(`Pasiekei ${n}. Kitas tikslas — ${nextTarget()}.`);
     }
 
     function move(d) {
-      pos = Math.max(0, Math.min(max, pos + d));
-      paint();
-      api.speak(String(pos), { rate: .95 });
-      if (pos === targets[t]) {
-        reached.add(targets[t]);
-        /* Tikslas pasiektas DABAR — visi taikiniai, o ne pirmas (§4). */
-        if (reached.size >= targets.length && !reported) {
-          reported = true;
-          api.progress({ correct: true });
-          api.note("Įveikei visus taikinius. Dabar grįžk iki nulio ir skaičiuok žingsnius.");
-          api.speak("Visi taikiniai pasiekti!");
-        } else {
-          api.note(`Puiku! ${targets[t]}. Kiek žingsnių liko iki ${max}?`);
-        }
-        t = Math.min(t + 1, targets.length - 1);
-        setTimeout(paint, 900);
+      const r = range();
+      const before = pos[active];
+      pos[active] = Math.max(0, Math.min(r.max, before + d));
+      if (pos[active] === before) {
+        api.note(d > 0 ? `Tiesė baigiasi ties ${r.max}.` : "Tiesė prasideda nuo 0.");
+        return;
       }
+      const hit = r.targets.includes(pos[active]) && !reached[active].has(pos[active]);
+      if (hit) reached[active].add(pos[active]);
+      paint();
+      api.speak(String(pos[active]), { rate: .95 });
+      if (hit) afterReach(pos[active]);
     }
 
     controls.querySelector("#sl-plus").addEventListener("click", () => move(1));
     controls.querySelector("#sl-minus").addEventListener("click", () => move(-1));
-    controls.querySelector("#sl-reset").addEventListener("click", () => { pos = 0; paint(); api.note("Pradėk nuo nulio."); });
+    tenUp.addEventListener("click", () => move(10));
+    tenDown.addEventListener("click", () => move(-10));
+    controls.querySelector("#sl-reset").addEventListener("click", () => { pos[active] = 0; paint(); api.note("Pradėk nuo nulio."); });
 
-    paint();
-    return null;
+    syncTen();
+    draw();
+
+    /* Plotis keičiasi sukant telefoną ar didinant tekstą: be perpiešimo
+       viewBox nebesutaptų su pločiu ir etiketės vėl taptų mažos (LL-06). */
+    let observed = 0;
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
+      const w = Math.round(wrap.getBoundingClientRect().width || 0);
+      if (!w || Math.abs(w - observed) < 2) return;
+      observed = w;
+      draw();
+    }) : null;
+    if (ro) ro.observe(wrap);
+    return () => { if (ro) ro.disconnect(); };
   },
 };
 

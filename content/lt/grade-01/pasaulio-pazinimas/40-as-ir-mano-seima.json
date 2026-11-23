@@ -1,0 +1,180 @@
+{
+  "id": "40-as-ir-mano-seima",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Kas kam giminė?",
+  "subtitle": "Močiutė atpažįstama iš ryšio, o ne iš žilų plaukų",
+  "minutes": 9,
+  "outcomes": [
+    "Nusakau, kas kam yra giminė: vaikas, mama, močiutė.",
+    "Sudarau trijų kartų grandinę iš tėvų ryšių.",
+    "Paaiškinu, kodėl žilaplaukė kaimynė dar nėra močiutė."
+  ],
+  "concept": {
+    "title": "Giminystės grandinė",
+    "big_idea": "Giminę nustato tėvų ryšys, o ne išvaizda. Rūta yra Ievos mama. Ieva yra Adomo mama. Todėl Rūta yra Adomo močiutė. Kaimynė Ona žilaplaukė, bet jos vaikai neturi vaikų. Todėl ji ne močiutė.",
+    "steps": [
+      "Paspausk žmogų ir perskaityk, kas jis Adomui.",
+      "Surask Adomo mamą, paskui močiutę.",
+      "Palygink Rūtą ir Oną: abi žilaplaukės."
+    ],
+    "example": "Adomas, Ieva ir Rūta yra viena giminė. Ona gyvena name greta, bet ji neturi anūko."
+  },
+  "sim": {
+    "component": "gimines-grandine",
+    "config": {
+      "child": "adomas",
+      "people": [
+        {
+          "id": "adomas",
+          "label": "Adomas",
+          "emoji": "👦",
+          "note": ""
+        },
+        {
+          "id": "ieva",
+          "label": "Ieva",
+          "emoji": "👩",
+          "note": ""
+        },
+        {
+          "id": "ruta",
+          "label": "Rūta",
+          "emoji": "👵",
+          "note": ""
+        },
+        {
+          "id": "ona",
+          "label": "Ona",
+          "emoji": "🧓",
+          "note": "kaimynė"
+        }
+      ],
+      "links": [
+        {
+          "parent": "ieva",
+          "child": "adomas"
+        },
+        {
+          "parent": "ruta",
+          "child": "ieva"
+        }
+      ],
+      "goals": [
+        {
+          "id": "mama",
+          "steps": 1,
+          "answer": "ieva"
+        },
+        {
+          "id": "mociute",
+          "steps": 2,
+          "answer": "ruta"
+        }
+      ],
+      "labels": {
+        "again": "Iš naujo"
+      },
+      "sentences": {
+        "fact": "Adomas gyvena su mama Ieva.",
+        "asks": {
+          "mama": "Surask Adomo mamą.",
+          "mociute": "Surask Adomo močiutę."
+        },
+        "cells": {
+          "mama-adomas": "Adomas yra vaikas. Mama yra už jį vyresnė.",
+          "mama-ieva": "Taip. Ieva yra Adomo mama.",
+          "mama-ruta": "Rūta yra Ievos mama. Ji ne Adomo mama.",
+          "mama-ona": "Ona yra kaimynė. Ji ne Adomo mama.",
+          "mociute-adomas": "Adomas yra anūkas, o ne močiutė.",
+          "mociute-ieva": "Ieva yra Adomo mama. Močiutė yra aukščiau už mamą.",
+          "mociute-ruta": "Taip. Rūta yra Ievos mama, o Ieva — Adomo mama.",
+          "mociute-ona": "Ona žilaplaukė, bet jos vaikai neturi vaikų. Ji ne močiutė."
+        },
+        "relation": {
+          "adomas": "Adomas yra vaikas. Virš jo — mama Ieva.",
+          "ieva": "Ieva yra Adomo mama, o Rūtos dukra.",
+          "ruta": "Rūta yra Ievos mama ir Adomo močiutė.",
+          "ona": "Ona yra kaimynė. Ji ne šios giminės dalis."
+        },
+        "done": "Radai abu.",
+        "doneNote": "Rūta yra močiutė, nes ji yra Ievos mama.",
+        "next": "Gerai. Dabar ieškok kito.",
+        "tryAgain": "Pažiūrėk į ryšius: kas kam mama.",
+        "rule": "Močiutė atpažįstama iš ryšio, o ne iš plaukų."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Rūta yra Ievos mama, o Ieva — Adomo mama. Kas yra Rūta Adomui?",
+      "options": [
+        "Močiutė",
+        "Mama",
+        "Sesuo"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, kiek ryšių reikia pereiti nuo Adomo iki Rūtos.",
+      "why": "Rūta yra mamos mama. Du ryšiai veda iki močiutės."
+    },
+    {
+      "q": "Kaimynė Ona žilaplaukė, bet jos vaikai neturi vaikų. Ar Ona yra Adomo močiutė?",
+      "options": [
+        "Taip, nes ji žilaplaukė",
+        "Ne, ji neturi anūko",
+        "Taip, nes ji gyvena greta"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk ne į plaukus, o į ryšį su vaiku.",
+      "why": "Močiutė turi anūką, o ne atrodo sena."
+    },
+    {
+      "q": "Rūta sako: „Esu ir mama, ir močiutė.“ Kodėl taip?",
+      "options": [
+        "Ji yra dvi moterys",
+        "Ji turi dvi mamas",
+        "Ji turi dukrą ir anūką"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kam Rūta mama, o kam — močiutė.",
+      "why": "Tas pats žmogus turi du vardus. Ievai ji mama, Adomui — močiutė."
+    },
+    {
+      "q": "Ona turi sūnų Joną, bet Jonas neturi vaikų. Ar Ona gali būti močiutė?",
+      "options": [
+        "Ne, kol Jonas neturi vaikų",
+        "Taip, ji jau sena",
+        "Taip, ji turi sūnų"
+      ],
+      "answer": 0,
+      "hint": "Močiutė atsiranda tada, kai gimsta anūkas.",
+      "why": "Kol nėra anūko, nėra ir močiutės.",
+      "optional": true
+    }
+  ],
+  "reflect": "Paaiškink savais žodžiais, kodėl Ona ne močiutė, nors ji žilaplaukė.",
+  "teacher": {
+    "goal": "Sąvoką „giminystė“ sieti su tėvų ryšiu, o ne su amžiumi ar išvaizda. Modelio kintamasis vienas — kurį žmogų vaikas paspaudžia; ryšiai nuo to nesikeičia. Dvi žilaplaukės moterys duoda skirtingą atsakymą: Rūta atsiduria grandinėje Rūta → Ieva → Adomas, o Ona lieka už jos, nes jos vaikai neturi vaikų. Sąmoninga modelio riba: rodomos trys kartos ir vienas tėvų kelias, todėl įvaikinimas, du namai ir kitos šeimų formos nevaizduojami — tai 6–7 m. amžiaus riba, kurią pasakome čia, o ne paliekame tylia išimtimi.",
+    "prompt": "Paklausk: „Kodėl Rūta yra močiutė, o Ona — ne? Kuo jos skiriasi, jei abi žilaplaukės?“",
+    "offline": "Ant keturių kortelių užrašykite išgalvotus vardus: vaikas, mama, močiutė ir kaimynė. Vaikai sustato tris korteles į vieną stulpelį, o kaimynę padeda atskirai. Klauskite: „Kas kam mama?“ Tada vieną kortelę apverskite ir paprašykite vaikų atkurti eilę. Naudokite išgalvotus vardus, o ne savo šeimos narių — taip neklausiate asmens duomenų ir kiekvienas vaikas gali dalyvauti lygiai.",
+    "misconceptions": [
+      "„Močiutė yra ta, kuri atrodo sena.“ Ona žilaplaukė, bet jos vaikai neturi vaikų; Rūta yra močiutė ne dėl plaukų, o todėl, kad yra Ievos mama.",
+      "„Kiekviena vyresnė moteris giminėje yra močiutė.“ Aukštyn veda vienas kelias: Adomas → mama Ieva → jos mama Rūta. Šalimais stovinti Ona tame kelyje nėra.",
+      "„Žmogus giminėje turi vieną vardą.“ Ieva yra mama Adomui ir dukra Rūtai; Rūta yra mama Ievai ir močiutė Adomui.",
+      "„Kas rūpinasi vaiku, tas jau giminė.“ Ona gali padėti ir rūpintis, bet giminystę nustato tėvų ryšys; rūpinimasis yra atskiras ir taip pat svarbus dalykas."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Visuomeninis ugdymas, C.1.2: „Paaiškina, kas yra karta… Sudaro giminės medį (vaikai, tėvai, seneliai), nusako šeimos narių giminystės ryšius“ (sources/pradinio-bp-rekomendacijos-2024.txt:39663).",
+    "Ten pat, slenkstinis 1–2 klasių lygis: „Mokytojui padedant sudaro giminės medį (vaikai, tėvai), nurodo tėvų, senelių vardus, įvardija giminystės ryšius“ (sources/pradinio-bp-rekomendacijos-2024.txt:40013–40017). Modelyje imamas būtent šis lygis: trys kartos ir vienas tėvų kelias.",
+    "Landau, B. (1982). Will the real grandmother please stand up? The psychological reality of dual meaning representations. Journal of Psycholinguistic Research, 11, 47–62. https://doi.org/10.1007/BF01067501 — 5 m. vaikai žodį „močiutė“ taiko pagal amžiaus požymį, o ne pagal kriterijų „turi anūką“.",
+    "Spokes, A. C., & Spelke, E. S. (2016). Children's expectations and understanding of kinship as a social category. Frontiers in Psychology, 7, 440. https://doi.org/10.3389/fpsyg.2016.00440 — giminystės supratimas formuojasi palaipsniui, todėl modelis pradedamas nuo vieno aiškaus kriterijaus.",
+    "NŠA, ten pat — projektas „Aš ir mano šeimos istorija“ (pokalbis su tėvais ir seneliais) (sources/pradinio-bp-rekomendacijos-2024.txt:14948–14952). Jis lieka veiklai be ekrano: platforma apie tikrą vaiko šeimą neklausia."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena sąvoka: giminystę nustato tėvų ryšys, o ne išvaizda. Modelis turi vieną kintamąjį (kurį žmogų vaikas paspaudžia) ir keturis žmones.",
+    "2 žingsnis — vertinamas perkėlimas: ta pati sąvoka klausiama apie Onos sūnų Joną, apie Rūtą, kuri yra ir mama, ir močiutė, bei apie dvi žilaplaukes moteris vienoje scenoje.",
+    "3 žingsnis — pagalba laiku: kiekvienas paspaudimas duoda paaiškinimą, kuris nukreipia į ryšį, o ne į atsakymą; nėra laikmačio, o ketvirta užduotis — praplėtimas.",
+    "P2 / T1.2 / T3.1 / T5.5: pirma paspaudimas ir pasekmė, paskui paaiškinimas; būsena pasakoma žodžiu ir grandine, ne vien spalva; 64 px taikiniai, klaviatūra, garso išjungimas."
+  ]
+}

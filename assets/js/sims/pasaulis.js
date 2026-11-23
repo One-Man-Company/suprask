@@ -5753,6 +5753,221 @@ const zmoniuIvairove = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 19. Giminės grandinė — kas kam giminė                               */
+/* ------------------------------------------------------------------ */
+/* Klaidinga nuostata: „močiutė yra ta, kuri atrodo sena“. Modelio
+   kintamasis vienas — kurį žmogų vaikas paspaudžia; ryšiai (kas kam
+   mama) nuo paspaudimo nesikeičia. Todėl dvi žilaplaukės moterys
+   elgiasi skirtingai: Rūta atsiduria grandinėje Rūta → Ieva → Adomas,
+   o kaimynė Ona lieka už jos, nes jos vaikai neturi vaikų.
+   Grandinė skaičiuojama iš `links`, o ne įrašyta tekstu: jei modulio
+   ryšiai pasikeistų, pasikeistų ir rodomas kelias (LL-34). Tikslai
+   tikrinami su tais pačiais ryšiais, todėl atsakymas negali „atsilikti“
+   nuo modelio (LL-17).
+   Sąmoninga riba: trys kartos ir vienas tėvų kelias. Įvaikinimas, du
+   namai ir kitos šeimų formos nevaizduojami — tai 6–7 m. modelio riba,
+   pasakyta mokytojo bloke, o ne tyli išimtis. */
+const giminesGrandine = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const people = (Array.isArray(config.people) ? config.people : []).filter(Boolean);
+    const links = (Array.isArray(config.links) ? config.links : []).filter(Boolean);
+    const goals = (Array.isArray(config.goals) ? config.goals : []).filter(Boolean);
+    const childId = config.child;
+    const cells = S.cells && typeof S.cells === "object" ? S.cells : {};
+    const relation = S.relation && typeof S.relation === "object" ? S.relation : {};
+    const asks = S.asks && typeof S.asks === "object" ? S.asks : {};
+
+    const esc = (t) => String(t).replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai ------------------------------------------- */
+    const problems = [];
+    const ids = people.map((p) => p && p.id);
+    if (people.length < 3) problems.push("reikia bent trijų žmonių");
+    if (new Set(ids).size !== ids.length) problems.push("pasikartojantis žmogaus id");
+    people.forEach((p) => {
+      if (!p.id || !p.label || !p.emoji) problems.push(`žmogus „${(p && p.id) || "?"}“ be id/label/emoji`);
+    });
+
+    const parentOf = new Map();
+    links.forEach((l) => {
+      if (!l || !ids.includes(l.parent) || !ids.includes(l.child)) {
+        problems.push("ryšys rodo į nežinomą žmogų");
+        return;
+      }
+      if (parentOf.has(l.child)) {
+        problems.push(`„${l.child}“ turi dvi mamas — modelis remiasi vienu keliu`);
+      }
+      parentOf.set(l.child, l.parent);
+    });
+    if (!ids.includes(childId)) problems.push("nėra vaiko, nuo kurio skaičiuojama grandinė");
+
+    const ancestor = (steps) => {
+      let cur = childId;
+      for (let i = 0; i < steps; i += 1) {
+        cur = parentOf.get(cur);
+        if (!cur) return null;
+      }
+      return cur || null;
+    };
+
+    if (goals.length < 2) problems.push("reikia bent dviejų tikslų");
+    goals.forEach((g) => {
+      if (!g || !g.id || !Number.isInteger(g.steps) || g.steps < 1) {
+        problems.push("tikslo be id arba steps");
+        return;
+      }
+      if (!asks[g.id]) problems.push(`trūksta klausimo „${g.id}“ (sentences.asks)`);
+      if (!ids.includes(g.answer)) problems.push(`tikslo „${g.id}“ atsakymas ne žmogus`);
+      const want = ancestor(g.steps);
+      if (!want) problems.push(`tikslas „${g.id}“ prašo ${g.steps} ryšių, bet grandinė trumpesnė`);
+      else if (want !== g.answer) problems.push(`tikslo „${g.id}“ atsakymas nesutampa su ryšiais (laukta „${want}“)`);
+      people.forEach((p) => {
+        const key = `${g.id}-${p.id}`;
+        if (typeof cells[key] !== "string" || !cells[key].trim()) {
+          problems.push(`trūksta sakinio „${key}“ (sentences.cells)`);
+        }
+      });
+    });
+    people.forEach((p) => {
+      if (typeof relation[p.id] !== "string" || !relation[p.id].trim()) {
+        problems.push(`trūksta ryšio sakinio „${p.id}“ (sentences.relation)`);
+      }
+    });
+    ["fact", "done", "doneNote", "next", "tryAgain", "rule"]
+      .forEach((k) => { if (!S[k]) problems.push(`trūksta sakinio „${k}“`); });
+    if (!L.again) problems.push("trūksta užrašo „again“");
+
+    if (problems.length) {
+      console.error(`gimines-grandine: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="error-box">Giminės ryšiai nesuderinti.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const personOf = (id) => people.find((p) => p.id === id) || null;
+
+    /* Grandinė nuo vaiko aukštyn: [Adomas, Ieva, Rūta]. Rodyti reikia
+       atvirkščiai — didžiausia karta viršuje, vaikas apačioje. */
+    const chainIds = [];
+    for (let cur = childId; cur; cur = parentOf.get(cur)) chainIds.push(cur);
+    const familyTopDown = chainIds.slice().reverse();
+    const outsiders = people.filter((p) => !chainIds.includes(p.id));
+
+    const card = (p) => `<button class="btn secondary" type="button" data-person="${esc(p.id)}"
+        aria-label="${esc(p.label)} — pasirinkti"
+        style="min-width:0;min-height:64px;height:auto;padding:.35rem .3rem;display:grid;
+        justify-items:center;gap:.1rem;line-height:1.15">
+        <span aria-hidden="true" style="font-size:1.9rem;line-height:1.05">${esc(p.emoji)}</span>
+        <span style="max-width:100%;overflow-wrap:anywhere;font-size:.9rem;font-weight:800">${esc(p.label)}</span>
+      </button>`;
+
+    /* Vertikali juosta, o ne rodyklė: ryšio kryptis priklauso nuo to,
+       kas kam mama, ir modelis jos iš anksto nepasako. */
+    const bar = '<span aria-hidden="true" style="justify-self:center;font-size:1rem;'
+      + 'line-height:.9;color:var(--ink-soft)">│</span>';
+
+    stage.innerHTML = `
+      <div style="width:100%;min-width:0;max-width:min(30rem,100%);margin:0 auto">
+        <p id="gg-fact" class="sim-note" style="margin:0 0 .45rem;text-align:center;overflow-wrap:anywhere"></p>
+        <p id="gg-ask" style="margin:0 0 .5rem;text-align:center;font-family:var(--font-head);
+            font-size:1rem;font-weight:800;line-height:1.3;overflow-wrap:anywhere"></p>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);
+                    gap:.5rem;align-items:start;min-width:0">
+          <div id="gg-family" role="group" aria-label="Giminė" style="display:grid;gap:.1rem;min-width:0"></div>
+          <div id="gg-others" role="group" aria-label="Kaimynai" style="display:grid;gap:.2rem;min-width:0"></div>
+        </div>
+        <p id="gg-chain" style="margin:.55rem 0 0;text-align:center;font-weight:800;font-size:.95rem;
+            line-height:1.3;min-height:1.3em;overflow-wrap:anywhere"></p>
+        <p id="gg-result" class="sim-note" style="margin:.2rem 0 0;text-align:center;
+            min-height:2.9em;overflow-wrap:anywhere"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.4rem;width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <button class="btn ghost" type="button" id="gg-reset"
+                style="min-height:48px;font-size:.95rem">${esc(L.again)}</button>
+      </div>`;
+
+    const factEl = stage.querySelector("#gg-fact");
+    const askEl = stage.querySelector("#gg-ask");
+    const chainEl = stage.querySelector("#gg-chain");
+    const resultEl = stage.querySelector("#gg-result");
+    stage.querySelector("#gg-family").innerHTML = familyTopDown
+      .map((id) => card(personOf(id))).join(bar);
+    stage.querySelector("#gg-others").innerHTML = outsiders.map((p) => `${card(p)}${p.note
+      ? `<p class="sim-note" style="margin:0;text-align:center;font-size:.82rem;line-height:1.2">${esc(p.note)}</p>`
+      : ""}`).join("");
+    const personBtns = [...stage.querySelectorAll("button[data-person]")];
+
+    let goalIdx = 0;
+    let reported = false;   // api.progress — vieną kartą, įveikus abu tikslus (LL-17, LL-29)
+
+    function chainText(id) {
+      const i = chainIds.indexOf(id);
+      if (i < 0) return "";
+      return chainIds.slice(0, i + 1).reverse().map((x) => personOf(x).label).join(" → ");
+    }
+
+    function paintAsk() {
+      const g = goalIdx < goals.length ? goals[goalIdx] : null;
+      askEl.textContent = g ? asks[g.id] : S.done;
+    }
+
+    factEl.textContent = S.fact;
+    // Pastaba yra už scenos ribų — be šios eilutės po perkrovimo liktų
+    // ankstesnio bandymo sakinys (LL-16).
+    api.note("");
+    paintAsk();
+
+    personBtns.forEach((b) => {
+      b.addEventListener("click", () => {
+        const p = personOf(b.dataset.person);
+        if (!p) return;
+        const g = goalIdx < goals.length ? goals[goalIdx] : null;
+        const sentence = g ? cells[`${g.id}-${p.id}`] : relation[p.id];
+        if (!sentence) return;
+
+        personBtns.forEach((x) => { x.style.outline = ""; x.style.outlineOffset = ""; });
+        b.style.outline = "3px solid var(--ink)";
+        b.style.outlineOffset = "2px";
+
+        chainEl.textContent = chainText(p.id);
+        resultEl.textContent = sentence;
+        api.readout(sentence);
+        api.speak(sentence);
+
+        if (g && g.answer === p.id) {
+          goalIdx += 1;
+          if (goalIdx >= goals.length) {
+            if (!reported) { reported = true; api.progress({ correct: true }); }
+            paintAsk();
+            api.note(`${S.doneNote} ${S.rule}`.trim());
+          } else {
+            paintAsk();
+            api.note(S.next);
+          }
+        } else {
+          api.note(g ? S.tryAgain : `${S.doneNote} ${S.rule}`.trim());
+        }
+      });
+    });
+
+    controls.querySelector("#gg-reset").addEventListener("click", () => {
+      stage.innerHTML = "";
+      controls.innerHTML = "";
+      giminesGrandine.mount({ stage, controls, api, config });
+    });
+
+    api.readout(`${S.fact} ${asks[goals[0].id]}`.trim());
+    api.speak(asks[goals[0].id]);
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "dienos-juosta": dienosJuosta,
   "metu-laikai": metuLaikai,
@@ -5771,5 +5986,6 @@ export const SIMS = {
   "traumos-apsauga": traumosApsauga,
   "bendruomenes": bendruomenes,
   "zmoniu-ivairove": zmoniuIvairove,
+  "gimines-grandine": giminesGrandine,
   "stebejimo-zurnalas": stebejimoZurnalas,
 };

@@ -430,6 +430,14 @@
      "file": "grade-01/pasaulio-pazinimas/33-stebejimas.json",
      "minutes": 9,
      "sim": "stebejimo-zurnalas"
+    },
+    {
+     "id": "40-as-ir-mano-seima",
+     "title": "Kas kam giminė?",
+     "subtitle": "Močiutė atpažįstama iš ryšio, o ne iš žilų plaukų",
+     "file": "grade-01/pasaulio-pazinimas/40-as-ir-mano-seima.json",
+     "minutes": 9,
+     "sim": "gimines-grandine"
     }
    ]
   },

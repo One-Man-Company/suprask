@@ -6279,7 +6279,274 @@ const kasLiekaPievoje = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 21. Energijos šaltiniai — visiems reikia savo šaltinio              */
+/* ------------------------------------------------------------------ */
+/* Vienas veiksmas atima energiją visiems trims iš karto, o pasekmės    */
+/* trys: augalas palinksta, vaiko kamuolys nukrenta, mašinėlė sustoja.  */
+/* Būtent tai, o ne paaiškinimas, paneigia nuostatą „energijos reikia   */
+/* tik tiems, kas juda“: augalas vietoje nejudėjo, o vis tiek sustojo.   */
+/* Šaltiniai grąžinami po vieną, todėl kiekvienas dalyvis atgyja būtent  */
+/* savo šaltinio dėka, o ne „iš naujo įjungus viską“. Visi užrašai —    */
+/* iš `config`, kad ekranas ir balsas neprasilenktų (LL-33).            */
+const energijosSaltiniai = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const items = (Array.isArray(config.items) ? config.items : []).filter(Boolean);
+    const esc = (t) => String(t).replace(/[&<>\"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai: nesuderinta konfigūracija pasakoma žodžiais,
+       o ne tyliai pakeičiama (LL-33). --- */
+    const ICONS = ["augalas", "vaikas", "masinele"];
+    const problems = [];
+    if (items.length !== 3) problems.push("reikia trijų dalyvių");
+    const seen = new Set();
+    items.forEach((it) => {
+      if (!it.id || !it.label) { problems.push("dalyvis be id ar užrašo"); return; }
+      if (seen.has(it.id)) problems.push(`dalyvis „${it.id}“ kartojasi`);
+      seen.add(it.id);
+      if (!ICONS.includes(it.icon)) problems.push(`dalyvis „${it.id}“ turi nežinomą piešinį „${it.icon}“`);
+      ["sourceLabel", "on", "off", "restoreLabel"].forEach((k) => {
+        if (typeof it[k] !== "string" || !it[k].trim()) problems.push(`dalyvis „${it.id}“ neturi „${k}“`);
+      });
+      if (!it.sentences || typeof it.sentences.on !== "string" || !it.sentences.on.trim()) {
+        problems.push(`dalyvis „${it.id}“ neturi grąžinimo sakinio`);
+      }
+    });
+    if (items.length === 3 && new Set(items.map((it) => it.icon)).size !== 3) {
+      problems.push("trys dalyviai turi turėti tris skirtingus piešinius");
+    }
+    ["ask", "cut", "note", "restoreAsk", "done", "again"].forEach((k) => {
+      if (!S[k]) problems.push(`sakinio „${k}“ nėra`);
+    });
+    if (problems.length) {
+      console.error(`energijos-saltiniai: ${problems.join("; ")}`);
+      stage.innerHTML = '<p class="error-box">Scena nesuderinta su dalyviais.</p>';
+      controls.innerHTML = "";
+      return null;
+    }
+
+    const GROUND = 238;
+    const SRC_Y = 58;
+    const XS = [64, 180, 296];
+    const stations = items.map((it, i) => ({ it, x: XS[i] }));
+
+    const state = { cut: false, back: new Set(), reported: false, msg: null };
+    const restored = (it) => state.back.has(it.id);
+    const active = (st) => !state.cut || restored(st.it);
+    const missing = () => stations.filter((st) => state.cut && !restored(st.it));
+
+    /* Šaltinio ženklas: saulė, obuolys, baterija. Atimtas šaltinis ne tik
+       blankesnis — jis perbrauktas, todėl spalva lieka ne vienintelė
+       informacijos nešėja (prieinamumas). */
+    function srcGlyph(st) {
+      const on = active(st);
+      const inner = st.it.icon === "augalas"
+        ? art.sun(st.x, SRC_Y, 8, "es", on ? 0.95 : 0.18)
+        : st.it.icon === "vaikas"
+          ? art.fruit(st.x, SRC_Y, 0.95, 0.9)
+          : art.pictogram("baterija", st.x - 18, SRC_Y - 18, 0.9);
+      const cross = on ? "" : `<line x1="${st.x - 14}" y1="${SRC_Y - 14}" x2="${st.x + 14}" y2="${SRC_Y + 14}"
+        stroke="#b0413e" stroke-width="3" stroke-linecap="round"/>`;
+      return `<g${on ? "" : ' opacity=".5"'}>${inner}</g>${cross}`;
+    }
+
+    /* Dalyvio būsena. Augalas: stiebas išsitiesia arba nusvyra, žiedas
+       išnyksta. Vaikas: kamuolys skrieja arba guli prie kojų. Mašinėlė:
+       judėjimo brūkšniai arba jų nėra. */
+    function subject(st) {
+      const on = active(st);
+      if (st.it.icon === "augalas") {
+        return `${art.pot(st.x - 18, 206, 36, 30, "es-pot")}
+          ${art.stem(st.x, 204, on ? 40 : 30, 4, on ? "#4c9a45" : "#8f9a6a", !on)}
+          ${art.leaf(st.x, on ? 188 : 192, 11, -1, !on, on ? "#59b95a" : "#a9b07a")}
+          ${art.leaf(st.x, on ? 178 : 184, 10, 1, !on, on ? "#4c9a45" : "#9aa86a")}
+          ${on ? art.flower(st.x + 13, 166, 0.55) : ""}`;
+      }
+      if (st.it.icon === "vaikas") {
+        const ball = on
+          ? `<path d="M${st.x + 6} 196 Q${st.x + 16} 168 ${st.x + 30} 178" fill="none"
+                   stroke="#8a8578" stroke-width="1.6" stroke-dasharray="3 4"/>
+             ${art.ball(st.x + 32, 178, 7, "#f2cf94", "#a9793f")}`
+          : art.ball(st.x + 26, 231, 7, "#f2cf94", "#a9793f");
+        return `${art.kid(st.x, GROUND, 0.95)}${ball}`;
+      }
+      const streaks = on
+        ? `<g stroke="#8fa07a" stroke-width="3" stroke-linecap="round" opacity=".7">
+             <line x1="${st.x - 36}" y1="212" x2="${st.x - 22}" y2="212"/>
+             <line x1="${st.x - 32}" y1="221" x2="${st.x - 17}" y2="221"/>
+           </g>`
+        : "";
+      return `${streaks}${art.pictogram("masinele", st.x - 20, 204, 1.0)}`;
+    }
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <p id="es-line" style="margin:0 0 .35rem;min-width:0;text-align:center;font-weight:800;
+           font-size:.9rem;line-height:1.25;overflow-wrap:anywhere;color:var(--ink-soft)"></p>
+        <svg id="es-scene" viewBox="0 0 360 272" width="100%"
+             style="display:block;max-width:360px;height:auto;margin:0 auto" role="img"></svg>
+        <p id="es-state" style="margin:.4rem 0 0;min-width:0;text-align:center;font-weight:800;
+           font-size:.95rem;line-height:1.25;overflow-wrap:anywhere"></p>
+        <p id="es-fate" class="sim-note" style="margin:.2rem 0 0;font-size:.82rem;line-height:1.3"></p>
+        <p style="margin:.1rem 0 0;text-align:center;font-size:.78rem;line-height:1.3;color:var(--ink-soft)">
+          Scena rodo tris dalyvius, ne visą gamtą.
+        </p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.55rem;width:100%;max-width:34rem;margin:0 auto;min-width:0">
+        <p id="es-ask" style="margin:0;min-width:0;font-size:.95rem;line-height:1.25;font-weight:800;
+           text-align:center;overflow-wrap:anywhere"></p>
+        <button type="button" class="btn" id="es-cut"
+                style="min-height:56px;font-size:.95rem;line-height:1.2">Atimk energiją</button>
+        <div id="es-restore" role="group" aria-label="Grąžink šaltinius"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));
+             gap:.4rem;min-width:0"></div>
+        <button type="button" class="btn ghost" id="es-reset"
+                style="min-height:48px;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
+    const scene = stage.querySelector("#es-scene");
+    const line = stage.querySelector("#es-line");
+    const stateEl = stage.querySelector("#es-state");
+    const fateEl = stage.querySelector("#es-fate");
+    const askEl = controls.querySelector("#es-ask");
+    const cutBtn = controls.querySelector("#es-cut");
+    const restoreGroup = controls.querySelector("#es-restore");
+    const resetBtn = controls.querySelector("#es-reset");
+
+    function sceneMarkup() {
+      return `${art.defs("es")}
+        ${art.cloud(24, 104, 0.5, 0.85)}
+        ${art.cloud(336, 112, 0.45, 0.8)}
+        ${art.hills(360, 186)}
+        ${art.grass(28, 244, 0.9)}${art.grass(140, 246, 0.8)}${art.grass(250, 245, 0.85)}
+        ${stations.map((st) => `
+          <text x="${st.x}" y="32" text-anchor="middle" font-family="system-ui, sans-serif"
+                font-size="12" font-weight="700" fill="#5f574d">${esc(st.it.sourceLabel)}</text>
+          ${srcGlyph(st)}
+          ${active(st) ? art.viewArrow(st.x, 84, st.x, 148) : ""}
+          ${subject(st)}
+          <text x="${st.x}" y="262" text-anchor="middle" font-family="system-ui, sans-serif"
+                font-size="13" font-weight="800"
+                fill="${active(st) ? "#2f5f3a" : "#8a4a3a"}">${esc(active(st) ? st.it.on : st.it.off)}</text>`).join("")}`;
+    }
+
+    function sceneLabel() {
+      return state.cut
+        ? "Pievoje augalas vazone, vaikas su kamuoliu ir žaislinė mašinėlė. Visiems trims atimtas energijos šaltinis."
+        : "Pievoje augalas vazone, vaikas su kamuoliu ir žaislinė mašinėlė. Kiekvienas turi savo šaltinį: saulė, maistas, baterija.";
+    }
+
+    function stateLine() {
+      if (!state.cut) {
+        return `Šaltinis duotas visiems trims: ${stations.map((st) => st.it.sourceLabel.toLowerCase()).join(", ")}.`;
+      }
+      const miss = missing().map((st) => st.it.label.toLowerCase());
+      return miss.length ? `Be šaltinio liko: ${miss.join(", ")}.` : S.done;
+    }
+
+    function render(focusSel) {
+      scene.innerHTML = sceneMarkup();
+      scene.setAttribute("aria-label", sceneLabel());
+
+      line.textContent = state.msg ? state.msg.readout : "";
+      stateEl.textContent = stateLine();
+      fateEl.textContent = state.msg ? (state.msg.note || "") : "";
+
+      askEl.textContent = !state.cut ? S.ask : (missing().length ? S.restoreAsk : S.done);
+
+      /* Atimtas šaltinis — pradinis veiksmas nebegalimas, o jo vieta
+         užima grąžinimas: nebeaktyvus valdiklis lieka tik tada, kai jį
+         paaiškina sąlyga (LL-04). `hidden` vienas nepakanka: `.btn` CSS
+         nustato `display`, todėl elementas liktų matomas ir neveiktų. */
+      cutBtn.hidden = state.cut;
+      cutBtn.style.display = state.cut ? "none" : "";
+
+      restoreGroup.innerHTML = state.cut ? missing().map((st) => `<button type="button"
+        class="btn secondary" data-restore="${esc(st.it.id)}" aria-label="${esc(st.it.restoreLabel)}"
+        style="min-width:0;min-height:56px;height:auto;padding:.35rem .3rem;font-size:.92rem;
+        line-height:1.15;overflow-wrap:anywhere">${esc(st.it.restoreLabel)}</button>`).join("") : "";
+
+      api.readout(state.msg ? state.msg.readout : askEl.textContent);
+      api.note(state.msg ? (state.msg.note || "") : "");
+
+      if (focusSel) {
+        const el = controls.querySelector(focusSel);
+        const fallback = controls.querySelector(missing().length ? "[data-restore]" : "#es-reset");
+        const target = el && !el.disabled && !el.hidden ? el : fallback;
+        if (target) target.focus();
+      }
+    }
+
+    function cut() {
+      if (state.cut) return;
+      state.cut = true;
+      state.back.clear();
+      state.msg = { readout: S.cut, note: S.note };
+      api.speak(S.cut);
+      render("[data-restore]");
+    }
+
+    function restore(id) {
+      const st = stations.find((x) => x.it.id === id);
+      if (!st || !state.cut || restored(st.it)) return;
+      state.back.add(id);
+      const said = st.it.sentences.on;
+      state.msg = { readout: said, note: missing().length ? S.restoreAsk : "" };
+      api.speak(said);
+      if (missing().length === 0) {
+        state.msg = { readout: S.done, note: S.note };
+        if (!state.reported) {
+          state.reported = true;
+          api.progress({ correct: true });
+        }
+        api.speak(S.done);
+        render("#es-reset");
+        return;
+      }
+      render("[data-restore]");
+    }
+
+    function reset() {
+      state.cut = false;
+      state.back.clear();
+      state.msg = { readout: S.again, note: S.ask };
+      api.speak(S.again);
+      render("#es-cut");
+    }
+
+    controls.addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b || b.disabled) return;
+      if (b.dataset.restore) { restore(b.dataset.restore); return; }
+      if (b.id === "es-cut") cut();
+      else if (b.id === "es-reset") reset();
+    });
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const group = e.target.closest("#es-restore");
+      if (!group) return;
+      const btns = [...group.querySelectorAll("button")].filter((b) => !b.disabled);
+      if (btns.length < 2) return;
+      const idx = btns.indexOf(document.activeElement);
+      if (idx < 0) return;
+      e.preventDefault();
+      const to = (idx + (e.key === "ArrowRight" ? 1 : btns.length - 1)) % btns.length;
+      btns[to].focus();
+    });
+
+    render();
+    return null;
+  },
+};
+
 export const SIMS = {
+  "energijos-saltiniai": energijosSaltiniai,
   "dienos-juosta": dienosJuosta,
   "metu-laikai": metuLaikai,
   "augalo-gyvenimas": augaloGyvenimas,

@@ -448,6 +448,14 @@
      "sim": "zmoniu-ivairove"
     },
     {
+     "id": "37-energijos-reikia-visiems",
+     "title": "Kiekvienas turi savo energijos šaltinį",
+     "subtitle": "Saulė augalui, maistas vaikui, baterija mašinėlei",
+     "file": "grade-01/pasaulio-pazinimas/37-energijos-reikia-visiems.json",
+     "minutes": 9,
+     "sim": "energijos-saltiniai"
+    },
+    {
      "id": "33-stebejimas",
      "title": "Ką pastebėjau kieme?",
      "subtitle": "Stebėjimas — tai įrašai, kuriuos gali palyginti",

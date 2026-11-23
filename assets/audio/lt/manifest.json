@@ -699,6 +699,10 @@
   "n": "n/2ea09df3be307a0a-70965cd5.mp3",
   "s": "s/2ea09df3be307a0a-9f0f22e6.mp3"
  },
+ "Atimk energiją visiems trims ir pažiūrėk, kas sustoja.": {
+  "n": "n/bd0b4988fa779789-4798df00.mp3",
+  "s": "s/bd0b4988fa779789-a88d683b.mp3"
+ },
  "Atkarpa ilgesnė. Ji vis dar turi du galus.": {
   "n": "n/96cea72c8e4c28bf-ea64f2e5.mp3",
   "s": "s/96cea72c8e4c28bf-b8c26745.mp3"
@@ -727,6 +731,10 @@
   "n": "n/b30a200f32c93a65-bdf116ed.mp3",
   "s": "s/b30a200f32c93a65-d4668ca3.mp3"
  },
+ "Augalas": {
+  "n": "n/fe1dd9f0591249d6-2930b6e3.mp3",
+  "s": "s/fe1dd9f0591249d6-30e94e7b.mp3"
+ },
  "Augalas paaugo. Kiti du nepakito.": {
   "n": "n/c233c5fdbd319065-83103cae.mp3",
   "s": "s/c233c5fdbd319065-f3a955f5.mp3"
@@ -734,6 +742,14 @@
  "Augalas su lapais": {
   "n": "n/0993a152cf6c1f0c-fff0ba6b.mp3",
   "s": "s/0993a152cf6c1f0c-5f9202cb.mp3"
+ },
+ "Augalas visai nejudėjo. Vis tiek sustojo — energijos reikia ir jam.": {
+  "n": "n/d5530c1465efddd0-7ca12897.mp3",
+  "s": "s/d5530c1465efddd0-f7cba2f4.mp3"
+ },
+ "Augalas vėl auga. Jam energiją duoda saulė.": {
+  "n": "n/7df6f00ce259136c-d5dd7d3e.mp3",
+  "s": "s/7df6f00ce259136c-bab7084d.mp3"
  },
  "Augalo lapai nuleisti. Kiti du nepakito.": {
   "n": "n/878e35b6b2c58aec-df987297.mp3",
@@ -1286,6 +1302,10 @@
  "Grupę rodo stiebas, ne aukštis.": {
   "n": "n/3ecb1976c1883ee5-e0a2ec1f.mp3",
   "s": "s/3ecb1976c1883ee5-1d620fac.mp3"
+ },
+ "Grąžink kiekvienam jo šaltinį.": {
+  "n": "n/458c3ba8a83fe4a0-66b806a2.mp3",
+  "s": "s/458c3ba8a83fe4a0-4b88550d.mp3"
  },
  "Gyvas organizmas keičiasi pats.": {
   "n": "n/3b7d70d5ad3f7025-e518050a.mp3",
@@ -1930,6 +1950,14 @@
  "Mamai": {
   "n": "n/9773842e3bc62a21-d470cfcb.mp3",
   "s": "s/9773842e3bc62a21-85918c52.mp3"
+ },
+ "Mašinėlė": {
+  "n": "n/786ed2c3838dfb78-90f98740.mp3",
+  "s": "s/786ed2c3838dfb78-14fe91b6.mp3"
+ },
+ "Mašinėlė vėl važiuoja. Jai energiją duoda baterija.": {
+  "n": "n/7870550fae9fe0e4-a7c631f6.mp3",
+  "s": "s/7870550fae9fe0e4-d25b6bf3.mp3"
  },
  "Mažas metalas dugne.": {
   "n": "n/343c8f5bfbe1f97c-565e1b9a.mp3",
@@ -3335,6 +3363,10 @@
   "n": "n/c82b4dc6fa6e3cee-e2a3996a.mp3",
   "s": "s/c82b4dc6fa6e3cee-b73fa4d0.mp3"
  },
+ "Vaikas": {
+  "n": "n/8b3b944055d1b723-e9cf81e9.mp3",
+  "s": "s/8b3b944055d1b723-2694426c.mp3"
+ },
  "Vaikas bėga taku ir krenta į priekį. Pasirink vietą ir spausk „Krentu“.": {
   "n": "n/1a565b2170a6e223-3cc81dcc.mp3",
   "s": "s/1a565b2170a6e223-1f938ad2.mp3"
@@ -3346,6 +3378,10 @@
  "Vaikas neužsidėjo antkelių.": {
   "n": "n/1cec0c52ed033d29-5fd803ab.mp3",
   "s": "s/1cec0c52ed033d29-cc2e3351.mp3"
+ },
+ "Vaikas vėl žaidžia. Jam energiją duoda maistas.": {
+  "n": "n/96d3ef5dc6fa059c-eda98ea2.mp3",
+  "s": "s/96d3ef5dc6fa059c-4c3b8820.mp3"
  },
  "Vandens lygis puodeliuose pažymėtas linija.": {
   "n": "n/150b5f2232d16597-50dc6e7f.mp3",
@@ -3470,6 +3506,14 @@
  "Visi trys darbai atlikti.": {
   "n": "n/352dccd1988a710a-48109d94.mp3",
   "s": "s/352dccd1988a710a-4e487f4f.mp3"
+ },
+ "Visi trys sustojo: augalas nebeauga, vaikas nebežaidžia, mašinėlė nebevažiuoja.": {
+  "n": "n/7464e850f1a03ddc-430e38ff.mp3",
+  "s": "s/7464e850f1a03ddc-fad97f9f.mp3"
+ },
+ "Visi trys vėl turi savo šaltinį: saulė, maistas, baterija.": {
+  "n": "n/b0cd4dff40fd0561-d93f56b4.mp3",
+  "s": "s/b0cd4dff40fd0561-59c8e340.mp3"
  },
  "Visi užrašai įrašyti. Jų suma 18.": {
   "n": "n/84069910d0cdd593-e4de3238.mp3",

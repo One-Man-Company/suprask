@@ -1,0 +1,156 @@
+{
+  "id": "37-energijos-reikia-visiems",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Kiekvienas turi savo energijos šaltinį",
+  "subtitle": "Saulė augalui, maistas vaikui, baterija mašinėlei",
+  "minutes": 9,
+  "outcomes": [
+    "Pasakau, iš kur energiją gauna augalas, vaikas ir mašinėlė.",
+    "Paaiškinu, kad be savo šaltinio visi trys sustoja.",
+    "Palyginu gyvą būtybę ir žaislą: šaltiniai skiriasi, poreikis — ne."
+  ],
+  "concept": {
+    "title": "Energija ateina iš šaltinio",
+    "big_idea": "Kad augtų, judėtų ar važiuotų, kiekvienam reikia energijos. Augalas ją ima iš saulės, vaikas — iš maisto. Mašinėlė ima ją iš baterijos. Atėmus šaltinį, visi trys sustoja.",
+    "steps": [
+      "Pažiūrėk į tris pievoje: augalą, vaiką ir mašinėlę. Kiekvienas turi savo šaltinį.",
+      "Paspausk „Atimk energiją“. Visi trys sustoja iš karto.",
+      "Augalas visai nejudėjo — ir vis tiek sustojo. Energijos reikia ir jam.",
+      "Grąžink kiekvienam jo šaltinį: saulę, maistą, bateriją."
+    ],
+    "example": "Ryte vaikas pavalgė košės ir bėgo į mokyklą. Mašinėlė važiavo, kol jos baterija išsikrovė."
+  },
+  "sim": {
+    "component": "energijos-saltiniai",
+    "config": {
+      "items": [
+        {
+          "id": "augalas",
+          "label": "Augalas",
+          "icon": "augalas",
+          "sourceLabel": "Saulė",
+          "on": "Auga",
+          "off": "Sustojo",
+          "restoreLabel": "Grąžink saulę",
+          "sentences": {
+            "on": "Augalas vėl auga. Jam energiją duoda saulė."
+          }
+        },
+        {
+          "id": "vaikas",
+          "label": "Vaikas",
+          "icon": "vaikas",
+          "sourceLabel": "Maistas",
+          "on": "Žaidžia",
+          "off": "Sustojo",
+          "restoreLabel": "Grąžink maistą",
+          "sentences": {
+            "on": "Vaikas vėl žaidžia. Jam energiją duoda maistas."
+          }
+        },
+        {
+          "id": "masinele",
+          "label": "Mašinėlė",
+          "icon": "masinele",
+          "sourceLabel": "Baterija",
+          "on": "Važiuoja",
+          "off": "Stovi",
+          "restoreLabel": "Grąžink bateriją",
+          "sentences": {
+            "on": "Mašinėlė vėl važiuoja. Jai energiją duoda baterija."
+          }
+        }
+      ],
+      "sentences": {
+        "ask": "Atimk energiją visiems trims ir pažiūrėk, kas sustoja.",
+        "cut": "Visi trys sustojo: augalas nebeauga, vaikas nebežaidžia, mašinėlė nebevažiuoja.",
+        "note": "Augalas visai nejudėjo. Vis tiek sustojo — energijos reikia ir jam.",
+        "restoreAsk": "Grąžink kiekvienam jo šaltinį.",
+        "done": "Visi trys vėl turi savo šaltinį: saulė, maistas, baterija.",
+        "again": "Pradedam iš naujo."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Vaikas sėdi ir piešia. Ar jam dabar reikia energijos?",
+      "options": [
+        "Ne, nes jis nejuda",
+        "Taip — net sėdint kūnas naudoja energiją",
+        "Tik tada, kai jis bėga"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, ar tavo širdis plaka ir tada, kai ramiai eini.",
+      "why": "Kūnas energiją naudoja visada — ir sėdėdamas, ir miegodamas."
+    },
+    {
+      "q": "Vaikas pusryčiams pavalgė košės. Per pietus nevalgė. Po pamokų jam sunku bėgti. Kodėl?",
+      "options": [
+        "Nes jis pamiršo, kaip bėgti",
+        "Nes mokykloje buvo šalta",
+        "Nes maisto energija baigėsi, o naujos jis negavo"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, iš ko vaikas gauna jėgų bėgti.",
+      "why": "Vaiko energija ateina iš maisto, todėl be pietų jos nebeužtenka."
+    },
+    {
+      "q": "Kurį daiktą įdėti į žaislinį šunį, kad jis vėl lotų?",
+      "options": [
+        "Bateriją",
+        "Obuolį",
+        "Saulę"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kas dedama į žaislą, o ne į lėkštę.",
+      "why": "Žaislui energiją duoda baterija, o ne maistas ar saulė."
+    },
+    {
+      "q": "Augalas visą savaitę stovėjo tamsiame garaže. Jis nejudėjo. Ar jam vis tiek reikėjo energijos?",
+      "options": [
+        "Ne — jis gi nejuda",
+        "Taip — be šviesos jis nustoja augti",
+        "Reikėjo tik tada, kai jis buvo laistomas"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, ką modelis parodė, kai augalui atėmei saulę.",
+      "why": "Augalui energiją duoda šviesa, todėl be jos jis nebeauga."
+    },
+    {
+      "q": "Kaip vaikas ir žaislinė mašinėlė panašūs?",
+      "options": [
+        "Abu yra gyvi",
+        "Abiem reikia to paties maisto",
+        "Abiem reikia savo šaltinio, kad galėtų judėti ir veikti"
+      ],
+      "answer": 2,
+      "hint": "Palygink, ką gauna vaikas ir ką gauna mašinėlė.",
+      "why": "Šaltiniai skiriasi — maistas ir baterija — bet energijos reikia abiem.",
+      "optional": true
+    }
+  ],
+  "reflect": "Draugas sako: „Augalui energijos nereikia, jis gi nejuda.“ Ką atsakytum?",
+  "teacher": {
+    "goal": "Suprasti, kad energijos reikia kiekvienam — ir tam, kas juda, ir tam, kas auga vietoje. Modelis turi vieną veiksmą: vaikas atima energiją visiems trims iš karto ir mato, kad augalas prie lango, vaikas ir mašinėlė sustoja tuo pačiu metu, nors jų šaltiniai skirtingi (saulė, maistas, baterija). Paskui šaltiniai grąžinami po vieną, todėl kiekvienas atgyja savo šaltinio dėka. Sąvoka lieka konkreti: ne „energija apskritai“, o „šitas daiktas turi šitą šaltinį“.",
+    "prompt": "Kas duoda energiją augalui, kas tau, o kas mašinėlei?",
+    "offline": "Padėkite prie lango du vazonus su daigais: vieną palikite šviesoje, kitą tris dienas laikykite uždengtą dėže. Lygiai taip pat vieną žaislinę mašinėlę įjunkite, o kitai išimkite bateriją. Po trijų dienų visi apžiūri: uždengtas daigas palinkęs ir blyškus, mašinėlė su baterija važiuoja, be baterijos — ne. Tada paklauskite: „Kas davė energiją daigui? Kas mašinėlei? O kas tau pačiam?“ ir leiskite vaikams patiems įvardyti tris skirtingus šaltinius.",
+    "misconceptions": [
+      "„Energija — tai tik elektra iš kištuko.“ Modelis rodo tris šaltinius vienoje scenoje: saulę, maistą ir bateriją, todėl elektra lieka vienu iš jų, o ne visos energijos vardu.",
+      "„Augalui energijos nereikia, jis gi nejuda.“ Atėmus saulę augalas palinksta ir nebeauga, nors visą laiką stovėjo toje pačioje vietoje.",
+      "„Vaikas sėdi, todėl energijos nenaudoja.“ Pirmoji užduotis klausia būtent apie sėdintį vaiką: kūnas energiją naudoja ir tada, kai nejuda.",
+      "„Pavalgius energija lieka visam laikui.“ Modelis rodo, kad veikla prasideda tik tada, kai šaltinis vėl duotas — energija sunaudojama ir jai reikia papildymo.",
+      "Modelio riba: scena rodo tris atstovus, ne visą gamtą. Grybas, žuvis ir dviratis taip pat turi savo šaltinius, kurių čia nėra. Tai pasakoma žodžiu, kad vaikas nepainiotų trijų pavyzdžių su visais."
+    ]
+  },
+  "sources": [
+    "NŠA (2024). Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos, Gamtos mokslai, 1 klasės ilgalaikis planas — 26.5.1 „Energijos reikia visiems“ (2 val.). Veiklos: demonstracinis bandymas (pvz., „Elektra yra labai gera pagalbininkė žmogaus gyvenime“), pasakojimas, minčių žemėlapis „Mechaninių ir elektrinių daiktų panašumai ir skirtumai“ sources/pradinio-bp-rekomendacijos-2024.txt:17665–17670.",
+    "NŠA (2024). Ten pat, bendroji dalis: gamtos mokslų tikslas — „pažinti gamtą ir žmogaus sukurtą aplinką, suprasti jų sąveiką“ (:78–80), todėl modulyje žmogaus sukurtas daiktas (mašinėlė) lyginamas su augalu pagal tą patį energijos poreikį, o ne pagal gyvybę."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (kiekvienas turi savo energijos šaltinį), be energijos rūšių sąrašo, be elektros grandinės ir be „mechaninis / elektrinis“ klasifikacijos — grandinė jau yra technologijų modulyje.",
+    "2 žingsnis — vienodas vertinimas: užduotys klausia apie pasekmę naujoje situacijoje (sėdintis vaikas, žaislinis šuo, augalas garaže), o ne kartoja modelio sakinį.",
+    "3 žingsnis — pagalba laiku: vaikas pirma pats atima energiją ir stebi, kas sustoja; spėjimas nebaudžiamas, o kiekvienas šaltinis grąžinamas atskirai ir iš karto parodo savo pasekmę.",
+    "8 žingsnis — mokytojas lieka mokytoju: veikla be ekrano (du daigai, dvi mašinėlės, trys dienos) parodo tą patį be kompiuterio, o klausimas „kas davė energiją tau?“ grąžina sąvoką į vaiko kūną."
+  ]
+}

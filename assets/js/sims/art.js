@@ -147,14 +147,15 @@ export const art = {
     </g>`;
   },
 
-  /** Vazonas su lūpomis ir šešėliu. */
-  pot(x, y, w, h,) {
+  /** Vazonas su lūpomis ir šešėliu. `id` — gradientas iš `defs(id)`; senieji
+   *  kvietimai be jo lieka tokie pat (numatyta `pot`). */
+  pot(x, y, w, h, id = "pot") {
     const topW = w;
     const botW = w * 0.74;
     return `<g>
       <ellipse cx="${x + w / 2}" cy="${y + h + 3}" rx="${w * 0.52}" ry="6" fill="${P.soilDark}" opacity=".22"/>
       <path d="M${x} ${y} H ${x + topW} L ${x + topW - (topW - botW) / 2} ${y + h}`
-      + ` H ${x + (topW - botW) / 2} Z" fill="url(#pot)"/>
+      + ` H ${x + (topW - botW) / 2} Z" fill="url(#${id})"/>
       <rect x="${x - 4}" y="${y - 7}" width="${w + 8}" height="11" rx="4" fill="${P.potDark}"/>
       <rect x="${x + 5}" y="${y + 6}" width="7" height="${h - 14}" rx="3" fill="#fff" opacity=".18"/>
     </g>`;
@@ -969,6 +970,33 @@ export const art = {
           <path d="M26 10 Q23.6 7.6 22.2 10.2" fill="#c0564a" opacity=".9"/>
           <ellipse cx="18.1" cy="18.4" rx="1.15" ry="1.7" fill="#5a4326" transform="rotate(-14 18.1 18.4)"/>
           <ellipse cx="21.6" cy="25.2" rx="1.05" ry="1.6" fill="#5a4326" transform="rotate(12 21.6 25.2)"/>
+        </g>`;
+      }
+      if (kind === "baterija") {
+        /* Baterija: korpusas su gnybtu ir žaibo ženklu viduje. Žaibas, o ne
+           raidė: 6–7 m. vaikas bateriją atpažįsta iš formos ir ženklo, o ne
+           iš užrašo (LL-06). */
+        return `<g stroke-linejoin="round">
+          <rect x="7" y="12" width="24" height="16" rx="3" fill="#eef1f2" stroke="#4a5a63" stroke-width="2"/>
+          <rect x="31" y="17" width="4" height="6" rx="1.4" fill="#4a5a63"/>
+          <path d="M21.6 13.4 L16.4 21.4 H20.2 L18.2 26.6 L24 18.4 H20.2 Z"
+                fill="#f2b13c" stroke="#8a6a25" stroke-width="1.3"/>
+          <line x1="11" y1="15.5" x2="11" y2="24.5" stroke="#c9d2d6" stroke-width="2" stroke-linecap="round"/>
+        </g>`;
+      }
+      if (kind === "masinele") {
+        /* Žaislinė mašinėlė iš šono: kebulas, langas ir du ratai. Be lango
+           ir ratų siluetas atrodytų kaip plyta, o vaikas neturėtų už ko
+           užkabinti „tai mašinėlė“ (LL-13). */
+        return `<g stroke-linejoin="round">
+          <path d="M5 27 L7 20 Q8 17 12 17 H18 L21.5 12.5 H27 Q30.5 12.5 31.5 16
+                   L33 20 Q35.5 21 35.5 24 V27 Z"
+                fill="#e2574c" stroke="#8f3530" stroke-width="2"/>
+          <path d="M19 16.6 L21.8 13.4 H26.4 L27.8 16.6 Z" fill="#dceef7" stroke="#8f3530" stroke-width="1.4"/>
+          <circle cx="12.6" cy="28" r="4.4" fill="#3f4a52" stroke="#2a3238" stroke-width="1.6"/>
+          <circle cx="12.6" cy="28" r="1.7" fill="#cfd8dd"/>
+          <circle cx="28.4" cy="28" r="4.4" fill="#3f4a52" stroke="#2a3238" stroke-width="1.6"/>
+          <circle cx="28.4" cy="28" r="1.7" fill="#cfd8dd"/>
         </g>`;
       }
       /* nafta */

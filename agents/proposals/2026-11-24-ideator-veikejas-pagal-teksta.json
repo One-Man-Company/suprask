@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 496,
+  "created": "2026-11-24T07:40:00+02:00",
+  "type": "tema",
+  "title": "Veikėjo apibūdinimą pasako sakinys, o ne paveikslėlis",
+  "body": "Tai paskutinė neuždengta lietuvių kalbos programos vieta: `lietuviu-kalba-1-klase.md:144` tiesiogiai rašo, kad B.2.1.1 („Įvardija ir apibūdina bent vieną veikėją“) neturi nė vieno modulio, o `03-sakinio-zodziai` tik suranda, kas veikia, bet neapibūdina. Ankstesnis šios temos atmetimas (`klausimai.md:97`) buvo teisingas vienai formai — „veikėjo kortelei“, kuri yra žymėjimas, o ne modelis. Šiandien siūloma kita forma: paveikslėlis laikomas pastoviu, keičiasi tik vienas sakinys, ir nuo jo apsisprendžia apibūdinimas. Klaidinga nuostata, kurią modelis turi parodyti: „ką veikėjas daro, jau matau paveikslėlyje, todėl apibūdinti nereikia“ — modelyje ta pati morka ir tas pats kiškis lieka ekrane, o sakinys „Kiškis pasidalijo morką su ežiu“ ir „Kiškis paslėpė morką nuo ežio“ duoda priešingus apibūdinimus; jei atsakymas ateitų iš piešinio, jis turėtų būti toks pat abiem atvejais, o jis nėra. Tai ne paveikslėlio užduotis, nes būtent nekintantis paveikslas yra kontrolinis dydis — jis parodo, kad skirtumą padarė tekstas. Ribos: viena nauja sąvoka (apibūdinimas remiasi tekstu), 2–3 trumpi sakiniai su garsu, jokio laisvo teksto lauko ir jokių klausimų apie patį vaiką.",
+  "target": "content/lt/grade-01/lietuviu-kalba/14-veikejas-pagal-teksta.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), 9 skyrius, B.2.1.1 (slenkstinis): „Įvardija ir apibūdina bent vieną veikėją“; to paties lygio diagnostinis klausimas „(5) Kas yra Feliksas? A. Pelė B. Varlė C. Lapė D. Boružė“ — sources/pradinio-bp-rekomendacijos-2024.txt:32536–32545",
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:144 — „B.2 (veikėjo įvardijimas ir apibūdinimas) — nė vieno modulio. `03-sakinio-zodziai` randa veikėją, bet neapibūdina jo; B.2 srities slenkstinis lygis … lieka neuždengtas.“",
+    "research/wiki/guidelines/klausimai.md:97 — ankstesnis atmetimas taikomas būtent „veikėjo kortelės“ formai („gerai nupieštas paveikslėlis duoda tą patį“); šis pasiūlymas atmetimo nepažeidžia, nes paveikslėlis jame yra kontrolinis kintamasis, o ne atsakymo šaltinis",
+    "Olsen, M. S. (1986). Interactions of Text and Illustration in Beginning Reading (ERIC ED267394): pradedantys skaityti pirmokai, kuriems skaitymas sekasi sunkiau, supratimo klausimus atsako geriau iliustruotuose tekstuose ir remiasi piešiniais, o ne tekstu — https://files.eric.ed.gov/fulltext/ED267394.pdf",
+    "Patikra, kad temos nėra: `ls content/lt/grade-01/lietuviu-kalba/` → 01–07, 10–13; `grep -rn veikėj content/lt/grade-01/` → tik `03-sakinio-zodziai` („kas? ką veikia?“) ir `01-dovana-ir-noras` (noras, ne apibūdinimas); failo `14-*` nėra",
+    "research/wiki/curriculum/backlog.json eilutė A:veikejas rodo `covered`, bet moduliai `01-dovana-ir-noras`, `17-kryptys-ir-vieta` yra gyvenimo įgūdžių ir matematikos — tai raktažodžio „veikėjas“ sugavimas, ne padengtis (žr. klausimai.md įrašą 2026-11-24)"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 496,
+  "created": "2026-11-24T07:32:00+02:00",
+  "type": "tema",
+  "title": "Šlapias batas forma praranda ne dėl drėgmės, o dėl to, kas viduje",
+  "body": "1 klasės technologijų programoje avalynės priežiūra įvardyta atskirai nuo drabužių, o esamas modulis `06-drabuziu-prieziura` savo `sources` lauke aiškiai pasilieka avalynę kitam moduliui, todėl tai ne nauja tema, o sąmoningai atidėta programos dalis: „1 klasė. Drabužių, avalynės priežiūra. Praktiškai išbandomi avalynės sutvarkymo būdai.“ Klaidinga nuostata, kurią modelis turi parodyti: „šlapias batas išdžius pats ir pats sugrįš į savo formą“ — džiūdamas batas formą ne atgauna, o užfiksuoja tokią, kokioje džiūsta, nes šlapia oda yra plastiška. Modelis: trys vienodi šlapi odiniai batai toje pačioje vietoje, keičiasi tik vienas dalykas — kas bato viduje (nieko / suglamžytas laikraštis / kietas įdėklas), ir viena laiko juosta; vaikas pirma spėja, kuris batas išdžius gražiausias, tada stumia laiką ir mato nosį: be įdėklo ji sulinksta ir susilanksto, su laikraščiu išlaiko apimtį. Teksto nepakanka, nes pasekmė nematoma, kol nepraeina laikas, o paveikslėlis teparodo vieną būseną. Sąmoningos ribos: modelyje nėra temperatūros skaičių (temperatūra kaip dydis 1 klasei nepriskirta, `matematika-1-klase.md:142`), nėra šildymo prietaisų — sąmoningai atsisakyta „džiovinti ant radiatoriaus“ modelio, nes chromu išdirbta odinė avalynė susitraukia tik ties 95–105 °C, tad radiatorius 60–75 °C tokios pasekmės negarantuoja ir modelis mokytų netiesos (LL-18). Batas niekada negadinamas negrįžtamai ir vaikas nieko nebaudžiamas — bandymą galima kartoti.",
+  "target": "content/lt/grade-01/technologijos/08-avalynes-dziovinimas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), 9 skyrius, C3: „1 klasė. Drabužių, avalynės priežiūra. Praktiškai išbandomi avalynės sutvarkymo būdai.“ — sources/pradinio-bp-rekomendacijos-2024.txt:40061",
+    "Ten pat, 23.2.2 „Drabužių, avalynės priežiūra“ (1–2 klasė): „…ar/ir avalynės/tekstilės valymas be cheminių priemonių. Apibūdinami darbo procesai, vaizdo ir kt. savybės.“ — sources/pradinio-bp-rekomendacijos-2024.txt:9458–9468",
+    "content/lt/grade-01/technologijos/06-drabuziu-prieziura.json:98 — modulio sources įrašas: „…avalynė paliekama atskiram moduliui, kad modulyje liktų viena idėja“ (ta pati byla :101 „…ir avalynė sąmoningai neįtrauktos“)",
+    "Avalynės priežiūros rekomendacijos, kuriose įdėklas ar laikraštis įvardytas kaip formos išlaikymo priemonė, o tiesioginė šiluma — kaip žalos šaltinis: https://wikishoes.org/learn/drying-wet-shoes-properly/ ; https://jihua3515.com/faqs/how-should-leather-shoes-be-dried-after-cleaning",
+    "Kodėl radiatorius atsisakytas: chromu išdirbtos odos susitraukimo temperatūra 95–105 °C (vegetaciniu būdu išdirbtos — 75–85 °C), t. y. aukščiau už buitinio radiatoriaus 60–75 °C — „Determination of hydrothermal stability of consolidated parchment and leathers“, https://cguaa.journals.ekb.eg/article_40215_e31a6fc276eb707d00babf4821c499e2.pdf ; radiatoriaus paviršiaus temperatūra: https://www.bestheating.com/info/faqs/how-hot-is-too-hot-for-radiators/",
+    "Patikra, kad modulio nėra: `ls content/lt/grade-01/technologijos/` → 01, 02, 03, 06, 07; `grep -rn avalyn content/ assets/js/sims/` → tik trys `06-drabuziu-prieziura.json` sources įrašai, nė vieno simuliacijos"
+  ]
+}

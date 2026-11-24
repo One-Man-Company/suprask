@@ -89,10 +89,10 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   vaiko patirtį skelbė faktą („modulis nepasiekiamas“), kurio po vieno bandymo
   pasakyti negalima. Dabar `fetch()` 404/410 laiko galutiniu atsakymu, o kitas
   klaidas kartoja (2 bandymai, 1,5 s pertrauka); pakartojimų skaičius
-  išvedamas, kad tylaus kartojimo nebūtų (LL-37). Neigiamas zondas:
-  `scratch/pub368/zondas_503.py` — veidrodis, kuris pirmą užklausą atsako 503,
-  o antrą 200, anksčiau davė raudoną, dabar žalią; veidrodis, kuris 503 atsako
-  visada, lieka raudonas.
+  išvedamas, kad tylaus kartojimo nebūtų (LL-37). Pakartojamas įrodymas
+  (`scripts/probe_publish_sets.py`, įtrauktas #506): G — veidrodis, kuris
+  pirmą užklausą atsako 503, o antrą 200, duoda `ok` ir matomą pakartojimų
+  skaičių; H — visada 503 duoda `unreachable`, o ne „nėra“.
 
 2026-11-18 (paleidimas #372): #370 palikta pusė darbo užbaigta ir tyli žalia uždaryta.
   #370 `compare()` perdarė į būsenas (`ok|differs|absent|unreachable`) ir atskyrė
@@ -102,9 +102,9 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   visada teisinga, tad pasenęs `grades.json` / garso `manifest.json` nebūtų
   parodytas nė karto (tyli žalia). Be to `missing_in_repo`, `aux_absent` ir
   `stale_unmeasured` buvo surenkami `check_grade()` viduje ir **numetami**
-  `report()` išvestyje, o `verdict()` jų nepažino: zondas
-  (`scratch/pub370/zondas_trukstamas_failas.py`, veidrodis be modulio failo,
-  gyva svetainė jį turi) davė `verdict: sutampa, ok=True`. Dabar visi trys
+  `report()` išvestyje, o `verdict()` jų nepažino: zondas (veidrodis, kuriame
+  repo indeksas rodo į failą, o failo nėra) davė `verdict: sutampa, ok=True`.
+  Pakartojamas įrodymas: `scripts/probe_publish_sets.py` E. Dabar visi trys
   būsenų vartotojai (AUX ciklas, `verdict()`, spausdintuvas) skaito būseną,
   o trūkstamas repo failas rodomas kaip `LŪŽĘS INDEKSAS` su gyvos pusės
   matavimu (`head_state()`): ar svetainėje failas yra. Neišmatuotas dydis
@@ -151,8 +151,9 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   būseną `"gone"`: repo failas yra, svetainė atsakė 404/410. Ji rodoma
   atskirai (`SVETAINĖJE NĖRA MODULIO FAILO`, `…PAGRINDINIO FAILO`,
   `…KODO FAILO`), o `verdict()` turi savo priežastis, nes taisymas kitas —
-  paleisti publikavimą, ne kartoti užklausą. Zondas:
-  `scratch/pub386/probe.py` — prieš pataisymą 3/5 (B krito), po — 5/5.
+  paleisti publikavimą, ne kartoti užklausą. Pakartojamas įrodymas:
+  `scripts/probe_publish_sets.py` F — gyvai 404 esantis modulio failas duoda
+  `live_missing` ir atskirą priežastį, o ne „nepasiekiama“.
 
 2026-11-19 (paleidimas #388): ta pati 404 klaida liko vienu lygiu aukščiau.
   #386 sutvarkė modulio failą ir svetainės kodą, bet **klasės** `index.json`
@@ -164,12 +165,13 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   publikavimo (LL-21, LL-120). Realus atvejis: klasė įjungta `grades.json`
   (`status: live`), o jos katalogas dar nepaskelbtas. Dabar `check_grade()`
   naudoja `fetch_answer()`, rašo `live_gone`, o `verdict()` turi priežastį
-  „klasės failo nėra svetainėje (404)“. Zondas:
-  `scratch/pub388/probe_f.py` — prieš pataisymą `verdict.label` =
-  „gyva svetainė nepasiekiama“, po — „klasės failo nėra svetainėje“.
+  „klasės failo nėra svetainėje (404)“. Pakartojamas įrodymas:
+  `scripts/probe_publish_sets.py` L — 404 indeksas duoda `live_gone`,
+  `published_measured is False` ir tokią pačią priežastį, o ne „gyva svetainė
+  nepasiekiama“.
 
 2026-11-20 (paleidimas #404): modulio failas, kurio niekas neindeksuoja, nebe tyli žalia.
-  Zondas (`scratch/pub404/probe_orphan.py`) atkartojo realų darbą: modulio failas
+  Zondas (dabar pakartojamas: `scripts/probe_publish_sets.py` D) atkartojo realų darbą: modulio failas
   įdėtas į `content/lt/grade-01/matematika/`, `grades.json` skelbiamas skaičius
   pakeltas 51 → 52, o `index.json` įrašo nėra. `pages.yml` kopijuoja visą
   `content/`, tad failas svetainėje **yra**, bet naršyklė jo neprašo — modulio
@@ -349,6 +351,39 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   su vietiniu `http.server` veidrodžiu: sveikas → `size_mismatch` 0 ir
   verdict žalias; sutrumpintas mp3 → `size_mismatch` 1, įvardytas failas ir
   abu dydžiai, verdict raudonas).
+
+2026-11-24 (paleidimas #506): du tylūs žali šaltiniai uždaryti, o teiginiai tapo paleidžiami.
+  Pirma, `historical_ids()` (dingusių ID patikra — nuo jos priklauso vaiko
+  `localStorage` žyma po pervadinimo) `checked` grąžindavo `True` ir tada, kai
+  **git neatsakė**. Priežastis buvo `subprocess.run(...).stdout` be
+  `returncode` patikros: ne git kataloge ar be `git` komandos `stdout` tuščias,
+  `revs = []`, o funkcija sakydavo „patikrinta, dingusių 0“. Tai LL-175
+  (įrankio nebuvimas nėra tuščias rezultatas) — toks pat tylios žalios atvejis
+  kaip LL-37, tik riba ne užklausos ilgis, o įrankio atsakymas. Dabar
+  `git rev-parse`, `git log` ir `git show` tikrinami pagal išėjimo kodą, o jei
+  `git log` rado revizijas ir nė viena neperskaityta — tai irgi nepavykusi
+  patikra, ne „istorijoje modulių nebuvo“. `verdict()` tam jau turėjo priežastį
+  „dingusių ID patikra neįvyko“.
+  Antra, lūžęs indeksas (įrašas yra, failo repo nėra) buvo matuojamas tik
+  baitų cikle, o tas ciklas sąmoningai praleidžia `missing_on_live` ID. Todėl
+  įrašas, kurio failas dar ir nepaskelbtas, atrodė vien kaip „1 neskelbta“ —
+  t. y. taisymas „paleisk publikavimą“, nors publikavimas jo neįkelia ir vaikas
+  modulio niekada negaus. Dabar `missing_in_repo` surašomas **be tinklo** iš
+  `index.json` ir repo failų, o baitų ciklas tik papildo dydžius.
+  Trečia, `probe_path_order.py` J/K6 tikrino kietą skaičių (72 žingsniai) ir po
+  to, kai 2026-11-24 kūrėjas į 1 klasę įdėjo 5 modulius, tapo raudonas dėl
+  teisingo darbo; dabar tikrinama „visi užfiksuoti ID yra, nė vienas
+  nepajudėtas, papildomi įvardyti kaip įterpti“ ir žingsnių skaičius imamas iš
+  `path.json` (LL-38).
+  Įrodymas repo: `python3 scripts/probe_publish_sets.py` → **22/22**, rc 0,
+  be interneto, ~6 s. Zondas stato laikiną repo su tikru `git`, `origin/main`
+  ir atskiru gyvos svetainės veidrodžiu, tada per `report()`/`verdict()`/`main()`
+  tikrina A–M: sveika būsena (rc 0), `missing_on_live` (ir kad tas pats ID
+  nekartojamas kaip „pasenęs“), `hidden_locally`, `orphan_files`,
+  `missing_in_repo`, `live_missing`, 503→200 kartojimą, visada 503,
+  ne git katalogą (rc 1), 404 klasės indeksą (`live_gone`, `published_measured`
+  False) ir atkūrimą. Šiame paleidime tikras bėgimas nepakito: repo 77 /
+  paskelbta 77, garso dydžiai 2 224/2 224, rc 0.
 
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
@@ -743,20 +778,39 @@ def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
 
     Trečias reikšmės narys `checked` saugo nuo tylios „0 dingusių“: jei istorijos
     perskaityti nepavyksta, tai nėra švarus rezultatas (LL-37/LL-10).
+
+    Kiekviena git užklausa tikrinama pagal **išėjimo kodą**, ne tik pagal
+    išvestį. `subprocess.run()` rūpestingai atspausdina klaidą, grąžindamas
+    tuščią `stdout`; iki #506 būtent taip atsitikdavo ne git kataloge arba be
+    `git` komandos — `revs` likdavo tuščias, o funkcija grąžindavo
+    `checked = True`. Tada `verdict()` sakydavo „dingusių ID patikra įvyko“,
+    nors nieko nebuvo perskaityta: pervadintas modulis būtų žalias, o vaiko
+    žyma liktų be modulio (LL-175 — įrankio nebuvimas nėra tuščias rezultatas).
     """
     path = f"content/lt/{grade_dir(grade)}/index.json"
     note = ""
     try:
-        shallow = subprocess.run(
+        probe = subprocess.run(
             ["git", "rev-parse", "--is-shallow-repository"],
             cwd=ROOT, capture_output=True, text=True, timeout=20,
-        ).stdout.strip()
-        if shallow == "true":
+        )
+        if probe.returncode != 0:
+            first = (probe.stderr or "").strip().splitlines()
+            return {}, ("git istorijos nepavyko perskaityti: "
+                        f"`git rev-parse` grąžino {probe.returncode}"
+                        + (f" ({first[0]})" if first else "")), False
+        if probe.stdout.strip() == "true":
             return {}, "git istorija sekli — dingusių ID patikra neįmanoma", False
-        revs = subprocess.run(
+        log = subprocess.run(
             ["git", "log", f"--max-count={HISTORY_LIMIT}", "--format=%h", "--", path],
             cwd=ROOT, capture_output=True, text=True, timeout=120,
-        ).stdout.split()
+        )
+        if log.returncode != 0:
+            first = (log.stderr or "").strip().splitlines()
+            return {}, ("git istorijos nepavyko perskaityti: "
+                        f"`git log` grąžino {log.returncode}"
+                        + (f" ({first[0]})" if first else "")), False
+        revs = log.stdout.split()
     except Exception as exc:  # noqa: BLE001
         return {}, f"git istorijos nepavyko perskaityti ({type(exc).__name__})", False
 
@@ -764,20 +818,31 @@ def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
         note = f"istorija ribota iki {HISTORY_LIMIT} revizijų — senesni ID nepatikrinti"
 
     seen: dict[str, str] = {}
+    unreadable = 0
     for rev in revs:
         try:
-            blob = subprocess.run(
+            show = subprocess.run(
                 ["git", "show", f"{rev}:{path}"],
                 cwd=ROOT, capture_output=True, text=True, timeout=30,
-            ).stdout
-            data = json.loads(blob)
+            )
+            if show.returncode != 0:
+                # Revizijoje indekso dar nebuvo arba jis ne JSON — tai
+                # atsakymas, todėl skaičiuojama, bet ne laikoma gedimu.
+                continue
+            data = json.loads(show.stdout)
         except Exception:  # noqa: BLE001
-            continue  # revizijoje indekso dar nebuvo arba jis ne JSON
+            unreadable += 1
+            continue
         for strand in data.get("strands", []):
             for mod in strand.get("modules", []):
                 mid = mod.get("id")
                 if mid and mid not in seen:
                     seen[mid] = rev
+    # `git log` rado revizijas, bet nė vienos nepavyko perskaityti: tai ne
+    # „istorijoje modulių nebuvo“, o nepavykusi patikra (LL-37).
+    if revs and not seen and unreadable == len(revs):
+        return {}, (f"git istorijos nepavyko perskaityti: nė viena iš "
+                    f"{len(revs)} revizijų neperskaityta"), False
     return seen, note, True
 
 
@@ -1466,8 +1531,20 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     stale: list[dict] = []
     stale_unknown: list[str] = []
     live_missing: list[dict] = []
-    missing_in_repo: list[dict] = []
     unmeasured: list[str] = []
+    # Indekso įrašai, rodantys į failą, kurio repo nėra — matuojama **be
+    # tinklo** ir nepriklausomai nuo gyvos svetainės būsenos (#506). Iki tol
+    # sąrašas pildėsi tik baitų cikle, o tas ciklas sąmoningai praleidžia
+    # `missing_on_live` ID (2026-11-12: vienas ID neturi pasirodyti dviejose
+    # eilutėse). Pasekmė: lūžęs indeksas, kurio modulis dar ir nepaskelbtas,
+    # atrodė tik kaip „1 neskelbta“ — t. y. taisymas „paleisk publikavimą“,
+    # nors publikavimas tokio modulio neįkelia ir vaikas jo niekada negaus
+    # (LL-37: vienas defektas paslėpė kitą, sunkesnį).
+    missing_in_repo: list[dict] = [
+        {"id": mid, "file": files[mid], "grade": grade,
+         "repo_bytes": -1, "live_bytes": -1}
+        for mid in local_ids if files.get(mid) and not (CONTENT / files[mid]).exists()
+    ]
     if compare_bytes:
         # Modulys, kurio ID gyvame `index.json` nėra, jau įvardytas kaip
         # NESKELBTA — jo baitų skirtumas nieko neprideda, o pranešime atrodytų
@@ -1488,8 +1565,12 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
                     # nieko nepakeis, kol indeksas netaisytas. Vaidmens taisyklė
                     # šį atvejį vadina lūžusiu indeksu ir reikalauja jį įvardyti
                     # atskirai, o ne sumaišyti su publikavimo defektais.
-                    missing_in_repo.append({"id": mid, "file": rel, "grade": grade,
-                                            "repo_bytes": local_size, "live_bytes": live_size})
+                    # Įrašas jau yra (sėjamas aukščiau) — papildomi tik dydžiai.
+                    for item in missing_in_repo:
+                        if item["id"] == mid:
+                            item["repo_bytes"] = local_size
+                            item["live_bytes"] = live_size
+                            break
                 elif state == "gone":
                     # Svetainė atsakė 404/410: failo ten nėra, nors indeksas jį
                     # rodo. Tai nepasibaigęs publikavimas, o ne „bandyk dar
@@ -1508,16 +1589,8 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
                 else:
                     stale.append({"id": mid, "file": rel, "repo_bytes": local_size,
                                   "live_bytes": live_size})
-        else:
-            # Gyvo indekso neperskaitėme, tad palyginti nėra su kuo: 48 baitų
-            # užklausos duotų 48 eilutes „NEPASIEKTA“ apie failus, kurių niekas
-            # nematė (#382, LL-37). Bet „indeksas rodo į failą, kurio repo
-            # nėra“ yra repo defektas — jis tikrinamas be tinklo ir lieka.
-            for mid in local_ids:
-                rel = files.get(mid)
-                if rel and not (CONTENT / rel).exists():
-                    missing_in_repo.append({"id": mid, "file": rel, "grade": grade,
-                                            "repo_bytes": -1, "live_bytes": -1})
+        # Kai gyvo indekso neperskaitėme, lūžę indekso įrašai jau surašyti
+        # aukščiau — jie repo faktas, ne svetainės matavimas (#382, LL-37).
     out["stale"] = stale
     out["stale_unknown"] = stale_unknown
     out["live_missing"] = live_missing

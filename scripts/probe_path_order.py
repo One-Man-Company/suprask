@@ -152,17 +152,27 @@ def main() -> int:
               isinstance(out, dict) and out["path_reordered"] == [],
               f"checked={out['path_order_checked']} note={out.get('path_order_note', '')[:60]!r}")
 
-        # J. Tikras repo: užfiksuota seka egzistuoja ir sutampa su path.json.
+        # J. Tikras repo: užfiksuota seka egzistuoja, o path.json gali turėti
+        # naujų ID, įterptų sąmoningai (pagal AGENTS.md leidžiama, jei esama
+        # tvarka nesikeičia). Todėl tikrinama: visi užfiksuoti ID yra, nė vienas
+        # nepajudėtas, o kiekvienas papildomas įvardytas kaip įterptas. Skaičių
+        # lyginti negalima — po užfiksavimo (2026-11-23) kūrėjas į 1 klasę įdėjo
+        # 5 modulius, tad lygybė tapo neteisingu lūkesčiu, o raudoni vartai dėl
+        # teisingo darbo moko juos apeiti (LL-38 — slenkstis, nuslinkęs nuo duomenų).
         cp.PATH_ORDER = original
         real_pin = json.loads(original.read_text(encoding="utf-8"))
         real_seq = list((real_pin.get("grades") or {}).get("1", {}).get("sequence") or [])
         path_seq = json.loads((ROOT / "content/lt/grade-01/path.json").read_text(encoding="utf-8"))["sequence"]
         out = cp.path_order_check(1, path_seq)
-        check("J repo 1 klasės seka užfiksuota ir sutampa",
+        expected_inserted = sorted(set(path_seq) - set(real_seq))
+        check("J repo 1 klasės seka užfiksuota, seni ID nepajudėti",
               bool(real_seq) and out["path_order_checked"] is True
-              and out["path_reordered"] == [] and out["path_inserted_midsequence"] == []
-              and len(real_seq) == len(path_seq),
-              f"pin={len(real_seq)} path={len(path_seq)} label={out['path_order_baseline'][:40]!r}")
+              and out["path_reordered"] == []
+              and sorted(out["path_inserted_midsequence"]) == expected_inserted
+              and set(real_seq) <= set(path_seq),
+              f"pin={len(real_seq)} path={len(path_seq)} "
+              f"įterpti={len(out['path_inserted_midsequence'])} "
+              f"label={out['path_order_baseline'][:40]!r}")
 
         # K. CI režimas `--path-order` (pasiūlymas #42399). Lyginama TIK su
         #    užfiksuota seka: šviežiame klone `HEAD` yra darbinė kopija, tad
@@ -233,9 +243,10 @@ def main() -> int:
                 rc_offline = cp.path_order_main(1, False)
         finally:
             cp.subprocess.run, cp.urllib.request.urlopen = real_run, real_urlopen
-        check("K6 režimas be git ir be tinklo → rc 0, 72 žingsniai",
-              rc_offline == 0 and "72 žingsnių" in buf.getvalue(),
-              f"rc={rc_offline} išvestis={buf.getvalue().strip()[:60]!r}")
+        check("K6 režimas be git ir be tinklo → rc 0, visi žingsniai",
+              rc_offline == 0 and f"{len(gate_seq)} žingsnių" in buf.getvalue(),
+              f"rc={rc_offline} laukta {len(gate_seq)} žingsnių, "
+              f"išvestis={buf.getvalue().strip()[:60]!r}")
     finally:
         cp.PATH_ORDER = original
 

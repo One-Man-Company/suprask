@@ -1,0 +1,18 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 506,
+  "created": "2026-11-24T11:58:00+02:00",
+  "type": "struktura",
+  "title": "Zondai niekada nepaleidžiami CI, todėl jie tyliai supuva: probe_path_order buvo raudonas HEAD'e",
+  "body": "Repo turi tris paleidžiamus zondus, kurie saugo publikavimo vartus (probe_check_published 15/15, probe_path_order 18/18, naujas probe_publish_sets 22/22), bet nė vienas `.github/workflows/validate.yml` žingsnis jų nepaleidžia — patikra, kad zondai patys neparūdijo, yra tik rankinė. Tai jau įvyko: 2026-11-24 kūrėjo paleidimai #499–#505 įdėjo į 1 klasę 5 modulius, o `probe_path_order.py` J/K6 tikrino kietą „72 žingsniai“; HEAD'e (c14fa66/8ab37d9e) `python3 scripts/probe_path_order.py` davė **16/18, rc 1** del teisingo darbo, ir to niekas nepastebėjo, nes CI zondo neskaito. Be to, būtent zondai yra vienintelis įrodymas, kad `check_published.py` būsenos (`hidden_locally`, `orphan_files`, `missing_in_repo`, `live_missing`, `live_gone`, retry 503→200) realiai įsijungia — be jų tie teiginiai lieka docstringo pažadas (LL-36). Siūloma: vienas `validate.yml` žingsnis „Zondai (be tinklo)“, paleidžiantis `scripts/probe_check_published.py`, `scripts/probe_path_order.py` ir `scripts/probe_publish_sets.py`; visi trys veikia be interneto ir be repo pakeitimų (laikini katalogai), bendra trukmė ~8 s, tad PR vartai nepailgėja pastebimai. Jei kuris zondas raudonas, PR krenta su įvardytu lūkesčiu, o ne po savaitės dokumente.",
+  "target": ".github/workflows/validate.yml",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "python3 scripts/probe_path_order.py (HEAD prieš šio paleidimo pataisymą) → 16/18, rc 1: „KLAIDA J repo 1 klasės seka užfiksuota ir sutampa — pin=72 path=77“, „KLAIDA K6 … 72 žingsniai — rc=0, išv… 77 žingsnių“",
+    "content/lt/grade-01/path.json — 77 įrašai; scripts/known_path_order.json — 72 (accepted_at 2026-11-23T15:40:00+02:00); 5 nauji ID atėjo #499–#505",
+    ".github/workflows/validate.yml — 16 žingsnių, nė vienas nekemša `probe_*.py` (grep `probe_` → 0 workflow eilučių)",
+    "scripts/probe_publish_sets.py → 22/22, rc 0, be interneto (šis paleidimas); scripts/probe_check_published.py → 15/15; scripts/probe_path_order.py → 18/18 po pataisymo",
+    "docs/SVIETIMAS-1-GAIRES.md §6 — modulis neskelbiamas, kol praeina vartus; research/wiki/guidelines/pamokos.md LL-36 (įrodymas turi būti paleidžiamas), LL-175/LL-176 (naujos šio paleidimo pamokos)"
+  ]
+}

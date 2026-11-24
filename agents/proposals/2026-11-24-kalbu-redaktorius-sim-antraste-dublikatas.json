@@ -1,0 +1,17 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 512,
+  "created": "2026-11-24T14:55:01+02:00",
+  "type": "struktura",
+  "title": "Ta pati simuliacijos antraštė gyvena du kartus — ir jau išsiskyrė",
+  "body": "Modulio 22-sudetis-per-desimti simuliacija rodo antraštę „Pirmas skaičius jau dešimtuke, antras — ant stalo.“, įrašytą tiesiai į komponento kodą (matematika.js:2940), o ta pati mintis yra ir sim.config.sentences.pradek („…, o antras laukia ant stalo.“). Tekstai jau skiriasi: JSON sakinys buvo taisytas, kodinis liko senas. Tai nėra tik stiliaus neatitikimas — kodinis variantas neturi garso įrašo, jo nemato check_language.py (skaito tik JSON), jo neaprėpia check_audio.py, o vaikas ekrane skaito vieną sakinį ir girdi kitą. Siūloma: komponento antraštę imti iš config (S.pradek) taip, kaip jau daroma sim.config.sentences.suma_* atveju, o kietą literalą pašalinti. Antras žingsnis — vartai, kurie mate, kai simuliacijos faile yra vaikui skaitomas lietuviškas sakinys, kurio nėra jokiame config lauke.",
+  "target": "assets/js/sims/matematika.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/matematika.js:2940 — `<p class=\"sim-note\" …>Pirmas skaičius jau dešimtuke, antras — ant stalo.</p>`",
+    "content/lt/grade-01/matematika/22-sudetis-per-desimti.json sim.config.sentences.pradek — „Pirmas skaičius jau dešimtuke, o antras laukia ant stalo.“",
+    "scripts/check_language.py:206–227 — check_sim_config() skaito tik modulio JSON, ne simuliacijos JS",
+    "scripts/check_audio.py — garso įrašai generuojami tik iš JSON sim.config, tad kietas kodinis sakinys lieka be balso"
+  ]
+}

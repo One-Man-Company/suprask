@@ -7,18 +7,18 @@
   "minutes": 9,
   "outcomes": [
     "Sudedu du skaičius per dešimtį. Pirma papildau dešimtuką, paskui pridedu likusį.",
-    "Paaiškinu, kodėl 8 + 5 patogu skaičiuoti per dešimtį."
+    "Paaiškinu, kodėl 8 + 5 skaičiuoju per dešimtį."
   ],
   "concept": {
     "title": "Kelias per dešimtį",
-    "big_idea": "Kai suma didesnė už dešimt, nereikia skaičiuoti po vieną. Pirma paimk tiek, kiek trūksta iki dešimties. Paskui pridėk, kas liko.",
+    "big_idea": "Kai suma didesnė už dešimt, nereikia skaičiuoti po vieną. Pirma paimk tiek dėmių, kiek trūksta iki dešimties. Paskui pridėk, kas liko.",
     "steps": [
-      "Pirmas skaičius jau dešimtuke. Suskaičiuok tuščius langelius.",
-      "Iš antro skaičiaus paimk tiek dėmių, kiek trūksta. Dešimtukas prisipildo — tai dešimt.",
+      "Dešimtukas turi dešimt langelių. Pirmas skaičius jau jame. Suskaičiuok tuščius langelius.",
+      "Iš antro skaičiaus paimk tiek dėmių, kiek trūksta. Pilname dešimtuke yra dešimt dėmių.",
       "Prie dešimties pridėk dėmes, kurios liko ant stalo.",
-      "Pabandyk ir su kitais skaičiais: 7 + 5, 9 + 6. Kaskart trūksta kito skaičiaus."
+      "Pabandyk ir su kitais skaičiais: 7 + 5, 9 + 6. Kartais trūksta trijų dėmių, kartais vienos."
     ],
-    "example": "Krepšyje 8 obuoliai. Draugas atneša dar 5. Paimk 2 obuolius ir įdėk į krepšį — bus dešimt. Liko 3 obuoliai. Viso 13."
+    "example": "Krepšyje 8 obuoliai. Draugas atneša dar 5. Iš tų penkių įdėk 2 obuolius į krepšį. Krepšyje bus dešimt obuolių. Liko 3 obuoliai. Viso 13 obuolių."
   },
   "sim": {
     "component": "sudetis-per-desimti",
@@ -43,7 +43,7 @@
   },
   "tasks": [
     {
-      "q": "Dešimtuke yra 8 dėmės. Kiek dėmių trūksta iki dešimties?",
+      "q": "Dešimtuke jau yra 8 dėmės. Kiek dėmių trūksta iki dešimties?",
       "options": [
         "2",
         "3",
@@ -51,21 +51,21 @@
       ],
       "answer": 0,
       "hint": "Suskaičiuok tuščius langelius dešimtuke.",
-      "why": "8 + 2 = 10, todėl dešimtukui trūksta dviejų dėmių."
+      "why": "8 + 2 = 10, todėl dar trūksta dviejų dėmių."
     },
     {
       "q": "Kaip 8 + 5 skaičiuoti per dešimtį?",
       "options": [
         "Skaičiuoti po vieną: 9, 10, 11, 12, 13",
         "8 + 2 = 10, paskui 10 + 3",
-        "Prie dešimties pridėti 5 ir gauti 15"
+        "Gauti dešimt, paskui pridėti visus 5"
       ],
       "answer": 1,
       "hint": "Ar visus penkis reikia dėti į dešimtuką?",
-      "why": "Iš penkių paimk 2, gausi dešimt, o likusius 3 pridėk: 13."
+      "why": "Iš penkių paimk 2, gausi dešimt. Paskui pridėk likusius 3 ir gausi 13."
     },
     {
-      "q": "Yra 9 raudoni ir 6 mėlyni rutuliai. Kiek jų iš viso?",
+      "q": "Yra 9 raudoni ir 6 mėlyni kamuoliai. Kiek jų iš viso?",
       "options": [
         "14",
         "15",
@@ -87,19 +87,19 @@
       "why": "Iš penkių paimk 3, dešimtukas prisipildo, lieka 2. 10 + 2 = 12."
     },
     {
-      "q": "Dėžėje jau 16 kamuolių. Įdėjo dar 7. Kiek kamuolių dabar?",
+      "q": "Dėžėje jau 16 kamuolių. Įdėjo dar 7 kamuolius. Kiek kamuolių dabar dėžėje?",
       "options": [
         "22",
         "23",
         "24"
       ],
       "answer": 1,
-      "hint": "Papildyk 16 iki 20 taip, kaip pildei dešimtuką.",
-      "why": "16 + 4 = 20, o likusius 3 pridėk: 23.",
+      "hint": "Kiek trūksta nuo 16 iki 20?",
+      "why": "16 + 4 = 20, o likusius 3 pridėk ir gausi 23.",
       "optional": true
     }
   ],
-  "reflect": "Pagalvok, kaip skaičiuoji 8 + 5. Kurį skaičių tau lengviausia papildyti iki dešimties?",
+  "reflect": "Kuris kelias tau patogesnis: po vieną ar per dešimtį? Kodėl?",
   "teacher": {
     "goal": "Suprasti, kad sudėtį per dešimtį galima atlikti dviem žingsniais: papildyti dešimtuką ir pridėti likusį skaičių; taikyti tai vienaženkliams (8 + 5) ir dviženkliui su vienaženkliu (16 + 7).",
     "prompt": "Kodėl 8 + 5 patogiau skaičiuoti kaip 8 + 2 ir 10 + 3?",

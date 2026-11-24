@@ -613,7 +613,7 @@
     {
      "id": "08-avalynes-dziovinimas",
      "title": "Batas išdžius toks, koks džiūsta",
-     "subtitle": "Formą užfiksuoja džiūvimas, o ne šlapimas",
+     "subtitle": "Formą užfiksuoja džiūvimas, o ne šlapia pradžia",
      "file": "grade-01/technologijos/08-avalynes-dziovinimas.json",
      "minutes": 9,
      "sim": "batas"

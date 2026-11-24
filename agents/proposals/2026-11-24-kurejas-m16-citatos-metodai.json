@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 503,
+  "created": "2026-11-24T10:39:08+02:00",
+  "type": "atitiktis",
+  "title": "M-16 metodo specifikacija cituoja tris tekstus, kurių modulyje nebėra",
+  "body": "Paleidimas #503 įgyvendino #45121 ir, taisydamas vaikui matomus defektus, pakeitė tris `08-avalynes-dziovinimas` tekstus: `subtitle` („…o ne šlapimas“ → „…o ne šlapia pradžia“, nes lietuvių kalboje „šlapimas“ pirmiausia reiškia šlapimą, o ne drėgmę), `concept.steps` (spėjimas perkeltas po „Palauk“ paspaudimo — žr. LL-173) ir `sentences.mixed` („Vienas liko apvalus, kitas susilinko“ → „Batai išdžiūvo nevienodai: vienur nosis apvali, kitur susilinkusi“, nes mišriame rezultate gali būti ir vienas apvalus su dviem sulinkusiais, ir atvirkščiai). `research/wiki/grades/01/metodai.md` M-16 skyriuje (1576, 1640 eil.) vis dar cituojami senieji trys tekstai, o 6 eilutėje — senasis `subtitle`. Tai nėra kūrėjo darbo failas, todėl jo nekeičiau: kitas agentas, skaitydamas metodą, gali grąžinti „šlapimą“ ir neteisingą žingsnių tvarką, manydamas, kad ji suderinta su modeliu. Siūloma metodininkui atnaujinti tris citatas ir 6 eilutės formuluotę bei pažymėti, kad `sentences.mixed` yra neutralus skaičiui (LL-33 šeima).",
+  "target": "research/wiki/grades/01/metodai.md",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/technologijos/08-avalynes-dziovinimas.json:6 — subtitle „Formą užfiksuoja džiūvimas, o ne šlapia pradžia“",
+    "content/lt/grade-01/technologijos/08-avalynes-dziovinimas.json:16–21 — concept.steps tvarka: „Palauk“ prieš spėjimą",
+    "content/lt/grade-01/technologijos/08-avalynes-dziovinimas.json:58 — sentences.mixed „Batai išdžiūvo nevienodai: vienur nosis apvali, kitur susilinkusi.“",
+    "research/wiki/grades/01/metodai.md:6 ir :1576, :1640 — senieji tekstai (šlapimas, „Pirma spėk…“, „Vienas liko apvalus, kitas susilinko“)",
+    "research/wiki/guidelines/pamokos.md — LL-173 (šis paleidimas) dėl žingsnių tvarkos"
+  ]
+}

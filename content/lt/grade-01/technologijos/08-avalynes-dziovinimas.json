@@ -3,7 +3,7 @@
   "grade": 1,
   "strand": "technologijos",
   "title": "Batas išdžius toks, koks džiūsta",
-  "subtitle": "Formą užfiksuoja džiūvimas, o ne šlapimas",
+  "subtitle": "Formą užfiksuoja džiūvimas, o ne šlapia pradžia",
   "minutes": 9,
   "outcomes": [
     "Paaiškinu, kad šlapias batas išdžiūsta tokios formos, kokioje džiūsta.",
@@ -15,9 +15,9 @@
     "big_idea": "Šlapias odinis batas minkštas, todėl lengvai susmunka. Džiūdamas jis sukietėja tokioje formoje, kokioje yra. Todėl į šlapius batus įdedame laikraštį ar įdėklą. Jis laiko formą, kol batas sausas.",
     "steps": [
       "Bakstelėk batą ir pasirink, kas bus viduje.",
-      "Pirma spėk, kas bus visiems trims.",
-      "Spausk „Palauk“ ir žiūrėk į nosį.",
-      "Palauk dar kartą ir perskaityk užrašus."
+      "Spausk „Palauk“ ir pasirodys trys spėjimai.",
+      "Spėk, kas bus visiems trims.",
+      "Spausk „Palauk dar“ ir palygink su savo spėjimu."
     ],
     "example": "Namuose šlapius batus prikimšame laikraščiu ir statome džiūti."
   },
@@ -55,7 +55,7 @@
         "dziusta": "Batai džiūsta. Nosis smunka ten, kur viduje nieko.",
         "edit": "Dar drėgnas. Formą dar galima pakeisti.",
         "sausas": "Batas jau sausas. Forma nebegrįš.",
-        "mixed": "Vienas liko apvalus, kitas susilinko.",
+        "mixed": "Batai išdžiūvo nevienodai: vienur nosis apvali, kitur susilinkusi.",
         "round": "Visi liko apvalūs, nes viduje buvo laikraštis ar įdėklas.",
         "bent": "Visi susilinko, nes nė viename nebuvo nieko.",
         "reset": "Vėl trys šlapi batai."
@@ -116,7 +116,7 @@
     "offline": "Duokite vaikui sausą odos atraižą (arba sausą batą) ir šlapią popieriaus juostelę. Tegul vaikas abi sulenkia: sausa nelinksta, šlapia linksta kaip virvė. Tada tą pačią šlapią juostelę palikite sulenktą lėkštėje iki pamokos pabaigos — ji bus sausa ir liks sulenkta. Namie prašykite vaiko pačiam įdėti laikraštį į šlapius batus ir ryte palyginti su batu, į kurį nieko neįdėjo. Modelio ribos, kurias verta pasakyti balsu: storas ar kietas batas gali išlaikyti formą ir be įdėklo; laikraštis tikrame bate sugeria ir drėgmę, o modelis rodo tik formą; džiovinimo ant radiatoriaus modelis neturi ir apie tai nieko nesako; jau sulinkusį odinį batą galima vėl sušlapinti ir formuoti, bet tai batų priežiūros darbas, ne pirmoko veiksmas.",
     "misconceptions": [
       "„Šlapias batas išdžiūsta ir pats grįš į savo formą.“ Tai nuostata iš gumos ir putų, kurios tikrai atsimena formą. Modelyje batas be įdėklo po džiūvimo lieka sulinkęs, ir jokia būsena negrąžina nosies atgal — mygtuko „ištiesinti“ sąmoningai nėra.",
-      "„Batas sulinko, nes buvo šlapias.“ Visi trys modelio batai šlapi vienodai, todėl šlapimas skirtumo nepaaiškina: sulinko tik tas, kurio viduje nieko nebuvo.",
+      "„Batas sulinko, nes buvo šlapias.“ Visi trys modelio batai šlapi vienodai, todėl šlapumas skirtumo nepaaiškina: sulinko tik tas, kurio viduje nieko nebuvo.",
       "„Įdėklas reikalingas tam, kad batas greičiau išdžiūtų.“ Modelis džiūvimo greičio neturi — nė vieno skaičiaus, nė vienos valandos. Įdėklas laiko formą, o ne greitina.",
       "„Forma priklauso nuo to, kas buvo viduje pradžioje.“ Kol batai dar drėgni, turinį galima pakeisti ir nosis išsitiesia; užšaldyta forma tampa tik tada, kai batas sausas.",
       "„Sulinkęs batas sugedęs visam laikui.“ Modelis to nesako ir neturi sakyti: jis baigiasi sausu batu ir nepretenduoja į batų taisymo pamoką."

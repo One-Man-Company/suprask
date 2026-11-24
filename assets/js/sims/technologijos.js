@@ -1477,8 +1477,11 @@ const BT_SAY = {
   guess: "Pirma spėk, kas bus batams.",
   dziusta: "Batai džiūsta. Nosis smunka ten, kur viduje nieko.",
   edit: "Dar drėgnas. Formą dar galima pakeisti.",
-  saussas: "Batas jau sausas. Forma nebegrįš.",
-  mixed: "Vienas liko apvalus, kitas susilinko.",
+  // Raktas turi sutapti su `config.sentences` raktu (`sausas`), kitaip
+  // atsarginis sakinys neatsiranda ir vaikas, paspaudęs sausą batą,
+  // išgirsta tylą (LL-14 šeima).
+  sausas: "Batas jau sausas. Forma nebegrįš.",
+  mixed: "Batai išdžiūvo nevienodai: vienur nosis apvali, kitur susilinkusi.",
   round: "Visi liko apvalūs, nes viduje buvo laikraštis ar įdėklas.",
   bent: "Visi susilinko, nes nė viename nebuvo nieko.",
   reset: "Vėl trys šlapi batai.",
@@ -1529,7 +1532,7 @@ const batas = {
 
     const st = {
       contents: ["nieko", "nieko", "nieko"],
-      stage: "slapias",     // slapias | dziusta | saussas
+      stage: "slapias",     // slapias | dziusta | sausas
       guess: null,          // same | bent | split
       guessShown: false,
       reported: false,

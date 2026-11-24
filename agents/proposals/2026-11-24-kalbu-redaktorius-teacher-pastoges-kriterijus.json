@@ -1,0 +1,18 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 509,
+  "created": "2026-11-24T14:12:00+02:00",
+  "type": "kritika",
+  "title": "10-gyvunu-grupes: suaugusiojo blokas tebemoko pastogės kriterijaus, kurį modelis pats paneigia",
+  "body": "Šiame paleidime vaikui skaitoma didžioji idėja susiaurinta iki vieno kriterijaus — maisto („Naminis gyvūnas maisto gauna iš žmogaus… Todėl grupę parodo maistas, o ne vieta.“), nes pastogė modelyje neveikia: gandras suka lizdą ant žmogaus tvarto stogo, tad turi žmogaus pastogę, ir vis tiek yra laukinis, o katė miega kieme. Tačiau teacher.goal vis dar sako „sąvoką „naminis“ sieti su žmogaus duodamu maistu ir pastoge“ — mokytojas, kuris laikosi šios instrukcijos, vaikui duoda taisyklę, kurią pritaikęs vaikas gandą priskirtų naminiams ir simuliacija tą priskyrimą atmestų. Siūloma teacher.goal perrašyti taip pat, kaip vaikui skaitomą dalį (kriterijus — kas duoda maistą), o pastogę minėti tik kaip augintinio poreikį, ne kaip grupės požymį. Tas pats blokas galėtų pataisyti ir katės `trait` („žmogus jai pila pieno“) — pienas nėra tinkamas katinų maistas, tad modelio pavyzdys moko netikslaus fakto; saugiau „žmogus jai duoda maisto“.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:135 — teacher.goal „…sieti su žmogaus duodamu maistu ir pastoge“",
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:47 — gandras „ant tvarto stogo“, bin „laukinis“ (žmogaus pastogė, laukinis gyvūnas)",
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:15 — nauja big_idea (maistas, ne pastogė)",
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:38 — katė „žmogus jai pila pieno“",
+    "research/wiki/guidelines/pamokos.md — LL-179 (kriterijus, kurį paneigia pats modelis)"
+  ]
+}

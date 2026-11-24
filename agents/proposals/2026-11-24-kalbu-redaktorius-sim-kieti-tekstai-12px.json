@@ -1,0 +1,18 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 509,
+  "created": "2026-11-24T14:10:00+02:00",
+  "type": "ux",
+  "title": "10-gyvunu-grupes: simuliacijos tekstas 12,8 px ir 4 kietos eilutės, kurių nemato nei kalbos, nei garso vartai",
+  "body": "Modulio 10-gyvunu-grupes simuliacijoje mažiausias vaikui rodomas tekstas yra 12,8 px (0,8rem) ir toks pats visuose trijuose plotuose — tai žemiau bet kokios 1 klasei skaitomos ribos, o check_view.py jį rodo kaip pastabą, nes docs/ standarte sim teksto minimumo dar nėra (#44331). Be to, dalis šio modulio sim teksto gyvena ne sim.config, o kode: „Pirma pasirink gyvūną.“ (pasaulis.js:795), „Paspausk „Žiema“ ir pažiūrėk, kas pasikeis.“ (816), „Ne šitaip. …“ (839) ir „Paaiškės, kai visi gyvūnai bus savo vietose.“ (892). Todėl jų nemato scripts/check_language.py (jis tikrina tik sim.config) ir scripts/generate_audio.py (jis renka sim.config) — vaikas jų negirdi, o sakinio ilgio vartai jų netikrina. Siūloma: šias eilutes perkelti į sim.config.sentences (nauji raktai, pvz. pickFirst, hintLocked, wrongBin, hintWaiting), o #gg-winter-hint dydį kelti bent iki 0,95rem — taip pats mažiausias sim tekstas sutaptų su užduočių tekstu, o tekstas taptų ir tariamas, ir tikrinamas.",
+  "target": "assets/js/sims/pasaulis.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:716 — <p id=\"gg-winter-hint\" style=\"…font-size:.8rem…\"> (12,8 px 16 px šaknyje)",
+    "assets/js/sims/pasaulis.js:795, 816, 839, 892 — vaikui rodomi sakiniai įrašyti kode, ne sim.config",
+    "python3 scripts/check_view.py --base http://127.0.0.1:8972/ --module 10-gyvunu-grupes --viewports desktop,tablet,phone → sim_fonts.min = 12.8 visuose trijuose plotuose (worst: p „Paaiškės, kai visi gyvūnai bus s“)",
+    "scripts/check_language.py:check_sim_config() — tikrina tik sim.config; scripts/generate_audio.py:collect() — renka tik sim.config",
+    "docs/KURINIO-STANDARTAS.md — sim teksto minimumo nėra (atviras #44331)"
+  ]
+}

@@ -175,3 +175,41 @@ Modulis: **21-erdvines-figuros** (1 kl., matematika). Audito #137 radiniai #6, #
 **Palikta sąmoningai:** `title` („Erdvinės figūros“) ir `subtitle` (indekso kopija — LL-05/LL-21, keitimas reikalautų `index.json` sinchronizacijos, o tekstas suprantamas); `sim.config.sentences[*]` (17 sakinių turi garso įrašus — keitimas paliktų vaiką be balso iki pergeneravimo; „Pradedam iš naujo.“ ir „Jis visą laiką buvo tas pats.“ lieka); `bodies.gretasienis` ir `sentences.gretasienis-*` (trumpasis „gretasienis“ vietoj „stačiakampis gretasienis“ — atviras #143 pasiūlymas, ne kalbos redaktoriaus sprendimas); `concept.big_idea` (4 trumpi sakiniai vietoj standarto „1–2“ — 1 klasei trumpesni sakiniai sąmoningesni už ilgesnį su jungtukais; validatoriuje nepažeidžia); `tasks[3].options` („Kamuolys plokščias“ / „Kamuolys apvalus iš visų pusių“ / „Lėkštė neturi krašto“ — skiriasi prasme, `answer` indeksas neliestas).
 
 **Nauji pasiūlymai:** `agents/proposals/2026-11-24-kalbu-redaktorius-ar-vieto-arba.json` (check_language nemato klausiamojo „ar“ instrukcijoje) ir `agents/proposals/2026-11-24-kalbu-redaktorius-sim-seen-etikete-12px.json` (`.ef-seen` 12,8 px — sim teksto minimumo vartai neegzistuoja, #44331). Nauja pamoka: LL-178 (nurodymas pagal vietą ekrane, o ne pagal daiktą).
+
+## Taisymo būsena (paleidimas #509, 2026-11-24)
+
+Modulis `10-gyvunu-grupes`. `check_language.py` modulyje rodė **0 įrašų ir prieš, ir po** — visi radiniai buvo žmogaus akių lauke (LL-52/LL-53 šeima: sakinio tiesa, ne jo ilgis). Šįkart pagrindinis klausimas buvo ne „ar sakinys per ilgas“, o „ar jis teisingas visiems šešiems modelio gyvūnams“ (nauja pamoka LL-179).
+
+| Vieta | Prieš | Po | Priežastis |
+|---|---|---|---|
+| `subtitle` (+ `index.json`) | „…tai **pasako** maistas, o ne vieta“ | „…tai **parodo** maistas, o ne vieta“ | „pasakyti“ nenaudojama negyvam daiktui; „parodo“ sutampa su `sim.config.sentences.rule` |
+| `concept.big_idea` | „…maistą **ir pastogę** gauna… Laukinis **susiranda pats**. Todėl grupę **pasako ne vieta, o tai, kas gyvūnu rūpinasi**.“ | „…**maisto** gauna… Laukinis **maisto** susiranda pats. Todėl grupę **parodo maistas, o ne vieta**.“ | pastogė — kriterijus, kurį paneigia gandras ant tvarto stogo; „tai, kas rūpinasi“ — abstrakti šalutinė 6–7 m. vaikui |
+| `concept.steps[2]` | „…ir **palygink, kas lieka, o kas išeina**“ | „…ir **pažiūrėk, kas pasikeitė**“ | palyginimas be kriterijaus; dvejetainis rėmas netinka ežiui (įminga) ir lapei (ateina arčiau) |
+| `tasks[1].q` | „Karvė gyvena tvarte, **o gandras ant tvarto stogo**.“ | „Karvė gyvena tvarte. Gandras gyvena ant tvarto stogo.“ | elipsė be veiksmažodžio — lėtas skaitytojas sustoja (ta pati šeima kaip #auditas 23/47) |
+| `tasks[1].options[2]` | „Abu, nes jie gyvena **viename kieme**“ | „Abu, nes jie gyvena **prie to paties tvarto**“ | variante atsirado žodis, kurio sąlygoje nėra (kiemas); klaidinga nuoroda į kitą vietą |
+| `tasks[2].q` | „**Kodėl katinas yra naminis gyvūnas?**“ | „**Ar katinas naminis, ar laukinis? Kodėl?**“ | sąlyga teigė atsakymą, o variantas „Laukinis, nes gyvena lauke“ į tokį klausimą neatsako |
+| `tasks[2].hint` | „**Kodėl žmogus pila jam pieno?**“ | „**Pagalvok, kas katinui duoda maisto.**“ | užuomina klausė apie žmogaus motyvą (vaikas atsakytų „nes nori pieno“), o ne apie kriterijų |
+| `tasks[3].q` | „…į kiemą **pažiūrėti vištų**“ | „…į kiemą **pas vištas**“ | netaisyklingas kilmininkas po „pažiūrėti“ |
+| `tasks[3].options[2]` | „Taip, nes ji **ieško maisto kieme**“ | „Taip, nes ji **moka gaudyti vištas**“ | 0 ir 2 variantai buvo beveik ta pati mintis (vieta) — dabar skiriasi ašis: įgūdis ≠ žmogaus priežiūra |
+| `tasks[3].hint` | „Kas jai **duoda maisto**?“ | „Kas ją **šeria**?“ | naujas variantas atėmė „maistas“ iš klaidingų variantų, tad užuomina ėmė to žodžio neišduoti (LL-22 vartai; validatorius tai pagavo) |
+| `tasks[4].options[1]` | „Lieka tvarte ir **lesa šieną su karve**“ | „**Žmogus atneša jam maisto į tvartą**“ | gandras šieno neėda — variantas buvo juokingas, ne klaidingas dėl grupės; naujas tikrina branduolį (maitina žmogus ⇒ naminis?) |
+| `tasks[4].why` | „**Karvei šieną duoda žmogus.**“ | „**Karvė lieka, nes jai šieną duoda žmogus.**“ | kontrastas su gandru buvo tik numanomas |
+| `tasks[5].q` | „Šuo gyveno **prieglaudoje**. Ten juo rūpinosi…“ | „Šuo gyveno prieglaudoje. **Prieglauda — tai namai, kur šunys laukia šeimos.** Juo rūpinosi…“ | „prieglauda“ 6–7 m. vaikui neaiškus žodis, o nuo jo supratimo priklauso visa užduotis |
+| `tasks[5].hint` | „…**Kas visai kitaip?**“ | „…**Ar jis ten buvo laukinis?**“ | nebaigtas klausimas („kas kitaip?“) → klausimas, kuris tikrina kriterijų, o ne įvardija variantą |
+| `sim.config.sentences.winter` | „Žiema. Pažiūrėk, **kas lieka, o kas išeina**.“ | „Žiema. Pažiūrėk, **kas pasikeitė**.“ | tas pats dvejetainis rėmas (garso įrašas pergeneruotas) |
+| `sim.config.sentences.winterNote` | „**Vieta pasikeitė**, o grupė liko ta pati.“ | „**Atėjo žiema**, o grupė liko ta pati.“ | vietą keičia 2 gyvūnai iš 6; teiginys prieštaravo tam, ką vaikas ką tik matė sąraše (garso įrašas pergeneruotas) |
+
+**Skaičiai.** `check_language.py --grade 1`: klaidos 0 → 0, įspėjimai 0 → 0, pastabos 53 → 53; modulyje 0 įrašų prieš ir po. Žmogaus akių radiniai: **16 → 0** (14 modulio laukuose + 2 `sim.config` sakiniai; `subtitle` pakeistas ir `index.json`, kad metaduomenys nelūžtų — LL-05). `validate_content.py` (be parametrų ir `--grade 1`): 0 klaidų, 0 įspėjimų. `check_audio.py`: 1112 tekstų / 2224 įrašų — skaičiai nepakito (2 sakiniai pakeisti, 2 nauji įrašai × n/s, 4 mp3 pergeneruoti `.venv/bin/python scripts/generate_audio.py`, 4 našlaičiai pašalinti `--prune`), visi 2224 mp3 naudojami.
+
+**`check_view.py` (Brave skydų imitacija, 127.0.0.1:8972, `--module 10-gyvunu-grupes`):** prieš ir po vienodai —
+| Plotis | overflow | smallCount | minTaskFont | tasksVisible | clipped | loading/fatal | problems |
+|---|---|---|---|---|---|---|---|
+| 1440 | 0 | 0 | 21,44 px | 5/5 | [] | false | [] |
+| 1024 | 0 | 0 | 21,44 px | 5/5 | [] | false | [] |
+| 390 | 0 | 0 | 19,14 px | 5/5 | [] | false | [] |
+
+**DOM zondas** (`probe_gg.py`, 390 px, brauzerio blokai visiems ne vietiniams URL): 5 užduotys su naujais tekstais; sim: 6 kortelės su vieta, abi dėžės, užrakintas „Žiema“ pasako „Pirma sudėk visus gyvūnus. Tada „Žiema“ parodys, kas pasikeis.“ (LL-04), teisingai sudėjus — „Visi gyvūnai savo vietose. Grupę parodo maistas, o ne vieta.“, tada „Žiema“ atrakina ir rodo „Atėjo žiema, o grupė liko ta pati. Karvė vis dar naminė, o gandras — laukinis.“; konsolės klaidų 0.
+
+**Palikta sąmoningai:** `title` „Kas gyvena tvarte?“ (kabliukas; keitimas reikalautų `index.json` ir viso maršruto antraščių); `sim.config.sentences.wrong` „Pažiūrėk ne į vietą, o į tai, kas duoda maistą.“ (kontrastinis neiginys, ne dvigubas; 8 žodžiai; perrašymas būtų stilius, ne defektas); `concept.example` „ūkininkas“ (9 raidės, konkretus ir pažįstamas žodis, ne vertinys); `teacher.*` (suaugusiojo tekstas — pastogės kriterijaus pataisa perduota pasiūlymu); `svietimas1` (ne vaikui skaitoma, o jo 1 žingsnis jau atitinka naują `big_idea`); `tasks[1]`, `tasks[3]`, `tasks[5]` `answer` indeksai ir variantų tvarka — neliesti nė viename.
+
+**Nauji pasiūlymai:** `2026-11-24-kalbu-redaktorius-sim-kieti-tekstai-12px.json` (sim tekstas 12,8 px + 4 sakiniai kode, kurių nemato nei kalbos, nei garso vartai) ir `2026-11-24-kalbu-redaktorius-teacher-pastoges-kriterijus.json` (teacher.goal tebemoko pastogės kriterijaus). Nauja pamoka: LL-179 (kriterijus, kurį paneigia pats modelis).

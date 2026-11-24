@@ -3,7 +3,7 @@
   "grade": 1,
   "strand": "pasaulio-pazinimas",
   "title": "Kas gyvena tvarte?",
-  "subtitle": "Naminis ar laukinis — tai pasako maistas, o ne vieta",
+  "subtitle": "Naminis ar laukinis — tai parodo maistas, o ne vieta",
   "minutes": 9,
   "outcomes": [
     "Skiriu naminius ir laukinius pagal tai, kas duoda maistą.",
@@ -12,11 +12,11 @@
   ],
   "concept": {
     "title": "Kas duoda maistą?",
-    "big_idea": "Naminis gyvūnas maistą ir pastogę gauna iš žmogaus. Laukinis susiranda pats. Todėl grupę pasako ne vieta, o tai, kas gyvūnu rūpinasi.",
+    "big_idea": "Naminis gyvūnas maisto gauna iš žmogaus. Laukinis maisto susiranda pats. Todėl grupę parodo maistas, o ne vieta.",
     "steps": [
       "Pasirink gyvūną ir pažiūrėk, kur jis gyvena.",
       "Atsakyk, kas jam duoda maistą: žmogus ar jis pats.",
-      "Paspausk „Žiema“ ir palygink, kas lieka, o kas išeina."
+      "Paspausk „Žiema“ ir pažiūrėk, kas pasikeitė."
     ],
     "example": "Karvė gyvena tvarte, o šieną jai duoda ūkininkas. Gandras suka lizdą ant tvarto stogo, bet varles gaudo pats. Žiemą jis išskrenda."
   },
@@ -66,66 +66,66 @@
         "lock": "Pirma sudėk visus gyvūnus. Tada „Žiema“ parodys, kas pasikeis.",
         "done": "Visi gyvūnai savo vietose.",
         "rule": "Grupę parodo maistas, o ne vieta.",
-        "winter": "Žiema. Pažiūrėk, kas lieka, o kas išeina.",
+        "winter": "Žiema. Pažiūrėk, kas pasikeitė.",
         "summer": "Vasara. Grįžk prie gyvūnų.",
-        "winterNote": "Vieta pasikeitė, o grupė liko ta pati. Karvė vis dar naminė, o gandras — laukinis."
+        "winterNote": "Atėjo žiema, o grupė liko ta pati. Karvė vis dar naminė, o gandras — laukinis."
       }
     }
   },
   "tasks": [
     {
-      "q": "Karvė gyvena tvarte, o gandras ant tvarto stogo. Kuris gyvūnas yra naminis?",
+      "q": "Karvė gyvena tvarte. Gandras gyvena ant tvarto stogo. Kuris gyvūnas yra naminis?",
       "options": [
         "Gandras, nes jis gyvena ant tvarto",
         "Karvė, nes jai maistą duoda žmogus",
-        "Abu, nes jie gyvena viename kieme"
+        "Abu, nes jie gyvena prie to paties tvarto"
       ],
       "answer": 1,
       "hint": "Pagalvok, kas gyvūną šeria kiekvieną dieną.",
       "why": "Karvei maistą duoda žmogus, o gandras varles gaudo pats."
     },
     {
-      "q": "Žmogus katiną maitina ir juo rūpinasi. Kodėl katinas yra naminis gyvūnas?",
+      "q": "Žmogus katiną maitina ir juo rūpinasi. Ar katinas naminis, ar laukinis? Kodėl?",
       "options": [
         "Laukinis, nes gyvena lauke",
         "Naminis, nes jis moka gaudyti peles",
         "Naminis, nes juo rūpinasi žmogus"
       ],
       "answer": 2,
-      "hint": "Kodėl žmogus pila jam pieno?",
+      "hint": "Pagalvok, kas katinui duoda maisto.",
       "why": "Katinui maistą duoda žmogus, todėl jis naminis, nors miega lauke."
     },
     {
-      "q": "Lapė atbėgo į kiemą pažiūrėti vištų. Ar ji dabar naminė?",
+      "q": "Lapė atbėgo į kiemą pas vištas. Ar ji dabar naminė?",
       "options": [
         "Taip, nes ji atbėgo į kiemą",
         "Ne, ji pati susiranda maistą",
-        "Taip, nes ji ieško maisto kieme"
+        "Taip, nes ji moka gaudyti vištas"
       ],
       "answer": 1,
-      "hint": "Lapė tik įbėgo į kiemą. Kas jai duoda maisto?",
+      "hint": "Lapė tik įbėgo į kiemą. Kas ją šeria?",
       "why": "Lapė maisto ieško pati, todėl ji laukinė. Kiemas to nekeičia."
     },
     {
       "q": "Žiemą po ledu nebeliko varlių. Kur gandras randa maistą?",
       "options": [
         "Skrenda į šiltus kraštus, kur varlių dar yra",
-        "Lieka tvarte ir lesa šieną su karve",
+        "Žmogus atneša jam maisto į tvartą",
         "Įminga ir miega iki pavasario"
       ],
       "answer": 0,
       "hint": "Pažiūrėk, ką gandras gaudo vasarą.",
-      "why": "Gandras laukinis, todėl maisto ieško kitur. Karvei šieną duoda žmogus."
+      "why": "Gandras laukinis, todėl maisto ieško kitur. Karvė lieka, nes jai šieną duoda žmogus."
     },
     {
-      "q": "Šuo gyveno prieglaudoje. Ten juo rūpinosi daug žmonių. Paskui jį paėmė viena šeima. Kas šuniui pasikeitė?",
+      "q": "Šuo gyveno prieglaudoje. Prieglauda — tai namai, kur šunys laukia šeimos. Juo rūpinosi daug žmonių. Paskui jį paėmė viena šeima. Kas šuniui pasikeitė?",
       "options": [
         "Šuo tapo laukiniu, nes paliko prieglaudą",
         "Dabar jam nebereikia žmogaus",
         "Dabar jis turi savo namus ir vieną šeimininką"
       ],
       "answer": 2,
-      "hint": "Prieglaudoje jau rūpinosi žmonės. Kas visai kitaip?",
+      "hint": "Prieglaudoje šunį šėrė žmonės. Ar jis ten buvo laukinis?",
       "why": "Šuo visą laiką buvo naminis. Dabar jis turi savo namus ir vieną šeimininką.",
       "optional": true
     }

@@ -727,6 +727,10 @@
   "n": "n/65dc70d3619e6b68-384c019b.mp3",
   "s": "s/65dc70d3619e6b68-bc774712.mp3"
  },
+ "Atėjo žiema, o grupė liko ta pati. Karvė vis dar naminė, o gandras — laukinis.": {
+  "n": "n/b648869c56c2bcfd-ff66b795.mp3",
+  "s": "s/b648869c56c2bcfd-70528314.mp3"
+ },
  "Atėmei devynias. Liko keturios.": {
   "n": "n/b30a200f32c93a65-bdf116ed.mp3",
   "s": "s/b30a200f32c93a65-d4668ca3.mp3"
@@ -3747,10 +3751,6 @@
   "n": "n/003868e611555a1e-a0b8966d.mp3",
   "s": "s/003868e611555a1e-47869961.mp3"
  },
- "Vieta pasikeitė, o grupė liko ta pati. Karvė vis dar naminė, o gandras — laukinis.": {
-  "n": "n/35f699915a731df8-4c14acdf.mp3",
-  "s": "s/35f699915a731df8-7b1f0f81.mp3"
- },
  "Viršutinis laidas yra. Apatinio nėra, todėl kelias neužsidaro.": {
   "n": "n/4523bd23cb838fb1-fe805551.mp3",
   "s": "s/4523bd23cb838fb1-4726d579.mp3"
@@ -4395,9 +4395,9 @@
   "n": "n/8c0846000ca22d18-ba6f7baa.mp3",
   "s": "s/8c0846000ca22d18-48ef6887.mp3"
  },
- "Žiema. Pažiūrėk, kas lieka, o kas išeina.": {
-  "n": "n/cbc37c5adddc2d8e-ce43f981.mp3",
-  "s": "s/cbc37c5adddc2d8e-a1964894.mp3"
+ "Žiema. Pažiūrėk, kas pasikeitė.": {
+  "n": "n/6c65ddebd91e6e94-996ba3db.mp3",
+  "s": "s/6c65ddebd91e6e94-4b23c1ea.mp3"
  },
  "Žinduoliai": {
   "n": "n/ddf119334452b7c6-973e39a3.mp3",

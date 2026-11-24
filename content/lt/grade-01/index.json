@@ -338,7 +338,7 @@
     {
      "id": "10-gyvunu-grupes",
      "title": "Kas gyvena tvarte?",
-     "subtitle": "Naminis ar laukinis — tai pasako maistas, o ne vieta",
+     "subtitle": "Naminis ar laukinis — tai parodo maistas, o ne vieta",
      "file": "grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json",
      "minutes": 9,
      "sim": "gyvunu-grupes"

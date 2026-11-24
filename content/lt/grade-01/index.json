@@ -100,6 +100,14 @@
      "file": "grade-01/lietuviu-kalba/13-pasakojimo-vidurys.json",
      "minutes": 9,
      "sim": "pasakojimo-vidurys"
+    },
+    {
+     "id": "14-veikejas-pagal-teksta",
+     "title": "Koks veikėjas? Ką sako sakinys",
+     "subtitle": "Apibūdinimą pasako sakinys, o ne paveikslėlis",
+     "file": "grade-01/lietuviu-kalba/14-veikejas-pagal-teksta.json",
+     "minutes": 9,
+     "sim": "veikejas-pagal-teksta"
     }
    ]
   },

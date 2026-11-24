@@ -3575,9 +3575,21 @@
   "n": "n/a164530612662813-699f1656.mp3",
   "s": "s/a164530612662813-125c3a7d.mp3"
  },
+ "Vaikas kas rytą neša katei vandens.": {
+  "n": "n/c1e97ddfe5e1d02c-096e83a2.mp3",
+  "s": "s/c1e97ddfe5e1d02c-5318a4c9.mp3"
+ },
  "Vaikas neužsidėjo antkelių.": {
   "n": "n/1cec0c52ed033d29-5fd803ab.mp3",
   "s": "s/1cec0c52ed033d29-cc2e3351.mp3"
+ },
+ "Vaikas pasidalijo bandelę su kate.": {
+  "n": "n/e56905d850bb616c-fcf4b775.mp3",
+  "s": "s/e56905d850bb616c-15e8d5dd.mp3"
+ },
+ "Vaikas paslėpė bandelę nuo katės.": {
+  "n": "n/7c1cccab89c64f53-083d60c5.mp3",
+  "s": "s/7c1cccab89c64f53-866aa103.mp3"
  },
  "Vaikas vėl žaidžia. Jam energiją duoda maistas.": {
   "n": "n/96d3ef5dc6fa059c-eda98ea2.mp3",
@@ -3799,6 +3811,10 @@
   "n": "n/3e23e8160039594a-6a770dfd.mp3",
   "s": "s/3e23e8160039594a-fe75090f.mp3"
  },
+ "bailus": {
+  "n": "n/5993c96664cd2fa3-d9889df7.mp3",
+  "s": "s/5993c96664cd2fa3-b9fcd96e.mp3"
+ },
  "berniukas": {
   "n": "n/fd6be65d5c46e196-bb358764.mp3",
   "s": "s/fd6be65d5c46e196-fa8e16f5.mp3"
@@ -3814,6 +3830,10 @@
  "d": {
   "n": "n/18ac3e7343f01689-60745850.mp3",
   "s": "s/18ac3e7343f01689-784f3d55.mp3"
+ },
+ "dosnus": {
+  "n": "n/d9c64e4f5da5cab4-d63494b7.mp3",
+  "s": "s/d9c64e4f5da5cab4-9ecd3a16.mp3"
  },
  "duo": {
   "n": "n/fdd823e31be438f6-36d88af4.mp3",
@@ -3838,6 +3858,10 @@
  "geria": {
   "n": "n/ae87882bd34b6c51-e646447c.mp3",
   "s": "s/ae87882bd34b6c51-bcf9e576.mp3"
+ },
+ "gobšus": {
+  "n": "n/d8b1dab1bf3ed948-0365a609.mp3",
+  "s": "s/d8b1dab1bf3ed948-5d6cc88a.mp3"
  },
  "h": {
   "n": "n/aaa9402664f1a41f-54aec787.mp3",
@@ -3898,6 +3922,10 @@
  "laikas": {
   "n": "n/d8f1cb5734f12989-3bcc6bfd.mp3",
   "s": "s/d8f1cb5734f12989-1df35588.mp3"
+ },
+ "linksmas": {
+  "n": "n/40477ca3b1e3dc44-19f764a7.mp3",
+  "s": "s/40477ca3b1e3dc44-c8e53ba0.mp3"
  },
  "lis": {
   "n": "n/afc0b0d1d853ba78-778cbf59.mp3",
@@ -4002,6 +4030,10 @@
  "ryte": {
   "n": "n/f031a87bdef1b790-18a185ad.mp3",
   "s": "s/f031a87bdef1b790-38ffd80f.mp3"
+ },
+ "rūpestingas": {
+  "n": "n/689c21004ba448a8-4578f2f9.mp3",
+  "s": "s/689c21004ba448a8-80bdc5c7.mp3"
  },
  "s": {
   "n": "n/043a718774c572bd-28b23a7c.mp3",

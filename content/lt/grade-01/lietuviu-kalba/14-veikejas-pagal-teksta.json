@@ -1,0 +1,161 @@
+{
+  "id": "14-veikejas-pagal-teksta",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Koks veikėjas? Ką sako sakinys",
+  "subtitle": "Apibūdinimą pasako sakinys, o ne paveikslėlis",
+  "minutes": 9,
+  "outcomes": [
+    "Įvardiju veikėją ir pasakau, koks jis, remdamasis sakiniu.",
+    "Paaiškinu, kad poelgį pasako sakinys, o ne paveikslėlis.",
+    "Pasakau, kodėl tas pats paveikslėlis gali turėti du apibūdinimus."
+  ],
+  "concept": {
+    "title": "Veikėją apibūdina jo poelgis",
+    "big_idea": "Paveikslėlis parodo, kas yra veikėjas. Ką jis padarė, pasako sakinys. Todėl apibūdinimą randi sakinyje, o ne paveikslėlyje.",
+    "steps": [
+      "Surask, apie ką kalbama: kas yra veikėjas.",
+      "Perskaityk, ką veikėjas padarė.",
+      "Iš poelgio pasirink žodį: dosnus, gobšus, rūpestingas.",
+      "Tas pats paveikslėlis lieka, o kitas sakinys duoda kitą žodį."
+    ],
+    "example": "Paveikslėlyje vaikas ir katė. Sakinys „Vaikas pasidalijo bandelę“ sako, kad jis dosnus. Sakinys „Vaikas paslėpė bandelę“ sako, kad jis gobšus. Paveikslėlis abiem atvejais tas pats."
+  },
+  "sim": {
+    "component": "veikejas-pagal-teksta",
+    "config": {
+      "title": "Tas pats paveikslėlis, kitas sakinys",
+      "sentences": [
+        "Vaikas pasidalijo bandelę su kate.",
+        "Vaikas paslėpė bandelę nuo katės.",
+        "Vaikas kas rytą neša katei vandens."
+      ],
+      "words": [
+        "dosnus",
+        "gobšus",
+        "rūpestingas",
+        "linksmas",
+        "bailus"
+      ],
+      "cases": [
+        {
+          "sentence": 0,
+          "options": [
+            "gobšus",
+            "dosnus",
+            "linksmas"
+          ],
+          "answer": 1,
+          "result": "Vaikas davė bandelės dalį. Todėl jis dosnus.",
+          "misses": {
+            "0": "Jei vaikas būtų gobšus, jis bandelės katei neduotų. O sakinys sako „pasidalijo“.",
+            "2": "Sakinys nepasako, kokia vaiko nuotaika. Jis pasako, ką vaikas padarė."
+          }
+        },
+        {
+          "sentence": 1,
+          "options": [
+            "dosnus",
+            "gobšus",
+            "rūpestingas"
+          ],
+          "answer": 1,
+          "result": "Vaikas bandelę paslėpė. Todėl jis gobšus.",
+          "misses": {
+            "0": "Pasidalyti reiškia duoti dalį. O sakinys sako „paslėpė“.",
+            "2": "Rūpestingas elgiasi kitaip: jis rūpinasi kate, o ne slepia maistą."
+          }
+        },
+        {
+          "sentence": 2,
+          "options": [
+            "bailus",
+            "gobšus",
+            "rūpestingas"
+          ],
+          "answer": 2,
+          "result": "Vaikas kasdien rūpinasi kate. Todėl jis rūpestingas.",
+          "misses": {
+            "0": "Bailus bijotų katės. Sakinys sako, kad vaikas jai neša vandens.",
+            "1": "Gobšus pasiliktų viską sau. O vaikas duoda katei vandens."
+          }
+        }
+      ],
+      "feedback": {
+        "start": "Paveikslėlis nesikeičia. Keičiasi tik sakinys.",
+        "done": "Tas pats paveikslėlis, trys skirtingi sakiniai.",
+        "again": "Pradedam iš naujo. Tas pats paveikslėlis."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Jonas padalijo savo sumuštinį draugui. Kuris žodis apibūdina Joną?",
+      "options": [
+        "gobšus",
+        "bailus",
+        "dosnus"
+      ],
+      "answer": 2,
+      "hint": "Perskaityk, ką Jonas padarė su sumuštiniu.",
+      "why": "Jonas atidavė dalį sumuštinio. Todėl jis dosnus."
+    },
+    {
+      "q": "Marta visą vakarą slaugė sergančią katę. Kuris žodis apibūdina Martą?",
+      "options": [
+        "rūpestinga",
+        "baili",
+        "linksma"
+      ],
+      "answer": 0,
+      "hint": "Pažiūrėk, ką Marta darė visą vakarą.",
+      "why": "Marta slaugė sergančią katę, todėl ji rūpestinga."
+    },
+    {
+      "q": "Sakinyje „Berniukas paslėpė pyragą nuo sesės“ kuris žodis apibūdina berniuką?",
+      "options": [
+        "linksmas",
+        "gobšus",
+        "dosnus"
+      ],
+      "answer": 1,
+      "hint": "Ką berniukas padarė su pyragu: pasidalijo ar paslėpė?",
+      "why": "Pyragas paslėptas nuo sesės, todėl berniukas gobšus."
+    },
+    {
+      "q": "Berniukas padavė kamuolį draugui. Paskui nusinešė kamuolį namo. Kuris darbas rodo gobšumą?",
+      "options": [
+        "Pirmas darbas",
+        "Antras darbas",
+        "Abu darbai"
+      ],
+      "answer": 1,
+      "hint": "Kuris veiksmas palieka draugą be kamuolio?",
+      "why": "Nusinešti kamuolį namo reiškia nepasidalyti. Tai gobšumas.",
+      "optional": true
+    }
+  ],
+  "reflect": "Pagalvok apie pasaką, kurią skaitei. Kaip supratai, koks yra veikėjas?",
+  "teacher": {
+    "goal": "Skaitymo sritis B, slenkstinis lygis B.2.1.1: „Įvardija ir apibūdina bent vieną veikėją“ (sources/pradinio-bp-rekomendacijos-2024.txt:32536–32545). Vaikas mokosi apibūdinimą grįsti sakiniu — poelgiu, o ne paveikslėliu, kuriame matosi tik tai, kas veikėjas yra.",
+    "prompt": "Iš kur sužinojai, koks yra vaikas: iš paveikslėlio ar iš sakinio? Kas sakinyje tai pasakė?",
+    "offline": "Nupieškite su vaiku vieną paveikslėlį: vaikas ir katė, tarp jų krepšys. Tada suaugusysis du kartus perskaito po vieną sakinį: „Vaikas pasidalijo su kate“ ir „Vaikas paslėpė nuo katės“. Po kiekvieno sakinio vaikas pasako vieną žodį apie vaiką. Aptarkite: paveikslėlis nepasikeitė, o žodis pasikeitė — kodėl?",
+    "misconceptions": [
+      "„Ką veikėjas daro, jau matau paveikslėlyje.“ Modelis rodo tą patį piešinį su priešingais sakiniais: piešinys duoda tą patį atsakymą abiem atvejais, o teisingi žodžiai skiriasi.",
+      "„Apibūdinimas — tai išvaizda: didelis, mažas, rudas.“ Išvaizdą matome, o apie dosnumą ar gobšumą sprendžiame iš to, ką veikėjas padarė.",
+      "„Jei piešinyje vaikas šypsosi, jis visada linksmas.“ Piešinys rodo vieną akimirką, o sakinys pasako poelgį; todėl apibūdinamas poelgis, o ne veido išraiška."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“, B.2 sritis, slenkstinis lygis B.2.1.1 „Įvardija ir apibūdina bent vieną veikėją“ ir to paties lygio diagnostinis klausimas (sources/pradinio-bp-rekomendacijos-2024.txt:32536–32545).",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), 1 klasė, skaitymo sritis B.2: skaitomo teksto veikėjo įvardijimas ir apibūdinimas.",
+    "Olsen, M. S. (1986). Interactions of Text and Illustration in Beginning Reading (ERIC ED267394): pradedantys skaityti pirmokai, kuriems skaitymas sekasi sunkiau, supratimo klausimus atsako geriau iliustruotuose tekstuose ir remiasi piešiniais, o ne tekstu — https://files.eric.ed.gov/fulltext/ED267394.pdf",
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:144 — B.2 srities slenkstinis lygis iki šiol neturėjo nė vieno modulio."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena didelė idėja: veikėją apibūdina poelgis, kurį pasako sakinys, o ne paveikslėlis (T1.1, T1.2).",
+    "2 žingsnis — užduotys perkelia taisyklę į naujus veikėjus ir naujus poelgius, o ne kartoja modulio sakinius (T2.2).",
+    "3 žingsnis — kiekvienas netinkamas žodis turi savo paaiškinimą apie tą patį sakinį, o teisingas žodis nerodomas automatiškai (T3.1, T3.2).",
+    "8 žingsnis — veikla be ekrano su vienu piešiniu ir dviem priešingais sakiniais (T8.3)."
+  ]
+}

@@ -226,3 +226,11 @@ Paleidime #496 „PROGRAMOS PADENGTIS“ blokas 1 klasei rodė 45 padengtas, 1 d
 **Ką siūlome programos derintojui:** (1) skaidyti tokią eilutę į dvi (`D:drabuziu-prieziura` ir `D:avalynes-prieziura`, po atskirą `outcome` ir `interactivity`) arba (2) palikti vieną eilutę ir įrašyti lauką `parts: ["drabužiai", "avalynė"]` su `modules` susiejimu, kad padengtis būtų skaičiuojama **daliai**, o ne eilutei. Kol to nėra, rankinė taisyklė: jei `outcome` mini du daiktus su „ir“ / kableliu, o `modules` yra vienas, eilutė tikrinama žmogaus.
 
 Šiame paleidime eilutės neliečiau (tai ne metodininko failas) — tema tik užrašyta ir su ja susijęs metodas M-16 `/research/wiki/grades/01/metodai.md` (tikslas `content/lt/grade-01/technologijos/08-avalynes-dziovinimas.json`).
+
+## Išspręsta: B.2.1.1 turi modulį (2026-11-24, #500)
+
+`content/lt/grade-01/lietuviu-kalba/14-veikejas-pagal-teksta.json` uždaro `:144` įvardytą spragą. Modelis: paveikslėlis (vaikas, katė, krepšys) lieka **tas pats** visuose trijuose sakiniuose, keičiasi tik sakinys — „pasidalijo“ duoda dosnumą, „paslėpė“ — gobšumą, „neša vandens“ — rūpestingumą. Tai atsako į ankstesnį atmetimą (`:97`): ten paveikslėlis buvo atsakymo šaltinis, čia jis yra kontrolinis dydis. `03-sakinio-zodziai` neliečiamas — jis randa, kas veikia, o naujasis modulis sprendžia, koks veikėjas.
+
+**Programos derintojui:** `backlog.json` eilutė `A:veikejas` vis dar rodo `modules: ['01-dovana-ir-noras', '17-kryptys-ir-vieta']`. Abu neteisingi (žr. `:189`). Taisyklingas susiejimas — `14-veikejas-pagal-teksta`; jei eilutė nepergeneruota, kūrėjas vėl gaus temą kaip `covered`, o `lietuviu-kalba-1-klase.md:144` tebeteigs, kad modulio nėra.
+
+**Matuoklio pastaba (ne turinio defektas).** Rašant ketvirtą užduotį paaiškėjo, kad `check_language.py` sakinio skaidymas (`re.split(r"(?<=[.!?])\s+")`) nematė ribos, kai kabutėse esantis sakinys baigiasi `.“` ir po jo eina tarpas: `„Padavė kamuolį draugui.“ Antras: …` buvo suskaičiuotas kaip vienas 12 žodžių sakinys. Turinys perrašytas taip, kad kiekvienas sakinys baigtųsi skyrybos ženklu be kabutės, bet pats skaidytuvas vertas pataisos — kitaip autorius, rašantis trumpus sakinius kabutėse, gauna klaidingą „per ilgo sakinio“ klaidą ir taiso ne tą dalyką (LL-35 šeima).

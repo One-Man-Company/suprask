@@ -2803,6 +2803,201 @@ const zinuteSkaitytojui = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 12. Veikėjas: apibūdinimą pasako sakinys, o ne paveikslėlis          */
+/* ------------------------------------------------------------------ */
+/* Modelis: PAVEIKSLĖLIS NEKINTA — tas pats vaikas, ta pati katė ir tas
+   pats krepšys lieka ekrane visą laiką. Keičiasi TIK vienas sakinys, o
+   nuo jo pasikeičia apibūdinimas: „pasidalijo“ duoda dosnumą,
+   „paslėpė“ — gobšumą. Jei atsakymas ateitų iš piešinio, jis būtų
+   toks pat abiem atvejais — o jis nėra. Todėl piešinys čia yra
+   KONTROLINIS dydis, o ne atsakymo šaltinis (LL-28: modelyje turi būti
+   prieštaraujančių pavyzdžių, ne vienas tvirtinantis paveikslėlis).
+   Klaidinga nuostata, kurią modelis parodo: „ką veikėjas daro, jau
+   matau paveikslėlyje, todėl apibūdinti nereikia“.
+   Kiekvienas netinkamas žodis turi paaiškinimą apie TĄ PATĮ sakinį
+   (LL-33), o teisingas žodis niekada nerodomas automatiškai (T3.2).
+   Pažanga žymima įveikus VISUS sakinius, o ne po pirmo (LL-29). */
+
+function vptScene() {
+  return `${art.defs("vpt")}
+    <rect x="0" y="0" width="320" height="170" rx="14" fill="url(#vpt-sky)"/>
+    ${art.sun(268, 34, 12, "vpt", 0.95)}
+    ${art.cloud(52, 32, 0.66)}
+    ${art.hills(320, 118)}
+    ${art.grass(20, 156, 1)}
+    ${art.grass(302, 157, 0.9)}
+    ${art.basket(168, 156, 42, 26)}
+    ${art.kid(92, 158, 1.2, "#3f5d8a", "#f2c9a0")}
+    ${art.cat(236, 156, 1.1)}`;
+}
+
+const veikejasPagalTeksta = {
+  mount({ stage, controls, api, config }) {
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const sentences = (Array.isArray(config.sentences) ? config.sentences : [])
+      .map((s) => String(s ?? "").trim()).filter(Boolean);
+    const known = new Set((Array.isArray(config.words) ? config.words : [])
+      .map((w) => String(w ?? "").trim()).filter(Boolean));
+    const cases = (Array.isArray(config.cases) ? config.cases : []).filter((c) => c
+      && Number.isInteger(c.sentence) && c.sentence >= 0 && c.sentence < sentences.length
+      && Array.isArray(c.options) && c.options.length >= 2
+      && Number.isInteger(c.answer) && c.answer >= 0 && c.answer < c.options.length
+      && c.options.every((o) => known.has(String(o))));
+    const F = config.feedback && typeof config.feedback === "object" ? config.feedback : {};
+    const title = String(config.title ?? "").trim();
+
+    /* `words` tikrinamas, nes būtent iš šio sąrašo `generate_audio.py` ima
+       garso įrašus: žodis, kurio sąraše nėra, ekrane būtų, o ausyje — ne
+       (LL-34). Todėl atvejis su nežinomu žodžiu čia atmetamas sąmoningai. */
+    const valid = sentences.length >= 2 && cases.length >= 2;
+
+    if (!valid) {
+      console.error("[veikejas-pagal-teksta] reikia bent 2 sakinių ir 2 atvejų su „sentence“, „options“, „answer“ bei žodžių sąrašo „words“", config);
+      stage.innerHTML = `<p class="error-box">Veikėjo duomenys nesuderinti.</p>`;
+      controls.innerHTML = "";
+      api.readout("Veikėjo duomenys nesuderinti.");
+      api.note("");
+      return () => {};
+    }
+
+    const timers = [];
+    let ci = 0;
+    let answered = false;
+    let reported = false;
+
+    let sentenceEl = null;
+    let wordsEl = null;
+    let nextEl = null;
+
+    const cur = () => cases[ci];
+
+    function paint() {
+      stage.innerHTML = `
+        <div style="width:100%;min-width:0;max-width:min(40rem, 100%);display:grid;gap:.55rem">
+          <svg viewBox="0 0 320 170" role="img" aria-label="Paveikslėlis: vaikas, katė ir krepšys"
+            style="display:block;width:100%;height:auto">${vptScene()}</svg>
+          <p style="margin:0;text-align:center;color:var(--ink-soft);font-size:clamp(.95rem,3.4vw,1.02rem)">Paveikslėlis nesikeičia.</p>
+          <div style="border:3px solid var(--line);border-radius:var(--r-m);background:#fffdf6;padding:.6rem .7rem">
+            ${title ? `<p style="margin:0 0 .35rem;text-align:center;font-family:var(--font-head);font-weight:900;letter-spacing:.04em;font-size:clamp(.9rem,3.4vw,1rem);text-transform:uppercase;color:var(--ink-soft);overflow-wrap:anywhere">${esc(title)}</p>` : ""}
+            <p id="vpt-sentence" style="margin:0;text-align:center;font-family:var(--font-head);font-weight:900;font-size:clamp(1.05rem,4vw,1.28rem);line-height:1.3;overflow-wrap:anywhere"></p>
+          </div>
+          <p class="sim-note" id="vpt-msg" style="margin:0;min-height:2.6rem"></p>
+        </div>`;
+      controls.innerHTML = `
+        <div id="vpt-words" role="group" aria-label="Žodžiai apie vaiką"
+          style="display:flex;gap:.55rem;flex-wrap:wrap;justify-content:center;width:100%"></div>
+        <button class="btn secondary" id="vpt-again" type="button">Iš naujo</button>
+        <button class="btn" id="vpt-next" type="button" style="display:none">Kitas sakinys →</button>`;
+
+      sentenceEl = stage.querySelector("#vpt-sentence");
+      wordsEl = controls.querySelector("#vpt-words");
+      nextEl = controls.querySelector("#vpt-next");
+      controls.querySelector("#vpt-again").addEventListener("click", reset);
+      nextEl.addEventListener("click", next);
+      paintCase();
+    }
+
+    function msgEl() {
+      return stage.querySelector("#vpt-msg");
+    }
+
+    function paintCase() {
+      answered = false;
+      const c = cur();
+      sentenceEl.textContent = sentences[c.sentence];
+      msgEl().textContent = String(F.start ?? "");
+      wordsEl.innerHTML = c.options.map((o, i) => `
+        <button class="btn secondary" type="button" data-opt="${i}"
+          aria-label="Žodis: ${esc(o)}"
+          style="min-height:52px;padding:.6rem 1rem;font-size:clamp(1rem,3.8vw,1.1rem);overflow-wrap:anywhere">${esc(o)}</button>`).join("");
+      wordsEl.querySelectorAll("[data-opt]").forEach((b) => {
+        b.addEventListener("click", () => pick(Number(b.dataset.opt), b));
+      });
+      nextEl.style.display = "none";
+      /* Klausimas rodomas dideliu tekstu, o sakinys — atskirai, kad vaikas
+         skirtų, ką skaityti, ir ką rinktis. Sakinys tariamas: 6–7 metų
+         vaikas jo dar neskaito sklandžiai, o būtent sakinys yra visa
+         užduotis (LL-11). */
+      api.readout("Koks vaikas šiame sakinyje?");
+      api.note(String(F.start ?? ""));
+      api.speak(sentences[c.sentence], { rate: .85 });
+      const first = wordsEl.querySelector("[data-opt]");
+      if (first && typeof first.focus === "function") first.focus({ preventScroll: true });
+    }
+
+    function pick(i, btn) {
+      if (answered) return;
+      const c = cur();
+
+      if (i === c.answer) {
+        answered = true;
+        btn.style.boxShadow = "inset 0 0 0 4px var(--ok)";
+        const result = String(c.result ?? "").trim()
+          || `Žodis „${c.options[c.answer]}“ tinka šiam sakiniui.`;
+        api.readout(result);
+        api.note(result);
+        msgEl().textContent = result;
+        api.speak(String(c.options[c.answer]), { rate: .85 });
+        nextEl.style.display = "";
+        nextEl.textContent = ci + 1 < cases.length ? "Kitas sakinys →" : "Baigti";
+        nextEl.focus({ preventScroll: true });
+        return;
+      }
+
+      /* Paaiškinimas — apie TĄ PATĮ sakinį, ne bendras „neteisingai“
+         (LL-33). Jei konfigūracijoje jo nėra, sakoma ta pati strategija. */
+      const miss = c.misses && typeof c.misses === "object" ? c.misses[String(i)] : "";
+      const text = String(miss ?? "").trim() || "Šis žodis sakiniui netinka. Perskaityk, ką vaikas padarė.";
+      api.readout(text);
+      api.note("Perskaityk sakinį dar kartą. Ką vaikas padarė?");
+      msgEl().textContent = text;
+      btn.style.boxShadow = "inset 0 0 0 3px var(--sun)";
+      timers.push(setTimeout(() => { btn.style.boxShadow = ""; }, 1200));
+      btn.focus({ preventScroll: true });
+    }
+
+    function next() {
+      if (ci + 1 < cases.length) {
+        ci += 1;
+        paintCase();
+        return;
+      }
+      finish();
+    }
+
+    function finish() {
+      if (!reported) {
+        reported = true;
+        api.progress({ cases: cases.length });
+      }
+      stage.innerHTML = `
+        <div style="text-align:center;padding:.4rem;min-width:0;max-width:min(34rem, 100%)">
+          <svg viewBox="0 0 320 170" role="img" aria-label="Paveikslėlis: vaikas, katė ir krepšys"
+            style="display:block;width:100%;height:auto">${vptScene()}</svg>
+          <p style="margin:.6rem 0 0;font-family:var(--font-head);font-weight:900;font-size:clamp(1.05rem,4vw,1.25rem);line-height:1.3">${esc(String(F.done ?? "Tas pats paveikslėlis, skirtingi sakiniai."))}</p>
+          <p style="margin:.5rem 0 0;line-height:1.4">Paveikslėlis buvo tas pats. Todėl apibūdinimą pasakė sakinys.</p>
+        </div>`;
+      controls.innerHTML = `<button class="btn secondary" id="vpt-again" type="button">Iš naujo</button>`;
+      controls.querySelector("#vpt-again").addEventListener("click", reset);
+      api.readout("Paveikslėlis buvo tas pats, o žodžiai skyrėsi.");
+      api.note(String(F.done ?? "Tas pats paveikslėlis, skirtingi sakiniai."));
+      const again = controls.querySelector("#vpt-again");
+      if (again && typeof again.focus === "function") again.focus({ preventScroll: true });
+    }
+
+    function reset() {
+      ci = 0;
+      paint();
+      api.readout("Koks vaikas šiame sakinyje?");
+      api.note(String(F.again ?? ""));
+    }
+
+    paint();
+    return () => { timers.forEach(clearTimeout); };
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
@@ -2815,4 +3010,5 @@ export const SIMS = {
   "teksto-klausimas": tekstoKlausimas,
   "pasakojimo-vidurys": pasakojimoVidurys,
   "zinute-skaitytojui": zinuteSkaitytojui,
+  "veikejas-pagal-teksta": veikejasPagalTeksta,
 };

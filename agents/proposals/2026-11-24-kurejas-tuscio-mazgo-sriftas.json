@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 522,
+  "created": "2026-11-24T23:05:00+02:00",
+  "type": "struktura",
+  "title": "check_view.py nemato šrifto mazguose, kurie tušti iki pirmo vaiko veiksmo",
+  "body": "Sim teksto vartai (`simText` ciklas `scripts/check_view.py`) renka tik tekstinius mazgus, kuriuose jau yra teksto (`if (!txt) continue`). Todėl būsenos žymos, kurias scenos kodas užpildo tik po veiksmo (`span.ms-seen` „lengvesnė už 1 kg“, `#ms-records`, `#iv-records`), į `simFonts.min` nepatenka nė po interaktyvaus zondo, nes įrankis veiksmų neatlieka. Šiandien tai reiškia, kad žyma gali likti 12,8 px ir visi trys vartai bus žali — tą pačią dieną (#522) būtent taip ir buvo: minimumą lėmė SVG „1 kg“, o `.ms-seen` 12,8 px nebuvo matuojamas nė karto. Siūloma matuoti ir tuščius matomų `#sim-stage/#sim-controls/#sim-readout/#sim-note` mazgus, kurių šriftas deklaruotas (`style` atributas arba klasė), ir įtraukti juos į `simFonts` su žyma `text: \"(tuščias)\"`; dekoratyvūs tušti `span` be fiksuoto dydžio lieka praleidžiami, todėl triukšmo neatsiras. Antra, to paties įrankio matavimo rėmas: SVG `<text>` `font-size` yra viewBox vienetai, todėl praneštas 15,0 px yra 18,4 px @1440 ir 15,1 px @360 (faktorius = SVG plotis / 300). Vartai turėtų matuoti `getBoundingClientRect()` arba perskaičiuoti pagal SVG mastelį, kitaip `simFonts.min` ir vėl gali būti didesnis už tai, ką vaikas mato, — tik atvirkščia kryptimi nei LL-185. Tai ta pati aklosios zonos šeima kaip LL-185 (`aria-hidden`) ir LL-187 (tuščias tekstas), tik taisoma įrankyje, o ne scenoje.",
+  "target": "scripts/check_view.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/geometrija.js:924 — span.ms-seen neturi teksto iki pirmo pasvėrimo; iki #522 buvo font-size:.8rem (12,8 px)",
+    "python3 scripts/check_view.py --base http://127.0.0.1:8972 --module 26-mase-ir-kilogramas --viewports desktop,tablet,phone --sim-font-strict --json → simFonts.min 12.8 („text 1 kg“), span.ms-seen tarp worst mazgų nepasirodo",
+    "Zondas #522: art.weight() SVG <text> computed 15 px, o renderintas 18,4 px @1440, 15,1 px @360, 13,2 px @320 (SVG plotis 368/301/264 prie viewBox 300)",
+    "research/wiki/guidelines/pamokos.md LL-185, LL-187"
+  ]
+}

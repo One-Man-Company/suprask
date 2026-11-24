@@ -527,7 +527,7 @@ const ilgisIrVienetas = {
         <div id="iv-dir" role="group" aria-label="Ar telps daugiau, ar mažiau"
              style="display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem"></div>
         <div id="iv-units" role="group" aria-label="Kuo matuoti"
-             style="display:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem"></div>
+             style="display:none;flex-wrap:wrap;gap:.5rem"></div>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;min-width:0">
           <button class="btn secondary" type="button" id="iv-place"
                   style="display:none;min-height:48px;flex:1 1 10rem">Dėk vieną</button>
@@ -572,7 +572,7 @@ const ilgisIrVienetas = {
     unitsEl.innerHTML = units.map((u) => (
       `<button class="btn secondary" type="button" data-unit="${u.id}" aria-pressed="false"
         aria-label="Matuoti ${u.instr}"
-        style="min-height:56px;padding:.4rem .3rem;font-size:.85rem;line-height:1.15;overflow-wrap:anywhere">${cap(u.pl)}</button>`
+        style="flex:1 1 7.5rem;min-width:0;min-height:56px;padding:.4rem .3rem;font-size:var(--fs-s);line-height:1.15;overflow-wrap:anywhere">${cap(u.pl)}</button>`
     )).join("");
 
     let state = {
@@ -621,7 +621,7 @@ const ilgisIrVienetas = {
       // matavimas sąvaržėlėmis, tik tada keičiamas vienetas (M-07 seka).
       show(guessEl, state.phase === "guess", "grid");
       show(dirEl, state.phase === "dir", "grid");
-      show(unitsEl, state.measured.size > 0, "grid");
+      show(unitsEl, state.measured.size > 0, "flex");
       const u = unitById(state.unit);
       show(placeBtn, state.phase === "measure" && !!u && state.placed < countOf(u), "inline-flex");
       paint();
@@ -840,7 +840,7 @@ const ilgisIrVienetas = {
 const MS_CX = 150;        // svarstyklių stulpas
 const MS_BASE = 196;      // stalviršiaus linija (svarstyklių pagrindas)
 const MS_BOX = 42;        // dėžutės kraštinė
-const MS_WEIGHT = 40;     // svarsčio plotis
+const MS_WEIGHT = 47;     // svarsčio plotis: 0,32×47 = 15,0 px užrašui „1 kg“ (LL-186)
 const MS_VB_W = 300;
 const MS_VB_H = 212;
 
@@ -894,9 +894,9 @@ const dezuteIrKilogramas = {
         <div id="ms-guess" role="group" aria-label="${msEsc(label("groupGuess", "Spėk, kokia dėžutė"))}"
              style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem">
           <button class="btn secondary" type="button" data-guess="daugiau" aria-pressed="false"
-                  style="min-height:48px;padding:.4rem .3rem;font-size:.9rem;line-height:1.15;overflow-wrap:anywhere">${msEsc(label("guessHeavier", "Sunkesnė už 1 kg"))}</button>
+                  style="min-height:48px;padding:.4rem .3rem;font-size:var(--fs-s);line-height:1.15;overflow-wrap:anywhere">${msEsc(label("guessHeavier", "Sunkesnė už 1 kg"))}</button>
           <button class="btn secondary" type="button" data-guess="maziau" aria-pressed="false"
-                  style="min-height:48px;padding:.4rem .3rem;font-size:.9rem;line-height:1.15;overflow-wrap:anywhere">${msEsc(label("guessLighter", "Lengvesnė už 1 kg"))}</button>
+                  style="min-height:48px;padding:.4rem .3rem;font-size:var(--fs-s);line-height:1.15;overflow-wrap:anywhere">${msEsc(label("guessLighter", "Lengvesnė už 1 kg"))}</button>
         </div>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;min-width:0">
           <button class="btn" type="button" id="ms-weigh" style="min-height:48px;flex:1 1 9rem">${msEsc(label("weigh", "Pasverti"))}</button>
@@ -920,8 +920,8 @@ const dezuteIrKilogramas = {
         <svg viewBox="0 0 36 36" width="34" height="34" aria-hidden="true" focusable="false">
           ${art.boxWithContent(b.kind === "putos" ? "putos" : "smelis", 3, 33, 30)}
         </svg>
-        <span style="font-size:.85rem;line-height:1.15;font-weight:800;text-align:center;overflow-wrap:anywhere">${msEsc(b.name)}</span>
-        <span class="ms-seen" style="font-size:.8rem;line-height:1.15;color:var(--ink-soft);font-weight:700;min-height:1.15em;overflow-wrap:anywhere"></span>
+        <span style="font-size:var(--fs-s);line-height:1.15;font-weight:800;text-align:center;overflow-wrap:anywhere">${msEsc(b.name)}</span>
+        <span class="ms-seen" style="font-size:var(--fs-s);line-height:1.15;color:var(--ink-soft);font-weight:700;min-height:1.15em;overflow-wrap:anywhere"></span>
       </button>`).join("");
 
     const guessBtns = [...guessEl.querySelectorAll("[data-guess]")];

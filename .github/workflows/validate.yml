@@ -8,6 +8,7 @@ on:
       - "assets/**"
       - "scripts/**"
       - "docs/**"
+      - ".github/**"
       - "README.md"
   pull_request:
   workflow_dispatch:
@@ -49,6 +50,21 @@ jobs:
       # nuorodoms. Patikra yra be tinklo: tik repo failų egzistavimas.
       - name: Vidaus nuorodos
         run: python3 scripts/check_refs.py
+
+      # Zondai. Kiekvienas `scripts/probe_*.py` yra paleidžiamas įrodymas, kad
+      # vartai aukščiau tikrai tą būseną mato (LL-36). Bet įrodymas, kurio
+      # nepaleidžia niekas, supūva taip pat tyliai, kaip docstringas: 2026-11-24
+      # `probe_path_order.py` tapo raudonas (17/18) dėl teisingo kūrėjo darbo —
+      # 5 nauji moduliai, 4 į vidurį, 1 į galą — ir to nematė niekas, nes CI šio
+      # žingsnio neturėjo (pasiūlymas #46733, LL-182). Ciklas ima **visus**
+      # `probe_*.py`: naujas zondas įsijungia be workflow pakeitimo. Sąlyga
+      # naujam zondui: veikia be tinklo ir trunka < 5 s.
+      - name: Zondai (be tinklo)
+        run: |
+          for f in scripts/probe_*.py; do
+            echo "── $f"
+            python3 "$f"
+          done
 
       - name: Dokumentų skaičiai
         run: python3 scripts/check_docs_facts.py

@@ -88,6 +88,20 @@ def main() -> int:
               out["path_reordered"] == [] and out["path_inserted_midsequence"] == ["a-99"],
               f"reordered={out['path_reordered']} inserted={out['path_inserted_midsequence']}")
 
+        # B2. Riba, nuo kurios priklauso visas skirtumas: naujas ID **prieš**
+        #     paskutinį seną yra „viduryje“, **po** jo — „gale“. Be šio
+        #     lūkesčio J galėtų būti žalias ir tada, kai įrankis traktuoja
+        #     paskutinę poziciją kaip vidurį.
+        before_last = BASE[:-1] + ["a-98"] + BASE[-1:]
+        after_last = BASE + ["a-97"]
+        mid_out = cp.path_order_check(1, before_last)
+        tail_out = cp.path_order_check(1, after_last)
+        check("B2 riba prie paskutinio seno ID: prieš — viduryje, po — gale",
+              mid_out["path_inserted_midsequence"] == ["a-98"]
+              and tail_out["path_inserted_midsequence"] == [],
+              f"prieš={mid_out['path_inserted_midsequence']} "
+              f"po={tail_out['path_inserted_midsequence']}")
+
         # D. Du gretimi seni ID sukeisti → raudona, įvardytas bent vienas.
         swapped = BASE[:]
         swapped[2], swapped[3] = swapped[3], swapped[2]
@@ -155,24 +169,45 @@ def main() -> int:
         # J. Tikras repo: užfiksuota seka egzistuoja, o path.json gali turėti
         # naujų ID, įterptų sąmoningai (pagal AGENTS.md leidžiama, jei esama
         # tvarka nesikeičia). Todėl tikrinama: visi užfiksuoti ID yra, nė vienas
-        # nepajudėtas, o kiekvienas papildomas įvardytas kaip įterptas. Skaičių
-        # lyginti negalima — po užfiksavimo (2026-11-23) kūrėjas į 1 klasę įdėjo
-        # 5 modulius, tad lygybė tapo neteisingu lūkesčiu, o raudoni vartai dėl
-        # teisingo darbo moko juos apeiti (LL-38 — slenkstis, nuslinkęs nuo duomenų).
+        # nepajudėtas, o kiekvienas papildomas **viduryje** įvardytas kaip
+        # įterptas. Skaičių lyginti negalima — po užfiksavimo (2026-11-23)
+        # kūrėjas į 1 klasę įdėjo 5 modulius, tad lygybė tapo neteisingu
+        # lūkesčiu, o raudoni vartai dėl teisingo darbo moko juos apeiti
+        # (LL-38 — slenkstis, nuslinkęs nuo duomenų).
+        #
+        # Lūkestis skaičiuojamas TOMIS PAČIOMIS taisyklėmis kaip įrankis:
+        # `inserted_midsequence()` matuoja **poziciją** (naujas ID prieš
+        # paskutinį seną), o ne aibės skirtumą. 2026-11-24 būtent čia zondas
+        # ir supuvo: 5 nauji ID, 4 jų viduryje, 1 gale, o lūkestis ėmė visą
+        # aibės skirtumą (5) — zondas tapo raudonas dėl teisingo repo, o kad
+        # jo niekas nepaleido CI, to niekas nematė (LL-182).
         cp.PATH_ORDER = original
         real_pin = json.loads(original.read_text(encoding="utf-8"))
         real_seq = list((real_pin.get("grades") or {}).get("1", {}).get("sequence") or [])
         path_seq = json.loads((ROOT / "content/lt/grade-01/path.json").read_text(encoding="utf-8"))["sequence"]
         out = cp.path_order_check(1, path_seq)
-        expected_inserted = sorted(set(path_seq) - set(real_seq))
+        new_ids = [m for m in path_seq if m not in set(real_seq)]
+        pos = {m: i for i, m in enumerate(path_seq)}
+        last_old = max((pos[m] for m in real_seq if m in pos), default=-1)
+        expected_mid = [m for m in new_ids if pos[m] < last_old]
+        expected_tail = [m for m in new_ids if pos[m] > last_old]
         check("J repo 1 klasės seka užfiksuota, seni ID nepajudėti",
               bool(real_seq) and out["path_order_checked"] is True
               and out["path_reordered"] == []
-              and sorted(out["path_inserted_midsequence"]) == expected_inserted
+              and sorted(out["path_inserted_midsequence"]) == sorted(expected_mid)
               and set(real_seq) <= set(path_seq),
               f"pin={len(real_seq)} path={len(path_seq)} "
-              f"įterpti={len(out['path_inserted_midsequence'])} "
+              f"viduryje={len(out['path_inserted_midsequence'])}/{len(expected_mid)} "
+              f"gale={len(expected_tail)} "
               f"label={out['path_order_baseline'][:40]!r}")
+
+        # J2. Ta pati riba neigiamai: ID, prirašytas **gale**, neturi būti
+        #     įvardytas kaip įterptas į vidurį. Būtent šios dvi krūvos
+        #     sumaišymas ir padarė J raudoną (aibė ≠ pozicija).
+        check("J2 prirašytas gale nėra „įterptas į vidurį“",
+              all(m not in out["path_inserted_midsequence"] for m in expected_tail),
+              f"gale={expected_tail or '—'} "
+              f"viduryje={sorted(out['path_inserted_midsequence'])}")
 
         # K. CI režimas `--path-order` (pasiūlymas #42399). Lyginama TIK su
         #    užfiksuota seka: šviežiame klone `HEAD` yra darbinė kopija, tad

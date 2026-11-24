@@ -713,7 +713,7 @@ const gyvunuGrupes = {
         <button class="btn secondary" id="gg-winter-btn" aria-pressed="false"
                 aria-disabled="true" aria-describedby="gg-winter-hint"
                 style="min-height:52px;font-size:.95rem">Žiema</button>
-        <p id="gg-winter-hint" style="margin:0;font-size:.8rem;line-height:1.3;text-align:center;color:var(--ink-soft)"></p>
+        <p id="gg-winter-hint" style="margin:0;font-size:.95rem;line-height:1.35;text-align:center;color:var(--ink-soft)"></p>
         <button class="btn ghost" id="gg-reset" style="min-height:48px;font-size:.95rem">Iš naujo</button>
       </div>`;
 
@@ -745,8 +745,8 @@ const gyvunuGrupes = {
           + "background:transparent;border-radius:14px;padding:5px 6px;font:inherit;color:inherit;"
           + `min-width:84px;min-height:88px;border:3px solid ${on ? "var(--ink)" : "transparent"}`;
         b.innerHTML = `<span aria-hidden="true" style="font-size:1.9rem;line-height:1.05">${a.emoji}</span>`
-          + `<span aria-hidden="true" style="font-size:.92rem;line-height:1.1;font-weight:800;text-align:center">${a.label}</span>`
-          + `<span aria-hidden="true" style="font-size:.72rem;line-height:1.15;text-align:center;color:var(--ink-soft)">${a.place}</span>`;
+          + `<span style="font-size:.92rem;line-height:1.1;font-weight:800;text-align:center">${a.label}</span>`
+          + `<span style="font-size:.95rem;line-height:1.2;text-align:center;color:var(--ink-soft)">${a.place}</span>`;
         b.addEventListener("click", () => {
           selected = a.label;
           drawTray();
@@ -786,14 +786,15 @@ const gyvunuGrupes = {
       bin.innerHTML =
         `<span aria-hidden="true" style="font-size:1.6rem;line-height:1.1">${b.emoji}</span>`
         + `<strong style="max-width:100%;overflow-wrap:break-word;font-size:.92rem;line-height:1.15;text-align:center;font-family:var(--font-head)">${b.label}</strong>`
-        + `<span class="group" style="display:none;max-width:100%;overflow-wrap:break-word;font-size:.8rem;line-height:1.15;font-weight:700;text-align:center;color:var(--ink-soft)"></span>`
+        + `<span class="group" style="display:none;max-width:100%;overflow-wrap:break-word;font-size:.95rem;line-height:1.2;font-weight:700;text-align:center;color:var(--ink-soft)"></span>`
         + `<span class="items" aria-hidden="true" style="display:flex;gap:2px;flex-wrap:wrap;justify-content:center;min-height:1.6rem;font-size:1.15rem;line-height:1.1"></span>`;
 
       const holder = bin.querySelector(".items");
       bin.addEventListener("click", () => {
         if (!selected) {
-          msg.textContent = S.ask || "Pirma pasirink gyvūną.";
-          api.readout(msg.textContent);
+          msg.textContent = S.pickFirst;
+          api.readout(S.pickFirst);
+          api.speak(S.pickFirst);
           return;
         }
         const a = animals.find((x) => x.label === selected && !x.done);
@@ -813,7 +814,7 @@ const gyvunuGrupes = {
             // prisiminimas, kad kažkas kadaise buvo įdėta (LL-17).
             if (!reported) { reported = true; api.progress({ correct: true }); }
             winterBtn.setAttribute("aria-disabled", "false");
-            winterHint.textContent = "Paspausk „Žiema“ ir pažiūrėk, kas pasikeis.";
+            winterHint.textContent = S.hintLocked;
             api.note(S.rule);
             drawTray();
             paintBins();
@@ -836,7 +837,8 @@ const gyvunuGrupes = {
           // Užuomina kartoja TAI, KĄ VAIKAS Mato kortelėje (vietą), ir
           // klausia apie kriterijų. Atsakymas neįvardijamas (LL-22).
           msg.textContent = `${cap(a.label)} gyvena ${a.place}. ${S.wrong}`;
-          api.readout(`Ne šitaip. ${a.label} liko lentelėje. Liko ${left()}.`);
+          api.readout(`${S.wrongBin} Liko ${left()}.`);
+          api.speak(S.wrongBin);
         }
       });
       binsEl.appendChild(bin);
@@ -851,7 +853,7 @@ const gyvunuGrupes = {
       // kiemo), o vaikui reikia matyti būtent tą prieštaraujantį atvejį.
       const items = animals.map((a) => `<li style="margin:.15rem 0">`
         + `<span aria-hidden="true">${a.emoji}</span> <strong>${a.label}</strong> — ${a.winter}</li>`).join("");
-      winterEl.innerHTML = `<p style="margin:0 0 .35rem;font-size:.9rem;font-weight:800">❄ Žiemą</p>`
+      winterEl.innerHTML = `<p style="margin:0 0 .35rem;font-size:.95rem;font-weight:800"><span aria-hidden="true">❄</span> ${S.winterTitle}</p>`
         + `<ul style="margin:0;padding-left:1.1rem;font-size:.9rem;line-height:1.35">${items}</ul>`;
     }
 
@@ -889,7 +891,7 @@ const gyvunuGrupes = {
     drawTray();
     paintBins();
     paintWinter();
-    winterHint.textContent = "Paaiškės, kai visi gyvūnai bus savo vietose.";
+    winterHint.textContent = S.hintWaiting;
     api.readout(S.start || `Sudėk gyvūnus. Liko ${left()}.`);
     return () => { timers.forEach(clearTimeout); timers.clear(); };
   },

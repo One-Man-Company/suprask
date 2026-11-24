@@ -62,11 +62,16 @@
       "sentences": {
         "start": "Pasirink gyvūną. Kas jam duoda maistą?",
         "ask": "Kas jam duoda maistą?",
+        "pickFirst": "Pirma pasirink gyvūną.",
         "wrong": "Pažiūrėk ne į vietą, o į tai, kas duoda maistą.",
+        "wrongBin": "Ne šitaip. Gyvūnas dar lentelėje.",
         "lock": "Pirma sudėk visus gyvūnus. Tada „Žiema“ parodys, kas pasikeis.",
+        "hintWaiting": "Paaiškės, kai visi gyvūnai bus savo vietose.",
+        "hintLocked": "Paspausk „Žiema“ ir pažiūrėk, kas pasikeis.",
         "done": "Visi gyvūnai savo vietose.",
         "rule": "Grupę parodo maistas, o ne vieta.",
         "winter": "Žiema. Pažiūrėk, kas pasikeitė.",
+        "winterTitle": "Žiemą",
         "summer": "Vasara. Grįžk prie gyvūnų.",
         "winterNote": "Atėjo žiema, o grupė liko ta pati. Karvė vis dar naminė, o gandras — laukinis."
       }

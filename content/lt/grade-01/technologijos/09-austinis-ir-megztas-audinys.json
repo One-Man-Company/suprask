@@ -1,0 +1,121 @@
+{
+  "id": "09-austinis-ir-megztas-audinys",
+  "grade": 1,
+  "strand": "technologijos",
+  "title": "Kodėl kojinė pabyra, o džinsai ne",
+  "subtitle": "Megzto audinio kilputė bėga, austo – tik siūlas išslysta",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu austą audinį nuo megzto pagal siūlų eigą.",
+    "Paaiškinu, kodėl megztas audinys pabyra, o austas ne.",
+    "Renkuosi audinį pagal tai, ar drabužis turi temptis."
+  ],
+  "concept": {
+    "title": "Siūlai susikerta arba susisuka",
+    "big_idea": "Austame audinyje siūlai eina skersai ir išilgai. Vienas siūlas gali išslysti, o audinys lieka. Megztame audinyje viena kilputė laiko kitą. Todėl pabėgusi kilputė išnarplioja visą gabalą.",
+    "steps": [
+      "Bakstelėk lopelį ir pasirink, kurį audinį nori išnagrinėti.",
+      "Spausk „Ištrauk siūlą“ ir žiūrėk, kas atsitiks.",
+      "Pabandyk abu lopelius ir palygink, kuris pabyra."
+    ],
+    "example": "Kojinė pabyra, kai užkliūva už vinies. Džinsai toje vietoje tik išslysta."
+  },
+  "sim": {
+    "component": "audinys",
+    "config": {
+      "labels": {
+        "woven": "Austas audinys",
+        "knit": "Megztas audinys",
+        "pull": "Ištrauk siūlą",
+        "again": "Iš naujo",
+        "chosen": "Pasirinkta"
+      },
+      "captions": {
+        "woven": "Austas",
+        "knit": "Megztas"
+      },
+      "sentences": {
+        "start": "Du lopeliai. Pasirink lopelį ir ištrauk siūlą.",
+        "select": "Lopelis parinktas. Spausk „Ištrauk siūlą“.",
+        "already": "Šis siūlas jau ištrauktas. Pasirink kitą lopelį.",
+        "woven": "Siūlas išslydo. Audinys liko vientisas.",
+        "knit": "Kilputės bėga viena po kitos. Skylutė didėja.",
+        "both": "Palygink. Austas liko vientisas, megztas pabyrėjo.",
+        "reset": "Vėl du sveiki lopeliai."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Iš megztos kojinės ištraukei siūlą. Kas atsitiks?",
+      "options": [
+        "Atsiras viena maža skylutė",
+        "Skylutė bėgs per visą kojinę",
+        "Kojinė taps storesnė"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, kaip kilputės laiko viena kitą.",
+      "why": "Kiekviena kilputė laiko gretimą, todėl narplioja visas iš eilės."
+    },
+    {
+      "q": "Džinsai iš austo audinio. Užkliuvai už vinies ir vienas siūlas trūko. Kas bus?",
+      "options": [
+        "Visas džinsas iširs į gabalus",
+        "Atsiras skylutė per visą kelį",
+        "Siūlas išslys, o audinys liks vientisas"
+      ],
+      "answer": 2,
+      "hint": "Prisimink, ką matei modelyje su austu lopeliu.",
+      "why": "Austo audinio siūlai susikerta, todėl gretimi siūlai lieka savo vietoje."
+    },
+    {
+      "q": "Kodėl kojinė mezgama, o džinsai audžiami?",
+      "options": [
+        "Megztas audinys tempiasi, austas beveik ne",
+        "Austas audinys tempiasi, megztas beveik ne",
+        "Abu audiniai tempiasi vienodai"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kaip kilputės juda, kai audinį trauki.",
+      "why": "Kilputės atsiveria, kai trauki, todėl megztas audinys prisitaiko prie pėdos."
+    },
+    {
+      "q": "Megztoje kepurėje atsirado maža skylutė. Kaip ją sutvarkyti?",
+      "options": [
+        "Nešioti toliau, kol pati užsitrauks",
+        "Susiūti iš karto, kol kilputės neišsibėgo",
+        "Ištraukti dar vieną siūlą, kad būtų lygiau"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, ką matei megztame lopelyje.",
+      "why": "Megzta skylutė pati neužsitraukia, todėl ją reikia sustabdyti iš karto.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kodėl tavo kojinė pabyra, o džinsai – ne?",
+  "teacher": {
+    "goal": "Suprasti, kad austame audinyje siūlai eina skersai ir išilgai ir vienas siūlas gali išslysti, o megztame audinyje kilputės laiko viena kitą ir trūkusi kilputė narplioja toliau. Modelis turi vieną veiksmą – ištraukti siūlą – ir du skirtingus padarinius: trys to paties dydžio lopeliai skiriasi tik struktūra, todėl vaikas pats pamato, kad skirtumas ne rašte. Skalbimas, dėmės ir temperatūra sąmoningai neliesti – tai 06-drabuziu-prieziura.",
+    "prompt": "Kodėl ištraukus siūlą austas lopelis liko vientisas, o megztas pabyrėjo?",
+    "offline": "Duokite vaikui du audinio atraižus: megztą (senos kojinės ar marškinėlių gabalą) ir austą (paklodės ar džinsų gabalą). Su didinamuoju stiklu vaikas pamato, kad viename siūlai eina skersai ir išilgai, o kitame susisuka į kilputes. Tada suaugęs padeda ištraukti po vieną siūlą iš kiekvieno ir palyginti: austame lieka plyšys, megztame kilputės bėga. Klasėje galima suvaidinti audimą pagal NŠA metodinę veiklą: keturi vaikai laiko išilgines virves, kiti keturi praeina skersai – taip pat „per vieną perlipa, po kitu pralenda“.",
+    "misconceptions": [
+      "„Megztas ir austas audinys skiriasi tik raštu.“ Modelyje raštas nesikeičia, bet ištraukus siūlą austas lopelis lieka, o megztas pabyra – skirtumas yra struktūroje, ne paveiksle.",
+      "„Skylutė kojinėje pati užsitrauks, nes audinys vientisas.“ Modelis neturi jokios būsenos, kuri uždarytų skylę: ištraukus siūlą ji tik didėja iki pat krašto.",
+      "„Ištraukus vieną siūlą audinys subyra į gabalus.“ Austas lopelis lieka vientisas, tik jame atsiranda plyšys – siūlai susikerta ir laiko gretimus.",
+      "„Audinys tempiasi todėl, kad jis plonas arba naujas.“ Modelis storio ir amžiaus neturi; skirtumą lemia kilputės, kurios atsiveria traukiant."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), 23.2.1 „Tekstilė“, 1–2 klasė: „Nagrinėjama audinių (austų ir trikotažo) struktūra“. sources/pradinio-bp-rekomendacijos-2024.txt:9444",
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), metodinė veikla „Tekstilė 1–2 klasė“: didelio formato austo audinio ir trikotažo pavyzdžiai, audimo proceso imitavimas metmenimis ir ataudais. sources/pradinio-bp-rekomendacijos-2024.txt:6217–6220",
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024): „Aiškinantis trikotažinio ir austinio audinio pritaikomumą rūbams… padaryti išvadas apie audinio ar trikotažo parinkimą, atitikimą drabužio paskirčiai“. sources/pradinio-bp-rekomendacijos-2024.txt:6236–6243",
+    "Technologijų bendroji programa (2022), 23.2 „Tekstilė“: audinių struktūra ir drabužių asortimentas pagal paskirtį 1–2 klasėje.",
+    "Spencer, D. J. (2001). Knitting Technology: A Comprehensive Handbook and Practical Guide (3rd ed.). Woodhead Publishing.",
+    "Adanur, S. (2001). Handbook of Weaving. CRC Press."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (siūlų eiga audinyje) ir viena pasekmė (pabyra arba ne). Skalbimas, dėmės ir drabužių rūšiavimas palikti 06-drabuziu-prieziura.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą į kojinę, džinsus ir kepurę, o ne įsimintą sakinį apie lopelį.",
+    "3 žingsnis — pagalba laiku: spėjimas nereikalaujamas, klaida nebaudžiama, modelis parodo padarinį ir leidžia pradėti iš naujo; yra praplėtimo užduotis.",
+    "8 žingsnis — mokytojas lieka mokytoju: veikla be ekrano su dviem audinio atraižomis ir didinamuoju stiklu, taip pat audimo vaidinimas su virvėmis."
+  ]
+}

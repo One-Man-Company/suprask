@@ -2282,6 +2282,341 @@ const valdiklis = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Audinys: austas ir megztas (23.2.1, 1–2 klasė)                      */
+/*                                                                     */
+/* Kodėl toks modelis: audinio struktūros vaikas nepamato perbraukęs   */
+/* pirštu — skirtumą parodo tik pasekmė. Todėl abu lopeliai rodomi      */
+/* priartinti iki siūlų, o vienintelis veiksmas „Ištrauk siūlą“ duoda   */
+/* SKIRTINGĄ rezultatą: austame siūlas išslysta, megztame kilputės     */
+/* bėga viena po kitos. Nuostata „skiriasi tik raštu“ griūna be         */
+/* paaiškinimo, nes raštas abiem atvejais lieka toks pat.              */
+/*                                                                     */
+/* Skalbimas, dėmės ir temperatūra sąmoningai neliesti — tai           */
+/* 06-drabuziu-prieziura; šiame modelyje viena sąvoka ir viena pasekmė. */
+/*                                                                     */
+/* Abu lopeliai piešiami tame pačiame 140 × 140 lauke ir to paties      */
+/* mastelio siūlais, todėl vaikas lygina struktūrą, o ne paveikslo      */
+/* stilių (LL-13). Austame — ištisi horizontalūs ir vertikalūs siūlai,  */
+/* persidengiantys kas antrą sankirtą; megztame — vertikalios V formos  */
+/* kilputės, kurios ir sudaro „kopėčias“, kai viena nutrūksta.          */
+/* ------------------------------------------------------------------ */
+
+const AD_STYLE_ID = "cc-audinys-style";
+
+const AD_CSS = `
+.ad-wrap { width: 100%; max-width: 360px; margin: 0 auto; }
+/* Pasirinkimas pasakomas žodžiu, ne vien rėmelio spalva (T5.5). Eilutė
+   rezervuoja aukštį iš anksto, kad parinkus lopelį scena nešokinėtų. */
+.ad-pick {
+  margin: 0 0 .45rem;
+  min-height: 1.4em;
+  text-align: center;
+  font-size: .95rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--ink-soft);
+  overflow-wrap: break-word;
+}
+.ad-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+.ad-cell {
+  min-width: 0;
+  margin: 0;
+  padding: .3rem .3rem .35rem;
+  border: 3px solid transparent;
+  border-radius: var(--r-s);
+  background: color-mix(in srgb, var(--sky) 8%, var(--paper-2));
+  text-align: center;
+}
+.ad-cell.is-on { border-color: var(--accent); }
+.ad-cell svg { display: block; width: 100%; height: auto; }
+.ad-cell figcaption {
+  margin-top: .15rem;
+  font-size: .95rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+.ad-choose {
+  min-height: 48px;
+  padding: .5rem .85rem;
+  border: 2px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.ad-choose[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 26%, transparent);
+}
+.ad-choose:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ad-actions { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin-top: .6rem; }
+`;
+
+function ensureAdStyle() {
+  if (document.getElementById(AD_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = AD_STYLE_ID;
+  style.textContent = AD_CSS;
+  document.head.appendChild(style);
+}
+
+/* Austas audinys: ištisi siūlai skersai ir išilgai. Kai vienas ištrauktas,
+   jis lieka kaboti prie krašto, o visi kiti siūlai — savo vietoje. */
+function wovenScene(pulled) {
+  const cell = 14;
+  const n = 6;
+  const x0 = (140 - n * cell) / 2;
+  const y0 = (140 - n * cell) / 2;
+  const half = cell / 2;
+  const pullRow = 3;
+  const edge = x0 + n * cell;
+
+  let g = art.spot(x0 - 9, y0 - 9, n * cell + 18, n * cell + 18, "#f1e3c9", "kampuota");
+
+  // Ataudas: horizontalūs siūlai.
+  for (let j = 0; j < n; j += 1) {
+    if (pulled && j === pullRow) continue;
+    const y = y0 + half + j * cell;
+    g += `<line x1="${x0 - 2}" y1="${y}" x2="${edge + 2}" y2="${y}"
+      stroke="#9c6a3e" stroke-width="5" stroke-linecap="round"/>`;
+  }
+
+  // Metmenys: vertikalūs siūlai po horizontaliais.
+  for (let i = 0; i < n; i += 1) {
+    const x = x0 + half + i * cell;
+    g += `<line x1="${x}" y1="${y0 - 2}" x2="${x}" y2="${y0 + n * cell + 2}"
+      stroke="#c08a56" stroke-width="5" stroke-linecap="round"/>`;
+  }
+
+  // Kas antras susikirtimas — viršuje horizontalus siūlas, todėl matosi
+  // pynimas: vienur viršuje metmenys, kitur ataudai.
+  for (let i = 0; i < n; i += 1) {
+    for (let j = 0; j < n; j += 1) {
+      if ((i + j) % 2 === 0) continue;
+      if (pulled && j === pullRow) continue;
+      const x = x0 + half + i * cell;
+      const y = y0 + half + j * cell;
+      g += `<line x1="${x - 5}" y1="${y}" x2="${x + 5}" y2="${y}"
+        stroke="#9c6a3e" stroke-width="5" stroke-linecap="round"/>`;
+    }
+  }
+
+  // Ištrauktas siūlas kybo prie dešiniojo krašto.
+  if (pulled) {
+    const y = y0 + half + pullRow * cell;
+    g += `<path d="M${edge + 2} ${y} C ${edge + 18} ${y + 3} ${edge + 14} ${y + 22} ${edge + 4} ${y + 27}"
+      fill="none" stroke="#9c6a3e" stroke-width="4.5" stroke-linecap="round"/>`;
+  }
+
+  return g;
+}
+
+/* Megztas audinys: vertikalios V formos kilputės. Kai viena nutrūksta,
+   visas stulpelis atsiveria iki krašto — skylutė bėga, o siūlas lieka
+   kyboti apačioje. */
+function knitScene(pulled) {
+  const cw = 14;
+  const ch = 12;
+  const cols = 6;
+  const rows = 6;
+  const x0 = (140 - cols * cw) / 2;
+  const y0 = (140 - rows * ch) / 2;
+  const pullCol = 2;
+  const bot = y0 + rows * ch + 2;
+  const hx = x0 + cw / 2 + pullCol * cw;
+
+  let g = art.spot(x0 - 10, y0 - 10, cols * cw + 20, rows * ch + 20, "#e6eef5", "kampuota");
+
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      if (pulled && c === pullCol) continue;
+      const x = x0 + cw / 2 + c * cw;
+      const y = y0 + 2 + r * ch;
+      g += `<path d="M${x - 6} ${y} L${x} ${y + 11} L${x + 6} ${y}"
+        fill="none" stroke="#7b9db8" stroke-width="4.4"
+        stroke-linecap="round" stroke-linejoin="round"/>`;
+    }
+  }
+
+  if (pulled) {
+    // Plyšys suplyšusio stulpelio vietoje.
+    g += `<path d="M${hx - 6} ${y0 + 8} C ${hx - 11} ${y0 + 30} ${hx - 9} ${bot - 18} ${hx - 7} ${bot}
+      L ${hx + 7} ${bot} C ${hx + 10} ${bot - 20} ${hx + 11} ${y0 + 28} ${hx + 5} ${y0 + 8} Z"
+      fill="#41505c" opacity=".82"/>`;
+    // Išsibėgusi gija, kabanti apačioje.
+    g += `<path d="M${hx} ${bot} C ${hx + 3} ${bot + 12} ${hx + 17} ${bot + 8} ${hx + 19} ${bot + 21}"
+      fill="none" stroke="#7b9db8" stroke-width="4.2" stroke-linecap="round"/>`;
+  }
+
+  return g;
+}
+
+const audinys = {
+  mount({ stage, controls, api, config }) {
+    ensureAdStyle();
+
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const C = config.captions || {};
+    const line = (key) => (typeof S[key] === "string" ? S[key] : "");
+    const label = (key, fallback) => (typeof L[key] === "string" ? L[key] : fallback);
+    const cap = (key, fallback) => (typeof C[key] === "string" ? C[key] : fallback);
+
+    const st = {
+      pick: "woven",
+      pulled: { woven: false, knit: false },
+      reported: false,
+      said: "",
+    };
+
+    stage.innerHTML = `
+      <div class="ad-wrap">
+        <p class="ad-pick" id="ad-pick"></p>
+        <div class="ad-pair">
+          <figure class="ad-cell" id="ad-woven">
+            <svg viewBox="0 0 140 140" role="img" aria-label=""></svg>
+            <figcaption>${cap("woven", "Austas")}</figcaption>
+          </figure>
+          <figure class="ad-cell" id="ad-knit">
+            <svg viewBox="0 0 140 140" role="img" aria-label=""></svg>
+            <figcaption>${cap("knit", "Megztas")}</figcaption>
+          </figure>
+        </div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div class="ad-actions" role="group" aria-label="Audinio pasirinkimas">
+        <button type="button" class="ad-choose" id="ad-woven-btn" aria-pressed="false">${label("woven", "Austas audinys")}</button>
+        <button type="button" class="ad-choose" id="ad-knit-btn" aria-pressed="false">${label("knit", "Megztas audinys")}</button>
+      </div>
+      <div class="ad-actions">
+        <button type="button" class="btn" id="ad-pull">${label("pull", "Ištrauk siūlą")}</button>
+        <button type="button" class="btn ghost" id="ad-again">${label("again", "Iš naujo")}</button>
+      </div>`;
+
+    const pickLine = stage.querySelector("#ad-pick");
+    const wCell = stage.querySelector("#ad-woven");
+    const kCell = stage.querySelector("#ad-knit");
+    const wSvg = wCell.querySelector("svg");
+    const kSvg = kCell.querySelector("svg");
+    const wBtn = controls.querySelector("#ad-woven-btn");
+    const kBtn = controls.querySelector("#ad-knit-btn");
+    const pullBtn = controls.querySelector("#ad-pull");
+    const resetBtn = controls.querySelector("#ad-again");
+
+    function paint() {
+      wSvg.innerHTML = wovenScene(st.pulled.woven);
+      kSvg.innerHTML = knitScene(st.pulled.knit);
+
+      wSvg.setAttribute(
+        "aria-label",
+        st.pulled.woven
+          ? "Austas audinys: vienas siūlas išslydo, audinys liko vientisas."
+          : "Austas audinys: siūlai eina skersai ir išilgai.",
+      );
+      kSvg.setAttribute(
+        "aria-label",
+        st.pulled.knit
+          ? "Megztas audinys: kilputės bėga, liko plyšys per visą gabalą."
+          : "Megztas audinys: kilputės susikabinusios viena su kita.",
+      );
+
+      wCell.classList.toggle("is-on", st.pick === "woven");
+      kCell.classList.toggle("is-on", st.pick === "knit");
+      wBtn.setAttribute("aria-pressed", String(st.pick === "woven"));
+      kBtn.setAttribute("aria-pressed", String(st.pick === "knit"));
+
+      const chosen = label(st.pick, "");
+      pickLine.textContent = `${label("chosen", "Pasirinkta")}: ${chosen.toLowerCase()}.`;
+    }
+
+    function say(text) {
+      if (!text || text === st.said) return;
+      st.said = text;
+      api.speak(text);
+    }
+
+    function select(which) {
+      st.pick = which;
+      st.said = "";
+      paint();
+      const text = st.pulled[which] ? line("already") : line("select");
+      api.readout(text);
+      say(text);
+      // Paaiškinimas keičiasi kartu su lopeliu: kitaip po ankstesnio
+      // bandymo liktų sakinys apie kitą audinį (LL-14 šeima).
+      api.note(st.pulled[which]
+        ? "Pažiūrėk į plyšį ir palygink su kitu lopeliu."
+        : `Spausk „${label("pull", "Ištrauk siūlą")}“ ir žiūrėk, kas bus.`);
+      pullBtn.focus();
+    }
+
+    function pull() {
+      const which = st.pick;
+      if (st.pulled[which]) {
+        const text = line("already");
+        api.readout(text);
+        say(text);
+        (which === "woven" ? kBtn : wBtn).focus();
+        return;
+      }
+
+      st.pulled[which] = true;
+      st.said = "";
+      paint();
+
+      const both = st.pulled.woven && st.pulled.knit;
+      const text = both ? line("both") : line(which);
+      api.readout(text);
+      say(text);
+
+      // Paaiškinimas po veiksmo — kas nutiko, o ne kas „teisinga“.
+      api.note(which === "woven"
+        ? "Siūlai susikerta. Gretimi siūlai liko savo vietoje."
+        : "Viena kilputė laikė kitą. Todėl kilputės bėga toliau.");
+
+      // Pažanga — tik kai abu lopeliai išnagrinėti (LL-17): vienas
+      // ištrauktas siūlas dar neparodo skirtumo, nes nėra su kuo lyginti.
+      if (both && !st.reported) {
+        st.reported = true;
+        api.progress({ correct: true });
+      }
+
+      if (both) resetBtn.focus();
+      else (which === "woven" ? kBtn : wBtn).focus();
+    }
+
+    function reset() {
+      st.pulled = { woven: false, knit: false };
+      st.pick = "woven";
+      st.said = "";
+      paint();
+      const text = line("reset");
+      api.readout(text);
+      say(text);
+      api.note("Pasirink lopelį ir ištrauk siūlą.");
+      pullBtn.focus();
+    }
+
+    wBtn.addEventListener("click", () => select("woven"));
+    kBtn.addEventListener("click", () => select("knit"));
+    pullBtn.addEventListener("click", pull);
+    resetBtn.addEventListener("click", reset);
+
+    paint();
+    api.readout(line("start"));
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "elektros-grandine": elektrosGrandine,
   "medziagu-bandymas": medziaguBandymas,
@@ -2289,4 +2624,5 @@ export const SIMS = {
   "drabuziu-prieziura": drabuziuPrieziura,
   "batas": batas,
   "valdiklis": valdiklis,
+  "audinys": audinys,
 };

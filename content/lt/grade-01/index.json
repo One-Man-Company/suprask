@@ -625,6 +625,14 @@
      "file": "grade-01/technologijos/07-elektronika.json",
      "minutes": 9,
      "sim": "valdiklis"
+    },
+    {
+     "id": "09-austinis-ir-megztas-audinys",
+     "title": "Kodėl kojinė pabyra, o džinsai ne",
+     "subtitle": "Megzto audinio kilputė bėga, austo – tik siūlas išslysta",
+     "file": "grade-01/technologijos/09-austinis-ir-megztas-audinys.json",
+     "minutes": 9,
+     "sim": "audinys"
     }
    ]
   },

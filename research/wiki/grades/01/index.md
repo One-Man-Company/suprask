@@ -36,14 +36,14 @@ atnaujinta: 2026-11-09
 | Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Kas gyvena tvarte? · Kur dingsta vanduo · Nuožulnioji plokštuma: kas lemia greitį · Kuprinė: tas pats svoris, kita vieta · Dūmai: žemai ir lauk, o ne slėptis · Kas gyvas: auga ir reaguoja, ne tik juda · Kas sukūrė šį daiktą: kelias iki gamtos · Medžiai, krūmai, žolės: grupę rodo stiebas · Augalo dalys: vieta, o ne išvaizda · Išmestas daiktas nedingsta · Kas lieka pievoje po metų · Vienas vanduo, trys formos · Trauma turi priežastį · Apsauga dengia tik savo vietą · Vėliau keltis — trumpesni pusryčiai · Kas priklauso bendruomenei? · Kiekvienas moka ką nors · Kiekvienas turi savo energijos šaltinį · Ką pastebėjau kieme? · Tie patys penki ženklai · Kas kam giminė? | 23 — gyva |
 | Muzika | Aukštas garsas ne visada garsus · Ritmas: plojimai ant tolygaus pulso · Ta pati melodija, kitas atlikėjas | 3 — gyva |
 | Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius | 3 — gyva |
-| Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas · Vienas kirpimas — kelios skylės · Balti skalbsis atskirai nuo spalvotų · Batas išdžius toks, koks džiūsta · Mygtukas grįžta, jungiklis lieka | 6 — gyva |
+| Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas · Vienas kirpimas — kelios skylės · Balti skalbsis atskirai nuo spalvotų · Batas išdžius toks, koks džiūsta · Mygtukas grįžta, jungiklis lieka · Kodėl kojinė pabyra, o džinsai ne | 7 — gyva |
 | Gyvenimo įgūdžiai | Dovana: kodėl vienas džiaugiasi, kitas ne · Jausmas turi savo vardą | 2 — gyva |
 | Dorinis ugdymas | Kai vienas nustoja, nukenčia visi · Ekranas žmogaus nepaslepia | 2 — gyva |
 | Dailė | Dailė: ta pati forma, kita spalva | 1 — gyva |
 
 ## Statusas
 
-**Live.** 76 modulių, 9 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
+**Live.** 77 modulių, 9 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
 
 ## Susieti
 

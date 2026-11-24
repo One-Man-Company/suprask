@@ -1,0 +1,18 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 505,
+  "created": "2026-11-24T11:16:43+02:00",
+  "type": "struktura",
+  "title": "Nė vienas vartas neskaito, ar sim.config seka išsprendžiama be spalvos",
+  "body": "Standartas §4.4 reikalauja, kad spalva niekada nebūtų vienintelis informacijos nešėjas, bet ši taisyklė tikrinama tik CSS lygmenyje: check_ui.py skaito main.css, check_view.py matuoja dydžius ir slinktį, o pats uždavinys yra modelio duomenyse. Todėl 07-desningumai penkias sekas sudėjo vien iš spalvotų apskritimų ir visi vartai buvo žali, nors daltonikui vaikui trys sekos neturėjo sprendimo kelio (LL-174). Siūloma validate_content.py pridėti taisyklę modeliams, kurie deklaruoja sim.config.palette: (1) kiekvieno uždavinio seq ir options žetonai turi egzistuoti paletėje ir turėti ne tuščią shape; (2) atsakymų variantų shape reikšmės turi būti unikalios — kitaip teisingą variantą be spalvos atskirti galima tik atspalviu; (3) po teisingo žetono įterpimo seka turi būti periodiška, o be spalvos (pagal shape) turi likti lygiai vienas sprendimas. Tai gaudo ir būsimą regresiją: config pataisymas, kuris grąžina spalvotus apskritimus, taptų raudonu vartu, o ne tyliu pedagoginiu defektu, kurio niekas nepastebi iki kritiko ataskaitos.",
+  "target": "scripts/validate_content.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "docs/KURINIO-STANDARTAS.md §4.4 (spalva niekada nėra vienintelis informacijos nešėjas)",
+    "docs/KURINIO-STANDARTAS.md §4 reikalavimai simuliacijai",
+    "content/lt/grade-01/matematika/07-desningumai.json — sim.config.palette ir penkios sekos",
+    "assets/js/sims/matematika.js — desningumai komponentas (palette, shape, ruleOf)",
+    "research/wiki/guidelines/pamokos.md LL-174"
+  ]
+}

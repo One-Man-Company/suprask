@@ -24,90 +24,98 @@
   "sim": {
     "component": "desningumai",
     "config": {
+      "palette": {
+        "raudonas-apskritimas": { "name": "raudonas apskritimas", "shape": "apskritimas", "fill": "var(--coral)" },
+        "melynas-kvadratas": { "name": "mėlynas kvadratas", "shape": "kvadratas", "fill": "var(--sky)" },
+        "geltonas-trikampis": { "name": "geltonas trikampis", "shape": "trikampis", "fill": "var(--sun)" },
+        "zalias-staciakampis": { "name": "žalias stačiakampis", "shape": "staciakampis", "fill": "var(--mint)" },
+        "oranzinis-rombas": { "name": "oranžinis rombas", "shape": "rombas", "fill": "var(--accent)" },
+        "violetine-zvaigzde": { "name": "violetinė žvaigždė", "shape": "zvaigzde", "fill": "var(--grape)" }
+      },
       "tasks": [
         {
           "seq": [
-            "🔴",
-            "🔵",
-            "🔴",
-            "🔵",
+            "raudonas-apskritimas",
+            "melynas-kvadratas",
+            "raudonas-apskritimas",
+            "melynas-kvadratas",
             "?"
           ],
           "options": [
-            "🔵",
-            "🔴",
-            "🟢"
+            "melynas-kvadratas",
+            "raudonas-apskritimas",
+            "zalias-staciakampis"
           ],
           "answer": 1,
-          "prompt": "Kokia spalva eina toliau?"
+          "prompt": "Kas eina toliau?"
         },
         {
           "seq": [
-            "🟡",
-            "🟡",
-            "🟢",
-            "🟡",
-            "🟡",
+            "geltonas-trikampis",
+            "geltonas-trikampis",
+            "zalias-staciakampis",
+            "geltonas-trikampis",
+            "geltonas-trikampis",
             "?"
           ],
           "options": [
-            "🟢",
-            "🟡",
-            "🔴"
+            "zalias-staciakampis",
+            "geltonas-trikampis",
+            "raudonas-apskritimas"
           ],
           "answer": 0,
-          "prompt": "Grupėje trys elementai. Kas toliau?"
+          "prompt": "Grupėje trys figūros. Kas eina toliau?"
         },
         {
           "seq": [
-            "🟠",
-            "🟢",
-            "🔵",
-            "🟠",
-            "🟢",
+            "oranzinis-rombas",
+            "zalias-staciakampis",
+            "melynas-kvadratas",
+            "oranzinis-rombas",
+            "zalias-staciakampis",
             "?"
           ],
           "options": [
-            "🔵",
-            "🟠",
-            "🟢"
+            "melynas-kvadratas",
+            "oranzinis-rombas",
+            "geltonas-trikampis"
           ],
           "answer": 0,
-          "prompt": "Grupėje trys skirtingi elementai. Kas toliau?"
+          "prompt": "Grupėje trys skirtingos figūros. Kas eina toliau?"
         },
         {
           "seq": [
-            "🟣",
-            "🟠",
-            "🟠",
-            "🟣",
-            "🟠",
+            "oranzinis-rombas",
+            "oranzinis-rombas",
+            "violetine-zvaigzde",
+            "oranzinis-rombas",
+            "oranzinis-rombas",
             "?"
           ],
           "options": [
-            "🟠",
-            "🟣",
-            "🔵"
+            "oranzinis-rombas",
+            "violetine-zvaigzde",
+            "raudonas-apskritimas"
           ],
-          "answer": 0,
-          "prompt": "Vienas violetinis, du oranžiniai. Kas toliau?"
+          "answer": 1,
+          "prompt": "Kas eina toliau? Skaičiuok grupę nuo pradžios."
         },
         {
           "seq": [
-            "🟡",
-            "🟢",
-            "🟡",
-            "🟢",
+            "geltonas-trikampis",
+            "zalias-staciakampis",
+            "geltonas-trikampis",
+            "zalias-staciakampis",
             "?",
-            "🟢"
+            "zalias-staciakampis"
           ],
           "options": [
-            "🟢",
-            "🟡",
-            "🔵"
+            "zalias-staciakampis",
+            "geltonas-trikampis",
+            "melynas-kvadratas"
           ],
           "answer": 1,
-          "prompt": "Viduryje trūksta vieno elemento. Kas ten stovi?"
+          "prompt": "Viduryje trūksta vienos figūros. Kas ten stovi?"
         }
       ]
     }

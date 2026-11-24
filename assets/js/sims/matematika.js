@@ -612,59 +612,285 @@ const figuros = {
 
 /* ------------------------------------------------------------------ */
 /* 4. Dėsningumai (algoritminis mąstymas)                              */
+/*                                                                    */
+/* Modelis: seka, kurioje kartojasi ta pati grupė. Vienas kintamasis  */
+/* (kuri figūra eina toliau), viena pasekmė (seka tampa pilna, o      */
+/* taisyklė įvardijama žodžiais).                                     */
+/*                                                                    */
+/* Kiekvienas žetonas turi DU nešėjus — SPALVĄ ir FORMĄ. Iki šio      */
+/* pataisymo seka buvo vien spalvoti apskritimai (🔴🔵🟡), todėl       */
+/* daltonikui vaikui 1–3 sekos buvo neišsprendžiamos: informaciją      */
+/* nešė vien spalva (LL-174). Forma skaitoma ir tada, kai spalvos      */
+/* nesiskiria, o `readout` ir balsas kiekvieną žetoną vadina vardu.     */
 /* ------------------------------------------------------------------ */
 const desningumai = {
   mount({ stage, controls, api, config }) {
-    const tasks = config.tasks || [];
-    let i = 0;
-    let reported = false; // api.progress — tik įveikus visas sekas (§4)
-    let locked = false;   // atsakymas jau priimtas — laukiama kitos sekos
+    const tasks = (Array.isArray(config.tasks) ? config.tasks : []).filter(
+      (t) => t && Array.isArray(t.seq) && t.seq.length > 1 && Array.isArray(t.options) && t.options.length
+    );
+    /* Paletė: žetono raktas -> { name, shape, fill }. Vardas yra tai, ką
+       girdi balsas ir skaito ekrano skaitytuvas; forma — antras nešėjas. */
+    const palette = config.palette && typeof config.palette === "object" ? config.palette : {};
+    const reduce = typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    stage.innerHTML = `<div id="ds-wrap" style="width:100%;max-width:40rem;text-align:center">
-      <div id="ds-seq" style="display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;font-size:clamp(1.8rem,7vw,2.6rem);min-height:4rem;align-items:center"></div>
-      <p class="sim-note" id="ds-msg"></p>
-    </div>`;
-    controls.innerHTML = `<div id="ds-opts" style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center"></div>`;
-    const seqEl = stage.querySelector("#ds-seq");
-    const msg = stage.querySelector("#ds-msg");
-    const optsEl = controls.querySelector("#ds-opts");
+    let alive = true;
+    let timers = [];
+    let i = 0;
+    let locked = false;    // atsakymas priimtas — laukiama kitos sekos
+    let reported = false;  // api.progress — tik įveikus visas sekas (§4)
+    let seqEl = null;
+    let msgEl = null;
+    let optsEl = null;
+
+    const later = (fn, ms) => {
+      const id = setTimeout(() => { if (alive) fn(); }, ms);
+      timers.push(id);
+    };
+    const stopTimers = () => { timers.forEach(clearTimeout); timers = []; };
+
+    /* Penkiakampė žvaigždė apskaičiuojama, o ne įrašoma ranka: ranka įrašyti
+       taškai po pirmo pataisymo nebeatitinka 48×48 rėmo. */
+    function starPoints() {
+      const pts = [];
+      for (let k = 0; k < 10; k += 1) {
+        const r = k % 2 === 0 ? 21 : 8.6;
+        const a = -Math.PI / 2 + (k * Math.PI) / 5;
+        pts.push(`${(24 + r * Math.cos(a)).toFixed(1)},${(25 + r * Math.sin(a)).toFixed(1)}`);
+      }
+      return pts.join(" ");
+    }
+
+    const SHAPE_PATHS = {
+      apskritimas: (fill) => svgEl("circle", { cx: 24, cy: 24, r: 18, fill }),
+      kvadratas: (fill) => svgEl("rect", { x: 6, y: 6, width: 36, height: 36, rx: 4, fill }),
+      trikampis: (fill) => svgEl("polygon", { points: "24,4 44,42 4,42", fill }),
+      staciakampis: (fill) => svgEl("rect", { x: 2, y: 13, width: 44, height: 22, rx: 4, fill }),
+      rombas: (fill) => svgEl("polygon", { points: "24,3 45,24 24,45 3,24", fill }),
+      zvaigzde: (fill) => svgEl("polygon", { points: starPoints(), fill }),
+    };
+
+    const tokenName = (key) => {
+      const p = palette[key];
+      return p && p.name ? p.name : String(key);
+    };
+
+    function tokenSvg(key) {
+      const p = palette[key];
+      if (!p || !SHAPE_PATHS[p.shape]) return null;
+      const svg = svgEl("svg", { viewBox: "0 0 48 48", "aria-hidden": "true", focusable: "false" });
+      const shape = SHAPE_PATHS[p.shape](p.fill || "var(--sky)");
+      // Tamsus kontūras: forma lieka matoma ir šviesioje, ir tamsioje temoje,
+      // o žetonas turi aiškų siluetą net ir be spalvos.
+      shape.setAttribute("stroke", "var(--ink)");
+      shape.setAttribute("stroke-width", "3");
+      shape.setAttribute("stroke-linejoin", "round");
+      svg.appendChild(shape);
+      return svg;
+    }
+
+    function tokenEl(key, maxw = null) {
+      const box = document.createElement("span");
+      box.style.cssText = "display:grid;place-items:center;min-width:0;line-height:1";
+      const svg = tokenSvg(key);
+      if (svg) {
+        // `width:100%` + kvadratinis viewBox: žetonas prisitaiko prie langelio
+        // pločio, todėl 360 px ekrane šeši žetonai telpa be horizontalios
+        // slinkties ir be `overflow` (matuota žr. ataskaitą).
+        svg.style.cssText = "display:block;width:100%;height:auto;max-width:" + (maxw ? `${maxw}px` : "100%");
+        box.appendChild(svg);
+        box.setAttribute("role", "img");
+        box.setAttribute("aria-label", tokenName(key));
+      } else {
+        // Senas žetonas be paletės (emoji): lieka skaitomas, bet formos
+        // neturi — tokios konfigūracijos nebenaudojamos, o čia tik apsauga,
+        // kad nebūtų tuščio langelio.
+        box.textContent = String(key);
+        box.style.fontSize = "clamp(1.4rem,6vw,2.2rem)";
+        box.setAttribute("role", "img");
+        box.setAttribute("aria-label", tokenName(key));
+      }
+      return box;
+    }
+
+    function slotEl() {
+      const box = document.createElement("span");
+      box.dataset.slot = "1";
+      box.style.cssText = "display:grid;place-items:center;min-width:0;box-sizing:border-box;" +
+        "border:3px dashed var(--ink-faint);border-radius:12px;aspect-ratio:1";
+      box.setAttribute("role", "img");
+      box.setAttribute("aria-label", "Tuščia vieta: kas čia bus?");
+      const q = document.createElement("span");
+      q.textContent = "?";
+      q.setAttribute("aria-hidden", "true");
+      q.style.cssText = "font-family:var(--font-head);font-weight:900;line-height:1;" +
+        "font-size:clamp(1.1rem,4.5vw,1.7rem);color:var(--ink-soft)";
+      box.appendChild(q);
+      return box;
+    }
+
+    function shell() {
+      stage.innerHTML = `
+        <div style="width:100%;max-width:30rem;min-width:0">
+          <div id="ds-seq" role="group" aria-label="Seka" style="display:grid;gap:.35rem;align-items:center"></div>
+          <p class="sim-note" id="ds-msg" style="margin:.6rem 0 0;min-height:2.6rem"></p>
+        </div>`;
+      controls.innerHTML = `
+        <div id="ds-opts" role="group" aria-label="Kas eina toliau"
+             style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;width:100%;max-width:22rem;margin:0 auto"></div>`;
+      seqEl = stage.querySelector("#ds-seq");
+      msgEl = stage.querySelector("#ds-msg");
+      optsEl = controls.querySelector("#ds-opts");
+    }
+
+    /* Taisyklė apskaičiuojama iš SEKOS, o ne įrašoma į config: kitaip
+       paaiškinimas liktų apie pirmą pavyzdį ir po config pataisymo
+       prieštarautų tam, ką vaikas mato (LL-33). */
+    function ruleOf(t) {
+      const ans = t.options[t.answer];
+      const filled = t.seq.map((k) => (k === "?" ? ans : k));
+      const n = filled.length;
+      for (let p = 1; p <= Math.floor(n / 2); p += 1) {
+        let ok = true;
+        for (let j = 0; j + p < n; j += 1) {
+          if (filled[j] !== filled[j + p]) { ok = false; break; }
+        }
+        if (ok) return filled.slice(0, p);
+      }
+      return filled.slice();
+    }
+
+    const COUNT_WORDS = { 1: "viena figūra", 2: "dvi figūros", 3: "trys figūros", 4: "keturios figūros" };
+
+    function ruleSentence(group) {
+      const names = group.map(tokenName);
+      const head = names.length === 1
+        ? names[0]
+        : `${names.slice(0, -1).join(", ")} ir ${names[names.length - 1]}`;
+      const count = COUNT_WORDS[names.length] || `${names.length} figūros`;
+      /* Be žodžio „kartojasi“: su juo trijų figūrų sakinys perkopia 1–2 klasei
+         skirtą 10 žodžių ribą (§6). Patį „kartojimąsi“ įvardija `concept.steps`. */
+      return `Taisyklė: ${count} — ${head}.`;
+    }
 
     function draw() {
       locked = false;
-      const t = tasks[i % tasks.length];
-      seqEl.innerHTML = t.seq.map((tok) => `<span style="display:inline-grid;place-items:center;min-width:2.4rem">${tok === "?" ? "❔" : tok}</span>`).join("");
-      optsEl.innerHTML = t.options.map((o, k) => `<button class="btn secondary" data-k="${k}" style="font-size:1.8rem;min-width:4rem">${o}</button>`).join("");
-      msg.textContent = t.prompt || "Kuris elementas eina toliau?";
-      optsEl.querySelectorAll("[data-k]").forEach((b) => {
-        b.addEventListener("click", () => {
-          if (locked) return;
-          if (Number(b.dataset.k) === t.answer) {
-            locked = true;
-            api.readout("Teisingai!");
-            api.note("Seka kartojasi. Pasakyk, kokia tvarka ji eina.");
-            /* Pažanga čia nežymima: tai dar viena seka iš kelių (§4). */
-            i += 1;
-            setTimeout(() => { if (i < tasks.length) draw(); else {
-              stage.innerHTML = `<div style="text-align:center;padding:1rem"><div style="font-size:4rem">🔁</div><p style="font-family:var(--font-head);font-weight:900;font-size:1.3rem">Sekos įveiktos!</p><p class="sim-note">Sugalvok savo seką iš dviejų spalvų ir pasakyk ją draugui.</p></div>`;
-              optsEl.innerHTML = "";
-              /* Tikslas pasiektas DABAR — paskutinė seka, o ne pirmoji. */
-              if (!reported) {
-                reported = true;
-                api.progress({ correct: true });
-              }
-            } }, 900);
-          } else {
-            msg.textContent = "Ne visai. Perskaityk seką nuo pradžios ir pasakyk, kas kartojasi.";
-            api.readout("Dar ne visai. Rask, kas kartojasi.");
-            b.classList.add("wiggle");
-            setTimeout(() => b.classList.remove("wiggle"), 450);
-          }
-        });
+      const t = tasks[i];
+      seqEl.style.gridTemplateColumns = `repeat(${t.seq.length}, minmax(0, 1fr))`;
+      seqEl.innerHTML = "";
+      t.seq.forEach((k) => seqEl.appendChild(k === "?" ? slotEl() : tokenEl(k)));
+
+      const prompt = t.prompt || "Kas eina toliau?";
+      msgEl.textContent = prompt;
+      api.readout(prompt);
+      api.note("Seką skaityk iš kairės į dešinę. Rask grupę, kuri kartojasi.");
+
+      optsEl.innerHTML = "";
+      t.options.forEach((opt, k) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "btn secondary";
+        b.dataset.k = String(k);
+        b.style.cssText = "box-sizing:border-box;min-width:0;min-height:72px;padding:.45rem;" +
+          "display:grid;place-items:center;overflow:hidden";
+        b.setAttribute("aria-label", `Atsakymas: ${tokenName(opt)}`);
+        b.appendChild(tokenEl(opt, 64));
+        b.addEventListener("click", () => answer(b, opt));
+        optsEl.appendChild(b);
       });
     }
 
+    const focusFirstOption = () => {
+      const first = optsEl ? optsEl.querySelector("button") : null;
+      if (first) first.focus();
+    };
+
+    /* Teisingas žetonas įrašomas į tuščią vietą — vaikas mato pilną seką,
+       o ne vien žodį „Teisingai“ (grįžtamasis ryšys turi parodyti modelį). */
+    function fillSlot(key) {
+      const slot = seqEl.querySelector("[data-slot]");
+      if (!slot) return;
+      slot.removeAttribute("data-slot");
+      slot.style.borderStyle = "solid";
+      slot.style.borderColor = "var(--ok)";
+      const tok = tokenEl(key);
+      slot.innerHTML = "";
+      while (tok.firstChild) slot.appendChild(tok.firstChild);
+      slot.setAttribute("aria-label", `${tokenName(key)} — čia tinka`);
+    }
+
+    function answer(btn, opt) {
+      if (!alive || locked) return;
+      const t = tasks[i];
+
+      if (opt !== t.options[t.answer]) {
+        msgEl.textContent = "Ne visai. Palygink pirmą grupę su antra.";
+        api.readout("Dar ne visai. Rask, kas kartojasi.");
+        api.note("Pažiūrėk, kiek figūrų yra vienoje grupėje, ir lygink grupes.");
+        if (!reduce) {
+          btn.classList.add("wiggle");
+          later(() => btn.classList.remove("wiggle"), 450);
+        }
+        // Fokusas lieka tame pačiame mygtuke: jis neperpiešiamas, todėl
+        // naršyklė jo nemeta (LL-32).
+        return;
+      }
+
+      locked = true;
+      fillSlot(opt);
+      const sentence = `Teisingai — ${tokenName(opt)}. ${ruleSentence(ruleOf(t))}`;
+      api.readout(sentence);
+      msgEl.textContent = ruleSentence(ruleOf(t));
+      api.note("Seka kartojasi. Pasakyk taisyklę savais žodžiais.");
+      api.speak(`${tokenName(opt)}. ${ruleSentence(ruleOf(t))}`);
+
+      later(() => {
+        i += 1;
+        if (i < tasks.length) { draw(); focusFirstOption(); }
+        else finish();
+      }, 1100);
+    }
+
+    function finish() {
+      api.readout("Visos sekos įveiktos. Sugalvok savo seką ir pasakyk ją draugui.");
+      api.note("Tu moki rasti taisyklę. Dabar sugalvok savo seką iš dviejų figūrų.");
+      stage.innerHTML = `
+        <div style="text-align:center;max-width:30rem;padding:.4rem">
+          <p style="font-family:var(--font-head);font-weight:900;font-size:1.3rem;margin:0 0 .35rem">Sekos įveiktos!</p>
+          <p class="sim-note" style="margin:0">Sugalvok savo seką iš dviejų figūrų ir pasakyk ją draugui.</p>
+        </div>`;
+      controls.innerHTML = "";
+      const again = document.createElement("button");
+      again.type = "button";
+      again.className = "btn ghost";
+      again.textContent = "Peržiūrėti sekas dar kartą";
+      again.addEventListener("click", () => {
+        stopTimers();
+        i = 0;
+        shell();
+        draw();
+        focusFirstOption();
+      });
+      controls.appendChild(again);
+      again.focus();
+      if (!reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    shell();
+    if (!tasks.length) {
+      stage.innerHTML = `<p class="sim-note">Sekų ruošiama.</p>`;
+      controls.innerHTML = "";
+      return () => { alive = false; stopTimers(); };
+    }
     draw();
-    return null;
+
+    return () => {
+      alive = false;
+      stopTimers();
+    };
   },
 };
 

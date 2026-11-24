@@ -35,8 +35,8 @@
         },
         {
           "label": "Katė", "emoji": "🐈", "place": "kieme prie namo", "bin": "naminis",
-          "trait": "žmogus jai pila pieno",
-          "winter": "Lieka prie namo. Pieną duoda žmogus."
+          "trait": "žmogus jai duoda maisto",
+          "winter": "Lieka prie namo. Maistą duoda žmogus."
         },
         {
           "label": "Višta", "emoji": "🐔", "place": "vištidėje", "bin": "naminis",
@@ -137,12 +137,12 @@
   ],
   "reflect": "Kokį gyvūną matai savo kieme? Kas jam duoda maistą?",
   "teacher": {
-    "goal": "Sąvoką „naminis“ sieti su žmogaus duodamu maistu ir pastoge, o ne su vieta prie namo. Vaikas mokosi atsispirti klaidai „kur kieme, tas naminis“.",
+    "goal": "Sąvoką „naminis“ sieti su tuo, kas gyvūnui duoda maistą, o ne su pastoge ar vieta prie namo. Pastogė — augintinio poreikis, o ne grupės požymis: gandras suka lizdą ant tvarto stogo, bet maisto susiranda pats. Vaikas mokosi atsispirti klaidai „kur kieme, tas naminis“.",
     "prompt": "Kas duoda maistą katei, kuri miega kieme, ir kas — gandrui ant tvarto stogo?",
     "offline": "Ant dviejų lapų užrašykite „Maistą duoda žmogus“ ir „Maistą susiranda pats“. Iškirpkite korteles su gyvūnais, kuriuos vaikai matė kieme ar tvarte. Kiekvieną kortelę dėkite ant lapo ir garsiai pasakykite, kas tam gyvūnui duoda maisto. Paskui apžiūrėkite kiemą ir suraskite vieną gyvūną, kuris gyvena prie namo, bet maisto susiranda pats.",
     "misconceptions": [
       "„Kas gyvena tvarte ar kieme, tas naminis.“ Gandras suka lizdą ant tvarto stogo, bet maistą susiranda pats.",
-      "„Kas gyvena lauke, tas laukinis.“ Katė, kuriai žmogus duoda pieno, lieka naminė.",
+      "„Kas gyvena lauke, tas laukinis.“ Katė, kuriai žmogus duoda maisto, lieka naminė.",
       "„Laukinis reiškia piktas arba pavojingas.“ Modelyje lapė tik ieško maisto; laukinis reiškia „pats susiranda“, o ne „puola“.",
       "„Šuo iš prieglaudos — benamis, vadinasi, laukinis.“ Prieglaudoje šunį šeria ir juo rūpinasi žmonės, o paskui jį paima šeima. Šuo visą laiką lieka naminis; keičiasi tik tai, kiek žmonių juo rūpinasi ir ar jis turi savo namus.",
       "„Jei gyvūnas naminis, jis pats maisto nesusiranda.“ Višta lesa žolę, bet be žmogaus grūdų ir vištidės šalčiausią žiemą neišgyventų."

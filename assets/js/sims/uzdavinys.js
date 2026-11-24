@@ -54,7 +54,7 @@ const klausimasRenkaVeiksma = {
     stage.innerHTML = `
       <div style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
         <p id="uk-story" class="sim-note"
-           style="margin:0 0 .35rem;text-align:center;font-weight:800;font-size:.95rem;line-height:1.3"></p>
+           style="margin:0 0 .35rem;text-align:center;font-weight:800;line-height:1.3"></p>
         <svg id="uk-scene" viewBox="0 0 360 240" width="100%" role="img"
              style="display:block;width:100%;height:auto"></svg>
         <p id="uk-eq"

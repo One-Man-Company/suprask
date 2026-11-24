@@ -96,7 +96,7 @@ const metuLaikai = {
         <p id="ml-pair" style="margin:.6rem 0 0;font-size:1rem;font-weight:800;line-height:1.25;text-align:center">
           Lapuotis keičiasi, eglė žaliuoja visus metus.
         </p>
-        <p class="sim-note" style="font-size:.8rem;text-align:center">Tai supaprastintas modelis: tikras oras kasdien būna įvairus.</p>
+        <p class="sim-note" style="text-align:center">Tai supaprastintas modelis: tikras oras kasdien būna įvairus.</p>
       </div>`;
 
     controls.innerHTML = `
@@ -327,7 +327,7 @@ const augaloGyvenimas = {
     stage.innerHTML = `
       <div style="width:100%;max-width:30rem">
         <svg id="ag-scene" viewBox="0 0 360 300" role="img" aria-label="Augalo augimo modelis"></svg>
-        <p class="sim-note" style="font-size:.8rem">Tai supaprastintas modelis: dirvožemis čia yra visą laiką, o šaknų nematome.</p>
+        <p class="sim-note">Tai supaprastintas modelis: dirvožemis čia yra visą laiką, o šaknų nematome.</p>
       </div>`;
 
     /* Sąlygos eilutė. Etiketė, taškai ir du mygtukai yra viena `flex`
@@ -982,7 +982,7 @@ const vandensBusenos = {
              style="display:grid;grid-template-columns:repeat(auto-fit,minmax(5.4rem,1fr));gap:.4rem;margin:.55rem 0 0">
           ${["water", "steam", "ice"].map(stateCard).join("")}
         </div>
-        <p class="sim-note" style="font-size:.8rem;text-align:center">
+        <p class="sim-note" style="text-align:center">
           Modelis supaprastintas: puodas rodomas perpjautas, kad matytum vandenį.
           Brūkšneliai rodo ore esantį garą, kurio nematome.
         </p>
@@ -1433,7 +1433,7 @@ const nuozulniojiPlokstuma = {
       <div style="width:100%;max-width:30rem;margin:0 auto">
         <svg id="np-scene" viewBox="0 0 360 320" role="img"
              aria-label="Dvi nuožulnios plokštumos su rutuliais"></svg>
-        <p class="sim-note" style="font-size:.8rem;text-align:center">
+        <p class="sim-note" style="text-align:center">
           Modelis supaprastintas: trinties ir rutulių sukimosi nesimato.
         </p>
       </div>`;
@@ -1724,9 +1724,9 @@ const kuprineIrSvoris = {
              role="img" aria-label="Vaikas stovi iš nugaros. Kuprinė dar neuždėta."></svg>
         <p id="kp-where" style="margin:.5rem 0 .15rem;text-align:center;font-weight:800;font-size:1.05rem">
           Spaudžia: kuprinė dar neuždėta</p>
-        <p class="sim-note" style="margin:0;text-align:center;font-size:.85rem">
+        <p class="sim-note" style="margin:0;text-align:center">
           Kuprinė ta pati. Svoris nepakito.</p>
-        <p class="sim-note" style="margin:.15rem 0 0;text-align:center;font-size:.85rem">
+        <p class="sim-note" style="margin:.15rem 0 0;text-align:center">
           Kūno dalys: galva · pečiai · juosmuo · kojos</p>
       </div>`;
 
@@ -2088,7 +2088,7 @@ const dumaiIrIsejimas = {
              role="img" aria-label="Kambarys. Dūmų dar nedaug, jie laikosi prie lubų."></svg>
         <p id="dm-way" style="margin:.55rem 0 .1rem;text-align:center;font-weight:800;font-size:1.05rem">
           Kelias lauk: dar nepasirinktas</p>
-        <p class="sim-note" style="margin:0;text-align:center;font-size:.85rem">
+        <p class="sim-note" style="margin:0;text-align:center">
           Pilka spalva rodo dūmus. Ruda — spinta.</p>
       </div>`;
 
@@ -2415,7 +2415,7 @@ const kasGyvas = {
       <div style="width:100%;max-width:26rem;margin:0 auto">
         <svg id="kg-scene" viewBox="0 0 328 188" width="100%" role="img"
              aria-label="Lentynoje pupos daigas, akmenukas ir kamuoliukas"></svg>
-        <p class="sim-note" style="font-size:.8rem;text-align:center">Modelis rodo savaitės pokytį. Kvėpavimo jame nematyti.</p>
+        <p class="sim-note" style="text-align:center">Modelis rodo savaitės pokytį. Kvėpavimo jame nematyti.</p>
       </div>`;
 
     controls.innerHTML = `
@@ -3181,7 +3181,7 @@ const augaluGrupes = {
     stage.innerHTML = `
       <div style="width:100%;max-width:24rem;margin:0 auto">
         <svg id="agr-scene" viewBox="0 0 328 272" width="100%" role="img" aria-label=""></svg>
-        <p class="sim-note" style="font-size:.78rem;text-align:center;line-height:1.3">
+        <p class="sim-note" style="text-align:center;line-height:1.3">
           Visi trys augalai nupiešti vienodo dydžio. Aukštį rodo juosta ir skaičius.</p>
       </div>`;
 
@@ -3575,7 +3575,7 @@ const ismestoDaiktoKelias = {
              style="display:block;max-width:360px;height:auto;margin:0 auto"
              role="img" aria-label="Lentyna su daiktais ir tuščia vieta krūvai."></svg>
         <p id="idk-count" style="margin:.45rem 0 0;text-align:center;font-weight:800;font-size:.95rem"></p>
-        <p class="sim-note" style="margin:.15rem 0 0;text-align:center;font-size:.82rem">
+        <p class="sim-note" style="margin:.15rem 0 0;text-align:center">
           Krūva rodo tik šio darbo daiktus.</p>
       </div>`;
 
@@ -3846,7 +3846,7 @@ const ledoFormos = {
         <svg id="lof-scene" viewBox="0 0 360 300" width="100%"
              style="display:block;max-width:360px;height:auto;margin:0 auto"
              role="img" aria-label="Trys puodeliai vandens ir trys tuščios formos."></svg>
-        <p class="sim-note" style="margin:.4rem 0 0;text-align:center;font-size:.8rem">
+        <p class="sim-note" style="margin:.4rem 0 0;text-align:center">
           Kiekviena forma gauna po vieną puodelį vandens.
         </p>
       </div>`;
@@ -5386,7 +5386,7 @@ const stebejimoZurnalas = {
           </tr></thead>
           <tbody id="sz-rows"></tbody>
         </table>
-        <p id="sz-summary" class="sim-note" style="margin:.35rem 0 0;text-align:center;font-size:.85rem;line-height:1.3;min-height:1.2em"></p>
+        <p id="sz-summary" class="sim-note" style="margin:.35rem 0 0;text-align:center;line-height:1.3;min-height:1.2em"></p>
       </div>`;
 
     controls.innerHTML = `
@@ -5899,7 +5899,7 @@ const giminesGrandine = {
     stage.querySelector("#gg-family").innerHTML = familyTopDown
       .map((id) => card(personOf(id))).join(bar);
     stage.querySelector("#gg-others").innerHTML = outsiders.map((p) => `${card(p)}${p.note
-      ? `<p class="sim-note" style="margin:0;text-align:center;font-size:.82rem;line-height:1.2">${esc(p.note)}</p>`
+      ? `<p class="sim-note" style="margin:0;text-align:center;line-height:1.2">${esc(p.note)}</p>`
       : ""}`).join("");
     const personBtns = [...stage.querySelectorAll("button[data-person]")];
 
@@ -6060,7 +6060,7 @@ const kasLiekaPievoje = {
              role="img" aria-label="Pieva su daiktais po pikniko."></svg>
         <p id="klp-count" style="margin:.4rem 0 0;min-width:0;text-align:center;font-weight:800;
            font-size:.95rem;line-height:1.25;overflow-wrap:anywhere"></p>
-        <p id="klp-fate" class="sim-note" style="margin:.2rem 0 0;font-size:.82rem;line-height:1.3"></p>
+        <p id="klp-fate" class="sim-note" style="margin:.2rem 0 0;line-height:1.3"></p>
         <p style="margin:.1rem 0 0;text-align:center;font-size:.78rem;line-height:1.3;color:var(--ink-soft)">
           Scena rodo pievą, ne visą mišką.
         </p>
@@ -6389,7 +6389,7 @@ const energijosSaltiniai = {
              style="display:block;max-width:360px;height:auto;margin:0 auto" role="img"></svg>
         <p id="es-state" style="margin:.4rem 0 0;min-width:0;text-align:center;font-weight:800;
            font-size:.95rem;line-height:1.25;overflow-wrap:anywhere"></p>
-        <p id="es-fate" class="sim-note" style="margin:.2rem 0 0;font-size:.82rem;line-height:1.3"></p>
+        <p id="es-fate" class="sim-note" style="margin:.2rem 0 0;line-height:1.3"></p>
         <p style="margin:.1rem 0 0;text-align:center;font-size:.78rem;line-height:1.3;color:var(--ink-soft)">
           Scena rodo tris dalyvius, ne visą gamtą.
         </p>
@@ -6703,7 +6703,7 @@ const gyvybesZenklai = {
              style="display:block;max-width:360px;height:auto;margin:0 auto" role="img"></svg>
         <p id="gz-state" style="margin:.35rem 0 0;min-width:0;text-align:center;font-weight:800;
            font-size:.95rem;line-height:1.25;overflow-wrap:anywhere"></p>
-        <p class="sim-note" style="margin:.25rem 0 0;font-size:.8rem;line-height:1.3">
+        <p class="sim-note" style="margin:.25rem 0 0;line-height:1.3">
           Scena rodo tris būtybes, ne visą gamtą. Kirmėlė ir medis turi tuos pačius ženklus.
         </p>
       </div>`;

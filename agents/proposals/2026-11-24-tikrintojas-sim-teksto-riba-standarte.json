@@ -1,0 +1,18 @@
+{
+  "role": "tikrintojas",
+  "run_id": 494,
+  "created": "2026-11-24T06:20:00+02:00",
+  "type": "ux",
+  "title": "Standartas neįvardija mažiausio skaitomo simuliacijos teksto dydžio, todėl vartai neturi slenksčio",
+  "body": "`docs/KURINIO-STANDARTAS.md` §4 reikalauja, kad simuliacija veiktų 360 px pločio ekrane, ir nustato 48 px lietimo taikinius, bet nė vienas dokumentas nepasako, kokio dydžio turi būti simuliacijos TEKSTAS. Dėl to `check_view.py` iki šiandien matavo tik užduoties kamieną (`minTaskFont`, LL-06), o `#sim-stage`, `#sim-controls`, `#sim-readout` ir `#sim-note` šriftą matavo nulis vartų. 2026-11-24 išmatuota: 37 iš 73 modulių turi bent vieną matomą simuliacijos teksto mazgą, mažesnį už 14 px (žemiausias 9,7 px — 19-simto-skaiciu-lentele, langelio „100“), o platformos žetonų lentelė prasideda nuo `--fs-xs` = 0,82rem = 13,1 px. Siūloma standarto §4 papildyti viena eilute: „1–2 klasėse simuliacijos tekstas, kurį vaikas skaito, yra ne mažesnis kaip 14 px telefone; mažesnis tekstas privalo būti `aria-hidden` iliustracijos dalis, ne skaitomas tekstas.“ Be šios eilutės `--sim-font-strict` vartai remiasi mano, o ne dokumento skaičiumi, o kitas kūrėjas pagrįstai gali rašyti 11 px etiketes. Šiandien `scripts/check_view.py` jau matuoja `simFonts` ir rodo pastabą (su `--sim-font-strict` — klaidą), bet slenkstis turi ateiti iš `docs/`, ne iš įrankio kodo.",
+  "target": "docs/KURINIO-STANDARTAS.md",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "Matavimas 2026-11-24: check_view.py --viewports small --json → sim_font_checked 73, sim_font_notes 37, mažiausias 9,7 px (matematika/19-simto-skaiciu-lentele, div.shl-cell „100“)",
+    "assets/css/main.css:408 — .sim-note { font-size: var(--fs-s) } (0,95rem = 15,2 px), t. y. platforma pati turi didesnį etaloną nei leidžia simuliacijų inline stiliai (17 vietų buvo font-size .78–.85rem; šiandien pašalintos)",
+    "docs/KURINIO-STANDARTAS.md §4 (simuliacijos sutartis) — yra 48 px taikinys ir 360 px plotis, nėra teksto dydžio",
+    "docs/SVIETIMAS-1-GAIRES.md T5.5 — prieinamumas: kontrastas, taikiniai, bet ne teksto dydis",
+    "research/wiki/guidelines/pamokos.md LL-06 — „Tekstas per mažas telefone“: taisyklė siejama su vartu, kuris matavo vieną zoną"
+  ]
+}

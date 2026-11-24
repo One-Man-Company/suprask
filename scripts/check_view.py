@@ -72,6 +72,16 @@ try { Object.defineProperty(Crypto.prototype, 'subtle', { get() { return undefin
 try { Object.defineProperty(window, 'speechSynthesis', { get() { return undefined; } }); } catch (e) {}
 """
 
+# Skaitomiausias simuliacijos tekstas. Riba dar NĖRA `docs/` dokumente, todėl
+# numatytajame bėgime tai PASTABA, o ne vartas. 2026-11-24 išmatuota: 43 iš 73
+# modulių turi bent vieną vaikui skaitomą `#sim-stage` / `#sim-controls` /
+# `#sim-readout` teksto mazgą, mažesnį už 14 px (žemiausias — 9,7 px,
+# 19-simto-skaiciu-lentele). Raudoni vartai 43 moduliams be pataisymo moko juos
+# apeiti (tas pats motyvas kaip #7396 `--text-scale`), o nutylėti negalima —
+# todėl matuojama VISADA ir parodoma ataskaitoje (LL-37). `--sim-font-strict`
+# paverčia pastabą klaida tiems, kurie jau taiso turinį.
+SIM_FONT_FLOOR = 14.0
+
 # 200 % teksto režimas (#7396, WCAG 1.4.4). Šaknies šriftas 16 → 32 px.
 # Kodėl atskiras režimas, o ne numatytasis: žmogus su padidintu tekstu yra
 # realus naudotojas, bet jo patikra neturi blokuoti publikavimo tol, kol
@@ -222,6 +232,38 @@ MEASURE = r"""
   const stage = document.querySelector('#sim-stage');
   const stageBox = stage ? stage.getBoundingClientRect() : null;
 
+  // Simuliacijų tekstas: kas jame skaitoma, o ne tik užduoties kamienas.
+  // `minTaskFont` matuoja .task-q; #sim-stage/#sim-controls/#sim-readout/#sim-note
+  // šrifto nematė nė vienas laukas, todėl 9,7 px etiketė simuliacijoje buvo
+  // „žalia“ (LL-06 taikoma tik zonai, kurią matuoja jos vartas).
+  // Skaičiuojami TIK matomi tekstiniai mazgai; `aria-hidden` iliustracijos dalis
+  // (pvz. dekoratyvūs skaičiai) neįtraukiamos, nes vaikas jų neskaito.
+  const simText = [];
+  for (const zone of document.querySelectorAll('#sim-stage, #sim-controls, #sim-readout, #sim-note')) {
+    if (!zone.getClientRects().length) continue;
+    const walker = document.createTreeWalker(zone, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const txt = (node.textContent || '').trim();
+      if (!txt) continue;
+      const el = node.parentElement;
+      if (!el || el.closest('[aria-hidden="true"]')) continue;
+      const cs = getComputedStyle(el);
+      if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) continue;
+      const r = el.getBoundingClientRect();
+      if (r.width < 1 || r.height < 1) continue;
+      const px = parseFloat(cs.fontSize) || 0;
+      if (!px) continue;
+      const cls = typeof el.className === 'string' ? el.className : (el.getAttribute('class') || '');
+      simText.push({
+        px: Math.round(px * 10) / 10,
+        sel: el.tagName.toLowerCase() + (cls ? '.' + cls.trim().split(/\s+/).slice(0, 2).join('.') : ''),
+        text: txt.slice(0, 32),
+      });
+    }
+  }
+  simText.sort((a, b) => (a.px - b.px) || (a.text.length - b.text.length));
+
   return {
     width: vw,
     scrollWidth: de.scrollWidth,
@@ -240,6 +282,13 @@ MEASURE = r"""
     voiceOnly,
     simVisibleControls: visibleSim.length,
     simHiddenControls: hiddenSim.slice(0, 5),
+    // Skaitomiausias simuliacijos tekstas (px) ir trys mažiausi mazgai su
+    // adresatu — kad pastaba turėtų failą, o ne tik skaičių (LL-36).
+    simFonts: {
+      min: simText.length ? simText[0].px : null,
+      nodes: simText.length,
+      worst: simText.slice(0, 3),
+    },
     loading: !!document.querySelector('.loading'),
     fatal: !!document.querySelector('.boot-fallback') && getComputedStyle(document.querySelector('.boot-fallback')).opacity === '1',
     title: document.querySelector('h1') ? document.querySelector('h1').innerText : null,
@@ -353,6 +402,12 @@ def main() -> int:
     ap.add_argument("--text-scale", type=int, default=0, metavar="N",
                     help="padidinti šaknies šriftą N %% (200 = WCAG 1.4.4); "
                          "atskiras režimas, neįtrauktas į numatytąjį bėgimą")
+    ap.add_argument("--sim-font-min", type=float, default=SIM_FONT_FLOOR, metavar="PX",
+                    help=f"mažiausias skaitomas simuliacijos teksto dydis "
+                         f"(numatyta {SIM_FONT_FLOOR:g} px, 1 kl.)")
+    ap.add_argument("--sim-font-strict", action="store_true",
+                    help="simuliacijos tekstas žemiau ribos yra KLAIDA (vartai), "
+                         "ne pastaba")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
 
@@ -408,6 +463,15 @@ def main() -> int:
         browser.close()
 
     bad = [r for r in results if not r.get("ok")]
+    # Simuliacijų skaitomumas: matuojama visada, bet numatytajame bėgime —
+    # pastaba (riba dar nėra docs/ dokumente). `--sim-font-strict` paverčia klaida.
+    font_low = [
+        r for r in results
+        if (r.get("simFonts") or {}).get("min") is not None
+        and r["simFonts"]["min"] < args.sim_font_min
+    ]
+    font_low.sort(key=lambda r: r["simFonts"]["min"])
+    font_bad = font_low if args.sim_font_strict else []
     scaled_bad = [r for r in scaled if not r.get("ok")]
     # Šaknies šriftas, kuris nepakilo, reiškia, kad matavimas buvo apie nieką.
     # Tai atskiriama nuo „telpa“ (LL-37), nes kitaip žalias rezultatas
@@ -423,6 +487,18 @@ def main() -> int:
             # Toleruoti atvejai (antraštė lūžta tik todėl, kad netelpa žemiau
             # standarto pločio) — atskirai, kad neliktų paslėpti serveryje (LL-37).
             "notes": [r for r in results if r.get("ok") and r.get("eyebrowLines", 1) > 1],
+            # Simuliacijų skaitomumas (1 kl. riba). `notes` neturi tapti
+            # klaida numatytajame bėgime, bet ir tylėti negali (LL-37):
+            # todėl atskiras laukas su KIEKVIENU žemiau ribos maršrutu.
+            "sim_font_floor": args.sim_font_min,
+            "sim_font_strict": args.sim_font_strict,
+            "sim_font_notes": [
+                {"route": r["route"], "viewport": r["viewport"],
+                 "min": r["simFonts"]["min"], "worst": r["simFonts"]["worst"]}
+                for r in font_low
+            ],
+            "sim_font_checked": sum(1 for r in results if (r.get("simFonts") or {}).get("min") is not None),
+            "sim_font_problems": [r["route"] for r in font_bad],
             # 200 % teksto režimas (#7396) — tik kai paprašytas; `null` reiškia
             # „nematuota“, o ne „švaru“.
             "text_scale": args.text_scale or None,
@@ -434,7 +510,8 @@ def main() -> int:
         }, ensure_ascii=False))
     else:
         print(f"Plotai: {plane_list}")
-        print(f"Patikrinta: {len(results)} (maršrutų: {len(routes)} · plotų: {len(names)}) · problemos: {len(bad)}")
+        print(f"Patikrinta: {len(results)} (maršrutų: {len(routes)} · plotų: {len(names)}) · "
+              f"problemos: {len(bad) + len(font_bad)}")
         for r in bad:
             bits = []
             if r.get("overflow", 0) > 1:
@@ -473,7 +550,25 @@ def main() -> int:
         for r in soft:
             print(f"  · {r['route']} @{r['viewport']}px: antraštė {r['eyebrowLines']} eilutės — "
                   f"plotis žemiau standarto {STANDARD_MIN_WIDTH} px; žyma vienoje eilutėje")
-        if not bad:
+        # Simuliacijų skaitomumas: VISADA spausdinama, jei yra ką pasakyti.
+        # Riba dar nėra docs/ dokumente, todėl numatytai tai pastaba; su
+        # `--sim-font-strict` — klaida. Skaičius + sąrašas, kad neliktų „tylios
+        # ribos“ (LL-37): sakoma, kiek maršrutų žemiau ribos ir kuris žemiausias.
+        checked_font = sum(1 for r in results if (r.get("simFonts") or {}).get("min") is not None)
+        if font_low:
+            if args.sim_font_strict:
+                mark, head = "✗", "klaida"
+            else:
+                mark, head = "·", "pastaba, ne vartas — ribos dar nėra docs/"
+            print(f"  {mark} simuliacijų tekstas < {args.sim_font_min:g} px: "
+                  f"{len(font_low)} iš {checked_font} patikrų ({head})")
+            for r in font_low[:10]:
+                w = r["simFonts"]["worst"][0]
+                print(f"      {r['simFonts']['min']:>5} px  {r['route']} @{r['viewport']}px  "
+                      f"{w['sel']} „{w['text']}“")
+            if len(font_low) > 10:
+                print(f"      … ir dar {len(font_low) - 10} (visi — --json sim_font_notes)")
+        if not bad and not font_bad:
             print("✔ Visi moduliai matomi ir telpa visuose plotuose (su Brave skydų blokais).")
         # 200 % teksto režimas (#7396) — atskira sekcija, kad žalias įprastas
         # bėgimas niekada neatrodytų kaip žalias ir padidintam tekstui.
@@ -497,7 +592,7 @@ def main() -> int:
     # `--text-scale` problemos NEGRĄŽINA ne-nulinio kodo, kol defektai
     # nesutvarkyti: #7396 sąmoningai prašė atskiro režimo, nes raudoni vartai
     # be pataisymo moko juos apeiti. Tai pasakyta, o ne nutylėta (LL-37).
-    return 1 if bad else 0
+    return 1 if (bad or font_bad) else 0
 
 
 if __name__ == "__main__":

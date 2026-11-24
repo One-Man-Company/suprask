@@ -385,12 +385,48 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   False) ir atkūrimą. Šiame paleidime tikras bėgimas nepakito: repo 77 /
   paskelbta 77, garso dydžiai 2 224/2 224, rc 0.
 
+2026-11-24 (paleidimas #515): klasės sąrašas — matavimas, o ne atsarginis variantas.
+  Visi šio įrankio skaičiai (repo / paskelbta / baitai / garsas) turi rėmą:
+  sąrašą klasių, kurių apskritai ieškoma. Tas rėmas imamas iš
+  `content/lt/grades.json`, ir jį skaito **ir** `app.js:110`
+  (`g.status === "live"`), tad jis nėra įrankio vidaus reikalas. Iki šiol
+  `live_grades()` bet kokią klaidą (`OSError`, sugadintas JSON, tuščias
+  sąrašas) paversdavo `[1]`, tad:
+  - sugadintas `grades.json` **abiejose** pusėse (repo ir gyvai) davė
+    `verdict: sutampa`, `ok=True`, nes baitai sutapo, o sąrašas buvo tylus.
+    Matuota 2026-11-24 prieš pataisą: `klases [1] verdict sutampa ok True`.
+    Vaikui tai svetainė, kurioje `registry.js:loadGrades()` neįkelia nė
+    vienos klasės — tuščias puslapis su žaliais vartais (LL-37 atvirkštinė
+    pusė: riba neša „viskas gerai“).
+  - katalogas `content/lt/grade-02/` su moduliu, kurio `grades.json`
+    neskelbia `live`, į `local`/`published` nepatenka nė karto. Matuota ta
+    pati diena: `grade-02` su 1 moduliu → `verdict sutampa`, o naujas raktas
+    neegzistavo. Tai **būtent** vaidmens klausimas „kodėl dashboard rodo
+    daugiau nei svetainė“: `validate_content.py:404` skaičiuoja failus diske,
+    `check_published.py` — tik skelbiamas klases, o skirtumo niekas neįvardijo
+    (LL-175 — įrankio aklumas nėra tuščias rezultatas).
+  Dabar yra `grade_scope()`: `checked`, `error`, `missing_index` (`live`
+  klasė be `index.json` repo) ir `undeclared` (katalogas su moduliais,
+  kurio sąrašas neskelbia). `report()` įrašo `scope_checked`, `scope_error`,
+  `scope_grades`, `scope_explicit` (`--grade N` rėmas nurodytas ranka),
+  `grade_scope_missing_index`, `undeclared_grades`; `verdict()` turi
+  keturias naujas priežastis; `published_measured` nebelieka `True` iš
+  `all([])`, o pranešimas sako, koks buvo rėmas, ir neberašo „0 modulių“,
+  kai nieko neieškota. `--path-order` be nė vienos `live` klasės grąžina
+  rc 1, o ne `all([]) == True` (CI žingsnis anksčiau „praeidavo“ nieko
+  nematuodamas).
+  Įrodymas repo: `scripts/probe_publish_sets.py` → **29/29** (N, O, P, Q
+  nauji; N ir Q senajame HEAD'e raudoni: `verdict sutampa, klasės [1]`,
+  rc 0), rc 0, ~8 s, be interneto. Tikras bėgimas nepakito: 77/77,
+  garsas 2 224/2 224, rc 0.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
     python3 scripts/check_published.py --grade 1     # viena klasė
     python3 scripts/check_published.py --no-bytes    # greita: tik ID ir seka
     python3 scripts/check_published.py --path-order   # be tinklo: tik maršruto tvarka (CI)
+    python3 scripts/check_published.py --scope        # be tinklo: tik klasių rėmas (CI)
     python3 scripts/check_published.py --audio-full  # tas pats kaip numatyta
     python3 scripts/check_published.py --audio-sample 48   # greitas, aklas
 """
@@ -1093,6 +1129,19 @@ def path_order_gate(grade: int) -> dict:
 def path_order_main(grade: int, as_json: bool) -> int:
     """Išveda `path_order_gate()` rezultatą žmogui arba JSON'u. rc 1 — raudona."""
     grades = [grade] if grade else live_grades()
+    if not grades:
+        # Be klasės sąrašo ciklas neturi nė vieno žingsnio, o `all([])` yra
+        # `True`: įrankis atspausdintų nieką ir grąžintų 0. Tai tyli žalia apie
+        # patikrą, kurios nebuvo (LL-37) — CIn šis žingsnis tada „praeitų"
+        # kiekvieną PR, nes nieko nematuotų.
+        msg = ("MARŠRUTO TVARKA NEIŠMATUOTA — nė viena klasė neskelbiama "
+               "„live“ (content/lt/grades.json), tad nėra ko tikrinti")
+        if as_json:
+            print(json.dumps({"ok": False, "grades": [], "error": msg},
+                             ensure_ascii=False))
+        else:
+            print(msg)
+        return 1
     rows = [path_order_gate(g) for g in grades]
     ok = all(r["ok"] for r in rows)
     if as_json:
@@ -1127,13 +1176,92 @@ def path_order_main(grade: int, as_json: bool) -> int:
     return 0 if ok else 1
 
 
-def live_grades() -> list[int]:
+def grade_scope() -> dict:
+    """Kurias klases svetainė skelbia `live` IR ar tas sąrašas perskaitytas.
+
+    Tai **visų** šio įrankio skaičių rėmas: `grades.json` yra vienintelis
+    šaltinis, iš kurio ir `app.js:110` (`g.status === "live"`), ir šis įrankis
+    sužino, kurias klases apskritai rodyti. Todėl jo negalima „atsarginio
+    varianto“ paversti matavimu:
+
+    - Iki šiol `live_grades()` bet kokią klaidą (`OSError`, sugadintas JSON,
+      tuščias sąrašas) paversdavo `[1]`. Pasekmė matuota 2026-11-24: sugadintas
+      `grades.json` **abiejose** pusėse (repo ir gyvai) davė `sutampa`,
+      `ok=True` — nes baitai sutapo, o sąrašas buvo tylus. Bet naršyklė
+      `registry.js:loadGrades()` tokio failo neįkelia, tad vaikas nemato nė
+      vienos klasės: vartai žali, svetainė tuščia (LL-37 — riba, kuri neša
+      „viskas gerai“).
+    - Antra pusė: klasės katalogas, kurio `grades.json` neskelbia `live`, į
+      matavimą nepatenka **nė karto** — nei `local`, nei `published`, nei
+      baitai. Dashboard'as (`validate_content.py:404`) skaičiuoja failus
+      diske, tad jis rodo daugiau negu svetainė, o įrankis, kurio vienintelis
+      klausimas yra „kodėl dashboard rodo daugiau nei svetainė“, apie tai
+      tyli. Tai tas pats vaidmens klausimas, tik klases lygmenyje (LL-175).
+
+    Grąžinama:
+      - `grades` — klasės su `status: live` (be atsarginio `[1]`);
+      - `checked` — ar sąrašą perskaitėme (be jo jokia išvada negalioja);
+      - `error` — kodėl neperskaitė;
+      - `missing_index` — `live` klasė be `index.json` repo;
+      - `undeclared` — katalogo klasė su moduliais, kurios sąrašas neskelbia.
+    """
+    out: dict = {"grades": [], "checked": False, "error": "",
+                 "missing_index": [], "undeclared": []}
     try:
         data = json.loads(GRADES.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return [1]
-    out = [int(g["grade"]) for g in data.get("grades", []) if g.get("status") == "live"]
-    return out or [1]
+    except (OSError, json.JSONDecodeError) as exc:
+        out["error"] = f"content/lt/grades.json: {type(exc).__name__}: {exc}"
+        return out
+    entries = [g for g in data.get("grades", []) if isinstance(g, dict)]
+    if not entries:
+        out["error"] = "content/lt/grades.json: sąrašas tuščias"
+        return out
+    grades: list[int] = []
+    for entry in entries:
+        try:
+            num = int(entry["grade"])
+        except (KeyError, TypeError, ValueError):
+            out["error"] = out["error"] or (
+                f"content/lt/grades.json: įrašas be skaitinio „grade“: {entry!r}")
+            continue
+        if entry.get("status") == "live":
+            grades.append(num)
+    out["grades"] = sorted(set(grades))
+    # Sąrašas perskaitytas, bet nė viena klasė nei `live`: tai ne „nieko
+    # netikrinti“, o svetainė, kurioje nėra ko atidaryti (app.js:110).
+    if not out["grades"]:
+        out["error"] = out["error"] or (
+            "content/lt/grades.json: nė viena klasė neskelbiama „live“")
+    out["checked"] = True
+    out["missing_index"] = [
+        grade_dir(g) for g in out["grades"]
+        if not (CONTENT / grade_dir(g) / "index.json").exists()]
+    live_set = set(out["grades"])
+    for index_path in sorted(CONTENT.glob("grade-*/index.json")):
+        name = index_path.parent.name
+        try:
+            num = int(name.split("-")[1])
+        except (IndexError, ValueError):
+            continue
+        if num in live_set:
+            continue
+        # Kiek modulių tas katalogas iš tikrųjų turi. Imama iš `index.json`,
+        # nes būtent jį naršyklė skaito; failai be įrašo (`orphan_files`) čia
+        # nepridedami — jie jau turi savo eilutę.
+        count = 0
+        try:
+            doc = json.loads(index_path.read_text(encoding="utf-8"))
+            count = sum(len(s.get("modules") or []) for s in doc.get("strands", []))
+        except (OSError, json.JSONDecodeError):
+            count = len(list(index_path.parent.glob("*/*.json")))
+        if count:
+            out["undeclared"].append({"grade": num, "dir": name, "modules": count})
+    return out
+
+
+def live_grades() -> list[int]:
+    """Klasės su `status: live` — be atsarginio `[1]` (žr. `grade_scope()`)."""
+    return grade_scope()["grades"]
 
 
 def local_index(grade: int) -> tuple[dict, dict[str, str]]:
@@ -1657,7 +1785,14 @@ def last_commit() -> str:
 def report(grades: list[int] | None = None, compare_bytes: bool = True,
            audio_sample: int | None = None) -> dict:
     RETRIES["count"] = 0
-    grades = grades or live_grades()
+    # Kurių klasių apskritai ieškoma — iš `grades.json`, ir tai yra
+    # **matavimas**, ne atsarginis variantas (`grade_scope()`). Anksčiau
+    # neperskaitytas sąrašas virdavo `[1]`, tad sugadintas `grades.json`
+    # abiejose pusėse davė žalią „sutampa“ apie svetainę, kurios naršyklė
+    # neįkelia nė vienos klasės.
+    scope = grade_scope()
+    explicit = bool(grades)
+    grades = grades or scope["grades"]
     # Vienas pigus HEAD prieš viską: jei svetainė neatsiliepia, likusios gyvos
     # patikros (pagrindiniai failai, svetainės kodas, 1432 garso įrašai) duotų
     # tik ilgą „nepasiekiama“ sąrašą — vieną gedimą, pakartotą 1451 kartą.
@@ -1746,6 +1881,21 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     out = {
         "grades": per_grade,
         "live_grades": grades,
+        # Klasės sąrašo matavimas (žr. `grade_scope()`). Be jo trys skaičiai
+        # (repo / paskelbta / neišstumta) galioja tik sąrašui, kurio niekas
+        # neperskaitė: `accounted: False` reiškia, kad rėmas nežinomas, o
+        # `undeclared` — kad kataloge yra klasė, kurios sąrašas neskelbia ir
+        # kuri į `local`/`published` nepatenka nė karto.
+        "scope_checked": scope["checked"],
+        "scope_error": scope["error"],
+        "scope_grades": scope["grades"],
+        # Ar rėmą nurodė vartotojas (`--grade N`), ar jis išvestas iš
+        # `grades.json`. Abu atvejai teisėti, bet sakinys apie rėmą turi
+        # sakyti tiesą: `--grade 2` gali tikrinti klasę, kurios sąrašas
+        # neskelbia `live`.
+        "scope_explicit": explicit,
+        "grade_scope_missing_index": scope["missing_index"],
+        "undeclared_grades": scope["undeclared"],
         # Suderinta su senuoju formatu (changelog'ai ir dashboard'as skaito šiuos raktus).
         "local": sum(g.get("local", 0) for g in per_grade),
         "published": sum(g.get("published", 0) for g in per_grade),
@@ -1809,7 +1959,11 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         # `published` skaičiuojamas tik iš perskaityto gyvo indekso. Kai jo
         # nėra, skaičius yra 0, bet tai ne matavimas — todėl atskiras laukas
         # (dashboard'as ir žmogus turi matyti skirtumą).
-        "published_measured": all(g.get("published_measured", False) for g in per_grade),
+        # `per_grade` tuščias, kai klasės sąrašo neperskaitėme — o `all([])`
+        # yra `True`, tad be `scope["checked"]` sąlygos tuščias matavimas
+        # taptų „Paskelbta: 0“ (LL-37).
+        "published_measured": scope["checked"] and all(
+            g.get("published_measured", False) for g in per_grade),
     }
     # Sprendimas keliauja kartu su duomenimis: dashboard'as neperrašo taisyklės
     # savo (LL-10 — būsena iš to paties šaltinio, iš kurio imamas rc).
@@ -1833,6 +1987,27 @@ def verdict(data: dict) -> dict:
     # atvejis virsdavo „gyva svetainė nepasiekiama“ ir siuntė taisyti ne to.
     if data.get("repo_error"):
         reasons.append("repo indekso nepavyko perskaityti")
+    # Klasės sąrašas yra rėmas, kuriuo remiasi visi kiti skaičiai. Jei jo
+    # neperskaitėme, „sutampa“ būtų teiginys apie sąrašą, kurio nematėme
+    # (`grade_scope()`); jei perskaitėme, bet nė viena klasė nei `live` —
+    # svetainėje nėra ko atidaryti (`app.js:110`).
+    if data.get("scope_checked") is False:
+        reasons.append("klasės sąrašo (grades.json) perskaityti nepavyko")
+    elif data.get("scope_error"):
+        reasons.append(data["scope_error"])
+    if data.get("grade_scope_missing_index"):
+        reasons.append(
+            f"{len(data['grade_scope_missing_index'])} „live“ klasė be index.json: "
+            + ", ".join(data["grade_scope_missing_index"]))
+    if data.get("undeclared_grades"):
+        # Katalogas su moduliais, kurio `grades.json` neskelbia `live`: į
+        # `local` ir `published` jis nepatenka, tad dashboard'as rodo daugiau
+        # negu svetainė, o šis įrankis — nieko (LL-175, to paties vaidmens
+        # klausimas klases lygmenyje).
+        items = ", ".join(f"{u['dir']} ({u['modules']})"
+                          for u in data["undeclared_grades"])
+        reasons.append(f"{len(data['undeclared_grades'])} klasės katalogas "
+                       f"neskelbiamas „live“ ir netikrintas: {items}")
     if data.get("live_error"):
         reasons.append("gyva svetainė nepasiekiama")
     # Klasės indekso 404: svetainė atsako, bet klasės katalogo joje nėra.
@@ -1847,7 +2022,7 @@ def verdict(data: dict) -> dict:
     # neturi atrodyti išmatuotas (#382). Kai indekso svetainėje nėra, priežastis
     # jau įvardyta aukščiau, tad kartoti „neišmatuota“ nereikia.
     if (data.get("published_measured") is False and not data.get("live_error")
-            and not data.get("live_gone")):
+            and not data.get("live_gone") and data.get("scope_checked") is not False):
         reasons.append("paskelbtų modulių skaičius neišmatuotas")
     # Deploy'aus langas — prieš visas baitų priežastis: kai svetainė pastatyta
     # iš ankstesnio commit'o, „N pasenęs modulis“ yra to pasekmė, o taisymas
@@ -1971,6 +2146,52 @@ def problems(data: dict) -> bool:
     return not verdict(data)["ok"]
 
 
+def scope_main(as_json: bool) -> int:
+    """`--scope` režimas: klasių rėmas be tinklo ir be git — CI vartams.
+
+    Kodėl atskiras režimas. `grade_scope()` saugo nuo dviejų dalykų, kurių
+    prieš push niekas nematė (matuota 2026-11-24):
+      1. `grades.json` neperskaitomas / nė viena klasė `live` → naršyklė
+         neatidaro nė vienos klasės, o visi kiti vartai žali, nes jie eina
+         per `live_grades()` ir tuščias sąrašas yra tyli žalia;
+      2. kataloge yra klasė su moduliais, kurios sąrašas neskelbia `live`.
+         Išmatuota laikiname repo su `grade-02` (1 moduliu, savo indeksu ir
+         `path.json`): `validate_content.py --grade 2` rc 1 (nes tos klasės
+         ne tikrina), `check_registry.py` rc 0 (išspausdina eilutę, bet
+         problemų 0), `check_published.py --path-order` rc 0 — t. y. visas
+         PR praeitų, o modulis atsidurtų svetainėje be nieko, kas jį rodytų.
+
+    Režimas yra be tinklo ir be `git`, tad CI klone matuoja tą patį, ką
+    vietoje, ir gali būti paleistas prieš push.
+    """
+    scope = grade_scope()
+    ok = (scope["checked"] and not scope["error"]
+          and not scope["missing_index"] and not scope["undeclared"])
+    if as_json:
+        print(json.dumps({"ok": ok, **scope}, ensure_ascii=False))
+        return 0 if ok else 1
+    if scope["error"]:
+        print(f"KLASĖS SĄRAŠO NEPERSKAITYTA — {scope['error']}")
+        print("  Naršyklė jo neįkelia, tad neatidarys nė vienos klasės.")
+    else:
+        print("Klasės: " + (", ".join(grade_dir(g) for g in scope["grades"])
+                            + " (statusas „live“)"))
+    for name in scope["missing_index"]:
+        print(f"„LIVE“ KLASĖ BE INDEKSO — {name}: svetainė jos neatidarys, "
+              f"o publikavimas nieko neįkeis.")
+    for item in scope["undeclared"]:
+        n = item["modules"]
+        print(f"NESKELBIAMA KLASĖ — {item['dir']} turi {n} "
+              f"{'modulį' if n == 1 else 'modulius'}, o `grades.json` jos "
+              f"neskelbia „live“: jie nepatenka į jokį skaičių ir jų baitai "
+              f"nelyginami. Arba įrašyk klasę į `grades.json`, arba nelaikyk "
+              f"jos `content/`.")
+    if ok:
+        print("✔ Klasės rėmas vientisas: sąrašas perskaitytas, kiekviena „live“ "
+              "klasė turi indeksą, nėra katalogo be įrašo.")
+    return 0 if ok else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", action="store_true")
@@ -1979,6 +2200,9 @@ def main() -> int:
     ap.add_argument("--path-order", action="store_true",
                     help="be tinklo ir be git: tik maršruto tvarka prieš "
                          "scripts/known_path_order.json (CI vartams)")
+    ap.add_argument("--scope", action="store_true",
+                    help="be tinklo ir be git: klasių rėmas (grades.json ↔ "
+                         "katalogai ↔ indeksai) — CI vartams")
     ap.add_argument("--audio-full", action="store_true",
                     help="tikrinti visus garso įrašus (tai yra ir numatytasis režimas)")
     ap.add_argument("--audio-sample", type=int, default=0,
@@ -1987,11 +2211,13 @@ def main() -> int:
                          f"pavienių 404 — tik rankiniam bėgimui)")
     args = ap.parse_args()
 
-    # Tvarkos vartai pirmi: jie be tinklo ir be `git show`, tad CI klone matuoja
-    # tą patį, ką vietoje. Visi kiti režimai lygina su gyva svetaine, kuri PR
-    # metu dar nerodo šio commit'o.
+    # Tvarkos ir rėmo vartai pirmi: jie be tinklo ir be `git show`, tad CI
+    # klone matuoja tą patį, ką vietoje. Visi kiti režimai lygina su gyva
+    # svetaine, kuri PR metu dar nerodo šio commit'o.
     if args.path_order:
         return path_order_main(args.grade, args.json)
+    if args.scope:
+        return scope_main(args.json)
 
     grades = [args.grade] if args.grade else None
     # Numatytai — visi garso įrašai (#303: mėginys duoda žalią šalia 404 mp3).
@@ -2002,8 +2228,54 @@ def main() -> int:
         print(json.dumps(data, ensure_ascii=False))
         return 1 if problems(data) else 0
 
-    print(f"Repozitorija: {data['local']} moduliai")
-    if data.get("published_measured", True):
+    if data.get("scope_checked"):
+        print(f"Repozitorija: {data['local']} moduliai")
+    else:
+        # Be klasės sąrašo `local` yra nulis ne todėl, kad modulių nėra, o
+        # todėl, kad nieko neieškota: `0` čia būtų skaičius vietoj matavimo
+        # (LL-37, ta pati taisyklė kaip `published_measured`).
+        print("Repozitorija: neišmatuota — klasės sąrašas neperskaitytas")
+    # Rėmas, kuriuo remiasi visi skaičiai. Pasakoma ir tada, kai jis geras:
+    # kitaip „77 / 77“ atrodo kaip visos platformos matavimas, nors tai vienos
+    # (vienintelės skelbiamos) klasės skaičius (`grade_scope()`).
+    if data.get("scope_checked") and not data.get("scope_error"):
+        if data.get("scope_explicit"):
+            # `--grade N` nurodo rėmą ranka: klasė gali būti neskelbiama
+            # `live`. Sakoma abu, kad pranešimas neteigtų, jog `grades.json`
+            # ją skelbia (LL-21).
+            print(f"Klasės:       {', '.join(grade_dir(g) for g in data['live_grades'])} "
+                  f"(nurodyta ranka; skelbiamos „live“: "
+                  f"{', '.join(grade_dir(g) for g in data.get('scope_grades') or []) or 'nė viena'})")
+        else:
+            print(f"Klasės:       {', '.join(grade_dir(g) for g in data['live_grades'])} "
+                  "(statusas „live“ iš content/lt/grades.json)")
+    elif data.get("scope_error"):
+        print(f"KLASĖS SĄRAŠO NEPERSKAITYTA — {data['scope_error']}")
+        print("  Be šio sąrašo „repo / paskelbta“ yra skaičiai apie nieką: "
+              "naršyklė jo neįkelia, tad neatidarys nė vienos klasės. "
+              "Taisyk content/lt/grades.json.")
+    if data.get("grade_scope_missing_index"):
+        print(f"„LIVE“ KLASĖ BE INDEKSO repo ({len(data['grade_scope_missing_index'])}): "
+              f"{', '.join(data['grade_scope_missing_index'])} — svetainė jos "
+              f"neatidarys, o publikavimas nieko neįkeis.")
+    if data.get("undeclared_grades"):
+        print(f"KLASĖS KATALOGAS, KURIO grades.json NESKELBIA „live“ "
+              f"({len(data['undeclared_grades'])}): "
+              + ", ".join(f"{u['dir']} ({u['modules']} moduliai)"
+                          for u in data["undeclared_grades"]))
+        print("  Šie moduliai į „repo / paskelbta“ NEĮSKAIČIUOTI ir jų baitai "
+              "nelyginti: dashboard'as juos skaičiuoja, svetainė nerodo. "
+              "Tai ir yra „dashboard rodo daugiau nei svetainė“ klases lygmenyje.")
+    if not data.get("scope_checked") and not data.get("scope_error"):
+        # Nė vienas aukščiau esantis kelias neturi palikti tylos: jei sąrašo
+        # būsena nežinoma, tai sakoma žodžiais, o ne praleidžiama (LL-37).
+        print("KLASĖS SĄRAŠO BŪSENA NEŽINOMA — „repo / paskelbta“ gali būti "
+              "skaičiai apie nieką.")
+    if data.get("scope_checked") is False:
+        # Ne „0 modulių“ ir ne „indeksas neperskaitytas“: klasės, kurios
+        # ieškoti, nežinome, tad nė vienas skaičius čia nebuvo matuotas.
+        print("Paskelbta:    neišmatuota — klasės sąrašas neperskaitytas")
+    elif data.get("published_measured", True):
         print(f"Paskelbta:    {data['published']} moduliai")
     elif data.get("live_gone"):
         # 404 yra atsakymas: klasės katalogo svetainėje nėra. Ne „neperskaityta“.

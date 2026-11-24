@@ -1,0 +1,19 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 515,
+  "created": "2026-11-24T20:25:00+02:00",
+  "type": "struktura",
+  "title": "check_registry.py išspausdina neskelbiamos klasės eilutę, bet „PROBLEMŲ: 0“ — modulis svetainėje yra, o vaikas jo nepasieks",
+  "body": "`scripts/check_registry.py` eina per visus `content/lt/grade-*/index.json` katalogus, tad neskelbiamą klasę jis mato ir išspausdina (matuota 2026-11-24 laikiname repo su `content/lt/grade-02/`: eilutė „grade-02: kryptys 1 · index 1 · failai 1 · užduotys 1 (optional 1) · sim 1 · path 1 · našlaičiai 0“), bet `PROBLEMŲ: 0` ir rc 0, nes į `problems` įtraukiami tik trūkstami failai, ID neatitikimai, našlaičiai ir `path.json` aibė. Tuo tarpu `validate_content.py` tokios klasės nepatikrina visai (ciklas eina tik per `status: live`, `validate_content.py:409`), o `check_published.py` iki #515 ėjo per tą patį sąrašą. Pasekmė: PR, kuris atneša naujos klasės katalogą nepakeitęs `grades.json`, praeina visus vartus, `pages.yml` nukopijuoja visą `content/`, ir moduliai svetainėje yra, bet naršyklė jų niekada neprašo — vaikas jų nepasieks, o dashboard'as (`validate_content.py:404` skaičiuoja failus diske) juos skaičiuos. #515 uždėjo atskirą vartą (`check_published.py --scope` ir CI žingsnį „Klasės rėmas“), bet pats `check_registry.py` tebėra tyli žalia apie tą patį faktą. Siūloma: kai `grade_dir.name` klasė nėra `grades.json` `status: live` (ar `planned`), o kataloge yra modulių, `check_registry.py` turi tai rašyti į `problems` su sakiniu, ką daryti (įrašyti į `grades.json` arba nelaikyti katalogo `content/`) — kitaip įrankis, kurio eilutė jau rodo defektą, moko skaityti tik skaičių „PROBLEMŲ“. Tai ta pati šeima kaip #404 (našlaitis buvo spausdinamas, bet neįtrauktas į `problems`) ir LL-37.",
+  "target": "scripts/check_registry.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "Matuota 2026-11-24 laikiname repo (git archive HEAD + grade-02 su 1 moduliu, savu index.json ir path.json): check_registry.py → rc 0, „grade-02: kryptys 1 · index 1 … našlaičiai 0“, „PROBLEMŲ: 0“",
+    "Tas pats laikinas repo: check_published.py --path-order → rc 0 (77 žingsnių, grade-01)",
+    "scripts/validate_content.py:409 — `live_grades` ėmimas, ciklas eina tik per `status: live`, tad grade-02 nepatikrinta visai",
+    "scripts/check_registry.py:86–95 — našlaitis įtraukiamas į `problems` (#404 pataisa), o klasės deklaracijos patikros nėra",
+    "scripts/check_published.py (#515) — `grade_scope()` ir `--scope` CI žingsnis matuoja tą patį faktą, bet kitame įrankyje",
+    "docs/SVIETIMAS-1-GAIRES.md T3.6 / AGENTS.md — publikavimas neturi prarasti nė vieno modulio; nematomas modulis prarandamas tyliai"
+  ]
+}

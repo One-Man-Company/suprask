@@ -43,6 +43,20 @@ jobs:
       - name: Maršruto tvarka
         run: python3 scripts/check_published.py --path-order
 
+      # Klasės rėmas. Visi kiti vartai eina per `live_grades()` — sąrašą
+      # klasių, kurias `content/lt/grades.json` skelbia `live`, — ir todėl
+      # turi tą pačią akląją zoną: (1) neperskaitytas sąrašas virsta tuščiu
+      # ciklu, t. y. žalia; (2) katalogo klasė, kurios sąrašas neskelbia,
+      # nepatenka nė į vieną patikrą. Matuota 2026-11-24 laikiname repo su
+      # `grade-02` (1 moduliu, savo indeksu ir `path.json`):
+      # `validate_content.py --grade 2` rc 1 (jos netikrina),
+      # `check_registry.py` rc 0 (eilutę išspausdina, problemų 0),
+      # `check_published.py --path-order` rc 0. Toks PR praeitų, o modulis
+      # atsidurtų svetainėje be indekso įrašo, kurį vaikas pasiektų.
+      # Režimas be tinklo ir be git, tad CI klone matuoja tą patį, ką vietoje.
+      - name: Klasės rėmas
+        run: python3 scripts/check_published.py --scope
+
       # Vidinės nuorodos. `check_published.py` lygina **failus, kurie repo
       # yra**; importas į failą, kurio niekas nesukūrė (ar su rašybos klaida),
       # nelyginamas su niekuo, tad deploy žalias, o vaikui lūžta visas JS

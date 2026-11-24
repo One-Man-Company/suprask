@@ -34,7 +34,20 @@ gyvos svetainės veidrodį, patiekiamą vietiniu `http.server`. Tada per patį
   I  ne git katalogas → istorijos patikra **nepavyko**, rc 1 (iki #506
      `historical_ids()` grąžindavo `checked = True`, tad dingęs ID likdavo
      žalias — LL-175);
-  J  atkūrus sveiką būseną → vėl žalia (patikra „neįsimena“ klaidos).
+  J  atkūrus sveiką būseną → vėl žalia (patikra „neįsimena“ klaidos);
+  N  sugadintas `grades.json` **abiejose** pusėse → NE „sutampa“, o priežastis
+     ir rc 1. Iki #515 `live_grades()` klaidą paversdavo `[1]`, tad įrankis
+     matavo vieną klasę ir skelbė žalią apie svetainę, kurios naršyklė
+     neįkelia nė vienos klasės (`app.js:110`) — LL-37 atvirkštinė pusė;
+  O  kataloge klasė su moduliais, kurios `grades.json` neskelbia `live` →
+     `undeclared_grades` ir rc 1. Anksčiau ji į `local`/`published`
+     nepatikdavo nė karto, tad dashboard'as rodė daugiau negu svetainė, o
+     įrankis tylėjo — tas pats vaidmens klausimas klases lygmenyje;
+     O2 — tas pats per `--scope` (be tinklo, be git), t. y. prieš push:
+     CI vartai, kurie anksčiau šio katalogo nematė;
+  P  `live` klasė be `index.json` repo → `missing_index` su vardu;
+  Q  nė viena klasė `live` → `--path-order` rc 1 (anksčiau `all([])` davė
+     rc 0, t. y. CI žingsnis „praeidavo“ nieko nematuodamas).
 
 Repo failai nekeičiami: viskas vyksta `tempfile` kataloge, kuris ištrinamas.
 Zondą galima paleisti bet kada, taip pat kaip regresijos patikrą.
@@ -371,6 +384,94 @@ def main() -> int:
         data = cp.report([1])
         check("M: indeksą grąžinus → vėl „sutampa“",
               data["verdict"]["ok"], f"verdict {data['verdict']['label']}")
+
+        # N. Klasės sąrašas sugadintas ABEJOSE pusėse — baitai sutampa, o
+        #    naršyklė neįkelia nė vienos klasės (`app.js:110`). Iki šio
+        #    pataisymo `live_grades()` klaidą paversdavo `[1]`, tad įrankis
+        #    matavo vieną klasę ir skelbė „sutampa“: LL-37 riba, kuri neša
+        #    „viskas gerai“ apie svetainę be turinio.
+        grades_path = repo / "content" / "lt" / "grades.json"
+        live_grades_path = live / "content" / "lt" / "grades.json"
+        good_grades = grades_path.read_bytes()
+        grades_path.write_text("{ ne json", encoding="utf-8")
+        live_grades_path.write_text("{ ne json", encoding="utf-8")
+        data = cp.report(None)
+        check("N: sugadintas grades.json (abi pusės) → NE „sutampa“, o priežastis",
+              not data["verdict"]["ok"] and data["scope_checked"] is False
+              and data["live_grades"] == []
+              and any("grades.json" in r for r in data["verdict"]["reasons"]),
+              f"verdict {data['verdict']['label']}, klasės {data['live_grades']}")
+        rc, out = run_cli([])
+        check("N: rc 1, o ne 0 (skaičiai apie nieką neturi būti žali)", rc == 1,
+              f"rc {rc}")
+        check("N: pranešimas nesako „Repozitorija: 0“ / „Paskelbta: 0“",
+              "neišmatuota" in out and "Repozitorija: 0" not in out
+              and "Paskelbta:    0" not in out,
+              "; ".join(line for line in out.splitlines()
+                        if line.startswith(("Repozitorija", "Paskelbta"))))
+        grades_path.write_bytes(good_grades)
+        live_grades_path.write_bytes(good_grades)
+
+        # O. Kataloge yra klasė su moduliais, kurios `grades.json` neskelbia
+        #    `live` → ji nepatenka į `local`/`published` nė karto, tad
+        #    dashboard'as rodo daugiau negu svetainė, o įrankis tylėjo.
+        g2 = repo / "content" / "lt" / "grade-02" / "matematika"
+        g2.mkdir(parents=True)
+        (g2 / "01-a.json").write_text(json.dumps({"id": "01-a", "title": "a", "grade": 2}),
+                                      encoding="utf-8")
+        (g2.parent / "index.json").write_text(json.dumps(
+            {"grade": 2, "strands": [{"id": "matematika", "grade": 2,
+                                      "modules": [{"id": "01-a", "title": "a",
+                                                   "file": "grade-02/matematika/01-a.json"}]}]},
+            ensure_ascii=False), encoding="utf-8")
+        data = cp.report(None)
+        check("O: neskelbta klasė su moduliu → `undeclared_grades`, rc 1",
+              data["undeclared_grades"] == [{"grade": 2, "dir": "grade-02", "modules": 1}]
+              and not data["verdict"]["ok"]
+              and any("neskelbiamas „live“" in r for r in data["verdict"]["reasons"])
+              and data["local"] == 2,
+              f"undeclared {data['undeclared_grades']}, local {data['local']}")
+        check("O: pranešimas neša skaičių, kiek modulių liko už matavimo",
+              "grade-02 (1" in (run_cli([])[1]), "išvestyje „grade-02 (1 moduliai)“")
+        # O2. Tas pats defektas **prieš push**: CI vartai (be tinklo, be git)
+        #     turi matyti neskelbiamą katalogą. Matuota: iki `--scope` režimo
+        #     laikinas repo su grade-02 praeidavo `check_registry.py` rc 0,
+        #     `validate_content.py --grade 2` rc 1 (nes jos netikrina) ir
+        #     `check_published.py --path-order` rc 0.
+        rc, out = run_cli(["--scope"])
+        check("O2: `--scope` mato neskelbiamą klasę → rc 1, be tinklo",
+              rc == 1 and "NESKELBIAMA KLASĖ — grade-02" in out,
+              f"rc {rc}, {(out.strip().splitlines() or [''])[-1][:80]}")
+        (g2.parent / "index.json").unlink()
+        shutil.rmtree(repo / "content" / "lt" / "grade-02")
+        rc, out = run_cli(["--scope"])
+        check("O2: pašalinus katalogą → `--scope` rc 0 ir sakinys, kad rėmas vientisas",
+              rc == 0 and "vientisas" in out,
+              f"rc {rc}, {out.strip().splitlines()[-1][:80] if out.strip() else 'tuščia'}")
+
+        # P. `live` klasė be `index.json` repo — svetainė jos neatidarys, o
+        #    publikavimas nieko neįkeis. Tai ne tas pats kaip tuščia klasė.
+        g1_index = repo / "content" / "lt" / "grade-01" / "index.json"
+        index_blob = g1_index.read_bytes()
+        g1_index.unlink()
+        scope = cp.grade_scope()
+        check("P: „live“ klasė be index.json → `missing_index` su vardu",
+              scope["missing_index"] == ["grade-01"] and scope["checked"] is True,
+              f"missing_index {scope['missing_index']}")
+        g1_index.write_bytes(index_blob)
+
+        # Q. Be nė vienos `live` klasės `--path-order` ciklas neturi žingsnių,
+        #    o `all([])` yra True → rc 0. CI žingsnis tada „praeitų“ kiekvieną
+        #    PR, nieko nematuodamas (LL-37).
+        nolive = json.dumps({"grades": [{"grade": 1, "status": "planned"}]})
+        grades_path.write_text(nolive, encoding="utf-8")
+        live_grades_path.write_text(nolive, encoding="utf-8")
+        rc, out = run_cli(["--path-order"])
+        check("Q: nė viena „live“ klasė → --path-order rc 1, o ne 0",
+              rc == 1 and "NEIŠMATUOTA" in out,
+              f"rc {rc}, {(out.strip().splitlines() or [''])[0][:70]}")
+        grades_path.write_bytes(good_grades)
+        live_grades_path.write_bytes(good_grades)
     finally:
         if httpd is not None:
             httpd.shutdown()

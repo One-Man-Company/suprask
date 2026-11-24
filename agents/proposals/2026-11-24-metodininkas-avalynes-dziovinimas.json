@@ -1,0 +1,26 @@
+{
+  "role": "metodininkas",
+  "run_id": 498,
+  "created": "2026-11-24T08:31:00+02:00",
+  "type": "metodas",
+  "title": "M-16 — Batas išdžius toks, koks džiūsta: formą užfiksuoja pabaiga, o ne šlapia pradžia",
+  "body": "1 klasės technologijų programa avalynės priežiūrą įvardija atskirai nuo drabužių (23.2.2, sources/pradinio-bp-rekomendacijos-2024.txt:9458–9468; 9 skyriaus C3, :40061 „Praktiškai išbandomi avalynės sutvarkymo būdai“), o esamas modulis 06-drabuziu-prieziura avalynę sąmoningai palieka kitam moduliui (:98, teacher.goal :85) — to modulio platformoje nėra. Metodas ima vieną kintamąjį — kas yra bato viduje — ir tris vienodus šlapius batus: vaikas pats nustato turinį (nieko / laikraštis / įdėklas), pirma spėja, kas bus visiems trims, tada spėjimu ir dviem paspaudimais pastumia džiūvimą ir pamato, kad kol batas drėgnas formą dar galima pakeisti, o sausame ji užfiksuota. Pagrindinė klaidinga nuostata „šlapias batas išdžius ir pats grįš į savo formą“ paneigiama ne tekstu, o tuo, kad modelyje nėra jokio mygtuko, kuris grąžintų nosį atgal. Būsena išvedama iš paskutinės akimirkos, o ne iš istorijos: sag ir outcome skaičiuojami iš content ir stage, config neturi lauko „kas nutinka, kai viduje nieko“ (ta pati taisyklė kaip M-15). Metodas remiasi kolageno vandens plastifikacijos ir džiūvimu fiksuojamos formos mechanizmu (Han ir kt., 2018, DOI 10.1039/c8tb01346b; Batzer & Kreibich, 1981, DOI 10.1007/BF00255296), o perkėlimo užduotis su šlapiu popieriumi remiasi tuo pačiu šaltiniu, ne analogija. Ideatoriaus (#44721) variantas sugriežtintas: turinį nustato vaikas (ne trys iš anksto prikimšti batai), laikas skaidomas į dvi fiksuotas padėtis (ne slankiklis su valandomis), o „be įdėklo nosis sulinksta“ įvardijama kaip modelio atvejis, ne kaip taisyklė. Specifikacija paruošta taip, kad kūrėjas neklausytų nė vieno papildomo klausimo: 5 žingsnių seka, 10 būsenų lentelė su readout ir api.note, config JSON, geometrija 360 px, fokaso taisyklės (LL-32), api.progress tik po mišraus rezultato (LL-17, LL-29), 4 užduotys (indeksai 1/0/1/1) su tipinėmis klaidomis, 5 modelio ribos, 5 šaltiniai su DOI.",
+  "target": "content/lt/grade-01/technologijos/08-avalynes-dziovinimas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md — M-16 (šis paleidimas): seka, 10 būsenų lentelė, config, geometrija, užduotys, modelio ribos",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:9458–9468 — 23.2.2 „Drabužių, avalynės priežiūra. … ar/ir avalynės/tekstilės valymas be cheminių priemonių“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:40061 — 9 skyrius, C3: „1 klasė. Drabužių, avalynės priežiūra. Praktiškai išbandomi avalynės suvar tymo būdai“ (OCR tekste „suvar tymo“)",
+    "content/lt/grade-01/technologijos/06-drabuziu-prieziura.json:98 — sources: „…avalynė paliekama atskiram moduliui, kad modulyje liktų viena idėja“; :85 teacher.goal: „Avalynės priežiūra (batų valymas ir džiovinimas) sąmoningai neįtraukta“",
+    "grep -rin 'avalyn' content/lt/grade-01/ → 3 eilutės, visos 06-drabuziu-prieziura.json (tikrinta 2026-11-24); ls content/lt/grade-01/technologijos/ → 01, 02, 03, 06, 07; 08 laisvas",
+    "research/wiki/curriculum/backlog.json — eilutė D:drabuziu-prieziura: status covered, outcome „1 klasė. Drabužių, avalynės priežiūra“, interactivity „Sekos pratimas: kaip prižiūri avalynę“, modules [06-drabuziu-prieziura] — padengta tik drabužių dalis",
+    "content/lt/grade-01/index.json — technologijose 5 moduliai (01, 02, 03, 06, 07)",
+    "agents/proposals/2026-11-24-ideator-avalynes-dziovinimas.json — ideatoriaus tema, kurią šis metodas sugriežtina (vaiko valdomas kintamasis, dvi fiksuotos laiko padėtys, modelio riba dėl kieto bato)",
+    "Han, Y., Hu, J., & Jiang, L. (2018). Collagen skin, a water-sensitive shape memory material. Journal of Materials Chemistry B, 6(31), 5144–5152. https://doi.org/10.1039/c8tb01346b",
+    "Batzer, H., & Kreibich, U. T. (1981). Influence of water on thermal transitions in natural polymers and synthetic polyamides. Polymer Bulletin, 5(11–12), 585–590. https://doi.org/10.1007/BF00255296",
+    "Gopnik, A., Sobel, D. M., Schulz, L. E., & Glymour, C. (2001). Causal learning mechanisms in very young children. Developmental Psychology, 37(5), 620–629. https://doi.org/10.1037/0012-1649.37.5.620",
+    "Kearney, M. (2004). Classroom use of multimedia-supported predict–observe–explain tasks. Research in Science Education, 34(4), 427–453. https://doi.org/10.1007/s11165-004-8795-y",
+    "Tikra patikra: juodraštinis modulis buvo laikinai įrašytas target kelyje ir ištrintas; validate_content.check_module → 0 klaidų, 1 įspėjimas (komponento batas kūno nėra, todėl sim.config gyvumas nepatikrintas); check_language.check_module → 0 radinių; po ištrynimo validate_content.py --grade 1 → 0 klaidų, 0 įspėjimų"
+  ]
+}

@@ -3,7 +3,7 @@ title: "1 klasės metodai"
 tipas: metodai
 klase: 1
 amzius: "6–7"
-atnaujinta: 2026-11-23
+atnaujinta: 2026-11-24
 ---
 
 # 1 klasės metodai
@@ -1516,6 +1516,144 @@ check_language.check_module     -> 0 radinių (1 kl. riba — 10 žodžių sakin
 **Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, technologijos 23.4.1 (`sources/pradinio-bp-rekomendacijos-2024.txt:9788–9796`, `:2094–2101`). Osborne, R. (1983). Towards modifying children's ideas about electric current. *Research in Science & Technological Education, 1*(1), 73–82. https://doi.org/10.1080/0263514830010108 · Chinn, C. A., & Brewer, W. F. (1993). The role of anomalous data in knowledge acquisition: A theoretical framework and implications for science instruction. *Review of Educational Research, 63*(1), 1–49. https://doi.org/10.3102/00346543063001001 · Bonawitz, E., Shafto, P., Gweon, H., Goodman, N. D., Spelke, E., & Schulz, L. (2011). The double-edged sword of pedagogy: Instruction limits spontaneous exploration and discovery. *Cognition, 120*(3), 322–330. https://doi.org/10.1016/j.cognition.2010.10.001 · Shipstone, D. M. (1984). A study of children's understanding of electricity in simple DC circuits. *European Journal of Science Education, 6*(2), 185–198. https://doi.org/10.1080/0140528840060208 (naudotas tik kaip krypties patvirtinimas: vaikai grandinę aiškina vietiniais, nuosekliais modeliais, todėl ne „srovė“, o matoma pasekmė).
 
 **Pastaba dėl pasiūlymo.** Ideatorius (#466) temą jau įrašė (`agents/proposals/2026-11-23-ideator-mygtukas-ir-jungiklis.json`), ir šis metodas ją **siaurina bei taiso**: (1) ideatorius durų skambutį priskyrė prie įtaisų, kurie „įsimena“, o iš tikrųjų skambutis kaip tik neturi atminties — jis yra **priešpriešinis** mygtuko pavyzdys, todėl metode jis perkeltas į 3-ą užduotį, o „įsimenantys“ prietaisai (telefonas, liftas) liko modelio riboje, ne užduotyje (LL-18 — variantas, kuris gyvenime teisingas, negali būti neteisingas atsakymas); (2) ideatorius rėmėsi vien lempa, o metodas įveda **matomą valdiklio padėtį** kaip antrą įrodymą tame pačiame kadre (LL-143); (3) ideatorius siūlė „paspaudžia ir paleidžia“ vienu judesiu, o metodas skaido į du bakstelėjimus, kad paleidimas būtų atskiras žingsnis ir nereikėtų laikyti piršto. Senesnis sistemos pasiūlymas `agents/proposals/backlog-d-elektronika-elektronika.json` tą pačią programos poziciją vadina `04-elektronika`; laikomasi `backlog.json` (ir žmogaus padengties bloko) tako `07-elektronika`, o 04 lieka laisvas.
+
+### M-16 — Batas išdžius toks, koks džiūsta: formą užfiksuoja pabaiga, o ne šlapia pradžia
+
+**Data:** 2026-11-24 · **Tema:** 1 klasės technologijos, 23.2.2 „Drabužių, avalynės priežiūra“ (`sources/pradinio-bp-rekomendacijos-2024.txt:9458–9468`) ir 9 skyriaus C3 „1 klasė. Drabužių, avalynės priežiūra. Praktiškai išbandomi avalynės sutvarkymo būdai“ (`:40061`; OCR tekste — „suvar tymo“) · **Tikslas:** `content/lt/grade-01/technologijos/08-avalynes-dziovinimas.json` (technologijose užimti 01, 02, 03, 06, 07 — 08 laisvas)
+
+**Viena didelė idėja.** Šlapias odinis batas minkštas, todėl lengvai praranda formą. Sausas — kietas, todėl formos nebeatgauna. Formą užfiksuoja ne šlapia pradžia, o **pabaiga**: batas išdžiūsta tokios formos, kokioje stovi paskutinę džiūvimo akimirką. Todėl šlapius batus džioviname su įdėtu laikraščiu ar įdėklu — ne tam, kad būtų gražiau, o tam, kad būtų kam išlaikyti formą.
+
+**Ką sako programa.** 23.2.2 punktas 1–2 klasei prašo „…ar/ir avalynės/tekstilės valymas be cheminių priemonių. Apibūdinami darbo procesai, vaizdo ir kt. savybės“ (`:9458–9468`), o 9 skyriaus C3 1 klasei įvardija būtent „Praktiškai išbandomi avalynės sutvarkymo būdai“ (`:40061`). Platformoje avalynė sąmoningai atidėta: `06-drabuziu-prieziura.json:98` `sources` lauke parašyta „— avalynė paliekama atskiram moduliui, kad modulyje liktų viena idėja“, o `teacher.goal` (`:85`) kartoja „Avalynės priežiūra (batų valymas ir džiovinimas) sąmoningai neįtraukta — tai atskiras modulis“. To modulio nėra: `ls content/lt/grade-01/technologijos/` rodo 01, 02, 03, 06, 07, o `grep -rin "avalyn" content/lt/grade-01/` randa tik tris eilutes, ir visos trys yra `06-drabuziu-prieziura.json` tekstuose (tikrinta 2026-11-24). `research/wiki/curriculum/backlog.json` eilutė `D:drabuziu-prieziura` tuo tarpu pažymėta `covered`, nors jos `outcome` yra „1 klasė. Drabužių, avalynės priežiūra“, o `interactivity` — „Sekos pratimas: kaip prižiūri avalynę“. Tai ne padengtis, o pusė temos: drabužiai padengti, avalynė — ne (žr. pastabą dėl pasiūlymo).
+
+**Kodėl modelis, o ne paveikslėlis.** Paveikslas gali parodyti tik vieną būseną: arba apvalią nosį, arba sulinkusią. Visa šios temos pasekmė yra **laike**: kol batas šlapias, jo forma dar kinta; kai sausas — nebekinta. Todėl reikia modelio, kuriame vaikas pats nustato, kas bus bato viduje, ir pats pastumia džiūvimą į priekį, o paskui pamato, kad nosies nebegalima grąžinti atgal. Tai vienintelis būdas atskirti dvi konkuruojančias nuostatas — „forma grįžta pati“ ir „formą laiko įdėklas“ — nes abi jos daro tą pačią prognozę tol, kol laikas nepajudėjo.
+
+**Ką rodo tyrimai.**
+Han, Hu ir Jiang (2018) parodė, kad kolagenas (odos pagrindas) yra **vandens valdomos formos atminties** medžiaga: vanduo išskiria tarppeptidinius vandenilinius ryšius, todėl šlapia oda tampa formuojama; džiūnant ryšiai susidaro iš naujo — bet jau naujose padėtyse, todėl deformuota forma tampa nauja pusiausvyros forma. Tai tiksliai tas mechanizmas, kurį modelis turi parodyti: formą fiksuoja džiūvimas, o ne šlapimas.
+Batzer ir Kreibich (1981) parodė, kad vanduo ryškiai nuleidžia kolageno ir celiuliozės stiklinimo temperatūrą — būtent dėl vandenilinių ryšių nutraukimo. Iš to seka dvi modelio dalys: (1) „šlapias minkštas, sausas kietas“ nėra palyginimas, o ta pati medžiaga dviejose būsenose; (2) **tas pats galioja popieriui**, todėl perkėlimo užduotis su šlapiu lapu remiasi tuo pačiu šaltiniu, o ne analogija „iš galvos“.
+Gopnik ir kt. (2001) parodė, kad net 2–4 metų vaikai daro išvadą apie priežastį iš **variacijos ir kovariacijos** modelio: kai vienas dalykas kinta, o kiti lieka tie patys. Todėl modelyje trys batai privalo būti vienodi iš viso, išskyrus vieną dalyką — turinį. Jei jie skirtųsi dydžiu ar spalva, vaikas priežastį galėtų priskirti jiems.
+Kearney (2004), aprašydamas spėjimas–stebėjimas–paaiškinimas (POE) užduotis su multimedija, rodo, kad būtent **spėjimas prieš stebėjimą** ištraukia vaiko nuostatą į paviršių ir padaro stebėjimą prasmingą; be spėjimo vaikas žiūri animaciją ir nemato, ką ji paneigė.
+Chinn ir Brewer (1993) rodo, kad vienas prieštaraujantis atvejis nuostatos beveik nekeičia — prieštara turi būti aiški ir kartojama. Todėl pažanga žymima ne po pirmo išdžiuvimo, o tada, kai tame pačiame kadre yra ir apvalus, ir sulinkęs batas.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Šlapias batas išdžius ir pats grįš į savo formą.“** Tai pagrindinė nuostata, ir ji kyla iš kasdienės patirties su guma ir putomis, kurios tikrai atsimena formą. Modelyje batas be įdėklo po džiūvimo lieka sulinkęs, ir jokia būsena nebegrąžina nosies atgal. Svarbu, kad modelis **neturi** mygtuko „ištiesinti“: jei jis būtų, vaikas manytų, kad užtenka pastangos.
+2. **„Batas sulinko, nes buvo šlapias.“** Visi trys modelio batai yra vienodai šlapi, todėl šlapimas negali paaiškinti skirtumo: sulinko tik tas, kurio viduje nieko nebuvo. Šlapimas yra sąlyga, o ne priežastis.
+3. **„Įdėklas reikalingas tam, kad batas greičiau išdžiūtų.“** Modelis neturi džiūvimo greičio — nė vieno skaičiaus, nė vienos laiko juostos su valandomis. Tai sąmoninga riba, kuri pasakoma, o ne slepiama (žr. modelio ribas).
+4. **„Forma priklauso nuo to, kas buvo viduje pradžioje.“** Modelis tam priešinasi vienu judesiu: kol batai dar „džiūsta“, turinį galima pakeisti ir nosis išsitiesia; kai „sausa“ — nebegalima. Būsena išvedama iš paskutinės akimirkos, o ne iš istorijos (ta pati taisyklė kaip M-15 „šviesą laiko padėtis“ ir LL-20 „bauda, kuri išnyksta iki galutinio dydžio“).
+5. **„Sulinkęs batas yra sugedęs visam laikui.“** Modelis to nepasako ir neturi pasakyti: jis baigiasi sausu batu ir nepretenduoja į batų taisymo pamoką. Ši riba įvardijama `teacher` bloke, o ne paliekama vaiko spėjimui.
+
+**Seka (konkretumas → pusiau abstraktus modelis → simbolis → perkėlimas).**
+
+1. **Du odos gabalėliai rankoje.** Mokytojas duoda sausą odos atraižą (arba sausą batą) ir šlapią odos atraižą (arba šlapią popieriaus juostelę). Vaikas abi sulenkia: sausa nelinksta, šlapia linksta kaip virvė. Tada šlapią sulenktą padeda į lėkštę ir palieka iki pamokos pabaigos — pamokos gale ji sausa ir **liko sulenkta**. Tikslas: skirtumą pirma pajusti ranka ir savo akimis, o ne perskaityti ekrane (T8.3).
+2. **Ekranas, trys vienodi batai.** Trys vienodo dydžio, vienos spalvos, vienoje linijoje stovintys šlapi batai, visuose viduje „nieko“. Vaikas baksteli batą ir pasirenka, kas bus viduje: nieko → laikraštis → įdėklas. Tikslas: pajusti, kad batai patys savaime niekuo nesiskiria — skirtumą daro tik vidus.
+3. **Spėjimas ir džiūvimas.** Vaikas spaudžia „Palauk“, pirmiausia pasako, kas bus visiems trims, tada batai pereina į „džiūsta“: ten, kur viduje nieko, nosis ima smukti. Dar galima pakeisti turinį — ir nosis išsitiesia. Tikslas: pamatyti, kad forma dar kinta, kol batas drėgnas.
+4. **Simbolis — užrašas po batu.** Antras „Palauk“ užbaigia džiūvimą; po kiekvienu batu atsiranda jo paties užrašas: „Susilinko“ arba „Liko apvali“, o bato nosis nebekinta. Vaikas pasako taisyklę savais žodžiais: „batas išdžiūsta toks, koks yra džiūdamas“. Tikslas: žodį susieti su tuo, ką jis pats padarė, o ne su ekrano tekstu.
+5. **Perkėlimas į tris vietas.** Šlapias popieriaus lapas, sulenktas ir padžiovintas; šlapias diržas, džiūvantis susuktas; šlapios pirštinės, numestos susmukusios. Vaikas kiekvienoje situacijoje pasako, kokia forma bus po džiūvimo ir ką reikėjo padaryti, kol daiktas šlapias. Tikslas: taisyklė apie medžiagą, kuri šlampa, o ne apie vieną batą.
+
+**Privalomas spėjimo žingsnis.** Vienas spėjimas per vieną džiūvimą, trys variantai: „Visi trys liks apvalūs“ / „Visi trys susilinks“ / „Skirsis“. Spėjimas pasirenkamas po pirmo „Palauk“ ir dar **prieš** tai, kai batai pradeda džiūti (spėjimas paleidžia džiūvimą); jis lieka matomas virš scenos iki pabaigos ir po džiūvimo parodomas šalia rezultato („Tavo spėjimas: skirsis“), bet niekada nevadinamas klaida (LL-15). Be spėjimo modelis virsta animacija: vaikas žiūri, kaip keičiasi nosis, bet negali pasakyti, ko tikėjosi.
+
+**Simuliacijos specifikacija.** Komponentas `batas`, failas `assets/js/sims/technologijos.js` (registracija: `SIMS` bloke, `technologijos.js:1847–1853`, eilutė `"batas": batas,` po `"valdiklis"`). Batas piešiamas kaip nauja `art.js` dalis `boot(x, baseY, s, sag, content)` — vienas kelias nosiai ir vienas kulnui, o `sag` (0–1) lenkia nosies viršų ir įjungia raukšlės liniją; `content` rodo, kas kyšo iš bato angos (nieko / baltas laikraštis / pilkas įdėklas). `art.js` jau turi `plank`, `block`, `pictogram`, `drops`, todėl grindų juostai ir vandens lašams naujų formų nereikia. `config`:
+
+```json
+{ "contents": [ { "key": "nieko",      "label": "Nieko" },
+                { "key": "laikrastis", "label": "Laikraštis" },
+                { "key": "idedas",     "label": "Įdėklas" } ],
+  "stages": [ { "key": "slapias", "label": "Šlapias" },
+              { "key": "dziusta", "label": "Džiūsta" },
+              { "key": "sausas",  "label": "Sausas" } ],
+  "labels": { "wait": "Palauk", "waitMore": "Palauk dar", "again": "Iš naujo",
+              "guess": "Kas bus batams?", "same": "Visi liks apvalūs",
+              "bent": "Visi susilinks", "split": "Skirsis",
+              "round": "Liko apvali", "crooked": "Susilinko" },
+  "sentences": { "start": "Trys šlapi batai. Bakstelėk batą ir pasirink, kas viduje.",
+                 "nieko": "Bato viduje nieko.",
+                 "laikrastis": "Bato viduje laikraštis.",
+                 "idedas": "Bato viduje įdėklas.",
+                 "guess": "Pirma spėk, kas bus batams.",
+                 "dziusta": "Batai džiūsta. Nosis smunka ten, kur viduje nieko.",
+                 "edit": "Dar drėgnas. Formą dar galima pakeisti.",
+                 "sausas": "Batas jau sausas. Forma nebegrįš.",
+                 "mixed": "Vienas liko apvalus, kitas susilinko.",
+                 "round": "Visi liko apvalūs, nes viduje buvo laikraštis ar įdėklas.",
+                 "bent": "Visi susilinko, nes nė viename nebuvo nieko.",
+                 "reset": "Vėl trys šlapi batai." } }
+```
+
+**Būsena išvedama, o ne įrašyta.** `config` sąmoningai neturi lauko „kas nutinka, kai viduje nieko“ — tai vienintelė taisyklė komponente:
+
+```
+sag(content, stage) = stage === "slapias" ? 0
+                    : stage === "dziusta" ? (content === "nieko" ? 0.5 : 0)
+                    :                        (content === "nieko" ? 1 : 0)
+outcome(content)    = content === "nieko" ? "crooked" : "round"
+```
+
+Jei `content` neatpažintas, komponentas rašo `console.error` ir rodo „Batas nesuderintas.“, o ne tyliai rodo sulinkusį batą. Tai ta pati taisyklė kaip M-07 (`kiekis = board.px / unit.px`), M-13 (`outcome(key)`) ir M-15 (`lit = behaviour === "lieka" ? down : pressed`): teiginys ekrane išvedamas iš tų pačių duomenų, kuriuos mato vaikas. **Laikas nėra kintamasis:** dvi fiksuotos padėtys, nes džiūvimo greitis šioje temoje nemokomas (tai antra sąvoka, T1.2). Eiga tokia: pirmas „Palauk“ neatlieka nieko, o parodo spėjimą; spėjimas **paleidžia** džiūvimą (batai pereina į „džiūsta“); antras paspaudimas (jau „Palauk dar“) užbaigia džiūvimą. Todėl vaikas niekada nemato judančios nosies be savo spėjimo, o paspaudimas negali būti praleistas netyčia — mygtukas keičia vardą, o ne tik būseną.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` (= tariamas sakinys) |
+|---|---|---|---|
+| pradžia | trys šlapi batai, nosys apvalios, po kiekvienu „Nieko“, spėjimo juostos dar nėra | „Kas bus viduje?“ | `sentences.start` |
+| turinys pakeistas | to paties bato angoje matosi laikraštis arba įdėklas, užrašas po batu pasikeitė | „Bato viduje laikraštis.“ | `sentences.laikrastis` / `idedas` / `nieko` |
+| spėjimas | spėjimo juosta su trimis mygtukais, batai dar šlapi, „Palauk dar“ dar nepasirodęs | „Pirma spėk.“ | `sentences.guess` |
+| džiūsta (po spėjimo) | nosys, kurių viduje nieko, jau įlinkusios per pusę; spėjimas matomas virš scenos; mygtukas pervardytas į „Palauk dar“ | „Batai džiūsta.“ | `sentences.dziusta` |
+| džiūsta, bakstelėtas batas | to paties bato nosis grįžta į apvalią, kai įdėtas laikraštis | „Dar drėgnas.“ | `sentences.edit` |
+| sausas, mišru | vienas batas apvalus, kitas sulinkęs; po kiekvienu užrašas, spėjimas palygintas | „Vieni apvalūs, kiti sulinkę.“ | `sentences.mixed` |
+| sausas, visi apvalūs | trys apvalios nosys, trys užrašai „Liko apvali“ | „Visi trys liko apvalūs.“ | `sentences.round` |
+| sausas, visi sulinkę | trys sulinkusios nosys, trys užrašai „Susilinko“ | „Visi trys susilinko.“ | `sentences.bent` |
+| sausas, bakstelėtas batas | niekas nepasikeitė, batas nejuda | „Batas jau sausas.“ | `sentences.sausas` |
+| „Iš naujo“ | trys šlapi batai, visi „Nieko“, spėjimo juostos nėra | „Vėl trys šlapi batai.“ | `sentences.reset` |
+
+Dešimt savybių, kurių negalima praleisti:
+
+- **Vienas kintamasis:** `content` — kas bato viduje. Abiejų lyčių, spalvos ir dydžio skirtumo nėra: visi trys batai iš to paties `art.boot` kvietimo su tais pačiais parametrais, tik skirtingu `x`. Tai modelio teiginys, o ne dekoracija.
+- **Geometrija 360 px:** `viewBox="0 0 340 300"`, `max-width:340px`, `width:100%`; grindų juosta `art.plank(8, 232, 324, 10)`; batų bazė `baseY = 232`, centrai `x = 62 / 170 / 278`, mastelis `s = 0.9` (batas ≈ 92 × 76 px, tarpai 16 px). Užrašas po batu — `font-size:var(--fs-s)` (15,2 px), `text-anchor:middle`, `y = 262`; ranka rašyti `font-size` negalima, nes LL-164 parodė, kad `.72rem` (11,5 px) praeina visus vartus ir lieka per mažas vaikui. Užrašas privalo tilpti į savo 92 px langelį (`Nieko`, `Laikraštis`, `Įdėklas`, `Susilinko`, `Liko apvali`): ilgiausias rašomas dviem eilutėmis (`tspan`), o jei vis tiek netelpa — trumpinamas žodis („Apvali“), o ne šriftas (LL-06, LL-30). Jokio horizontalaus slinkimo.
+- **Įėjimai ir klaviatūra:** trys bato mygtukai (88 × 76 px ekrane — ≥ 48 px), „Palauk“ / „Palauk dar“, trys spėjimo mygtukai, „Iš naujo“; visi `<button>`. `Tab` eilė: batas 1 → batas 2 → batas 3 → „Palauk“; kai rodoma spėjimo juosta — trys spėjimai; `Enter` / `Space` aktyvuoja. `aria-label` sako būseną žodžiais („Pirmas batas. Viduje nieko. Bakstelėk, kad pakeistum.“), ne vien spalvą; `aria-live="polite"` — `readout`.
+- **Fokusas** (LL-32): paspaudus batą fokusas lieka tame bate (turinys sukasi ratu, todėl nereikia atskiro pasirinkimo meniu); paspaudus „Palauk“ be spėjimo — fokusas į pirmą spėjimo mygtuką; pasirinkus spėjimą — į „Palauk dar“; po antro paspaudimo — į „Iš naujo“. Sušalę batai žymimi `aria-disabled="true"` ir lieka fokusuojami, kad fokusas neprapultų, o bandymas juos pakeisti paaiškinamas `api.note`.
+- **Grįžtamasis ryšys** paaiškina **kodėl**, o ne „teisingai“: `readout` įvardija, ką vaikas mato („Visi trys susilinko“), `api.note` — kodėl („…nes nė viename nebuvo nieko“). Niekada „neteisingai“ (T2.3, T5.1).
+- **Pažanga** (`api.progress({ correct: true })`) kviečiama vieną kartą, kai po antro „Palauk“ **dabartinėje** būsenoje yra ir bent vienas apvalus, ir bent vienas sulinkęs batas (LL-17), o ne po pirmo paspaudimo (LL-29). Jei visi trys vienodi, pažanga nežymima, o `api.note` pasiūlo: „Į vieną batą įdėk laikraštį, į kitą nieko“ — klaida nevadinama, bandymas kartojamas. „Iš naujo“ pažangos netrina (LL-16).
+- **Garsas:** tariamos tik `config.sentences` frazės (12; kiekviena gauna po du įrašus `n` ir `s`, tad manifestas išaugs 24 įrašais, jei tų pačių sakinių dar neturi), o `api.note` rodo **tą patį** sakinį, kuris tariamas — ekranas ir balsas negali išsiskirti. Užrašai po batais ir `readout` netariami kiekvieną kartą (LL-14).
+- **Be laikmačių:** „Palauk“ nieko nelaukia — jis iškart perkelia į kitą padėtį; jokio `setInterval`, jokios animacijos, kuri tekėtų pati. Jei naudojama CSS perėja nosiai lenkti (0,6 s), ji grąžinama per `prefers-reduced-motion` į akimirksnį, o tekstas perėjos metu nesikeičia (LL-14).
+- **Abi būsenos turi savo įrodymą paveiksle** (LL-143): apvali — apvali nosies linija ir užrašas „Liko apvali“, sulenkta — įlinkusi linija, raukšlė ir užrašas „Susilinko“. Spalva nėra vienintelis nešėjas.
+- **Be „game over“, be skaičiavimo, kiek kartų bandei.** Batas niekada negadinamas negrįžtamai: „Iš naujo“ grąžina tris šlapius batus.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Batas džiūsta be nieko viduje. Kaip atrodys nosis?“ — „Apvali, kaip buvo“ / „Susilinkusi“ / „Ilgesnė už batą“ | 1 | „Apvali, kaip buvo“ — tikimasi, kad forma grįš pati | „Pagalvok, kas laikė batą, kol jis džiūvo.“ |
+| 2 | taikymas | „Parsinešei šlapius batus. Kaip elgsiesi pirmiausia?“ — „Įdėsiu laikraštį ir pastatysiu“ / „Paliksiu susmukusius džiūti“ / „Padėsiu vieną ant kito“ | 0 | „Paliksiu susmukusius džiūti“ — laukiama, kad forma grįš savaime | „Šlapias batas minkštas — formą reikia padėti dabar.“ |
+| 3 | perkėlimas | „Šlapią lapą sulankstei ir palikai. Kaip atrodys po džiūvimo?“ — „Tiesus, nes popierius išsities“ / „Sulenktas toje pačioje vietoje“ / „Suvirškins nuo drėgmės“ | 1 | „Tiesus, nes popierius išsities“ — ta pati „forma grįžta“ nuostata, tik kitai medžiagai | „Šlapias popierius taip pat sukietėja džiūdamas.“ |
+| 4 | perkėlimas (`optional: true`) | „Šlapias diržas džiūsta susuktas į ritinį. Kaip jį padėti?“ — „Palaukti, kol išdžius, tada ištiesinti“ / „Padėti tiesiai, kol dar šlapias“ / „Užlieti daugiau vandens“ | 1 | „Palaukti, kol išdžius, tada ištiesinti“ — laikoma, kad sausą odą galima tiesiog išlankstyti | „Kada oda dar lanksti — dabar ar po paros?“ |
+
+Atsakymų indeksai 1 / 0 / 1 / 1 — ne visi tame pačiame indekse (`validate_content.py` tikrina pasiskirstymą). Nė viena užuomina nepasako atsakymo ir nekartoja teisingo varianto žodžių: 2 užduoties užuomina mini „dabar“, o ne „laikraštį“; 4 užduoties užuomina nurodo laiką, o ne veiksmą. 4 užduotyje sąmoningai nėra varianto „padėti ant radiatoriaus“: modelis šilumos neturi, o teisingas atsakymas negali priklausyti nuo to, ar radiatoriaus šeima turi (LL-18).
+
+**Refleksija.** „Ką darysi su šlapiais batais, kai grįši namo?“ Klausiama žodžiu, neverinama; laukiamas atsakymas — veiksmas („Įdėsiu laikraštį“), o ne taisyklės kartojimas. Tai patikra be ekrano ir be balo (T5.3).
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Modelis rodo odinį batą, kurio nosis, kol šlapias, savaime smunka.** Ne kiekvienas batas taip elgiasi: storas ar kietas batas gali išlaikyti formą ir be įdėklo. Modelis rodo atvejį, kai įdėklas tikrai reikalingas, ir tai pasakoma `teacher.offline`, o ne slepiama.
+2. **Laikraštis tikrame bate sugeria ir drėgmę**, o modelis rodo tik formą. Džiūvimo greitis modeliuojamas sąmoningai ne — jokių valandų, jokių „greičiau / lėčiau“.
+3. **Šilumos modelis neturi.** Džiovinimas ant radiatoriaus, prie krosnies ar plaukų džiovintuvu lieka už šio modelio ribų; modelis apie tai nieko nesako ir neturi mokyti.
+4. **Modelis baigiasi sausu batu ir nepasako, ką daryti su jau sulinkusiu.** Tikrovėje odą galima vėl sušlapinti ir bandyti formuoti: Han ir kt. (2018) rodo, kad vanduo vėl išskiria tuos pačius ryšius, todėl oda vėl tampa formuojama. Tai batų priežiūros darbas, ne 1 klasės veiksmas, ir modelyje jo nėra.
+5. **Trys batai yra trys to paties modelio bato kopijos.** Tikrovėje du batai gali būti iš skirtingos odos ir džiūti skirtingai; modelis sąmoningai naikina šį skirtumą, kad liktų vienas kintamasis.
+
+**Ką tai reiškia modulio autoriui.** `id` — `08-avalynes-dziovinimas`; `title` — „Batas išdžius toks, koks džiūsta“ (32 simboliai); `subtitle` — „Formą užfiksuoja džiūvimas, o ne šlapimas“; `minutes` — 9; trys `outcomes` („Paaiškinu, kad šlapias batas išdžiūsta tokios formos, kokioje džiūsta.“, „Nuspėju, kurių batų nosis liks apvali, ir pasitikrinu modelyje.“, „Parodau, kad įdėtas laikraštis ar įdėklas išlaiko bato formą.“); `concept.title` — „Formą fiksuoja džiūvimas“; `concept.big_idea` — „Šlapias odinis batas minkštas, todėl lengvai susmunka. Džiūdamas jis sukietėja tokioje formoje, kokioje yra. Todėl į šlapius batus įdedame laikraštį ar įdėklą. Jis laiko formą, kol batas sausas.“ (194 simboliai); `concept.steps` — „Bakstelėk batą ir pasirink, kas bus viduje.“, „Pirma spėk, kas bus visiems trims.“, „Spausk „Palauk“ ir žiūrėk į nosį.“, „Palauk dar kartą ir perskaityk užrašus.“; `concept.example` — „Namuose šlapius batus prikimšame laikraščiu ir statome džiūti.“ (pavyzdys mini tą patį veiksmą kaip modelis — LL-142); `sim` — `{ "component": "batas", "config": { … } }`. Įrašius modulį jis turi patekti į `content/lt/grade-01/index.json` (technologijos, po `06-drabuziu-prieziura`) ir į `path.json` **po `06-drabuziu-prieziura`**: ten vaikas rūšiavo drabužius prieš skalbimą, čia — padeda formą prieš džiūvimą; abu moduliai yra „ką padaryti prieš pasekmę“.
+
+**Patikra.** Metodo specifikacija surašyta kaip juodraštinis modulis ir paleisti tie patys vartai, kuriuos paleidžia CI. Juodraštis buvo laikinai įrašytas tikslioje vietoje (`content/lt/grade-01/technologijos/08-avalynes-dziovinimas.json`) ir po patikros ištrintas — `git status` rodo tik šį wiki failą, o `python3 scripts/validate_content.py --grade 1` po ištrynimo — 0 klaidų, 0 įspėjimų. Komponentas `batas` vartams paduotas kaip registruotas (registro dar nėra), todėl kūno patikra neįvyko ir lieka įspėjimas:
+
+```
+validate_content.check_module   -> 0 klaidų, 1 įspėjimas
+   (įspėjimas: „nepavyko perskaityti simuliacijos „batas“ kūno — sim.config gyvumas nepatikrintas“)
+check_language.check_module     -> 0 radinių (1 kl. riba — 10 žodžių sakinyje)
+```
+
+Pirmoji juodraščio versija davė **vieną tikrą radinį**, ir jis pataisytas, o ne apeitas: `concept.big_idea` paskutinis sakinys buvo 14 žodžių (riba — 10), todėl skaidytas į du („Todėl į šlapius batus įdedame laikraštį ar įdėklą. Jis laiko formą, kol batas sausas.“). Be to, keturių užduočių klausimai buvo performuluoti taip, kad turėtų klausiamąjį žodį, kurį tikrina `check_language` („Kokia bus nosis?“ → „Kaip atrodys nosis?“) — turinys nepakito, pakito tik formuluotė.
+
+Įspėjimas paliktas sąmoningai ir neapeitas: komponento dar nėra, todėl `sim.config` gyvumo (LL-61) patikrinti negalima. Jį privalo paleisti tas, kas rašys `batas` į `technologijos.js` — su tikru komponento kūnu tas pats vartas turi duoti 0 įspėjimų. Rankinė patikra, kurią galima atlikti be modulio: kiekvienas `config` raktas (`contents`, `stages`, `labels`, `sentences` ir jų vidus) turi atsirasti komponento kūne, o `outcome` turi būti lyginamas su `"nieko"`, ne su `"pirmas"` ar bato numeriu.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, technologijos 23.2.2 (`sources/pradinio-bp-rekomendacijos-2024.txt:9458–9468`) ir 9 skyriaus C3 (`:40061`). Han, Y., Hu, J., & Jiang, L. (2018). Collagen skin, a water-sensitive shape memory material. *Journal of Materials Chemistry B, 6*(31), 5144–5152. https://doi.org/10.1039/c8tb01346b · Batzer, H., & Kreibich, U. T. (1981). Influence of water on thermal transitions in natural polymers and synthetic polyamides. *Polymer Bulletin, 5*(11–12), 585–590. https://doi.org/10.1007/BF00255296 · Gopnik, A., Sobel, D. M., Schulz, L. E., & Glymour, C. (2001). Causal learning mechanisms in very young children: Two-, three-, and four-year-olds infer causal relations from patterns of variation and covariation. *Developmental Psychology, 37*(5), 620–629. https://doi.org/10.1037/0012-1649.37.5.620 · Kearney, M. (2004). Classroom use of multimedia-supported predict–observe–explain tasks in a social constructivist learning environment. *Research in Science Education, 34*(4), 427–453. https://doi.org/10.1007/s11165-004-8795-y · Chinn, C. A., & Brewer, W. F. (1993). The role of anomalous data in knowledge acquisition: A theoretical framework and implications for science instruction. *Review of Educational Research, 63*(1), 1–49. https://doi.org/10.3102/00346543063001001
+
+**Pastaba dėl pasiūlymo.** Ideatorius (#44721) temą jau įrašė (`agents/proposals/2026-11-24-ideator-avalynes-dziovinimas.json`), ir šis metodas ją **susieja ir sugriežtina**: (1) ideatorius siūlė tris skirtingai prikimštus batus iš karto, o metodas duoda vaikui pačiam nustatyti turinį — kitaip modelis neturi kintamojo ir virsta iliustracija (gairių P2); (2) ideatorius siūlė „stumti laiką“, o metodas laiką skaido į dvi fiksuotas padėtis — 6–7 m. vaikui slankiklis su valandomis įneša antrą sąvoką (T1.2), o džiūvimo greitis šioje temoje nemokomas; (3) ideatorius rašė, kad „be įdėklo nosis sulinksta“ kaip taisyklę, o metodas tai įvardija kaip **modelio atvejį** ir modelio ribose pasako, kad kietas batas gali išsilaikyti ir be įdėklo — kitaip modelis mokytų netiesos (LL-18); (4) ideatoriaus pavyzdžiai (wikishoes.org, jihua3515.com) pakeisti moksliniais šaltiniais su DOI, o laikraščio dviguba paskirtis (forma ir drėgmė) atskirta, kad modelis liktų apie vieną dalyką. `research/wiki/curriculum/backlog.json` eilutė `D:drabuziu-prieziura` lieka `covered`, nors avalynės dalis neturi modulio — tai užrašyta `research/wiki/guidelines/klausimai.md`, o ne taisyta čia (tai programos-derintojo darbas).
 
 ## Atviros prielaidos
 

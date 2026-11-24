@@ -131,12 +131,13 @@ const erdvinesFiguros = {
        kortelę (LL-40). Su `min()` stulpelis susitraukia iki kortelės pločio
        ir eilutė persirikiuoja, o ne išstumia puslapį.
 
-       Kūno takelis — 7.5rem, o ne buvę 6.1rem: ilgiausias oficialaus vardo
-       žodis „Stačiakampis“ prie .8rem/800 yra 96 px, o 6.1rem stulpelis
-       (97.6 px) atėmus paminkštinimą duoda ~84 px — @390 px ekrane žodis
-       lūžo per pusąžodį („Stačiakam / pis“), nors dokumentas neslenka
-       (LL-51). 7.5rem = 120 px → turinys ≥106 px, žodis lieka sveikas
-       @320–1440 ir 200 % tekste. */
+       Kūno takelis — 8.5rem, o ne buvę 7.5rem: mygtuko etiketė pakelta nuo
+       .8rem iki .95rem (#47139 — 12,8 px 6–7 m. vaikui per maža), todėl
+       ilgiausias oficialaus vardo žodis „Stačiakampis“ prie .95rem/800 yra
+       ~114 px, o 7.5rem stulpelis (120 px) atėmus paminkštinimą duoda ~110 px —
+       žodis lūžtų per pusęžodį (LL-51). 8.5rem = 136 px → turinys ≥126 px,
+       žodis lieka sveikas @320–1440 ir 200 % tekste. Stulpelių skaičius
+       nekinta: 576 px juostoje ir anksčiau tilpo 4, ir dabar 4. */
     /* Pastaba — turinys, ne kodas (#5828). Anksčiau ji buvo įrašyta čia, todėl
        kalbos redaktorius negalėjo jos pataisyti nekeisdamas simuliacijos kodo.
        Dabar tekstas imamas iš modulio `sim.config.intro`; atsarginis variantas
@@ -149,25 +150,25 @@ const erdvinesFiguros = {
       <div id="ef-wrap" style="width:100%;max-width:36rem;margin:0 auto;box-sizing:border-box">
         <p id="ef-intro" class="sim-note" style="margin:0 0 .5rem;text-align:center"></p>
         <div id="ef-bodies" role="group" aria-label="Pasirink kūną"
-             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7.5rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(8.5rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7rem,100%),1fr));gap:.5rem;margin-top:.7rem;box-sizing:border-box">
           <figure style="margin:0;text-align:center;min-width:0">
             <svg id="ef-solid" viewBox="0 0 200 200" width="100%" role="img"
                  style="display:block;max-height:11rem;margin:0 auto"></svg>
-            <figcaption id="ef-solid-cap" style="font-size:.85rem;color:var(--ink-soft);font-weight:700"></figcaption>
+            <figcaption id="ef-solid-cap" style="font-size:.95rem;color:var(--ink-soft);font-weight:700"></figcaption>
           </figure>
           <figure style="margin:0;text-align:center;min-width:0">
             <svg id="ef-flat" viewBox="0 0 200 200" width="100%" role="img"
                  style="display:block;max-height:11rem;margin:0 auto"></svg>
-            <figcaption id="ef-flat-cap" style="font-size:.85rem;color:var(--ink-soft);font-weight:700"></figcaption>
+            <figcaption id="ef-flat-cap" style="font-size:.95rem;color:var(--ink-soft);font-weight:700"></figcaption>
           </figure>
         </div>
-        <p id="ef-views-heading" style="margin:.7rem 0 .3rem;font-size:.85rem;font-weight:800;color:var(--ink-soft);text-align:center"></p>
+        <p id="ef-views-heading" style="margin:.7rem 0 .3rem;font-size:.95rem;font-weight:800;color:var(--ink-soft);text-align:center"></p>
         <div id="ef-views" role="group" aria-label="Iš kur žiūri"
-             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(5rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
-        <p id="ef-shapes-heading" style="margin:.7rem 0 .3rem;font-size:.85rem;font-weight:800;color:var(--ink-soft);text-align:center"></p>
+             style="display:flex;flex-wrap:wrap;gap:.4rem;box-sizing:border-box"></div>
+        <p id="ef-shapes-heading" style="margin:.7rem 0 .3rem;font-size:.95rem;font-weight:800;color:var(--ink-soft);text-align:center"></p>
         <div id="ef-shapes" role="group" aria-label="Kokią formą matai"
-             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(6.4rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(8.25rem,100%),1fr));gap:.4rem;box-sizing:border-box"></div>
       </div>`;
 
     controls.innerHTML = `
@@ -214,24 +215,37 @@ const erdvinesFiguros = {
               aria-pressed="${b.id === body}" aria-label="${b.name}"
               style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;padding:.45rem .3rem;min-height:56px;box-sizing:border-box">
         ${iconMarkup(b.id)}
-        <span style="font-size:.8rem;line-height:1.15;font-weight:800;text-align:center;overflow-wrap:anywhere">${b.name}</span>
+        <span style="font-size:.95rem;line-height:1.15;font-weight:800;text-align:center;overflow-wrap:anywhere">${b.name}</span>
       </button>`).join("");
 
     /* Antra eilutė — ne puošmena: joje lieka tai, ką vaikas jau matė iš šios
-       krypties. Trys mygtukai kartu parodo „vienas kūnas, trys vaizdai“. */
+       krypties. Trys mygtukai kartu parodo „vienas kūnas, trys vaizdai“.
+       Jos dydis — .95rem, kaip ir visa kita skaitoma sim teksto eilutė:
+       modulio užrašas vaiką nukreipia kaip tik į šią eilutę („Mygtuke matysi,
+       ką jau matei“), todėl ji negali būti mažiausias ekrano tekstas
+       (#47139, LL-185 atvirkštinė: .8rem = 12,8 px 6–7 m. vaikui per maža).
+
+       Eilutė — flex, o ne trys stulpeliai: ilgiausias formos vardas
+       „stačiakampis“ prie .95rem užima ~112 px, trims mygtukams reikia
+       ~349 px, o sim juosta @390 px ekrane teturi ~329 px. Fiksuotas tris
+       stulpelis todėl laužydavo žodį per pusę („stačiakam / pis“, LL-51) —
+       ir prie .8rem jau laužė (94,6 px į 93 px). Su `flex:1 1 7rem`
+       stalčiuje telpa trys (576 px), telefone — du ir trečias per visą
+       plotį, todėl žodis lieka sveikas visur, o trys kryptys vis tiek
+       matomos kartu. */
     viewsEl.innerHTML = VIEWS.map((v) => `
       <button type="button" class="btn secondary ef-view" data-view="${v.id}"
               aria-pressed="${v.id === view}" aria-label="${v.label}"
-              style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;padding:.45rem .25rem;min-height:56px;box-sizing:border-box;text-align:center">
+              style="display:flex;flex:1 1 7rem;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;padding:.45rem .25rem;min-height:56px;box-sizing:border-box;text-align:center">
         <span style="font-size:.95rem;line-height:1.15;font-weight:800;overflow-wrap:anywhere">${v.label}</span>
-        <span class="ef-seen" style="font-size:.8rem;line-height:1.15;color:var(--ink-soft);font-weight:700;min-height:1.15em;overflow-wrap:anywhere"></span>
+        <span class="ef-seen" style="font-size:.95rem;line-height:1.15;color:var(--ink-soft);font-weight:700;min-height:1.15em;overflow-wrap:anywhere"></span>
       </button>`).join("");
 
     shapesEl.innerHTML = Object.entries(SHAPES).map(([id, sh]) => `
       <button type="button" class="btn secondary ef-shape" data-shape="${id}" aria-label="${sh.nom}"
               style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;padding:.35rem .25rem;min-height:56px;box-sizing:border-box">
         <svg viewBox="0 0 200 200" width="26" height="26" aria-hidden="true" focusable="false">${art.flatShape(id, 100, 100, 160, 9)}</svg>
-        <span style="font-size:.8rem;line-height:1.1;font-weight:800;text-align:center;overflow-wrap:anywhere">${sh.nom.charAt(0).toUpperCase() + sh.nom.slice(1)}</span>
+        <span style="font-size:.95rem;line-height:1.1;font-weight:800;text-align:center;overflow-wrap:anywhere">${sh.nom.charAt(0).toUpperCase() + sh.nom.slice(1)}</span>
       </button>`).join("");
 
     const bodyBtns = [...bodiesEl.querySelectorAll(".ef-body")];

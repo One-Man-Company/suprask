@@ -1,0 +1,19 @@
+{
+  "role": "kurejas",
+  "run_id": 520,
+  "created": "2026-11-24T22:05:00+02:00",
+  "type": "ux",
+  "title": "Tame pačiame geometrija.js liko 12,8 px sim teksto — „1 kg“ matuojamas, o „ms-seen“ ne",
+  "body": "Paleidimas #520 pakėlė visą `21-erdvines-figuros` scenos skaitomą tekstą iki 0,95rem (15,2 px), bet tame pačiame faile gyvena dar dvi 1 klasės simuliacijos, kuriose mažiausias tekstas liko žemiau 14 px ribos. `26-mase-ir-kilogramas` rodo svarstžio užrašą „1 kg“ 12,8 px (`art.weight`, SVG `<text>`) ir dėžučių pavadinimus 13,6 px — tai matuoja pats `check_view.py`, bet tik kaip pastabą, nes `--sim-font-strict` dar neįjungtas kaip vartai (`simFontNotes` 12,8 / 13,6). Dar blogiau: `span.ms-seen` („sunkesnė už 1 kg“) taip pat 12,8 px, bet jis tuščias iki pirmo pasvėrimo, todėl į `simFonts.min` nepatenka nė po interaktyvaus zondo — ta pati aklina zona kaip LL-185, tik čia ne `aria-hidden`, o tuščias tekstas. `25-ilgis-ir-vienetas` vienetų mygtukai („Sąvaržėlės“, „Trintukai“, „Pieštukai“) — 13,6 px. Siūloma pakelti šiuos tris mazgus iki `var(--fs-s)` (0,95rem) ir patikrinti, kad ilgiausias žodis telpa mygtuko dėžėje (LL-186), o ne tik kad dokumentas neslenka. Tai ta pati defekto klasė kaip #47139, tik kituose šio failo komponentuose, todėl atskiras darbas, o ne to paties taisymo tęsinys.",
+  "target": "assets/js/sims/geometrija.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/geometrija.js:575 — vienetų mygtukai `font-size:.85rem` (13,6 px)",
+    "assets/js/sims/geometrija.js:924 — `span.ms-seen` font-size:.8rem (12,8 px); eil. 923 — dėžutės pavadinimas .85rem",
+    "art.weight() SVG `<text>` — svarstžio užrašas „1 kg“ 12,8 px, matuojamas kaip `text` mazgas",
+    "python3 scripts/check_view.py --base http://127.0.0.1:8972/ --module 26-mase-ir-kilogramas --viewports desktop,phone --json → simFonts.min 12.8 („text 1 kg“), worst 13.6 („Putų dėžutė“, „Smėlio dėžutė“), sim_font_notes 2 įrašai, problems []",
+    "Interaktyvus zondas @390 ir @1440: po pasvėrimo `span.ms-seen` = 12,8 px, dėžučių pavadinimai 13,6 px; `25-ilgis-ir-vienetas` trys vienetų mygtukai 13,6 px",
+    "docs/KURINIO-STANDARTAS.md §4.6 — mobilus pirmiausia; research/wiki/guidelines/pamokos.md LL-185, LL-186"
+  ]
+}

@@ -1378,6 +1378,444 @@ const drabuziuPrieziura = {
 };
 
 /* ------------------------------------------------------------------ */
+/* Batas: formą užfiksuoja džiūvimas (M-16)                            */
+/*                                                                     */
+/* Kodėl toks modelis: trys vienodi šlapi batai, o vienintelis          */
+/* skirtumas — kas viduje. Kol batas drėgnas, forma dar kinta; kai      */
+/* sausas — nebegrįžta. Komponente nėra mygtuko „ištiesinti“, nes       */
+/* būtent to vaikas ir tikisi („forma grįš pati“). `sag` išvedamas iš    */
+/* turinio ir padėties, o ne įrašomas: config neturi lauko „kas nutinka, */
+/* kai viduje nieko“ (ta pati taisyklė kaip M-15).                      */
+/* ------------------------------------------------------------------ */
+
+const BT_STYLE_ID = "cc-batas-style";
+
+const BT_CSS = `
+.bt-guess {
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem .5rem;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto .5rem;
+  padding: .5rem .55rem;
+  border: 2px dashed var(--line);
+  border-radius: var(--r-s);
+  background: var(--paper-2);
+}
+.bt-guess.is-on { display: flex; }
+.bt-guess p {
+  flex-basis: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: .95rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.bt-guess button {
+  min-width: 6.4rem;
+  min-height: 48px;
+  padding: .4rem .6rem;
+  border: 2px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: .95rem;
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.bt-guess button[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+.bt-guess button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.bt-made { flex-basis: 100%; margin: 0; text-align: center; font-size: .9rem; font-weight: 800; color: var(--ink-soft); }
+.bt-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  border-radius: var(--r-m);
+  background: color-mix(in srgb, var(--sky) 8%, var(--paper-2));
+}
+.bt-scene { display: block; width: 100%; height: auto; }
+/* Batai patys yra mygtukai: taikinys 96 x 92 vienetų (>= 48 px ekrane),
+   o ne atskiras sąrašas po paveikslu. Fonas permatomas, kad vaikas
+   spaustų būtent batą, o ne jo dėžutę. */
+.bt-hit {
+  position: absolute;
+  width: 28.235%;
+  height: 31.945%;
+  top: 50.694%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.bt-hit:hover { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+.bt-hit:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.bt-actions { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; width: 100%; }
+.bt-actions .btn { min-height: 48px; }
+@media (prefers-reduced-motion: reduce) {
+  .bt-hit { transition: none; }
+}
+`;
+
+const BT_SAY = {
+  start: "Trys šlapi batai. Bakstelėk batą ir pasirink, kas viduje.",
+  nieko: "Bato viduje nieko.",
+  laikrastis: "Bato viduje laikraštis.",
+  idedas: "Bato viduje įdėklas.",
+  guess: "Pirma spėk, kas bus batams.",
+  dziusta: "Batai džiūsta. Nosis smunka ten, kur viduje nieko.",
+  edit: "Dar drėgnas. Formą dar galima pakeisti.",
+  saussas: "Batas jau sausas. Forma nebegrįš.",
+  mixed: "Vienas liko apvalus, kitas susilinko.",
+  round: "Visi liko apvalūs, nes viduje buvo laikraštis ar įdėklas.",
+  bent: "Visi susilinko, nes nė viename nebuvo nieko.",
+  reset: "Vėl trys šlapi batai.",
+};
+
+const BT_STAGES = ["slapias", "dziusta", "sausas"];
+const BT_ORDINAL = ["Pirmas", "Antras", "Trečias"];
+
+function ensureBtStyle() {
+  if (document.getElementById(BT_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = BT_STYLE_ID;
+  style.textContent = BT_CSS;
+  document.head.appendChild(style);
+}
+
+const batas = {
+  mount({ stage, controls, api, config }) {
+    ensureBtStyle();
+
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const line = (key) => (typeof S[key] === "string" ? S[key] : (BT_SAY[key] || ""));
+    const label = (key, fallback) => (typeof L[key] === "string" ? L[key] : fallback);
+
+    const contents = Array.isArray(config.contents) ? config.contents.filter((c) => c && c.key) : [];
+    const stageList = Array.isArray(config.stages)
+      ? config.stages.filter((s) => s && s.key)
+      : [];
+    const keys = contents.map((c) => c.key);
+    const stageKeys = stageList.map((s) => s.key);
+    // Modelio sąlyga: turi būti „nieko“ atvejis (nuo jo priklauso `sag`) ir
+    // trys padėtys. Nežinoma konfigūracija negali tyliai virsti „tvarkingu“.
+    if (keys.length < 2 || !keys.includes("nieko") || BT_STAGES.some((k) => !stageKeys.includes(k))) {
+      console.error("[batas] config nesuderintas:", config);
+      stage.innerHTML = `<p class="error-box">Batas nesuderintas.</p>`;
+      return null;
+    }
+
+    const labelOf = (key) => {
+      const c = contents.find((x) => x.key === key);
+      return c ? c.label : key;
+    };
+    const stageName = () => {
+      const s = stageList.find((x) => x.key === st.stage);
+      return s ? s.label : "";
+    };
+
+    const st = {
+      contents: ["nieko", "nieko", "nieko"],
+      stage: "slapias",     // slapias | dziusta | saussas
+      guess: null,          // same | bent | split
+      guessShown: false,
+      reported: false,
+    };
+
+    // Viena taisyklė visam modeliui (M-16): formą fiksuoja pabaiga.
+    const sagOf = (content) => {
+      if (st.stage === "slapias") return 0;
+      if (st.stage === "dziusta") return content === "nieko" ? 0.5 : 0;
+      return content === "nieko" ? 1 : 0;
+    };
+    const outcomeOf = (content) => (content === "nieko" ? "crooked" : "round");
+    const rounds = () => st.contents.filter((c) => outcomeOf(c) === "round").length;
+    // Du atskiri žodynai, ir jų negalima maišyti: spėjimo raktai yra
+    // `same|bent|split` (mygtukų etiketės), o rezultato sakiniai —
+    // `round|bent|mixed`. Kai vienas buvo ieškomas kitame, pabaigos
+    // paaiškinimas išeidavo tuščias: vaikas matydavo batus, bet
+    // neišgirsdavo, kodėl (LL-33 šeima — tekstas įrašytas pagal vieną atvejį).
+    const outcomeKey = () => {
+      const r = rounds();
+      return r === 3 ? "round" : r === 0 ? "bent" : "mixed";
+    };
+    const guessTruth = () => {
+      const r = rounds();
+      return r === 3 ? "same" : r === 0 ? "bent" : "split";
+    };
+    const guessLabel = (key) => {
+      if (key === "same") return label("same", "Visi liks apvalūs");
+      if (key === "bent") return label("bent", "Visi susilinks");
+      return label("split", "Skirsis");
+    };
+
+    const VBW = 340;
+    const VBH = 288;
+    const GROUND = 231;
+    const SCALE = 0.92;
+    const CENTERS = [62, 170, 278];
+
+    const guessQ = label("guess", "Kas bus batams?");
+
+    stage.innerHTML = `
+      <div class="bt-guess" id="bt-guess" role="group" aria-label="${guessQ}">
+        <p id="bt-guess-q">${guessQ}</p>
+        <button type="button" id="bt-g-same" aria-pressed="false">${guessLabel("same")}</button>
+        <button type="button" id="bt-g-bent" aria-pressed="false">${guessLabel("bent")}</button>
+        <button type="button" id="bt-g-split" aria-pressed="false">${guessLabel("split")}</button>
+        <p class="bt-made" id="bt-made"></p>
+      </div>
+      <div class="bt-wrap" id="bt-wrap">
+        <svg class="bt-scene" id="bt-scene" viewBox="0 0 ${VBW} ${VBH}" role="img" aria-label=""></svg>
+        ${CENTERS.map((cx, i) => {
+          const left = ((cx - 48) / VBW) * 100;
+          return `<button type="button" class="bt-hit" id="bt-hit-${i}" style="left:${left.toFixed(3)}%"></button>`;
+        }).join("")}
+      </div>`;
+
+    controls.innerHTML = `
+      <div class="bt-actions">
+        <button type="button" class="btn" id="bt-wait">${label("wait", "Palauk")}</button>
+        <button type="button" class="btn ghost" id="bt-reset">${label("again", "Iš naujo")}</button>
+      </div>`;
+
+    const scene = stage.querySelector("#bt-scene");
+    const guessBar = stage.querySelector("#bt-guess");
+    const madeLine = stage.querySelector("#bt-made");
+    const guessBtns = {
+      same: stage.querySelector("#bt-g-same"),
+      bent: stage.querySelector("#bt-g-bent"),
+      split: stage.querySelector("#bt-g-split"),
+    };
+    const bootBtns = CENTERS.map((_, i) => stage.querySelector(`#bt-hit-${i}`));
+    const waitBtn = controls.querySelector("#bt-wait");
+    const resetBtn = controls.querySelector("#bt-reset");
+
+    /* Tekstas po batu niekada nedingsta: jis arba sako turinį, arba rezultatą.
+       Būtent todėl „Susilinko“ ir „Apvali“ turi savo vietą, o ne atsiranda
+       virš paveikslo kaip bendras sakinys (LL-13, LL-24). */
+    function paintScene() {
+      const boots = CENTERS.map((cx, i) => art.boot(
+        cx - 50 * SCALE, GROUND, SCALE, sagOf(st.contents[i]), st.contents[i],
+      )).join("");
+
+      // 17 px, o ne `var(--fs-s)`: SVG tekstą dar sumažina pats viewBox
+      // (340 → 301 px telefone), todėl 15,2 px ekrane taptų 13,5 px. Vartai
+      // matuoja CSS dydį, o vaikas mato galutinį — todėl bazė didinama
+      // tiek, kad ir 360 px pločiui liktų ≥ 15 px (LL-06, LL-39).
+      const caps = CENTERS.map((cx, i) => {
+        const c = st.contents[i];
+        const text = st.stage === "sausas"
+          ? (outcomeOf(c) === "round" ? label("round", "Apvali") : label("crooked", "Susilinko"))
+          : labelOf(c);
+        return `<text x="${cx}" y="262" text-anchor="middle"
+          style="font-family:var(--font-head);font-size:17px;font-weight:800;fill:#5b3d18">${text}</text>`;
+      }).join("");
+
+      // Vandens lašų sąmoningai nėra: vienintelis kintamasis šiame modelyje
+      // yra tai, kas bato viduje, o ne drėgmė. Lašai pasakytų „šlapia /
+      // sausa“ ir nukreiptų dėmesį nuo nosies linijos (T1.2, LL-13).
+      scene.innerHTML = `${art.defs("bt")}${art.plank(6, 240, 328, 9)}${boots}${caps}`;
+
+      const parts = CENTERS.map((cx, i) => {
+        const c = st.contents[i];
+        const nose = st.stage === "slapias"
+          ? "nosis apvali"
+          : st.stage === "dziusta"
+            ? (outcomeOf(c) === "round" ? "nosis dar apvali" : "nosis jau įlinkusi per pusę")
+            : (outcomeOf(c) === "round" ? "nosis liko apvali" : "nosis susilinkusi");
+        return `${BT_ORDINAL[i]} batas, viduje ${labelOf(c).toLowerCase()}, ${nose}.`;
+      });
+      scene.setAttribute("aria-label", `${stageName()}. ${parts.join(" ")}`);
+    }
+
+    function paintButtons() {
+      bootBtns.forEach((btn, i) => {
+        const c = st.contents[i];
+        const frozen = st.stage === "sausas";
+        btn.setAttribute("aria-disabled", String(frozen));
+        const state = frozen
+          ? (outcomeOf(c) === "round" ? `${label("round", "Apvali")}.` : `${label("crooked", "Susilinko")}.`)
+          : "Bakstelėk, kad pakeistum, kas viduje.";
+        btn.setAttribute(
+          "aria-label",
+          `${BT_ORDINAL[i]} batas. Viduje ${labelOf(c).toLowerCase()}. ${state}`,
+        );
+      });
+
+      const drying = st.stage === "dziusta";
+      const dry = st.stage === "sausas";
+      // Sausam batui „Palauk dar“ būtų netiesa: laukti nebereikia. Todėl
+      // mygtukas tada sako būseną, o ne komandą, ir lieka toje pačioje
+      // vietoje, kad išdėstymas nešokinėtų po pirštu (LL-32).
+      waitBtn.textContent = dry
+        ? label("dry", "Batai sausi")
+        : drying
+          ? label("waitMore", "Palauk dar")
+          : label("wait", "Palauk");
+      // Ne `disabled`, kad fokusas neprapultų (LL-32).
+      waitBtn.setAttribute("aria-disabled", String(dry));
+
+      const shown = st.guessShown;
+      guessBar.classList.toggle("is-on", shown);
+      guessBar.style.display = shown ? "flex" : "none";
+      Object.entries(guessBtns).forEach(([k, btn]) => {
+        btn.setAttribute("aria-pressed", String(st.guess === k));
+        btn.setAttribute("aria-disabled", String(st.stage !== "slapias"));
+      });
+
+      let made = "";
+      if (st.guess) {
+        made = `Tavo spėjimas: ${guessLabel(st.guess).toLowerCase()}.`;
+        if (st.stage === "sausas") {
+          made += guessTruth() === st.guess ? " Taip ir gavosi." : " Gavosi kitaip.";
+        }
+      }
+      madeLine.textContent = made;
+    }
+
+    function paint() {
+      paintScene();
+      paintButtons();
+    }
+
+    function say(text) {
+      if (!text) return;
+      api.speak(text);
+    }
+
+    function tapBoot(i) {
+      if (st.stage === "sausas") {
+        const text = line("sausas");
+        api.readout(text);
+        api.note(text);
+        say(text);
+        return;
+      }
+      const cur = keys.indexOf(st.contents[i]);
+      const next = contents[(cur + 1) % contents.length];
+      st.contents[i] = next.key;
+      paint();
+
+      const text = line(next.key);
+      api.readout(text);
+      // Džiūnant sakinys turi pasakyti, kad forma dar kinta — kitaip vaikas
+      // gali pamanyti, kad turinys jau nieko nekeičia.
+      const note = st.stage === "dziusta" ? line("edit") : text;
+      api.note(note);
+      say(st.stage === "dziusta" ? line("edit") : text);
+    }
+
+    function wait() {
+      if (st.stage === "sausas") {
+        const text = line("sausas");
+        api.readout(text);
+        api.note(`Spausk „${label("again", "Iš naujo")}“, jei nori pradėti iš naujo.`);
+        say(text);
+        resetBtn.focus();
+        return;
+      }
+      if (st.stage === "slapias") {
+        st.guessShown = true;
+        paint();
+        const text = line("guess");
+        api.readout(text);
+        api.note(text);
+        say(text);
+        guessBtns.same.focus();
+        return;
+      }
+      finish();
+    }
+
+    function chooseGuess(key) {
+      if (st.stage !== "slapias" || !st.guessShown) {
+        // Paspaudimas po spėjimo negali likti tyliu tekstu: vaikas, kuris dar
+        // neskaito, turi išgirsti, kas dabar vyksta. Todėl sakomas esamos
+        // padėties sakinys, o ne nauja, garso neturinti eilutė.
+        const text = line(st.stage === "sausas" ? "sausas" : "dziusta");
+        api.readout(text);
+        api.note(st.stage === "sausas"
+          ? `Spausk „${label("again", "Iš naujo")}“, jei nori pradėti iš naujo.`
+          : `Spėjimas jau užrašytas. Spausk „${label("waitMore", "Palauk dar")}“.`);
+        say(text);
+        return;
+      }
+      st.guess = key;
+      st.stage = "dziusta";
+      paint();
+      const text = line("dziusta");
+      api.readout(text);
+      api.note(text);
+      say(text);
+      waitBtn.focus();
+    }
+
+    function finish() {
+      st.stage = "sausas";
+      const key = outcomeKey();
+      paint();
+
+      const text = line(key);
+      api.readout(text);
+      const hint = key === "mixed"
+        ? ""
+        : ` Spausk „${label("again", "Iš naujo")}“ ir į vieną batą įdėk laikraštį, į kitą nieko.`;
+      api.note(text + hint);
+      say(text);
+
+      // Pažanga — tik kai tame pačiame kadre yra ir apvalus, ir sulinkęs
+      // batas (LL-17). Vienodi trys batai nieko nepaneigia, todėl bandymas
+      // kartojamas, bet klaida nevadinama (LL-15).
+      if (key === "mixed" && !st.reported) {
+        st.reported = true;
+        api.progress({ correct: true });
+      }
+      resetBtn.focus();
+    }
+
+    function reset() {
+      st.contents = ["nieko", "nieko", "nieko"];
+      st.stage = "slapias";
+      st.guess = null;
+      st.guessShown = false;
+      paint();
+      const text = line("reset");
+      api.readout(text);
+      api.note("Bakstelėk batą ir pasirink, kas viduje.");
+      say(text);
+      bootBtns[0].focus();
+    }
+
+    bootBtns.forEach((btn, i) => btn.addEventListener("click", () => tapBoot(i)));
+    guessBtns.same.addEventListener("click", () => chooseGuess("same"));
+    guessBtns.bent.addEventListener("click", () => chooseGuess("bent"));
+    guessBtns.split.addEventListener("click", () => chooseGuess("split"));
+    waitBtn.addEventListener("click", wait);
+    resetBtn.addEventListener("click", reset);
+
+    paint();
+    api.readout(line("start"));
+    api.note("Bakstelėk batą ir pasirink, kas viduje.");
+
+    return null;
+  },
+};
+
+/* ------------------------------------------------------------------ */
 /* Valdiklis: jungiklis lieka, mygtukas grįžta (M-15)                  */
 /*                                                                     */
 /* Kodėl toks modelis: 1 klasėje valdiklio skirtumą vaikas pamato po   */
@@ -1849,5 +2287,6 @@ export const SIMS = {
   "medziagu-bandymas": medziaguBandymas,
   "lankstymas-ir-karpiniai": lankstymasIrKarpiniai,
   "drabuziu-prieziura": drabuziuPrieziura,
+  "batas": batas,
   "valdiklis": valdiklis,
 };

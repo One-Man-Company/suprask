@@ -595,6 +595,14 @@
      "sim": "drabuziu-prieziura"
     },
     {
+     "id": "08-avalynes-dziovinimas",
+     "title": "Batas išdžius toks, koks džiūsta",
+     "subtitle": "Formą užfiksuoja džiūvimas, o ne šlapimas",
+     "file": "grade-01/technologijos/08-avalynes-dziovinimas.json",
+     "minutes": 9,
+     "sim": "batas"
+    },
+    {
      "id": "07-elektronika",
      "title": "Mygtukas grįžta, jungiklis lieka",
      "subtitle": "Padėtis laiko šviesą, o ne pirštas",

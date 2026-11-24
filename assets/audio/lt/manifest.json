@@ -819,6 +819,26 @@
   "n": "n/261723f95a6ac5ca-bb0911c7.mp3",
   "s": "s/261723f95a6ac5ca-b22cbca6.mp3"
  },
+ "Batai džiūsta. Nosis smunka ten, kur viduje nieko.": {
+  "n": "n/e6167b7c2008b328-67bf576a.mp3",
+  "s": "s/e6167b7c2008b328-2f42e611.mp3"
+ },
+ "Batas jau sausas. Forma nebegrįš.": {
+  "n": "n/08d19221cb459bbe-7965ed7b.mp3",
+  "s": "s/08d19221cb459bbe-ff15a8ae.mp3"
+ },
+ "Bato viduje laikraštis.": {
+  "n": "n/7a33888862cc6fb7-160f4b6a.mp3",
+  "s": "s/7a33888862cc6fb7-0ffc8d3a.mp3"
+ },
+ "Bato viduje nieko.": {
+  "n": "n/44c167b0158be12b-2007522d.mp3",
+  "s": "s/44c167b0158be12b-8a6bf95d.mp3"
+ },
+ "Bato viduje įdėklas.": {
+  "n": "n/372dae8e407479b4-5f729447.mp3",
+  "s": "s/372dae8e407479b4-b66f9148.mp3"
+ },
  "Be antkelių": {
   "n": "n/98838ea222b126f1-5539ba23.mp3",
   "s": "s/98838ea222b126f1-a4b1223e.mp3"
@@ -922,6 +942,10 @@
  "Daigas": {
   "n": "n/e9ebf47dd9afa46f-0377d56d.mp3",
   "s": "s/e9ebf47dd9afa46f-aaffef6d.mp3"
+ },
+ "Dar drėgnas. Formą dar galima pakeisti.": {
+  "n": "n/ce8765c54d354b53-61d758ec.mp3",
+  "s": "s/ce8765c54d354b53-9dacbd3d.mp3"
  },
  "Dar mažiau. Tas pats ilgis.": {
   "n": "n/dd3f0aa81557d05b-8af8f770.mp3",
@@ -1202,6 +1226,10 @@
  "Dūmų nėra. Oras švarus visame kambaryje.": {
   "n": "n/e94d734a358e3195-c0ceaee6.mp3",
   "s": "s/e94d734a358e3195-418ff380.mp3"
+ },
+ "Džiūsta": {
+  "n": "n/2d3c44b8a272d561-85af4b31.mp3",
+  "s": "s/2d3c44b8a272d561-aa668eec.mp3"
  },
  "E": {
   "n": "n/a9f51566bd6705f7-5d6f8aea.mp3",
@@ -1871,6 +1899,10 @@
   "n": "n/c90fb2c84132f82d-d754e5bb.mp3",
   "s": "s/c90fb2c84132f82d-6a39fd21.mp3"
  },
+ "Laikraštis": {
+  "n": "n/0436d858270a59e0-e363fb94.mp3",
+  "s": "s/0436d858270a59e0-b9c506c0.mp3"
+ },
  "Laikyk garsą ir žiūrėk, ar oras nueis iki galo.": {
   "n": "n/d8963ad5dde95c56-2c1955ef.mp3",
   "s": "s/d8963ad5dde95c56-5499703b.mp3"
@@ -2130,6 +2162,10 @@
  "Niekas nieko nesako. Iš veido ir vietos tikslaus žodžio nežinome.": {
   "n": "n/eac22a803fe65ba4-27e02c4f.mp3",
   "s": "s/eac22a803fe65ba4-79baff34.mp3"
+ },
+ "Nieko": {
+  "n": "n/21d2027da4418010-5d5a4a4b.mp3",
+  "s": "s/21d2027da4418010-c17a7f66.mp3"
  },
  "Nieko nėra": {
   "n": "n/a538c11a135f32bc-d078ccb5.mp3",
@@ -2495,6 +2531,10 @@
   "n": "n/cfec274b298571db-f3d309ce.mp3",
   "s": "s/cfec274b298571db-40caf5f0.mp3"
  },
+ "Pirma spėk, kas bus batams.": {
+  "n": "n/afeccd6291be1367-e868b597.mp3",
+  "s": "s/afeccd6291be1367-d8e7070b.mp3"
+ },
  "Pirma spėk, tada atleisk.": {
   "n": "n/caea72e7630ffe19-43c476cb.mp3",
   "s": "s/caea72e7630ffe19-3e2f654e.mp3"
@@ -2838,6 +2878,10 @@
  "Saugiai.": {
   "n": "n/9427c00adf0a980f-13ec9fac.mp3",
   "s": "s/9427c00adf0a980f-8b3b0df2.mp3"
+ },
+ "Sausas": {
+  "n": "n/8d3988b81979654c-726b894d.mp3",
+  "s": "s/8d3988b81979654c-43b7f4bb.mp3"
  },
  "Seka baigėsi ne prie vėliavos.": {
   "n": "n/6c592c218e675828-3cbab252.mp3",
@@ -3335,6 +3379,10 @@
   "n": "n/da3c514821c976da-86f549a5.mp3",
   "s": "s/da3c514821c976da-278d796c.mp3"
  },
+ "Trys šlapi batai. Bakstelėk batą ir pasirink, kas viduje.": {
+  "n": "n/a4ea763a5ef66dcf-8f4a04c8.mp3",
+  "s": "s/a4ea763a5ef66dcf-e9206e90.mp3"
+ },
  "Tu man netrugink": {
   "n": "n/e13f6e62cc91f803-2c61515e.mp3",
   "s": "s/e13f6e62cc91f803-c3dedb49.mp3"
@@ -3607,6 +3655,10 @@
   "n": "n/137124f99ec1f1ba-f47056df.mp3",
   "s": "s/137124f99ec1f1ba-edabb656.mp3"
  },
+ "Vienas liko apvalus, kitas susilinko.": {
+  "n": "n/7840018acc294d55-4ad85e07.mp3",
+  "s": "s/7840018acc294d55-a6252786.mp3"
+ },
  "Vienas petys laiko visą kuprinės svorį.": {
   "n": "n/ee6c6227d0f68c5e-eca930d9.mp3",
   "s": "s/ee6c6227d0f68c5e-42f06e85.mp3"
@@ -3650,6 +3702,14 @@
  "Visi gyvūnai savo vietose.": {
   "n": "n/6974ab76ffadda8b-a818f62e.mp3",
   "s": "s/6974ab76ffadda8b-76d8804d.mp3"
+ },
+ "Visi liko apvalūs, nes viduje buvo laikraštis ar įdėklas.": {
+  "n": "n/2abf92e19e81fd4b-9d0b9f83.mp3",
+  "s": "s/2abf92e19e81fd4b-5d74f3a2.mp3"
+ },
+ "Visi susilinko, nes nė viename nebuvo nieko.": {
+  "n": "n/3f42f02f6c5d291f-0ea9e6de.mp3",
+  "s": "s/3f42f02f6c5d291f-faebbe4e.mp3"
  },
  "Visi taikiniai pasiekti!": {
   "n": "n/ba4855f4b9f8191c-f13f6eda.mp3",
@@ -3710,6 +3770,10 @@
  "Vėl ta pati melodija.": {
   "n": "n/bdcef3bd34b76de9-e2bae482.mp3",
   "s": "s/bdcef3bd34b76de9-2c90c1b2.mp3"
+ },
+ "Vėl trys šlapi batai.": {
+  "n": "n/6cd83a1858bc9342-c7ad0b05.mp3",
+  "s": "s/6cd83a1858bc9342-2dafa9a7.mp3"
  },
  "Vėl žalia. Paveikslas toks pat.": {
   "n": "n/c46c25cb45cad82f-edbfd1d8.mp3",
@@ -4055,6 +4119,10 @@
   "n": "n/36d6fa8ed74757e8-00157337.mp3",
   "s": "s/36d6fa8ed74757e8-ebc2064f.mp3"
  },
+ "Įdėklas": {
+  "n": "n/0dc122424c37d3cf-3c5ebf6b.mp3",
+  "s": "s/0dc122424c37d3cf-34fba1e4.mp3"
+ },
  "Įlindai į spintą. Iš ten į lauką neišeisi.": {
   "n": "n/a75b0d0d04b2cc13-89ea952a.mp3",
   "s": "s/a75b0d0d04b2cc13-5be8e779.mp3"
@@ -4126,6 +4194,10 @@
  "Šioje vietoje žodis nesustoja. Skaičiuok, kiek skiemenų girdi.": {
   "n": "n/030eef6ef6dfa717-f45bee2e.mp3",
   "s": "s/030eef6ef6dfa717-6e3fb15c.mp3"
+ },
+ "Šlapias": {
+  "n": "n/1c15874f7903baf5-be7dcac6.mp3",
+  "s": "s/1c15874f7903baf5-1fea921b.mp3"
  },
  "Šlapios grindys": {
   "n": "n/310e5aa3d68ec76f-e21f548d.mp3",

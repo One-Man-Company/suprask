@@ -1266,6 +1266,89 @@ export const art = {
   },
 
   /**
+   * Odinis batas iš šono, nosimi į dešinę.
+   *
+   * `x` — kairys kraštas, `baseY` — padas (grindų linija), `s` — mastelis.
+   * `sag` (0–1) — kiek nosis įlinkusi: 0 — apvali, 1 — susmukusi ant pado.
+   * `content` — kas kyšo iš bato angos: `nieko`, `laikrastis`, `idedas`.
+   *
+   * Kodėl būtent taip: vienintelis skirtumas tarp trijų modelio batų yra
+   * vidus, todėl forma turi būti ta pati iki paskutinio taško, o nosies
+   * linija — vienas kelias, kurio kreivę lemia `sag`. Raukšlė atsiranda tik
+   * tada, kai nosis tikrai įlinkusi: kitaip „susilinko“ būtų žodis be
+   * įrodymo paveiksle (LL-13).
+   */
+  boot(x, baseY, s = 1, sag = 0, content = "nieko", color = "#8a5a3b") {
+    const k = Math.max(0, Math.min(1, Number(sag) || 0));
+    const f = (v) => v.toFixed(1);
+    const H = 82;                      // bato aukštis iki pado apačios
+    const dark = "#53341d";
+    const light = "#b07d52";
+
+    // Nosis turi būti NEABEJOTINA, o ne „šiek tiek žemesnė“: kai bato viduje
+    // nieko, priekis nusileidžia prie pat pado ir sutrumpėja. Tik todėl
+    // vaikas, palyginęs du batus tame pačiame kadre, pamato formos skirtumą
+    // (LL-13: užrašas ir paveikslas turi sutarti).
+    const dip = 50 + 22 * k;           // įlinkio vieta (pėdos viršus)
+    const toeTop = 54 + 16 * k;        // nosies viršus
+    const toeX = 96 - 2 * k;           // nosis trumpėja
+    const toeFront = 68 + 6 * k;       // priekinis nosies taškas
+
+    const body = `<path d="M24 8 C30 3 54 3 58 8 L58 38
+        C62 ${f(44 + 18 * k)} 66 ${f(dip)} 72 ${f(dip)}
+        C80 ${f(dip - 4 * k)} 86 ${f(toeTop)} 90 ${f(toeTop)}
+        C94 ${f(toeTop + 3)} ${f(toeX)} ${f(toeFront - 4)} ${f(toeX)} ${f(toeFront)}
+        C${f(toeX - 1)} ${f(toeFront + 5)} ${f(toeX - 4)} 76 84 76
+        L22 76 C18 76 16 72 17 64 Z"
+      fill="${color}" stroke="${dark}" stroke-width="2.6" stroke-linejoin="round"/>`;
+
+    // Padas: atskira juosta, kad batas stovėtų ant grindų, o ne skęstų jose.
+    const sole = `<path d="M17 74 C14 74 13 78 16 80 C19 82 24 82 30 82
+        L84 82 C91 82 ${f(toeX)} 80 ${f(toeX - 1)} 76"
+      fill="#4a3527" stroke="${dark}" stroke-width="2.2" stroke-linejoin="round"/>`;
+
+    // Siūlė per nosį ir kulno šlaitą — bato, o ne klumpės požymis.
+    const seam = `<path d="M40 9 C41 22 42 32 44 42" fill="none"
+      stroke="${dark}" stroke-opacity=".45" stroke-width="1.8"/>`;
+
+    /* Raukšlė — ne puošmena, o įrodymas: ji atsiranda tik ten, kur oda
+       tikrai perlūžo, ir VISADA bato viduje (linija ant fono atrodytų kaip
+       purvas, ne kaip raukšlė). Todėl ji rišama prie `dip`, o ne prie
+       fiksuotų taškų, kurie ties `k = 1` išeitų už silueto. */
+    const crease = k > 0.05
+      ? `<path d="M60 ${f(45 + 20 * k)} Q66 ${f(50 + 18 * k)} 70 ${f(dip + 2)}"
+           fill="none" stroke="${dark}" stroke-opacity=".6" stroke-width="${f(1.6 + 1.4 * k)}"
+           stroke-linecap="round"/>
+         <path d="M64 ${f(47 + 20 * k)} Q68 ${f(52 + 18 * k)} 72 ${f(dip + 3)}"
+           fill="none" stroke="${dark}" stroke-opacity=".3" stroke-width="1.4"
+           stroke-linecap="round"/>`
+      : "";
+
+    const sheen = `<path d="M26 12 C30 10 38 10 42 12" fill="none"
+      stroke="${light}" stroke-width="2.4" stroke-opacity=".55" stroke-linecap="round"/>`;
+
+    // Anga: visada tamsi, o turinys — ant jos. Skiriasi FORMA, ne vien spalva:
+    // laikraštis — kampuotas ir baltas, įdėklas — apvalus ir rusvas.
+    let fill = `<ellipse cx="41" cy="9" rx="15" ry="4.6" fill="#241a12"/>`;
+    if (content === "laikrastis") {
+      fill += `<path d="M26 11 L30 -3 L38 3 L45 -5 L52 2 L54 11 Z"
+          fill="#f7f4e9" stroke="#b0a894" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M33 1 H40 M35 4 H44" stroke="#948b78" stroke-width="1.2" stroke-linecap="round"/>`;
+    } else if (content === "idedas") {
+      fill += `<path d="M28 11 Q28 -2 40 -2 Q52 -2 52 11 Z"
+          fill="#d9c4a2" stroke="#9a835e" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M40 0 V8" stroke="#9a835e" stroke-width="1.2" stroke-opacity=".7"/>`;
+    }
+
+    return `<g transform="translate(${f(x)} ${f(baseY)}) scale(${s})">
+      <g transform="translate(0 ${-H})">
+        <ellipse cx="56" cy="82" rx="42" ry="4" fill="#5a4632" opacity=".18"/>
+        ${body}${sole}${sheen}${seam}${crease}${fill}
+      </g>
+    </g>`;
+  },
+
+  /**
    * Pinta pintinė su lūpomis ir vytelių raštu. `x` — kairys kraštas,
    * `baseY` — dugnas, `w` — plotis (viršuje), `h` — aukštis.
    * Vytelės yra įstrižos ir horizontalios, todėl pintinė neatrodys kaip

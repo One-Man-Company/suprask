@@ -1,0 +1,137 @@
+{
+  "id": "08-avalynes-dziovinimas",
+  "grade": 1,
+  "strand": "technologijos",
+  "title": "Batas išdžius toks, koks džiūsta",
+  "subtitle": "Formą užfiksuoja džiūvimas, o ne šlapimas",
+  "minutes": 9,
+  "outcomes": [
+    "Paaiškinu, kad šlapias batas išdžiūsta tokios formos, kokioje džiūsta.",
+    "Nuspėju, kurių batų nosis liks apvali, ir pasitikrinu modelyje.",
+    "Parodau, kad įdėtas laikraštis ar įdėklas išlaiko bato formą."
+  ],
+  "concept": {
+    "title": "Formą fiksuoja džiūvimas",
+    "big_idea": "Šlapias odinis batas minkštas, todėl lengvai susmunka. Džiūdamas jis sukietėja tokioje formoje, kokioje yra. Todėl į šlapius batus įdedame laikraštį ar įdėklą. Jis laiko formą, kol batas sausas.",
+    "steps": [
+      "Bakstelėk batą ir pasirink, kas bus viduje.",
+      "Pirma spėk, kas bus visiems trims.",
+      "Spausk „Palauk“ ir žiūrėk į nosį.",
+      "Palauk dar kartą ir perskaityk užrašus."
+    ],
+    "example": "Namuose šlapius batus prikimšame laikraščiu ir statome džiūti."
+  },
+  "sim": {
+    "component": "batas",
+    "config": {
+      "contents": [
+        { "key": "nieko", "label": "Nieko" },
+        { "key": "laikrastis", "label": "Laikraštis" },
+        { "key": "idedas", "label": "Įdėklas" }
+      ],
+      "stages": [
+        { "key": "slapias", "label": "Šlapias" },
+        { "key": "dziusta", "label": "Džiūsta" },
+        { "key": "sausas", "label": "Sausas" }
+      ],
+      "labels": {
+        "wait": "Palauk",
+        "waitMore": "Palauk dar",
+        "dry": "Batai sausi",
+        "again": "Iš naujo",
+        "guess": "Kas bus batams?",
+        "same": "Visi liks apvalūs",
+        "bent": "Visi susilinks",
+        "split": "Skirsis",
+        "round": "Apvali",
+        "crooked": "Susilinko"
+      },
+      "sentences": {
+        "start": "Trys šlapi batai. Bakstelėk batą ir pasirink, kas viduje.",
+        "nieko": "Bato viduje nieko.",
+        "laikrastis": "Bato viduje laikraštis.",
+        "idedas": "Bato viduje įdėklas.",
+        "guess": "Pirma spėk, kas bus batams.",
+        "dziusta": "Batai džiūsta. Nosis smunka ten, kur viduje nieko.",
+        "edit": "Dar drėgnas. Formą dar galima pakeisti.",
+        "sausas": "Batas jau sausas. Forma nebegrįš.",
+        "mixed": "Vienas liko apvalus, kitas susilinko.",
+        "round": "Visi liko apvalūs, nes viduje buvo laikraštis ar įdėklas.",
+        "bent": "Visi susilinko, nes nė viename nebuvo nieko.",
+        "reset": "Vėl trys šlapi batai."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Batas džiūsta be nieko viduje. Kaip atrodys nosis?",
+      "options": [
+        "Apvali, kaip buvo",
+        "Susilinkusi",
+        "Ilgesnė už batą"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kas laikė batą, kol jis džiūvo.",
+      "why": "Šlapias batas susmunka, o džiūdamas sukietėja jau sulinkęs."
+    },
+    {
+      "q": "Parsinešei šlapius batus. Kaip elgsiesi pirmiausia?",
+      "options": [
+        "Įdėsiu laikraštį ir pastatysiu",
+        "Paliksiu susmukusius džiūti",
+        "Padėsiu vieną ant kito"
+      ],
+      "answer": 0,
+      "hint": "Šlapias batas minkštas, todėl formą reikia padėti dabar.",
+      "why": "Kol batas šlapias, jo formą dar galima pakeisti."
+    },
+    {
+      "q": "Šlapią lapą sulankstei ir palikai. Kaip atrodys po džiūvimo?",
+      "options": [
+        "Tiesus, nes popierius išsities",
+        "Sulenktas toje pačioje vietoje",
+        "Sutrupės į gabaliukus"
+      ],
+      "answer": 1,
+      "hint": "Šlapias popierius taip pat sukietėja džiūdamas.",
+      "why": "Popierius džiūdamas sukietėja tokioje formoje, kokioje buvo."
+    },
+    {
+      "q": "Šlapias diržas džiūsta susuktas į ritinį. Kaip jį padėti?",
+      "options": [
+        "Palaukti, kol išdžius, tada ištiesinti",
+        "Padėti tiesiai, kol dar šlapias",
+        "Užlieti daugiau vandens"
+      ],
+      "answer": 1,
+      "hint": "Kada oda dar lanksti: dabar ar po paros?",
+      "why": "Odą formuoti galima tik tada, kol ji drėgna.",
+      "optional": true
+    }
+  ],
+  "reflect": "Ką darysi su šlapiais batais, kai grįši namo?",
+  "teacher": {
+    "goal": "Suprasti, kad šlapias odinis batas yra minkštas, o džiūdamas sukietėja tokioje formoje, kokioje yra, todėl į šlapius batus dedamas laikraštis ar įdėklas. Modelis turi vieną kintamąjį — kas bato viduje: trys vienodi šlapi batai skiriasi tik turiniu, o vaikas pats pastumia džiūvimą ir pamato, kad formos nebegrąžina joks mygtukas. Avalynė sąmoningai atskirta nuo drabužių modulio (06-drabuziu-prieziura) — ten liko viena idėja apie dažus vandenyje.",
+    "prompt": "Kodėl batas be laikraščio viduje išdžiūvo sulinkęs, o su laikraščiu liko apvalus?",
+    "offline": "Duokite vaikui sausą odos atraižą (arba sausą batą) ir šlapią popieriaus juostelę. Tegul vaikas abi sulenkia: sausa nelinksta, šlapia linksta kaip virvė. Tada tą pačią šlapią juostelę palikite sulenktą lėkštėje iki pamokos pabaigos — ji bus sausa ir liks sulenkta. Namie prašykite vaiko pačiam įdėti laikraštį į šlapius batus ir ryte palyginti su batu, į kurį nieko neįdėjo. Modelio ribos, kurias verta pasakyti balsu: storas ar kietas batas gali išlaikyti formą ir be įdėklo; laikraštis tikrame bate sugeria ir drėgmę, o modelis rodo tik formą; džiovinimo ant radiatoriaus modelis neturi ir apie tai nieko nesako; jau sulinkusį odinį batą galima vėl sušlapinti ir formuoti, bet tai batų priežiūros darbas, ne pirmoko veiksmas.",
+    "misconceptions": [
+      "„Šlapias batas išdžiūsta ir pats grįš į savo formą.“ Tai nuostata iš gumos ir putų, kurios tikrai atsimena formą. Modelyje batas be įdėklo po džiūvimo lieka sulinkęs, ir jokia būsena negrąžina nosies atgal — mygtuko „ištiesinti“ sąmoningai nėra.",
+      "„Batas sulinko, nes buvo šlapias.“ Visi trys modelio batai šlapi vienodai, todėl šlapimas skirtumo nepaaiškina: sulinko tik tas, kurio viduje nieko nebuvo.",
+      "„Įdėklas reikalingas tam, kad batas greičiau išdžiūtų.“ Modelis džiūvimo greičio neturi — nė vieno skaičiaus, nė vienos valandos. Įdėklas laiko formą, o ne greitina.",
+      "„Forma priklauso nuo to, kas buvo viduje pradžioje.“ Kol batai dar drėgni, turinį galima pakeisti ir nosis išsitiesia; užšaldyta forma tampa tik tada, kai batas sausas.",
+      "„Sulinkęs batas sugedęs visam laikui.“ Modelis to nesako ir neturi sakyti: jis baigiasi sausu batu ir nepretenduoja į batų taisymo pamoką."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), 9 skyrius, C3: „1 klasė. Drabužių, avalynės priežiūra. Praktiškai išbandomi avalynės sutvarkymo būdai“.",
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Technologijos“, 23.2.2 „Drabužių, avalynės priežiūra“: avalynės ir tekstilės valymas be cheminių priemonių, darbo procesų apibūdinimas 1–2 klasėje.",
+    "Han, Y., Hu, J., & Jiang, L. (2018). Collagen skin, a water-sensitive shape memory material. Journal of Materials Chemistry B, 6(31), 5144–5152. https://doi.org/10.1039/c8tb01346b",
+    "Batzer, H., & Kreibich, U. T. (1981). Influence of water on thermal transitions in natural polymers and synthetic polyamides. Polymer Bulletin, 5(11–12), 585–590. https://doi.org/10.1007/BF00255296"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (formą fiksuoja džiūvimas). Batų valymas, tepimas ir džiovinimo greitis sąmoningai neįtraukti.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą į popierių ir diržą, o ne įsimintą sakinį apie laikraštį.",
+    "3 žingsnis — pagalba laiku: spėjimas paleidžia džiūvimą, klaida nebaudžiama, o paaiškinimas sako, kas nutiko, ir ką daryti toliau; yra praplėtimo užduotis.",
+    "8 žingsnis — mokytojas lieka mokytoju: veikla be ekrano su šlapia popieriaus juostele ir modelio ribų sąrašas mokytojui."
+  ]
+}

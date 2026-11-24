@@ -1,0 +1,163 @@
+{
+  "id": "41-augalo-dalys",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Augalo dalys: vieta, o ne išvaizda",
+  "subtitle": "Morkos šaknis stora, ąžuolo — plona. Abi yra šaknys.",
+  "minutes": 9,
+  "outcomes": [
+    "Rodau augale šaknį, stiebą, lapus ir žiedą.",
+    "Paaiškinu, kodėl morkos ir ąžuolo šaknys — ta pati dalis.",
+    "Pasakau, kurią augalo dalį valgome."
+  ],
+  "concept": {
+    "title": "Dalis — tai vieta augale",
+    "big_idea": "Augalo dalį rodo vieta, kur ji prijungta. Po žeme yra šaknis, aukščiau — stiebas. Ant stiebo auga lapai, viršuje — žiedas. Iš žiedo atsiranda vaisius su sėkla. Todėl morkos ir ąžuolo šaknys — ta pati dalis.",
+    "steps": [
+      "Pradėk nuo apačios: kas po žeme, ta šaknis. Morkos ji stora ir oranžinė, ąžuolo — plona ir šakota.",
+      "Aukščiau žemės kyla stiebas. Medyje jis vadinamas kamienu.",
+      "Lapai auga ant stiebo. Kopūsto lapai susisukę į gūžę, bet tai vis tiek lapai.",
+      "Stiebo viršuje atsiranda žiedas, o iš jo — vaisius. Vaisiuje sunoksta sėkla."
+    ],
+    "example": "Išrauk morką ir kiaulpienę. Abi turi šaknį. Viena stora ir oranžinė, kita ilga ir plona."
+  },
+  "sim": {
+    "component": "augalo-dalys",
+    "config": {
+      "plants": [
+        {
+          "id": "morka",
+          "label": "Morka",
+          "parts": [
+            { "id": "saknis", "label": "Šaknis", "look": "Po žeme, stora ir oranžinė." },
+            { "id": "stiebas", "label": "Stiebas", "look": "Trumpas, ties žeme, virš šaknies." },
+            { "id": "lapai", "label": "Lapai", "look": "Ilgi ir žali, auga iš stiebo viršaus." }
+          ]
+        },
+        {
+          "id": "kopustas",
+          "label": "Kopūstas",
+          "parts": [
+            { "id": "saknis", "label": "Šaknis", "look": "Po žeme, plona, su šakelėmis." },
+            { "id": "lapai", "label": "Lapai", "look": "Susisukę į apvalią gūžę." }
+          ]
+        },
+        {
+          "id": "azuolas",
+          "label": "Ąžuolas",
+          "parts": [
+            { "id": "saknis", "label": "Šaknis", "look": "Po žeme, plona ir šakota." },
+            { "id": "stiebas", "label": "Kamienas", "look": "Storas, kyla į viršų iš šaknų." },
+            { "id": "lapai", "label": "Lapai", "look": "Vainike, daug mažų lapų." },
+            { "id": "vaisius", "label": "Vaisius", "look": "Gilė po lapais, su sėkla viduje." }
+          ]
+        },
+        {
+          "id": "kiaulpiene",
+          "label": "Kiaulpienė",
+          "parts": [
+            { "id": "saknis", "label": "Šaknis", "look": "Po žeme, ilga ir plona." },
+            { "id": "stiebas", "label": "Stiebas", "look": "Status, be lapų, laiko žiedą." },
+            { "id": "lapai", "label": "Lapai", "look": "Prie pat žemės, išsidėstę ratu." },
+            { "id": "ziedas", "label": "Žiedas", "look": "Geltona galvutė stiebo viršuje." },
+            { "id": "vaisius", "label": "Vaisius", "look": "Pūkelis su sėkla, kuri nuskrenda." }
+          ]
+        }
+      ],
+      "ui": {
+        "undergroundOn": "Pažiūrėti po žeme",
+        "undergroundOff": "Uždengti žemę"
+      },
+      "sentences": {
+        "pick": "Paspausk dalies pavadinimą — modelis parodys, kur ji yra.",
+        "hidden": "Ši dalis yra po žeme. Paspausk „Pažiūrėti po žeme“.",
+        "root": "Šaknis visada po žeme. Pakeisk augalą ir palygink.",
+        "done": "Keturios šaknys atrodo skirtingai, o visos yra po žeme.",
+        "opened": "Žemė permatoma. Matai, kas buvo po ja.",
+        "closed": "Žemė vėl uždengia šaknis.",
+        "again": "Pradedam iš naujo."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Išrauta morka. Viršuje lapai, apačioje stora oranžinė dalis. Kas ta apatinė dalis?",
+      "options": [
+        "Vaisius",
+        "Šaknis",
+        "Sėkla"
+      ],
+      "answer": 1,
+      "hint": "Kur ji buvo: virš žemės ar po ja?",
+      "why": "Ji augo po žeme. Todėl tai šaknis, nors ir oranžinė."
+    },
+    {
+      "q": "Po ąžuolu atkasta plona, šakota dalis. Kas tai?",
+      "options": [
+        "Kamienas",
+        "Lapai",
+        "Šaknis"
+      ],
+      "answer": 2,
+      "hint": "Ar ji yra virš žemės, ar po žeme?",
+      "why": "Ji yra po žeme. Todėl tai šaknis, nors visai nepanaši į morką."
+    },
+    {
+      "q": "Kopūsto gūžė apvali ir kieta. Kuri augalo dalis ji yra?",
+      "options": [
+        "Lapai",
+        "Vaisius",
+        "Šaknis"
+      ],
+      "answer": 0,
+      "hint": "Gūžė nėra po žeme ir neišaugo iš žiedo.",
+      "why": "Gūžę sudaro ant stiebo susisukę lapai."
+    },
+    {
+      "q": "Ant stalo morka, kopūstas ir arbūzas. Kurią augalo dalį valgome arbūze?",
+      "options": [
+        "Šaknį",
+        "Lapus",
+        "Vaisių"
+      ],
+      "answer": 2,
+      "hint": "Morka ir kopūstas auga ne iš žiedo. O arbūzas?",
+      "why": "Arbūzas išauga iš žiedo, o jo viduje yra sėklos. Todėl tai vaisius."
+    },
+    {
+      "q": "Kiaulpienė: prie žemės lapai, aukščiau ilgas stiebas, viršuje geltona galvutė. Kas ta geltona dalis?",
+      "options": [
+        "Žiedas",
+        "Vaisius",
+        "Šaknis"
+      ],
+      "answer": 0,
+      "hint": "Geltona dalis yra pačiame stiebo gale, ne po žeme.",
+      "why": "Stiebo viršuje esanti geltona dalis yra žiedas.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kuriame kiemo augale tu rastum šaknį? O kur ieškotum lapų? Papasakok.",
+  "teacher": {
+    "goal": "Gamtos mokslai, 26.2.3 „Augalai“ (1 klasei — 4 val.): atpažinti augalo dalis pagal vietą, kur jos prijungtos, o ne pagal vieną pažįstamą pavyzdį (morką). Antra numanoma dalis — augalų nauda žmonėms: kurią augalo dalį valgome.",
+    "prompt": "Kodėl morkos šaknis ir ąžuolo šaknis vadinasi vienodai, nors atrodo visai kitaip?",
+    "offline": "Išraukite dvi skirtingas daržoves ar piktžoles (morką ir kiaulpienę). Padėkite ant popieriaus ir apibraukite. Vaikas pirštu rodo: kas po žeme, kas virš žemės. Tada paklauskite: kuri dalis abiem ta pati, nors atrodo kitaip? Veiklai ekrano nereikia.",
+    "misconceptions": [
+      "„Šaknis — tai oranžinė stora daržovė.“ Modelis rodo keturias šaknis: morkos stora ir oranžinė, ąžuolo plona ir šakota, kopūsto plona. Vardas tas pats, nes vieta ta pati — po žeme.",
+      "„Kopūsto gūžė — vaisius, nes apvali.“ Gūžę sudaro lapai, susisukę ant trumpo stiebo, o vaisius auga tik iš žiedo.",
+      "„Kas auga aukščiausiai, tas vaisius.“ Vaisius atsiranda ten, kur buvo žiedas; kiaulpienėje tai pūkelis su sėkla.",
+      "„Jei dalies nesimato, jos augale nėra.“ Morkoje pirmą vasarą žiedo nematyti, bet tai nereiškia, kad augalas niekada nežydi — modelis rodo tik tai, kas matoma dabar."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Gamtos mokslai, 26.2.3 „Augalai“ (1 klasei — 4 val.): „Aptariama augalų nauda žmonėms. Mokomasi atpažinti augalo dalis (šaknys, stiebas / kamienas, lapai, žiedas, vaisius, sėkla)“ (sources/pradinio-bp-rekomendacijos-2024.txt:39581–39582).",
+    "Ten pat, 1 klasės plano eilutė („Augalai … augalo dalys“) :39950 ir 1–2 klasių lentelės eilutė :40431 — ta pati formuluotė, todėl tema priklauso 1 klasei, o ne vyresnei (dalių funkcijos — 27.2.1).",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:89, :104 — temos „Augalai (26.2.3)“ vieta 1 klasės programoje (4 val.) ir mokymosi turinys: augalo dalių atpažinimas."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (dalis = vieta augale), o ne šešių pavadinimų sąrašas (T1.1, T1.2).",
+    "2 žingsnis — vienodas vertinimas: užduotys perkelia taisyklę į naujus augalus (ąžuolas, kopūstas, arbūzas), o ne kartoja modelio sakinius (T2.2).",
+    "3 žingsnis — pagalba laiku: neteisingas variantas turi savo užuominą apie vietą, o teisingas atsakymas neparodomas automatiškai (T3.1, T3.2).",
+    "8 žingsnis — veikla be ekrano su dviem išrautais augalais ir popieriumi (T8.3)."
+  ]
+}

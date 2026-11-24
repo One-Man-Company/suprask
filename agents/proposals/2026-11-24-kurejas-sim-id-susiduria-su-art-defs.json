@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 501,
+  "created": "2026-11-24T10:05:43+02:00",
+  "type": "struktura",
+  "title": "Simo valdiklio ID gali sutapti su art.defs() gradientu — ir tada mygtukas tyli",
+  "body": "Kurdamas modulį 41-augalo-dalys simuliacijoje pavadinau žemės permatomumo mygtuką id=\"ad-soil\", o art.defs(\"ad\") tame pačiame dokumente sukuria gradientą id=\"ad-soil\". controls.querySelector(\"#ad-soil\") grąžino gradientą (defs yra anksčiau medyje), todėl mygtukas liko be užrašo, o jo paspaudimo klausytuvas kabėjo ant <linearGradient>. Jokia klaida nei konsolėje, nei vartuose: validate_content.py --grade 1 --strict 0 klaidų, check_audio.py pilnas, check_view.py desktop/phone/360 → problems []. Defektą radau tik elgsenos zondą rašydamas ranka, o ne vartais. Siūlau vartą, kuris iš simuliacijų kodo surenka visus `art.defs(<id>)` iškvietimus ir patikrina, kad tame pačiame komponente nė vienas valdiklio ID neprasideda tuo pačiu `<id>-` (art.defs išveda -sky, -soil, -water, -pot, -glow, -ball, -smoke). Antra, pigi taisyklė tame pačiame varte: kiekvienas simuliacijos sukuriamas `button` su `id` turi turėti ne tuščią tekstą arba `aria-label` — tuščias valdiklis yra defektas, o ne tuščia vieta.",
+  "target": "scripts/validate_content.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/art.js:61–95 — art.defs(id) kuria `-sky`, `-winter`, `-autumn`, `-glow`, `-soil`, `-water`, `-pot`, `-ball`, `-smoke` ID",
+    "assets/js/sims/pasaulis.js (41-augalo-dalys) — mygtukas buvo id=\"ad-soil\", dabar id=\"ad-under\"; zondo rezultatas: document.querySelector(\"#ad-soil\").tagName → linearGradient",
+    "research/wiki/guidelines/pamokos.md — LL-172 (naujas šio paleidimo įrašas su simptomu, priežastimi, taisykle ir patikra)",
+    "scripts/validate_content.py:157–199 — check_sim_config tikrina config raktų gyvumą, bet ne DOM ID unikalumą"
+  ]
+}

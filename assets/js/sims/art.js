@@ -201,15 +201,18 @@ export const art = {
       + ` stroke="${color}" stroke-width="${width}" stroke-linecap="round" fill="none"/>`;
   },
 
-  flower(x, y, s = 1) {
+  /** `petal`/`core` — neprivalomi: be jų žiedas toks pat kaip iki šiol.
+   *  Reikia ten, kur augalo žiedas iš tikrųjų kitos spalvos (kiaulpienė
+   *  geltona, o ne rožinė) — užrašas ir paveikslas turi sutarti (LL-13). */
+  flower(x, y, s = 1, petal = P.flower, core = P.flowerCore) {
     const petals = Array.from({ length: 6 }, (_, i) => {
       const a = (i * 60 * Math.PI) / 180;
       return `<ellipse cx="${(Math.cos(a) * 8 * s).toFixed(1)}" cy="${(Math.sin(a) * 8 * s).toFixed(1)}"`
         + ` rx="${(5.5 * s).toFixed(1)}" ry="${(3.6 * s).toFixed(1)}" transform="rotate(${i * 60})"`
-        + ` fill="${P.flower}"/>`;
+        + ` fill="${petal}"/>`;
     }).join("");
     return `<g transform="translate(${x} ${y})">${petals}
-      <circle r="${4.6 * s}" fill="${P.flowerCore}"/>
+      <circle r="${4.6 * s}" fill="${core}"/>
       <circle r="${2.2 * s}" fill="#f6a623"/></g>`;
   },
 

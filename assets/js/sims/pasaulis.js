@@ -6849,6 +6849,329 @@ const gyvybesZenklai = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 22. Augalo dalys — vieta, o ne išvaizda                            */
+/* ------------------------------------------------------------------ */
+/* Viena didelė idėja: augalo dalį rodo VIETA, kur ji prijungta, o ne
+   išvaizda. Modelis laiko keturis augalus (morka, kopūstas, ąžuolas,
+   kiaulpienė) ir leidžia palyginti tą pačią dalį: morkos šaknis stora ir
+   oranžinė, ąžuolo — plati ir šakota, kopūsto — plona su šakelėmis,
+   kiaulpienės — ilga ir plona. Todėl vaikas, kuris šaknį atpažįsta iš
+   oranžinės spalvos, ąžuole teisingo atsakymo neturi — būtent tą
+   klaidingą nuostatą modelis ir parodo (gairių 4 skyriaus 3 klausimas).
+
+   Du parametrai: augalas ir tai, ar žemė permatoma. Pasekmė matoma iš
+   karto — ta pati dalis atrodo kitaip, o vardas nekinta. Pasirinkus
+   šaknį, žemė atsiveria pati: taip vaikas pamato, kad šaknis visada
+   po žeme, ir nesusiduria su užrakintu valdikliu be paaiškinimo (LL-04).
+   Dalių, kurių tame augale nėra, mygtukų nerodome — modelis neieško to,
+   ko pats nesukūrė (LL-03, LL-25). Morkoje žiedo nėra, nes pirmą vasarą
+   morka žiedų neturi; todėl apie jį nekalbame nei mygtuku, nei tekstu.
+
+   Skaičiuojama TIK šaknis („Šaknį matei 2 iš 4 augalų“): būtent ji
+   parodo tą pačią dalį skirtingose išvaizdose. Pažanga žymima įveikus
+   paskutinį augalą, o ne po pirmo paspaudimo (LL-29). */
+const adEsc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+}[c]));
+
+/* art.leaf piešia lapą į dešinę nuo taško, o pats tepasuka jį 8° arba 26°.
+   Todėl lapų vėduoklė daroma sukant kiekvieną lapą apie stiebo tašką.
+   `angles` yra KRYPTYS laipsniais nuo +x ašies (SVG y eina žemyn):
+   -90 — tiesiai į viršų, -140 — į viršų kairėn. Anksčiau čia buvo
+   simetriški kampai su kaitaliojamu `dir`, todėl du lapai apsisukdavo
+   žemyn ir įlįsdavo į žemę (morkos lapai siekė 268, o žemė prasideda
+   250) — paveikslas prieštaravo užrašui „auga iš stiebo viršaus“. */
+const adLeaves = (cx, y, angles, s, color, droop) => angles
+  .map((a) => `<g transform="rotate(${a} ${cx} ${y})">${art.leaf(cx, y, s, 1, droop, color)}</g>`)
+  .join("");
+
+/* Požeminės dalys. Skirtingos formos IR spalvos — todėl „šaknis“ negali
+   būti atpažįstama iš vieno pavyzdžio (LL-28). */
+const AD_ROOTS = {
+  morka: `<path d="M164 250 C 164 284 174 308 180 328 C 186 308 196 284 196 250 Z"
+      fill="#e2872f" stroke="#b96a1e" stroke-width="2"/>
+    <path d="M169 292 q -14 10 -19 22 M192 300 q 12 8 17 20"
+      stroke="#c9761f" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+  kopustas: `<path d="M180 250 C 179 280 177 300 180 314"
+      stroke="#e3d3ae" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M180 272 q 12 4 18 12 M180 286 q -16 6 -24 16 M180 298 q 14 6 21 14"
+      stroke="#dccaa2" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
+  azuolas: `<path d="M180 250 L 180 318" stroke="#a97c4e" stroke-width="8" stroke-linecap="round"/>
+    <path d="M180 266 C 168 276 156 288 146 306 M180 280 C 194 288 206 298 216 314
+      M180 298 C 172 306 166 314 160 326"
+      stroke="#a97c4e" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    <path d="M180 310 q -9 6 -13 14 M181 316 q 9 4 13 10"
+      stroke="#a97c4e" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
+  kiaulpiene: `<path d="M180 250 C 179 282 184 306 180 332"
+      stroke="#e6d7b4" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M181 274 q -13 8 -18 18 M181 300 q 12 8 16 18"
+      stroke="#dccaa2" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
+};
+
+/* Virš žemės esančios dalys, sugrupuotos pagal dalies ID: žymint dalį,
+   kitos pritemsta, o pasirinktoji lieka ryški. */
+const AD_TOPS = {
+  morka: {
+    stiebas: `<path d="M172 250 q 0 -16 8 -16 q 8 0 8 16 z" fill="#4c8b3a"/>`,
+    lapai: adLeaves(180, 236, [-140, -115, -90, -65, -40], 15, "#5aa552", 0),
+  },
+  kopustas: {
+    lapai: `<path d="M180 250 C 152 250 140 222 158 202 C 172 186 188 186 202 202 C 220 222 208 250 180 250 Z"
+        fill="#8fbf6a"/>
+      <path d="M180 246 C 158 246 150 222 164 206 C 175 194 185 194 196 206 C 210 222 202 246 180 246 Z"
+        fill="#a9d27f"/>
+      <path d="M180 240 C 166 240 160 222 170 210 C 177 201 183 201 190 210 C 200 222 194 240 180 240 Z"
+        fill="#c3e39a"/>
+      <path d="M180 232 C 172 232 168 220 174 212 C 178 207 182 207 186 212 C 192 220 188 232 180 232 Z"
+        fill="#dcefc0"/>
+      <path d="M180 204 C 172 214 168 230 170 246 M180 204 C 188 214 192 230 190 246"
+        stroke="#7aa858" stroke-width="1.6" fill="none" opacity=".5"/>`,
+  },
+  azuolas: {
+    stiebas: `${art.stem(180, 250, 62, 13, "#8a5c33", 0)}
+      <path d="M182 216 l -24 -14 M182 228 l 26 -16"
+        stroke="#8a5c33" stroke-width="5" stroke-linecap="round" fill="none"/>`,
+    lapai: `<circle cx="156" cy="198" r="19" fill="#4f9e4a"/><circle cx="204" cy="196" r="21" fill="#5aa954"/>
+      <circle cx="180" cy="176" r="24" fill="#63b45b"/><circle cx="142" cy="216" r="13" fill="#448a40"/>
+      <circle cx="218" cy="216" r="13" fill="#448a40"/><circle cx="180" cy="204" r="17" fill="#6fbe63"/>`,
+    vaisius: `<path d="M224 218 v 8" stroke="#8a5c33" stroke-width="2"/>
+      <ellipse cx="224" cy="238" rx="7" ry="9" fill="#c39a5c" stroke="#8f6a3a" stroke-width="1.4"/>
+      <path d="M217 231 q 7 -6 14 0 q -7 5 -14 0 z" fill="#8a5c33"/>`,
+  },
+  kiaulpiene: {
+    stiebas: art.stem(180, 250, 60, 4.5, "#6aa84f", 0),
+    lapai: adLeaves(180, 246, [-170, -135, -90, -45, -10], 17, "#5aa552", 0),
+    ziedas: art.flower(180, 190, 1.25, "#f4c430", "#e0a21a"),
+    /* Pūkelis — vaisius su sėkla. Antras stiebas, kad žiedas ir vaisius
+       būtų matomi kartu: augale jie auga toje pačioje vietoje, tik ne
+       tuo pačiu metu, o vienas kitą pakeičia. */
+    vaisius: `${art.stem(214, 250, 38, 3.5, "#6aa84f", 0)}
+      <g stroke="#ffffff" stroke-width="1.5">
+        ${Array.from({ length: 10 }, (_, i) => {
+    const a = (i * 36 * Math.PI) / 180;
+    return `<line x1="214" y1="212" x2="${(214 + Math.cos(a) * 13).toFixed(1)}" y2="${(212 + Math.sin(a) * 13).toFixed(1)}"/>`;
+  }).join("")}
+      </g>
+      <circle cx="214" cy="212" r="9" fill="#f7f7f2" stroke="#d8d8cc" stroke-width="1.2"/>
+      <circle cx="214" cy="212" r="4" fill="#e8e4c9"/>`,
+  },
+};
+
+const augaloDalys = {
+  mount({ stage, controls, api, config }) {
+    const plants = Array.isArray(config.plants) ? config.plants : [];
+    const ui = config.ui || {};
+    const S = config.sentences || {};
+
+    let plantIdx = 0;
+    let part = "";
+    let underground = false;
+    let reported = false;
+    const rootsSeen = new Set();
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:30rem">
+        <svg id="ad-svg" viewBox="0 0 360 340" role="img" aria-label="Augalo modelis"></svg>
+        <div id="ad-compare" hidden style="margin-top:.5rem"></div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.5rem;width:100%;max-width:34rem;margin:0 auto">
+        <div id="ad-plants" role="group" aria-label="Pasirink augalą"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:.4rem"></div>
+        <button class="btn secondary" id="ad-under" type="button" aria-pressed="false"
+                style="min-height:48px;padding:.4rem;font-size:.95rem;font-weight:800"></button>
+        <div id="ad-parts" role="group" aria-label="Pasirink augalo dalį"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(5.2rem,1fr));gap:.4rem"></div>
+        <p id="ad-count" style="margin:0;min-width:0;text-align:center;font-weight:800;font-size:.95rem;line-height:1.3"></p>
+        <button class="btn ghost" id="ad-reset" type="button" style="min-height:48px;padding:.4rem;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
+    const svg = stage.querySelector("#ad-svg");
+    const compareBox = stage.querySelector("#ad-compare");
+    const plantsBox = controls.querySelector("#ad-plants");
+    const partsBox = controls.querySelector("#ad-parts");
+    const soilBtn = controls.querySelector("#ad-under");
+    const countEl = controls.querySelector("#ad-count");
+    const resetBtn = controls.querySelector("#ad-reset");
+
+    plantsBox.innerHTML = plants.map((p, i) => `<button class="btn secondary" type="button"
+      data-plant="${i}" aria-pressed="false"
+      style="min-height:48px;padding:.4rem .3rem;font-size:.95rem;font-weight:800">${adEsc(p.label)}</button>`).join("");
+
+    const current = () => plants[plantIdx] || { id: "", label: "", parts: [] };
+    const findPart = (id) => (current().parts || []).find((x) => x.id === id) || null;
+
+    function scene() {
+      const p = current();
+      const tops = AD_TOPS[p.id] || {};
+      const has = (id) => (p.parts || []).some((x) => x.id === id);
+      const dim = (id) => (part && part !== id && has(id) ? 0.3 : 1);
+      const above = Object.entries(tops)
+        .map(([id, html]) => `<g opacity="${dim(id)}">${html}</g>`)
+        .join("");
+      return `${art.defs("ad")}
+        <rect x="0" y="0" width="360" height="340" rx="18" fill="url(#ad-sky)"/>
+        ${art.sun(320, 38, 12, "ad", 1)}
+        ${art.cloud(66, 50, 1, 0.9)}
+        ${art.hills(360, 236)}
+        <g opacity="${dim("saknis")}">${AD_ROOTS[p.id] || ""}</g>
+        <g opacity="${underground ? 0.3 : 1}">${art.soil(0, 250, 360, 90, "ad")}</g>
+        ${underground
+    ? `<line x1="0" y1="250" x2="360" y2="250" stroke="#5a3d16" stroke-width="2"
+             stroke-dasharray="7 5" opacity=".9"/>`
+    : ""}
+        ${art.grass(46, 256, 1.1)}${art.grass(308, 256, 1)}${art.grass(120, 254, 0.9)}
+        ${above}`;
+    }
+
+    function renderParts() {
+      const p = current();
+      if (partsBox.dataset.plantId !== p.id) {
+        partsBox.dataset.plantId = p.id;
+        partsBox.innerHTML = (p.parts || []).map((x) => `<button class="btn secondary" type="button"
+          data-part="${adEsc(x.id)}" aria-pressed="false"
+          style="min-height:48px;padding:.4rem .3rem;font-size:.95rem;font-weight:800">${adEsc(x.label)}</button>`).join("");
+      }
+      for (const b of partsBox.querySelectorAll("[data-part]")) {
+        const on = b.dataset.part === part;
+        b.setAttribute("aria-pressed", String(on));
+        b.style.background = on ? "var(--ink)" : "var(--paper-2)";
+        b.style.color = on ? "var(--paper)" : "var(--ink)";
+        b.style.borderColor = on ? "var(--ink)" : "var(--line)";
+      }
+    }
+
+    /* Keturių šaknų palyginimas atsiranda tik tada, kai vaikas jas pamatė
+       visas. Tai modelio kulminacija: 6–7 metų vaikas negali atmintyje
+       lyginti keturių formų, todėl jos parodomos vienoje vietoje po tuo
+       pačiu vardu. Palyginimas rodomas tik pasirinkus šaknį — kitaip jis
+       liktų dekoracija, nesusijusi su tuo, ką vaikas daro. */
+    function renderCompare() {
+      /* Palyginimas rodomas tik tada, kai žemė atverta: kitaip didelis
+         paveikslas rodytų šaknis, o scena virš jo — „žemė uždengta“, ir
+         du to paties modelio vaizdai prieštarautų vienas kitam (LL-34). */
+      const show = part === "saknis" && underground && rootsSeen.size >= plants.length;
+      compareBox.hidden = !show;
+      if (!show) {
+        compareBox.innerHTML = "";
+        return;
+      }
+      compareBox.innerHTML = `
+        <p style="margin:0 0 .35rem;font-size:.9rem;font-weight:800;text-align:center">Keturios šaknys — visos po žeme</p>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem">
+          ${plants.map((p) => `<figure style="margin:0;min-width:0;text-align:center">
+            <svg viewBox="0 0 90 80" role="img" aria-label="${adEsc(p.label)}: šaknis po žeme"
+                 style="width:100%;height:auto;border:2px solid var(--line);border-radius:.6rem;background:var(--paper-2)">
+              <line x1="4" y1="22" x2="86" y2="22" stroke="#8b5e3c" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <g transform="translate(${(45 - 180 * 0.6).toFixed(1)} ${(22 - 250 * 0.6).toFixed(1)}) scale(0.6)">${AD_ROOTS[p.id] || ""}</g>
+            </svg>
+            <figcaption style="font-size:.9rem;font-weight:800;margin-top:.15rem">${adEsc(p.label)}</figcaption>
+          </figure>`).join("")}
+        </div>`;
+    }
+
+    function render() {
+      const p = current();
+      const sel = findPart(part);
+
+      for (const b of plantsBox.querySelectorAll("[data-plant]")) {
+        const on = Number(b.dataset.plant) === plantIdx;
+        b.setAttribute("aria-pressed", String(on));
+        b.style.background = on ? "var(--ink)" : "var(--paper-2)";
+        b.style.color = on ? "var(--paper)" : "var(--ink)";
+        b.style.borderColor = on ? "var(--ink)" : "var(--line)";
+      }
+
+      soilBtn.textContent = underground ? (ui.undergroundOff || "Uždengti žemę")
+        : (ui.undergroundOn || "Pažiūrėti po žeme");
+      soilBtn.setAttribute("aria-pressed", String(underground));
+
+      renderParts();
+      renderCompare();
+      svg.innerHTML = scene();
+      svg.setAttribute("aria-label", sel
+        ? `${p.label}: ${sel.label}. ${sel.look}`
+        : `${p.label}. ${underground ? "Žemė permatoma." : "Žemė uždengta."}`);
+
+      countEl.textContent = rootsSeen.size
+        ? `Šaknį matei ${rootsSeen.size} iš ${plants.length} augalų.`
+        : `Šaknį rask visuose ${plants.length} augaluose.`;
+
+      let note;
+      if (!sel) note = S.pick || "Paspausk dalies pavadinimą.";
+      else if (sel.id === "saknis" && !underground) note = S.hidden || "";
+      else if (sel.id === "saknis" && rootsSeen.size >= plants.length) note = S.done || "";
+      else if (sel.id === "saknis") note = S.root || "";
+      else note = sel.look;
+
+      api.readout(sel ? `${p.label}: ${sel.label}.` : `${p.label}.`);
+      api.note(note);
+
+      if (!reported && plants.length && rootsSeen.size >= plants.length) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    function choosePart(id) {
+      const sel = findPart(id);
+      if (!sel) return;
+      part = part === id ? "" : id;   // antras paspaudimas nuima žymę
+      if (part === "saknis") {
+        underground = true;           // šaknis visada po žeme — žemė atsiveria pati
+        rootsSeen.add(current().id);
+      }
+      api.speak(sel.label);
+      render();
+    }
+
+    plantsBox.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-plant]");
+      if (!b) return;
+      plantIdx = Number(b.dataset.plant);
+      if (!findPart(part)) part = "";
+      /* Pakeitus augalą, pasirinkta šaknis lieka pasirinkta — ir vaikas
+         ją mato. Todėl ji įskaitoma ir čia, o ne tik paspaudus mygtuką:
+         kitaip skaitliukas liktų 1 iš 4, nors ekrane jau ketvirta šaknis
+         (LL-17 — būsena turi atitikti tai, ką vaikas mato). */
+      if (part === "saknis") {
+        underground = true;
+        rootsSeen.add(current().id);
+      }
+      api.speak(current().label);
+      render();
+    });
+
+    partsBox.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-part]");
+      if (b) choosePart(b.dataset.part);
+    });
+
+    soilBtn.addEventListener("click", () => {
+      underground = !underground;
+      api.speak(underground ? (S.opened || "Žemė permatoma. Matai, kas po žeme.")
+        : (S.closed || "Žemė vėl uždengia šaknis."));
+      render();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      plantIdx = 0;
+      part = "";
+      underground = false;
+      reported = false;
+      rootsSeen.clear();
+      api.speak(S.again || "Pradedam iš naujo.");
+      render();
+      resetBtn.focus();
+    });
+
+    render();
+    return null;
+  },
+};
+
 export const SIMS = {
   "gyvybes-zenklai": gyvybesZenklai,
   "energijos-saltiniai": energijosSaltiniai,
@@ -6872,4 +7195,5 @@ export const SIMS = {
   "gimines-grandine": giminesGrandine,
   "stebejimo-zurnalas": stebejimoZurnalas,
   "kas-lieka-pievoje": kasLiekaPievoje,
+  "augalo-dalys": augaloDalys,
 };

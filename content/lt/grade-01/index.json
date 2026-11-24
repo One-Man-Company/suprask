@@ -400,6 +400,14 @@
      "sim": "augalu-grupes"
     },
     {
+     "id": "41-augalo-dalys",
+     "title": "Augalo dalys: vieta, o ne išvaizda",
+     "subtitle": "Morkos šaknis stora, ąžuolo — plona. Abi yra šaknys.",
+     "file": "grade-01/pasaulio-pazinimas/41-augalo-dalys.json",
+     "minutes": 9,
+     "sim": "augalo-dalys"
+    },
+    {
      "id": "23-ismestas-daiktas-nedingsta",
      "title": "Išmestas daiktas nedingsta",
      "subtitle": "Jis atsiduria krūvoje, kuri auga prieš akis",

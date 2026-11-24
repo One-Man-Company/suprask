@@ -2936,9 +2936,7 @@ const sudetisPerDesimti = {
 
     stage.innerHTML = `
       <div id="sp-wrap" style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
-        <p class="sim-note" style="margin:0 0 .25rem;text-align:center">
-          Pirmas skaičius jau dešimtuke, antras — ant stalo.
-        </p>
+        <p class="sim-note" id="sp-lead" style="margin:0 0 .25rem;text-align:center"></p>
         <div id="sp-eq" style="font-family:var(--font-head);font-weight:900;font-size:1.75rem;line-height:1.15;text-align:center"></div>
         <div id="sp-frame" role="img" aria-label="Dešimtukas"
              style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.3rem;max-width:19rem;margin:.45rem auto 0"></div>
@@ -2963,7 +2961,7 @@ const sudetisPerDesimti = {
             aria-pressed="${n === b}" aria-label="Antras skaičius ${n}"
             style="min-height:48px;min-width:3rem;padding:.4rem .6rem">${n}</button>`).join("")}
       </div>
-      <div role="group" aria-label="Kiek dėmių trūksta iki dešimties"
+      <div role="group" aria-label="Kiek trūksta?"
            style="display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;align-items:center">
         <span style="width:100%;text-align:center;font-weight:800;font-size:.95rem">Kiek trūksta?</span>
         ${[1, 2, 3].map((n) => `<button type="button" class="btn secondary sp-g" data-g="${n}"
@@ -2977,10 +2975,30 @@ const sudetisPerDesimti = {
 
     const frameEl = stage.querySelector("#sp-frame");
     const eqEl = stage.querySelector("#sp-eq");
+    const leadEl = stage.querySelector("#sp-lead");
     const trayLabel = stage.querySelector("#sp-tray-label");
     const restEl = stage.querySelector("#sp-rest");
     const splitEl = stage.querySelector("#sp-split");
     const fillBtn = controls.querySelector("#sp-fill");
+
+    /* Antraštė — vienintelis šaltinis yra sim.config.sentences.pradek (LL-42).
+       Anksčiau šis sakinys buvo įrašytas ir kode, ir JSON'e; JSON buvo taisytas
+       („…, o antras laukia ant stalo.“), kodas liko senas („antras — ant
+       stalo.“) — vaikas skaitė vieną, girdėjo kitą, o check_language.py ir
+       check_audio.py mato tik JSON. Todėl kieto literalo čia nebėra: jei
+       config eilutės nėra, pastraipa paslepiama, o ne rodoma tuščia. */
+    function setLead() {
+      const text = String(S.pradek || "").trim();
+      leadEl.textContent = text;
+      leadEl.hidden = !text;
+    }
+
+    /* Klausimas — tas pats, kurį taria balsas (`api.speak(S.klausk)`). Todėl
+       ekrane rašoma config eilutė, o ne jos perrašyta kopija: anksčiau
+       „Pasikeitė pirmas skaičius. Kiek dėmių dabar trūksta iki dešimties?“
+       skyrėsi nuo tariamo sakinio, o atsarginis literalas žodis į žodį kartojo
+       config reikšmę — trečias šaltinis be garso įrašo (LL-42, LL-68). */
+    const ask = () => String(S.klausk || "").trim();
 
     const markPressed = (sel, key, value) => {
       controls.querySelectorAll(sel).forEach((x) => {
@@ -3065,15 +3083,15 @@ const sudetisPerDesimti = {
       markPressed(".sp-b", "b", b);
       markPressed(".sp-g", "g", 0);
       paint();
-      api.note(S.klausk || "Kiek dėmių trūksta iki dešimties?");
+      api.note(ask());
     }
 
     controls.querySelectorAll(".sp-a").forEach((btn) => {
       btn.addEventListener("click", () => {
         a = Number(btn.dataset.a);
         reset({ keepAddends: true });
-        api.note("Pasikeitė pirmas skaičius. Kiek dėmių dabar trūksta iki dešimties?");
-        api.speak(S.klausk || "");
+        api.note(`Pasikeitė pirmas skaičius. ${ask()}`.trim());
+        api.speak(ask());
       });
     });
 
@@ -3081,8 +3099,8 @@ const sudetisPerDesimti = {
       btn.addEventListener("click", () => {
         b = Number(btn.dataset.b);
         reset({ keepAddends: true });
-        api.note("Pasikeitė antras skaičius. Kiek dėmių dabar trūksta iki dešimties?");
-        api.speak(S.klausk || "");
+        api.note(`Pasikeitė antras skaičius. ${ask()}`.trim());
+        api.speak(ask());
       });
     });
 
@@ -3101,7 +3119,8 @@ const sudetisPerDesimti = {
     });
 
     paint();
-    api.note(S.klausk || "Kiek dėmių trūksta iki dešimties?");
+    setLead();
+    api.note(ask());
     api.speak(S.pradek || "");
     return null;
   },

@@ -1,0 +1,18 @@
+{
+  "role": "kurejas",
+  "run_id": 523,
+  "created": "2026-11-24T22:40:00+02:00",
+  "type": "struktura",
+  "title": "Nė vienas vartas nelygina kieto šablono sakinio su to paties modulio sim.config",
+  "body": "Įgyvendinus #47763 (22-sudetis-per-desimti antraštė iš config), ta pati dreifo šeima liko 14 eilučių 4 simuliacijų failuose (13 — to paties modulio sim.config eilutės atitikmenys, 1 — modulio pavadinimas config.title): to paties komponento kietas sakinys ir jo modulio sim.config eilutė skiriasi „beveik“ — pasaulis.js „Pusryčiams laiko neliko.“ vs config „…nebeliko.“ (0,96), technologijos.js „Visi drabužiai jau pintinėse…“ vs „Visi drabužiai pintinėse…“ (0,96), calba.js „Tas pats paveikslėlis, skirtingi sakiniai.“ vs „…trys skirtingi sakiniai.“ (0,94), pasaulis.js „…išėjai į lauką.“ vs „…išėjai lauk.“ (0,96). check_language.py skaito modulio JSON, check_audio.spoken_literals() — api.speak(\"…\") eilutes, o innerHTML šablonų tekstiniai mazgai ir api.note(\"…\") nepatenka nė į vieną. Siūloma: check_audio.py (ar atskiras check_sim_text.py) iš content/lt/grade-XX/index.json sudaro komponento → modulio atvaizdį, iš komponento kūno ima šablonų mazgus ir literalus bei lygina su to modulio sim.config eilutėmis pagal difflib ≥ 0,85; kiekvienas sutapimas, kuris nelygus, yra įspėjimas su failu, eilute ir config raktu, o ne bendra žinia.",
+  "target": "scripts/check_audio.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "2026-11-24 (#523) zondas pagal komponento → modulio atvaizdį iš content/lt/grade-01/index.json: 14 kandidatų 4 failuose (calba.js 4, matematika.js 3, pasaulis.js 6, technologijos.js 1), difflib 0,86–0,98",
+    "assets/js/sims/pasaulis.js:5043 „Pusryčiams laiko neliko.“; content/lt/grade-01/pasaulio-pazinimas/30-dienos-rezimas-mityba.json config.sentences.none „Pusryčiams laiko nebeliko.“",
+    "assets/js/sims/technologijos.js:1301 „Visi drabužiai jau pintinėse. Spausk „Skalbti“.“; content/lt/grade-01/technologijos/06-drabuziu-prieziura.json config.sentences.sudeta „Visi drabužiai pintinėse. Spausk „Skalbti“.“",
+    "assets/js/sims/calba.js:2978 „Tas pats paveikslėlis, skirtingi sakiniai.“; content/lt/grade-01/lietuviu-kalba/14-veikejas-pagal-teksta.json config.feedback.done „Tas pats paveikslėlis, trys skirtingi sakiniai.“",
+    "docs/KURINIO-STANDARTAS.md §4 — sim.config yra tekstų šaltinis; LL-42, LL-68, LL-188 research/wiki/guidelines/pamokos.md"
+  ]
+}

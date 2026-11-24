@@ -327,6 +327,29 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   pats režimas, įskaitant „nėra užfiksuotos sekos → rc 1, o ne žalia“ ir
   „režimas nepaliečia git ar tinklo“).
 
+2026-11-24 (paleidimas #495): gyvas garso failas matuojamas ne tik „yra“, bet ir „toks pat“.
+  `check_audio()` šešis paleidimus klausė svetainės „ar failas ten yra“ ir
+  niekada — „ar ten tie patys baitai“. Skylė vaikui girdima: svetainė gali
+  atsakyti 200 ir **pusę** mp3 (nutrūkęs įkėlimas, senas failas tokiu pačiu
+  vardu), tada 404 nėra, `empty` nėra (dydis > 0), o `audio_name_digest()`
+  žalias — jis lygina **repo** baitus su **repo** vardu, t. y. sako tiesą apie
+  failą diske, ne apie tai, ką siunčia svetainė (LL-167 ta pati šeima: vartai
+  tikrina tai, kas yra, o ne tai, kas siunčiama). Dydis nekainuoja nė vienos
+  papildomos užklausos: HEAD jau grąžina `Content-Length`, disko dydis yra
+  `stat()`. Dabar `check_audio()` grąžina `size_checked` ir `size_mismatch`
+  (failas, disko baitai, gyvi baitai), `verdict()` turi atskirą priežastį
+  („nutrūkęs įrašas“ — taisymas paleisti publikavimą, o ne pergeneruoti
+  garsą), o pranešime visada spausdinama „dydis: N iš N“ eilutė, kad
+  „visi pasiekiami“ nebūtų skaitomas kaip pilnas atsakymas (LL-37).
+  Išmatuota prieš įjungiant: 2 124/2 124 `Content-Length` = disko baitai,
+  `Content-Length` 0 atvejų 0, 404 0 (visos 1 062 poros × n/s, HEAD per gyvą
+  svetainę). Šiandien poveikis nulinis, bet pirmas nutrūkęs mp3 anksčiau
+  praeidavo visas patikras žalias. Įrodymas repo:
+  `python3 scripts/probe_check_published.py` → **15/15** (du nauji žingsniai
+  su vietiniu `http.server` veidrodžiu: sveikas → `size_mismatch` 0 ir
+  verdict žalias; sutrumpintas mp3 → `size_mismatch` 1, įvardytas failas ir
+  abu dydžiai, verdict raudonas).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -517,16 +540,57 @@ def _audio_state(rel: str) -> tuple[str, int]:
 
 
 def check_audio(sample: int | None = None) -> dict:
+    """Ar garso failai yra svetainėje IR ar jie tokie patys kaip repo.
+
+    Iki #495 buvo klausiama tik „ar failas ten yra“ (`ok` ir `0 B`). To
+    pakako 404 atvejui, bet ne antram teiginiui: svetainė gali atsakyti 200 ir
+    **kitokiu** failu — nutrūkusiu, pusiau įkeltu, senu. Vaikui tai ta pati
+    klaida kaip 404 (girdi tylą ar pusę žodžio), o vartai buvo žali, nes
+    `audio_name_digest()` lygina **repo** baitus su repo vardu, o ne su tuo,
+    ką siunčia svetainė (LL-167: vartai lygina tai, kas yra, o ne tai, į ką
+    nurodoma).
+
+    Dydis yra pigiausias įrodymas abiem pusėms: HEAD jau grąžina
+    `Content-Length`, o disko dydį turime vietoje. Todėl papildomų užklausų
+    nereikia — nauja informacija ateina iš to paties atsakymo.
+
+    Būsenos (kaip `audio_name_digest()`, kad sumos nemeluotų — LL-37):
+      - `size_checked` — kiek failų dydį pavyko palyginti (failas yra
+        svetainėje ir repo);
+      - `size_mismatch` — svetainė siunčia kitokio dydžio failą. Taisymas:
+        paleisti publikavimą iš naujo, o ne pergeneruoti garsą (baitai repo
+        sveiki — tai įrodo vardo galas).
+    Failas, kurio repo nėra, čia neįskaitomas: jį įvardija
+    `audio_name_digest()` kaip `absent`, o svetainėje — `missing`; trečia
+    eilutė už tą patį defektą būtų LL-21 (skaičius, kuris kaltina ne tą).
+    """
     rels, total = audio_paths(sample)
     if not total:
         return {"total": 0, "checked": 0, "sampled": False,
                 "missing": [], "empty": [], "unreachable": [],
+                "size_checked": 0, "size_mismatch": [],
                 "note": "manifestas neperskaitytas — garso patikra neįvyko"}
     with ThreadPoolExecutor(max_workers=10) as pool:
         results = list(pool.map(lambda rel: (rel, _audio_state(rel)), rels))
     missing = [rel for rel, (state, _) in results if state == "missing"]
     empty = [rel for rel, (state, _) in results if state == "empty"]
     unreachable = [rel for rel, (state, _) in results if state == "unreachable"]
+    # Dydis lyginamas tik tada, kai failas svetainėje tikrai yra: priešingu
+    # atveju `-1` ar `0` būtų palyginti su disku ir tas pats defektas būtų
+    # praneštas du kartus skirtingais žodžiais (LL-129).
+    size_mismatch: list[dict] = []
+    size_checked = 0
+    for rel, (state, live_size) in results:
+        if state != "ok":
+            continue
+        try:
+            disk_size = (AUDIO_MANIFEST.parent / rel).stat().st_size
+        except OSError:
+            continue
+        size_checked += 1
+        if disk_size != live_size:
+            size_mismatch.append({"file": rel, "disk_bytes": disk_size,
+                                  "live_bytes": live_size})
     return {
         "total": total,
         "checked": len(rels),
@@ -534,6 +598,8 @@ def check_audio(sample: int | None = None) -> dict:
         "missing": missing,
         "empty": empty,
         "unreachable": unreachable,
+        "size_checked": size_checked,
+        "size_mismatch": size_mismatch,
         "note": "",
     }
 
@@ -1789,6 +1855,12 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(audio['empty'])} tuščias garso failas")
     if audio.get("unreachable"):
         reasons.append(f"{len(audio['unreachable'])} nepasiekiamas garso failas")
+    # Failas yra, bet svetainė siunčia kitokio dydžio baitus (nutrūkęs, pusiau
+    # įkeltas, senas). Tai ne „trūksta garso“: pergeneravimas nieko nepakeis,
+    # o publikavimas pakeis — todėl ir priežastis sava (LL-129, LL-21).
+    if audio.get("size_mismatch"):
+        reasons.append(f"{len(audio['size_mismatch'])} garso failas svetainėje "
+                       f"kitokio dydžio nei repo (nutrūkęs įrašas)")
     # Vardo maišo patikra (#426/#428). Tai NE „trūksta garso“: failas yra, bet
     # jo baitai ne tie, kuriuos žada vardas — taisymas pergeneruoti, ne
     # publikuoti. Del to atskira priežastis, o ne ta pati eilutė.
@@ -2038,6 +2110,19 @@ def main() -> int:
                            ("unreachable", "nepasiektas")):
             for rel in audio.get(key, [])[:10]:
                 print(f"  - {rel} — {label}")
+        # Antras teiginys: failas ne tik yra, bet ir toks pat. Eilutė
+        # spausdinama visada, kai matuota — kitaip „visi pasiekiami“ skambėtų
+        # kaip pilnas atsakymas, nors dydis būtų nematytas (LL-37).
+        if audio.get("size_checked"):
+            size_bad = audio.get("size_mismatch") or []
+            ok_sizes = audio["size_checked"] - len(size_bad)
+            tail = ("visi tokio pat dydžio" if not size_bad
+                    else f"SKIRIASI {len(size_bad)}")
+            print(f"  dydis: {ok_sizes} iš {audio['size_checked']} — {tail} "
+                  f"(diskas = Content-Length)")
+            for item in size_bad[:10]:
+                print(f"  - {item['file']} — svetainėje {item['live_bytes']} B, "
+                      f"repo {item['disk_bytes']} B")
         if audio.get("sampled"):
             print("  (mėginys, ne visa apimtis — numatytasis režimas tikrina visus įrašus)")
     elif audio.get("note"):
@@ -2086,6 +2171,13 @@ def main() -> int:
         if name.get("total"):
             name_tail = (f", garso vardai {name.get('checked', 0)}/{name['total']}"
                          f" = baitai ir tekstas")
+        # Tapatybė svetainėje (#495): „failas yra“ ir „failas toks pat“ yra du
+        # teiginiai, todėl sėkmės eilutėje jie skiriami — kitaip žalias
+        # „sutampa“ apie 2 124 mp3 nieko nesakytų apie jų dydį.
+        size_tail = ""
+        if audio.get("size_checked"):
+            ok_sizes = audio["size_checked"] - len(audio.get("size_mismatch") or [])
+            size_tail = f", garso dydžiai {ok_sizes}/{audio['size_checked']} = Content-Length"
         # Tvarka — matavimas, o ne prielaida: sėkmės eilutė turi pasakyti, su
         # kuo lyginta, kitaip „sutampa“ apie 72 ID nieko nesako apie jų eilę.
         order_tail = ""
@@ -2101,6 +2193,7 @@ def main() -> int:
             print(f"✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai, "
                   f"svetainės kodas {data.get('shell_count', 0)} failų"
                   f"{name_tail}"
+                  f"{size_tail}"
                   f"{order_tail}"
                   f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
         else:
@@ -2110,6 +2203,14 @@ def main() -> int:
             print("✔ ID ir seka sutampa — DALINĖ PATIKRA: modulių baitai, pagrindinių failų baitai, "
                   "svetainės kodas ir garsas svetainėje NETIKRINTI (--no-bytes)"
                   f"{name_tail}{order_tail}.")
+
+    if problems(data):
+        # Priežasčių sakinys yra tas pats, kurį skaito dashboard'as ir
+        # `--json` (LL-10): žmogus neturi iš naujo daryti išvados iš detalių
+        # eilučių. Eilutės viršuje pasako KUR, ši — KODĖL. Iki #495 CLI
+        # spausdindavo tik detales, o sprendimo sakinio neturėjo.
+        reasons = (data.get("verdict") or {}).get("reasons") or []
+        print("SPRENDIMAS: nepublikuota — " + "; ".join(reasons))
 
     return 1 if problems(data) else 0
 

@@ -13,10 +13,13 @@ dokumente, kurio niekas neperskaičiuoja.
 Šis zondas tikrina būtent tai, ko negali patikrinti `check_published.py` savo
 bėgime: kad **kiekviena** `audio_name_digest()` būsena (`checked`, `mismatch`,
 `text_mismatch`, `unverified`, `absent`) realiai įsijungia ir kad jų suma
-visada lygi `total` (LL-37 — tyli riba). Veidrodis statomas laikiname
-kataloge iš **tikrų** `assets/audio/lt/` failų; repo failai nekeičiami, tinklo
-užklausų nėra, tad zondą galima paleisti bet kada, taip pat ir po vėlesnių
-pataisymų (regresijos patikra).
+visada lygi `total` (LL-37 — tyli riba). Nuo #495 tas pats daroma ir garso
+failo **tapatybei svetainėje**: `check_audio()` būsenos `size_mismatch` /
+`size_checked` tikrinamos prieš vietinį `http.server` (G–I), nes `Content-Length`
+be tinklo neegzistuoja, o būtent jis ir buvo nematomas. Veidrodis statomas
+laikiname kataloge iš **tikrų** `assets/audio/lt/` failų; repo failai
+nekeičiami, išorinių užklausų nėra, tad zondą galima paleisti bet kada, taip
+pat ir po vėlesnių pataisymų (regresijos patikra).
 
 Naudojimas:
     python3 scripts/probe_check_published.py      # 0 — visi lūkesčiai išsipildė
@@ -24,12 +27,15 @@ Naudojimas:
 
 from __future__ import annotations
 
+import functools
 import hashlib
+import http.server
 import json
 import pathlib
 import shutil
 import sys
 import tempfile
+import threading
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -88,6 +94,31 @@ def verdict_for(report: dict) -> dict:
     """`verdict()` su minimaliu duomenų rinkiniu: tik garso vardo teiginys."""
     return cp.verdict({"audio_name": report, "unpushed_checked": True,
                        "published_measured": True, "bytes_checked": True})
+
+
+def verdict_for_audio(report: dict) -> dict:
+    """`verdict()` su minimaliu duomenų rinkiniu: tik garso failo teiginys."""
+    return cp.verdict({"audio": report, "unpushed_checked": True,
+                       "published_measured": True, "bytes_checked": True})
+
+
+class _QuietHandler(http.server.SimpleHTTPRequestHandler):
+    """Tas pats serveris be žurnalo eilučių: zondo išvestis turi būti perskaitoma."""
+
+    def log_message(self, format, *args):  # noqa: A002 - bazinės klasės vardas
+        pass
+
+
+def serve(base: pathlib.Path):
+    """Vietinis `http.server` — HEAD turi ateiti per tinklą, o ne iš disko.
+
+    `check_audio()` tapatybę matuoja `Content-Length`, tad be serverio ši
+    patikra liktų neišbandyta: būtent tai ir buvo defektas (#495).
+    """
+    handler = functools.partial(_QuietHandler, directory=str(base))
+    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    return httpd, f"http://127.0.0.1:{httpd.server_address[1]}/"
 
 
 def main() -> int:
@@ -185,6 +216,67 @@ def main() -> int:
               and verdict_for(report)["ok"],
               f"checked {report['checked']}/{report['total']}, "
               f"verdict {verdict_for(report)['label']}")
+
+        # G–I. Garso failo TAPATYBĖ svetainėje (#495). Vardo maišas įrodo, kad
+        #    repo baitai atitinka repo vardą; jis nieko nesako apie tai, ką
+        #    siunčia svetainė. Todėl veidrodis patiekiamas per HTTP: HEAD
+        #    `Content-Length` yra vienintelis to teiginio šaltinis.
+        #    Du katalogai sąmoningai atskiri: `disk` yra „repo“ (su manifestu),
+        #    `web` — tai, ką siunčia serveris. Jei abu būtų vienas katalogas,
+        #    sutrumpintume ir disko kopiją, ir patikra lygintų failą su pačiu
+        #    savimi (pirmas zondo bėgimas taip ir parodė: 0 neatitikimų).
+        disk_dir = tmp / "disk" / "assets" / "audio" / "lt"
+        disk_manifest = build_mirror(disk_dir, pairs)
+        web = tmp / "web" / "assets" / "audio" / "lt"
+        build_mirror(web, pairs)
+        httpd, url = serve(tmp / "web")
+        original_live = cp.LIVE_ROOT
+        try:
+            cp.AUDIO_MANIFEST = disk_manifest
+            cp.LIVE_ROOT = url
+            report = cp.check_audio()
+            label = verdict_for_audio(report)
+            check("G: sveikas HTTP veidrodis → size_checked 2, mismatch 0",
+                  report["size_checked"] == 2 and not report["size_mismatch"]
+                  and not report["missing"] and not report["empty"],
+                  f"size_checked {report['size_checked']}, mismatch "
+                  f"{len(report['size_mismatch'])}, missing {len(report['missing'])}")
+            check("G: verdict žalias, kai dydžiai sutampa", label["ok"],
+                  f"verdict {label['label']}")
+
+            # H. Svetainė siunčia tą patį vardą, bet pusę failo: 404 nėra,
+            #    `empty` nėra (dydis > 0). Būtent šis atvejis iki #495 buvo
+            #    žalias visuose vartuose.
+            victim_rel = pathlib.Path(pairs[0][1]).name
+            victim = web / victim_rel
+            full_size = (disk_dir / victim_rel).stat().st_size
+            victim.write_bytes(victim.read_bytes()[:-100])
+            report = cp.check_audio()
+            label = verdict_for_audio(report)
+            hit = report["size_mismatch"][0] if report["size_mismatch"] else {}
+            check("H: sutrumpintas mp3 svetainėje → size_mismatch = 1",
+                  len(report["size_mismatch"]) == 1 and report["size_checked"] == 2
+                  and hit.get("live_bytes") == full_size - 100
+                  and hit.get("disk_bytes") == full_size,
+                  f"size_mismatch {len(report['size_mismatch'])}, "
+                  f"gyvi {hit.get('live_bytes')} B / disko {hit.get('disk_bytes')} B")
+            check("H: verdict raudonas ir įvardija dydį",
+                  not label["ok"] and "dydžio" in label["label"],
+                  f"verdict {label['label']}")
+
+            # I. Failo atkūrimas — patikra turi vėl būti žalia, o ne likti
+            #    raudona kaip „įsiminusi“ klaidą.
+            victim.write_bytes((REAL_AUDIO / pairs[0][1]).read_bytes())
+            report = cp.check_audio()
+            check("I: atkūrus failą → mismatch 0 ir verdict žalias",
+                  not report["size_mismatch"] and verdict_for_audio(report)["ok"],
+                  f"mismatch {len(report['size_mismatch'])}, "
+                  f"verdict {verdict_for_audio(report)['label']}")
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            cp.LIVE_ROOT = original_live
+            cp.AUDIO_MANIFEST = manifest_path
     finally:
         cp.AUDIO_MANIFEST = original
         shutil.rmtree(tmp, ignore_errors=True)

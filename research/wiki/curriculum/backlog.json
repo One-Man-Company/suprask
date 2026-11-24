@@ -1,6 +1,6 @@
 {
  "grade": 1,
- "generated": "2026-11-24T09:03:28",
+ "generated": "2026-11-24T10:49:04",
  "source_hash": "5227ed042f104f9c",
  "curriculum_positions": 47,
  "counts": {
@@ -8,7 +8,7 @@
   "partial": 1,
   "missing": 1
  },
- "modules_now": 73,
+ "modules_now": 77,
  "rows": [
   {
    "key": "26.2.3",
@@ -126,7 +126,7 @@
     "19-dumai-ir-isejimas"
    ],
    "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/41-traumu-prevencija.json",
+   "target": "content/lt/grade-01/pasaulio-pazinimas/42-traumu-prevencija.json",
    "hours": "3"
   },
   {
@@ -222,6 +222,7 @@
    "modules": [
     "11-teksto-supratimas",
     "12-zinute-skaitytojui",
+    "14-veikejas-pagal-teksta",
     "02-skiemenu-jungimas"
    ],
    "status": "covered",
@@ -312,7 +313,8 @@
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:30",
    "strand": "lietuviu-kalba",
    "modules": [
-    "11-teksto-supratimas"
+    "11-teksto-supratimas",
+    "14-veikejas-pagal-teksta"
    ],
    "status": "covered",
    "target": ""
@@ -329,6 +331,7 @@
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:31",
    "strand": "lietuviu-kalba",
    "modules": [
+    "14-veikejas-pagal-teksta",
     "01-dovana-ir-noras",
     "17-kryptys-ir-vieta"
    ],
@@ -349,6 +352,7 @@
    "modules": [
     "11-teksto-supratimas",
     "03-sakinio-zodziai",
+    "14-veikejas-pagal-teksta",
     "14-pinigai"
    ],
    "status": "covered",
@@ -609,7 +613,7 @@
     "22-medziai-krumai-zoles",
     "02-medziagu-bandymas",
     "09-augalo-gyvenimas",
-    "08-metu-laikai"
+    "41-augalo-dalys"
    ],
    "status": "covered",
    "target": ""
@@ -626,10 +630,10 @@
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:57",
    "strand": "pasaulio-pazinimas",
    "modules": [
+    "41-augalo-dalys",
     "09-augalo-gyvenimas",
     "18-kuprine-ir-kuno-dalys",
-    "20-kas-gyvas",
-    "22-medziai-krumai-zoles"
+    "20-kas-gyvas"
    ],
    "status": "covered",
    "target": ""
@@ -647,9 +651,9 @@
    "strand": "pasaulio-pazinimas",
    "modules": [
     "09-augalo-gyvenimas",
+    "41-augalo-dalys",
     "01-dovana-ir-noras",
-    "02-emociju-zodynas",
-    "10-gyvunu-grupes"
+    "02-emociju-zodynas"
    ],
    "status": "covered",
    "target": ""
@@ -809,7 +813,8 @@
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:76",
    "strand": "technologijos",
    "modules": [
-    "06-drabuziu-prieziura"
+    "06-drabuziu-prieziura",
+    "09-austinis-ir-megztas-audinys"
    ],
    "status": "covered",
    "target": ""

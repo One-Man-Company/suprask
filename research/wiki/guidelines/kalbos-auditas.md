@@ -143,3 +143,35 @@ Rasta **5 rimti, 5 vidutiniai, 4 smulkūs** radiniai. Visi 5 moduliai praeina `v
 - 02-skiemenu-jungimas: „mokykla“ skaidoma mo-kyk-la, o turi būti mo-ky-kla (R3).
 - 04-kaip-zmones-sveikinasi: simuliacija pati padaro išvadą „Visi…“ po vieno žmogaus (R4/R5) — užtaisyta #352; garso įrašas taria veiksmą (V4) — užtaisyta #363.
 - 05-plakatas-ir-informacija: pusė neteisingų pasirinkimų neturi savo paaiškinimo (V5).
+
+## Taisymo būsena (paleidimas #508, 2026-11-24T13:30)
+
+Modulis: **21-erdvines-figuros** (1 kl., matematika). Audito #137 radiniai #6, #31, #32 ir #143/#147 radiniai jau buvo uždaryti anksčiau; šį kartą peržiūra daryta iš naujo, nuo vaiko, kuris skaito lėtai ir vartoja 200 % teksto.
+
+**Pakeista (13 vietų, visos — formuluotė; `answer` indeksai, `concept`, `teacher`, `sources`, sim JSON raktai nepaliesti):**
+
+| Laukas | Prieš | Po | Priežastis |
+|---|---|---|---|
+| outcomes[1] | „Įvardiju kubą, rutulį…“ | „Vardinu kubą, rutulį…“ | „Įvardiju“ — suaugusiojo terminas, 6–7 m. vaikui neverčiamas žodis |
+| concept.steps[0] | „…iš viršaus **ar** nuo šono.“ | „…iš viršaus **arba** nuo šono.“ | „ar“ yra klausiamasis: nurodymas skaitomas kaip klausimas |
+| concept.steps[1] | „Spėk, kokią formą matai, **ir** spausk **jos** mygtuką.“ | „Spėk, kokią formą matai. Tada spausk **tos formos** mygtuką.“ | dvi instrukcijos viename sakinyje + įvardis be daikto |
+| sim.intro | „Pasirink kūną **ir** spėk… Tada rinkis: … **ar** nuo šono.“ | „Pasirink kūną. Spėk… Tada rinkis: … **arba** nuo šono.“ | ta pati priežastis; tekstas rodomas virš modelio, skaitomas pirmas |
+| labels.viewsHeading | „Iš kur žiūrėsi? Mygtuke…“ | „Pasirink, iš kur žiūrėsi. Mygtuke…“ | užrašas virš mygtukų buvo klausimas, o ne nurodymas |
+| notes.lookRight | „…į paveikslą **dešinėje**.“ | „…į **antrą** paveikslą.“ | prie 200 % teksto figūros sukrenta viena po kita — žodis apie vietą tampa neteisingas (nauja pamoka LL-178) |
+| notes.allSides | „Apžiūrėjai **jį**…“ | „Apžiūrėjai **kūną**…“ | įvardis sakinio pradžioje be daikto toje pačioje eilutėje |
+| bodies.kugis | „Kūgio **pagrindas** apvalus…“ | „Kūgio **apačia** apvali…“ | modulyje tas pats daiktas vadintas dviem žodžiais: užuomina sakė „apačia“, modelis — „pagrindas“ |
+| tasks[0].why | „Kūgio **pagrindas** apvalus…“ | „Kūgio **apačia** apvali…“ | ta pati priežastis (atsakymas nepakeistas) |
+| tasks[4].why | „…o jo **pagrindas** apvalus.“ | „…o jo **apačia** apvali.“ | ta pati priežastis |
+| tasks[1].q | „…stačiakampį, iš viršaus **—** apskritimą. **Kas tai per kūnas?**“ | „…stačiakampį. Iš viršaus matai apskritimą. **Kuris tai kūnas?**“ | brūkšninė elipsė 1 klasei + tas pats klausimas modulyje jau buvo „Kuris tai kūnas?“ (tasks[4]) |
+| tasks[1].hint | „…Pažiūrėk į **dėžutę** iš viršaus.“ | „…Pažiūrėk į **kubą** simuliacijoje.“ | „dėžutė“ modelyje neegzistuoja — vaikas jos ieško ir neranda (ta pati šeima kaip #147 radinys „kauliukas“) |
+| reflect | „…iš **kiekvienos** pusės… Kaip **jis** atrodo…“ | „…iš **skirtingų** pusių… Kaip **tas daiktas** atrodo…“ | „kiekviena pusė“ kūne nesuskaičiuojama; įvardis vietoj daikto |
+
+**Skaičiai.** `check_language.py --grade 1`: klaidos 0 → 0, įspėjimai 0 → 0, pastabos 53 → 53 (modulyje 0 įrašų ir prieš, ir po — visi 13 radinių buvo žmogaus akių lauke: klausiamasis „ar“, įvardis, sąvokos dubliavimas, varianto objektas modelyje, pozicinis žodis; LL-52/LL-53 šeima). Žmogaus akių radiniai: **13 → 0**. `validate_content.py --grade 1`: 0 klaidų, 0 įspėjimų. `check_audio.py`: 1112 tekstų / 2224 įrašų — nepakito, nes nė vienas pakeistas raktas (`outcomes`, `concept`, `tasks`, `reflect`, `sim.config.intro/labels/notes/bodies`) nėra tariamas; `sim.config.sentences` sąmoningai neliestas, nes tie sakiniai turi mp3 įrašus.
+
+**`check_view.py` (Brave skydų imitacija, 127.0.0.1:8972):** prieš ir po vienodai — 1440: `overflow` 0, `smallCount` 0, `minTaskFont` 21,44, `tasksVisible` 5/5; 1024: 0 / 0 / 21,44 / 5/5; 390: 0 / 0 / 19,14 / 5/5; `clipped []`, `loading`/`fatal` false, konsolės klaidų 0, `problems []`.
+
+**DOM zondai:** `probe508_dom2.py` (390 px, `localStorage`/`crypto`/`speechSynthesis` užblokuoti) — sim pastaba po neteisingo spėjimo „Kūgio apačia apvali, o viršus smailas. Pažiūrėk į antrą paveikslą.“; užduočių užuominos („Pažiūrėk, kokia kūgio apačia.“, „…Pažiūrėk į kubą simuliacijoje.“) ir naujas 2-os užduoties klausimas rodomi; `readout` po trijų vaizdų „Ritinys nuo šono: matai stačiakampį. Apžiūrėjai kūną iš trijų pusių.“; tikslo pastaba („Trys vaizdai, vienas kūnas.“) atsiranda tik trečią kartą — tame pačiame `checkGoal()` kelyje, kuris kviečia `api.progress`, tad pažanga žymima pabaigoje, ne po pirmo vaizdo; `localStorage` zonde užblokuotas, todėl žymos įrašo tiesiogiai nematuota; konsolės klaidų 0.
+
+**Palikta sąmoningai:** `title` („Erdvinės figūros“) ir `subtitle` (indekso kopija — LL-05/LL-21, keitimas reikalautų `index.json` sinchronizacijos, o tekstas suprantamas); `sim.config.sentences[*]` (17 sakinių turi garso įrašus — keitimas paliktų vaiką be balso iki pergeneravimo; „Pradedam iš naujo.“ ir „Jis visą laiką buvo tas pats.“ lieka); `bodies.gretasienis` ir `sentences.gretasienis-*` (trumpasis „gretasienis“ vietoj „stačiakampis gretasienis“ — atviras #143 pasiūlymas, ne kalbos redaktoriaus sprendimas); `concept.big_idea` (4 trumpi sakiniai vietoj standarto „1–2“ — 1 klasei trumpesni sakiniai sąmoningesni už ilgesnį su jungtukais; validatoriuje nepažeidžia); `tasks[3].options` („Kamuolys plokščias“ / „Kamuolys apvalus iš visų pusių“ / „Lėkštė neturi krašto“ — skiriasi prasme, `answer` indeksas neliestas).
+
+**Nauji pasiūlymai:** `agents/proposals/2026-11-24-kalbu-redaktorius-ar-vieto-arba.json` (check_language nemato klausiamojo „ar“ instrukcijoje) ir `agents/proposals/2026-11-24-kalbu-redaktorius-sim-seen-etikete-12px.json` (`.ef-seen` 12,8 px — sim teksto minimumo vartai neegzistuoja, #44331). Nauja pamoka: LL-178 (nurodymas pagal vietą ekrane, o ne pagal daiktą).

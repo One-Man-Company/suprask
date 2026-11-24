@@ -7,15 +7,15 @@
   "minutes": 9,
   "outcomes": [
     "Skiriu kūną nuo jo vaizdo. Kūgis iš priekio atrodo kitaip nei iš viršaus.",
-    "Įvardiju kubą, rutulį, ritinį, kūgį ir stačiakampį gretasienį.",
+    "Vardinu kubą, rutulį, ritinį, kūgį ir stačiakampį gretasienį.",
     "Randu aplinkoje daiktų, panašių į šiuos kūnus."
   ],
   "concept": {
     "title": "Tas pats kūnas, kitas vaizdas",
     "big_idea": "Vienas kūnas iš skirtingų pusių atrodo kitaip. Kūgis iš priekio atrodo kaip trikampis. Iš viršaus jis atrodo kaip apskritimas. Bet tai vis dar vienas kūgis.",
     "steps": [
-      "Pasirink kūną. Žiūrėk iš priekio, iš viršaus ar nuo šono.",
-      "Spėk, kokią formą matai, ir spausk jos mygtuką.",
+      "Pasirink kūną. Žiūrėk iš priekio, iš viršaus arba nuo šono.",
+      "Spėk, kokią formą matai. Tada spausk tos formos mygtuką.",
       "Žiūrėk iš kitos pusės. Forma keisis, o kūnas liks tas pats.",
       "Apžiūrėk kūną iš visų trijų pusių."
     ],
@@ -24,25 +24,25 @@
   "sim": {
     "component": "erdvines-figuros",
     "config": {
-      "intro": "Pasirink kūną ir spėk, kokią formą matai. Tada rinkis: iš priekio, iš viršaus ar nuo šono.",
+      "intro": "Pasirink kūną. Spėk, kokią formą matai. Tada rinkis: iš priekio, iš viršaus arba nuo šono.",
       "labels": {
         "solidCaption": "Kūnas ant stalo",
         "flatCaption": "Ką matai",
-        "viewsHeading": "Iš kur žiūrėsi? Mygtuke matysi, ką jau matei.",
+        "viewsHeading": "Pasirink, iš kur žiūrėsi. Mygtuke matysi, ką jau matei.",
         "shapesHeading": "Kokią formą matai?"
       },
       "notes": {
         "prompt": "Vienas kūnas iš skirtingų pusių atrodo kitaip.",
         "revealed": "Pats kūnas nepasikeitė. Pasikeitė tik vaizdas.",
-        "lookRight": "Pažiūrėk į paveikslą dešinėje.",
+        "lookRight": "Pažiūrėk į antrą paveikslą.",
         "goal": "Trys vaizdai, vienas kūnas.",
         "chooseView": "Pasirink, iš kur dar žiūrėsi.",
         "guess": "Spėk formą arba spausk „Rodyk vaizdą“.",
-        "allSides": "Apžiūrėjai jį iš trijų pusių.",
+        "allSides": "Apžiūrėjai kūną iš trijų pusių.",
         "sameBody": "Pats kūnas liko tas pats."
       },
       "bodies": {
-        "kugis": "Kūgio pagrindas apvalus, o viršus smailas.",
+        "kugis": "Kūgio apačia apvali, o viršus smailas.",
         "ritinys": "Ritinio galai apvalūs, o šonas tiesus.",
         "kubas": "Visos kubo pusės yra kvadratai.",
         "gretasienis": "Visos gretasienio pusės yra stačiakampiai.",
@@ -79,17 +79,17 @@
       ],
       "answer": 1,
       "hint": "Pažiūrėk, kokia kūgio apačia.",
-      "why": "Kūgio pagrindas apvalus, todėl iš viršaus matai apskritimą."
+      "why": "Kūgio apačia apvali, todėl iš viršaus matai apskritimą."
     },
     {
-      "q": "Iš priekio matai stačiakampį, iš viršaus — apskritimą. Kas tai per kūnas?",
+      "q": "Iš priekio matai stačiakampį. Iš viršaus matai apskritimą. Kuris tai kūnas?",
       "options": [
         "Kubas",
         "Rutulys",
         "Ritinys"
       ],
       "answer": 2,
-      "hint": "Kubas iš viršaus atrodo kaip kvadratas. Pažiūrėk į dėžutę iš viršaus.",
+      "hint": "Kubas iš viršaus atrodo kaip kvadratas. Pažiūrėk į kubą simuliacijoje.",
       "why": "Ritinio šonas tiesus, o abu galai apvalūs."
     },
     {
@@ -123,11 +123,11 @@
       ],
       "answer": 0,
       "hint": "Palygink su ritiniu. Ar ritinio viršus smailus?",
-      "why": "Kūgis siaurėja į viršų, o jo pagrindas apvalus.",
+      "why": "Kūgis siaurėja į viršų, o jo apačia apvali.",
       "optional": true
     }
   ],
-  "reflect": "Rask klasėje daiktą, kuris iš kiekvienos pusės atrodo kitaip. Kaip jis atrodo iš viršaus?",
+  "reflect": "Rask klasėje daiktą, kuris iš skirtingų pusių atrodo kitaip. Kaip tas daiktas atrodo iš viršaus?",
   "teacher": {
     "goal": "Atpažinti ir įvardyti kubą, rutulį, ritinį, kūgį ir stačiakampį gretasienį bei suprasti, kad tas pats kūnas iš skirtingų pusių atrodo skirtingai, o pats kūnas nesikeičia. Briaunų, viršūnių ir sienų neskaičiuojame — tai ne 1 klasės programa.",
     "prompt": "Kodėl tas pats kūgis iš vienos pusės atrodo kaip trikampis, o iš kitos — kaip apskritimas?",

@@ -1,0 +1,16 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 508,
+  "created": "2026-11-24T13:34:48+02:00",
+  "type": "struktura",
+  "title": "Klausiamasis „ar“ instrukcijoje lieka nematomas nė vienam vartui",
+  "body": "Modulyje 21-erdvines-figuros buvo dvi vietos, kuriose vaikui duodamas pasirinkimas parašytas klausiamuoju „ar“, o ne „arba“: concept.steps[0] „Žiūrėk iš priekio, iš viršaus ar nuo šono.“ ir sim.config.intro „Tada rinkis: iš priekio, iš viršaus ar nuo šono.“ Sakinys su „ar“ yra klausimas, tad nurodymas skaitomas kaip klausimas, į kurį vaikas turi atsakyti, nors simuliacijoje tiesiog spaudžiami trys mygtukai. check_language.py tikrina priešingą kryptį („arba“ dviprasmiškumą, kai tinka ne bet kuris variantas), o klausiamojo „ar“ instrukcijoje nepažįsta: modulis įrankyje buvo 0 klaidų / 0 įspėjimų ir prieš, ir po. Siūloma pridėti taisyklę: liepiamojoje formoje (sakinys prasideda veiksmažodžiu „Pasirink / Žiūrėk / Rinkis“) sąrašo jungtukas „ar“ yra įspėjimas, o siūloma forma — „arba“. Taisyklė neturi liesti tikrų klausimų (sakinys su „?“), kad neapkaltintų teisingų užduočių.",
+  "target": "scripts/check_language.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/matematika/21-erdvines-figuros.json — concept.steps[0] ir sim.config.intro (prieš šio paleidimo pataisymą)",
+    "python3 scripts/check_language.py --json → modulio 21-erdvines-figuros įrašų 0, nors abi vietos buvo su „ar“",
+    "docs/KURINIO-STANDARTAS.md §6 — kalba turi būti vienareikšmė, vienaskaitos antrasis asmuo"
+  ]
+}

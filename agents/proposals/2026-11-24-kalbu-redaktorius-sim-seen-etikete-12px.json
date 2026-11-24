@@ -1,0 +1,16 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 508,
+  "created": "2026-11-24T13:36:10+02:00",
+  "type": "ux",
+  "title": "Sim valdiklio paantraštė „ką jau matei“ rodoma 12,8 px — 1 klasei per maža",
+  "body": "Modulio 21-erdvines-figuros simuliacijoje (assets/js/sims/geometrija.js, erdvinesFiguros) krypties mygtukai turi dvi eilutes: pagrindinę etiketę 0,95rem (15,2 px) ir paantraštę span.ef-seen 0,8rem (12,8 px). Būtent paantraštė pasako, ką vaikas jau matė iš tos pusės („Apskritimas“), ir modulio užrašas vaiką nukreipia kaip tik į ją: „Mygtuke matysi, ką jau matei.“ check_view.py matuoja ir rodo sim teksto minimumą 12,8 px visuose trijuose plotuose (1440/1024/390), bet sim_font_problems lieka tuščias, nes standartas sim teksto minimumo neįvardija (#44331), o sim_font_strict nėra įjungtas. 6–7 metų vaikui 12,8 px su lietuviška diakritika sunkiai skaitoma, o tai ne puošmena — tai būsenos informacija. Siūloma: padidinti .ef-seen iki ≥1rem ir tuo pačiu metu įvardyti sim teksto minimumą standarte, kad vartai turėtų slenkstį, o ne tik matavimą.",
+  "target": "assets/js/sims/geometrija.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/geometrija.js:227 — span.ef-seen font-size:.8rem",
+    "python3 scripts/check_view.py --base http://127.0.0.1:8972/ --module 21-erdvines-figuros --viewports desktop,tablet,phone --json → simFonts.min 12.8 (nodes 25), sim_font_problems []",
+    "docs/SVIETIMAS-1-GAIRES.md T5.5 — prieinamumas; docs/KURINIO-STANDARTAS.md §4.6 — mobilus pirmiausia, taikiniai ≥48 px"
+  ]
+}

@@ -31,6 +31,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "agents"))
 import db  # noqa: E402
 import pause as system_pause  # noqa: E402
+import run as runner  # noqa: E402  (yield_to_waiting — žr. #516)
 
 AUDIT = ROOT / "research" / "wiki" / "guidelines" / "kalbos-auditas.md"
 STATE = ROOT / "agents" / "kalbos-queue.json"
@@ -145,6 +146,12 @@ def main() -> int:
     for m in queue:
         if done >= args.max_items or (time.time() - started) / 60 > args.max_minutes:
             break
+        # Grafinis vaidmuo laukia užrakto? Užleidžiam vietą — jo langas vienas
+        # per dieną, o eilė gali tęstis kitą kartą (`kalbu_queue.py` yra
+        # antradieniais/penktadieniais 13:10, būtent kritiko 14:00 akivaizdoje).
+        yielded = runner.yield_to_waiting("kalbu-redaktorius")
+        if yielded:
+            print(f"   {yielded}")
         print(f"→ {m['id']}")
         before_id = max([int(r["id"]) for r in db.recent_runs(5)] or [0])
         env = dict(os.environ, SUPRASK_LOCK_WAIT=os.environ.get("SUPRASK_LOCK_WAIT", "3600"))

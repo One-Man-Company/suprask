@@ -21,8 +21,21 @@ agentai vienu metu negali dirbti: pirmasis publikuotų antrojo nebaigtus
 pakeitimus (taip atsitiko commit'e `5b58476`). Todėl:
 
 - `agents/.run.lock` imamas **visiems vaidmenims** viso paleidimo metu;
-- antrasis agentas **laukia** (`SUPRASK_LOCK_WAIT`, numatyta 900 s), o ne
-  praleidžia — kitaip jis tyliai praranda savo dienos paleidimą;
+- antrasis agentas **laukia**, o ne praleidžia — kitaip jis tyliai praranda
+  savo dienos paleidimą. Laukimo riba priklauso nuo to, kas užraktą laiko:
+  paprastas vaidmuo — `LOCK_WAIT_DEFAULT` (900 s), **eilės vaidmuo**
+  (`kurejas`, `kalbu-redaktorius`) — `LOCK_WAIT_QUEUE` (2700 s), nes vienas
+  eilės darbas trunka iki 2098 s (p95). `SUPRASK_LOCK_WAIT` visada laimi.
+  Riba iki 2026-11-24 buvo viena (900 s), todėl grafinis vaidmuo, atėjęs eilės
+  lango metu, dūsdavo po 15 min (`kritikas` neteko 2 iš 7 paleidimų);
+- laukdamas vaidmuo rašo žymę `agents/.wait.<role>` (šviežumas 300 s), o eilės
+  procesas tarp savo darbų ją pamato ir **sąmoningai užleidžia vietą**
+  (`yield_to_waiting()`): eilė turi daug langų, grafinis vaidmuo — vieną;
+- kas laiko užraktą, nustatoma iš `/proc/locks` (PID) ir
+  `/proc/<pid>/cmdline` (vaidmuo) — `lock_holder_role()`. Nuo 2026-11-08 iki
+  2026-11-24 čia buvo skaitomi `agents/.run.<role>.lock`, kurių niekas
+  nebeužrakina, todėl atsakymas visada buvo tuščias, o `RoleWatch` nematė
+  svetimo vaidmens (LL-184);
 - git operacijos papildomai saugomos trumpu `.git.lock`;
 - failas, kuris buvo nešvarus **prieš** paleidimą, niekada nepatenka į to
   paleidimo commit'ą.
@@ -89,8 +102,31 @@ Agentui **draudžiama** daryti `git commit`, `git push`, `gh pr create` — tai 
 | `conflict` | susidūrė su `origin/main`, reikia žmogaus |
 | `unpushed` | commit yra, bet push nepavyko |
 | `failed` / `timeout` | modelio klaida arba laikas baigėsi |
+| `skipped` | užraktas buvo užimtas visą laukimo ribą — paleidimas net neprasidėjo |
+| `exhausted` | baigėsi ėjimų biudžetas PIRMS įrašant failą (talpa, ne turinys) |
 
 Anksčiau statusas priklausė nuo `exit` kodo, todėl „partial“ atrodė kaip sėkmė, nors repo nepasikeitė.
+
+`skipped` **nėra** turinio gedimas: jo negali sukelti pasiūlymas, ir
+`scripts/kurejas_queue.py` tokio paleidimo nebeblokuoja — pasiūlymas grąžinamas
+į `new` (2026-11-24 #47139 buvo prarastas būtent taip).
+
+## Jau įgyvendinti, bet neuždaryti pasiūlymai
+
+Pasiūlymas uždaromas tik tada, kai jo tikslo failas pakeistas TAME PAČIAME
+commite (apsauga nuo #486). Jei darbas padarytas vėliau, o numeris nebuvo
+deklaruotas (`ĮGYVENDINTA: #N`), įrašas lieka `new` amžinai ir
+`check_agents.py` kiekvieną paleidimą įspėja apie „laukiančius >3 d.“.
+Patikrinti ir uždaryti su įrodymu:
+
+```bash
+python3 scripts/queue_repair.py --prove '4455=REPORT_MAX'          # sausa eiga
+python3 scripts/queue_repair.py --apply --prove '4455=REPORT_MAX'  # uždaro
+```
+
+Uždaroma tik su trimis įrodymais: būsena dar `new`, tikslo failas keistas PO
+pasiūlymo sukūrimo, ir `REGEX` randamas dabartiniame faile. Be vieno iš jų
+atsisakoma ir pasakoma kodėl.
 
 ## Rankinis įstrigusio darbo paskelbimas
 

@@ -128,6 +128,33 @@ def main() -> int:
         if role not in roles:
             warnings.append(f"{f.name}: timer'is be atitinkamo vaidmens ROLES")
 
+    # Vienetas privalo gyventi ilgiau nei ilgiausias vaidmens biudžetas (#516).
+    # Iki 2026-11-24 `suprask-agent@.service` turėjo `TimeoutStartSec=3900`,
+    # nors `sistemos-architektas` ir `simuliaciju-inzinierius` turi 14400 s
+    # biudžetą: systemd perkirpdavo kiekvieną ilgesnį nei 65 min paleidimą
+    # tyliai, o ROLES skaičius liko popieriuje. Dabar skaičius generuojamas
+    # (`deploy/gen_timers.py:agent_service_timeout`) ir lyginamas čia — kad
+    # ranka pataisytas šablonas vėl neatitoltų nuo ROLES.
+    try:
+        import run as _runner
+        unit = UNITS / "suprask-agent@.service"
+        if unit.is_file():
+            found = re.search(r"^TimeoutStartSec=(\d+)", unit.read_text(encoding="utf-8"),
+                              re.MULTILINE)
+            if not found:
+                problems.append("suprask-agent@.service: trūksta TimeoutStartSec")
+            else:
+                limit = int(found.group(1))
+                need = max((int(c["timeout"]) for c in roles.values() if not c.get("queue")),
+                           default=0) + int(getattr(_runner, "LOCK_WAIT_QUEUE", 0))
+                if limit < need:
+                    problems.append(
+                        f"suprask-agent@.service: TimeoutStartSec={limit} < {need} "
+                        f"(ilgiausias biudžetas + laukimas užrakto) — systemd nužudys "
+                        f"paleidimą viduryje darbo; paleisk deploy/gen_timers.py")
+    except Exception as exc:  # noqa: BLE001
+        warnings.append(f"vieneto laiko limito patikra praleista: {exc}")
+
     # Dienoraštis: architektas privalo palikti įrašą po kiekvieno darbo.
     # Tikrinamas paskutinis BAIGTAS paleidimas, o ne pirmas sąraše: kol
     # architektas dirba, `recent_runs()` pirmas įrašas yra `running`, ir senoji

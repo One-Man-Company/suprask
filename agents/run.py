@@ -171,6 +171,24 @@ INFRA_MAX_ATTEMPTS = 3
 # apsauga („0 failų = ne bandymas“) niekada negalėjo suveikti.
 LOG_PREFIX = "agents/log/"
 
+# Laukimo užraktui ribos (#516). Viena bendra 900 s riba buvo trumpesnė už tai,
+# ko laukiama: eilės vaidmens vienas darbas trunka iki 2098 s (p95, `runs.db`
+# 2026-11-24), o `kurejas` eilė laiko užraktą dar ilgiau. Todėl paleidimas,
+# atėjęs eilės lango metu, dūsdavo po 15 min ir visas jo dienos darbas dingdavo:
+# 6 `skipped` paleidimai, 5 iš jų — būtent `Užraktas užimtas ilgiau nei 900 s`.
+# `kritikas` (14:00) krisdavo į `kalbu-redaktorius` eilę (13:10, iki 4 modulių)
+# kiekvieną antradienį/penktadienį — 2 iš 7 paleidimų = 28 % jo darbo.
+#
+# Dabar laukiama tiek, kiek realiai gali trukti tai, ko laukiama: paprastas
+# rašymas — 900 s, o jei užraktą laiko EILĖS vaidmuo (jo paleidimai ilgi, bet
+# baigtiniai) — `LOCK_WAIT_QUEUE`. Skaičius paimtas su rezervu virš p95.
+LOCK_WAIT_DEFAULT = 900
+LOCK_WAIT_QUEUE = 2700
+
+# Kiek laiko žymė `agents/.wait.<role>` laikoma galiojančia. Žymė atnaujinama
+# kas 10 s, kol paleidimas laukia; pasenusi (lūžusio proceso) ignoruojama.
+WAIT_MARKER_FRESH_S = 300
+
 # Dokumentai, kuriuose kiekvienas modulis keičia skaičių (#5400). Juos perrašo
 # `scripts/sync_docs_facts.py`; bėgiklis prideda juos prie publikuojamų failų,
 # kad commit'as būtų vientisas (modulis + teisingi skaičiai).
@@ -789,7 +807,7 @@ def parse_porcelain(text: str) -> list[str]:
     return files
 
 
-RUNTIME_RE = re.compile(r"^agents/\.(?:git|run[^/]*)\.lock$")
+RUNTIME_RE = re.compile(r"^agents/\.(?:git\.lock|run[^/]*\.lock|wait\.[^/]+)$")
 
 
 def is_runtime_artifact(rel: str) -> bool:
@@ -893,7 +911,7 @@ class RoleWatch:
     Vieno patikrinimo paleidimo pradžioje neužtenka: kitas vaidmuo gali pradėti
     ir baigti visiškai mūsų viduje, ir tada pabaigoje jo užraktas jau būtų
     atlaisvintas. Todėl imame ėminius kas kelias sekundes per visą paleidimą;
-    `agents/.run.<role>.lock` laikomas nuo `main()` pradžios iki `finally`,
+    bendras rašymo užraktas `agents/.run.lock` laikomas visą `main()` laiką,
     todėl ėminio pakanka, kad užfiksuotume faktą „dirbo“.
     """
 
@@ -1429,24 +1447,70 @@ def _proc_locks_usable() -> bool:
     return ok
 
 
-def active_role_locks(exclude: str = "") -> list[str]:
-    """Vaidmenys, kurių paleidimas šiuo metu vyksta (jų užraktas laikomas).
+def role_of_pid(pid: int) -> str | None:
+    """Vaidmuo, kurį paleido procesas `pid` (`agents/run.py <vaidmuo>`).
 
-    Užraktas `agents/.run.<role>.lock` laikomas visą paleidimą (nuo `main()`
-    iki `finally`), todėl jo būsena — vienintelis patikimas požymis, kad kitas
-    vaidmuo dar dirba tame pačiame darbiniame kataloge.
+    Reikalinga tam, kad būtų galima pasakyti, KAS laiko bendrą rašymo užraktą.
+    Iki 2026-11-24 to niekas nesakė: `active_role_locks()` skaitė
+    `agents/.run.<role>.lock` failus, kurių NIEKAS nebenaudoja nuo commit
+    `378dbd8` (2026-11-08, „vienas užraktas visiems“). Vietoje to, kad
+    reikalautų dviejų užraktų, atsakymas imamas iš to paties šaltinio, kuris
+    užraktą laiko: `/proc/locks` duoda PID, o `/proc/<pid>/cmdline` — vaidmenį.
+    """
+    try:
+        raw = Path(f"/proc/{pid}/cmdline").read_bytes()
+    except OSError:
+        return None
+    args = [a.decode("utf-8", "replace") for a in raw.split(b"\0") if a]
+    for i, arg in enumerate(args[:-1]):
+        if arg.endswith("agents/run.py") and args[i + 1] in ROLES:
+            return args[i + 1]
+    return None
+
+
+def lock_holder_role(exclude: str = "") -> str | None:
+    """Vaidmuo, kuris DABAR laiko bendrą rašymo užraktą (`agents/.run.lock`)."""
+    if not _proc_locks_usable():
+        return None
+    holders = _locked_inodes() or {}
+    try:
+        inode = LOCK_FILE.stat().st_ino
+    except OSError:
+        return None
+    pid = holders.get(inode)
+    if not pid or pid == os.getpid():
+        return None
+    role = role_of_pid(pid)
+    return role if role and role != exclude else None
+
+
+def active_role_locks(exclude: str = "") -> list[str]:
+    """Vaidmenys, kurių paleidimas šiuo metu vyksta.
+
+    Nuo 2026-11-24 šaltinis yra TAS PATS užraktas, kuris tikrai laikomas:
+    bendras `agents/.run.lock` (PID iš `/proc/locks` → vaidmuo iš
+    `/proc/<pid>/cmdline`). Anksčiau čia buvo skaitomi
+    `agents/.run.<role>.lock` failai, kurių niekas neužrakina nuo commit
+    `378dbd8`, todėl funkcija **visada** grąžindavo tuščią sąrašą: žurnalas
+    sakydavo „laukia, kol baigs kitas agentas“ be vardo, o `RoleWatch` niekada
+    nematydavo svetimo vaidmens (LL-49 apsauga buvo akla, nors vartai žali).
 
     Savas vaidmuo praleidžiamas (`exclude`): `flock` užraktas priklauso failo
     aprašui, ne procesui, todėl bandymas užrakinti savo paties failą per antrą
     deskriptorių atrodytų kaip svetimas užraktas.
 
-    Pirmiausia skaitomas `/proc/locks` (nieko neužrakina). Jei jis netinka,
-    naudojamas senasis `flock` zondas su jo varžybų kaina.
+    Senasis keliass vaidmenų užraktų skaitymas paliktas kaip papildomas
+    šaltinis: jei kada nors vėl imamas užraktas pagal vaidmenį, jis bus
+    matomas be šio failo pakeitimo.
     """
-    holders = _locked_inodes() if _proc_locks_usable() else None
     active: list[str] = []
+    holder = lock_holder_role(exclude)
+    if holder:
+        active.append(holder)
+
+    holders = _locked_inodes() if _proc_locks_usable() else None
     for other in sorted(ROLES):
-        if other == exclude:
+        if other == exclude or other in active:
             continue
         path = role_lock_file(other)
         if not path.exists():  # neužrakintas paleidimas dar nesukūrė failo
@@ -1470,6 +1534,103 @@ def active_role_locks(exclude: str = "") -> list[str]:
         except OSError:
             continue
     return active
+
+
+def queue_roles() -> set[str]:
+    """Vaidmenys, kurių paleidimas yra EILĖ (vienas procesas, daug darbų)."""
+    return {r for r, c in ROLES.items() if c.get("queue")}
+
+
+def role_wait_marker(role: str) -> Path:
+    """Žymė `agents/.wait.<role>`: šis vaidmuo šiuo metu laukia užrakto.
+
+    Reikalinga tam, kad eilės vaidmuo (kuris laiko užraktą ilgiausiai) galėtų
+    UŽLEISTI kelią grafikiniui vaidmeniui. Be šios žymės abu procesai lenktyniauja
+    `flock(LOCK_NB)` kas 10 s ir laimi tas, kuris anksčiau paklausė — taip
+    `kritikas` (14:00) pralaimėdavo `kalbu-redaktorius` eilės darbams, o po
+    900 s būdavo paleidžiamas kaip `skipped` (2026-11-24 #511, 2026-11-20 #408).
+    """
+    return AGENTS / f".wait.{role}"
+
+
+def lock_wait_budget(env_wait: str | None, holders: list[str], current: int) -> int:
+    """Kiek sekundžių laukti užrakto, atsižvelgiant į tai, KAS jį laiko.
+
+    Gryna funkcija (be laiko ir būsenos), kad būtų išbandoma zonde: taisyklė
+    „eilės laužiamas užraktas laikomas ilgiau“ turi turėti įrodymą, o ne likti
+    docstringu (LL-36). `env_wait` visada laimi — rankinis paleidimas turi
+    galėti nustatyti savo ribą.
+    """
+    if env_wait:
+        try:
+            return int(env_wait)
+        except ValueError:
+            return current
+    if any(h in queue_roles() for h in holders):
+        return max(current, LOCK_WAIT_QUEUE)
+    return current
+
+
+def mark_waiting(role: str) -> None:
+    """Įrašo/atnaujina laukimo žymę (kviečiama kas 10 s, kol laukiama)."""
+    try:
+        role_wait_marker(role).write_text(dt.datetime.now().isoformat(timespec="seconds"),
+                                          encoding="utf-8")
+    except OSError:
+        pass
+
+
+def clear_waiting(role: str) -> None:
+    try:
+        role_wait_marker(role).unlink(missing_ok=True)
+    except OSError:
+        pass
+
+
+def waiting_roles(exclude: str = "") -> list[str]:
+    """Kiti vaidmenys, kurie DABAR laukia užrakto (žymė šviežia).
+
+    Pasenusi žymė (procesas lūžo, kol laukė) ignoruojama — kitaip eilė amžinai
+    užleistų kelią vaidmeniui, kurio nebėra.
+    """
+    now = dt.datetime.now().timestamp()
+    found: list[str] = []
+    for other in sorted(ROLES):
+        if other == exclude:
+            continue
+        path = role_wait_marker(other)
+        try:
+            if now - path.stat().st_mtime <= WAIT_MARKER_FRESH_S:
+                found.append(other)
+        except OSError:
+            continue
+    return found
+
+
+def yield_to_waiting(role: str, max_wait_s: int = 1800,
+                     step_s: float = 5, give_s: float = 15) -> str:
+    """Eilės vaidmuo palaukia, kol grafikinis vaidmuo paims užraktą.
+
+    Kviečiama tarp eilės darbų (užrakto nelaikant). Grąžina žmogui skaitomą
+    priežastį arba tuščią eilutę, jei užleisti nereikėjo. Tai vienintelė vieta,
+    kur eilė savanoriškai atsisako pirmumo: jos darbas gali laukti kito lango,
+    o grafikinis vaidmuo (kritikas, architektas) kito šanso šiandien neturi.
+
+    `step_s` ir `give_s` — kad zondas galėtų išbandyti šią šaką per sekundę,
+    o ne per 20 (LL-36: taisyklė be paleidžiamo įrodymo supūva).
+    """
+    others = waiting_roles(exclude=role)
+    if not others:
+        return ""
+    who = ", ".join(others)
+    started = time.time()
+    while waiting_roles(exclude=role) and time.time() - started < max_wait_s:
+        time.sleep(step_s)
+    if not waiting_roles(exclude=role):
+        # Užraktą laikantis darbas baigėsi — duodam laukiančiam jį paimti.
+        time.sleep(give_s)
+        return f"užleista laukiančiam: {who}"
+    return f"laukiama {who} ilgiau nei {max_wait_s} s — tęsiu eilę"
 
 
 def ensure_clean(role: str) -> str:
@@ -1515,8 +1676,8 @@ def ensure_clean(role: str) -> str:
             body = (f"Likutį rado „{role}“ paleidimas prieš pradėdamas savo darbą.\n\n"
                     f"Kas: {len(dirty)} failų — {listed}\n"
                     f"Kodėl likutis: nė vienas kitas vaidmuo nebuvo aktyvus "
-                    f"(`agents/.run.*.lock` neužimti), tad tai nutrūkusio ar rankinio "
-                    f"paleidimo likutis, o ne vykstantis darbas (LL-45).")
+                    f"(bendras rašymo užraktas `agents/.run.lock` laisvas), tad tai "
+                    f"nutrūkusio ar rankinio paleidimo likutis, o ne vykstantis darbas (LL-45).")
             # Neutralus prefiksas: tai NĖRA agento darbas, tik darbinės kopijos likutis.
             if git("commit", "-m", f"[sistema] darbinės kopijos likutis prieš {role} paleidimą",
                    "-m", body).returncode == 0:
@@ -1833,24 +1994,36 @@ def main() -> int:
     # commit'ą 5b58476). Serializuojam rašymą, o laukiame, o ne praleidžiame —
     # kitaip agentas tyliai praranda savo dienos paleidimą.
     lock_handle = open(LOCK_FILE, "w")
-    wait_s = int(os.environ.get("SUPRASK_LOCK_WAIT", "900"))
+    # Kiek laukti: eilės vaidmuo laiko užraktą ilgiausiai, tad jei jis dirba,
+    # laukiama ilgiau (žr. LOCK_WAIT_QUEUE). ENV vis dar perrašo abu atvejus.
+    env_wait = os.environ.get("SUPRASK_LOCK_WAIT")
     started_wait = time.time()
     notified = False
+    wait_s = int(env_wait) if env_wait else LOCK_WAIT_DEFAULT
     while True:
         try:
             fcntl.flock(lock_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            clear_waiting(args.role)
             break
         except BlockingIOError:
             others = active_role_locks(args.role)
+            wait_s = lock_wait_budget(env_wait, others, wait_s)
+            # Žymė leidžia eilės vaidmeniui sąmoningai užleisti vietą tarp
+            # savo darbų — kitaip grafinis vaidmuo pralaimi lenktynes kas kartą.
+            mark_waiting(args.role)
             if not notified:
                 print(f"{args.role}: laukia, kol baigs {', '.join(others) or 'kitas agentas'}"
                       f" (iki {wait_s} s)")
                 notified = True
             if time.time() - started_wait > wait_s:
+                clear_waiting(args.role)
+                holders = ", ".join(others) or "nežinomas"
                 run_id = db.start_run(args.role, args.trigger, f"hermes:{cfg['profile']}", "skipped: lock")
                 db.finish_run(run_id, "skipped", None, int(time.time() - started_wait), "",
-                              f"Užraktas užimtas ilgiau nei {wait_s} s.")
+                              f"Užraktas užimtas ilgiau nei {wait_s} s ({holders}).",
+                              detail=f"Užraktą laikė: {holders}")
                 print(f"{args.role}: užraktas užimtas ilgiau nei {wait_s} s — praleista")
+                lock_handle.close()
                 return 0
             time.sleep(10)
 
@@ -2166,6 +2339,7 @@ def main() -> int:
         watch.stop()
         Path(query_path).unlink(missing_ok=True)
         Path(goal_path).unlink(missing_ok=True)
+        clear_waiting(args.role)
         fcntl.flock(lock_handle, fcntl.LOCK_UN)
         lock_handle.close()
 

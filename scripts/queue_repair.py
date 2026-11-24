@@ -24,13 +24,23 @@ Naudojimas:
     python3 scripts/queue_repair.py             # sausa bėga: ką pakeistų
     python3 scripts/queue_repair.py --apply     # įrašo pakeitimus
     python3 scripts/queue_repair.py --json      # mašininė išvestis
+
+Antra taisymo rūšis (nuo 2026-11-24, #4455/#4516): pasiūlymas, kurio prašymas
+JAU yra tikslo faile, bet kabo `new`, nes uždarymas reikalauja pakeitimo TAME
+PAČIAME commite. `--prove ID=REGEX` uždaroma tik su trimis įrodymais: (1)
+pasiūlymas dar `new`, (2) tikslo failas pakeistas PO pasiūlymo sukūrimo, (3)
+`REGEX` randamas dabartiniame faile. Be vieno iš jų — atsisakoma ir pasakoma
+kodėl, o ne uždaroma „nes atrodo padaryta“ (LL-36).
 """
 
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
+import pathlib
 import re
+import subprocess
 import sqlite3
 import sys
 from pathlib import Path
@@ -98,13 +108,112 @@ def diagnose(prop: dict) -> dict:
                    f"žymė „{reason}“"}
 
 
+def prove_done(prop: dict, pattern: str) -> dict:
+    """Ar pasiūlymo prašymas JAU yra tikslo faile? Grąžina sprendimą su įrodymais.
+
+    Ką tai sprendžia (#4455, #4516): uždarymas reikalauja, kad tikslo failas
+    būtų pakeistas TAME PAČIAME commite (`mark_implemented`, #486). Jei darbas
+    padarytas vėliau kitame paleidime, o numeris nebuvo deklaruotas, pasiūlymas
+    lieka `new` amžinai: #4455 (ataskaitų dydis) įgyvendintas commite f662b27,
+    o eilėje kabėjo 16 dienų; #4516 (sakinio ilgis `error`) — nuo 2026-11-08.
+    Todėl `check_agents.py` kiekvieną paleidimą įspėja apie „11 laukiančių
+    sisteminių pasiūlymų“, nors dalis jų jau seniai padaryta, ir architektas
+    eikvoja paleidimus jiems iš naujo.
+
+    Trys sąlygos, visos privalomos:
+      1. pasiūlymas dar `new` (žmogaus sprendimo neperrašome),
+      2. bent vienas tikslo failas pakeistas PO pasiūlymo sukūrimo datos,
+      3. `pattern` (įrodymas, kad būtent šis prašymas ten yra) randamas faile.
+    """
+    if (prop.get("status") or "") != "new":
+        return {"prove": False, "why": f"būsena {prop.get('status')}, ne new"}
+    target = (prop.get("target") or "").strip()
+    paths = runner.target_paths(target)
+    if not paths:
+        return {"prove": False, "why": "tikslas nenurodo failo kelio"}
+    try:
+        created = dt.datetime.fromisoformat(prop.get("created") or "").timestamp()
+    except (TypeError, ValueError):
+        return {"prove": False, "why": "pasiūlymo data neperskaitoma"}
+    try:
+        regex = re.compile(pattern)
+    except re.error as exc:
+        return {"prove": False, "why": f"netinkamas šablonas: {exc}"}
+
+    found_in: list[str] = []
+    changed_after: list[str] = []
+    for rel in paths:
+        path = ROOT / rel
+        if not path.is_file():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        if regex.search(text):
+            found_in.append(rel)
+        try:
+            out = subprocess.run(["git", "log", "-1", "--format=%ct", "--", rel],
+                                 cwd=ROOT, capture_output=True, text=True, timeout=20)
+            stamp = out.stdout.strip()
+            if stamp.isdigit() and int(stamp) > created:
+                changed_after.append(rel)
+        except (OSError, subprocess.SubprocessError):
+            continue
+    if not found_in:
+        return {"prove": False, "why": f"šablono nėra nė viename tikslо faile: {', '.join(paths)}"}
+    if not changed_after:
+        return {"prove": False,
+                "why": f"tikslo failas nepakeistas po {prop.get('created')} — "
+                       f"įrodymas galėjo būti ir prieš prašymą"}
+    return {"prove": True, "files": found_in, "changed_after": changed_after,
+            "why": f"šablonas rastas: {', '.join(found_in)}; failas keistas po prašymo"}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true", help="įrašo pakeitimus į agents/runs.db")
     ap.add_argument("--json", action="store_true", help="mašininė išvestis")
+    ap.add_argument("--prove", action="append", default=[], metavar="ID=REGEX",
+                    help="uždaryti pasiūlymą, jei REGEX jau yra tikslo faile (kartojamas)")
     args = ap.parse_args()
 
     db.init()
+
+    # ── Antra rūšis: jau įgyvendinti, bet neuždaryti pasiūlymai (#4455, #4516)
+    proven: list[dict] = []
+    for spec in args.prove:
+        if "=" not in spec:
+            proven.append({"id": spec, "prove": False,
+                           "why": "formatas turi būti ID=REGEX"})
+            continue
+        raw_id, pattern = spec.split("=", 1)
+        try:
+            pid = int(raw_id.strip().lstrip("#"))
+        except ValueError:
+            proven.append({"id": raw_id, "prove": False, "why": "numeris ne skaičius"})
+            continue
+        row = next((r for r in db.proposals(1000) if int(r["id"]) == pid), None)
+        if not row:
+            proven.append({"id": pid, "prove": False, "why": "pasiūlymo nėra"})
+            continue
+        verdict = prove_done(row, pattern)
+        proven.append({"id": pid, "title": row.get("title"), **verdict})
+        if verdict["prove"] and args.apply:
+            db.set_proposal_status(pid, "done",
+                                   f"įrodyta, kad jau yra: {verdict['files'][0]} "
+                                   f"({pattern[:40]}) — darbas padarytas kitame commite")
+            proven[-1]["closed"] = True
+
+    if proven and not args.json:
+        print(f"Jau įgyvendinti (‑‑prove): {sum(1 for v in proven if v['prove'])} "
+              f"iš {len(proven)}")
+        for v in proven:
+            mark = "→ done" if v["prove"] else "  likti new"
+            print(f"  #{v['id']} {mark}: {v['why']}")
+            if v.get("closed"):
+                print("      uždaryta agents/runs.db")
+
     verdicts = []
     for prop in db.proposals(1000, status="blocked"):
         diag = diagnose(prop)
@@ -113,7 +222,7 @@ def main() -> int:
     fixable = [v for v in verdicts if v["repair"]]
     if args.json:
         print(json.dumps({"checked": len(verdicts), "fixable": fixable,
-                          "apply": args.apply}, ensure_ascii=False))
+                          "proven": proven, "apply": args.apply}, ensure_ascii=False))
         if not fixable:
             return 0
     else:

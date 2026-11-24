@@ -445,3 +445,75 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
 - **Neliesta sąmoningai:** `content/`, `assets/js/sims/`, `agents/scope.json`, kitų vaidmenų
   failai, `AGENTS.md`, `.github/workflows/` (CI žingsnis jau buvo). `queue_repair.py` →
   grąžintinų 0: blokuoti 4, visi dėl turinio, ne infrastruktūros.
+
+## 2026-11-24 20:32 · sistemos-architektas #516
+
+- **Mačiau (prieš):** 179 paleidimai / 7 d. Nenaudingų: `kritikas` **56 %**
+  (2 `empty`, 2 `skipped`), `dizaineris` 33 %, `simuliaciju-inzinierius` 28 %,
+  `kalbu-redaktorius` 22 %, `ideator` 22 %. Pasiūlymai: 212 (new 27, blocked 4,
+  done 172); **23 sisteminiai `new`, seniausias — 16 d.**; `check_agents.py`
+  įspėjo apie 11 laukiančių >3 d. Ataskaitų 580 failų / 10,7 MB.
+  Ištyrus `skipped` paleidimus: **6 iš 6** — ne vaidmens gedimas, o užrakto
+  laukimas. 5 jų baigėsi po lygiai 900 s (riba), o laikytojas buvo eilės
+  vaidmuo (`kalbu-redaktorius` 1775–1800 s, `kurejas` 1018 s). Eilės darbo
+  trukmė (`runs.db`): mediana 816 s, p95 **2098 s**, max 5939 s — t. y. laukimo
+  riba buvo trumpesnė už tai, ko laukiama.
+- **Keičiau:**
+  - `agents/run.py` — **`LOCK_WAIT_QUEUE=2700`** (laukiama ilgiau, kai laikantis
+    vaidmuo yra eilės; `SUPRASK_LOCK_WAIT` vis dar laimi), `lock_wait_budget()`
+    kaip gryna funkcija (kad būtų zondas); laukimo žymė `agents/.wait.<role>`
+    (`mark_waiting`/`waiting_roles`/`clear_waiting`, šviežumas 300 s) ir
+    `yield_to_waiting()` — eilė tarp savo darbų sąmoningai užleidžia vietą.
+    **Antra, gilesnė klaida tame pačiame faile:** `active_role_locks()` skaitė
+    `agents/.run.<role>.lock`, kurių niekas neužrakina nuo commito `378dbd8`
+    (2026-11-08) — todėl visada grąžindavo `[]`. Pridėta `role_of_pid()` +
+    `lock_holder_role()` (`/proc/locks` → PID → `/proc/<pid>/cmdline`).
+  - `scripts/kurejas_queue.py` — **`skipped` nebeblokuoja pasiūlymo.** Šiandien
+    #47139 virto `blocked` („paleidimas nepavyko: kurejas: užraktas užimtas
+    ilgiau nei 900 s“), nors modulio niekas nelietė — `blocked` nebeliečia, tad
+    geras pasiūlymas būtų prarastas visam laikui. Dabar jis grąžinamas į `new`.
+    Taip pat `yield_to_waiting("kurejas")` eilės cikle.
+  - `scripts/kalbu_queue.py` — `yield_to_waiting` prieš kiekvieną modulį
+    (šis langas — 13:10 antradieniais/penktadieniais, būtent kritiko 14:00
+    akivaizdoje; 2026-11-20 #408 ir 2026-11-24 #511 abu taip prarasti).
+  - `deploy/gen_timers.py` + `deploy/systemd/suprask-agent@.service` —
+    `TimeoutStartSec` **3900 → 17700**: jis buvo mažesnis už ilgiausią ROLES
+    biudžetą (14400 s), tad systemd tyliai kirpo ilgus paleidimus. Dabar
+    skaičiuojama `agent_service_timeout()` iš ROLES ir `LOCK_WAIT_QUEUE`.
+  - `scripts/check_agents.py` — naujas vartas: vieneto `TimeoutStartSec` ≥
+    ilgiausias biudžetas + laukimas (kad skaičius vėl neatitolų).
+  - `scripts/queue_repair.py` — `--prove ID=REGEX`: uždaro pasiūlymą, kuris
+    **jau įgyvendintas**, bet kabo `new`, nes uždarymas reikalauja pakeitimo
+    tame pačiame commite. Trys įrodymai privalomi: būsena `new`, tikslo failas
+    keistas PO pasiūlymo, REGEX randamas faile.
+  - `scripts/probe_lock_wait.py` — naujas zondas, 17 lūkesčių (įsijungia į CI
+    per esamą `probe_*.py` ciklą).
+  - `research/wiki/guidelines/pamokos.md` — **LL-184**; `.gitignore` —
+    `agents/.wait.*` (vykdymo būsena, ne turinys).
+- **Kodėl:** #516 matavimas parodė, kad didžiausias nuostolis yra ne turinio, o
+  **užrakto** sistemoje: 6 paleidimai prarasti, o `kritikas` neteko 28 % savo
+  darbo 2 savaites iš eilės. Be to, mano paties taisymas būtų buvęs neveikiantis,
+  nes laikytojo vardas nebuvo žinomas — todėl abi dalys taisytos kartu.
+  Eilėje atsirado ir naujas tos pačios priežasties įrašas (#47139), kuris
+  parodė, kad `skipped` klaidingai blokuoja pasiūlymus.
+- **Patikra (po):** `probe_lock_wait.py` **17/17**, rc 0 (~1 s, be tinklo);
+  neigiama kontrolė: prieš pataisą tame pačiame procese `active_role_locks()` →
+  `[]`, o `lock_holder_role()` → `sistemos-architektas`. Integracinis bandymas
+  realiame procese: antras `run.py kuratorius` (kai architektas laiko užraktą)
+  → „laukia, kol baigs **sistemos-architektas**“, o `runs.db` #517 `detail` =
+  „Užraktą laikė: sistemos-architektas“ (anksčiau tekstas buvo „kitas agentas“).
+  `queue_repair.py --prove`: #4455 ir #4516 → `done` (abu įrodymai rasti),
+  neigiama kontrolė su išgalvotu šablonu → liko `new`, su jau `done` numeriu →
+  atsisakyta. Sisteminiai `new`: **23 → 21**; `check_agents` įspėjimas apie
+  >3 d. laukiančius: **11 → 9**. Grafiko kūrėjo eilė: 4 įrašai (ne 0).
+  `gen_timers.py --install` + `daemon-reload`: `TimeoutStartUSec=4h 55min`.
+  Visi 9 vartai rc 0: `validate_content`, `check_agents`, `check_lessons` (184),
+  `check_ui`, `check_art`, `check_registry` (0), `check_language --strict`,
+  `check_audio` (2224/2224), `check_docs_facts`.
+- **Neliesta sąmoningai:** `content/`, `assets/js/sims/` (turinio ir simuliacijų
+  darbas — kūrėjas/inžinierius), `agents/scope.json` (žmogaus sprendimas),
+  `AGENTS.md`, kitų vaidmenų failai. Likę **21** sisteminis pasiūlymas —
+  nekelti visi vienu metu; seniausias normalus dabar #5342 (2026-11-08,
+  worktree izoliacija), o high eilėje — #22168, #42019, #44331, #46530.
+  `queue_repair.py --apply`: grąžintinų į eilę 0 (4 blokuoti — dėl turinio,
+  ne infrastruktūros).

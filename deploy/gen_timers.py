@@ -56,6 +56,42 @@ Unit=suprask-agent@{role}.service
 WantedBy=timers.target
 """
 
+# Vienas šablonas visiems grafikos vaidmenims. `TimeoutStartSec` NEGALI būti
+# mažesnis už ilgiausią vaidmens biudžetą, nes systemd nužudo procesą tyliai
+# (`SIGTERM`), o `run.py` apie tai neparašo nieko — ataskaita atrodo kaip
+# nutrūkusi be priežasties. Iki 2026-11-24 čia buvo 3900 s, nors ROLES
+# `sistemos-architektas` ir `simuliaciju-inzinierius` turi 14400 s biudžetą:
+# kiekvienas ilgesnis nei 65 min paleidimas buvo perkirpamas viduryje darbo.
+# Skaičiuojama iš ROLES (`timeout`) + užrakto laukimo (`LOCK_WAIT_QUEUE`).
+AGENT_SERVICE = """[Unit]
+Description=SUPRASK agentas: %i
+Documentation=file:{root}/agents/README.md
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+WorkingDirectory={root}
+# hermes lives in ~/.local/bin, which systemd's default PATH omits.
+Environment="PATH=/home/zoltanas/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="SUPRASK_HERMES_BIN=/home/zoltanas/.local/bin/hermes"
+ExecStart=/usr/bin/python3 {root}/agents/run.py %i
+# Ilgiausias vaidmens biudžetas + laukimas užrakto + rezervas publikavimui.
+# Skaičius skaičiuojamas žemiau iš ROLES ir LOCK_WAIT_QUEUE — ne rašomas ranka.
+TimeoutStartSec={timeout}
+Nice=10
+StandardOutput=journal
+StandardError=journal
+"""
+
+
+def agent_service_timeout() -> int:
+    """`TimeoutStartSec` grafikos vaidmenims: ilgiausias biudžetas + laukimas."""
+    longest = max((int(c["timeout"]) for c in runner.ROLES.values() if not c.get("queue")),
+                  default=3600)
+    return longest + runner.LOCK_WAIT_QUEUE + 600
+
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -91,6 +127,16 @@ def main() -> int:
             )
 
     print(f"Sugeneruota timerių: {len(written)}")
+
+    # Šablonas `suprask-agent@.service` generuojamas taip pat, kad jo
+    # `TimeoutStartSec` negalėtų atsilikti nuo ROLES (žr. AGENT_SERVICE).
+    agent_unit = OUT / "suprask-agent@.service"
+    agent_unit.write_text(
+        AGENT_SERVICE.format(root=ROOT, timeout=agent_service_timeout()),
+        encoding="utf-8",
+    )
+    print(f"Šablonas: {agent_unit.relative_to(ROOT)} "
+          f"(TimeoutStartSec={agent_service_timeout()})")
 
     if args.install:
         USER_UNITS.mkdir(parents=True, exist_ok=True)

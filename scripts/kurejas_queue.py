@@ -300,6 +300,12 @@ def main() -> int:
     done = blocked = review = processed = 0
 
     while processed < args.max_items and (time.time() - started) / 60 < args.max_minutes:
+        # Prieš imant kitą darbą: jei grafinis vaidmuo laukia užrakto, užleidžiam
+        # vietą. Eilė turi daug langų, o `kritikas` ar `architektas` — vieną, todėl
+        # be šios eilutės jų paleidimas virsdavo `skipped` (2026-11-24 #511).
+        yielded = runner.yield_to_waiting("kurejas")
+        if yielded:
+            print(f"   {yielded}")
         pending = queue()
         if not pending:
             print("Eilė tuščia — baigiu.")
@@ -384,6 +390,22 @@ def main() -> int:
             blocked += 1
             print(f"   Paleidimas baigėsi laiko limitu ({duration}s), o tikslo dar nėra — "
                   f"pasiūlymas lieka new, stabdau eilę (naujas laiko limitas 4× didesnis).")
+            break
+
+        if run_status == "skipped":
+            # Užraktas buvo užimtas ilgiau nei laukimo riba — paleidimas net
+            # nepradėjo darbo. Tai NĖRA pasiūlymo kaltė ir ne turinio gedimas:
+            # 2026-11-24 #47139 taip virto `blocked` („paleidimas nepavyko:
+            # kurejas: užraktas užimtas ilgiau nei 900 s"), nors modulio niekas
+            # net nebandė liesti — ilgą užraktą laikė architekto paleidimas.
+            # `blocked` nebeliečia, tad geras pasiūlymas būtų prarastas visam
+            # laikui. Grąžiname į `new` ir stabdome eilę: kol užraktas toks
+            # ilgas, kitas darbas tik pakartotų tą patį.
+            db.set_proposal_status(int(prop["id"]), "new",
+                                   f"nebandyta: užraktas užimtas >{duration}s — "
+                                   f"pasiūlymas nepradėtas, lieka eilėje")
+            print(f"   Užraktas buvo užimtas visą laukimą ({duration}s) — pasiūlymas "
+                  f"net nebandytas, lieka new. Stabdau eilę.")
             break
 
         if run_status == "published":

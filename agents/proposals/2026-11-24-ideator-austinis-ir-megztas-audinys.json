@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 497,
+  "created": "2026-11-24T07:52:00+02:00",
+  "type": "tema",
+  "title": "Kodėl kojinė pabyra, o marškiniai ne",
+  "body": "23.2.1 (1–2 kl.) programoje yra atskiras sakinys, kurio platforma neliečia nė karto: „Nagrinėjama audinių (austų ir trikotažo) struktūra“ (`sources/pradinio-bp-rekomendacijos-2024.txt:9444`), o metodinėje dalyje tam skirta veikla su didelio formato austo audinio ir trikotažo pavyzdžiais (`:6217–6220`) ir siūlymas aiškintis „trikotažinio ir austinio audinio pritaikomumą rūbams“ (`:6236`). Šis modulis to nelyčia sąmoningai: `06-drabuziu-prieziura.json` pats rašo, kad vaikas rūšiuoja „ne pagal audinį ir ne pagal temperatūrą“, o jo `svietimas1` sako, kad audinio rūšis paliekama kitam moduliui. Modelis: du audinio lopeliai, priartinti iki siūlų — austame siūlai eina skersai ir išilgai (metmenys ir ataudai), megztame jie susisuka į kilputes. Vienas veiksmas — „Ištrauk siūlą“ — duoda skirtingą pasekmę: austame siūlas išslysta ir audinys tik pakraštyje apspursta, megztame kilputės bėga viena po kitos ir skylutė didėja per visą gabalą. Klaidinga nuostata, kurią modelis turi parodyti: „megztas ir austas audinys skiriasi tik raštu“ (ir jos atmaina „skylutė kojinėje pati užsitrauks, nes audinys vientisas“). Antra užduotis perkelia tą patį į drabužio paskirtį: kojinė ir sportiniai marškiniai tempiasi, džinsai — ne, todėl vienam reikia megzto, kitam — austo. Ribos: viena sąvoka (siūlų eiga), vienas veiksmas, jokio cheminio plovimo ir jokio kvapo ar dėmių klausimo — tai liko `06`. Numeris 09: 08 paliekamas eilėje esančiam avalynės pasiūlymui (`#44721`, `08-avalynes-dziovinimas.json`).",
+  "target": "content/lt/grade-01/technologijos/09-austinis-ir-megztas-audinys.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), 23.2.1 „Tekstilė“, 1–2 klasės: „Nagrinėjama audinių (austų ir trikotažo) struktūra“ — sources/pradinio-bp-rekomendacijos-2024.txt:9444",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:6217–6220 — metodinė veikla „Tekstilė 1–2 klasė. Nagrinėjama audinių (austų ir trikotažo) struktūra. Galima aptarti didelio formato austo audinio ir trikotažo pvz.“ (ten pat aprašytas audimo proceso imitavimas metmenimis ir ataudais)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:6236–6243 — „Aiškinantis trikotažinio ir austinio audinio pritaikomumą rūbams, tekstilės gaminiams… padaryti išvadas apie audinio ar trikotažo parinkimą, atitikimą drabužio, tekstilės gaminio paskirčiai“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:62 — 23.2 srities 1–2 kl. turinys: „drabužių asortimentas pagal sezoną ir paskirtį, tautinis kostiumas, audinių struktūra, komplektų sudarymas“",
+    "content/lt/grade-01/technologijos/06-drabuziu-prieziura.json `svietimas1[0]` — pažodžiui: „Audinio rūšis, skalbimo temperatūra ir avalynė sąmoningai neįtrauktos“ — esamas modulis šią temą palieka atskirai, bet nė vienas modulis jos dar neėmė",
+    "Patikra, kad temos nėra: `grep -c \"trikotaž\\|megzt\" content/lt/grade-01/technologijos/*.json` → 0; `02-medziagu-bandymas` tiria plaukimą (medinė/metalinė kaladėlė), ne siūlų struktūrą; failų `04`, `05`, `08`, `09` technologijose nėra"
+  ]
+}

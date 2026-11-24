@@ -1,0 +1,17 @@
+{
+  "role": "ideator",
+  "run_id": 497,
+  "created": "2026-11-24T07:48:00+02:00",
+  "type": "tema",
+  "title": "Augalo dalį pažįsti iš vietos, o ne iš morkos",
+  "body": "Programa 1 klasei augalams skiria 4 val. (`pasaulio-pazinimas-1-klase.md:89`) ir tame pačiame sakinyje prašo dviejų dalykų: „Aptariama augalų nauda žmonėms. Mokomasi atpažinti augalo dalis (šaknys, stiebas / kamienas, lapai, žiedas, vaisius, sėkla)“ (`sources/pradinio-bp-rekomendacijos-2024.txt:39581–39582`, tas pats `:39950`). Platformoje šios temos nėra: `09-augalo-gyvenimas` moko sąlygų ir ciklo (jo `sources` tik cituoja programos sakinį apie dalis), `22-medziai-krumai-zoles` skiria medžius, krūmus ir žoles, o `42` failo nėra. Siūlomas modelis laiko tris augalus (morka, kopūstas, ąžuolas) ir leidžia įjungti „rentgeną“: po žeme atsidengia ta pati vieta, kuri viršuje atrodo visai kitaip. Viena didelė idėja — **dalis atpažįstama iš to, kur ji prijungta, o ne iš to, kaip atrodo**. Klaidinga nuostata, kurią modelis turi parodyti: „šaknis yra oranžinė ir stora, o lapas — plokščias ir žalias“: morkos šaknis tokia, o ąžuolo šaknis — plona ir šakota, kopūsto lapai susisukę į gūžę, o beržo — plokšti; jei atsakymas ateitų iš išvaizdos, ąžuolui teisingo atsakymo nebūtų. Antra užduotis neša „augalų naudą žmonėms“ be moralizavimo: ta pati lėkštė (morka, kopūstas, obuolys, brokolis) prašo pasakyti, kurią dalį valgome, o modelis pažymi tą vietą augale — taip morka nustoja būti „vaisiumi“. Ribos: viena sąvoka (dalis = vieta augale), 6 dalys be terminų gausos, 3 augalai viename ekrane, jokio klausimo apie vaiko šeimą ar maistą namuose. Numeris 41: eilės target `41-traumu-prevencija.json` nestatomas, nes 26.1.1 jau dengia du moduliai (`25-traumu-prevencija`, `38-traumu-prevencija`) — tai `_merge()` klaida, aprašyta `klausimai.md`.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/41-augalo-dalys.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), 26.2.3 „Augalai“ (1 klasė, 4 val.): „Aptariama augalų nauda žmonėms. Mokomasi atpažinti augalo dalis (šaknys, stiebas / kamienas, lapai, žiedas, vaisius, sėkla)“ — sources/pradinio-bp-rekomendacijos-2024.txt:39581–39582; ta pati formuluotė 1 kl. plane :39950 ir 1–2 kl. lentelėje :40431",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:22766 — 1 klasės „Kalbinis ugdymas“ lentelės eilutė: augalo dalis (šaknys, stiebas / kamienas, lapai, žiedas, vaisius, sėkla) kaip 1 kl. turinys, o ne 2 kl. dalių funkcijos (tos lieka :35167)",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:89 — eilutė 26.2.3 „Augalai | 4 | medžiai, krūmai, žolės; augalo dalys; gyvenimo ciklas“; :104 — „Augalai (26.2.3) … Mokomasi atpažinti augalo dalis (šaknys, stiebas / kamienas, lapai, žiedas, vaisius, sėkla)“",
+    "Patikra, kad temos nėra: `ls content/lt/grade-01/pasaulio-pazinimas/` → 08, 09, 10, 16–25, 30, 33–40; `grep -rn \"šakn\\|valgom\\|daržov\" content/lt/grade-01/` → `09-augalo-gyvenimas` (sources citata apie ciklą) ir `39-bendri-gyvu-organizmu-pozymiai`; nė vienas modulis nemoko atpažinti dalių; failo `41-*` nėra"
+  ]
+}

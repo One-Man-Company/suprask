@@ -198,3 +198,21 @@ Paleidime #496 „PROGRAMOS PADENGTIS“ blokas 1 klasei rodė 45 padengtas, 1 d
 - **Spalvų maišymas, erdvinės raidės (dailė)** — abu atsakyti `:96` ir `:110`; naujo modelio, kuris nepakartotų `01-spalva-ir-nuotaika` ar `21-erdvines-figuros`, neradau.
 - **Orų reiškiniai, asmens higiena, saugus eismas, dienos režimas, nusiraminimo būdai** — atsakyti `:63–:65`, `:69`, `:77`; 1 kl. plane jų nėra arba modelis neįmanomas be asmens duomenų.
 - **Tekstilės furnitūra (23.2.3)** — programa ją numato, bet modelis „kuri užsegimo priemonė kur“ yra rūšiavimas pagal paveikslą; klaidingos nuostatos su matoma pasekme neradau (gairių 3 klausimas).
+
+## Temos, kurių nepasiūlėme (ideator, 2026-11-24, #497)
+
+**Pasiūlyta:** augalo dalių atpažinimas kaip vieta augale, o ne kaip išvaizda (`agents/proposals/2026-11-24-ideator-augalo-dalys.json`, 26.2.3, `:39581–39582`) ir austo bei megzto audinio struktūra (`agents/proposals/2026-11-24-ideator-austinis-ir-megztas-audinys.json`, 23.2.1, `:9444`, `:6217–6243`).
+
+- **Ritminis pritarimas / ostinatas (muzika, aranžavimas)** — programa 1–2 klasei jį įvardija tiesiogiai („paprasto ritminio pritarimo (pulso ar paprasto ritminio ostinato) pritaikymas dainai“, `:13844`; taip pat `:3559`), bet gairių 5 klausimas krenta: `03-klausymasis` jau turi rezultatą „Pasakau, kuris balsas veda melodiją, o kuris pritaria“, o `02-ritmas-ir-perkusija` simuliacija groja du sluoksnius kartu („Klausyk abiejų sluoksnių kartu. Pulsas žemai, plojimai aukštai“). Trečias dviejų sluoksnių modelis būtų „daugiau to paties“.
+- **Sekos kūrimas pagal savo taisyklę (matematika)** — programa prašo „sudaryti seką pagal nurodytą taisyklę, sukurti savo“ (`matematika-1-klase.md:90`), bet tai jau yra: `07-desningumai` trečias rezultatas — „Sugalvoju savo seką ir ją užrašau“.
+- **26.1.1 traumų prevencija (vienintelė `partial` eilutė)** — poziciją jau dengia du moduliai `25-traumu-prevencija` ir `38-traumu-prevencija`; trečias dubliuotų. Tai eilės `_merge()` klaida, o ne turinio spraga.
+- **D: funkciniai judesiai (vienintelė `missing` eilutė)** — `(be srauto)`, jau užrašyta `:137`: platforma neturi fizinio ugdymo krypties, o programa prašo individualios ūgties be palyginimo.
+- **Trintis / „kas priverčia daiktą judėti“ (26.4.1)** — 1 kl. plane minima kaip „sunkio, tamprumo, trinties jėgų tyrinėjimas“, bet tai 4 kl. eilutė (29.3.1) → LL-23; be to, `17-judejimas` jau sprendžia greitį vieno kintamojo modeliu.
+- **Dailė** (platformoje vienas modulis) — spalvų maišymas, erdvinės raidės ir simetrija jau atsakyti `:96` ir `:110`; simetrija papildomai yra 2 kl. ir dubliuotų `03-lankstymas-ir-karpiniai`. Naujo modelio su matoma pasekme, kuris nepakartotų `01-spalva-ir-nuotaika`, neradau — tai atviras klausimas dailės krypčiai, ne modulio trūkumas.
+- **Maisto laikymas, drabužių sezonas, orai, asmens higiena, saugus eismas** — atsakyti `:60–:75`; 1 kl. plane jų nėra (higiena — 3 kl. 28.1.2, orai — 2 kl. 27.1.1).
+
+**Rasti neatitikimai, kuriuos turi pataisyti tyrėjas / programos derintojas:**
+
+1. `:63–:65` sako, kad dienos režimas atmestas („vienintelis garbingas modelis būtų 24 val. biudžetas“), bet platformoje yra `content/lt/grade-01/pasaulio-pazinimas/30-dienos-rezimas-mityba.json`. Žyma pasenusi — kitas paleidimas neturi šios temos atmesti iš naujo.
+2. `pasaulio-pazinimas-1-klase.md` §2.6 (2026-11-16) teigia „26.2.3 medžiai, krūmai, žolės — modulio nėra“, nors `22-medziai-krumai-zoles.json` sukurtas, o §2.5 tikrina tik 8 modulius (dabar jų 22). Ta pati lentelė teigia „26.1.1 traumų — temos nėra“, nors yra du moduliai.
+3. Prompt'o „KLASIŲ APIMTIS“ sąrašas mini „Dienos rėžimas — DAR NĖRA“ ir „Orų reiškiniai — DAR NĖRA“. Pirmas neteisingas (`30-dienos-rezimas-mityba`), antras teisingas kaip modulis, bet 1 kl. programoje orų temos nėra (`:63`). Sąrašas generuojamas ne iš `backlog.json`, todėl jo „DAR NĖRA“ žymos negali būti vienintelis darbo šaltinis.

@@ -287,6 +287,45 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
 .grade-pill.active small { color: color-mix(in srgb, var(--paper) 70%, transparent); }
 .grade-pill.locked { opacity: .45; cursor: not-allowed; }
 
+/* Krypčių (dalykų) sąrašas klasės puslapyje — nuo #507 viršuje ir sulankstytas.
+   Matuota @360 px iki pakeitimo: pirmoji kryptis buvo 11 878 px (15,2 ekrano)
+   nuo viršaus, o 9 kortelės su aprašymais paskutinius 1 620 px puslapio.
+   Atviras 9 eilučių sąrašas virš vaiko kelio telefone kainuotų 0,6 ekrano
+   (matuota: 489 px), todėl sąrašas atsiverčia tik paprašius — vaikui jo nereikia,
+   o mokytojui tai du paspaudimai vietoj 15 ekranų slinkties. */
+.subject-box > summary {
+  cursor: pointer; font-weight: 800; color: var(--ink-soft);
+}
+.subject-strip {
+  display: grid; gap: .45rem; margin-top: .5rem;
+  /* 14rem: tiek, kad „Pasaulio pažinimas“ netiltų į dvi eilutes. Telefone
+     lieka viena pilno pločio eilutė kiekvienai krypčiai (sąrašas atviras tik
+     tada, kai jo prašoma), 1440 px — keturios. */
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+.subject-pill {
+  display: flex; align-items: center; justify-content: space-between; gap: .45rem;
+  min-height: var(--tap); padding: .35rem .8rem; min-width: 0;
+  border: 2px solid var(--line); border-radius: var(--r-pill);
+  background: var(--paper-2); color: var(--ink);
+  font-weight: 800; text-decoration: none;
+}
+.subject-pill:hover { box-shadow: var(--shadow-1); }
+/* Kryptis, kurioje yra dabartinis modulis. Tai ne „esate čia“ (puslapis yra
+   klasės), o „čia tęsi“ — ir tai parašyta žodžiu, o ne vien oranžiniu rėmeliu:
+   rėmelio spalva 2,31:1, todėl spalvų neatskiriančiam vaikui ar mokytojui ji
+   nieko nesako (T5.5, LL-12 šeima). Rėmelis lieka kaip antras ženklas. */
+.subject-pill.is-here { border-color: var(--accent); }
+.subject-here {
+  flex: none; font-size: var(--fs-xs); font-weight: 900; text-transform: uppercase;
+  letter-spacing: .04em; color: color-mix(in srgb, var(--accent) 45%, var(--ink));
+}
+.subject-name { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; text-align: start; }
+.subject-count {
+  flex: none; font-variant-numeric: tabular-nums; font-size: var(--fs-s);
+  font-weight: 700; color: var(--ink-faint);
+}
+
 .strand-card { display: flex; flex-direction: column; gap: .5rem; text-decoration: none; transition: transform .15s, box-shadow .15s; }
 .strand-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
 .strand-emoji { font-size: 2rem; line-height: 1; }

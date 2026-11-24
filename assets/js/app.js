@@ -219,15 +219,25 @@ async function viewGrade(grade) {
   }).join("");
 
   /* Kryptys lieka kaip atskiras įėjimas (pvz., mokytojui reikia tik
-   * matematikos), bet jos nebekartoja modulių eilių — tik pažangą. */
-  const strands = g.strands.map((s) => {
+   * matematikos), bet jos nebekartoja modulių eilių — tik pažangą.
+   *
+   * Nuo 2026-11-24 (#507) tai sulankstytas sąrašas VIRŠ kelio, o ne kortelių
+   * tinklelis po juo. Matuota @360 px: „Kryptys“ kortelės prasidėjo 11 878 px
+   * nuo viršaus (15,2 ekrano), todėl mokytojas, ieškantis vieno dalyko, turėjo
+   * pereiti beveik visą vaiko kelią. Sąrašas užima vieną eilutę, kol jo
+   * neprašoma (atviras 9 eilučių sąrašas telefone kainuotų 489 px — 0,6 ekrano
+   * prieš vaiko kelią), o aprašomieji `.intro` sakiniai lieka krypties
+   * puslapyje, kur jie ir skirti skaityti prieš pradedant.
+   */
+  const subjects = g.strands.map((s) => {
     const done = progress.count(s.modules.map((m) => m.id));
+    const here = s.modules.some((m) => m.id === nextId);
     return `
-      <a class="card strand-card" href="#/klase/${grade}/${s.id}">
-        <span class="strand-emoji" aria-hidden="true">${esc(s.emoji || "")}</span>
-        <h3>${esc(s.title)}</h3>
-        <p class="strand-meta">${esc(s.intro || "")}</p>
-        <p class="strand-meta"><strong>${done.done} iš ${done.total}</strong> modulių atlikta</p>
+      <a class="subject-pill${here ? " is-here" : ""}" href="#/klase/${grade}/${s.id}">
+        <span aria-hidden="true">${esc(s.emoji || "")}</span>
+        <span class="subject-name">${esc(s.title)}</span>
+        ${here ? '<span class="subject-here">čia tęsi</span>' : ""}
+        <span class="subject-count"><span class="sr-only">atlikta </span>${done.done}/${done.total}</span>
       </a>`;
   }).join("");
 
@@ -237,15 +247,15 @@ async function viewGrade(grade) {
     <p class="lede" style="color:var(--ink-soft)">${esc(g.age || "")} · ${esc(g.note || "")}</p>
     ${continueCard}
 
+    <details class="subject-box" style="margin-top:1.2rem">
+      <summary>Kryptys · ${g.strands.length} dalykai</summary>
+      <div class="subject-strip">${subjects}</div>
+    </details>
+
     <section aria-labelledby="kelias-h" style="margin-top:1.5rem">
       <h2 id="kelias-h" style="font-size:1.3rem">Mokymosi kelias</h2>
       <p class="strand-meta" style="margin:.2rem 0 .6rem">Eik iš viršaus į apačią. Skaičius rodo tą pačią vietą kaip „Kitas žingsnis“ modulio apačioje.</p>
       <div class="path-list">${steps}</div>
-    </section>
-
-    <section aria-labelledby="kryptys-h" style="margin-top:2rem">
-      <h2 id="kryptys-h" style="font-size:1.3rem">Kryptys</h2>
-      <div class="grid grid-2" style="margin-top:1rem">${strands}</div>
     </section>
   `;
 }
@@ -323,10 +333,23 @@ async function viewStrand(grade, strandId) {
     started,
   })).join("");
 
+  /* Krypties puslapis iki #507 neturėjo „Tęsk nuo čia“ kortelės, nors klasės
+   * puslapyje ji yra: vaikas, įėjęs per kryptį grįžęs po pertraukos, turėjo
+   * 12–24 eilučių sąraše rasti tą, kurioje yra žyma „tęsk“ (matuota @360 px:
+   * dabartinė eilutė y=815, t. y. 1,0 ekrano slinkties ir skaitymo; @1440 px —
+   * y=653). Kortelė
+   * rodoma TIK tada, kai dabartinis modulis yra šioje kryptyje — kitu atveju
+   * ji siūlytų palikti puslapį, kuriame vaikas ką tik apsisprendė. */
+  const here = nextId ? own.find((m) => m.id === nextId) : null;
+  const resume = here
+    ? resumeCard(grade, { ...here, strand: s }, progress.count(seq))
+    : "";
+
   app.innerHTML = `
     <div class="crumbs"><a href="#/">Pradžia</a> / <a href="#/klase/${grade}">${grade} klasė</a> / ${esc(s.title)}</div>
     <h1><span aria-hidden="true">${s.emoji}</span> ${esc(s.title)}</h1>
     <p class="lede" style="color:var(--ink-soft)">${esc(s.intro || "")}</p>
+    ${resume}
     <p class="strand-meta" style="margin:.2rem 0 .6rem">Skaičius rodo vietą visame kelyje — todėl jie eina ne iš eilės. <a href="#/klase/${grade}">Visas kelias</a></p>
     <div class="path-list">${steps}</div>
   `;

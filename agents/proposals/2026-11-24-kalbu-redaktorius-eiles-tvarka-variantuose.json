@@ -1,0 +1,19 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 510,
+  "created": "2026-11-24T14:27:00+02:00",
+  "type": "struktura",
+  "title": "Variantas, kuris nurodo sakinio eilę, o ne daiktą, eina per visas šalis",
+  "body": "Modulio 01-garso-aukstis trečioje užduotyje variantai buvo „Pirmas“ / „Antras“ / „Abu vienodai“, o klausimas — „Kurio balsas žemesnis?“. Vaikas ekrane mato tris mygtukus po užduoties numeriu „3.“, tad „Pirmas“ gali reikšti pirmą variantą, pirmą sakinį ar pirmą šunį; simuliacijoje šunų nėra, todėl vienintelis kelias — suskaičiuoti sakinius. Šiame paleidime variantus perrašiau į „Mažo šuniuko“ / „Didelio šuns“ / „Abiejų vienodai“, bet tokia pati forma liko kituose moduliuose: 14-pinigai 3 užduotyje („Pirmas“ / „Antras“ į klausimą „Kas turi daugiau?“) ir 24-komandu-seka 3 užduotyje (ten teisėta, nes klausimas įvardija seką). Nė vienas vartas šito nemato: validate_content.py tikrina answer indeksą, variantų skaičių ir užuominos nutekėjimą, o check_language.py — varianto ilgį; varianto objekto su sąlygos objektais nelygina niekas. Siūloma validate_content.py pridėti įspėjimą: jei variantas yra savarankiškas eilės žodis (pirmas, antra, trečias …) ir klausime nėra sekos daiktavardžio (seka, komanda, eilė, žingsnis, eilutė), tai defektas, o ne stilius. Taisyklė su ta išimtimi praeina 24-komandu-seka (teisėtas atvejis) ir pagautų 14-pinigai bei būsimus tos pačios formos variantus.",
+  "target": "scripts/validate_content.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/muzika/01-garso-aukstis.json — tasks[2].options buvo „Pirmas“/„Antras“/„Abu vienodai“ (pataisyta šiame paleidime)",
+    "content/lt/grade-01/matematika/14-pinigai.json — tasks[2].options „Pirmas“/„Antras“ į klausimą „Kas turi daugiau?“",
+    "content/lt/grade-01/matematika/24-komandu-seka.json — tasks[2].options „Pirma“/„Antra“/„Trečia“ (teisėtas atvejis: klausimas įvardija seką)",
+    "assets/js/app.js:535 — užduotis numeruojama „N.“, todėl eilės žodis variante dubliuoja numerį",
+    "scripts/validate_content.py:293–330 — dabartinės tasks[] patikros (answer, variantų skaičius, hint nutekėjimas)",
+    "research/wiki/guidelines/pamokos.md — LL-180 (nauja pamoka)"
+  ]
+}

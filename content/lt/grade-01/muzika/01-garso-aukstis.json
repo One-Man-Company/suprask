@@ -6,7 +6,7 @@
   "subtitle": "Aukštis ir garsumas — dvi skirtingos savybės",
   "minutes": 9,
   "outcomes": [
-    "Skiriu aukštą garsą nuo garsaus ir paaiškinu skirtumą.",
+    "Skiriu, kada garsas aukštas, o kada garsus. Paaiškinu skirtumą.",
     "Pakeičiu vieną savybę ir pasakau, kad kita liko tokia pati.",
     "Palyginu du garsus ir pasakau, kuris skamba aukščiau."
   ],
@@ -14,9 +14,9 @@
     "title": "Dvi atskiros savybės",
     "big_idea": "Garsas gali būti žemas arba aukštas. Garsas gali būti tylus arba garsus. Tai dvi atskiros savybės: kai pakeiti vieną, kita nepasikeičia.",
     "steps": [
-      "Paklausyk žemo garso, paskui aukšto. Garsumą palik tokį pat.",
+      "Paklausyk žemo garso. Paskui paklausyk aukšto. Garsumo nekeisk.",
       "Dabar keisk tik garsumą. Aukštis nepasikeis.",
-      "Aukštas garsas gali būti tylus. Tylus garsas gali būti labai aukštas.",
+      "Aukštas garsas gali būti tylus. Žemas garsas gali būti garsus.",
       "Mažas varpas skamba aukščiau nei didelis."
     ],
     "example": "Paukštis cypsi aukštai ir tyliai. Didelis varpas dūzgia žemai ir garsiai."
@@ -63,19 +63,19 @@
         "Garsumas"
       ],
       "answer": 2,
-      "hint": "Paklausyk, kas keičiasi, kai nata lieka ta pati.",
+      "hint": "Pagalvok, ar garsiau dainuodamas vaikas dainuoja aukščiau.",
       "why": "Toje pačioje natoje keičiasi tik garsumas."
     },
     {
       "q": "Mažas šuniukas loja aukštai ir tyliai. Didelis šuo loja žemai ir garsiai. Kurio balsas žemesnis?",
       "options": [
-        "Pirmas",
-        "Antras",
-        "Abu vienodai"
+        "Mažo šuniuko",
+        "Didelio šuns",
+        "Abiejų vienodai"
       ],
       "answer": 1,
-      "hint": "Aukštis ir garsumas — ne tas pats dalykas.",
-      "why": "Antras loja žemai, nors ir garsiai."
+      "hint": "Šuniukas loja tyliai. Ar tyliai reiškia žemai?",
+      "why": "Didelis šuo loja žemai, nors ir garsiai."
     },
     {
       "q": "Du varpai skamba vienodai garsiai. Vienas mažas, kitas didelis. Kuris skambės aukščiau?",
@@ -85,12 +85,12 @@
         "Abu vienodai"
       ],
       "answer": 0,
-      "hint": "Palygink, kaip skamba mažas ir didelis daiktas.",
+      "hint": "Palygink, kaip skamba mažas ir didelis varpas.",
       "why": "Mažesnis varpas skamba aukščiau, nors garsumas toks pat.",
       "optional": true
     }
   ],
-  "reflect": "Prisimink du garsus, kuriuos šiandien girdėjai. Kuris buvo aukštesnis, o kuris garsesnis? Papasakok.",
+  "reflect": "Prisimink du garsus, kuriuos šiandien girdėjai. Pasakyk, kuris buvo aukštesnis. Ar aukštesnis garsas buvo ir garsesnis?",
   "teacher": {
     "goal": "Atskirti garso aukštį nuo garsumo ir pajusti, kad tai dvi nepriklausomos savybės: pakeitus vieną, kita nesikeičia.",
     "prompt": "Ar garsus garsas visada būna aukštas? Kaip tai patikrintum?",

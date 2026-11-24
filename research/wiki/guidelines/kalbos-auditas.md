@@ -213,3 +213,39 @@ Modulis `10-gyvunu-grupes`. `check_language.py` modulyje rodė **0 įrašų ir p
 **Palikta sąmoningai:** `title` „Kas gyvena tvarte?“ (kabliukas; keitimas reikalautų `index.json` ir viso maršruto antraščių); `sim.config.sentences.wrong` „Pažiūrėk ne į vietą, o į tai, kas duoda maistą.“ (kontrastinis neiginys, ne dvigubas; 8 žodžiai; perrašymas būtų stilius, ne defektas); `concept.example` „ūkininkas“ (9 raidės, konkretus ir pažįstamas žodis, ne vertinys); `teacher.*` (suaugusiojo tekstas — pastogės kriterijaus pataisa perduota pasiūlymu); `svietimas1` (ne vaikui skaitoma, o jo 1 žingsnis jau atitinka naują `big_idea`); `tasks[1]`, `tasks[3]`, `tasks[5]` `answer` indeksai ir variantų tvarka — neliesti nė viename.
 
 **Nauji pasiūlymai:** `2026-11-24-kalbu-redaktorius-sim-kieti-tekstai-12px.json` (sim tekstas 12,8 px + 4 sakiniai kode, kurių nemato nei kalbos, nei garso vartai) ir `2026-11-24-kalbu-redaktorius-teacher-pastoges-kriterijus.json` (teacher.goal tebemoko pastogės kriterijaus). Nauja pamoka: LL-179 (kriterijus, kurį paneigia pats modelis).
+
+## Taisymo būsena (paleidimas #510, 2026-11-24T14:27)
+
+Modulis **01-garso-aukstis** (1 kl., muzika). Audito #137 radiniai #4 ir #19 jau buvo uždaryti anksčiau, todėl šį kartą modulis skaitytas iš naujo, nuo 6–7 m. vaiko, kuris klausosi ir skaito lėtai. `check_language.py` modulyje rodė **0 įrašų ir prieš, ir po** (visi radiniai — žmogaus akių lauke: varianto objektas, užuominos kryptis, sakinio elipsė, nesusietas laipsnis).
+
+| Laukas | Prieš | Po | Priežastis |
+|---|---|---|---|
+| `outcomes[0]` | „Skiriu aukštą garsą nuo **garsaus** ir paaiškinu skirtumą.“ | „Skiriu, kada garsas aukštas, o kada garsus. Paaiškinu skirtumą.“ | „skirti … nuo garsaus“ be daiktavardžio — vaikas ieško, nuo ko skirti (LL-01 šeima) |
+| `concept.steps[0]` | „Paklausyk žemo garso, **paskui aukšto**. **Garsumą palik tokį pat.**“ | „Paklausyk žemo garso. Paskui paklausyk aukšto. Garsumo nekeisk.“ | elipsė be veiksmažodžio + sakinys pradedamas galininku; dvi instrukcijos viename sakinyje |
+| `concept.steps[2]` | „Aukštas garsas gali būti tylus. **Tylus garsas gali būti labai aukštas.**“ | „Aukštas garsas gali būti tylus. Žemas garsas gali būti garsus.“ | antras sakinys — tos pačios minties veidrodis (simetriška), o „labai aukštas“ — laipsnis be atskaitos; naujas sakinys duoda kitą įstrižainę, kurią vaikas gali patikrinti simuliacijoje |
+| `tasks[1].hint` | „**Paklausyk**, kas keičiasi, kai nata lieka ta pati.“ | „Pagalvok, ar garsiau dainuodamas vaikas dainuoja aukščiau.“ | užduotyje nėra garso: „paklausyk“ yra neįvykdomas nurodymas (ta pati šeima kaip hint'as apie simuliacijoje neegzistuojantį daiktą); nauja užuomina nukreipia į klaidingą nuostatą „garsiau = aukščiau“ |
+| `tasks[2].options` | „Pirmas“ / „Antras“ / „Abu vienodai“ | „Mažo šuniuko“ / „Didelio šuns“ / „Abiejų vienodai“ | variantas nurodė sakinio eilę, ne daiktą; užduotis pati numeruojama („3.“), tad „Pirmas“ dubliuoja numerį (nauja pamoka LL-180) |
+| `tasks[2].hint` | „Aukštis ir garsumas — ne tas pats dalykas.“ | „Šuniukas loja tyliai. Ar tyliai reiškia žemai?“ | buvusi formuluotė — apibrėžimas, ne nuoroda į konkrečią vaiko klaidą; naujoji klausia būtent to, ką vaikas supainiojo |
+| `tasks[2].why` | „**Antras** loja žemai, nors ir garsiai.“ | „Didelis šuo loja žemai, nors ir garsiai.“ | `why` liko su eilės žodžiu, kurio variantuose nebeliko |
+| `tasks[3].hint` | „Palygink, kaip skamba mažas ir didelis **daiktas**.“ | „Palygink, kaip skamba mažas ir didelis **varpas**.“ | užduotis apie varpus, o užuomina kalbėjo apie „daiktą“ — vaikas ieškojo kito objekto |
+| `reflect` | „**Kuris buvo aukštesnis, o kuris garsesnis?** Papasakok.“ | „Pasakyk, kuris buvo aukštesnis. Ar aukštesnis garsas buvo ir garsesnis?“ | senasis klausimas neatsakomas, kai vaiko prisiminti garsai skiriasi tik viena savybe (arba abi savybės keičiasi kartu); naujasis visada atsakomas ir tikrina nepriklausomumą |
+
+**Skaičiai.** `check_language.py --grade 1`: klaidos 0 → 0, įspėjimai 0 → 0, pastabos 53 → 53 (modulyje 0 įrašų ir prieš, ir po — LL-52/LL-53 šeima: sakinio sandara ir varianto objektas, ne jo ilgis). Žmogaus akių radiniai: **9 → 0**. `validate_content.py` (be parametrų ir `--grade 1`): 0 klaidų, 0 įspėjimų. `check_audio.py`: 1112 tekstų / 2224 įrašų — nepakito, nes nė vienas pakeistas raktas (`outcomes`, `concept.steps`, `tasks`, `reflect`) netariamas; `sim.config` (vienintelis tariamas šiame modulyje) neliestas.
+
+**`check_view.py` (Brave skydų imitacija, 127.0.0.1:8972, `--module 01-garso-aukstis`):** prieš ir po vienodai —
+
+| Plotis | overflow | smallCount | minTaskFont | tasksVisible | clipped | loading/fatal | problems |
+|---|---|---|---|---|---|---|---|
+| 1440 | 0 | 0 | 21,44 px | 4/4 | [] | false | [] |
+| 1024 | 0 | 0 | 21,44 px | 4/4 | [] | false | [] |
+| 390 | 0 | 0 | 19,14 px | 4/4 | [] | false | [] |
+
+`simFonts.min` = 13,1 px visuose trijuose plotuose, bet tai **ne šio modulio defektas**: garsumo skalės etiketės („tyliai“, „vidutiniškai“, „garsiai“) naudoja platformos žetoną `--fs-xs` (`muzika.js:51`, `font-size:.82rem`), t. y. mažiausią leistiną žetoną, o ne savavališką trupmeną. Sim teksto minimumo standarte dar nėra (#44331), tad tai lieka pastaba, ne vartai — atskiro pasiūlymo nekartoju.
+
+**DOM zondas** (`probe510.py`, 390 px, `localStorage`/`crypto.subtle`/`speechSynthesis` užblokuoti): matomi 7 nauji tekstai (outcomes[0], steps[0], steps[2], trys varianto etiketės, reflect klausimas), senų tekstų puslapyje nebeliko (`Pirmas`, `Antras`, „labai aukštas“, „didelis daiktas“, „Paklausyk, kas keičiasi“ — 0 atitikimų); 2 užduotis po klaidingo „Aukštis“ rodo „Pagalvok, ar garsiau dainuodamas vaikas dainuoja aukščiau.“, po teisingo „Garsumas“ — „Teisingai! Toje pačioje natoje keičiasi tik garsumas.“; 3 užduotis po klaidingo „Mažo šuniuko“ rodo „Šuniukas loja tyliai. Ar tyliai reiškia žemai?“, po teisingo — „Teisingai! Didelis šuo loja žemai, nors ir garsiai.“; 4 užduotis po klaidingo varianto — „Palygink, kaip skamba mažas ir didelis varpas.“; simuliacija gyva („Garsas vidutinis, skamba vidutiniškai.“ → aukštis aukštyn → „Garsas aukštas…“ → garsumas žemyn → „…skamba tyliai.“ → „Keitei aukštį ir garsumą atskirai: tai dvi skirtingos savybės.“), konsolės klaidų 0.
+
+**Audito klaida, kurią reikia žinoti.** Šio audito lentelės radinys **#4** skelbė, kad „Pakėlei … nelietei“ yra neegzistuojančios formos ir siūlė „pakėlai, nepalietei“. Tai netiesa: *kelti* būtasis laikas — „kėliau, **kėlei**, kėlė“, *liesti* — „liečiau, **lietei**, lietė“, tad „pakėlei“ ir „lietei“ yra taisyklingos 2-ojo asmens formos, o „pakėlai“ būtų klaida. Modulis vis tiek buvo perrašytas #151 (dabar „Aukštį pakėlei, o garsumo nekeitei.“), bet klaidinga audito eilutė ateityje gali paskatinti „taisyti“ taisyklingą tekstą — todėl ji žymima čia, o ne trinama iš istorijos.
+
+**Palikta sąmoningai:** `title` („Aukštas garsas ne visada garsus“) ir `subtitle` (indekso kopija — LL-05/LL-21, keitimas reikalautų `index.json` sinchronizacijos, o tekstas suprantamas); `concept.big_idea` (3 trumpi sakiniai vietoj standarto „1–2“ — 1 klasei trumpesni sakiniai sąmoningesni; validatoriuje nepažeidžia); `concept.title` „Dvi atskiros savybės“ (sąvokos pavadinimas, ne sakinys); `tasks[1].q` „Pirma garsiai, paskui tyliai.“ (veiksmažodžio elipsė po to paties veikėjo — prasmė vienareikšmė, o „nata“ vartojama ir seseriniame `03-klausymasis`); `sim.config` (tariamos etiketės „Žemas garsas“… ir `short` „žemas/vidutinis/aukštas“ sutampa su simuliacijos kopėčiomis ir juosta — keitimas paliktų vaiką be balso iki pergeneravimo); `teacher.*` ir `sources` (suaugusiojo tekstas ir šaltiniai — ne vaiko laukas); visi `answer` indeksai (1, 2, 1, 0) ir teisingi variantai — nepaliesti nė viename.
+
+**Naujas pasiūlymas:** `agents/proposals/2026-11-24-kalbu-redaktorius-eiles-tvarka-variantuose.json` (vartai, kurie mato variantą-eilės žodį be daikto). Nauja pamoka: LL-180.

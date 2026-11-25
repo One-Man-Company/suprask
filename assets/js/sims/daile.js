@@ -246,6 +246,225 @@ const demeIrSpalvos = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Ta pati linija, trys priemonės                                       */
+/*                                                                     */
+/* Modelis: TRYS tie patys piešiniai (raidė o, akis, saga), tik juos     */
+/* brėžia skirtinga priemonė. Linijos plotį nustato priemonė (`w`), o   */
+/* vidaus dydis skaičiuojamas iš geometrijos: r − w/2. Todėl teiginys    */
+/* „kreidelė užkloja sagos vidų“ yra ne tekstas, o ta pati SVG kreivė,    */
+/* kurios stroke-width didesnis už skersmenį (LL-33, LL-25).            */
+/*                                                                     */
+/* Antras valdiklis — spaudimas. Jis keičia TIK `stroke-opacity`, t. y.  */
+/* tamsumą, o `stroke-width` lieka toks pat. Klaidinga nuostata           */
+/* „kuo stipriau spaudi, tuo storesnė linija“ tampa patikrinama, o ne    */
+/* perskaitoma (LL-17: būsena rodoma dabar, ne praeityje).              */
+/*                                                                     */
+/* Kodėl trys skirtingo dydžio formos: tas pats plotis didelėje formoje  */
+/* telpa, o mažoje — užkloja vidų. Vaikas pamato, kad storis priklauso   */
+/* priemonei, o ar ji tinka — formos dydžiui.                            */
+/* ------------------------------------------------------------------ */
+
+const INK = "#3a342b";
+
+const linijosStoris = {
+  mount({ stage, controls, api, config }) {
+    const OBJECTS = Array.isArray(config.objects) ? config.objects : [];
+    const TOOLS = Array.isArray(config.tools) ? config.tools : [];
+    if (!OBJECTS.length || !TOOLS.length) {
+      stage.innerHTML = `<p class="strand-meta">Piešiniai dar nesukonfigūruoti.</p>`;
+      return () => {};
+    }
+
+    const SENT = config.sentences || {};
+    const NOTES = config.notes || {};
+
+    let tool = TOOLS.find((t) => t.id === config.start) || TOOLS[0];
+    let strong = true;
+    let reported = false;
+    let pressSwitched = false;
+    let nudged = false;
+    let lastNote = "";
+    const used = new Set([tool.id]);
+
+    stage.innerHTML = `
+      <div style="display:grid;gap:.7rem;width:100%;min-width:0">
+        <div role="group" aria-label="Trys piešiniai"
+             style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;align-items:end">
+          ${OBJECTS.map((o, i) => `
+            <figure style="margin:0;display:grid;justify-items:center;gap:.3rem;min-width:0">
+              <svg data-fig="${i}" viewBox="0 0 96 96" width="100%" role="img"
+                   aria-label="${o.label}"
+                   style="display:block;width:100%;max-width:96px;height:auto">
+                <g data-ring="${i}">${art.spot(48 - o.r, 48 - o.r, o.r * 2, o.r * 2, INK, "apvali", tool.w)}</g>
+              </svg>
+              <figcaption style="font-size:.95rem;font-weight:800;text-align:center;color:var(--ink-soft)">${o.label}</figcaption>
+            </figure>`).join("")}
+        </div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div role="group" aria-label="Piešimo priemonės"
+           style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;width:100%">
+        ${TOOLS.map((t) => `
+          <button class="btn secondary" type="button" data-tool="${t.id}"
+            aria-label="${t.name}: ${t.say}" aria-pressed="false"
+            style="display:grid;justify-items:center;align-content:center;gap:.2rem;
+                   min-width:4.6rem;padding:.35rem .5rem">
+            <svg viewBox="0 0 46 40" width="46" height="40" aria-hidden="true"
+                 style="display:block">${art.spot(4, (40 - t.w) / 2, 38, t.w, INK, "juosta")}</svg>
+            <span style="font-size:.95rem;font-weight:800">${t.name}</span>
+          </button>`).join("")}
+      </div>
+      <div role="group" aria-label="Spaudimas"
+           style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;width:100%">
+        <button class="btn secondary" type="button" data-press="weak"
+          aria-label="Spausti silpnai" aria-pressed="false" style="min-width:6rem;font-size:.95rem">Silpnai</button>
+        <button class="btn secondary" type="button" data-press="strong"
+          aria-label="Spausti stipriai" aria-pressed="true" style="min-width:6rem;font-size:.95rem">Stipriai</button>
+        <button class="btn secondary" type="button" id="lp-reset"
+          aria-label="Pradėti iš naujo" style="min-width:6rem;font-size:.95rem">Iš naujo</button>
+      </div>`;
+
+    const figs = OBJECTS.map((_, i) => stage.querySelector(`[data-fig="${i}"]`));
+    const rings = OBJECTS.map((_, i) => stage.querySelector(`[data-ring="${i}"] path`));
+    const toolBtns = Array.from(controls.querySelectorAll("[data-tool]"));
+    const pressBtns = Array.from(controls.querySelectorAll("[data-press]"));
+    const resetBtn = controls.querySelector("#lp-reset");
+
+    /* Vidaus spindulys — ta pati formule, iš kurios piešiama kreivė.
+       Jei tekstas ir geometrija imtų skirtingus skaičius, sakinys galėtų
+       teigti viena, o paveikslas rodyti kita (LL-03). */
+    const holeOf = (o) => o.r - tool.w / 2;
+
+    function stateWord(o) {
+      const hole = holeOf(o);
+      if (hole < 1) return "vidus užsipildė";
+      if (hole < o.r * 0.6) return "vidus susiaurėjo";
+      return "vidus matosi";
+    }
+
+    function render() {
+      OBJECTS.forEach((o, i) => {
+        const path = rings[i];
+        if (path) {
+          path.setAttribute("stroke-width", String(tool.w));
+          path.setAttribute("stroke-opacity", strong ? "1" : "0.5");
+        }
+        const fig = figs[i];
+        if (fig) fig.setAttribute("aria-label", `${o.label}, nupiešta ${tool.ins}: ${stateWord(o)}`);
+      });
+
+      toolBtns.forEach((b) => {
+        const on = b.dataset.tool === tool.id;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "var(--line)";
+      });
+      pressBtns.forEach((b) => {
+        const on = (b.dataset.press === "strong") === strong;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.style.borderColor = on ? "var(--ink)" : "var(--line)";
+      });
+    }
+
+    function say(key) {
+      const text = SENT[key] || "";
+      if (text) api.speak(text, { rate: 0.95 });
+      return text;
+    }
+
+    /* Vienas vartas pastebėjimui: `lastNote` laiko tai, ką vaikas dabar
+       mato, kad vėlesnis sakinys galėtų jį PRIDĖTI, o ne pakeisti. */
+    function setNote(text) {
+      lastNote = String(text || "").replace(/\s+/g, " ").trim();
+      api.note(lastNote);
+    }
+
+    function nudge() {
+      if (pressSwitched || nudged || used.size < 2) return "";
+      nudged = true;
+      return SENT.pressHint ? ` ${SENT.pressHint}` : "";
+    }
+
+    /* Pažanga žymima tik įveikus ABU žingsnius: palyginti bent tris
+       priemones IR tos pačios priemonės spaudimą. Vienas priemonės
+       pasirinkimas nėra „baigta“ (LL-29).
+
+       Išvada PRIDEDAMA prie pastebėjimo, o ne pakeičia jį: jei baigimo
+       sakinys užrašytų „Sagos vidus liko siauras“, vaikas nebegalėtų
+       perskaityti to, ką ką tik pamatė (LL-14, LL-33). */
+    function checkDone() {
+      if (reported || used.size < 3 || !pressSwitched) return;
+      reported = true;
+      api.readout(say("done"));
+      setNote(`${lastNote} ${SENT.noteDone || ""}`);
+      api.progress({ correct: true });
+    }
+
+    function chooseTool(id) {
+      if (id === tool.id) {
+        setNote(SENT.sameTool || "Ši priemonė jau rankoje.");
+        return;
+      }
+      tool = TOOLS.find((t) => t.id === id) || tool;
+      used.add(tool.id);
+      render();
+      api.readout(say(tool.id));
+      setNote((NOTES[tool.id] || "") + nudge());
+      checkDone();
+    }
+
+    function choosePress(value) {
+      const wantStrong = value === "strong";
+      if (wantStrong === strong) {
+        setNote(SENT.samePress || "Spaudimas toks pat. Rink kitą.");
+        return;
+      }
+      strong = wantStrong;
+      pressSwitched = true;
+      render();
+      api.readout(say(strong ? "stipriai" : "silpnai"));
+      setNote(SENT[strong ? "noteStrong" : "noteWeak"] || "");
+      checkDone();
+    }
+
+    function reset() {
+      tool = TOOLS.find((t) => t.id === config.start) || TOOLS[0];
+      strong = true;
+      render();
+      api.readout(SENT.start || "Rink priemonę ir žiūrėk.");
+      setNote(NOTES[tool.id] || "");
+    }
+
+    toolBtns.forEach((b) => b.addEventListener("click", () => chooseTool(b.dataset.tool)));
+    pressBtns.forEach((b) => b.addEventListener("click", () => choosePress(b.dataset.press)));
+    if (resetBtn) resetBtn.addEventListener("click", reset);
+
+    controls.addEventListener("keydown", (e) => {
+      const active = document.activeElement;
+      const inTools = toolBtns.indexOf(active);
+      const inPress = pressBtns.indexOf(active);
+      if (inTools >= 0 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+        e.preventDefault();
+        const step = e.key === "ArrowRight" ? 1 : -1;
+        toolBtns[(inTools + step + toolBtns.length) % toolBtns.length].focus();
+      } else if (inPress >= 0 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+        e.preventDefault();
+        pressBtns[(inPress + 1) % pressBtns.length].focus();
+      } else if (e.key === "r" || e.key === "R") {
+        reset();
+      }
+    });
+
+    render();
+    api.readout(SENT.start || "Rink priemonę ir žiūrėk.");
+    setNote(NOTES[tool.id] || "");
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "deme-ir-spalvos": demeIrSpalvos,
+  "linijos-storis": linijosStoris,
 };

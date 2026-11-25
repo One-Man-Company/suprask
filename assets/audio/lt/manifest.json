@@ -1311,6 +1311,10 @@
   "n": "n/f67ab10ad4e4c531-5661c2ef.mp3",
   "s": "s/f67ab10ad4e4c531-55d97451.mp3"
  },
+ "Flomasteris. Stora linija.": {
+  "n": "n/eb0c1d2be67663a5-bb65b677.mp3",
+  "s": "s/eb0c1d2be67663a5-83c58475.mp3"
+ },
  "Formą ledui davė indas, o ne vandens kiekis.": {
   "n": "n/23f2e36b0e17ffda-6f671bd4.mp3",
   "s": "s/23f2e36b0e17ffda-bdb49d4b.mp3"
@@ -1887,6 +1891,10 @@
   "n": "n/be3e3477d0727a8a-6b6ddb3b.mp3",
   "s": "s/be3e3477d0727a8a-8b93b87b.mp3"
  },
+ "Kreidelė. Labai stora linija.": {
+  "n": "n/00f8e1822fbf1cb9-16d802ec.mp3",
+  "s": "s/00f8e1822fbf1cb9-ca015f6e.mp3"
+ },
  "Kubas iš priekio atrodo kaip kvadratas.": {
   "n": "n/0a26471c3415e289-1355c62d.mp3",
   "s": "s/0a26471c3415e289-c1f846f9.mp3"
@@ -1938,6 +1946,10 @@
  "Kur užsegti antkelius?": {
   "n": "n/95cc7269dcc174a8-c1eeb201.mp3",
   "s": "s/95cc7269dcc174a8-ba163194.mp3"
+ },
+ "Kuri priemonė palieka ploniausią liniją? Rink ir žiūrėk.": {
+  "n": "n/7f6964575ed2d2a6-1f14de7f.mp3",
+  "s": "s/7f6964575ed2d2a6-6c448e49.mp3"
  },
  "Kurioje dviračio pusėje yra baltas žibintas?": {
   "n": "n/2a03abd8b8205149-4f2c558e.mp3",
@@ -2122,6 +2134,14 @@
  "Lenta baigėsi. Šešios sąvaržėlės.": {
   "n": "n/ddba4fc539a8eb99-87701608.mp3",
   "s": "s/ddba4fc539a8eb99-48f9bd31.mp3"
+ },
+ "Linija platesnė netapo.": {
+  "n": "n/86ebce48ca85f9d9-46e8b929.mp3",
+  "s": "s/86ebce48ca85f9d9-53ea5b32.mp3"
+ },
+ "Linija siauresnė netapo.": {
+  "n": "n/83b01c372b43361a-5a7e5c5c.mp3",
+  "s": "s/83b01c372b43361a-91f5e7fe.mp3"
  },
  "Liniuotė atiteko draugui. Krūva nepaaugo.": {
   "n": "n/4535d8423729c74d-8c50c925.mp3",
@@ -2415,6 +2435,10 @@
   "n": "n/d2be6484e53549b5-663b34f1.mp3",
   "s": "s/d2be6484e53549b5-3202bbe0.mp3"
  },
+ "Pabandyk tą pačią priemonę paspausti silpnai ir stipriai.": {
+  "n": "n/3e58a03463e59e23-619cabc9.mp3",
+  "s": "s/3e58a03463e59e23-ea3b2431.mp3"
+ },
  "Padėk plyteles į dvi eiles: ilgas garsas ir trumpas garsas.": {
   "n": "n/42b40a7aafe456c5-7d476d59.mp3",
   "s": "s/42b40a7aafe456c5-8944593c.mp3"
@@ -2667,6 +2691,10 @@
   "n": "n/c42348608b4a3c39-d887802c.mp3",
   "s": "s/c42348608b4a3c39-60e2d759.mp3"
  },
+ "Pieštukas. Plona linija.": {
+  "n": "n/c61a5931c5458c20-7e4e8c17.mp3",
+  "s": "s/c61a5931c5458c20-cf9f0a34.mp3"
+ },
  "Piktogramoje viena figūra atstoja vieną ženklą.": {
   "n": "n/5d96fcfd61dd4993-3ee99065.mp3",
   "s": "s/5d96fcfd61dd4993-7bbcbd8f.mp3"
@@ -2738,6 +2766,10 @@
  "Pirmas skaičius jau dešimtuke, o antras laukia ant stalo.": {
   "n": "n/be1b948182521b61-abb7ba9c.mp3",
   "s": "s/be1b948182521b61-4c74d3a7.mp3"
+ },
+ "Plotį lemia priemonė, o spaudimas tik tamsumą.": {
+  "n": "n/8a6b3473e3c3721a-ae026d0c.mp3",
+  "s": "s/8a6b3473e3c3721a-e5d09fa7.mp3"
  },
  "Po dešimt metų": {
   "n": "n/1e6ea9cc81344768-656b5e47.mp3",
@@ -2910,6 +2942,10 @@
  "Raudona dėmė. Formos tos pačios.": {
   "n": "n/51841b83c864cc90-a41c5d40.mp3",
   "s": "s/51841b83c864cc90-6dcfdf77.mp3"
+ },
+ "Rašiklis. Kiek storesnė linija.": {
+  "n": "n/e9a1aa1efb0d6966-4ba24ad3.mp3",
+  "s": "s/e9a1aa1efb0d6966-216a5292.mp3"
  },
  "Ritinys iš priekio atrodo kaip stačiakampis.": {
   "n": "n/3cc41c23fdbd3079-7e46fd23.mp3",
@@ -3138,6 +3174,18 @@
  "Spalis": {
   "n": "n/60be12bf25a6cd50-aa12c32f.mp3",
   "s": "s/60be12bf25a6cd50-d7ba154d.mp3"
+ },
+ "Spaudei silpnai. Linija tokia pati plati, tik šviesesnė.": {
+  "n": "n/47aaa7daa88c2fa1-cf732379.mp3",
+  "s": "s/47aaa7daa88c2fa1-449b0b3b.mp3"
+ },
+ "Spaudei stipriai. Linija tokia pati plati, tik tamsesnė.": {
+  "n": "n/1f122ee9ef78f5ac-d1f288a4.mp3",
+  "s": "s/1f122ee9ef78f5ac-35d21bca.mp3"
+ },
+ "Spaudimas toks pat. Rink kitą.": {
+  "n": "n/5a1c08e4615977a2-b2b7e337.mp3",
+  "s": "s/5a1c08e4615977a2-f85ca780.mp3"
  },
  "Spausk dalis: pirmas spausdinimas — tau, antras — draugui.": {
   "n": "n/9d0bea2621b15a38-184cd99f.mp3",
@@ -3542,6 +3590,10 @@
  "Trys kortelės. Ta pati pora jungiklių.": {
   "n": "n/57a4c6af8d35b724-94f797e7.mp3",
   "s": "s/57a4c6af8d35b724-10e12c87.mp3"
+ },
+ "Trys priemonės — trys storiai. Spaudimas keitė tik tamsumą.": {
+  "n": "n/d21fe3ab484b8406-64889c20.mp3",
+  "s": "s/d21fe3ab484b8406-9eaa1212.mp3"
  },
  "Trys rytai, viena taisyklė.": {
   "n": "n/62f31e4efbed1834-10b7c113.mp3",
@@ -4011,6 +4063,10 @@
   "n": "n/a559233c2df4a7e8-9edbf694.mp3",
   "s": "s/a559233c2df4a7e8-7c75ec40.mp3"
  },
+ "akis": {
+  "n": "n/4b44f12928dd9900-4944486e.mp3",
+  "s": "s/4b44f12928dd9900-b51f7548.mp3"
+ },
  "b": {
   "n": "n/3e23e8160039594a-6a770dfd.mp3",
   "s": "s/3e23e8160039594a-fe75090f.mp3"
@@ -4231,6 +4287,10 @@
   "n": "n/454349e422f05297-fbf4a909.mp3",
   "s": "s/454349e422f05297-4700bde2.mp3"
  },
+ "raidė o": {
+  "n": "n/4ee8ea600650230a-d0b30b97.mp3",
+  "s": "s/4ee8ea600650230a-1e4d3305.mp3"
+ },
  "ryte": {
   "n": "n/f031a87bdef1b790-18a185ad.mp3",
   "s": "s/f031a87bdef1b790-38ffd80f.mp3"
@@ -4242,6 +4302,10 @@
  "s": {
   "n": "n/043a718774c572bd-28b23a7c.mp3",
   "s": "s/043a718774c572bd-b9006854.mp3"
+ },
+ "saga": {
+  "n": "n/936fccfc8fe9a540-d9c68878.mp3",
+  "s": "s/936fccfc8fe9a540-f6d892dc.mp3"
  },
  "sau": {
   "n": "n/dfb3c9aac79bac44-f3d83a86.mp3",
@@ -4434,6 +4498,10 @@
  "Ši pora tariama vienu balsu, todėl ribos joje nėra.": {
   "n": "n/435d286d49c9be7c-6feefd21.mp3",
   "s": "s/435d286d49c9be7c-e503dc76.mp3"
+ },
+ "Ši priemonė jau rankoje.": {
+  "n": "n/21a64571aacc560c-ed7a77e1.mp3",
+  "s": "s/21a64571aacc560c-27dc4062.mp3"
  },
  "Ši seka veda ne prie vėliavos. Viena komanda klaidinga.": {
   "n": "n/6d6f88831dc26d38-c2d34fc3.mp3",

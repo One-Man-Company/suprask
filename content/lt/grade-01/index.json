@@ -702,12 +702,20 @@
    "intro": "Forma, spalva ir nuotaika: žiūrėk, keisk, palygink.",
    "modules": [
     {
-     "id": "01-spalva-ir-nuotaika",
-     "title": "Dailė: ta pati forma, kita spalva",
-     "subtitle": "Toje pačioje formoje kitos spalvos keičia nuotaiką",
-     "file": "grade-01/daile/01-spalva-ir-nuotaika.json",
-     "minutes": 9,
-     "sim": "deme-ir-spalvos"
+      "id": "01-spalva-ir-nuotaika",
+      "title": "Dailė: ta pati forma, kita spalva",
+      "subtitle": "Toje pačioje formoje kitos spalvos keičia nuotaiką",
+      "file": "grade-01/daile/01-spalva-ir-nuotaika.json",
+      "minutes": 9,
+      "sim": "deme-ir-spalvos"
+    },
+    {
+      "id": "03-piesimo-priemones",
+      "title": "Dailė: ta pati linija, trys priemonės",
+      "subtitle": "Storį lemia priemonė, o spaudimas keičia tik tamsumą",
+      "file": "grade-01/daile/03-piesimo-priemones.json",
+      "minutes": 9,
+      "sim": "linijos-storis"
     }
    ]
   }

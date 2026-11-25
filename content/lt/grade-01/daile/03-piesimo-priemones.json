@@ -1,0 +1,133 @@
+{
+  "id": "03-piesimo-priemones",
+  "grade": 1,
+  "strand": "daile",
+  "title": "Dailė: ta pati linija, trys priemonės",
+  "subtitle": "Storį lemia priemonė, o spaudimas keičia tik tamsumą",
+  "minutes": 9,
+  "outcomes": [
+    "Pasakau, kuri piešimo priemonė palieka ploniausią liniją.",
+    "Parodau, kad stipresnis spaudimas linijos nepaplatina.",
+    "Renkuosi ploną priemonę mažam piešinio vidui."
+  ],
+  "concept": {
+    "title": "Linijos storis priklauso priemonei",
+    "big_idea": "Kiekviena priemonė palieka savo pločio liniją. Pieštukas — ploną, kreidelė — labai storą. Spaudimas keičia tik tamsumą, o ne plotį.",
+    "steps": [
+      "Rink priemonę ir žiūrėk į tris piešinius. Tai raidė o, akis ir saga.",
+      "Ta pati priemonė visuose piešiniuose palieka tokio pat pločio liniją.",
+      "Tą pačią priemonę paspausk silpnai ir stipriai. Linija bus šviesesnė ar tamsesnė, bet ne platesnė.",
+      "Mažam vidui rink ploną priemonę: stora linija jį užkloja."
+    ],
+    "example": "Sagos skylutė atviruke nedidelė. Pieštuku nupiešta ji lieka aiški, o kreidele nupiešta beveik išnyksta."
+  },
+  "sim": {
+    "component": "linijos-storis",
+    "config": {
+      "objects": [
+        { "id": "o", "label": "raidė o", "r": 30 },
+        { "id": "akis", "label": "akis", "r": 20 },
+        { "id": "saga", "label": "saga", "r": 12 }
+      ],
+      "tools": [
+        { "id": "piestukas", "name": "Pieštukas", "ins": "pieštuku", "say": "plona linija", "w": 2 },
+        { "id": "rasiklis", "name": "Rašiklis", "ins": "rašikliu", "say": "kiek storesnė linija", "w": 4 },
+        { "id": "flomasteris", "name": "Flomasteris", "ins": "flomasteriu", "say": "stora linija", "w": 12 },
+        { "id": "kreidele", "name": "Kreidelė", "ins": "kreidele", "say": "labai stora linija", "w": 26 }
+      ],
+      "start": "piestukas",
+      "sentences": {
+        "start": "Kuri priemonė palieka ploniausią liniją? Rink ir žiūrėk.",
+        "piestukas": "Pieštukas. Plona linija.",
+        "rasiklis": "Rašiklis. Kiek storesnė linija.",
+        "flomasteris": "Flomasteris. Stora linija.",
+        "kreidele": "Kreidelė. Labai stora linija.",
+        "silpnai": "Spaudei silpnai. Linija tokia pati plati, tik šviesesnė.",
+        "stipriai": "Spaudei stipriai. Linija tokia pati plati, tik tamsesnė.",
+        "pressHint": "Pabandyk tą pačią priemonę paspausti silpnai ir stipriai.",
+        "done": "Trys priemonės — trys storiai. Spaudimas keitė tik tamsumą.",
+        "noteDone": "Plotį lemia priemonė, o spaudimas tik tamsumą.",
+        "sameTool": "Ši priemonė jau rankoje.",
+        "samePress": "Spaudimas toks pat. Rink kitą.",
+        "noteStrong": "Linija platesnė netapo.",
+        "noteWeak": "Linija siauresnė netapo."
+      },
+      "notes": {
+        "piestukas": "Visi trys vidai matosi.",
+        "rasiklis": "Visi trys vidai dar matosi.",
+        "flomasteris": "Sagos vidus liko siauras.",
+        "kreidele": "Sagos vidus užsipildė, kiti du susiaurėjo."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Pieši mažą sagos skylutę. Kuri priemonė ją užkloja?",
+      "options": [
+        "Kreidelė",
+        "Rašiklis",
+        "Pieštukas"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, kuri priemonė palieka plačiausią juostą.",
+      "why": "Kreidelė palieka tokią storą liniją, kad sagos vidus visai užsipildo."
+    },
+    {
+      "q": "Pieštuku spaudi stipriau. Kas pasikeis piešinyje?",
+      "options": [
+        "Linija bus tokia pat stora kaip kreidelės",
+        "Linija taps tamsesnė",
+        "Linija išnyks"
+      ],
+      "answer": 1,
+      "hint": "Palygink to paties pieštuko liniją spausdamas silpnai ir stipriai.",
+      "why": "Spaudimas keičia tamsumą, o plotį lemia priemonė."
+    },
+    {
+      "q": "Tas pats piešinys nupieštas pieštuku ir kreidele. Kur liko platesnis vidus?",
+      "options": [
+        "Pieštuko piešinyje",
+        "Kreidelės piešinyje",
+        "Abiejuose vienodas"
+      ],
+      "answer": 0,
+      "hint": "Stora linija iš abiejų pusių uždengia daugiau vidaus.",
+      "why": "Plonesnė linija vidų dengia mažiau, todėl jis lieka platesnis."
+    },
+    {
+      "q": "Didelėje raidėje O reikia užpildyti storą juostą. Kuri priemonė tam tinka geriausiai?",
+      "options": [
+        "Pieštukas",
+        "Rašiklis",
+        "Kreidelė"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok apie piešinio dydį, ne apie mažą skylutę.",
+      "why": "Didelį plotą stora linija uždengia greičiau, o vidus lieka platus.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kuri priemonė tau padėjo nupiešti mažą vidų? Kodėl kitos jo neužpildė?",
+  "teacher": {
+    "goal": "Atskirti linijos plotį nuo tamsumo: plotį lemia piešimo priemonė, o spaudimas keičia tik tai, kokia linija tamsi.",
+    "prompt": "Kodėl ta pati saga pieštuku ir kreidele atrodo kitaip?",
+    "offline": "Duokite tris lapelius su nupieštu mažu apskritimu. Vieną apveskite pieštuku, kitą flomasteriu, trečią kreidele. Padėkite greta ir paklauskite, kuriame vidus liko didžiausias. Paskui pieštuką spauskite stipriau: ar vidus sumažėjo?",
+    "misconceptions": [
+      "„Kuo stipriau spaudi, tuo storesnė linija.“ Modelis tą pačią priemonę rodo spaudžiamą silpnai ir stipriai: keičiasi tik tamsumas, plotis lieka toks pat. Realybėje stiprus spaudimas kiek paskleidžia dažus, bet pieštukas vis tiek nepalieka kreidelės pločio linijos.",
+      "„Stora priemonė geriau, nes greičiau.“ Mažoje formoje ji vidų užkloja: toje pačioje sagoje kreidelė palieka vientisą dėmę.",
+      "„Pieštukas per plonas, jo nesimato.“ Plona linija vienintelė palieka mažą vidų atvirą."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), dailė, 1 kl. pamokų ciklas „Dekoruotos ir erdvinės raidės“: kūrybos reikmenys — piešimo popierius, pieštukai, rašikliai, flomasteriai, kreidelės.",
+    "NŠA (2024), dailė, pasiekimas A2: „Taiko pasiūlytas dailės technikas, saugiai naudoja kūrybos įrankius ir medžiagas. Eksperimentuoja, negalvodamas apie galutinį rezultatą“.",
+    "Dailės bendroji programa (2022), 1–2 klasė: meninės raiškos srityje mokiniai tyrinėja medžiagas, formas ir piešimo priemones.",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md — 1–2 kl. dailėje dominuoja praktinė kūrybinė raiška; 1 kl. ciklas „Dekoruotos ir erdvinės raidės“ kaip modelio pagrindas."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (linijos storį lemia priemonė), o ne keturių priemonių sąrašas.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo parinkti priemonę naujoje situacijoje, o ne atkartoti sakinį.",
+    "3 žingsnis — pagalba laiku: kiekviena klaida turi užuominą, modelis leidžia bandyti dar kartą be baudimo.",
+    "T3.4 — praplėtimas: papildoma užduotis apie didelį plotą greitesniems vaikams."
+  ]
+}

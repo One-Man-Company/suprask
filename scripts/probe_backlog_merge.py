@@ -68,7 +68,7 @@ def row(status: str, modules: list[str], key: str = "26.1.1",
 def main() -> int:
     # T1 — būsena geresnė, moduliai iš laimėjusios eilutės.
     dst = row("partial", ["08-metu-laikai", "19-dumai-ir-isejimas"],
-              section="C. Pasaulio pažinimas", source="zemelapis.md:62",
+              section="Ko platformoje nėra", source="zemelapis.md:62",
               gap="traumų temos nėra")
     src = row("covered", ["25-traumu-prevencija", "38-traumu-prevencija"],
               section="Ko platformoje nėra", source="pasaulio.md:174")
@@ -89,7 +89,8 @@ def main() -> int:
          f"gap {dst.get('gap')!r}")
 
     # T6 — silpnesnės eilutės sąrašas neperimamas (26.1.2 atvejis).
-    dst2 = row("covered", ["30-dienos-rezimas-mityba"], key="26.1.2")
+    dst2 = row("covered", ["30-dienos-rezimas-mityba"], key="26.1.2",
+               section="Ko platformoje nėra", gap="režimo nėra")
     src2 = row("partial", ["04-kaip-zmones-sveikinasi", "09-augalo-gyvenimas"],
                key="26.1.2", topic="Sveikas gyvenimas")
     cb._merge(dst2, src2)
@@ -139,7 +140,8 @@ def main() -> int:
     # prieštaravimas būdavo registruojamas tik tada, kai silpnesnė eilutė eina
     # ANTRA — o tvarka priklauso nuo to, kuri lentelė wiki faile pirma (LL-19).
     def fresh_pair() -> tuple[dict, dict]:
-        return (row("partial", ["08-metu-laikai"], source="zemelapis.md:62"),
+        return (row("partial", ["08-metu-laikai"], source="zemelapis.md:62",
+                    section="Ko platformoje nėra", gap="trūksta"),
                 row("covered", ["25-traumu-prevencija", "38-traumu-prevencija"],
                     source="pasaulio.md:174"))
 
@@ -154,6 +156,19 @@ def main() -> int:
          same_outcome and bool(m1.get("stale_claim")) and bool(m2.get("stale_claim")),
          f"silpna-dst {m1['status']}/{m1['modules']} claim={bool(m1.get('stale_claim'))}; "
          f"stipri-dst {m2['status']}/{m2['modules']} claim={bool(m2.get('stale_claim'))}")
+
+    # T13 — kaltės adresas teisingas: programos LENTELĖS eilutė (oficialus temos
+    # pavadinimas, `partial` dėl silpno žodžių sutapimo) NĖRA pasenęs teiginys —
+    # jos negalima siųsti „taisyti“, kitaip vartai nurodo teisingą eilutę
+    # (LL-21 atvirkščia kryptimi). `stale_claim` skirtas TIK „nėra“ teiginiui.
+    table_row = row("partial", ["08-metu-laikai"], topic="Saugus elgesys",
+                    section="C. Pasaulio pažinimas", source="pasaulio.md:85")
+    strong_row = row("covered", ["25-traumu-prevencija", "38-traumu-prevencija"],
+                     section="Ko platformoje nėra", source="pasaulio.md:174")
+    cb._merge(table_row, strong_row)
+    case("T13 programos lentelės eilutė nekaltinama kaip pasenusi",
+         table_row["status"] == "covered" and not table_row.get("stale_claim"),
+         f"būsena {table_row['status']}, stale_claim {table_row.get('stale_claim')!r}")
 
     # T12 — vartai įvardija, KURIS šaltinis pasikeitė (#42779). Be to raudoni
     # vartai praneša tik „pasenęs“, trys paleidimai iš eilės kartoja tą patį

@@ -1,6 +1,6 @@
 {
  "grade": 1,
- "generated": "2026-11-25T20:51:15",
+ "generated": "2026-11-25T21:00:24",
  "source_hash": "500d229db9b1a863",
  "source_files": {
   "1-klases-temų-žemėlapis.md": "d51dd4b59f29b1b5",
@@ -135,7 +135,6 @@
    ],
    "status": "covered",
    "target": "",
-   "stale_claim": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:85: „Saugus elgesys“ šią poziciją rodo kaip `partial`, o moduliai 25-traumu-prevencija, 38-traumu-prevencija ją moko",
    "hours": "3"
   },
   {

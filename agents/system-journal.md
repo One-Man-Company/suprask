@@ -549,8 +549,10 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
      negalima uždaryti teisingu veiksmu, moko juos apeiti.
   3. `research/wiki/curriculum/pasaulio-pazinimas-1-klase.md` — dvi pasenusios
      eilutės (26.1.1, 26.1.2) pakeistos faktais su modulių vardais ir data.
-  4. `scripts/probe_backlog_merge.py` — 11 lūkesčių zondas; įsijungia į CI per
-     esamą `for f in probe_*.py` ciklą, be tinklo ir git, 0,3 s.
+  4. `scripts/probe_backlog_merge.py` — 12 lūkesčių zondas; įsijungia į CI per
+     esamą `for f in probe_*.py` ciklą, be tinklo ir git, 0,3 s. T13 saugo
+     priešingą klaidą: programos LENTELĖS eilutės (oficialus temos pavadinimas)
+     negalima vadinti „pasenusiu teiginiu“ vien dėl silpno žodžių sutapimo.
   5. `research/wiki/guidelines/pamokos.md` — **LL-199** (199 įrašai).
 - **Kodėl:** tai ne vienas blogas modulis, o **generatoriaus taisyklė**, kuri
   kiekvieną paleidimą klaidino kūrėją: blogesnė būsena turėjo atrodyti „saugiau“,

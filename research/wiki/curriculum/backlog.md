@@ -66,14 +66,6 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | traumų prevencija | 26.1.1 | padengta 25-traumu-prevencija („Trauma turi priežastį“) ir 38-traumu-prevencija („Apsauga dengia tik savo viet | `pasaulio-pazinimas-1-klase.md:174` |
 | covered | žmonių įvairovė | 26.2.1 | modulio nėra; atmesta guidelines/klausimai.md:71 (asmens duomenys) | `pasaulio-pazinimas-1-klase.md:171` |
 
-## Pasenę wiki teiginiai (taisyti šaltinyje, ne kurti modulį)
-
-Padengtis imama iš modulių, o ne iš wiki sakinio: jei modulis poziciją
-moko, o `curriculum/*.md` vis dar rašo „nėra“, teisingas sprendimas yra
-pataisyti tą eilutę, o ne statyti antrą modulį tai pačiai temai.
-
-- **26.1.1 traumų prevencija** — research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:85: „Saugus elgesys“ šią poziciją rodo kaip `partial`, o moduliai 25-traumu-prevencija, 38-traumu-prevencija ją moko
-
 ## Kaip tai naudoti
 
 1. Imk `missing` eilutę, kurios `target` tuščias arba kurios srauto repo dar neturi —

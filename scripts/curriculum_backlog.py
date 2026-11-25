@@ -322,11 +322,24 @@ def _merge(dst: dict, src: dict) -> None:
                 f"šią poziciją rodo kaip `{weaker['status']}`, o moduliai "
                 f"{', '.join(stronger_modules)} ją moko")
 
+    def _asserts_absence(r: dict) -> bool:
+        """Ar eilutė tvirtina, kad medžiagos NĖRA (tik tokia gali būti pasenusi)?
+
+        Programos lentelės eilutė (`| 26.1.1 | Saugus elgesys | 3 | …`) yra
+        oficialus temos PAVADINIMAS, ne teiginys apie platformos būklę. Jos
+        būsena `partial` reiškia, kad žodžių sutapimas silpnas, o ne kad
+        kažkas pasenę — todėl tokios eilutės negalima vadinti „pasenusiu
+        teiginiu“ ir siųsti žmogaus taisyti (kitaip vartai siūlytų taisyti
+        teisingą eilutę, t. y. LL-21 atvirkščia kryptimi).
+        """
+        return (r.get("section") == "Ko platformoje nėra"
+                or bool(r.get("gap")))
+
     # Prieštaravimas registruojamas NEPRIKLAUSOMAI nuo to, kuri eilutė eina
     # pirma: sujungimas turi duoti tą patį rezultatą abiem kryptimis (LL-19
     # šeima — taisymas, kurio rezultatas priklauso nuo grupės eilės).
     if src_rank > dst_rank:
-        if dst.get("modules"):
+        if dst.get("modules") and _asserts_absence(dst):
             dst["stale_claim"] = _claim(dst, list(src.get("modules") or []))
         dst["status"], dst["modules"] = src["status"], list(src.get("modules") or [])
     elif src_rank == dst_rank:
@@ -334,7 +347,8 @@ def _merge(dst: dict, src: dict) -> None:
             dst["modules"] = list(src.get("modules") or [])
     else:  # src_rank < dst_rank
         # silpnesnė eilutė: įrodymo nekeičia, bet pasenęs teiginys lieka matomas
-        dst["stale_claim"] = _claim(src, list(dst.get("modules") or []))
+        if _asserts_absence(src):
+            dst["stale_claim"] = _claim(src, list(dst.get("modules") or []))
     if src.get("section") == "Ko platformoje nėra" and src.get("outcome"):
         extra = src["outcome"]
         if extra and extra not in (dst.get("gap") or ""):

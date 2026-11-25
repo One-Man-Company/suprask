@@ -119,6 +119,10 @@ scaled_checked 77   problems []   scaled_unapplied []
   apsaugos vieta), bet skaidriai skirtingi moduliai su beveik tuo pačiu failo vardu; palikta
   kaip yra, užregistruota šioje ataskaitoje.
 - 320 px @ 200 % nematuota (ne vartas, standartas žemiau 360 px nieko nežada).
+  Užfiksuota ir tai: pirmas 200 % bandymas buvo paleistas su `--viewports 360` (toks
+  pavadinimas neegzistuoja) — įrankis atsisakė matuoti garsiai, `KLAIDA: nežinomi plotai 360;
+  galimi: desktop, tablet, phone, small, tiny`, rc 2, o ne tylus „0 problemų“. Matavimas
+  pakartotas su `--viewports small` (360 px) → 77/77, 0 problemų.
 
 ## Failai
 

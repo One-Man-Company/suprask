@@ -47,7 +47,15 @@ gyvos svetainės veidrodį, patiekiamą vietiniu `http.server`. Tada per patį
      CI vartai, kurie anksčiau šio katalogo nematė;
   P  `live` klasė be `index.json` repo → `missing_index` su vardu;
   Q  nė viena klasė `live` → `--path-order` rc 1 (anksčiau `all([])` davė
-     rc 0, t. y. CI žingsnis „praeidavo“ nieko nematuodamas).
+     rc 0, t. y. CI žingsnis „praeidavo“ nieko nematuodamas);
+  R  failas atsakė 404 be žymės, o su `?cb=` — 200 ir tie patys baitai →
+     „sutampa“, rc 0, o pranešime įvardyta priežastis („CDN neigiama
+     kopija“). Iki #537 toks atvejis virsdavo `live_missing` ir
+     „sustabdyta“, tad sekantis agentas eidavo ieškoti ištrinto turinio;
+  S  tas pats kelias 404 **ir su žyme** → vis dar `live_missing`, rc 1:
+     pakartojimas negali paversti tikro nebuvimo žalia;
+  T  baitai skiriasi, o LL-76 pakartojimas atsako 404 → `gone`, o ne
+     `unreachable`: 404 lieka atsakymu ir antru matavimu.
 
 Repo failai nekeičiami: viskas vyksta `tempfile` kataloge, kuris ištrinamas.
 Zondą galima paleisti bet kada, taip pat kaip regresijos patikrą.
@@ -472,6 +480,113 @@ def main() -> int:
               f"rc {rc}, {(out.strip().splitlines() or [''])[0][:70]}")
         grades_path.write_bytes(good_grades)
         live_grades_path.write_bytes(good_grades)
+
+        # R. Krašto neigiama kopija (#50319): pirmas GET be žymės → 404, tas
+        #    pats adresas su `?cb=` → 200 ir tie patys baitai. Tai realus
+        #    #526 atvejis po modulio pervadinimo: `x-cache: HIT`, `age: 42`.
+        neg = {"get": 0, "head": 0}
+
+        class _NegativeCache(_QuietHandler):
+            """Vienas 404 be keitimo žymės, tada 200 — kaip kraštas."""
+
+            def do_GET(self):  # noqa: N802 - bazinės klasės vardas
+                if "01-a.json" in self.path and "cb=" not in self.path and not neg["get"]:
+                    neg["get"] += 1
+                    self.send_error(404)
+                    return
+                super().do_GET()
+
+            def do_HEAD(self):  # noqa: N802 - bazinės klasės vardas
+                if "01-a.json" in self.path and "cb=" not in self.path and not neg["head"]:
+                    neg["head"] += 1
+                    self.send_error(404)
+                    return
+                super().do_HEAD()
+
+        httpd4 = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0), functools.partial(_NegativeCache, directory=str(live)))
+        threading.Thread(target=httpd4.serve_forever, daemon=True).start()
+        cp.LIVE_ROOT = f"http://127.0.0.1:{httpd4.server_address[1]}/"
+        data = cp.report([1])
+        check("R: 404 be žymės, 200 su žyme → „sutampa“, o ne `live_missing`",
+              data["verdict"]["ok"] and not data["live_missing"]
+              and data["cdn_refreshed_count"] >= 1
+              and any(x.endswith("01-a.json") for x in data["cdn_refreshed"]),
+              f"verdict {data['verdict']['label']}, live_missing "
+              f"{ids(data['live_missing'])}, cdn {data['cdn_refreshed_count']}")
+        neg["get"] = neg["head"] = 0
+        rc, out = run_cli(["--grade", "1"])
+        check("R: pranešimas įvardija priežastį (ne tyli žalia), rc 0",
+              rc == 0 and "CDN NEIGIAMA KOPIJA" in out,
+              f"rc {rc}, {(out.strip().splitlines() or [''])[0][:70]}")
+        # HEAD kelias (garsas, `head_state()`) turi tą patį pakartojimą.
+        neg["head"] = 0
+        state, size = cp.head_state("content/lt/grade-01/matematika/01-a.json")
+        check("R: `head_state()` 404 → 200 su žyme → `ok` ir dydis",
+              state == "ok" and size > 0, f"būsena {state}, {size} B")
+        httpd4.shutdown()
+        httpd4.server_close()
+        cp.LIVE_ROOT = url
+
+        # S. Tas pats kelias atsako 404 ir **su** keitimo žyme: tai tikras
+        #    nebuvimas, tad pakartojimas neturi paversti jo žaliu.
+        class _AlwaysGone(_QuietHandler):
+            def do_GET(self):  # noqa: N802
+                if "01-a.json" in self.path:
+                    self.send_error(404)
+                    return
+                super().do_GET()
+
+        httpd5 = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0), functools.partial(_AlwaysGone, directory=str(live)))
+        threading.Thread(target=httpd5.serve_forever, daemon=True).start()
+        cp.LIVE_ROOT = f"http://127.0.0.1:{httpd5.server_address[1]}/"
+        data = cp.report([1])
+        check("S: 404 ir su žyme → vis dar `live_missing`, rc 1",
+              ids(data["live_missing"]) == ["01-a"]
+              and data["cdn_refreshed_count"] == 0
+              and any("modulio failo nėra svetainėje" in r
+                      for r in data["verdict"]["reasons"])
+              and run_cli(["--grade", "1"])[0] == 1,
+              f"live_missing {ids(data['live_missing'])}, cdn "
+              f"{data['cdn_refreshed_count']}, reasons {data['verdict']['reasons']}")
+        httpd5.shutdown()
+        httpd5.server_close()
+        cp.LIVE_ROOT = url
+
+        # T. Skirtingi baitai pirmu matavimu, o antras matavimas — 404
+        #    (LL-76 pakartojimas). Tai atsakymas, ne tinklo gedimas: būsena
+        #    turi likti `gone`, o ne virsti `unreachable`.
+        class _StaleThenGone(_QuietHandler):
+            sent = {"n": 0}
+
+            def do_GET(self):  # noqa: N802
+                if "01-a.json" in self.path:
+                    if self.sent["n"] == 0:
+                        self.sent["n"] += 1
+                        body = b'{"id": "01-a", "title": "senas"}'
+                        self.send_response(200)
+                        self.send_header("Content-Type", "application/json")
+                        self.send_header("Content-Length", str(len(body)))
+                        self.end_headers()
+                        self.wfile.write(body)
+                        return
+                    self.send_error(404)
+                    return
+                super().do_GET()
+
+        httpd6 = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0), functools.partial(_StaleThenGone, directory=str(live)))
+        threading.Thread(target=httpd6.serve_forever, daemon=True).start()
+        cp.LIVE_ROOT = f"http://127.0.0.1:{httpd6.server_address[1]}/"
+        state, _, _ = cp.compare(
+            repo / "content" / "lt" / "grade-01" / "matematika" / "01-a.json",
+            "content/lt/grade-01/matematika/01-a.json")
+        check("T: antro matavimo 404 → `gone`, ne `unreachable`",
+              state == "gone", f"būsena {state}")
+        httpd6.shutdown()
+        httpd6.server_close()
+        cp.LIVE_ROOT = url
     finally:
         if httpd is not None:
             httpd.shutdown()

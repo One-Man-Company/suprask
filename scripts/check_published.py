@@ -420,6 +420,24 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   rc 0), rc 0, ~8 s, be interneto. Tikras bėgimas nepakito: 77/77,
   garsas 2 224/2 224, rc 0.
 
+2026-11-25 (paleidimas #537): 404 gali būti krašto neigiama kopija, ne dingęs failas.
+  Paleidime #526 pirmas nekešuotas GET į ką tik pervadintą
+  `lietuviu-kalba/03-sakinio-zodziai.json` grąžino 404 / 563 B su `x-cache:
+  HIT`, `age: 42`, o tas pats adresas su `?cb=` — 200 / 5 459 B, baitiškai
+  lygus repo. #386 taisyklė „404 yra atsakymas, todėl nekartojamas“ teisinga
+  tikram nebuvimui, bet ne krašto neigiamai kopijai: įrankis pranešdavo
+  `live_missing`, `verdict` — „sustabdyta“, ir sekantis agentas eidavo ieškoti
+  ištrinto turinio, nors reikėjo tik palaukti. Dabar `refetch_after_gone()`
+  kartoja **vieną kartą** ir **tik su keitimo žyme** (`?cb=<laikas>`): 200 →
+  ta pati būsena „ok“, o `CDN_REFRESH` / `cdn_refreshed` įrašo, kad pirmas
+  atsakymas buvo 404 (ne tyliai, LL-37); jei ir su žyme 404 — būsena lieka
+  „gone“ ir pranešama kaip iki šiol. Tas pats kelias yra `compare()`,
+  `_shell_state()`, `head_state()` (garsas) ir `check_grade()` klasės
+  `index.json` / `path.json`: tai vienas defektas, ne vienas failas (LL-21).
+  Įrodymas: `scripts/probe_publish_sets.py` R (pirmas GET 404, su `?cb=` 200 →
+  „sutampa“, rc 0 ir įvardyta priežastis) ir S (tas pats kelias visada 404 →
+  vis dar `live_missing`, rc 1).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -589,6 +607,13 @@ def head_state(url_rel: str) -> tuple[str, int]:
                 return "ok", int(resp.headers.get("Content-Length") or 0)
         except urllib.error.HTTPError as exc:
             if exc.code in (404, 410):
+                # Krašto neigiama kopija (#50319): naujas kodas, garsas ar
+                # klasės katalogas kurį laiką atsako 404 būtent iš jos.
+                # Vienas pakartojimas su keitimo žyme; jei ir jis 404 —
+                # tai atsakymas, ne ryšio gedimas (LL-37).
+                blob = refetch_after_gone(LIVE_ROOT + url_rel, url_rel)
+                if blob is not None:
+                    return "ok", len(blob)
                 return "missing", -1
             if attempt == 0:
                 time.sleep(1.5)  # LL-76: kraštas po deploymento būna mišrus
@@ -1280,6 +1305,44 @@ FETCH_ATTEMPTS = 2
 # Kiek užklausų teko kartoti po laikinos klaidos. Skaičius išvedamas, o ne
 # nuslopinamas: tylus kartojimas paslėptų flakuojančią svetainę (LL-37).
 RETRIES = {"count": 0}
+# Kiek 404 pasirodė buvę krašto **neigiama** kopija (#50319). Tai atskiras
+# skaičius nuo `RETRIES`: ten laikina klaida (503, timeout), čia — atsakymas,
+# kurį kraštas atidavė iš savo 404 kopijos. Sąmoningai rodomas pranešime, nes
+# „failo nėra“ ir „kraštas dar nepersikrovė“ turi likti atskiri (LL-21, LL-37).
+CDN_REFRESH = {"count": 0, "items": []}
+
+
+def cache_busted(url: str) -> str:
+    """Tas pats adresas su keitimo žyme — apeina krašto neigiamą kopiją."""
+    sep = "&" if "?" in url else "?"
+    return f"{url}{sep}cb={int(time.time() * 1000)}"
+
+
+def refetch_after_gone(url: str, rel: str) -> bytes | None:
+    """Vienas pakartojimas su keitimo žyme, kai pirmas atsakymas buvo 404/410.
+
+    Kodėl tai ne tas pats, kas `fetch_answer()` kartojimas. 404 yra
+    **atsakymas** (#386), ir jo kartoti be priežasties negalima: tikro
+    nebuvimo atveju tai būtų tik dvigubas srautas. Bet kraštas (GitHub Pages
+    per Fastly) laiko ir **neigiamą** 404 kopiją, o ką tik atsiradęs kelias —
+    naujas ar pervadintas modulis, naujas kodo failas, naujai įjungta klasė —
+    kurį laiką atsako 404 būtent iš jos. Paleidimas #526: pirmas nekešuotas
+    GET į `03-sakinio-zodziai.json` → 404 / 563 B (`x-cache: HIT`,
+    `age: 42`), tas pats adresas su `?cb=` → 200 / 5 459 B, baitiškai lygus
+    repo. Vaikui tai ne „failo nėra“, o „puslapis dar nepersikrovė“.
+
+    Todėl kartojama **vieną kartą** ir **tik su keitimo žyme**: žymė apeina
+    krašto raktą, o tikro nebuvimo neatveria (GitHub Pages 404 atsako ir su
+    `?cb=`). Atsakymas 200 grąžinamas kaip įprasti baitai, o įrašas
+    `CDN_REFRESH` pasako, kad pirmas atsakymas buvo 404 — kitaip pranešimas
+    vaidintų, jog pirmas bandymas pavyko (LL-21, LL-37).
+    """
+    status, blob = fetch_answer(cache_busted(url), attempts=1)
+    if status != "ok" or blob is None:
+        return None
+    CDN_REFRESH["count"] += 1
+    CDN_REFRESH["items"].append(rel)
+    return blob
 
 
 def fetch_answer(url: str, timeout: int = 20,
@@ -1365,16 +1428,25 @@ def compare(local_path: pathlib.Path, url_rel: str) -> tuple[str, int, int]:
     status, live = fetch_answer(LIVE_ROOT + url_rel)
     if status == "missing":
         # Atsakymas gautas: failo svetainėje nėra. Tai ne ryšio klaida ir ne
-        # pasenęs turinys — nėra ko lyginti baitais (LL-21).
-        return "gone", len(local), -1
-    if live is None:
+        # pasenęs turinys — nėra ko lyginti baitais (LL-21). Bet 404 gali būti
+        # ir krašto neigiama kopija, kuri laikoma po pervadinimo ar naujo
+        # publikavimo (#50319), todėl vienas pakartojimas su keitimo žyme.
+        # Jei ir jis 404 — būsena lieka „gone“ ir pranešama kaip iki šiol.
+        live = refetch_after_gone(LIVE_ROOT + url_rel, url_rel)
+        if live is None:
+            return "gone", len(local), -1
+    elif live is None:
         return "unreachable", len(local), -1
     if sha(live) != sha(local):
         # LL-76: pirmomis sekundėmis po deploymento kraštas gali būti mišrus.
         time.sleep(1.5)
-        live = fetch(LIVE_ROOT + url_rel)
-        if live is None:
-            return "unreachable", len(local), -1
+        status, again = fetch_answer(LIVE_ROOT + url_rel)
+        if again is None:
+            # Antras matavimas irgi neatsakė turiniu: 404 čia yra atsakymas,
+            # ne ryšio klaida (ta pati #386 taisyklė); `fetch()` šioje vietoje
+            # šį skirtumą prarasdavo ir 404 virsdavo „unreachable“.
+            return ("gone" if status == "missing" else "unreachable"), len(local), -1
+        live = again
     return ("ok" if sha(live) == sha(local) else "differs"), len(local), len(live)
 
 
@@ -1432,9 +1504,13 @@ def _shell_state(rel: str) -> tuple[str, int, int]:
     status, live = fetch_answer(LIVE_ROOT + rel)
     if status == "missing":
         # Svetainė kodo failo neturi: tai nepasibaigęs publikavimas, o ne
-        # ryšio klaida (#386, ta pati LL-21 šeima kaip `compare()`).
-        return "gone", len(local), -1
-    if live is None:
+        # ryšio klaida (#386, ta pati LL-21 šeima kaip `compare()`). Kodo
+        # failas po deploy'o taip pat būna krašto neigiamoje kopijoje, tad
+        # vienas pakartojimas su keitimo žyme (#50319); likus 404 — „gone“.
+        live = refetch_after_gone(LIVE_ROOT + rel, rel)
+        if live is None:
+            return "gone", len(local), -1
+    elif live is None:
         return "unreachable", len(local), -1
     for attempt in (0, 1):
         if strip_version(live.decode("utf-8", "replace")) == strip_version(local.decode("utf-8", "replace")):
@@ -1442,9 +1518,11 @@ def _shell_state(rel: str) -> tuple[str, int, int]:
         if attempt == 0:
             # LL-76: pirmomis sekundėmis po deploymento kraštas gali būti mišrus.
             time.sleep(2.5)
-            live = fetch(LIVE_ROOT + rel)
-            if live is None:
-                return "unreachable", len(local), -1
+            status, again = fetch_answer(LIVE_ROOT + rel)
+            if again is None:
+                # Kaip `compare()`: 404 antrą kartą yra atsakymas, ne tinklas.
+                return ("gone" if status == "missing" else "unreachable"), len(local), -1
+            live = again
     return "differs", len(local), len(live)
 
 
@@ -1594,11 +1672,17 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     # patikra ėjo per tą pačią svetainę ir rado viską (LL-21, LL-120 vienu
     # lygiu aukščiau: priežastis, kurios niekas neperskaitė).
     for name in ("index.json", "path.json"):
-        status, blob = fetch_answer(f"{LIVE_ROOT}content/lt/{gd}/{name}")
+        url_rel = f"content/lt/{gd}/{name}"
+        status, blob = fetch_answer(LIVE_ROOT + url_rel)
         if status == "missing":
-            # 404 — atsakymas, ne gedimas: failo svetainėje nėra.
-            out["live_gone"].append(f"{gd}/{name}")
-            break
+            # 404 — atsakymas, ne gedimas: failo svetainėje nėra. Bet ką tik
+            # įjungtos klasės indeksas būna krašto neigiamoje kopijoje, tad
+            # vienas pakartojimas su keitimo žyme (#50319). Likus 404 —
+            # `live_gone`, kaip iki šiol.
+            blob = refetch_after_gone(LIVE_ROOT + url_rel, url_rel)
+            if blob is None:
+                out["live_gone"].append(f"{gd}/{name}")
+                break
         if blob is None:
             out["live_error"] = out["live_error"] or f"gyvas {gd}/{name} nepasiekiamas"
             break
@@ -1785,6 +1869,8 @@ def last_commit() -> str:
 def report(grades: list[int] | None = None, compare_bytes: bool = True,
            audio_sample: int | None = None) -> dict:
     RETRIES["count"] = 0
+    CDN_REFRESH["count"] = 0
+    CDN_REFRESH["items"] = []
     # Kurių klasių apskritai ieškoma — iš `grades.json`, ir tai yra
     # **matavimas**, ne atsarginis variantas (`grade_scope()`). Anksčiau
     # neperskaitytas sąrašas virdavo `[1]`, tad sugadintas `grades.json`
@@ -1948,6 +2034,12 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "unpushed_commits": len(unpushed_list),
         "unpushed_checked": unpushed_ok,
         "retried_requests": RETRIES["count"],
+        # Kiek 404 pasirodė buvę krašto neigiama kopija (#50319). Atskiras
+        # raktas, nes tai nėra pakartojimas po laikinos klaidos: pirmas
+        # atsakymas buvo 404, o failas svetainėje yra. Be šio įrašo žalias
+        # „sutampa“ nuslėptų, kad kraštas dar kurį laiką atsakė 404.
+        "cdn_refreshed": list(CDN_REFRESH["items"]),
+        "cdn_refreshed_count": CDN_REFRESH["count"],
         "last_commit": last_commit(),
         "live_error": "; ".join(live_errors),
         "repo_error": "; ".join(repo_errors),
@@ -2507,6 +2599,19 @@ def main() -> int:
     if data.get("retried_requests"):
         # Ne klaida, bet svarbu: jei svetainė flakuoja, skaičius auga.
         print(f"Užklausos, kartotos po laikinos klaidos: {data['retried_requests']}")
+    refreshed = data.get("cdn_refreshed") or []
+    if refreshed:
+        # Ne klaida ir ne tyla. Pirmas atsakymas buvo 404, o su keitimo žyme
+        # — 200 ir tie patys baitai: failas svetainėje yra, kraštas atsakė
+        # neigiama kopija (#50319). Pasakoma, nes kitaip žalias „sutampa“
+        # nuslėptų, kad vaiko naršyklė dar kelias minutes gali gauti 404
+        # (ji `?cb=` nededa), o kitas agentas eitų ieškoti ištrinto failo.
+        shown = ", ".join(refreshed[:8])
+        more = f" … ir dar {len(refreshed) - 8}" if len(refreshed) > 8 else ""
+        print(f"CDN NEIGIAMA KOPIJA — pirmas atsakymas 404, su keitimo žyme 200 "
+              f"({len(refreshed)}): {shown}{more}")
+        print("  Failas svetainėje yra ir baitai sutampa: tai krašto vėlavimas, "
+              "ne turinio defektas ir ne nepaskelbtas modulis.")
     if not problems(data):
         name = data.get("audio_name") or {}
         # Vardo maišas tikrinamas ir `--no-bytes` režime (jis vietinis, be
@@ -2523,6 +2628,11 @@ def main() -> int:
         if audio.get("size_checked"):
             ok_sizes = audio["size_checked"] - len(audio.get("size_mismatch") or [])
             size_tail = f", garso dydžiai {ok_sizes}/{audio['size_checked']} = Content-Length"
+        # 404, kuris virto 200 su keitimo žyme, lieka matomas ir sėkmės
+        # eilutėje: kitaip išvesties skaitytojas (žmogus ar agentas) manytų,
+        # kad visi failai atsakė iš pirmo karto (#50319).
+        refresh_tail = (f", {len(refreshed)} atsakymas buvo CDN neigiama kopija "
+                        f"(pakartota su keitimo žyme)" if refreshed else "")
         # Tvarka — matavimas, o ne prielaida: sėkmės eilutė turi pasakyti, su
         # kuo lyginta, kitaip „sutampa“ apie 72 ID nieko nesako apie jų eilę.
         order_tail = ""
@@ -2539,6 +2649,7 @@ def main() -> int:
                   f"svetainės kodas {data.get('shell_count', 0)} failų"
                   f"{name_tail}"
                   f"{size_tail}"
+                  f"{refresh_tail}"
                   f"{order_tail}"
                   f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
         else:
@@ -2547,7 +2658,7 @@ def main() -> int:
             # t. y. pranešdavo apie matavimą, kurio nebuvo (LL-37).
             print("✔ ID ir seka sutampa — DALINĖ PATIKRA: modulių baitai, pagrindinių failų baitai, "
                   "svetainės kodas ir garsas svetainėje NETIKRINTI (--no-bytes)"
-                  f"{name_tail}{order_tail}.")
+                  f"{name_tail}{refresh_tail}{order_tail}.")
 
     if problems(data):
         # Priežasčių sakinys yra tas pats, kurį skaito dashboard'as ir

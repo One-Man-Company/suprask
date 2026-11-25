@@ -171,8 +171,8 @@ Patikrinti visi 8 `content/lt/grade-01/pasaulio-pazinimas/` moduliai. Šaltinis 
 | 26.2.1 **žmonių įvairovė** | modulio nėra; atmesta `guidelines/klausimai.md:71` (asmens duomenys) |
 | 26.5.1 **energijos reikia visiems** | atskiro modulio nėra; atmesta `guidelines/klausimai.md:70` (gairių 2 klausimas) |
 | 26.2.2 **naminiai ir laukiniai gyvūnai** | padengta `10-gyvunu-grupes` (perrašytas 2026-11-18, #348: kriterijus — kas duoda maistą, ne vieta) |
-| 26.1.1 **traumų prevencija** | yra tik gaisro dalis (`19`); traumų temos nėra |
-| 26.1.2 **dienos režimas, mityba** | yra tik kuprinės dalis (`18`); režimo ir mitybos nėra |
+| 26.1.1 **traumų prevencija** | padengta `25-traumu-prevencija` („Trauma turi priežastį“) ir `38-traumu-prevencija` („Apsauga dengia tik savo vietą“), abiejų `sources` cituoja 26.1.1; gaisro dalis — `19-dumai-ir-isejimas` (2026-11-25, #542) |
+| 26.1.2 **dienos režimas, mityba** | padengta `30-dienos-rezimas-mityba` („Vėliau keltis — trumpesni pusryčiai“, sim `dienos-juosta`, `sources` cituoja 26.1.2) ir `18-kuprine-ir-kuno-dalys` (kuprinės svoris); žr. LL-196 dėl `7:25 → −5 min.` defekto, kuris dar netaisytas (2026-11-25, #542) |
 
 ## 3. Ką 1-okas turi mokėti metų gale
 

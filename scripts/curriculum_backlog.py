@@ -71,6 +71,15 @@ SUBJECT_STRAND = {
 
 GRADE = 1
 
+# Programos pozicijos kodas (`26.1.1`). Skiria programos poziciją nuo temos,
+# kuri turi tik vardą (`C:saugus-elgesys`).
+_CODE_RE = re.compile(r"^\d+\.\d+\.\d+$")
+
+# Būsenų eilė: kuo didesnis, tuo daugiau įrodymo. Sujungiant dvi tos pačios
+# pozicijos eilutes imama DIDŽIAUSIA reikšmė, nes modulis repo yra faktas, o
+# wiki eilutė „nėra“ — tik teiginys, kuris gali būti pasenęs.
+_STATUS_ORDER = {"missing": 0, "partial": 1, "covered": 2}
+
 
 def _slug(text: str) -> str:
     return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", scope._norm(text))).strip("-")[:48]
@@ -279,6 +288,84 @@ def _strand_for(row: dict) -> str | None:
     return SUBJECT_STRAND.get(sritis)
 
 
+def _merge(dst: dict, src: dict) -> None:
+    """Sujungia DVI tos pačios programos pozicijos eilutes.
+
+    Būsena imama **geriausia**, o moduliai — TOS eilutės, kuri tą būseną
+    įrodė. Anksčiau čia buvo imama blogesnė būsena ir kartu jos modulių
+    sąrašas, todėl padengties įrodymas buvo numetamas: 26.1.1 „traumų
+    prevencija“ iš spragų lentelės turėjo `covered` [`25-traumu-prevencija`,
+    `38-traumu-prevencija`], o 26.1.1 „Saugus elgesys“ iš žemėlapio —
+    `partial` [`08-metu-laikai`, `19-dumai-ir-isejimas`]; po sujungimo
+    likdavo `partial` BE įrodžiusių modulių, o `target` nukreipdavo į dar
+    vieną (trečią) traumų modulį. Kiekvienas agento promptas tą klaidingą
+    darbo užsakymą gaudavo kasdien (LL-199).
+
+    Moduliai imami tik iš laimėjusios eilutės. Silpnesnės eilutės sąrašas
+    yra raktažodžių triukšmas (26.1.2 „Sveikas gyvenimas“ atsinešė
+    `04-kaip-zmones-sveikinasi`), o įrodymas turi būti įrodymas, ne sąrašo
+    ilgis (LL-37). Kai būsenos LYGIOS, lieka pirmosios eilutės sąrašas —
+    `_gaps()` eina pirma, tad tai ta eilutė, kuri cituoja programos kodą ir
+    spragos pastabą; antroji tik pakartoja tą pačią poziciją kitu vardu.
+
+    Prieštaravimas neužmaskuojamas: jis įrašomas į `stale_claim`, kad
+    programos derintojas matytų, kurią wiki eilutę reikia atnaujinti.
+
+    Iškelta iš `build()` į modulio lygį, kad zondas
+    (`scripts/probe_backlog_merge.py`) tikrintų TĄ PAČIĄ funkciją, o ne jos
+    kopiją — kopija žaliuotų savaime ir neįrodytų nieko (LL-36).
+    """
+    dst_rank, src_rank = _STATUS_ORDER[dst["status"]], _STATUS_ORDER[src["status"]]
+
+    def _claim(weaker: dict, stronger_modules: list[str]) -> str:
+        return (f"{weaker.get('source', '')}: „{weaker.get('topic', '')}“ "
+                f"šią poziciją rodo kaip `{weaker['status']}`, o moduliai "
+                f"{', '.join(stronger_modules)} ją moko")
+
+    # Prieštaravimas registruojamas NEPRIKLAUSOMAI nuo to, kuri eilutė eina
+    # pirma: sujungimas turi duoti tą patį rezultatą abiem kryptimis (LL-19
+    # šeima — taisymas, kurio rezultatas priklauso nuo grupės eilės).
+    if src_rank > dst_rank:
+        if dst.get("modules"):
+            dst["stale_claim"] = _claim(dst, list(src.get("modules") or []))
+        dst["status"], dst["modules"] = src["status"], list(src.get("modules") or [])
+    elif src_rank == dst_rank:
+        if not dst.get("modules"):
+            dst["modules"] = list(src.get("modules") or [])
+    else:  # src_rank < dst_rank
+        # silpnesnė eilutė: įrodymo nekeičia, bet pasenęs teiginys lieka matomas
+        dst["stale_claim"] = _claim(src, list(dst.get("modules") or []))
+    if src.get("section") == "Ko platformoje nėra" and src.get("outcome"):
+        extra = src["outcome"]
+        if extra and extra not in (dst.get("gap") or ""):
+            dst["gap"] = ((dst.get("gap", "") + " " + extra).strip()
+                          if dst.get("gap") else extra)
+    # Užpildyta pozicija negali nešti „ko trūksta“ pastabos: jei moduliai
+    # ją moko, ta pastaba yra pasenęs wiki teiginys, o ne darbo užsakymas.
+    # Ji prijungiama prie `stale_claim` (o ne užrašoma vietoj jo), kad liktų
+    # matoma ir būtų taisoma šaltinyje, o ne skaitoma kaip dar neatliktas
+    # darbas (LL-37).
+    if dst["status"] == "covered" and dst.get("gap"):
+        gap = dst.pop("gap")
+        have = dst.get("stale_claim") or ""
+        dst["stale_claim"] = f"{have} (šaltinis rašo: „{gap}“)".strip() if have else gap
+    for field in ("strand", "sritis", "outcome", "source", "level",
+                  "interactivity", "hours"):
+        if not dst.get(field) and src.get(field):
+            dst[field] = src[field]
+
+
+def _same_position(dst: dict, src: dict) -> bool:
+    """Ar dvi eilutės žymi TĄ PAČIĄ programos poziciją?
+
+    SKIRTINGI programos kodai yra skirtingos pozicijos, net jei temų
+    pavadinimai sutampa: sujungus juos dingtų viena pozicija iš eilės
+    („47 pozicijos“ taptų 46) ir niekas to nepastebėtų.
+    """
+    a, b = dst.get("key", ""), src.get("key", "")
+    return not (_CODE_RE.match(a) and _CODE_RE.match(b) and a != b)
+
+
 def build(grade: int = GRADE) -> dict:
     rows = _gaps() + _code_rows() + _map_rows()  # eilės tvarka = vyresnumas
     for r in rows:
@@ -286,23 +373,10 @@ def build(grade: int = GRADE) -> dict:
             r["strand"] = _strand_for(r)
     rows = enrich(rows, grade)
 
-    order = {"missing": 0, "partial": 1, "covered": 2}
-
-    def _merge(dst: dict, src: dict) -> None:
-        if order[src["status"]] < order[dst["status"]]:
-            dst["status"], dst["modules"] = src["status"], src["modules"]
-        if src.get("section") == "Ko platformoje nėra" and src.get("outcome"):
-            extra = src["outcome"]
-            if extra and extra not in (dst.get("gap") or ""):
-                dst["gap"] = ((dst.get("gap", "") + " " + extra).strip()
-                              if dst.get("gap") else extra)
-        for field in ("strand", "sritis", "outcome", "source", "level",
-                      "interactivity", "hours"):
-            if not dst.get(field) and src.get(field):
-                dst[field] = src[field]
-
     # 1 praėjimas — pagal temos vardą („Saugus elgesys" iš žemėlapio ir iš
     # spragų lentelės yra viena pozicija, net jei viena turi kodą, o kita ne).
+    # Du SKIRTINGI kodai lieka dviem pozicijomis: temos vardas sutampa
+    # atsitiktinai, o sujungus eilė netektų vieno programos punkto.
     by_name: dict[str, dict] = {}
     for r in rows:
         key = _slug(re.sub(r"^\d+\.\d+\.\d+\s*", "", r["topic"]))
@@ -310,16 +384,21 @@ def build(grade: int = GRADE) -> dict:
         if have is None:
             by_name[key] = r
             continue
+        if not _same_position(have, r):
+            by_name[f"{key}#{r['key']}"] = r
+            continue
         _merge(have, r)
 
     # 2 praėjimas — pagal kodą: numeruota pozicija nugali be kodo, o jei dvi
     # eilutės turi tą patį kodą (26.1.1 „Saugus elgesys" / „traumų
-    # prevencija"), tai TA PATI programos pozicija — imame griežtesnę būseną
-    # ir vieną `target`, kad agentas negautų dviejų failų tam pačiam darbui.
+    # prevencija"), tai TA PATI programos pozicija — imame GERIAUSIĄ būseną su
+    # visais įrodytais moduliais ir vieną `target`, kad agentas negautų dviejų
+    # failų tam pačiam darbui. Blogesnė būsena čia nėra „saugesnė": ji siųsdavo
+    # kurti trečią modulį temai, kurią jau moko du (LL-199).
     by_code: dict[str, dict] = {}
     rest: list[dict] = []
     for r in by_name.values():
-        if re.match(r"^\d+\.\d+\.\d+$", r["key"]):
+        if _CODE_RE.match(r["key"]):
             have = by_code.get(r["key"])
             if have is not None:
                 _merge(have, r)
@@ -338,10 +417,14 @@ def build(grade: int = GRADE) -> dict:
     counts = {"covered": 0, "partial": 0, "missing": 0}
     for r in rows:
         counts[r["status"]] = counts.get(r["status"], 0) + 1
+    sources = _source_files()
     return {
         "grade": grade,
         "generated": dt.datetime.now().isoformat(timespec="seconds"),
-        "source_hash": _source_hash(),
+        "source_hash": _source_hash(sources),
+        # Kiekvieno šaltinio pirštų atspaudas atskirai: be jo vartai žino TIK,
+        # kad kažkas pasikeitė, o ne kurį failą reikia pergeneruoti (#42779).
+        "source_files": sources,
         "curriculum_positions": len(rows),
         "counts": counts,
         "modules_now": len(_module_blobs(grade)),
@@ -349,14 +432,31 @@ def build(grade: int = GRADE) -> dict:
     }
 
 
-def _source_hash() -> str:
-    """Pirštų atspaudas TIK tų failų, iš kurių generuojama (ne backlog.md!)."""
-    h = hashlib.sha256()
+def _source_files() -> dict[str, str]:
+    """Kiekvieno šaltinio failo pirštų atspaudas atskirai.
+
+    `_source_hash()` pasako TIK tai, kad kažkas pasikeitė, bet ne KAS — todėl
+    raudoni vartai „backlog.json pasenęs“ neįvardija failo, kurį reikia
+    pergeneruoti, ir trys paleidimai iš eilės pranešė tą patį neuždaromą
+    įspėjimą (#42779). Vartai, kurių negalima uždaryti teisingu veiksmu, moko
+    juos apeiti (LL-159/LL-160).
+    """
+    out: dict[str, str] = {}
     for p in sorted(CURRICULUM.glob("*.md")):
-        if p.name == OUT_MD.name:  # savo paties išvestis — kitaip --check niekada nepraeitų
+        if p.name == OUT_MD.name:  # savo paties išvestis
             continue
-        h.update(p.name.encode())
-        h.update(p.read_bytes())
+        out[p.name] = hashlib.sha256(p.read_bytes()).hexdigest()[:16]
+    return out
+
+
+def _source_hash(files: dict[str, str] | None = None) -> str:
+    """Pirštų atspaudas TIK tų failų, iš kurių generuojama (ne backlog.md!)."""
+    if files is None:
+        files = _source_files()
+    h = hashlib.sha256()
+    for name, digest in sorted(files.items()):
+        h.update(name.encode())
+        h.update(digest.encode())
     return h.hexdigest()[:16]
 
 
@@ -391,6 +491,14 @@ def to_markdown(data: dict) -> str:
         lines.append(
             f"| {r['status']} | {r['topic']}{note} | {r['key']} | {r['outcome'][:110]} | `{src}` |"
         )
+    stale = [r for r in data["rows"] if r.get("stale_claim")]
+    if stale:
+        lines += ["", "## Pasenę wiki teiginiai (taisyti šaltinyje, ne kurti modulį)", "",
+                  "Padengtis imama iš modulių, o ne iš wiki sakinio: jei modulis poziciją",
+                  "moko, o `curriculum/*.md` vis dar rašo „nėra“, teisingas sprendimas yra",
+                  "pataisyti tą eilutę, o ne statyti antrą modulį tai pačiai temai.", ""]
+        for r in sorted(stale, key=lambda r: r["key"]):
+            lines.append(f"- **{r['key']} {r['topic']}** — {r['stale_claim']}")
     lines += ["", "## Kaip tai naudoti", "",
               "1. Imk `missing` eilutę, kurios `target` tuščias arba kurios srauto repo dar neturi —",
               "   tai struktūrinė spraga, kurią reikia užrašyti `research/wiki/guidelines/klausimai.md`,",
@@ -399,6 +507,19 @@ def to_markdown(data: dict) -> str:
               "   skirtingiems aspektams — tai leidžiama, bet `covered` dar nereiškia „išnagrinėta“.",
               ""]
     return "\n".join(lines)
+
+
+def changed_sources(old: dict, now: dict) -> list[str]:
+    """Kurie šaltinio failai pasikeitė tarp dviejų generavimų.
+
+    Ištraukta iš `main() --check`, kad zondas tikrintų TĄ PAČIĄ funkciją, kuri
+    sudaro pranešimą. #42779: vartai sakydavo tik „pasenęs“, tad trys
+    paleidimai iš eilės kartojo neuždaromą įspėjimą ir niekas nežinojo, kurį
+    `curriculum/*.md` failą pergeneruoti (LL-159/LL-160).
+    """
+    old = old or {}
+    now = now or {}
+    return sorted(n for n in set(old) | set(now) if old.get(n) != now.get(n))
 
 
 def main() -> int:
@@ -419,7 +540,17 @@ def main() -> int:
             print("KLAIDA: backlog.json nėra — paleisk be --check")
             return 1
         if old.get("source_hash") != data["source_hash"]:
-            print("KLAIDA: backlog.json pasenęs (pasikeitė curriculum/*.md) — paleisk be --check")
+            # Įvardyk KURIS failas pasikeitė: be to raudoni vartai praneša tik
+            # „pasenęs“ ir trys paleidimai iš eilės kartoja tą patį neuždaromą
+            # įspėjimą (#42779). LL-159/LL-160: vartai, kurių negalima uždaryti
+            # teisingu veiksmu, moko juos apeiti.
+            was = old.get("source_files") or {}
+            now = data["source_files"]
+            changed = changed_sources(was, now)
+            print("KLAIDA: backlog.json pasenęs — pasikeitė: " + ", ".join(changed or ["nežinoma"]))
+            if not changed:
+                print("       (backlog.json neturi `source_files` — pergeneruok jį vieną kartą)")
+            print("       Spręsk: python3 scripts/curriculum_backlog.py")
             return 1
         print(f"✔ Padengties eilė suderinta: {data['curriculum_positions']} pozicijų, "
               f"{data['counts']['missing']} be modulio")

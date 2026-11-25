@@ -517,3 +517,71 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   worktree izoliacija), o high eilėje — #22168, #42019, #44331, #46530.
   `queue_repair.py --apply`: grąžintinų į eilę 0 (4 blokuoti — dėl turinio,
   ne infrastruktūros).
+
+## 2026-11-25 20:55 · sistemos-architektas #542
+
+- **Mačiau:** `system_report.py` 170 paleidimų per 7 d.; nenaudingų: kūrėjas 8 %,
+  publikavimo-agentas 3 %, leidėjas 0 %, bet sistemos-architektas 28 %,
+  simuliacijų inžinierius 28 %, kalbų redaktorius 22 %, ideatorius 20 %,
+  kritikas 43 %. Eilė: 227 pasiūlymai (27 `new`, 4 `blocked`), sisteminių **24**,
+  seniausias #5342 kabo 17 d. Patikros visos žalios, bet `klausimai.md` tą patį
+  įrašą kartojo **tris paleidimus iš eilės**: „Programos padengties blokas vis
+  dar rodo `26.1.1` su target `42-traumu-prevencija.json`, nors failai yra `25-`
+  ir `38-`“. Patikrinau, kas tiksliai nutinka generatoriuje — ir kodėl
+  `curriculum_backlog.py --check` tuo metu buvo žalia (jis lygina `source_hash`,
+  o ne turinį).
+- **Keičiau** (tik `scripts/`, `research/wiki/curriculum/`, `research/wiki/guidelines/`
+  — turinio ir simuliacijų neliečiau):
+  1. `scripts/curriculum_backlog.py::_merge()` — būsena ir įrodymas atskirti:
+     imama geriausia būsena (`covered` > `partial` > `missing`), o moduliai —
+     **tik iš eilutės, kuri tą būseną įrodė**. Anksčiau imdavo griežtesnę būseną
+     KARTU su jos modulių sąrašu, tad `covered` (`25-`, `38-`) virsdavo `partial`
+     su raktažodžių triukšmu (`08-metu-laikai`, `19-dumai-ir-isejimas`) ir
+     `target` siūlydavo statyti **trečią** traumų modulį. Prieštaravimas dabar
+     įrašomas `stale_claim` (su šaltinio eilute ir silpnesne būsena), o ne
+     išnyksta; sujungimas padarytas **simetrišku** (tvarka nekeičia rezultato —
+     LL-19 šeima). Pridėta `_same_position()`: skirtingi programos kodai
+     (`26.1.1` vs `26.1.2`) nesujungiami net sutapus temų vardams, kitaip eilė
+     tyliai netenka pozicijos.
+  2. `--check` dabar įvardija, **kuris** `curriculum/*.md` failas pasikeitė
+     (`source_files` + `changed_sources()`), nes iki tol trys paleidimai iš eilės
+     pranešė „backlog.json pasenęs“ be jokio adreso (#42779) — vartai, kurių
+     negalima uždaryti teisingu veiksmu, moko juos apeiti.
+  3. `research/wiki/curriculum/pasaulio-pazinimas-1-klase.md` — dvi pasenusios
+     eilutės (26.1.1, 26.1.2) pakeistos faktais su modulių vardais ir data.
+  4. `scripts/probe_backlog_merge.py` — 11 lūkesčių zondas; įsijungia į CI per
+     esamą `for f in probe_*.py` ciklą, be tinklo ir git, 0,3 s.
+  5. `research/wiki/guidelines/pamokos.md` — **LL-199** (199 įrašai).
+- **Kodėl:** tai ne vienas blogas modulis, o **generatoriaus taisyklė**, kuri
+  kiekvieną paleidimą klaidino kūrėją: blogesnė būsena turėjo atrodyti „saugiau“,
+  bet ji naikino vienintelį faktą, kurį turėjo saugoti. Pasekmė buvo dvejopa:
+  (a) kūrėjas būtų statęs dublikatą (gairių 4 klausimas — nedubliavimas), o
+  tikra spraga `D:funkciniai-judesiai` liktų nepaliesta; (b) `klausimai.md` kas
+  paleidimą rašė tą patį, tad žmogus matė triukšmą, o ne signalą.
+- **Patikra (prieš / po):**
+  - Padengtis: `{'covered': 45, 'partial': 1, 'missing': 1}` → `{'covered': 46,
+    'partial': 0, 'missing': 1}`, pozicijų **47 → 47** (pozijų nedingo).
+  - `26.1.1`: `partial ['08-metu-laikai','19-dumai-ir-isejimas']` +
+    `target 42-traumu-prevencija.json` → `covered ['25-traumu-prevencija',
+    '38-traumu-prevencija']`, `target` tuščias, `stale_claim` įvardija
+    `pasaulio-pazinimas-1-klase.md:85`.
+  - `probe_backlog_merge.py`: **11/11**, rc 0. Neigiamoji kontrolė tame pačiame
+    procese: `git show HEAD:scripts/curriculum_backlog.py` → `partial`,
+    `target 42-…`, `counts 45/1/1`; T8 ir T2 su sena versija krenta.
+  - `--check` adresas: papildžius `matematika-1-klase.md` → „pasikeitė:
+    matematika-1-klase.md“, rc 1; atstačius → rc 0.
+  - Visi vartai rc 0: `validate_content` (0/0), `check_registry` (0),
+    `check_lessons` (199), `check_ui`, `check_art`, `check_language --strict`,
+    `check_audio` (1213 tekstų / 2426 įrašų), `check_agents`, `check_docs_facts`;
+    6 zondai 10/10, 15/15, 17/17, 20/20, 45/45, 9/9.
+  - `queue_repair.py --apply`: grąžintinų **0** (4 blokuoti dėl turinio, ne
+    infrastruktūros). `--prove 42019`: atsisakė uždaryti (failas keistas, bet
+    `source_hash` neturi istorijos) — todėl numerį uždarau ataskaitoje, o ne
+    per įrankį, kuris neturi trijų įrodymų.
+  - Grafikai neliesti (ROLES nekeistas) — `gen_timers` nereikėjo.
+- **Neliesta sąmoningai:** `content/`, `assets/js/sims/` (kūrėjo ir inžinieriaus
+  darbas — #52972, #52974 turi tikslus moduliuose), `agents/scope.json` (žmogaus
+  sprendimas), `AGENTS.md`, kitų vaidmenų failai. Likę 24 sisteminiai pasiūlymai
+  nejudinti: seniausias **#5342** (worktree izoliacija, 17 d.), o `high` —
+  #22168, #44331, #46530 (`high` eilėje taip pat #42019, kuris šiandien
+  įgyvendintas ir bus uždarytas bėgiklio).

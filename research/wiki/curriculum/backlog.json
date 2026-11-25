@@ -1,11 +1,19 @@
 {
  "grade": 1,
- "generated": "2026-11-25T11:08:50",
- "source_hash": "5227ed042f104f9c",
+ "generated": "2026-11-25T20:51:15",
+ "source_hash": "500d229db9b1a863",
+ "source_files": {
+  "1-klases-temų-žemėlapis.md": "d51dd4b59f29b1b5",
+  "README.md": "f3dce4d7012404f0",
+  "kti-dalykai-1-klase.md": "25b1831c4d8d4d77",
+  "lietuviu-kalba-1-klase.md": "29dcf1a997bedcdc",
+  "matematika-1-klase.md": "e51d1bf352397494",
+  "pasaulio-pazinimas-1-klase.md": "972747a7fa8c60a5"
+ },
  "curriculum_positions": 47,
  "counts": {
-  "covered": 45,
-  "partial": 1,
+  "covered": 46,
+  "partial": 0,
   "missing": 1
  },
  "modules_now": 82,
@@ -115,18 +123,19 @@
    "section": "Ko platformoje nėra",
    "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
    "topic": "traumų prevencija",
-   "outcome": "yra tik gaisro dalis (19); traumų temos nėra",
+   "outcome": "padengta 25-traumu-prevencija („Trauma turi priežastį“) ir 38-traumu-prevencija („Apsauga dengia tik savo vietą“), abiejų sources cituoja 26.1.1; gaisro dalis — 19-dumai-ir-isejimas (2026-11-25, #542)",
    "strand": "pasaulio-pazinimas",
    "level": "Taikyti",
    "interactivity": "Situacijos sprendimas (atvejo analizė)",
    "svietimas": "",
    "source": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:174",
    "modules": [
-    "08-metu-laikai",
-    "19-dumai-ir-isejimas"
+    "25-traumu-prevencija",
+    "38-traumu-prevencija"
    ],
-   "status": "partial",
-   "target": "content/lt/grade-01/pasaulio-pazinimas/42-traumu-prevencija.json",
+   "status": "covered",
+   "target": "",
+   "stale_claim": "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:85: „Saugus elgesys“ šią poziciją rodo kaip `partial`, o moduliai 25-traumu-prevencija, 38-traumu-prevencija ją moko",
    "hours": "3"
   },
   {
@@ -134,7 +143,7 @@
    "section": "Ko platformoje nėra",
    "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
    "topic": "dienos režimas, mityba",
-   "outcome": "yra tik kuprinės dalis (18); režimo ir mitybos nėra",
+   "outcome": "padengta 30-dienos-rezimas-mityba („Vėliau keltis — trumpesni pusryčiai“, sim dienos-juosta, sources cituoja 26.1.2) ir 18-kuprine-ir-kuno-dalys (kuprinės svoris); žr. LL-196 dėl 7:25 → −5 min. defekto, kuris dar netaisytas (2026-11-25, #542)",
    "strand": "pasaulio-pazinimas",
    "level": "Suprasti",
    "interactivity": "„Kiek sveria tavo kuprinė?“ + kūno dalių žemėlapis",

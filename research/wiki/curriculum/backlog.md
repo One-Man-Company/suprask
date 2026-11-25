@@ -12,14 +12,13 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 
 - Programos pozicijų: **47**
 - Modulių dabar: **82**
-- Padengta / iš dalies / nėra: **45 / 1 / 1**
+- Padengta / iš dalies / nėra: **46 / 0 / 1**
 
 ## Ko dar nėra (prioritetas)
 
 | Būsena | Tema | Kodas | Rezultatas | Šaltinis |
 |---|---|---|---|---|
 | missing | Funkciniai judesiai | D:funkciniai-judesiai | „Susipažinimas su mokinių turimais ir trūkstamais judėjimo gebėjimais“; „abi kūno pusės tolygiai“ | `1-klases-temų-žemėlapis.md:77` |
-| partial | traumų prevencija | 26.1.1 | yra tik gaisro dalis (19); traumų temos nėra | `pasaulio-pazinimas-1-klase.md:174` |
 | covered | Garsas kalbos sraute | A:garsas-kalbos-sraute | „Skiria lietuvių kalbos garsus kalbos sraute“ (D.1.1) | `1-klases-temų-žemėlapis.md:26` |
 | covered | Garsas vs raidė | A:garsas-vs-raide | „Paaiškina, kuo raidė skiriasi nuo garso“ (D.1.1) | `1-klases-temų-žemėlapis.md:27` |
 | covered | Garsinė sandara | A:garsine-sandara | „Žino garsinę sandarą: balsius, priebalsius, dvibalsius“ (1 lentelė) | `1-klases-temų-žemėlapis.md:28` |
@@ -59,12 +58,21 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 | covered | Medžiagų savybės | D:medziagu-savybes | 23.3.1: „kieti, minkšti, plastiški, blizgūs“; tinkamumas darbui | `1-klases-temų-žemėlapis.md:75` |
 | covered | Virtualumas | D:virtualumas | „Draugiško elgesio internete taisyklės“ („Aš ir virtualumas“) | `1-klases-temų-žemėlapis.md:80` |
 | covered | Teksto skaitymas su supratimu (B.1.2 tiesiogine prasme) | gap:teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p | 05-plakatas-ir-informacija randa informaciją plakate, bet nė vienas modulis nepateikia kelių sakinių teksto, a | `lietuviu-kalba-1-klase.md:145` |
-| covered | dienos režimas, mityba | 26.1.2 | yra tik kuprinės dalis (18); režimo ir mitybos nėra | `pasaulio-pazinimas-1-klase.md:175` |
+| covered | dienos režimas, mityba | 26.1.2 | padengta 30-dienos-rezimas-mityba („Vėliau keltis — trumpesni pusryčiai“, sim dienos-juosta, sources cituoja 2 | `pasaulio-pazinimas-1-klase.md:175` |
 | covered | energijos reikia visiems | 26.5.1 | atskiro modulio nėra; atmesta guidelines/klausimai.md:70 (gairių 2 klausimas) | `pasaulio-pazinimas-1-klase.md:172` |
 | covered | gamtos ištekliai, tarša, tausojimas | 26.3.1 | modulio nėra; pasiūlymas 2026-11-14-ideator-kas-sukure-dailka.json (target 21) | `pasaulio-pazinimas-1-klase.md:170` |
 | covered | medžiai, krūmai, žolės | 26.2.3 | modulio nėra; pasiūlymai 2026-11-16-ideator-medziai-krumai-zoles.json ir 2026-11-16-metodininkas-medziai-kruma | `pasaulio-pazinimas-1-klase.md:169` |
 | covered | naminiai ir laukiniai gyvūnai | 26.2.2 | padengta 10-gyvunu-grupes (perrašytas 2026-11-18, #348: kriterijus — kas duoda maistą, ne vieta) | `pasaulio-pazinimas-1-klase.md:173` |
+| covered | traumų prevencija | 26.1.1 | padengta 25-traumu-prevencija („Trauma turi priežastį“) ir 38-traumu-prevencija („Apsauga dengia tik savo viet | `pasaulio-pazinimas-1-klase.md:174` |
 | covered | žmonių įvairovė | 26.2.1 | modulio nėra; atmesta guidelines/klausimai.md:71 (asmens duomenys) | `pasaulio-pazinimas-1-klase.md:171` |
+
+## Pasenę wiki teiginiai (taisyti šaltinyje, ne kurti modulį)
+
+Padengtis imama iš modulių, o ne iš wiki sakinio: jei modulis poziciją
+moko, o `curriculum/*.md` vis dar rašo „nėra“, teisingas sprendimas yra
+pataisyti tą eilutę, o ne statyti antrą modulį tai pačiai temai.
+
+- **26.1.1 traumų prevencija** — research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:85: „Saugus elgesys“ šią poziciją rodo kaip `partial`, o moduliai 25-traumu-prevencija, 38-traumu-prevencija ją moko
 
 ## Kaip tai naudoti
 

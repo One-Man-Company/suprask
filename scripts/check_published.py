@@ -438,6 +438,31 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   „sutampa“, rc 0 ir įvardyta priežastis) ir S (tas pats kelias visada 404 →
   vis dar `live_missing`, rc 1).
 
+2026-11-25 (paleidimas #539): 200 su senais baitais gali būti krašto **teigiama**
+  kopija, ne nepaskelbtas turinys.
+  Ta pati #50319 šeima, tik priešingu ženklu. Kraštas (GitHub Pages per Fastly)
+  laiko ir teigiamą kopiją, o `content/**` JSON naršyklė prašo **be** `?v=`
+  (`registry.js` → `fetch(BASE + path)`), tad modulio perrašymas paleidžia
+  TTL langą: gyvas adresas atsako 200, bet senais baitais. Iki šios pataisos
+  `compare()` po dviejų matavimų be keitimo žymės skelbė „pasenęs turinys“ —
+  t. y. siūlė ieškoti turinio skirtumo, kurio repo ir `main` neturi, nors
+  pakartojimas su `?cb=` būtų davęs repo baitus. Dabar po antro nesėkmingo
+  matavimo daromas **vienas** pakartojimas su keitimo žyme:
+  - baitai sutampa su repo → būsena lieka „ok“, o `CDN_STALE` /
+    `cdn_stale` / `cdn_stale_count` įrašo, kad kraštas atidavė seną kopiją
+    (atskira eilutė „CDN SENA KOPIJA“ ir priedas sėkmės eilutėje — ne tyli
+    žalia, LL-37);
+  - baitai skiriasi ir su žyme → būsena lieka „differs“ (tikras pasenimas),
+    taigi tikro deploy atsilikimo ši pataisa paversti žaliu negali.
+  Tas pats kelias yra `compare()` (moduliai, `index.json`, `path.json`,
+  `AUX_FILES`) ir `_shell_state()` (svetainės kodas, kurį naršyklė įkelia su
+  `?v=<commit>`; jo be žymės matavimas yra kitas krašto raktas, tad senas
+  atsakymas ten juo labiau ne įrodymas apie publikavimą).
+  Įrodymas: `scripts/probe_publish_sets.py` U (seni baitai be žymės, repo
+  baitai su žyme → „sutampa“, rc 0, priežastis įvardyta) ir V (seni baitai ir
+  su žyme → vis dar `stale`, rc 1; neigiama kontrolė, kad pataisa
+  nemaskuoja tikro atsilikimo).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -1310,6 +1335,12 @@ RETRIES = {"count": 0}
 # kurį kraštas atidavė iš savo 404 kopijos. Sąmoningai rodomas pranešime, nes
 # „failo nėra“ ir „kraštas dar nepersikrovė“ turi likti atskiri (LL-21, LL-37).
 CDN_REFRESH = {"count": 0, "items": []}
+# Kitas atskiras skaičius: gyvas adresas atsakė **200**, bet senais baitais, o
+# pakartojimas su keitimo žyme davė repo baitus. Tai krašto teigiama kopija, ne
+# nepaskelbtas turinys. Skiriama nuo `CDN_REFRESH`, nes ten pirmas atsakymas
+# buvo 404 (neigiama kopija), o čia — 200 su pasenusiu kūnu. Abiem atvejais
+# priežastis pasakoma, o ne nuslopinama (LL-37).
+CDN_STALE = {"count": 0, "items": []}
 
 
 def cache_busted(url: str) -> str:
@@ -1342,6 +1373,34 @@ def refetch_after_gone(url: str, rel: str) -> bytes | None:
         return None
     CDN_REFRESH["count"] += 1
     CDN_REFRESH["items"].append(rel)
+    return blob
+
+
+def refetch_after_diff(url: str, rel: str, local_sha: str) -> bytes | None:
+    """Vienas pakartojimas su keitimo žyme, kai gyvi baitai **skyrėsi**.
+
+    Kodėl tai ne tas pats, kas `compare()` LL-76 pakartojimas. Tas pakartojimas
+    eina į tą patį adresą, tad krašto teigiama kopija (200 su senu kūnu) atsako
+    lygiai taip pat — du vienodi matavimai tada skelbiami „pasenęs turinys“, o
+    tai teiginys apie priežastį, kurios niekas nepatikrino (LL-21). Kraštas
+    (GitHub Pages per Fastly) kešuoja pagal pilną URL su užklausos eilute, tad
+    `?cb=<laikas>` yra **kitas raktas** ir atsako tuo, ką turi origin — t. y.
+    tuo, ar failas iš tikrųjų paskelbtas.
+
+    Todėl:
+      - su žyme gauti baitai lygūs repo → būsena grįžta „ok“, o `CDN_STALE`
+        įrašo, kad pirmi du matavimai buvo seni (ne tyliai, LL-37);
+      - su žyme baitai kiti → `None`, o `compare()` palieka „differs“: tikras
+        deploy atsilikimas arba kitas turinys lieka raudonas.
+
+    Kvietėjas privalo mokėti atskirti abu atvejus; ši funkcija pati būsenos
+    nekeičia.
+    """
+    status, blob = fetch_answer(cache_busted(url), attempts=1)
+    if status != "ok" or blob is None or sha(blob) != local_sha:
+        return None
+    CDN_STALE["count"] += 1
+    CDN_STALE["items"].append(rel)
     return blob
 
 
@@ -1447,7 +1506,16 @@ def compare(local_path: pathlib.Path, url_rel: str) -> tuple[str, int, int]:
             # šį skirtumą prarasdavo ir 404 virsdavo „unreachable“.
             return ("gone" if status == "missing" else "unreachable"), len(local), -1
         live = again
-    return ("ok" if sha(live) == sha(local) else "differs"), len(local), len(live)
+    if sha(live) != sha(local):
+        # Du vienodi matavimai dar neįrodo, kad failas nepaskelbtas: jei kraštas
+        # laiko **teigiamą** seną kopiją (200 su senu kūnu), jis atsakys taip
+        # pat ir trečią kartą. Todėl vienas matavimas su keitimo žyme — kitas
+        # krašto raktas (#539). Baitai sutampa su repo → turinys paskelbtas, o
+        # `CDN_STALE` įrašo vėlavimą; skiriasi → `differs`, kaip iki šiol.
+        fresh = refetch_after_diff(LIVE_ROOT + url_rel, url_rel, sha(local))
+        if fresh is not None:
+            return "ok", len(local), len(fresh)
+    return (("ok" if sha(live) == sha(local) else "differs"), len(local), len(live))
 
 
 def same_bytes(rel: str) -> tuple[str, int, int]:
@@ -1523,6 +1591,17 @@ def _shell_state(rel: str) -> tuple[str, int, int]:
                 # Kaip `compare()`: 404 antrą kartą yra atsakymas, ne tinklas.
                 return ("gone" if status == "missing" else "unreachable"), len(local), -1
             live = again
+    # Kraštas gali laikyti ir teigiamą seną kopiją. Be šio matavimo du vienodi
+    # atsakymai virstų „kodo failas pasenęs“ — t. y. teigtų priežastį, kurios
+    # niekas nepatikrino (LL-21). Be to, naršyklė šį failą prašo su
+    # `?v=<commit>` (`pages.yml`), tad be žymės išmatuotas adresas yra **kitas**
+    # krašto raktas: senas atsakymas jame neįrodo, kad vaikas vykdo seną kodą.
+    status, fresh = fetch_answer(cache_busted(LIVE_ROOT + rel), attempts=1)
+    if status == "ok" and fresh is not None and \
+            strip_version(fresh.decode("utf-8", "replace")) == strip_version(local.decode("utf-8", "replace")):
+        CDN_STALE["count"] += 1
+        CDN_STALE["items"].append(rel)
+        return "ok", len(local), len(fresh)
     return "differs", len(local), len(live)
 
 
@@ -1871,6 +1950,8 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     RETRIES["count"] = 0
     CDN_REFRESH["count"] = 0
     CDN_REFRESH["items"] = []
+    CDN_STALE["count"] = 0
+    CDN_STALE["items"] = []
     # Kurių klasių apskritai ieškoma — iš `grades.json`, ir tai yra
     # **matavimas**, ne atsarginis variantas (`grade_scope()`). Anksčiau
     # neperskaitytas sąrašas virdavo `[1]`, tad sugadintas `grades.json`
@@ -2040,6 +2121,12 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         # „sutampa“ nuslėptų, kad kraštas dar kurį laiką atsakė 404.
         "cdn_refreshed": list(CDN_REFRESH["items"]),
         "cdn_refreshed_count": CDN_REFRESH["count"],
+        # Kiek 200 atsakymų buvo krašto **teigiama** (sena) kopija, o su keitimo
+        # žyme gauti baitai sutapo su repo. Atskiras raktas nuo `stale`: jei
+        # šis skaičius nelygus nuliui, turinys paskelbtas, o „pasenęs“ sąrašas
+        # liko tuščias tinkamai — bet pranešimas turi tai pasakyti žodžiais.
+        "cdn_stale": list(CDN_STALE["items"]),
+        "cdn_stale_count": CDN_STALE["count"],
         "last_commit": last_commit(),
         "live_error": "; ".join(live_errors),
         "repo_error": "; ".join(repo_errors),
@@ -2612,6 +2699,18 @@ def main() -> int:
               f"({len(refreshed)}): {shown}{more}")
         print("  Failas svetainėje yra ir baitai sutampa: tai krašto vėlavimas, "
               "ne turinio defektas ir ne nepaskelbtas modulis.")
+    stale_served = data.get("cdn_stale") or []
+    if stale_served:
+        # Priešingas atvejis nei aukščiau: 200 su senu kūnu. Be šios eilutės
+        # „sutampa“ nuslėptų, kad pirmi matavimai buvo seni, o skaitytojas
+        # negalėtų atskirti „paskelbta iš karto“ nuo „paskelbta, kraštas
+        # atsiliko“ (LL-37). Ne klaida: su keitimo žyme baitai sutapo su repo.
+        shown = ", ".join(stale_served[:8])
+        more = f" … ir dar {len(stale_served) - 8}" if len(stale_served) > 8 else ""
+        print(f"CDN SENA KOPIJA — gyvas adresas atsakė 200 senais baitais, "
+              f"su keitimo žyme — repo baitai ({len(stale_served)}): {shown}{more}")
+        print("  Turinys paskelbtas; kraštas dar laiko ankstesnę kopiją. Tai "
+              "vėlavimas, ne pasenęs turinys — publikavimo kartoti nereikia.")
     if not problems(data):
         name = data.get("audio_name") or {}
         # Vardo maišas tikrinamas ir `--no-bytes` režime (jis vietinis, be
@@ -2633,6 +2732,8 @@ def main() -> int:
         # kad visi failai atsakė iš pirmo karto (#50319).
         refresh_tail = (f", {len(refreshed)} atsakymas buvo CDN neigiama kopija "
                         f"(pakartota su keitimo žyme)" if refreshed else "")
+        stale_tail = (f", {len(stale_served)} atsakymas buvo CDN sena kopija "
+                      f"(su keitimo žyme — repo baitai)" if stale_served else "")
         # Tvarka — matavimas, o ne prielaida: sėkmės eilutė turi pasakyti, su
         # kuo lyginta, kitaip „sutampa“ apie 72 ID nieko nesako apie jų eilę.
         order_tail = ""
@@ -2650,6 +2751,7 @@ def main() -> int:
                   f"{name_tail}"
                   f"{size_tail}"
                   f"{refresh_tail}"
+                  f"{stale_tail}"
                   f"{order_tail}"
                   f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
         else:
@@ -2658,7 +2760,7 @@ def main() -> int:
             # t. y. pranešdavo apie matavimą, kurio nebuvo (LL-37).
             print("✔ ID ir seka sutampa — DALINĖ PATIKRA: modulių baitai, pagrindinių failų baitai, "
                   "svetainės kodas ir garsas svetainėje NETIKRINTI (--no-bytes)"
-                  f"{name_tail}{refresh_tail}{order_tail}.")
+                  f"{name_tail}{refresh_tail}{stale_tail}{order_tail}.")
 
     if problems(data):
         # Priežasčių sakinys yra tas pats, kurį skaito dashboard'as ir

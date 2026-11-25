@@ -55,7 +55,14 @@ gyvos svetainės veidrodį, patiekiamą vietiniu `http.server`. Tada per patį
   S  tas pats kelias 404 **ir su žyme** → vis dar `live_missing`, rc 1:
      pakartojimas negali paversti tikro nebuvimo žalia;
   T  baitai skiriasi, o LL-76 pakartojimas atsako 404 → `gone`, o ne
-     `unreachable`: 404 lieka atsakymu ir antru matavimu.
+     `unreachable`: 404 lieka atsakymu ir antru matavimu;
+  U  tas pats adresas be žymės atsako **200, bet senais baitais** (krašto
+     teigiama kopija), o su `?cb=` — repo baitai → „sutampa“, rc 0, `stale`
+     tuščias, o pranešime įvardyta „CDN SENA KOPIJA“. Iki #539 tai virsdavo
+     `stale` + „sustabdyta“, tad agentas eidavo ieškoti turinio skirtumo,
+     kurio repo neturi;
+  V  seni baitai ir be žymės, ir su ja → vis dar `stale`, rc 1: pataisa
+     negali tikro deploy atsilikimo paversti žaliu (neigiama U kontrolė).
 
 Repo failai nekeičiami: viskas vyksta `tempfile` kataloge, kuris ištrinamas.
 Zondą galima paleisti bet kada, taip pat kaip regresijos patikrą.
@@ -586,6 +593,75 @@ def main() -> int:
               state == "gone", f"būsena {state}")
         httpd6.shutdown()
         httpd6.server_close()
+        cp.LIVE_ROOT = url
+
+        # U. Krašto **teigiama** kopija (#539): adresas be žymės atsako 200, bet
+        #    senu kūnu, o su `?cb=` — repo baitais. Tai ne pasenęs turinys:
+        #    failas paskelbtas, kraštas dar laiko ankstesnę kopiją. Iki pataisos
+        #    du vienodi matavimai virsdavo `stale` + „sustabdyta“.
+        new_bytes = (repo / "content" / "lt" / "grade-01" / "matematika" / "01-a.json").read_bytes()
+        old_bytes = b'{"id": "01-a", "title": "senas"}'
+
+        class _PositiveCache(_QuietHandler):
+            """Be žymės — seni baitai, su žyme — repo baitai."""
+
+            def do_GET(self):  # noqa: N802 - bazinės klasės vardas
+                if "01-a.json" in self.path and "cb=" not in self.path:
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(old_bytes)))
+                    self.end_headers()
+                    self.wfile.write(old_bytes)
+                    return
+                super().do_GET()
+
+        httpd7 = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0), functools.partial(_PositiveCache, directory=str(live)))
+        threading.Thread(target=httpd7.serve_forever, daemon=True).start()
+        cp.LIVE_ROOT = f"http://127.0.0.1:{httpd7.server_address[1]}/"
+        data = cp.report([1])
+        check("U: 200 su senais baitais, o su žyme — repo baitai → „sutampa“",
+              data["verdict"]["ok"] and not data["stale"]
+              and data["cdn_stale_count"] >= 1
+              and any(x.endswith("01-a.json") for x in data["cdn_stale"]),
+              f"verdict {data['verdict']['label']}, stale {ids(data['stale'])}, "
+              f"cdn_stale {data['cdn_stale_count']}")
+        rc, out = run_cli(["--grade", "1"])
+        check("U: pranešimas įvardija „CDN SENA KOPIJA“, rc 0",
+              rc == 0 and "CDN SENA KOPIJA" in out
+              and "ne pasenęs turinys" in out,
+              f"rc {rc}, {(out.strip().splitlines() or [''])[0][:70]}")
+        # Neigiama pusė: tie patys seni baitai ir su žyme — tai tikras
+        # atsilikimas, todėl būsena turi likti `differs` / `stale`, rc 1.
+        class _PositiveAndOriginStale(_QuietHandler):
+            def do_GET(self):  # noqa: N802
+                if "01-a.json" in self.path:
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(old_bytes)))
+                    self.end_headers()
+                    self.wfile.write(old_bytes)
+                    return
+                super().do_GET()
+
+        httpd8 = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0),
+            functools.partial(_PositiveAndOriginStale, directory=str(live)))
+        threading.Thread(target=httpd8.serve_forever, daemon=True).start()
+        cp.LIVE_ROOT = f"http://127.0.0.1:{httpd8.server_address[1]}/"
+        data = cp.report([1])
+        check("V: seni baitai ir su žyme → vis dar `stale`, rc 1",
+              ids(data["stale"]) == ["01-a"] and data["cdn_stale_count"] == 0
+              and not data["verdict"]["ok"] and run_cli(["--grade", "1"])[0] == 1,
+              f"stale {ids(data['stale'])}, cdn_stale {data['cdn_stale_count']}, "
+              f"reasons {data['verdict']['reasons']}")
+        check("V: baitai repo nebuvo pakeisti (zondas rašo tik į veidrodį)",
+              new_bytes == (repo / "content" / "lt" / "grade-01" / "matematika" / "01-a.json").read_bytes(),
+              f"repo {len(new_bytes)} B")
+        httpd7.shutdown()
+        httpd7.server_close()
+        httpd8.shutdown()
+        httpd8.server_close()
         cp.LIVE_ROOT = url
     finally:
         if httpd is not None:

@@ -239,6 +239,14 @@
      "sim": "komandu-seka"
     },
     {
+     "id": "35-logines-operacijos-ir-arba-ne",
+     "title": "Kortelė pasako, kada degs lempa",
+     "subtitle": "Trys kortelės, ta pati pora jungiklių, kita lempos būsena",
+     "file": "grade-01/matematika/35-logines-operacijos-ir-arba-ne.json",
+     "minutes": 9,
+     "sim": "taisykle-ir-lempa"
+    },
+    {
      "id": "25-ilgis-ir-vienetas",
      "title": "Ilgis: tas pats daiktas, kitas skaičius",
      "subtitle": "Skaičius priklauso nuo vieneto, kuriuo matuoji",

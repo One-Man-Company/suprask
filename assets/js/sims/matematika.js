@@ -5431,6 +5431,396 @@ const dviJuostos = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 19. Taisyklė, o ne lempa (loginės operacijos IR / ARBA / NE)        */
+/*                                                                    */
+/* Du jungikliai ir viena lempa nekinta nė per pikselį — keičiasi tik  */
+/* kortelė, kuri pasako taisyklę. Todėl „kodėl dega?“ turi antrą dalį: */
+/* „pagal kurią kortelę?“ (M-17, programa B2.3). Lempos būsena         */
+/* išvedama iš kortelės `op` (lit), o ne įrašyta konfigūracijoje —     */
+/* lentelė ir lempa negali išsiskirti.                                */
+/*                                                                    */
+/* Scena sąmoningai sudaryta iš HTML valdiklių, o ne iš art.js: čia    */
+/* piešiamas prietaiso skydas (jungikliai, lemputė, lentelė), o ne    */
+/* gamtos scena, ir kiekvienas jo elementas yra tikras mygtukas su     */
+/* 48 px taikiniu. `matematika.js` lieka LEGACY sąraše (`check_art.py`)*/
+/* būtent todėl, kad kitos šio failo scenos dar neperkeltos.           */
+/* ------------------------------------------------------------------ */
+const taisykleIrLempa = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const SWITCHES = Array.isArray(config.switches) ? config.switches : [];
+    const CARDS = Array.isArray(config.cards) ? config.cards : [];
+    const CASES = Array.isArray(config.cases) ? config.cases : [];
+
+    /* Proza imama tik iš `config.sentences` (LL-42): kode nėra nė vieno
+       sakinio, kurio negirdėtų balsas ir nematytų `check_audio.py`. */
+    const line = (key) => String(S[key] || "").trim();
+    const lab = (key, fallback) => String(L[key] || fallback || "").trim();
+
+    let on = [false, false];        // jungiklių padėtis: [kairys, dešinys]
+    let cardAt = 0;                 // kuri kortelė įstatyta
+    let guess = null;               // "on" | "off" | null — vaiko spėjimas
+    let powered = false;            // ar lempa rodo rezultatą
+    let reported = false;
+    const rows = new Map();         // kortelės raktas -> Map(atvejo raktas -> { guess, lit })
+
+    const card = () => CARDS[cardAt] || {
+      key: "", label: "", op: "", gloss: "", rule: "", done: "",
+    };
+    const matchCase = (values) => CASES.find((c) => Array.isArray(c.in)
+      && Boolean(c.in[0]) === Boolean(values[0])
+      && Boolean(c.in[1]) === Boolean(values[1])) || null;
+
+    /* Vienintelė modelio taisyklė. Neatpažintas `op` — matoma klaida, o ne
+       tyliai tamsi lempa: kitaip vaikas manytų, kad taisyklė neleidžia degti. */
+    function litOf(c, values) {
+      const [x, y] = values;
+      if (c.op === "IR") return x && y;
+      if (c.op === "ARBA") return x || y;
+      if (c.op === "NE") return !(x && y);
+      console.error(`taisykle-ir-lempa: nežinoma kortelės taisyklė „${c.op}“`);
+      return null;
+    }
+
+    const rowsOf = (key) => {
+      if (!rows.has(key)) rows.set(key, new Map());
+      return rows.get(key);
+    };
+    const doneRow = (cKey, atvejis) => rowsOf(cKey).get(atvejis.key) || null;
+    const cardDone = (cKey) => CASES.length > 0 && CASES.every((c) => rowsOf(cKey).has(c.key));
+
+    /* --- scena -------------------------------------------------------- */
+    stage.innerHTML = `
+      <div id="tl-wrap" style="width:100%;max-width:328px;margin:0 auto;min-width:0;box-sizing:border-box">
+        <div style="border:3px solid var(--ink);border-radius:14px;background:var(--paper-2);padding:.4rem .55rem;text-align:center">
+          <p id="tl-card-label" style="margin:0;font-family:var(--font-head);font-weight:900;font-size:1.22rem;line-height:1.15"></p>
+          <p id="tl-card-gloss" style="margin:.1rem 0 0;font-size:var(--fs-s);color:var(--ink-soft);line-height:1.25"></p>
+        </div>
+        <div style="display:flex;justify-content:center;margin:.35rem 0 0">
+          <div style="text-align:center">
+            <div id="tl-lamp" role="img"></div>
+            <p id="tl-lamp-state" style="margin:.1rem 0 0;font-size:var(--fs-s);font-weight:800"></p>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:.75rem;padding:0 .7rem;margin:.3rem 0 0"></div>
+        <div aria-hidden="true" style="height:10px;margin:.2rem auto 0;border-radius:5px;
+             background:linear-gradient(#c9a877,#a9855a);box-shadow:0 2px 0 #8a6a44"></div>
+        <table id="tl-table" style="width:100%;border-collapse:collapse;font-size:var(--fs-s);margin:.5rem 0 0;table-layout:fixed">
+          <caption class="sr-only">Lentelė: jungikliai, spėjimas ir lempa</caption>
+          <thead></thead><tbody></tbody>
+        </table>
+        <ul id="tl-marks" style="margin:.4rem 0 0;padding-left:1.1rem;font-size:var(--fs-s);line-height:1.3"></ul>
+      </div>`;
+
+    const lampEl = stage.querySelector("#tl-lamp");
+    const lampStateEl = stage.querySelector("#tl-lamp-state");
+    const cardLabelEl = stage.querySelector("#tl-card-label");
+    const cardGlossEl = stage.querySelector("#tl-card-gloss");
+    const switchRow = stage.querySelector("#tl-wrap > div:nth-of-type(3)");
+    const tableHead = stage.querySelector("#tl-table thead");
+    const tableBody = stage.querySelector("#tl-table tbody");
+    const marksEl = stage.querySelector("#tl-marks");
+
+    switchRow.innerHTML = SWITCHES.slice(0, 2).map((sw, i) => `
+      <div style="text-align:center">
+        <button type="button" class="btn secondary" id="tl-sw-${i}" aria-pressed="false"
+                style="width:72px;min-width:72px;height:72px;min-height:72px;padding:0;display:flex;
+                       align-items:center;justify-content:center"></button>
+        <p id="tl-sw-label-${i}" style="margin:.15rem 0 0;font-size:var(--fs-s);line-height:1.2"></p>
+      </div>`).join("");
+
+    controls.innerHTML = `
+      <div role="group" aria-label="Pirma spėk, kas bus su lempa"
+           style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;width:100%">
+        <button type="button" class="btn secondary" id="tl-g-on" aria-pressed="false"
+                style="min-height:48px;min-width:8rem">${lab("on", "Degs")}</button>
+        <button type="button" class="btn secondary" id="tl-g-off" aria-pressed="false"
+                style="min-height:48px;min-width:8rem">${lab("off", "Nedegs")}</button>
+      </div>
+      <button type="button" class="btn" id="tl-power" style="min-height:56px;width:100%">${lab("test", "Įjunk")}</button>
+      <div role="group" aria-label="Kortelė"
+           style="display:flex;flex-direction:column;gap:.4rem;width:100%">${CARDS.map((c, i) => `
+        <button type="button" class="btn secondary" id="tl-card-${i}" aria-pressed="false"
+                style="min-height:56px;width:100%;padding:.35rem .5rem;line-height:1.25">
+          <span style="font-weight:900">${c.label || ""}</span>
+          <span style="font-weight:600"> · ${c.gloss || ""}</span>
+        </button>`).join("")}</div>
+      <button type="button" class="btn ghost" id="tl-reset" style="min-height:48px">${lab("again", "Iš naujo")}</button>`;
+
+    const guessOn = controls.querySelector("#tl-g-on");
+    const guessOff = controls.querySelector("#tl-g-off");
+    const powerBtn = controls.querySelector("#tl-power");
+    const resetBtn = controls.querySelector("#tl-reset");
+    const switchBtns = [0, 1].map((i) => stage.querySelector(`#tl-sw-${i}`));
+    const cardBtns = CARDS.map((_, i) => controls.querySelector(`#tl-card-${i}`));
+
+    const guessLabel = (g) => (g === "on" ? lab("on", "Degs") : g === "off" ? lab("off", "Nedegs") : "");
+    const switchText = (i) => `${SWITCHES[i] ? SWITCHES[i].label : ""}, `
+      + (on[i] ? lab("swOn", "įjungtas") : lab("swOff", "išjungtas"));
+
+    /* --- lemputė ------------------------------------------------------- */
+    function lampMarkup(state) {
+      const lit = state === "on";
+      const live = state !== "power";
+      const glass = lit ? "#ffe08a" : "#e9e2d3";
+      const edge = lit ? "#d99a1f" : live ? "#9c927e" : "#b6ad9d";
+      const wire = lit ? "#b8741a" : live ? "#7d7464" : "#a79e8e";
+      const glow = lit
+        ? `<circle cx="48" cy="46" r="42" fill="#ffd75e" opacity=".38"/>`
+          + `<circle cx="48" cy="46" r="34" fill="#ffe08a" opacity=".35"/>`
+        : "";
+      const filament = live
+        ? `<path d="M38 54 Q43 40 48 50 Q53 60 58 44" fill="none" stroke="${wire}"
+                 stroke-width="3.4" stroke-linecap="round"/>`
+        : `<path d="M38 54 L58 44" fill="none" stroke="${wire}" stroke-width="3.4"
+                 stroke-linecap="round" stroke-dasharray="5 5"/>`;
+      return `<svg viewBox="0 0 96 122" width="84" height="107" aria-hidden="true"
+                   focusable="false" style="display:block">${glow}
+        <circle cx="48" cy="46" r="30" fill="${glass}" stroke="${edge}" stroke-width="4"
+                ${live ? "" : 'stroke-dasharray="7 6"'}/>
+        <ellipse cx="38" cy="34" rx="7" ry="9" fill="#ffffff" opacity="${lit ? ".75" : ".4"}"
+                 transform="rotate(-22 38 34)"/>
+        ${filament}
+        <rect x="36" y="78" width="24" height="7" rx="3.5" fill="${edge}"/>
+        <rect x="37" y="86" width="22" height="6" rx="3" fill="${edge}" opacity=".8"/>
+        <rect x="39" y="93" width="18" height="6" rx="3" fill="${edge}" opacity=".65"/>
+        <rect x="42" y="100" width="12" height="9" rx="4.5" fill="${edge}"/>
+      </svg>`;
+    }
+
+    const lever = (isOn) => `<svg viewBox="0 0 56 56" width="40" height="40" aria-hidden="true"
+        focusable="false" style="display:block">
+        <rect x="17" y="6" width="22" height="44" rx="11" fill="var(--paper)" stroke="var(--ink-soft)" stroke-width="2.5"/>
+        <rect x="20" y="${isOn ? 9 : 27}" width="16" height="20" rx="7" fill="${isOn ? "var(--accent)" : "var(--line)"}"
+              stroke="var(--ink-soft)" stroke-width="2"/>
+      </svg>`;
+
+    /* --- piešimas ------------------------------------------------------ */
+    function paintScene() {
+      const c = card();
+      cardLabelEl.textContent = c.label || "";
+      cardGlossEl.textContent = c.gloss || "";
+
+      const lit = litOf(c, on);
+      const state = lit === null ? "off" : (!powered ? "power" : (lit ? "on" : "off"));
+      lampEl.innerHTML = lampMarkup(state);
+      lampStateEl.textContent = lit === null ? lab("broken", "Kortelė nesuderinta.")
+        : state === "on" ? lab("on", "Degs")
+          : state === "off" ? lab("off", "Nedegs") : lab("powerOff", "Neįjungta");
+      lampEl.setAttribute("aria-label", `${lab("tableLamp", "Lempa")}: ${lampStateEl.textContent}`);
+
+      switchBtns.forEach((btn, i) => {
+        if (!btn) return;
+        btn.innerHTML = lever(on[i]);
+        btn.setAttribute("aria-pressed", String(on[i]));
+        btn.setAttribute("aria-label", switchText(i));
+        btn.className = on[i] ? "btn" : "btn secondary";
+        btn.style.width = "72px";
+        btn.style.minWidth = "72px";
+        btn.style.height = "72px";
+        btn.style.minHeight = "72px";
+        btn.style.padding = "0";
+        btn.style.display = "flex";
+        btn.style.alignItems = "center";
+        btn.style.justifyContent = "center";
+        const labelEl = stage.querySelector(`#tl-sw-label-${i}`);
+        if (labelEl) labelEl.textContent = SWITCHES[i] ? SWITCHES[i].label : "";
+      });
+
+      cardBtns.forEach((btn, i) => {
+        if (!btn) return;
+        const isOnCard = i === cardAt;
+        btn.setAttribute("aria-pressed", String(isOnCard));
+        btn.className = isOnCard ? "btn" : "btn secondary";
+        btn.style.minHeight = "56px";
+        btn.style.width = "100%";
+      });
+
+      guessOn.setAttribute("aria-pressed", String(guess === "on"));
+      guessOff.setAttribute("aria-pressed", String(guess === "off"));
+      guessOn.className = guess === "on" ? "btn" : "btn secondary";
+      guessOff.className = guess === "off" ? "btn" : "btn secondary";
+      guessOn.style.minHeight = "48px";
+      guessOff.style.minHeight = "48px";
+      guessOn.style.minWidth = "8rem";
+      guessOff.style.minWidth = "8rem";
+      powerBtn.style.minHeight = "56px";
+      resetBtn.style.minHeight = "48px";
+    }
+
+    function paintTable() {
+      const cKey = card().key;
+      tableHead.innerHTML = `<tr>
+        <th scope="col" style="text-align:left;padding:.3rem;border-bottom:2px solid var(--line);font-size:var(--fs-s)">${lab("tableCase", "Jungikliai")}</th>
+        <th scope="col" style="padding:.3rem;border-bottom:2px solid var(--line);font-size:var(--fs-s)">${lab("tableGuess", "Spėjai")}</th>
+        <th scope="col" style="padding:.3rem;border-bottom:2px solid var(--line);font-size:var(--fs-s)">${lab("tableLamp", "Lempa")}</th>
+      </tr>`;
+      tableBody.innerHTML = CASES.map((atvejis) => {
+        const row = doneRow(cKey, atvejis);
+        const guessText = !row ? "—" : row.guess === "start" ? lab("start", "Pradžia") : guessLabel(row.guess);
+        const lampText = !row ? "—" : (row.lit ? lab("on", "Degs") : lab("off", "Nedegs"));
+        return `<tr>
+          <td style="padding:.3rem;border-bottom:1px solid var(--line)">${atvejis.label || ""}</td>
+          <td style="padding:.3rem;border-bottom:1px solid var(--line);text-align:center">${guessText}</td>
+          <td style="padding:.3rem;border-bottom:1px solid var(--line);text-align:center;font-weight:700">${lampText}</td>
+        </tr>`;
+      }).join("");
+    }
+
+    function paintMarks() {
+      const done = CARDS.filter((c) => cardDone(c.key)).map((c) => c.done);
+      marksEl.innerHTML = done.map((key) => `<li>${line(key)}</li>`).join("");
+      marksEl.hidden = done.length === 0;
+    }
+
+    const paint = () => { paintScene(); paintTable(); paintMarks(); };
+
+    /* --- veiksmai ------------------------------------------------------ */
+    function say(text, spoken) {
+      if (!text) return;
+      api.readout(text);
+      api.note(spoken || text);
+      api.speak(spoken || text);
+    }
+
+    function report() {
+      if (reported) return;
+      if (!CARDS.length || !CARDS.every((c) => cardDone(c.key))) return;
+      reported = true;
+      api.progress({ correct: true });
+      api.note(line("visos"));
+      api.speak(line("visos"));
+    }
+
+    function toggleSwitch(i) {
+      on[i] = !on[i];
+      powered = false;           // lempos rezultatas buvo senajai padėčiai
+      guess = null;
+      paint();
+      const text = line("switched") || line("guess");
+      api.readout(text);
+      api.note(text);
+      api.speak(text);
+    }
+
+    function pickGuess(kind) {
+      guess = kind;
+      paintScene();
+      say(line("chosen"), line("chosen"));
+      powerBtn.focus();
+    }
+
+    function nextUntestedCase() {
+      return CASES.find((c) => !rowsOf(card().key).has(c.key)) || null;
+    }
+
+    function power() {
+      const c = card();
+      const atvejis = matchCase(on);
+      if (!atvejis) {                          // neturėtų atsitikti, bet ne tyliai
+        api.note(lab("broken", "Pora nesuderinta."));
+        return;
+      }
+      const known = doneRow(c.key, atvejis);
+      if (!guess && !known) {
+        const text = line("locked") || line("guess");
+        api.readout(line("guess") || text);
+        api.note(text);
+        api.speak(text);
+        guessOn.focus();
+        return;
+      }
+
+      const lit = litOf(c, on);
+      if (lit === null) {
+        api.note(lab("broken", "Kortelė nesuderinta."));
+        return;
+      }
+      powered = true;
+      if (!known) rowsOf(c.key).set(atvejis.key, { guess, lit });
+      paint();
+
+      const text = line(`${atvejis.key}${lit ? "Dega" : "Tamsu"}`);
+      if (text) {
+        api.readout(text);
+        api.note(known ? line("repeated") || text : line(c.why) || text);
+        api.speak(text);
+      }
+
+      report();
+      if (reported) return;
+
+      if (cardDone(c.key)) {
+        const nextCard = CARDS.findIndex((x) => !cardDone(x.key));
+        if (nextCard >= 0) cardBtns[nextCard]?.focus();
+        else resetBtn.focus();
+        return;
+      }
+      const next = nextUntestedCase();
+      if (next) {
+        const diff = on[0] !== Boolean(next.in[0]) ? 0 : 1;
+        switchBtns[diff]?.focus();
+      }
+    }
+
+    function pickCard(i) {
+      cardAt = i;
+      powered = false;
+      guess = null;
+      paint();
+      const rule = line(card().rule);
+      if (rule) {
+        api.readout(rule);
+        api.note(rule);
+        api.speak(rule);
+      }
+    }
+
+    function reset() {
+      on = [false, false];
+      guess = null;
+      powered = false;
+      rows.clear();
+      paint();
+      const text = line("vel");
+      if (text) {
+        api.readout(text);
+        api.note(text);
+        api.speak(text);
+      }
+      switchBtns[0]?.focus();
+    }
+
+    switchBtns.forEach((btn, i) => btn?.addEventListener("click", () => toggleSwitch(i)));
+    cardBtns.forEach((btn, i) => btn?.addEventListener("click", () => pickCard(i)));
+    guessOn.addEventListener("click", () => pickGuess("on"));
+    guessOff.addEventListener("click", () => pickGuess("off"));
+    powerBtn.addEventListener("click", power);
+    resetBtn.addEventListener("click", reset);
+
+    /* --- pradinė būsena ------------------------------------------------ */
+    /* Abu jungikliai išjungti ir lempa jau rodo rezultatą: tai padėtis,
+       kurią vaikas randa įėjęs, todėl ji įrašoma į lentelę be spėjimo.
+       Be jos lentelė turėtų tris eilutes ir ketvirtą nepaaiškintą lempą. */
+    const startCase = matchCase([false, false]);
+    if (startCase && CARDS.length) {
+      rowsOf(CARDS[0].key).set(startCase.key, { guess: "start", lit: Boolean(litOf(CARDS[0], [false, false])) });
+      powered = true;                          // lempa dega/nedega pagal kortelę
+    }
+    paint();
+    const first = line("start");
+    if (first) {
+      api.readout(first);
+      api.speak(first);
+    }
+    api.note(line(card().rule) || line("rule"));
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "dvi-juostos": dviJuostos,
   "du-remeliai-demuo": duRemeliaiDemuo,
@@ -5452,4 +5842,5 @@ export const SIMS = {
   "skaiciavimas-per-desimti": skaiciavimasPerDesimti,
   "komandu-seka": komanduSeka,
   "skaicius-ir-skaitmuo": skaiciusIrSkaitmuo,
+  "taisykle-ir-lempa": taisykleIrLempa,
 };

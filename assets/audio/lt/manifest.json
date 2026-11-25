@@ -539,6 +539,10 @@
   "n": "n/559aead08264d579-a5632da0.mp3",
   "s": "s/559aead08264d579-dc96ebef.mp3"
  },
+ "ABU": {
+  "n": "n/5f9e15d6684f6fff-e790a83e.mp3",
+  "s": "s/5f9e15d6684f6fff-10151ce4.mp3"
+ },
  "Abi dėžutės vienodo dydžio, o masė skirtinga.": {
   "n": "n/551ca17eb02a9efe-8dee55bf.mp3",
   "s": "s/551ca17eb02a9efe-0fdde3d6.mp3"
@@ -563,6 +567,14 @@
   "n": "n/ba743292d674eedb-b6b15df4.mp3",
   "s": "s/ba743292d674eedb-509cf0ad.mp3"
  },
+ "Abu išjungti. Lempa dega.": {
+  "n": "n/555282b2e2b2c549-b4b1ca3a.mp3",
+  "s": "s/555282b2e2b2c549-39f71d96.mp3"
+ },
+ "Abu išjungti. Lempa nedega.": {
+  "n": "n/81ae741b35c4365b-503b83eb.mp3",
+  "s": "s/81ae741b35c4365b-3d371d79.mp3"
+ },
  "Abu kartu": {
   "n": "n/33b9b9c23825b7b4-3ed6d89a.mp3",
   "s": "s/33b9b9c23825b7b4-023c3b5f.mp3"
@@ -574,6 +586,14 @@
  "Abu veikia. Vienas lieka, kitas grįžta.": {
   "n": "n/8f81d80dd2372ed1-d52cce62.mp3",
   "s": "s/8f81d80dd2372ed1-6a109012.mp3"
+ },
+ "Abu įjungti. Lempa dega.": {
+  "n": "n/7be3e098cbacc8ee-fe866dfb.mp3",
+  "s": "s/7be3e098cbacc8ee-a5554792.mp3"
+ },
+ "Abu įjungti. Lempa nedega.": {
+  "n": "n/d3cea9bdf89c58aa-fc6e39bc.mp3",
+  "s": "s/d3cea9bdf89c58aa-00c76d6a.mp3"
  },
  "Adomas": {
   "n": "n/3dcf0fa90d0a3f2a-69bd8911.mp3",
@@ -807,6 +827,10 @@
   "n": "n/df7e70e5021544f4-66c4ce24.mp3",
   "s": "s/df7e70e5021544f4-5289ae66.mp3"
  },
+ "BENT VIENAS": {
+  "n": "n/d337f1b6e936752a-2f567baf.mp3",
+  "s": "s/d337f1b6e936752a-4b6ca3b6.mp3"
+ },
  "Bakstelėk figūrą.": {
   "n": "n/a2e75c27e88be1e8-af8dda34.mp3",
   "s": "s/a2e75c27e88be1e8-31199b9b.mp3"
@@ -1015,6 +1039,18 @@
   "n": "n/374e7b088a131049-391d5710.mp3",
   "s": "s/374e7b088a131049-471e1c1e.mp3"
  },
+ "Dešinys": {
+  "n": "n/61c57bc79104aec8-c3b082d5.mp3",
+  "s": "s/61c57bc79104aec8-c9442902.mp3"
+ },
+ "Dešinys įjungtas. Lempa dega.": {
+  "n": "n/c96c027cfb8d2400-a95ab1a8.mp3",
+  "s": "s/c96c027cfb8d2400-41506f81.mp3"
+ },
+ "Dešinys įjungtas. Lempa nedega.": {
+  "n": "n/c582a0b37c894070-0ac0e998.mp3",
+  "s": "s/c582a0b37c894070-6893f5bf.mp3"
+ },
  "Dešinė sunkesnė.": {
   "n": "n/eddc1aa0b9dd380e-aadbab58.mp3",
   "s": "s/eddc1aa0b9dd380e-97141549.mp3"
@@ -1154,6 +1190,10 @@
  "Diena 9": {
   "n": "n/9857ee5f9d20326c-986364ea.mp3",
   "s": "s/9857ee5f9d20326c-11bba99c.mp3"
+ },
+ "Du jungikliai, viena lempa ir kortelė.": {
+  "n": "n/0a4141edba1b52f0-a55a4ff3.mp3",
+  "s": "s/0a4141edba1b52f0-00f2051c.mp3"
  },
  "Du lopeliai. Pasirink lopelį ir ištrauk siūlą.": {
   "n": "n/1d8275756b150485-b57685c9.mp3",
@@ -1487,6 +1527,10 @@
   "n": "n/3b7aa6c88c1a5fb7-e0c3417c.mp3",
   "s": "s/3b7aa6c88c1a5fb7-95939895.mp3"
  },
+ "Jungikliai pasikeitė. Spėk iš naujo.": {
+  "n": "n/db921dbed822b137-1afe6e15.mp3",
+  "s": "s/db921dbed822b137-620f7b56.mp3"
+ },
  "Jungiklis": {
   "n": "n/89ed2030a5cc310e-008a84a8.mp3",
   "s": "s/89ed2030a5cc310e-21edcff0.mp3"
@@ -1526,6 +1570,18 @@
  "Kaimo šventė": {
   "n": "n/1ce73d2630332022-b05b7a80.mp3",
   "s": "s/1ce73d2630332022-ed8a9f61.mp3"
+ },
+ "Kairys": {
+  "n": "n/08fb4f03cd1bff19-598065e4.mp3",
+  "s": "s/08fb4f03cd1bff19-e1197034.mp3"
+ },
+ "Kairys įjungtas. Lempa dega.": {
+  "n": "n/798625230fe3e371-010a46fc.mp3",
+  "s": "s/798625230fe3e371-16ec33a1.mp3"
+ },
+ "Kairys įjungtas. Lempa nedega.": {
+  "n": "n/c56bae667de5386c-4ae66d71.mp3",
+  "s": "s/c56bae667de5386c-ab14d94f.mp3"
  },
  "Kairė sunkesnė.": {
   "n": "n/d668000feecfe009-475c2f25.mp3",
@@ -1790,6 +1846,46 @@
  "Kopūstas": {
   "n": "n/801bc76753a82813-d0ac4170.mp3",
   "s": "s/801bc76753a82813-6f520e45.mp3"
+ },
+ "Kortelei BENT VIENAS užtenka vieno jungiklio.": {
+  "n": "n/84527f49de2235e8-e9318b89.mp3",
+  "s": "s/84527f49de2235e8-13ab6f33.mp3"
+ },
+ "Kortelė ABU dega tik su abiem jungikliais.": {
+  "n": "n/23be0c112dc2d39b-4cf8d7ca.mp3",
+  "s": "s/23be0c112dc2d39b-c7883005.mp3"
+ },
+ "Kortelė ABU laukia abiejų jungiklių.": {
+  "n": "n/d3c14ad521da96bd-1954fcc5.mp3",
+  "s": "s/d3c14ad521da96bd-83069d54.mp3"
+ },
+ "Kortelė ABU. Reikia abiejų jungiklių.": {
+  "n": "n/652fede0b3b4ec82-8e3bb611.mp3",
+  "s": "s/652fede0b3b4ec82-095f67ae.mp3"
+ },
+ "Kortelė BENT VIENAS dega ir su vienu.": {
+  "n": "n/dc51d02ad1ae7cff-1119c324.mp3",
+  "s": "s/dc51d02ad1ae7cff-f86533a7.mp3"
+ },
+ "Kortelė BENT VIENAS. Užtenka vieno jungiklio.": {
+  "n": "n/409c31c9a20b9ce4-7a51b79d.mp3",
+  "s": "s/409c31c9a20b9ce4-5f7dfd64.mp3"
+ },
+ "Kortelė NE dega priešingai negu ABU.": {
+  "n": "n/4685768a0e76e1a3-60afb84f.mp3",
+  "s": "s/4685768a0e76e1a3-2589d392.mp3"
+ },
+ "Kortelė NE dega visur, kur ABU nedega.": {
+  "n": "n/52e8824ba770cea3-3d741830.mp3",
+  "s": "s/52e8824ba770cea3-8612861c.mp3"
+ },
+ "Kortelė NE. Ji dega kitaip negu ABU.": {
+  "n": "n/513d6c27dfc157ec-38be8497.mp3",
+  "s": "s/513d6c27dfc157ec-993d939f.mp3"
+ },
+ "Kortelė pasako taisyklę.": {
+  "n": "n/be3e3477d0727a8a-6b6ddb3b.mp3",
+  "s": "s/be3e3477d0727a8a-8b93b87b.mp3"
  },
  "Kubas iš priekio atrodo kaip kvadratas.": {
   "n": "n/0a26471c3415e289-1355c62d.mp3",
@@ -2178,6 +2274,10 @@
  "N": {
   "n": "n/8ce86a6ae65d3692-84095ad0.mp3",
   "s": "s/8ce86a6ae65d3692-081e4fe1.mp3"
+ },
+ "NE": {
+  "n": "n/d539cd97ca1a108f-58059d70.mp3",
+  "s": "s/d539cd97ca1a108f-bf12eabb.mp3"
  },
  "Naudosiu dar": {
   "n": "n/6fff13367b0e28e1-fa0b75b5.mp3",
@@ -2603,6 +2703,10 @@
   "n": "n/afeccd6291be1367-e868b597.mp3",
   "s": "s/afeccd6291be1367-d8e7070b.mp3"
  },
+ "Pirma spėk, kas bus su lempa.": {
+  "n": "n/46c14106da1cf7fc-9a4a7a54.mp3",
+  "s": "s/46c14106da1cf7fc-4b2feedc.mp3"
+ },
  "Pirma spėk, tada atleisk.": {
   "n": "n/caea72e7630ffe19-43c476cb.mp3",
   "s": "s/caea72e7630ffe19-3e2f654e.mp3"
@@ -2618,6 +2722,10 @@
  "Pirma spėk. Tada dėk ant svarstyklių.": {
   "n": "n/99bab1d18f71938b-bf127f46.mp3",
   "s": "s/99bab1d18f71938b-20a6908b.mp3"
+ },
+ "Pirma spėk. Tada įjunk jungiklį.": {
+  "n": "n/fe164bd6a1648cee-43918563.mp3",
+  "s": "s/fe164bd6a1648cee-d4bc501f.mp3"
  },
  "Pirma sudėk visus gyvūnus. Tada „Žiema“ parodys, kas pasikeis.": {
   "n": "n/cc284e4b29ed01a8-d4c4c59d.mp3",
@@ -3107,6 +3215,10 @@
   "n": "n/98d838a1c27b5462-c718afd8.mp3",
   "s": "s/98d838a1c27b5462-6e97ead9.mp3"
  },
+ "Spėjimas įrašytas. Dabar spausk Įjunk.": {
+  "n": "n/67bcc2f9eb836018-737e9053.mp3",
+  "s": "s/67bcc2f9eb836018-746a8dfd.mp3"
+ },
  "Spėjimas įrašytas. Dabar spausk Žemyn.": {
   "n": "n/1aa2b230049497d2-167a73e5.mp3",
   "s": "s/1aa2b230049497d2-a7964439.mp3"
@@ -3427,6 +3539,10 @@
   "n": "n/5b90edb4fc88f8a3-dcacee97.mp3",
   "s": "s/5b90edb4fc88f8a3-f58247b5.mp3"
  },
+ "Trys kortelės. Ta pati pora jungiklių.": {
+  "n": "n/57a4c6af8d35b724-94f797e7.mp3",
+  "s": "s/57a4c6af8d35b724-10e12c87.mp3"
+ },
  "Trys rytai, viena taisyklė.": {
   "n": "n/62f31e4efbed1834-10b7c113.mp3",
   "s": "s/62f31e4efbed1834-5d8dc413.mp3"
@@ -3675,6 +3791,10 @@
   "n": "n/6677b42c574c330f-3d893b59.mp3",
   "s": "s/6677b42c574c330f-0dd2cc05.mp3"
  },
+ "Valom nuo pradžių. Abu jungikliai išjungti.": {
+  "n": "n/387adda676a9323d-fe50718b.mp3",
+  "s": "s/387adda676a9323d-27a416d6.mp3"
+ },
  "Vandens lygis puodeliuose pažymėtas linija.": {
   "n": "n/150b5f2232d16597-50dc6e7f.mp3",
   "s": "s/150b5f2232d16597-7118522c.mp3"
@@ -3882,6 +4002,14 @@
  "a": {
   "n": "n/ca978112ca1bbdca-f8fc0510.mp3",
   "s": "s/ca978112ca1bbdca-f32141b9.mp3"
+ },
+ "abu išjungti": {
+  "n": "n/583d9291f0872c7d-ba0fda80.mp3",
+  "s": "s/583d9291f0872c7d-2db41ad2.mp3"
+ },
+ "abu įjungti": {
+  "n": "n/a559233c2df4a7e8-9edbf694.mp3",
+  "s": "s/a559233c2df4a7e8-7c75ec40.mp3"
  },
  "b": {
   "n": "n/3e23e8160039594a-6a770dfd.mp3",
@@ -4135,6 +4263,14 @@
   "n": "n/e4432baa90819aae-c9d3ee33.mp3",
   "s": "s/e4432baa90819aae-e3d13e87.mp3"
  },
+ "tik dešinys": {
+  "n": "n/2996b9b8fc8a6efd-19e930a0.mp3",
+  "s": "s/2996b9b8fc8a6efd-644c3709.mp3"
+ },
+ "tik kairys": {
+  "n": "n/b98b52002939f68d-1109e204.mp3",
+  "s": "s/b98b52002939f68d-4855de7c.mp3"
+ },
  "tis": {
   "n": "n/cd8336b83b08f00a-1220bc9a.mp3",
   "s": "s/cd8336b83b08f00a-282072c8.mp3"
@@ -4334,6 +4470,10 @@
  "Šviesa dega. Pirštas dar laiko.": {
   "n": "n/c871f9fbbadcd21d-941ce0e4.mp3",
   "s": "s/c871f9fbbadcd21d-f537e1c0.mp3"
+ },
+ "Šį derinį jau bandei. Žiūrėk į lentelę.": {
+  "n": "n/6e104e42613dcac6-00248e9c.mp3",
+  "s": "s/6e104e42613dcac6-9b84766d.mp3"
  },
  "šiandien po pietų": {
   "n": "n/d3bcd1e45f81ea90-542487fc.mp3",

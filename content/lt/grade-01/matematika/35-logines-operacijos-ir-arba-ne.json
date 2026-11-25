@@ -1,0 +1,157 @@
+{
+  "id": "35-logines-operacijos-ir-arba-ne",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Kortelė pasako, kada degs lempa",
+  "subtitle": "Trys kortelės, ta pati pora jungiklių, kita lempos būsena",
+  "minutes": 9,
+  "outcomes": [
+    "Pasakau, kada lempa degs, kai žinau kortelės taisyklę.",
+    "Palyginu tris korteles su tais pačiais jungikliais.",
+    "Paaiškinu, kad lempą valdo taisyklė, o ne jungiklis."
+  ],
+  "concept": {
+    "title": "Taisyklė, o ne lempa",
+    "big_idea": "Ta pati pora jungiklių dega kitaip, nes taisyklę pasako kortelė. Lempa pati nieko nenusprendžia.",
+    "steps": [
+      "Paspausk jungiklį ir pažiūrėk, kas nutinka lempai.",
+      "Prieš įjungdamas spėk: degs ar nedegs?",
+      "Pakeisk kortelę — jungikliai lieka tie patys.",
+      "Palygink lenteles ir pasakyk, ką daro kortelė."
+    ],
+    "example": "Žaislinis robotas važiuoja, kai įjungtas jo jungiklis ir uždėta baterija."
+  },
+  "sim": {
+    "component": "taisykle-ir-lempa",
+    "config": {
+      "switches": [
+        { "key": "kaire", "label": "Kairys" },
+        { "key": "desine", "label": "Dešinys" }
+      ],
+      "cards": [
+        { "key": "abu", "label": "ABU", "op": "IR", "gloss": "reikia abiejų", "rule": "ruleAbu", "why": "whyAbu", "done": "abuBaigta" },
+        { "key": "bent", "label": "BENT VIENAS", "op": "ARBA", "gloss": "užtenka vieno", "rule": "ruleBent", "why": "whyBent", "done": "bentBaigta" },
+        { "key": "ne", "label": "NE", "op": "NE", "gloss": "ne abu įjungti", "rule": "ruleNe", "why": "whyNe", "done": "neBaigta" }
+      ],
+      "cases": [
+        { "key": "isjungti", "label": "abu išjungti", "in": [false, false] },
+        { "key": "kaire", "label": "tik kairys", "in": [true, false] },
+        { "key": "desine", "label": "tik dešinys", "in": [false, true] },
+        { "key": "abudu", "label": "abu įjungti", "in": [true, true] }
+      ],
+      "labels": {
+        "on": "Degs",
+        "off": "Nedegs",
+        "test": "Įjunk",
+        "again": "Iš naujo",
+        "tableCase": "Jungikliai",
+        "tableGuess": "Spėjai",
+        "tableLamp": "Lempa",
+        "start": "Pradžia",
+        "powerOff": "Neįjungta",
+        "swOn": "įjungtas",
+        "swOff": "išjungtas",
+        "broken": "Kortelė nesuderinta."
+      },
+      "sentences": {
+        "start": "Du jungikliai, viena lempa ir kortelė.",
+        "rule": "Kortelė pasako taisyklę.",
+        "guess": "Pirma spėk, kas bus su lempa.",
+        "locked": "Pirma spėk. Tada įjunk jungiklį.",
+        "switched": "Jungikliai pasikeitė. Spėk iš naujo.",
+        "chosen": "Spėjimas įrašytas. Dabar spausk Įjunk.",
+        "repeated": "Šį derinį jau bandei. Žiūrėk į lentelę.",
+        "isjungtiDega": "Abu išjungti. Lempa dega.",
+        "isjungtiTamsu": "Abu išjungti. Lempa nedega.",
+        "kaireDega": "Kairys įjungtas. Lempa dega.",
+        "kaireTamsu": "Kairys įjungtas. Lempa nedega.",
+        "desineDega": "Dešinys įjungtas. Lempa dega.",
+        "desineTamsu": "Dešinys įjungtas. Lempa nedega.",
+        "abuduDega": "Abu įjungti. Lempa dega.",
+        "abuduTamsu": "Abu įjungti. Lempa nedega.",
+        "abuBaigta": "Kortelė ABU dega tik su abiem jungikliais.",
+        "bentBaigta": "Kortelė BENT VIENAS dega ir su vienu.",
+        "neBaigta": "Kortelė NE dega visur, kur ABU nedega.",
+        "visos": "Trys kortelės. Ta pati pora jungiklių.",
+        "vel": "Valom nuo pradžių. Abu jungikliai išjungti.",
+        "ruleAbu": "Kortelė ABU. Reikia abiejų jungiklių.",
+        "ruleBent": "Kortelė BENT VIENAS. Užtenka vieno jungiklio.",
+        "ruleNe": "Kortelė NE. Ji dega kitaip negu ABU.",
+        "whyAbu": "Kortelė ABU laukia abiejų jungiklių.",
+        "whyBent": "Kortelei BENT VIENAS užtenka vieno jungiklio.",
+        "whyNe": "Kortelė NE dega priešingai negu ABU."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Kortelė ABU. Įjungtas tik kairys jungiklis. Ar dega lempa?",
+      "options": [
+        "Taip, lempa dega",
+        "Ne, lempa nedega",
+        "Taip, nes kairys jungiklis pirmas"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, ką darei modelyje su vienu jungikliu.",
+      "why": "Kortelė ABU laukia abiejų jungiklių, o įjungtas vienas."
+    },
+    {
+      "q": "Kortelė BENT VIENAS. Įjungti abu jungikliai. Kas bus su lempa?",
+      "options": [
+        "Lempa degs",
+        "Lempa nedegs, nes įjungti abu",
+        "Lempa nedegs, nes reikia tiksliai vieno"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, kiek eilučių degė su šia kortele.",
+      "why": "Kortelei BENT VIENAS užtenka vieno jungiklio, o dabar įjungti abu."
+    },
+    {
+      "q": "Skambutis skamba, kai paspaustas bent vienas mygtukas. Tu paspaudei abu mygtukus. Ar skambės?",
+      "options": [
+        "Ne, nes reikia vieno mygtuko",
+        "Ne, nes du mygtukai trukdo",
+        "Taip, skambės"
+      ],
+      "answer": 2,
+      "hint": "Modelyje tokia pat taisyklė buvo ant vienos kortelės.",
+      "why": "Užtenka vieno mygtuko, o paspausti abu — dar daugiau."
+    },
+    {
+      "q": "Kortelės nesimato. Su vienu jungikliu lempa nedega. Su abiem — dega. Kuri kortelė buvo?",
+      "options": [
+        "BENT VIENAS",
+        "ABU",
+        "NE"
+      ],
+      "answer": 1,
+      "hint": "Prisimink lentelę: kiek eilučių degė su kiekviena kortele.",
+      "why": "Tik kortelė ABU laukia abiejų jungiklių.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kuri kortelė tave nustebino? Kodėl?",
+  "teacher": {
+    "goal": "Suprasti, kad lempos būseną lemia kortelės taisyklė, o ne vienas jungiklis: ta pati pora jungiklių su skirtinga kortele dega skirtingai, todėl klausimas „kodėl dega?“ turi antrą dalį — „pagal kurią kortelę?“.",
+    "prompt": "Kodėl su tais pačiais jungikliais lempa dega kitaip?",
+    "offline": "Keturi vaikai atlieka mašinos vaidmenis. Du vaikai laiko po jungiklio kortelę. Trečias laiko lemputės kortelę. Ketvirtas tyliai perskaito taisyklę iš lapelio. Lemputė pakeliama tik tada, kai taisyklė tenkinama. Klasė spėja prieš kiekvieną kėlimą. Paskui mokytojas pakeičia lapelį. Jungiklių vaikai lieka tie patys, o lemputė pradeda keltis kitaip.",
+    "misconceptions": [
+      "„Kiekvienas jungiklis uždega lempą“ — su kortele ABU vienas jungiklis lempos neuždega, o su kortele BENT VIENAS uždega. Paneigiama ne tekstu, o tuo, kad tas pats vienas jungiklis su trimis kortelėmis duoda dvi skirtingas pasekmes.",
+      "„BENT VIENAS reiškia tiksliai vieną, o ne abu“ — taip „arba“ dažnai vartojama kasdienėje kalboje ir taip jį komandos užduotyje supranta 5–7 metų vaikai (Braine ir Rumain, 1981; Morris, 2008). Kortelė pati rašo „užtenka vieno“, o lentelė rodo tris degančias eilutes, todėl nuostata apie žodį lieka, o apie kortelę — ne (LL-18).",
+      "„NE išjungia lempą“ — NE ne išjungia, o apverčia: su abiem jungikliais kortelė ABU dega, o kortelė NE ne; kai abu išjungti, ABU tyli, o NE dega. Tai matoma kaip dviejų lentelių veidrodis."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), informatika B2.3 — mokinys atpažįsta ir vykdo komandų sekas, pasirinkimo komandą, skiria logines operacijas NE, IR, ARBA (1–2 klasių stulpelis).",
+    "Matematikos bendroji programa (2022), „Modeliai ir sąryšiai“, 1–2 klasė — schema ar piešiniu pavaizduoti nuosekliai atliekamų komandų seką.",
+    "Braine, M. D. S., & Rumain, B. (1981). Development of comprehension of „or“: Evidence for a sequence of competencies. Journal of Experimental Child Psychology, 31(1), 46–70. https://doi.org/10.1016/0022-0965(81)90003-5",
+    "Singh, R., Wexler, K., Astle-Rahim, A., Kamawar, D., & Fox, D. (2016). Children interpret disjunction as conjunction. Natural Language Semantics, 24(4), 305–352. https://doi.org/10.1007/s11050-016-9126-3",
+    "Morris, B. J. (2008). Logically speaking: Evidence for item-based acquisition of the connectives AND & OR. Journal of Cognition and Development, 9(1), 67–88. https://doi.org/10.1080/15248370701836600",
+    "Reuter, T., Feiman, R., & Snedeker, J. (2018). Getting to no: Pragmatic and semantic factors in two- and three-year-olds' understanding of negation. Child Development, 89(4), e364–e381. https://doi.org/10.1111/cdev.12858"
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (lempos būseną lemia kortelės taisyklė), o ne trys loginės operacijos kaip trys temos — kortelė keičiama, jungikliai ir lempa lieka tie patys",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina taisyklės perkėlimą į kitą daiktą (skambutis) ir atvirkštinę užduotį, o ne apibrėžimų atkartojimą",
+    "3 žingsnis — pagalba laiku: kiekviena užduotis turi užuominą į modelio lentelę, spėjimas nieko nebaudžia ir lieka matomas šalia rezultato"
+  ]
+}

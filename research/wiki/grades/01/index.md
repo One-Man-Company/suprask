@@ -32,7 +32,7 @@ atnaujinta: 2026-11-09
 | Kryptis | Moduliai | Būsena |
 |---|---|---|
 | Lietuvių kalba | Garsas ir raidė · Skiemenų jungimas · Kas? Ką veikia? · Kaip žmonės sveikinasi · Plakatas: kur ieškoti atsakymo · Atsakymas: kuriame sakinyje? · Garsas, kurį gali tempti · Kas garsui užstoja kelią · Du balsiai, vienas balsas · Žinutė, kurią skaitytojas supranta · Pasakojimo vidurys: kas nutiko tarp? · Koks veikėjas? Ką sako sakinys | 12 — gyva |
-| Matematika | Skaičių tiesė · Dešimtukas · Figūros aplink mus · Dėsningumai · Pinigai: vertė yra skaičius · Laikas: vienas ratas, vienas žingsnis · Lygybė: abi pusės sveria tiek pat · Kryptys: kairė priklauso nuo žiūrovo · Taškas, tiesė, spindulys, atkarpa · Šimto lentelė: žemyn reiškia dešimt · Laikas: 2 val. ir 14:00 — tas pats laikas · Erdvinės figūros · Sudėtis per dešimtį · Piktograma ir stulpelis · Komandų seka: viena klaida pakreipia kelią · Ilgis: tas pats daiktas, kitas skaičius · Masė: vienodo dydžio dėžutės · Skaičius ir skaitmuo: 13 ir 31 · Uždavinys: klausimas pasako, ką daryti · Atimtis per dešimtį: imk iš dešimtuko · Po 30 eina 29, o ne 20 · Pasisukimas pagal laikrodžio rodyklę · Tas pats 18, keli užrašai · Dviženklis plius dviženklis | 24 — gyva |
+| Matematika | Skaičių tiesė · Dešimtukas · Figūros aplink mus · Dėsningumai · Pinigai: vertė yra skaičius · Laikas: vienas ratas, vienas žingsnis · Lygybė: abi pusės sveria tiek pat · Kryptys: kairė priklauso nuo žiūrovo · Taškas, tiesė, spindulys, atkarpa · Šimto lentelė: žemyn reiškia dešimt · Laikas: 2 val. ir 14:00 — tas pats laikas · Erdvinės figūros · Sudėtis per dešimtį · Piktograma ir stulpelis · Komandų seka: viena klaida pakreipia kelią · Kortelė pasako, kada degs lempa · Ilgis: tas pats daiktas, kitas skaičius · Masė: vienodo dydžio dėžutės · Skaičius ir skaitmuo: 13 ir 31 · Uždavinys: klausimas pasako, ką daryti · Atimtis per dešimtį: imk iš dešimtuko · Po 30 eina 29, o ne 20 · Pasisukimas pagal laikrodžio rodyklę · Tas pats 18, keli užrašai · Dviženklis plius dviženklis | 25 — gyva |
 | Pasaulio pažinimas | Metų laikai · Augalo gyvenimas · Kas gyvena tvarte? · Kur dingsta vanduo · Nuožulnioji plokštuma: kas lemia greitį · Kuprinė: tas pats svoris, kita vieta · Dūmai: žemai ir lauk, o ne slėptis · Kas gyvas: auga ir reaguoja, ne tik juda · Kas sukūrė šį daiktą: kelias iki gamtos · Medžiai, krūmai, žolės: grupę rodo stiebas · Augalo dalys: vieta, o ne išvaizda · Išmestas daiktas nedingsta · Kas lieka pievoje po metų · Vienas vanduo, trys formos · Trauma turi priežastį · Apsauga dengia tik savo vietą · Vėliau keltis — trumpesni pusryčiai · Kas priklauso bendruomenei? · Kiekvienas moka ką nors · Kiekvienas turi savo energijos šaltinį · Ką pastebėjau kieme? · Tie patys penki ženklai · Kas kam giminė? | 23 — gyva |
 | Muzika | Aukštas garsas ne visada garsus · Ritmas: plojimai ant tolygaus pulso · Ta pati melodija, kitas atlikėjas | 3 — gyva |
 | Sąžiningumas ir žaidimai | Sąžiningas dalijimasis · Bendradarbiavimo tiltas · Akmenėlis, žirklės, popierius | 3 — gyva |
@@ -43,7 +43,7 @@ atnaujinta: 2026-11-09
 
 ## Statusas
 
-**Live.** 77 modulių, 9 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
+**Live.** 78 modulių, 9 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
 
 ## Susieti
 

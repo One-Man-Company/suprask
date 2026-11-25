@@ -1519,4 +1519,37 @@ export const art = {
       ${band}
     </g>`;
   },
+
+  /**
+   * Atidarytas skėtis. `x, y` — skėtio krašto (skliauto apačios) vidurys,
+   * `s` — mastelis. Skėtis atpažįstamas iš skliauto, šonkaulių ir vingiuoto
+   * koto, o ne iš spalvos (LL-13). Kotas brėžiamas pirmas, todėl skliautas
+   * jį uždengia ir skėtis atrodo vientisas.
+   */
+  umbrella(x, y, s = 1, color = "#c8503f") {
+    const r = 26 * s;
+    const top = y - r * 0.95;
+    const dark = "#8f3a2c";
+    const wood = "#7a5a3a";
+    const canopy = `M${x - r} ${y}`
+      + ` Q${x - r * 0.66} ${top} ${x} ${top}`
+      + ` Q${x + r * 0.66} ${top} ${x + r} ${y}`
+      + ` Q${x + r * 0.62} ${(y + r * 0.2).toFixed(1)} ${x + r * 0.34} ${y}`
+      + ` Q${x + r * 0.17} ${(y + r * 0.22).toFixed(1)} ${x} ${y}`
+      + ` Q${x - r * 0.17} ${(y + r * 0.22).toFixed(1)} ${x - r * 0.34} ${y}`
+      + ` Q${x - r * 0.62} ${(y + r * 0.2).toFixed(1)} ${x - r} ${y} Z`;
+    const ribs = [-0.68, 0.68].map((k) =>
+      `<line x1="${x}" y1="${top.toFixed(1)}" x2="${(x + r * k).toFixed(1)}" y2="${y}"`
+      + ` stroke="${dark}" stroke-width="${(1.6 * s).toFixed(1)}" opacity=".8"/>`).join("");
+    return `<g>
+      <line x1="${x}" y1="${top.toFixed(1)}" x2="${x}" y2="${(y + r * 1.7).toFixed(1)}"
+            stroke="${wood}" stroke-width="${(2.6 * s).toFixed(1)}" stroke-linecap="round"/>
+      <path d="M${x} ${(y + r * 1.7).toFixed(1)} q0 ${(9 * s).toFixed(1)} ${(-10 * s).toFixed(1)} ${(7 * s).toFixed(1)}"
+            fill="none" stroke="${wood}" stroke-width="${(2.6 * s).toFixed(1)}" stroke-linecap="round"/>
+      <line x1="${x}" y1="${top.toFixed(1)}" x2="${x}" y2="${(top - 6 * s).toFixed(1)}"
+            stroke="${wood}" stroke-width="${(2.2 * s).toFixed(1)}" stroke-linecap="round"/>
+      <path d="${canopy}" fill="${color}" stroke="${dark}" stroke-width="${(2 * s).toFixed(1)}" stroke-linejoin="round"/>
+      ${ribs}
+    </g>`;
+  },
 };

@@ -1,0 +1,146 @@
+{
+  "id": "15-nezinomas-zodis",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Nežinomas žodis: kuri pagalba padeda?",
+  "subtitle": "Du pilki žodžiai, trys pagalbos — kiekvienam žodžiui sava",
+  "minutes": 9,
+  "outcomes": [
+    "Renkuosi pagalbą pagal tai, ką noriu sužinoti apie žodį.",
+    "Paaiškinu, kodėl paveikslėlis nepasako, kiek laiko kas vyko.",
+    "Pasakau, kad perskaitytas žodis dar nereiškia suprasto žodžio."
+  ],
+  "concept": {
+    "title": "Pagalba turi atsakyti į klausimą",
+    "big_idea": "Ne kiekvieną nežinomą žodį paaiškina paveikslėlis. Paveikslėlis parodo daiktą. Kitas sakinys pasako, kiek laiko lijo. Garsiai perskaitytas žodis dar nereiškia suprasto žodžio.",
+    "steps": [
+      "Sustok prie pilko žodžio ir paklausk, ko tau trūksta.",
+      "Pasirink vieną pagalbą: paveikslėlį, kitą sakinį, balsą.",
+      "Žiūrėk, ar žodis ėmė turėti prasmę.",
+      "Jei ne, rinkis kitą pagalbą ir bandyk dar kartą."
+    ],
+    "example": "Paveikslėlyje matai skėtį. Kiek laiko lijo, pasakys tik kitas sakinys."
+  },
+  "sim": {
+    "component": "nezinomas-zodis",
+    "config": {
+      "aprasas": "Berniukas po dideliu raudonu skėčiu, lauke lyja.",
+      "lines": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "word": [
+        "ilgai",
+        "skėtį"
+      ],
+      "unknown": [
+        {
+          "line": 0,
+          "by": "sakinys",
+          "done": "done-ilgai",
+          "miss": {
+            "paveikslas": "miss-ilgai-paveikslas",
+            "garsas": "miss-balsas"
+          }
+        },
+        {
+          "line": 2,
+          "by": "paveikslas",
+          "done": "done-sketis",
+          "miss": {
+            "sakinys": "miss-sketis-sakinys",
+            "garsas": "miss-balsas"
+          }
+        }
+      ],
+      "sentences": {
+        "s1": "Lauke ilgai lijo lietus.",
+        "s2": "Lietus ėjo nuo ryto iki vakaro.",
+        "s3": "Tomas atidarė skėtį.",
+        "start": "Bakstelėk pilką žodį, tada pasirink pagalbą.",
+        "done-ilgai": "Žodis ilgai paaiškėjo. Tai reiškia nuo ryto iki vakaro.",
+        "done-sketis": "Žodis skėtis paaiškėjo. Tai daiktas, kuris saugo nuo lietaus.",
+        "miss-ilgai-paveikslas": "Paveikslėlyje matai skėtį. Kiek laiko lijo, jis nepasako.",
+        "miss-sketis-sakinys": "Po šio sakinio tekste nieko neparašyta.",
+        "miss-balsas": "Žodį išgirdai. Ką jis reiškia, dar nežinai.",
+        "baigta": "Abu žodžiai paaiškėjo. Vieną parodė paveikslėlis, kitą sakinys.",
+        "is-naujo": "Pradedam iš naujo. Abu žodžiai vėl pilki."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "„Vakare ilgai lijo lietus.“ Kuri pagalba pasakys, kiek laiko?",
+      "options": [
+        "Paveikslėlis",
+        "Kitas sakinys",
+        "Pavadinimas virš teksto"
+      ],
+      "answer": 1,
+      "hint": "Paveikslėlis nejuda, tad laiko jis neparodo.",
+      "why": "Laiką paaiškina tolesnis sakinys, o ne piešinys.",
+      "optional": false
+    },
+    {
+      "q": "Perskaitei žodį garsiai. Ar jau žinai, ką jis reiškia?",
+      "options": [
+        "Ne, žinau tik kaip skamba",
+        "Taip, to pakanka",
+        "Taip, jei skaičiau lėtai"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, ar girdėjai paaiškinimą.",
+      "why": "Balsas pasako skambesį, o prasmę parodo paveikslėlis ar sakinys.",
+      "optional": false
+    },
+    {
+      "q": "Piešinys rodo žolę su lašais. Kas jame tikrai matoma?",
+      "options": [
+        "Kad lašai yra ant žolės",
+        "Kodėl lašai ten atsirado",
+        "Kiek laiko lašai ten buvo"
+      ],
+      "answer": 0,
+      "hint": "Paveikslėlis rodo tik tai, kas jame nupiešta.",
+      "why": "Piešinys parodo, kas matoma, o priežasties nepasako.",
+      "optional": false
+    },
+    {
+      "q": "Perskaitei žodį ir pažiūrėjai paveikslėlį. Kaip darysi toliau?",
+      "options": [
+        "Baigsiu skaityti tekstą",
+        "Kartosiu žodį dar garsiau",
+        "Skaitysiu toliau, kitą sakinį"
+      ],
+      "answer": 2,
+      "hint": "Dar vienas kelias liko neišbandytas.",
+      "why": "Tolesnis tekstas dažnai paaiškina žodį, kurio piešinys neparodo.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kuri pagalba tau padėjo labiausiai? Kodėl?",
+  "teacher": {
+    "goal": "Skaitymo sritis B (B.1.2 ir B.3.1): rinktis būdą nežinomam žodžiui išsiaiškinti. Vaikas atskiria tris pagalbos rūšis — iliustraciją, tolesnį tekstą ir garsų perskaitymą — ir pamato, kad kiekviena atsako į skirtingą klausimą: paveikslėlis parodo daiktą, sakinys paaiškina trukmę, o balsas tepasako, kaip žodis skamba. Modelyje abu keliai lieka teisingi, tik skirtingiems žodžiams, todėl iliustracija nevaizduojama kaip nereikalinga.",
+    "prompt": "Kurios pagalbos klausei pirmiausia? Ką ji tau pasakė apie žodį?",
+    "offline": "Ant trijų lapelių paruoškite vieną sakinį su sunkiu žodžiu, pavyzdžiui: „Senelis ilgai virė uogienę.“ Pirmame lapelyje nupieškite puodą, antrame parašykite „Virė nuo ryto iki vakaro“, trečiame didelėmis raidėmis — žodį „ilgai“, kad vaikas jį perskaitytų. Paprašykite vaiko pasirinkti lapelį ir pasakyti, ką tas lapelis paaiškino. Tada paklauskite: „Ar puodo piešinys pasakė, kiek laiko virė?“ Po pokalbio lapelius sumaišykite ir pakartokite su kitu žodžiu.",
+    "misconceptions": [
+      "„Kiekvieną nežinomą žodį paaiškins paveikslėlis.“ Modelyje paveikslėlis paaiškina skėtį, bet ne tai, kiek laiko lijo — trukmės nejudančiame piešinyje apskritai nematyti.",
+      "„Jei perskaičiau žodį garsiai, tai jau supratau.“ Balsas duoda tik skambesį: žodį galima perskaityti teisingai ir vis tiek nesuprasti. Todėl garsas modelyje nėra nė vieno žodžio sprendimas.",
+      "„Užtenka vienos pagalbos visam tekstui.“ Du to paties teksto žodžiai reikalauja skirtingų pagalbų: daikto žodį išsprendžia paveikslėlis, trukmės — kitas sakinys.",
+      "„Jei paveikslėlis nepaaiškina visko, jis nereikalingas.“ Iliustracija padeda skaityti (B.3.1) ir modelyje tikrai išsprendžia daikto žodį; paneigiamas ne paveikslėlis, o jo universalumas."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“: „mokiniai kartu mokosi skaitymo būdų ir aptaria skaitomus tekstus, ieško tinkamiausio būdo nežinomam žodžiui išsiaiškinti“ (sources/pradinio-bp-rekomendacijos-2024.txt:233–234).",
+    "Ten pat, 1–2 klasės pasiekimai, B.3.1: „Remiasi iliustracijomis skaitydamas tekstą“ — iliustracijos vaidmuo, o ne tapatybė su paaiškinimu (sources/pradinio-bp-rekomendacijos-2024.txt:7610).",
+    "Ten pat, B.1.2: „Skaito savo poreikius ir galimybes atitinkančius tekstus, randa tekste aiškiai pateiktą informaciją“ (sources/pradinio-bp-rekomendacijos-2024.txt:7604–7606).",
+    "Lietuvių kalbos ir literatūros bendroji programa (2022), skaitymo sritis B, 1 klasė; research/wiki/curriculum/lietuviu-kalba-1-klase.md:44 — „ieškoti tinkamiausio būdo nežinomam žodžiui išsiaiškinti“."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena didelė idėja: pagalbą renkamės pagal klausimą, o ne pagal įprotį; kitos skaitymo strategijos (perpasakojimas, klausimų kėlimas) lieka kitiems moduliams.",
+    "2 žingsnis — užduotys perkelia taisyklę į kitus tekstus (vakaro lietus, rasa ant žolės), o ne kartoja modulio sakinį (T2.2).",
+    "3 žingsnis — klaida nebaudžiama: netinkama pagalba paaiškina, į kokį klausimą ji atsakė, o teisingas žodis neparodomas automatiškai (T3.1, T3.2); yra praplėtimo užduotis (T3.4).",
+    "5 žingsnis — grįžtamasis ryšys apie veiksmą („ši pagalba atsakė į kitą klausimą“), o ne apie vaiką (T5.1); veikla be ekrano atliekama su popieriaus lapeliais (T8.3)."
+  ]
+}

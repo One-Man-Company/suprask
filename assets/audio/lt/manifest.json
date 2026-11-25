@@ -595,6 +595,10 @@
   "n": "n/d3cea9bdf89c58aa-fc6e39bc.mp3",
   "s": "s/d3cea9bdf89c58aa-00c76d6a.mp3"
  },
+ "Abu žodžiai paaiškėjo. Vieną parodė paveikslėlis, kitą sakinys.": {
+  "n": "n/efebdd866a6430e8-d00faa02.mp3",
+  "s": "s/efebdd866a6430e8-625b1dd0.mp3"
+ },
  "Adomas": {
   "n": "n/3dcf0fa90d0a3f2a-69bd8911.mp3",
   "s": "s/3dcf0fa90d0a3f2a-4ddb968e.mp3"
@@ -838,6 +842,10 @@
  "Bakstelėk figūrą. Ji įsiskaito į savo grupę.": {
   "n": "n/5d730d6540952a24-d9140fb7.mp3",
   "s": "s/5d730d6540952a24-82ec682c.mp3"
+ },
+ "Bakstelėk pilką žodį, tada pasirink pagalbą.": {
+  "n": "n/11763d48f316f0bf-2d49b085.mp3",
+  "s": "s/11763d48f316f0bf-e1b021ce.mp3"
  },
  "Balti drabužiai paraudo.": {
   "n": "n/493e5a1940b4b104-9e79ccb5.mp3",
@@ -2131,6 +2139,10 @@
   "n": "n/554e0a133245fe50-2ceabdf8.mp3",
   "s": "s/554e0a133245fe50-57f62bf8.mp3"
  },
+ "Lauke ilgai lijo lietus.": {
+  "n": "n/a5254e82ee6080d6-49e66311.mp3",
+  "s": "s/a5254e82ee6080d6-fbaa0a68.mp3"
+ },
  "Lauke lijo smulkus lietus.": {
   "n": "n/4af97b6a0ed89064-c30eb57a.mp3",
   "s": "s/4af97b6a0ed89064-69dd4175.mp3"
@@ -2170,6 +2182,10 @@
  "Lenta tuščia. Įdėk dalių.": {
   "n": "n/37e359058b287d87-f99e1954.mp3",
   "s": "s/37e359058b287d87-900369f9.mp3"
+ },
+ "Lietus ėjo nuo ryto iki vakaro.": {
+  "n": "n/619cc7bcf801173a-9f827ac7.mp3",
+  "s": "s/619cc7bcf801173a-d4815391.mp3"
  },
  "Linija platesnė netapo.": {
   "n": "n/86ebce48ca85f9d9-46e8b929.mp3",
@@ -2631,6 +2647,10 @@
   "n": "n/d2e49dfc62d6e714-ae0aef9a.mp3",
   "s": "s/d2e49dfc62d6e714-0fdf0fb2.mp3"
  },
+ "Paveikslėlyje matai skėtį. Kiek laiko lijo, jis nepasako.": {
+  "n": "n/f7939fa2f55cb84b-a0ffb4e2.mp3",
+  "s": "s/f7939fa2f55cb84b-73492272.mp3"
+ },
  "Pažiūrėk dar kartą į medį ir žemę.": {
   "n": "n/0d67d9d60f16f690-1d2ecdd5.mp3",
   "s": "s/0d67d9d60f16f690-0e5cf7fa.mp3"
@@ -2831,6 +2851,10 @@
   "n": "n/1c8517fa3bc8e402-7e8d1cfd.mp3",
   "s": "s/1c8517fa3bc8e402-fad09c04.mp3"
  },
+ "Po šio sakinio tekste nieko neparašyta.": {
+  "n": "n/184487aacdbf4211-ef36cdbe.mp3",
+  "s": "s/184487aacdbf4211-c7117726.mp3"
+ },
  "Popieriaus lapas liko ant lentynos. Krūva nepaaugo.": {
   "n": "n/8b213f020619d3e6-fb54b24a.mp3",
   "s": "s/8b213f020619d3e6-1af0a067.mp3"
@@ -2850,6 +2874,10 @@
  "Pradedam iš naujo.": {
   "n": "n/4fa2eb8b0dfdbe22-1ac10d4f.mp3",
   "s": "s/4fa2eb8b0dfdbe22-bd284fe1.mp3"
+ },
+ "Pradedam iš naujo. Abu žodžiai vėl pilki.": {
+  "n": "n/81b4359574255de4-19b224a9.mp3",
+  "s": "s/81b4359574255de4-b18a8b54.mp3"
  },
  "Pradedam iš naujo. Ciferblatas rodo 2 val. po pietų.": {
   "n": "n/cf50f1166eb90f2e-fe5271b3.mp3",
@@ -3615,6 +3643,10 @@
   "n": "n/86c496b088a575d6-c0860daf.mp3",
   "s": "s/86c496b088a575d6-71b2f6bc.mp3"
  },
+ "Tomas atidarė skėtį.": {
+  "n": "n/36e33352359a9993-83e721f6.mp3",
+  "s": "s/36e33352359a9993-6a50ab36.mp3"
+ },
  "Tomas bėgo su kamuoliu.": {
   "n": "n/6bb2100626c3fd3a-deb8c637.mp3",
   "s": "s/6bb2100626c3fd3a-7ff0bac6.mp3"
@@ -4243,6 +4275,10 @@
   "n": "n/de7d1b721a1e0632-17f9d648.mp3",
   "s": "s/de7d1b721a1e0632-e703546d.mp3"
  },
+ "ilgai": {
+  "n": "n/79841565a3a7f127-a61342f6.mp3",
+  "s": "s/79841565a3a7f127-85f630af.mp3"
+ },
  "j": {
   "n": "n/189f40034be7a199-fc703028.mp3",
   "s": "s/189f40034be7a199-ae92d54b.mp3"
@@ -4430,6 +4466,10 @@
  "skaito": {
   "n": "n/e66d5a0b2c8eee42-d326dd5b.mp3",
   "s": "s/e66d5a0b2c8eee42-541efaf5.mp3"
+ },
+ "skėtį": {
+  "n": "n/b852dad61c0f51b2-6f16c0d0.mp3",
+  "s": "s/b852dad61c0f51b2-d2382f52.mp3"
  },
  "t": {
   "n": "n/e3b98a4da31a127d-2c148cc0.mp3",
@@ -4759,9 +4799,21 @@
   "n": "n/29108178601c894d-99c88dea.mp3",
   "s": "s/29108178601c894d-6c479d88.mp3"
  },
+ "Žodis ilgai paaiškėjo. Tai reiškia nuo ryto iki vakaro.": {
+  "n": "n/37b17c253aea37b5-99eaa916.mp3",
+  "s": "s/37b17c253aea37b5-361a24b5.mp3"
+ },
  "Žodis keliauja.": {
   "n": "n/90bc0a5f0a39c399-99f302db.mp3",
   "s": "s/90bc0a5f0a39c399-83c4d348.mp3"
+ },
+ "Žodis skėtis paaiškėjo. Tai daiktas, kuris saugo nuo lietaus.": {
+  "n": "n/4be7f172e49fed8f-81dc7341.mp3",
+  "s": "s/4be7f172e49fed8f-cf4e5f2f.mp3"
+ },
+ "Žodį išgirdai. Ką jis reiškia, dar nežinai.": {
+  "n": "n/1842076ad6c4fa77-e336117d.mp3",
+  "s": "s/1842076ad6c4fa77-c014c64f.mp3"
  },
  "Žodžiu": {
   "n": "n/ba7ae0cc6626d97e-3a6c4a13.mp3",

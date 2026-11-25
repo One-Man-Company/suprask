@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 534,
+  "created": "2026-11-25T10:50:24+02:00",
+  "type": "struktura",
+  "title": "Vartai nemato klausiamojo „ką“ ir verčia perrašyti natūralų klausimą",
+  "body": "Kuriant 15-nezinomas-zodis dvi užduotys buvo surašytos natūraliausia 1 klasei forma: „Ką jis pasako apie rasą?“ ir „Vis dar nesupranti. Ką darysi?“. check_language.py abiem atvejais pranešė „neaiškus klausimas — nėra klausiamojo/veiksmo žodžio“, nors klausiamasis žodis yra pirmas. Priežastis — baltasis sąrašas (scripts/check_language.py:266–269) turi kiek/kur/kaip/kodėl/kuo/kada/kas/ar, bet neturi ką, ko, kam, kokių ir kt. formų. Kad vartai būtų žali, sakiniai perrašyti į „Kas jame tikrai matoma?“ ir „Kaip darysi toliau?“ — pastarasis prastesnis už „Ką darysi toliau?“. Tai ta pati dinamika, nuo kurios saugojo #7396: vartas neparodo defekto, o verčia turinį lenktis prie savo kodo. Siūlau sąrašą kildinti iš kalbos (visos klausiamųjų įvardžių formos ir prielinksniniai junginiai), o klausimą vertinti visame kamiene, ne tik iki pirmo taško; prie plėtimo pridėti teigiamą („Ką pasako piešinys?“ — tyli) ir neigiamą („Tai yra piešinys.“ — praneša) pavyzdį.",
+  "target": "scripts/check_language.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_language.py:266–269 — klausiamojo žodžio baltasis sąrašas be „ką/ko/kam/kokių“",
+    "content/lt/grade-01/lietuviu-kalba/15-nezinomas-zodis.json — tasks[3].q ir tasks[4].q (po perfrazavimo 0 įspėjimų)",
+    "python3 scripts/check_language.py --grade 1 --strict → prieš: 0 klaidų, 2 įspėjimai (abu šiame modulyje); po: 0 įspėjimų",
+    "research/wiki/guidelines/pamokos.md:LL-192 — ta pati išvada, užrašyta kaip pamoka"
+  ]
+}

@@ -2998,6 +2998,308 @@ const veikejasPagalTeksta = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 12. Nežinomas žodis: kuri pagalba atsako į tavo klausimą            */
+/* ------------------------------------------------------------------ */
+/* Modelis: tame pačiame tekste du pilki žodžiai, o po ranka trys
+   pagalbos kortelės. Vaikas pasirenka, KOKIOS pagalbos klausti, ir tame
+   pačiame kadre mato pasekmę: žodis įgyja prasmę arba tebelieka pilkas.
+   Pagalba pritaikoma visam tekstui, ne vien pasirinktam žodžiui, todėl
+   modelis nemeluoja: paveikslėlis tikrai paaiškina skėtį, nors vaikas
+   jo klausė apie trukmę — ir būtent tai yra pamoka.
+
+   Klaidingos nuostatos, kurias modelis laužo:
+     1) „kiekvieną nežinomą žodį paaiškins paveikslėlis“ — paveikslėlyje
+        matomas skėtis, bet ne tai, kiek laiko lijo;
+     2) „jei perskaičiau žodį, tai jau supratau“ — balsas duoda skambesį,
+        ne prasmę, todėl garsas nėra nė vieno žodžio sprendimas;
+     3) „viena pagalba tinka visiems žodžiams“ — du to paties teksto
+        žodžiai reikalauja skirtingų pagalbų.
+
+   Ko modelis nedaro: nevaizduoja paveikslėlio kaip nereikalingo (B.3.1:
+   iliustracija padeda skaityti) — jis tikrai paaiškina daiktą. Todėl
+   daikto žodis sprendžiamas paveikslėliu, o trukmės — kitu sakiniu, ir
+   abu keliai lieka teisingi, tik skirtingiems žodžiams.
+   Pažanga žymima, kai paaiškėja ABU žodžiai (LL-29), o sėkmės sąlyga
+   skaičiuojama iš dabartinės `solved` būsenos, todėl „Iš naujo“ tikrai
+   grąžina abu žodžius į pilką (LL-17). */
+
+const NZ_STYLE_ID = "cc-nezinomas-zodis-style";
+
+const NZ_CSS = `
+.nz-wrap { width: 100%; max-width: 40rem; margin: 0 auto; display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+.nz-text {
+  display: grid; gap: .3rem; padding: .55rem .7rem; border: 3px solid var(--line);
+  border-radius: var(--r-m); background: #fffdf6; color: #3a342b;
+  font-size: 1.06rem; line-height: 1.5; overflow-wrap: anywhere;
+}
+.nz-line { margin: 0; padding: .1rem .25rem; border-radius: 8px; }
+.nz-line.is-open {
+  background: #ffe9d6;
+  box-shadow: inset 0 0 0 3px #ff8a3d;
+}
+.nz-mark {
+  padding: 0 .12em; border-bottom: 3px dashed #8b8175; background: #efe7d8;
+  color: #3a342b; font-weight: 800;
+}
+.nz-mark.is-done { border-bottom-style: solid; border-bottom-color: #2f9e6e; background: #dff2e8; }
+.nz-q { margin: .1rem 0 0; font-weight: 800; font-size: 1rem; line-height: 1.3; text-align: center; }
+.nz-words { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+.nz-word {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; min-width: 5.5rem; padding: .3rem .95rem;
+  border: 3px solid var(--line); border-radius: 999px; background: var(--paper-2);
+  color: var(--ink); font: inherit; font-weight: 800; font-size: 1.06rem; cursor: pointer;
+}
+.nz-word[aria-pressed="true"] { border-color: var(--ink); }
+.nz-word.is-done { border-color: #2f9e6e; background: #dff2e8; color: #1f5f45; }
+.nz-word.is-done::after { content: " ✓"; font-weight: 900; }
+.nz-word:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.nz-pic { margin: 0; border: 3px solid var(--line); border-radius: var(--r-m); overflow: hidden; line-height: 0; }
+.nz-pic[hidden] { display: none; }
+.nz-pic svg { display: block; width: 100%; height: auto; }
+.nz-help { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+.nz-help .btn { min-height: 48px; }
+`;
+
+function ensureNzStyle() {
+  if (document.getElementById(NZ_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = NZ_STYLE_ID;
+  style.textContent = NZ_CSS;
+  document.head.appendChild(style);
+}
+
+/* Trys pagalbos. `id` sutampa su `unknown[].by`, todėl modulio JSON
+   pasako, kuri pagalba kurį žodį išsprendžia. "garsas" nesprendžia nė
+   vieno žodžio sąmoningai: balsas duoda skambesį, o ne prasmę. */
+const NZ_HELP = [
+  { id: "paveikslas", label: "Paveikslėlis" },
+  { id: "sakinys", label: "Kitas sakinys" },
+  { id: "garsas", label: "Paklausyk žodžio" },
+];
+
+/* Scena: berniukas po atidarytu skėčiu lyjant. Skėtis yra TAS daiktas,
+   kurį paaiškina paveikslėlis — todėl jis didelis ir centre, o lietaus
+   linijos neša tik „lyja“, ne „kiek laiko“. */
+function nzScene(id) {
+  const rain = [22, 52, 82, 112, 142, 172, 202, 232, 262, 292]
+    .map((x, i) => {
+      const y = 70 + ((i * 19) % 42);
+      return `<line x1="${x}" y1="${y}" x2="${x - 6}" y2="${y + 22}"`
+        + ` stroke="#7fb6d6" stroke-width="3" stroke-linecap="round" opacity=".85"/>`;
+    }).join("");
+  return `${art.defs(id)}
+    <rect x="0" y="0" width="320" height="190" rx="14" fill="url(#${id}-sky)"/>
+    ${art.cloud(62, 34, 1.05, 0.98)}
+    ${art.cloud(212, 26, 0.9, 0.95)}
+    ${rain}
+    ${art.hills(320, 148)}
+    ${art.grass(34, 186, 1.1)}
+    ${art.grass(94, 188, 1)}
+    ${art.grass(258, 186, 1.05)}
+    ${art.kid(146, 188, 1.5, "#3f5d8a", "#f2c9a0")}
+    ${art.umbrella(168, 96, 1.25, "#c8503f")}`;
+}
+
+const nezinomasZodis = {
+  mount({ stage, controls, api, config }) {
+    ensureNzStyle();
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const S = config.sentences && typeof config.sentences === "object" ? config.sentences : {};
+    const lines = Array.isArray(config.lines) ? config.lines.map((k) => String(k)) : [];
+    const words = Array.isArray(config.word) ? config.word.map((w) => String(w ?? "").trim()) : [];
+    const unknown = Array.isArray(config.unknown) ? config.unknown : [];
+    const alt = String(config.aprasas ?? "").trim();
+
+    const lineText = (i) => String(S[lines[i]] ?? "").trim();
+    const helpIds = new Set(NZ_HELP.map((h) => h.id));
+
+    /* Kiekvienas nežinomas žodis turi būti TIKRAI tame sakinyje, o jo
+       pagalba — egzistuoti. Kitu atveju modelis ieškotų elemento, kurio
+       pats nesukūrė (LL-03), ir vaikas spaustų kortelę be pasekmės. */
+    const valid = lines.length >= 2
+      && words.length >= 1
+      && unknown.length === words.length
+      && Boolean(alt)
+      && unknown.every((u, i) => u
+        && Number.isInteger(u.line) && u.line >= 0 && u.line < lines.length
+        && words[i] && lineText(u.line).includes(words[i])
+        && helpIds.has(String(u.by ?? ""))
+        /* Žodis, kurį sprendžia „kitas sakinys“, turi turėti tą sakinį:
+           paskutinėje eilutėje jis liktų neišsprendžiamas ir modelio
+           užbaigti nebūtų įmanoma (LL-03 šeima). */
+        && (u.by !== "sakinys" || u.line + 1 < lines.length)
+        && String(S[String(u.done ?? "")] ?? "").trim());
+
+    if (!valid) {
+      console.error("[nezinomas-zodis] reikia „lines“, „word“, „unknown“ (su „line“, „by“, „done“) ir „aprasas“", config);
+      stage.innerHTML = `<p class="error-box">Teksto duomenys nesuderinti.</p>`;
+      controls.innerHTML = "";
+      api.readout("Teksto duomenys nesuderinti.");
+      api.note("");
+      return () => {};
+    }
+
+    let sel = 0;
+    const solved = new Set();
+    let picShown = false;
+    let openLine = -1;
+    let reported = false;
+
+    stage.innerHTML = `
+      <div class="nz-wrap">
+        <div class="nz-text" id="nz-text" role="group" aria-label="Tekstas su pilkais žodžiais"></div>
+        <p class="nz-q">Kurio žodžio prasmę nori sužinoti?</p>
+        <div class="nz-words" id="nz-words" role="group" aria-label="Nežinomi žodžiai"></div>
+        <figure class="nz-pic" id="nz-pic" hidden>
+          <svg viewBox="0 0 320 190" role="img" aria-label="${esc(alt)}">${nzScene("nz")}</svg>
+        </figure>
+      </div>`;
+
+    controls.innerHTML = `
+      <div class="nz-help">
+        ${NZ_HELP.map((h) => `<button type="button" class="btn secondary" data-help="${h.id}">${h.label}</button>`).join("")}
+        <button type="button" class="btn ghost" id="nz-reset">Iš naujo</button>
+      </div>`;
+
+    const textEl = stage.querySelector("#nz-text");
+    const wordsEl = stage.querySelector("#nz-words");
+    const picEl = stage.querySelector("#nz-pic");
+
+    /* Tekstas surenkamas kartą: žymos yra `span`, o ne mygtukai, todėl
+       sakinio eilutė nelūžta ir nelieka 24 px taikinių (standartas §4.4).
+       Tikri taikiniai — didelės žodžių kortelės po tekstu. */
+    function buildText() {
+      textEl.innerHTML = lines.map((key, li) => {
+        const text = lineText(li);
+        let out = "";
+        let pos = 0;
+        words.forEach((w, wi) => {
+          if (unknown[wi].line !== li) return;
+          const at = text.indexOf(w, pos);
+          if (at < 0) return;
+          out += esc(text.slice(pos, at));
+          out += `<span class="nz-mark" data-w="${wi}">${esc(w)}</span>`;
+          pos = at + w.length;
+        });
+        out += esc(text.slice(pos));
+        return `<p class="nz-line" data-line="${li}">${out}</p>`;
+      }).join("");
+    }
+
+    function buildWords() {
+      wordsEl.innerHTML = words.map((w, i) => `
+        <button type="button" class="nz-word" data-w="${i}" aria-pressed="false"
+          aria-label="${esc(w)}. Nežinomas žodis.">${esc(w)}</button>`).join("");
+      wordsEl.querySelectorAll(".nz-word").forEach((b) => {
+        b.addEventListener("click", () => choose(Number(b.dataset.w)));
+      });
+    }
+
+    /* Būsena perpiešiama vietoje, o ne perkuriama: fokusas lieka ant to
+       paties mygtuko, kurį vaikas ką tik paspaudė (LL-32). */
+    function paint() {
+      stage.querySelectorAll(".nz-mark").forEach((el) => {
+        el.classList.toggle("is-done", solved.has(Number(el.dataset.w)));
+      });
+      stage.querySelectorAll(".nz-word").forEach((b) => {
+        const i = Number(b.dataset.w);
+        const done = solved.has(i);
+        b.classList.toggle("is-done", done);
+        b.setAttribute("aria-pressed", String(i === sel));
+        b.setAttribute("aria-label", `${words[i]}. ${done ? "Jau supratai." : "Nežinomas žodis."}`);
+      });
+      stage.querySelectorAll(".nz-line").forEach((el) => {
+        el.classList.toggle("is-open", Number(el.dataset.line) === openLine);
+      });
+      picEl.hidden = !picShown;
+    }
+
+    function choose(i) {
+      sel = i;
+      paint();
+      api.readout(words[i]);
+      api.speak(words[i], { rate: .72 });
+      api.note(solved.has(i) ? "Šis žodis jau turi prasmę." : "Dabar pasirink pagalbą.");
+    }
+
+    function useCard(id) {
+      const u = unknown[sel];
+      const before = solved.size;
+      if (id === "paveikslas") {
+        picShown = true;
+        /* Pagalba taikoma visam tekstui: jei paveikslėlis parodo daiktą,
+           tas žodis paaiškėja net tada, kai vaikas klausė apie kitą. */
+        unknown.forEach((x, i) => { if (x.by === "paveikslas") solved.add(i); });
+      } else if (id === "sakinys") {
+        const target = u.line + 1;
+        if (target < lines.length) {
+          openLine = target;
+          unknown.forEach((x, i) => { if (x.by === "sakinys" && x.line + 1 === target) solved.add(i); });
+        }
+      } else {
+        api.speak(words[sel], { rate: .58 });
+      }
+
+      const ok = solved.has(sel);
+      const finishing = ok && solved.size === unknown.length && !reported;
+      if (finishing) reported = true;
+
+      const key = ok ? String(u.done) : String((u.miss && u.miss[id]) || "miss-bendra");
+      const text = String(S[key] ?? "").trim();
+      paint();
+      if (text) {
+        api.readout(text);
+        api.speak(text);
+      }
+      /* Pastaba sako KĄ DARYTI, o ne kartoja pasakytą sakinį: 6–7 m.
+         vaikas jos neperskaito, bet mokytojas mato, ar vaikas žino kitą
+         žingsnį. Ketvirta būsena — kai pagalba išsprendė KITĄ žodį:
+         kitaip ekrane vienas žodis žalias, o tekstas sako „dar neturi
+         prasmės“, ir atrodo, kad modelis klysta (LL-33, LL-17). */
+      api.note(finishing
+        ? String(S.baigta ?? "")
+        : (ok
+          ? "Žodis dabar turi prasmę. Kuris žodis dar pilkas?"
+          : (solved.size > before
+            ? "Kitas žodis jau turi prasmę. Tavo pasirinktasis — dar ne."
+            : "Žodis dar neturi prasmės. Rinkis kitą pagalbą.")));
+      if (finishing) api.progress({ words: unknown.length });
+    }
+
+    function reset() {
+      solved.clear();
+      sel = 0;
+      picShown = false;
+      openLine = -1;
+      reported = false;
+      paint();
+      const text = String(S["is-naujo"] ?? "").trim();
+      api.readout(text);
+      api.speak(text);
+      api.note("Bakstelėk pilką žodį ir pasirink pagalbą.");
+      const first = wordsEl.querySelector(".nz-word");
+      if (first) first.focus({ preventScroll: true });
+    }
+
+    controls.querySelectorAll("[data-help]").forEach((b) => {
+      b.addEventListener("click", () => useCard(String(b.dataset.help)));
+    });
+    controls.querySelector("#nz-reset").addEventListener("click", reset);
+
+    buildText();
+    buildWords();
+    paint();
+    const start = String(S.start ?? "").trim();
+    api.readout(start);
+    api.note("Bakstelėk pilką žodį ir pasirink pagalbą.");
+    api.speak(start);
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
@@ -3011,4 +3313,5 @@ export const SIMS = {
   "pasakojimo-vidurys": pasakojimoVidurys,
   "zinute-skaitytojui": zinuteSkaitytojui,
   "veikejas-pagal-teksta": veikejasPagalTeksta,
+  "nezinomas-zodis": nezinomasZodis,
 };

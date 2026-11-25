@@ -1660,6 +1660,157 @@ Pirmoji juodraščio versija davė **vieną tikrą radinį**, ir jis pataisytas,
 
 **Pastaba dėl pasiūlymo.** Ideatorius (#44721) temą jau įrašė (`agents/proposals/2026-11-24-ideator-avalynes-dziovinimas.json`), ir šis metodas ją **susieja ir sugriežtina**: (1) ideatorius siūlė tris skirtingai prikimštus batus iš karto, o metodas duoda vaikui pačiam nustatyti turinį — kitaip modelis neturi kintamojo ir virsta iliustracija (gairių P2); (2) ideatorius siūlė „stumti laiką“, o metodas laiką skaido į dvi fiksuotas padėtis — 6–7 m. vaikui slankiklis su valandomis įneša antrą sąvoką (T1.2), o džiūvimo greitis šioje temoje nemokomas; (3) ideatorius rašė, kad „be įdėklo nosis sulinksta“ kaip taisyklę, o metodas tai įvardija kaip **modelio atvejį** ir modelio ribose pasako, kad kietas batas gali išsilaikyti ir be įdėklo — kitaip modelis mokytų netiesos (LL-18); (4) ideatoriaus pavyzdžiai (wikishoes.org, jihua3515.com) pakeisti moksliniais šaltiniais su DOI, o laikraščio dviguba paskirtis (forma ir drėgmė) atskirta, kad modelis liktų apie vieną dalyką. `research/wiki/curriculum/backlog.json` eilutė `D:drabuziu-prieziura` vis dar `covered` ir tebevardija tik `06-drabuziu-prieziura`, nors avalynės modulis `08-avalynes-dziovinimas` jau įrašytas — tai programos-derintojo darbas (`backlog.json` sąrašo atnaujinimas), ne šio metodo.
 
+### M-17 — Taisyklė, o ne lempa: ta pati pora jungiklių, trys kortelės
+
+**Data:** 2026-11-25 · **Tema:** 1 klasės matematika (integruota informatika), B2.3 „Atpažįsta ir vykdo komandų sekas, pasirinkimo komandą, **skiria logines operacijas: NE, IR, ARBA**“ (`sources/pradinio-bp-rekomendacijos-2024.txt:12284`; lentelės antraštė „1-2 klasės 3-4 klasės“ — `:12278`), metų plano tema „Loginės operacijos: NE, IR, ARBA“ (`:22786–22792`), `research/wiki/curriculum/kti-dalykai-1-klase.md:115` · **Tikslas:** `content/lt/grade-01/matematika/35-logines-operacijos-ir-arba-ne.json` · **Pasiūlymas:** #50535 · **Šaltinis:** [[../../foundations/taisykle-ir-daiktas|taisyklė ir daiktas]]
+
+**Viena didelė idėja.** Lempą valdo ne jungiklis ir ne pati lempa, o taisyklė, kurią pasako kortelė. Toje pačioje poroje jungiklių trys kortelės duoda tris skirtingas lempos būsenas. Todėl klausimas „kodėl dega?“ turi antrą dalį: „pagal kurią taisyklę?“
+
+**Ką sako programa ir ko platformoje nėra.** B2.3 yra 1–2 klasių stulpelyje ir apima komandų seką bei pasirinkimo komandą, bet loginės operacijos jame išvardytos atskirai — kaip tai, ką vaikas turi **skirti**, o ne apibrėžti. Platformoje komandų seka jau yra (`24-komandu-seka`), grandinės vientisumas — `01-elektros-grandine`, o jungiklio ir mygtuko skirtumas — `07-elektronika`. Nė viename iš jų taisyklė neegzistuoja kaip atskiras, keičiamas dalykas: jungiklis ten vienas, o jo elgsena — paties daikto savybė. Patikra: `grep -rin "logines operacij\|loginių operacij" content/lt/grade-01/` → **0** eilučių, `grep -rln "jungik" content/lt/grade-01/*/*.json` → 2 failai (abi technologijos). Loginių operacijų pozicijos nėra ir `research/wiki/curriculum/backlog.json` (47 pozicijos, `grep -o "operacij[a-z]*"` → 0), todėl šis modulis negalėjo atsirasti iš padengties eilės — tik iš pasiūlymo.
+
+**Kodėl modelis, o ne paveikslėlis ir ne sakinys.** Paveikslas su trimis degančiomis eilutėmis jau pasako atsakymą, o sakinys „kortelė BENT VIENAS reiškia bent vieną“ pasako jį dar tiesiau. Abu jie turi tą pačią ydą: vaikas neturi ką patikrinti. Modelis duoda vienintelį dalyką, kurio paveikslas negali — **tą pačią porą jungiklių su kita kortele**, kai jungikliai nejuda nė per pikselį, o keičiasi tik kortelė. Tada priežastis atsiskiria nuo daikto mechaniškai, o ne iš teksto. Antras interaktyvumo argumentas — spėjimas prieš kiekvieną įjungimą: be jo modelis virstų lempučių demonstracija.
+
+**Ką rodo tyrimai (ir kodėl būtent taip).**
+
+1. **Tas pats žodis duoda priešingus atsakymus.** Braine ir Rumain (1981) tyrė 5–6 metų vaikus ir rado, kad komandos užduotyje („paduok vieną“) jie „arba“ suprato **išskirtinai** (vieną, ne abu), o tikrumo įvertinimo užduotyje — kaip jungtuką „ir“ (abu). Autoriai padarė išvadą, kad disjunkcijos supratimas komandoje ateina anksčiau negu jos teisingumo sąlygų žinojimas. Tai reiškia, kad apie žodį sutarti negalima: reikia ką nors, kas parodo pasekmę.
+2. **Ikimokyklinukai „arba“ dažnai sustiprina iki „ir“.** Singh, Wexler, Astle-Rahim, Kamawar ir Fox (2016) parodė, kad vaikai disjunkcinį sakinį neretai supranta kaip jungtinį („abu“), nors suaugusieji tą patį sakinį supranta išskirtinai; autoriai tai aiškina pragmatiniu sustiprinimu, o ne neišmanyta semantika.
+3. **Literatūra nesutaria, ką vaikas iš tikrųjų supranta.** Jasbi ir Frank (2021), ištyrę ikimokyklinukus paprastuose egzistenciniuose sakiniuose, rado, kad jų disjunkcijos supratimas yra **daug panašesnis į suaugusiųjų**, negu buvo manyta ankstesniuose darbuose. Vadinasi, vienas tyrimas ir viena užduotis negali būti sąvokos matas — reikia matomos pasekmės, kurią vaikas pasigamina pats, o ne sakinio apie žodį.
+4. **Kasdienė vartosena nėra logikos taisyklė.** Morris (2008) rado, kad „ir“ vaikai pradeda vartoti anksčiau nei „arba“, kad ankstyvas vartojimas paprastai nėra loginis ir kad „arba“ tiek vaikų, tiek suaugusiųjų kalboje dažniausiai yra **išskirtinis**.
+5. **Neigimas anksti suprantamas, bet ne sudėtinio sakinio atžvilgiu.** Reuter, Feiman ir Snedeker (2018) parodė, kad 2–3 metų vaikai „ne“, „ne…“ ir „negali“ supranta palankioje situacijoje, bet supratimas priklauso nuo konteksto. Todėl modelyje NE nėra aiškinamas žodžiu: jis parodomas kaip atskira kortelė, kuri dega ten, kur kita nedega.
+
+Iš šių penkių išvadų metodui lieka viena: **vaikui nereikia paaiškinti, ką reiškia „arba“; jam reikia parodyti, ką daro kortelė, ir duoti kortelę perskaityti.** Todėl kortelės užrašas yra ne vien operatorius, o operatorius ir jo paaiškinimas: `ABU (IR) — reikia abiejų`, `BENT VIENAS (ARBA) — užtenka vieno`, `NE — ne abu`.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Kiekvienas jungiklis uždega lempą.“** Vaikas įjungia vieną jungiklį ir laukia šviesos; kortelė ABU jos neduoda. Paneigiama ne tekstu, o tuo, kad tas pats vienas įjungtas jungiklis su trimis kortelėmis duoda dvi skirtingas pasekmes: su ABU tamsu, su BENT VIENAS ir su NE — dega.
+2. **„Jei parašyta ARBA, tai reiškia vieną, o ne abu.“** Tai ne išgalvota klaida — taip „arba“ vartojama kasdienėje kalboje ir taip jį komandos užduotyje supranta 5–7 metų vaikai (Braine ir Rumain, 1981; Morris, 2008). Paneigiama dviem dalykais: kortelėje parašyta „užtenka vieno“, o lentelė rodo **tris** degančias eilutes. Modelis sąmoningai neklausia „ką reiškia žodis arba“ — jis klausia „ką daro ši kortelė“, todėl klaidinga nuostata apie žodį lieka teisinga, o apie kortelę — ne (LL-18).
+3. **„NE išjungia lempą.“** Vaikas NE supranta kaip išjungimo mygtuką. Modelis rodo priešingai: sujungus abu jungiklius kortelė ABU dega, o kortelė NE — ne; kai abu išjungti, ABU tyli, o NE dega. Neigimas čia yra **apvertimas**, ir jis matomas kaip dviejų lentelių veidrodis.
+4. **„Lempa pati žino, kada degti“** (daikto savybė). Tai ta pati nuostata kaip M-06 („spalva yra daikto pavadinimas“) ir M-07 („skaičius pasako ilgį“), tik apie elgseną. Paneigiama tuo, kad lempa nekinta nė karto: keičiasi tik kortelė, o lempa paklūsta.
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas), 5 žingsniai.**
+
+1. **Klasė be ekrano, keturi vaikai kaip mašina.** Du vaikai laiko po kortelę „įjungta“ / „išjungta“, trečias laiko lemputės kortelę, ketvirtas tyliai perskaito taisyklę iš sulankstyto lapelio. Lemputės vaikas pakelia kortelę tik tada, kai taisyklė tenkinama. Klasė spėja prieš kiekvieną kėlimą. Tada mokytojas pakeičia **lapelį**, o jungiklių vaikai lieka tie patys. Tikslas: pajausti, kad pasikeitė ne mašina, o taisyklė.
+2. **Ekranas, pirmoji kortelė.** Du jungikliai, viena lempa, kortelė `ABU (IR) — reikia abiejų`. Vaikas spėja („Degs“ / „Nedegs“), tada įjungia. Spėjimas lieka lentelės stulpelyje „Spėjai“, rezultatas — „Lempa“. Tikslas: pamatyti pasekmę savo veiksmu.
+3. **Antroji kortelė, tie patys jungikliai.** `BENT VIENAS (ARBA) — užtenka vieno`. Jungikliai prasideda toje pačioje padėtyje, eilutės tos pačios. Vaikas pamato, kad su vienu jungikliu dabar dega. Tikslas: skirti dvi taisykles, kai viskas kita lieka taip pat.
+4. **Trečioji kortelė `NE — ne abu` ir simbolis.** Lentelė apsiverčia: dega ten, kur ABU nedegė. Po kiekviena baigta lentele atsiranda požymis („Kortelė ABU dega tik su abiem jungikliais.“), o trys požymiai sustoja vienas šalia kito. Tikslas: taisyklę įvardyti vienu sakiniu, o ne skaičiuoti eilutes.
+5. **Perkėlimas.** Trys užduotys be modelio: kita kortelė (`ABU` su vienu jungikliu), ta pati taisyklė kitame daikte (skambutis su dviem mygtukais) ir atvirkštinė užduotis — iš elgsenos atpažinti kortelę. Tikslas: taikyti taisyklę ten, kur kortelės nesimato.
+
+**Privalomas spėjimo žingsnis.** Prieš kiekvieną pirmą to atvejo įjungimą `api.readout` sako: „Pirma spėk, kas bus su lempa.“ Kol vaikas nepasirinko „Degs“ arba „Nedegs“, mygtukas „Įjunk“ neaktyvus, bet **ne `disabled`**: jis paaiškina „Pirma spėk. Tada įjunk jungiklį.“ ir perkelia fokusą į spėjimo mygtukus (LL-04, LL-32). Spėjimas niekada neištrinamas ir niekada nevadinamas klaida: jis lieka lentelės stulpelyje šalia rezultato, todėl palyginimas matomas (LL-15). Be spėjimo modelis virsta lempučių demonstracija: vaikas spaudžia tol, kol pamato įdomią būseną, ir sąryšio nesudaro (tas pats pavojus kaip M-01–M-16, `research/wiki/foundations/sujungti-dydziai.md`).
+
+**Simuliacijos specifikacija.** Komponentas `taisykle-ir-lempa`, failas `assets/js/sims/matematika.js` (`registry.js` jau importuoja `matematika.js`, registracijos keisti nereikia). `config`:
+
+```json
+{ "switches": [ { "key": "kaire",  "label": "Kairys" },
+                { "key": "desine", "label": "Dešinys" } ],
+  "cards": [ { "key": "abu",  "label": "ABU",          "op": "IR",   "gloss": "reikia abiejų" },
+             { "key": "bent", "label": "BENT VIENAS",  "op": "ARBA", "gloss": "užtenka vieno" },
+             { "key": "ne",   "label": "NE",           "op": "NE",   "gloss": "ne abu" } ],
+  "cases": [ { "key": "kaire",  "label": "tik kairys" },
+             { "key": "desine", "label": "tik dešinys" },
+             { "key": "abudu",  "label": "abu įjungti" } ],
+  "labels": { "on": "Degs", "off": "Nedegs", "test": "Įjunk",
+              "tableCase": "Jungikliai", "tableGuess": "Spėjai", "tableLamp": "Lempa",
+              "again": "Iš naujo" },
+  "sentences": { "start": "Du jungikliai, viena lempa ir kortelė.",
+                 "rule": "Kortelė pasako taisyklę.",
+                 "guess": "Pirma spėk, kas bus su lempa.",
+                 "locked": "Pirma spėk. Tada įjunk jungiklį.",
+                 "isjungtiDega": "Abu išjungti. Lempa dega.",
+                 "isjungtiTamsu": "Abu išjungti. Lempa nedega.",
+                 "kaireDega": "Kairys įjungtas. Lempa dega.",
+                 "kaireTamsu": "Kairys įjungtas. Lempa nedega.",
+                 "desineDega": "Dešinys įjungtas. Lempa dega.",
+                 "desineTamsu": "Dešinys įjungtas. Lempa nedega.",
+                 "abuduDega": "Abu įjungti. Lempa dega.",
+                 "abuduTamsu": "Abu įjungti. Lempa nedega.",
+                 "abuBaigta": "Kortelė ABU dega tik su abiem jungikliais.",
+                 "bentBaigta": "Kortelė BENT VIENAS dega ir su vienu.",
+                 "neBaigta": "Kortelė NE dega visur, kur ABU nedega.",
+                 "lyginu": "Ta pati pora jungiklių. Kita kortelė, kita lempa.",
+                 "visos": "Trys kortelės. Ta pati pora jungiklių.",
+                 "whyAbu": "Kortelė ABU laukia abiejų jungiklių.",
+                 "whyBent": "Kortelei BENT VIENAS užtenka vieno jungiklio.",
+                 "whyNe": "Kortelė NE dega priešingai negu ABU.",
+                 "vel": "Valom nuo pradžių. Abu jungikliai išjungti." } }
+```
+
+**Būsena išvedama, o ne įrašyta.** `config.cards[]` sąmoningai neturi lauko, ar lempa dega: tai vienintelė taisyklė komponente —
+
+```
+lit(card, a, b) = card.op === "IR"   ? (a && b)
+                : card.op === "ARBA" ? (a || b)
+                :                      !(a && b)   // NE = „ne abu“
+```
+
+Jei `op` neatpažintas, komponentas rašo `console.error` ir rodo „Kortelė nesuderinta.“, o ne tyliai tamsią lempą. Tai ta pati taisyklė kaip M-07 (`kiekis = board.px / unit.px`), M-15 (`lit = behaviour === "lieka" ? down : pressed`) ir M-16 (`outcome(content)`): teiginys ekrane išvedamas iš tų pačių duomenų, kuriuos mato vaikas — lentelė ir lempa negali išsiskirti.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | abu jungikliai išjungti, lempa pagal kortelę, pirma lentelės eilutė („abu išjungti“) jau užpildyta | `sentences.isjungtiDega` / `isjungtiTamsu` | `sentences.rule` |
+| spėjimo laukia | trys spėjimo mygtukai, „Įjunk“ neaktyvus ir paaiškina, kas jį atrakina | `sentences.guess` | `sentences.locked` |
+| spėjimas pasirinktas | spėjimas matomas virš lentelės, „Įjunk“ aktyvus | — | — |
+| atvejis atliktas | eilutėje spėjimas ir lempos būsena, jungiklio svirtis matomoje padėtyje | `sentences.<atvejis>Dega` / `Tamsu` | `sentences.why<kortelė>` |
+| kortelė baigta (3 atvejai) | po lentele – vienas požymis | `sentences.abuBaigta` / `bentBaigta` / `neBaigta` | tas pats sakinys |
+| antra kortelė baigta | du požymiai vienas šalia kito, jungikliai toje pačioje padėtyje | `sentences.lyginu` | `sentences.lyginu` |
+| visos trys kortelės baigtos | trys požymiai, trys lentelės lieka matomos | `sentences.visos` | tas pats |
+| „Iš naujo“ | atvejai išvalyti, požymiai lieka | `sentences.vel` | — |
+
+Dešimt savybių, kurių negalima praleisti:
+
+- **Vienas kintamasis:** `case` — kurį iš trijų jungiklių derinių vaikas bando. Kortelė yra **raundo sąlyga**, o ne antras kintamasis: ją pakeitus lentelė pradedama iš naujo (nebaigtos eilutės išvalomos), o jau baigtų lentelių požymiai lieka matomi. Kortelė niekada neužrakinama — jei vaikas nori grįžti atgal, jis grįžta ir bando iš naujo be jokių nuobaudų (LL-04). Jungiklių padėtis, lempos vieta ir kortelės dydis nekinta nė karto — tai modelio teiginys, o ne dekoracija (LL-27).
+- **Pirma lentelės eilutė rodoma iš karto.** Abu išjungti — pradinė padėtis, kurią vaikas mato įėjęs, todėl ji įrašoma į lentelę be spėjimo. Be jos modelis turėtų trijų eilučių lentelę ir ketvirtą nepaaiškintą lempos būseną; su ja lentelė yra **pilna** (visi keturi įėjimai), o vaikui nereikia nė vieno papildomo bakstelėjimo.
+- **Geometrija 360 px:** scena `viewBox="0 0 328 300"`, `max-width:328px`, `width:100%`; jungiklių dėžutės 72 × 72 px (x 24–96 ir 232–304, y 150–222), lemputė `art.ball(164, 92, 26)`, lentynėlė `art.plank(8, 222, 312, 12)`, kortelės lizdas 132 × 56 px (x 98, y 236). Lentelė — HTML po scena: trys stulpeliai 128 / 92 / 92 px ir du 8 px tarpai = 328 px, keturios eilutės po 34 px; šriftas `var(--fs-s)` (15,2 px), ne mažesnis (LL-06, LL-164). Kortelių sąrašas — **vertikali** trijų mygtukų kolona po 328 × 56 px, o ne trys mygtukai vienoje eilutėje: „BENT VIENAS“ telefone netelpa į trečdalį pločio ir lūžtų žodis (LL-186). Jokio horizontalaus slinkimo.
+- **Įėjimai ir klaviatūra:** jungiklių dėžutės `<button>` po 72 × 72 px (`aria-pressed`), trys spėjimo mygtukai ≥ 48 px, „Įjunk“ 328 × 56 px, trys kortelių mygtukai 328 × 56 px, „Iš naujo“ ≥ 48 px. `Tab` eilė: kairys → dešinys → spėjimas → „Įjunk“ → kortelės → „Iš naujo“; `Enter` / `Space` aktyvuoja; `aria-live="polite"` — `readout`.
+- **Fokusas** (LL-32): pasirinkus spėjimą fokusas eina į „Įjunk“; po rezultato — į kitą neišbandytą atvejį; baigus kortelę — į pirmą neišbandytą kitos kortelės atvejį; baigus visas — į „Iš naujo“. Neaktyvūs elementai žymimi `aria-disabled` ir lieka fokusuojami, o bandymas juos paspausti paaiškinamas `api.note`, o ne tyli.
+- **Grįžtamasis ryšys** paaiškina **kodėl**, o ne „teisingai“: `readout` įvardija, kas įjungta ir kas su lempa, o `api.note` duoda vieną priežasties sakinį iš `why<kortelė>`. Niekada „neteisingai“ (T2.3, T5.1). `readout` neperrašomas kiekvieną kadrą (LL-14).
+- **Pažanga** (`api.progress({ correct: true })`) — vieną kartą, kai **visų trijų** kortelių lentelės užpildytos **dabartinėje** būsenoje (LL-17), o ne po pirmos eilutės (LL-29). „Iš naujo“ pažangos netrina (LL-16). Užverstos kortelės raundo modelyje nėra: tai perkėlimas, jis vyksta užduotyje, o ne simuliacijoje.
+- **Garsas:** tariamos tik `config.sentences` frazės (21; kiekviena gauna po du įrašus `n` ir `s`, tad manifestas išaugs 42 įrašais, jei tų pačių sakinių dar neturi). Lentelės antraštės ir jungiklių pavadinimai netariami (mažas manifestas), `api.note` rodo **tą patį** sakinį, kuris tariamas.
+- **Abi būsenos turi savo įrodymą paveiksle** (LL-143): dega — švytėjimas ir šviesus stiklas, ne — tamsus stiklas ir matomas siūlelis; jungiklio svirtis visada rodo padėtį. Spalva niekada nėra vienintelis informacijos nešėjas.
+- **Be laikmačių, be ėjimų limito, be „game over“.** Kortelę galima keisti tiek kartų, kiek vaikas nori; „Iš naujo“ nieko nebando.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Kortelė ABU. Įjungtas tik kairys jungiklis. Ar dega lempa?“ — Taip, lempa dega / Ne, lempa nedega / Lempa dega trumpai | Ne, lempa nedega (1) | „Taip“ — kiekvienas jungiklis laikomas uždegėju | „Prisimink, ką darei modelyje su vienu jungikliu.“ |
+| 2 | taikymas | „Kortelė BENT VIENAS. Įjungti abu jungikliai. Kas bus su lempa?“ — Lempa degs / Lempa nedegs / Lempa mirksės | Lempa degs (0) | „Nedegs“ — kasdienis išskirtinis „arba“ | „Prisimink, kiek eilučių degė su šia kortele.“ |
+| 3 | perkėlimas | „Skambutis skamba, kai paspaustas bent vienas mygtukas. Tu paspaudei abu mygtukus. Ar skambės?“ — Ne, nes reikia vieno mygtuko / Ne, nes du mygtukai trukdo / Taip, skambės | Taip, skambės (2) | pirmas — ta pati išskirtinė nuostata kitame daikte | „Modelyje tokia pat taisyklė buvo ant vienos kortelės.“ |
+| 4 | perkėlimas (`optional: true`) | „Kortelės nesimato. Su vienu jungikliu lempa nedega. Su abiem — dega. Kuri kortelė buvo?“ — BENT VIENAS / ABU / NE | ABU (1) | „BENT VIENAS“ — atsakoma pagal tai, kad „daugiau jungiklių = daugiau šviesos“ | „Prisimink lentelę: kiek eilučių degė su kiekviena kortele.“ |
+
+Atsakymų indeksai 1 / 0 / 2 / 1 — ne visi tame pačiame indekse (`validate_content.py` tikrina pasiskirstymą). Nė viena užuomina nepasako atsakymo: 2-oji nurodo į lentelę, 3-ioji — į modelyje matytą kortelę, 4-oji — į eilučių skaičių, o ne į kortelės vardą. 3 užduotyje sąmoningai nėra varianto „Ne, nes skambutis turi laikmatį“: toks prietaisas gyvenime egzistuoja, tad jis negali būti neteisingas atsakymas (LL-18).
+
+**Refleksija.** „Kuri kortelė tave nustebino? Kodėl?“ Klausiama žodžiu, nevertinama; laukiamas atsakymas apie savo patirtį („BENT VIENAS, nes degė su vienu“), o ne taisyklės kartojimas (T5.3).
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Kasdienėje kalboje „arba“ dažniausiai reiškia vieną, o ne abu** (Morris, 2008), ir modulis to neneigia. Kortelė BENT VIENAS yra **logikos** kortelė, o jos reikšmė parašyta ant jos pačios: „užtenka vieno“. Vaikas mokosi skaityti kortelę, o ne atspėti žodžio reikšmę.
+2. **Kortelė NE neigia vieną sakinį — „abu įjungti“.** Modelyje NE niekada nestovi prie „bent vienas“, todėl vaikas nemato dvigubo neigimo. Tai sąmoningas siaurinimas: neigti sudėtinį sakinį („ne (bent vienas)“) 6–7 metų vaikui būtų antra sąvoka tame pačiame kadre (T1.2).
+3. **Modelis neturi tiesos lentelės ir nerašo „1“ / „0“.** Žymėjimas yra požymis sakiniu ir lentelės eilutė; sutartiniai loginiai simboliai (∧, ∨, ¬) priklauso vyresnei klasei (LL-23).
+4. **Keturi įėjimai, trys atvejai vaikui.** Ketvirtas (abu išjungti) rodomas iš karto ir nėra spėjamas: jis skirtas tam, kad lentelė būtų pilna, o ne tam, kad vaikas jį atskirai tirtų.
+5. **Lempa dega arba ne — trečios būsenos nėra.** Tikrovėje lemputė gali būti perdegusi, blyksėti ar būti blanki; modelis rodo tik „dega / ne“, nes trečia būsena įneštų antrą sąvoką.
+6. **Tai ne įgūdžio įrodymas.** Teisingas atsakymas reiškia, kad vaikas perskaitė kortelę ir palygino su lentele, o ne kad jis savarankiškai skiria logines operacijas be atramos; Braine ir Rumain (1981) rodo, kad teisingumo sąlygos 6–7 metais dar tik formuojasi, todėl modulis sąmoningai remiasi matoma pasekme.
+
+**Ką tai reiškia modulio autoriui.** `id` — `35-logines-operacijos-ir-arba-ne`; `title` — „Kortelė pasako, kada degs lempa“ (31 simbolis); `subtitle` — „Trys kortelės, ta pati pora jungiklių, kita lempos būsena“ (57); `minutes` — 9; trys `outcomes` („Pasakau, kada lempa degs, kai žinau kortelės taisyklę.“, „Palyginu tris korteles su tais pačiais jungikliais.“, „Paaiškinu, kad lempą valdo taisyklė, o ne jungiklis.“); `concept.title` — „Taisyklė, o ne lempa“; `concept.big_idea` — „Ta pati pora jungiklių dega kitaip, nes taisyklę pasako kortelė. Lempa pati nieko nenusprendžia.“ (96); `concept.steps` — keturi žingsniai iš sekos 2–4; `concept.example` — „Žaislinis robotas važiuoja, kai įjungtas jo jungiklis ir uždėta baterija.“ (pavyzdys rodo tą pačią sąvoką kitame daikte, o ne kartoja modelį — LL-142); `teacher.offline` — keturių vaikų mašina su popierinėmis kortelėmis; `teacher.misconceptions` — trys nuostatos iš šio skyriaus; `sim` — `{ "component": "taisykle-ir-lempa", "config": { … } }`. Modulis įrašomas į `content/lt/grade-01/index.json` (matematika, po `24-komandu-seka`) ir į `path.json` **po `24-komandu-seka`**: ten vaikas vykdė komandas iš eilės, čia — nusako, pagal kokią taisyklę komandų pora duoda vieną rezultatą; abu moduliai yra „taisyklė prieš veiksmą“. Numeris `35-` laisvas (`ls content/lt/grade-01/matematika/` → didžiausias 34).
+
+**Patikra.** Metodo specifikacija surašyta kaip juodraštinis modulis, laikinai įrašytas tikslioje vietoje (`content/lt/grade-01/matematika/35-logines-operacijos-ir-arba-ne.json`) ir po patikros ištrintas; po ištrynimo `git status` švarus. Komponentas `taisykle-ir-lempa` vartams paduotas kaip registruotas (registro dar nėra), todėl kūno patikra neįvyko:
+
+```
+validate_content.check_module   -> 0 klaidų, 1 įspėjimas
+   (įspėjimas: „nepavyko perskaityti simuliacijos „taisykle-ir-lempa“ kūno —
+    sim.config gyvumas nepatikrintas“)
+check_language.check_module     -> 0 radinių (1 kl. riba — 10 žodžių sakinyje)
+validate_content.py --grade 1 --strict (be juodraščio) -> 0 klaidų, 0 įspėjimų
+check_language.py --grade 1 --strict (be juodraščio)   -> 0 klaidų, 0 įspėjimų (53 pastabos)
+```
+
+Pirmoji juodraščio versija davė **du tikrus radinius**, ir abu pataisyti, o ne apeiti: 4 užduoties `why` buvo 11 žodžių (riba — 10) ir skaidytas į du sakinius; 3 užduoties `hint` prasidėjo įvardžiu „Ši“ (`check_language` „neaiški nuoroda pradžioje“), todėl performuluotas į „Modelyje tokia pat taisyklė buvo ant vienos kortelės.“ Toliau sąmoningai vengta žodžio „arba“ visuose vaikui skaitomuose laukuose, kuriuos tikrina `AMBIGUOUS` (`check_language.py:107`): operatorius „ARBA“ gyvena tik `concept.big_idea` ir `sim.config.cards[].op`, o kortelės užrašas vaikui yra „BENT VIENAS — užtenka vieno“. Taip dviprasmybės vartas nebūna apeinamas — jis neturi ko rasti, nes kortelė pati pasako savo reikšmę.
+
+Įspėjimas paliktas sąmoningai ir neapeitas: komponento dar nėra, todėl `sim.config` gyvumo (LL-61) patikrinti negalima. Jį privalo paleisti tas, kas rašys `taisykle-ir-lempa` į `matematika.js`: su tikru komponento kūnu tas pats vartas turi duoti 0 įspėjimų. Rankinė patikra be modulio: kiekvienas `config` raktas (`switches`, `cards`, `cases`, `labels`, `sentences` ir jų vidus) turi atsirasti komponento kūne, o `lit()` turi būti lyginamas su `op` reikšmėmis `"IR"`, `"ARBA"`, `"NE"`, ne su kortelės vardais.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, informatika B2.3 (`sources/pradinio-bp-rekomendacijos-2024.txt:12284`, `:12278`) ir 1–2 klasės metų plano tema (`:22786–22792`); `research/wiki/curriculum/kti-dalykai-1-klase.md:115`. Braine, M. D. S., & Rumain, B. (1981). Development of comprehension of „or“: Evidence for a sequence of competencies. *Journal of Experimental Child Psychology, 31*(1), 46–70. https://doi.org/10.1016/0022-0965(81)90003-5 · Morris, B. J. (2008). Logically speaking: Evidence for item-based acquisition of the connectives AND & OR. *Journal of Cognition and Development, 9*(1), 67–88. https://doi.org/10.1080/15248370701836600 · Singh, R., Wexler, K., Astle-Rahim, A., Kamawar, D., & Fox, D. (2016). Children interpret disjunction as conjunction: Consequences for theories of implicature and child development. *Natural Language Semantics, 24*(4), 305–352. https://doi.org/10.1007/s11050-016-9126-3 · Jasbi, M., & Frank, M. C. (2021). Adults' and children's comprehension of linguistic disjunction. *Collabra: Psychology, 7*(1), 27702. https://doi.org/10.1525/collabra.27702 · Reuter, T., Feiman, R., & Snedeker, J. (2018). Getting to no: Pragmatic and semantic factors in two- and three-year-olds' understanding of negation. *Child Development, 89*(4), e364–e381. https://doi.org/10.1111/cdev.12858 · Kearney, M. (2004). Classroom use of multimedia-supported predict–observe–explain tasks. *Research in Science Education, 34*(4), 427–453. https://doi.org/10.1007/s11165-004-8795-y
+
+**Pastaba dėl pasiūlymo.** Ideatorius (#50535) temą įrašė (`agents/proposals/2026-11-25-ideator-logines-operacijos-ir-arba.json`), ir šis metodas ją **susieja ir sugriežtina**: (1) ideatorius siūlė, kad vaikas pasirinktų taisyklę ir pamatytų, jog „įjungus abu jungiklius lempa užsidega“ — palikta, bet papildyta spėjimu prieš kiekvieną įjungimą ir keturių eilučių lentele, nes be jų pasekmė matoma, o sąryšis ne (gairių P2, `sujungti-dydziai.md`); (2) ideatorius „NE“ apibūdino kaip reikšmės apvertimą — tai išlaikyta, bet NE tapo **atskira kortele**, kuri neigia sakinį „abu įjungti“, o ne trečiąja nepriklausoma taisykle, nes 6–7 metų vaikui „NE“ be sakinio, kurį neigia, neturi ką apversti (T1.2, LL-23); (3) ideatoriaus sakinys „vaikas mano, kad 'arba' reiškia vieną ar kitą, bet ne abu“ yra teisingas kaip **kalbos** pastebėjimas (Morris, 2008), todėl jis nepaverstas klaida, kurią reikia išguiti: kortelė turi savo užrašą, o modelio ribose pasakyta, kad kasdienė vartosena išlieka (LL-18); (4) ideatorius rėmėsi tik programos tekstu, o metodas prideda šešis recenzuojamus šaltinius su DOI ir vieną naują `foundations` įrašą.
+
 ## Atviros prielaidos
 
 

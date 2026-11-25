@@ -24,6 +24,7 @@
 | [[garsas-ir-rasytas-tekstas]] | du pertekliaus tipai, pradinio skaitymo duomenys | balsas lieka, bet prie paveikslo netariamas rodomas sakinys |
 | [[kilme-ir-grandine]] | kilmė kaip grandinė atgal nuo daikto; savybė kaip paaiškinimas | grandinė trumpa, baigiama konkrečia vieta, spėjimas prieš pirmą žingsnį |
 | [[sujungti-dydziai]] | sujungti rodikliai modelyje; teisingas rezultatas be supratimo | modelis su jungtimi reikalauja spėjimo ir perkėlimo užduoties |
+| [[taisykle-ir-daiktas]] | taisyklė kaip sąryšis, o ne daikto savybė; „arba“ reikšmė priklauso nuo užduoties | daiktas fiksuojamas, keičiama tik kortelė; kortelė pati pasako savo reikšmę; kiekviena taisyklė atskiriama bent vienu atveju |
 
 ## Žaidimų teorijos dalis
 

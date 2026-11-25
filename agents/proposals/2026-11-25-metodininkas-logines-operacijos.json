@@ -1,0 +1,27 @@
+{
+  "role": "metodininkas",
+  "run_id": 529,
+  "created": "2026-11-25T08:34:00+02:00",
+  "type": "metodas",
+  "title": "M-17 — Taisyklė, o ne lempa: ta pati pora jungiklių, trys kortelės",
+  "body": "B2.3 (1–2 klasės) prašo, kad vaikas skirtų logines operacijas NE, IR, ARBA, o platformoje tokio modelio nėra nė vieno: komandų seka (24-komandu-seka), grandinės vientisumas (01-elektros-grandine) ir jungiklio/mygtuko skirtumas (07-elektronika) sąryšio „įėjimai → išėjimas“ nerodo. Metodas ima vieną porą jungiklių ir vieną lempą, o keičia tik kortelę: ABU (IR), BENT VIENAS (ARBA) ir NE, kuri neigia sakinį „abu įjungti“. Vaikas prieš kiekvieną įjungimą spėja, rezultatas lieka keturių eilučių lentelėje, o po kiekvienos baigtos lentelės atsiranda vieno sakinio požymis, kurį galima palyginti su kitais. Tyrimai rodo, kad apie žodį sutarti negalima — tas pats 5–6 metų vaikas komandos užduotyje „arba“ supranta išskirtinai, o tikrumo įvertinimo užduotyje jungtiniškai (Braine ir Rumain, 1981; Singh ir kt., 2016), o kasdienė vartosena yra išskirtinė (Morris, 2008). Todėl ideatoriaus sakinys „arba reiškia vieną, ne abu“ nepaverstas klaida, kurią reikia išguiti: kortelė turi užrašą „užtenka vieno“, o modelio ribose pasakyta, kad kasdienė reikšmė lieka (LL-18). NE atskirta nuo ARBA, nes 6–7 metų vaikui neigimas be sakinio, kurį neigia, neturi ką apversti (T1.2, LL-23). Specifikacija paruošta taip, kad kūrėjas neklausytų nė vieno papildomo klausimo: 5 žingsnių seka, config blokas, 8 būsenų lentelė, lit(card,a,b) išvedimo taisyklė, geometrija 360 px, fokaso seka (LL-32), api.progress tik po visų trijų lentelių (LL-17, LL-29), 4 užduotys (indeksai 1/0/2/1), 6 modelio ribos, 6 šaltiniai su DOI.",
+  "target": "content/lt/grade-01/matematika/35-logines-operacijos-ir-arba-ne.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md — M-17 (šis paleidimas): seka, config, būsenų lentelė, geometrija, užduotys, modelio ribos",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:12284 — „Atpažįsta ir vykdo komandų sekas, pasirinkimo komandą, skiria logines operacijas: NE, IR, ARBA (B2.3)“; lentelės antraštė :12278 („1-2 klasės 3-4 klasės“)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:22786–22792 — 1–2 kl. metų plano tema „Loginės operacijos: NE, IR, ARBA … Tyrinės įvairias situacijas ir spręs logines užduotis“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:115 — B2.3 formuluotė, priskirta 1–2 klasių informatikos kompetencijai (integruojama per matematikos „Modeliai ir sąryšiai“)",
+    "grep -rin 'logines operacij\\|loginių operacij' content/lt/grade-01/ → 0 eilučių; grep -rln 'jungik' content/lt/grade-01/*/*.json → 2 failai (01-elektros-grandine, 07-elektronika); ls content/lt/grade-01/matematika/ → didžiausias numeris 34, tad 35 laisvas",
+    "research/wiki/curriculum/backlog.json — 47 pozicijos, grep -o 'operacij[a-z]*' → 0; B2.3 neturi eilutės, todėl modulis gali atsirasti tik iš pasiūlymo (užrašyta research/wiki/guidelines/klausimai.md)",
+    "Braine, M. D. S., & Rumain, B. (1981). Development of comprehension of „or“: Evidence for a sequence of competencies. Journal of Experimental Child Psychology, 31(1), 46–70. https://doi.org/10.1016/0022-0965(81)90003-5",
+    "Morris, B. J. (2008). Logically speaking: Evidence for item-based acquisition of the connectives AND & OR. Journal of Cognition and Development, 9(1), 67–88. https://doi.org/10.1080/15248370701836600",
+    "Singh, R., Wexler, K., Astle-Rahim, A., Kamawar, D., & Fox, D. (2016). Children interpret disjunction as conjunction. Natural Language Semantics, 24(4), 305–352. https://doi.org/10.1007/s11050-016-9126-3",
+    "Jasbi, M., & Frank, M. C. (2021). Adults' and children's comprehension of linguistic disjunction. Collabra: Psychology, 7(1), 27702. https://doi.org/10.1525/collabra.27702",
+    "Reuter, T., Feiman, R., & Snedeker, J. (2018). Getting to no. Child Development, 89(4), e364–e381. https://doi.org/10.1111/cdev.12858",
+    "research/wiki/foundations/taisykle-ir-daiktas.md — naujas pagrindo įrašas (šis paleidimas): daiktas fiksuojamas, keičiama taisyklė; kiekviena taisyklė atskiriama bent vienu atveju (IR 0/0/1, ARBA 1/1/1, NE 1/1/0 — visos skirtingos)",
+    "Tikra patikra: juodraštinis modulis laikinai įrašytas target kelyje ir ištrintas; validate_content.check_module → 0 klaidų, 1 įspėjimas (komponento taisykle-ir-lempa kūno nėra, sim.config gyvumas nepatikrintas); check_language.check_module → 0 radinių; po ištrynimo validate_content.py --grade 1 --strict → 0/0, check_language.py --grade 1 --strict → 0/0",
+    "agents/proposals/2026-11-25-ideator-logines-operacijos-ir-arba.json — ideatoriaus tema, kurią šis metodas sugriežtina (spėjimas prieš įjungimą, keturių eilučių lentelė, NE kaip atskira kortelė, kasdienė „arba“ reikšmė nepaversta klaida)"
+  ]
+}

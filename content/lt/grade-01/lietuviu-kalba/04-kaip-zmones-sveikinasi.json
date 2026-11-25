@@ -53,13 +53,13 @@
       "tie": "Dvi grupės yra lygios.",
       "quiet": "Nieko nesakė",
       "people": [
-        { "label": "Labas!", "group": "zodis" },
-        { "label": "Labas!", "group": "zodis" },
         { "label": "Linktelėjo", "group": "linkt", "say": "" },
-        { "label": "Labas rytas!", "group": "zodis" },
+        { "label": "Linktelėjo", "group": "linkt", "say": "" },
         { "label": "Mostelėjo", "group": "mostas", "say": "" },
-        { "label": "Labas!", "group": "zodis" },
         { "label": "Linktelėjo", "group": "linkt", "say": "" },
+        { "label": "Labas!", "group": "zodis" },
+        { "label": "Labas rytas!", "group": "zodis" },
+        { "label": "Labas!", "group": "zodis" },
         { "label": "Sveiki!", "group": "zodis" }
       ]
     }

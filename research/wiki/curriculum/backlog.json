@@ -1,6 +1,6 @@
 {
  "grade": 1,
- "generated": "2026-11-25T09:04:28",
+ "generated": "2026-11-25T11:08:50",
  "source_hash": "5227ed042f104f9c",
  "curriculum_positions": 47,
  "counts": {
@@ -8,7 +8,7 @@
   "partial": 1,
   "missing": 1
  },
- "modules_now": 77,
+ "modules_now": 82,
  "rows": [
   {
    "key": "26.2.3",
@@ -261,6 +261,7 @@
    "strand": "lietuviu-kalba",
    "modules": [
     "01-garsas-ir-raide",
+    "02-erdvines-raides",
     "01-garso-aukstis",
     "06-garso-trukme"
    ],
@@ -539,7 +540,8 @@
    "strand": "matematika",
    "modules": [
     "21-erdvines-figuros",
-    "06-figuros"
+    "06-figuros",
+    "02-erdvines-raides"
    ],
    "status": "covered",
    "target": ""
@@ -576,7 +578,7 @@
     "08-metu-laikai",
     "15-laikas",
     "20-laikas-12-ir-24-val",
-    "30-dienos-rezimas-mityba"
+    "10-maisto-laikymas"
    ],
    "status": "covered",
    "target": ""
@@ -722,6 +724,7 @@
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:71",
    "strand": "daile",
    "modules": [
+    "02-erdvines-raides",
     "01-garsas-ir-raide",
     "21-erdvines-figuros"
    ],

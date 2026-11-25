@@ -517,13 +517,25 @@ const sakinioZodziai = {
    lentelės kiekvieną akimirką:
      all  — „Visi žmonės…“  — nepagrįsta: sutikti žmonės nėra visi žmonės;
      seen — „Visi sutikti…“ — teisinga, kol visi sutiktieji vienodi;
-     most — „Daugiausia…“   — teisinga, kai sutiktieji sveikinasi įvairiai.
+     most — „Daugiausia…“   — teisinga, kai sutiktieji sveikinasi įvairiai;
+     tie  — „Dvi grupės lygios…“ — kai dviejų grupių skaičiai vienodi.
    Todėl nėra spėjimo, kurį modelis pameta (LL-15), ir nėra klaidingo
    varianto, kuris gyvenime teisingas (LL-18): kiekvienas netinkamas
    teiginys prieštarauja LENTELĖS duomenims, ne vaiko nuomonei.
    Žmonių eilė fiksuota sąmoningai (jokio Math.random): tas pats tyrimas
-   visada atkuriamas, o trečias žmogus tyčia sveikinasi kitaip — be
-   prieštaraujančio atvejo modelis neįrodytų, kad pirma išvada netinka. */
+   visada atkuriamas, o prieštaraujantys atvejai įterpti sąmoningai.
+
+   Du modelio įvykiai, kurių anksčiau nebuvo matyti:
+   1. LYDERIS KEIČIASI. Seka sukonstruota taip, kad pirmi pastebėjimai
+      duotų „daugiausia linkteli“, septintas — lygybę, o paskutinis
+      apverstų išvadą į „daugiausia sveikinasi žodžiu“. Be šito vaikas
+      matydavo tik apimties pokytį (seen → most), o modulio antroji
+      klaidinga nuostata („pirmą išvadą laikau galutine“) likdavo
+      nepaneigta. Dabar kiekvienas posūkis pasakomas žodžiu: „Pasikeitė:
+      anksčiau daugiausia buvo „Linktelėjo“, dabar — „Žodžiu“.“
+   2. BŪSENA TURI TEKSTINĮ ATITIKMENĮ. Lyderis įvardijamas `#kz-lead`
+      eilutėje ir `api.readout` — todėl modelis veikia be garso ir be
+      spalvos, o įkėlus modulį readout nebėra tuščias (LL-11). */
 const kaipZmonesSveikinasi = {
   mount({ stage, controls, api, config }) {
     const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -578,6 +590,7 @@ const kaipZmonesSveikinasi = {
     let first = null;    // pirma teisinga vaiko išvada { text, at }
     let currentOptions = [];
     let reported = false;
+    let leadChanged = ""; // šio žingsnio lyderio pasikeitimas, "" jei nepasikeitė
 
     /* „apie 1 žmogų“, „apie 2 žmones“, „apie 11 žmonių“ — lietuviškas
        skaičiuotinis, kad tekstas nevirstų „1 žmones“. */
@@ -609,6 +622,44 @@ const kaipZmonesSveikinasi = {
     function topGroups() {
       const best = groups.reduce((m, g) => Math.max(m, counts[g.id]), 0);
       return groups.filter((g) => counts[g.id] === best);
+    }
+
+    /* Kas dabar pirmauja — modelio būsena, kuri iki šiol buvo rodoma TIK
+       juostų ilgiu ir skaičiumi prie jų. Vaikas, kuris nemato spalvos ar
+       skaito ekrano skaitytuvu, neturėjo jokio sakinio apie daugumą, o
+       būtent dauguma yra šio modelio išvada. Todėl lyderis įvardijamas
+       žodžiais toje pačioje scenoje (`#kz-lead`) ir `api.readout`.
+       Reikšmės: "" — dar nieko nepastebėta; "tie" — kelios grupės lygios;
+       kita — grupės id. */
+    function leadKey() {
+      if (!seen) return "";
+      const top = topGroups();
+      if (top.length > 1) return "tie";
+      return counts[top[0].id] > 0 ? top[0].id : "";
+    }
+
+    const leadName = (key) => {
+      const g = groups.find((x) => x.id === key);
+      return g ? `„${g.label}“` : "";
+    };
+
+    function leadText() {
+      const key = leadKey();
+      if (!key) return "";
+      if (key === "tie") {
+        return `Dvi grupės lygios: ${topGroups().map((g) => `„${g.label}“`).join(" ir ")}.`;
+      }
+      return `Daugiausia — ${leadName(key)}.`;
+    }
+
+    /* Pasikeitimas įvardijamas tik tada, kai tikrai pasikeitė lyderis
+       (grupė arba lygybė). To paties sakinio kartoti kas žingsnį negalima:
+       jis taptų fonu, o ne žinia (LL-14). */
+    function leadChange(before, after) {
+      if (!before || !after || before === after) return "";
+      if (after === "tie") return "Pasikeitė: dabar dvi grupės lygios.";
+      if (before === "tie") return `Pasikeitė: anksčiau buvo lygu, dabar daugiausia ${leadName(after)}.`;
+      return `Pasikeitė: anksčiau daugiausia buvo ${leadName(before)}, dabar — ${leadName(after)}.`;
     }
 
     /* Teisinga išvada — ne tekstas iš sąrašo, o skaičiavimas iš duomenų:
@@ -697,6 +748,8 @@ const kaipZmonesSveikinasi = {
           <div id="kz-who" style="font-size:var(--fs-s);color:var(--ink-soft);text-align:center">Spausk „Sekantis žmogus“</div>
         </div>
         <div style="display:grid;gap:.4rem;margin-top:.8rem">${barsMarkup()}</div>
+        <p id="kz-lead" style="margin:.5rem 0 0;text-align:center;font-weight:800;
+           font-size:clamp(.98rem,3.6vw,1.1rem);line-height:1.25;overflow-wrap:anywhere"></p>
         <div style="margin-top:.8rem;padding:.6rem .8rem;border-left:4px solid var(--sun);border-radius:var(--r-s);background:var(--paper)">
           <p style="margin:0;font-size:clamp(.98rem,3.6vw,1.1rem)">Pastebėjimų: <strong id="kz-total">0</strong></p>
           <p id="kz-known" style="margin:.25rem 0 0;font-size:clamp(.98rem,3.6vw,1.1rem);font-weight:800">Kol kas nieko nepastebėjai.</p>
@@ -728,6 +781,7 @@ const kaipZmonesSveikinasi = {
     });
 
     const questionEl = stage.querySelector("#kz-question");
+    const leadEl = stage.querySelector("#kz-lead");
     if (questionEl) questionEl.textContent = config.question || "Kaip žmonės sveikinasi?";
 
     /* Ką vaikas kol kas žino — ne išvada apie žmones, o faktas apie
@@ -802,6 +856,10 @@ const kaipZmonesSveikinasi = {
         if (countEls[g.id]) countEls[g.id].textContent = String(counts[g.id]);
       });
       pickEl.textContent = pick ? `Tavo pasirinkimas: „${pick}“` : "Išvados dar nepasirinkai.";
+      /* Lyderis — tai, ką modelis sako apie daugumą DABAR. Šio žingsnio
+         pasikeitimas rodomas vietoj nuolatinio sakinio, o ne šalia jo:
+         tas pats sakinys du kartus tame pačiame ekrane yra triukšmas. */
+      if (leadEl) leadEl.textContent = leadChanged || leadText();
       renderOptions();
       drawFirst();
       nextEl.textContent = seen >= people.length ? "Pradėti iš naujo" : "Sekantis žmogus";
@@ -849,13 +907,14 @@ const kaipZmonesSveikinasi = {
       groups.forEach((g) => { counts[g.id] = 0; });
       pick = "";
       first = null;
+      leadChanged = "";
       emojiEl.textContent = "🏫";
       saidEl.textContent = "Dar nieko";
       quietEl.hidden = true;
       quietEl.textContent = "";
       whoEl.textContent = "Spausk „Sekantis žmogus“";
       verdictEl.textContent = "";
-      api.readout("Tyrimas pradėtas iš naujo.");
+      api.readout("Tyrimas pradėtas iš naujo. Spausk „Sekantis žmogus“.");
       api.note("Spausk „Sekantis žmogus“ ir skaičiuok.");
       render();
     }
@@ -865,8 +924,13 @@ const kaipZmonesSveikinasi = {
       const person = people[seen];
       const group = groups.find((g) => g.id === person.group);
       if (!group) { api.note("Šio žmogaus grupė nerasta."); return; }
+      /* Lyderis skaičiuojamas PRIEŠ ir PO pastebėjimo: pasikeitimas yra
+         modelio įvykis, kurio vaikas be šio palyginimo nepastebėtų
+         (juosta pailgėja tik keliais pikseliais). */
+      const leadBefore = leadKey();
       seen += 1;
       counts[group.id] += 1;
+      leadChanged = leadChange(leadBefore, leadKey());
       emojiEl.textContent = group.emoji || "";
       saidEl.textContent = person.label || group.label;
       /* Tyla — ne „nieko“, o įvardytas pastebėjimas (LL-04): kortelė pasako,
@@ -878,9 +942,16 @@ const kaipZmonesSveikinasi = {
       whoEl.textContent = `${ORDINALS[seen - 1] || seen} sutiktas žmogus`;
       if (said) api.speak(said);
       render();
-      api.readout(said
-        ? `${seen} iš ${people.length} žmonių`
-        : `${quietText || "Nieko nesakė"}. ${seen} iš ${people.length} žmonių`);
+      /* Readout yra kiekvienos būsenos tekstinis atitikmuo: jame yra ir ką
+         žmogus padarė, ir kiek jau pastebėta, ir kas dabar dauguma — todėl
+         modelis veikia ir be garso, ir be spalvos. */
+      const observed = said || (quietText || "Nieko nesakė");
+      /* „Nieko nesakė“ neturi sakinio pabaigos, o „Labas!“ turi savo —
+         todėl taškas pridedamas tik tada, kai jo nėra (be šito readout
+         skaitytų „Nieko nesakė Jau sutikai…“). */
+      const observedLine = /[.!?]$/.test(observed) ? observed : `${observed}.`;
+      api.readout(`${observedLine} Jau sutikai ${zmones(seen)} iš ${people.length}.`
+        + (leadChanged ? ` ${leadChanged}` : leadText() ? ` ${leadText()}` : ""));
       /* Duomenys pasikeitė — todėl vaiko pasirinkimas tikrinamas iš naujo,
          o ne laikomas galiojančiu (LL-17). */
       if (pick) {
@@ -901,6 +972,10 @@ const kaipZmonesSveikinasi = {
     render();
     verdictEl.textContent = "";
     api.note("Spausk „Sekantis žmogus“ ir skaičiuok. Išvadą pasirinksi pats.");
+    /* Pradinė būsena taip pat turi tekstinį atitikmenį: iki šiol įkėlus
+       modulį `#sim-readout` buvo tuščias, todėl vaikas be garso negirdėjo
+       net to, ką reikia daryti (LL-11). */
+    api.readout("Pastebėjimų dar nėra. Spausk „Sekantis žmogus“ ir žiūrėk, kaip žmonės sveikinasi.");
     return null;
   },
 };

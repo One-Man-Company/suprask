@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 536,
+  "created": "2026-11-25T11:29:20+02:00",
+  "type": "struktura",
+  "title": "Pradinė simuliacijos būsena gali neturėti jokio teksto, o nė vienas vartas to nemato",
+  "body": "Patikrinau visas 82 pirmos klasės simuliacijas 360 px pločio: po puslapio įkėlimo (kol vaikas dar nieko nepaspaudė) `#sim-readout` buvo tuščias lygiai viename modulyje — `04-kaip-zmones-sveikinasi`. Simuliacija piešė lentelę, bet `api.readout` pirmą kartą kviečiamas tik apdorojus pirmą paspaudimą, todėl vaikas, kuris negirdi balso arba skaito ekrano skaitytuvu, negavo nė vieno sakinio apie tai, kokią būseną mato ir ką daryti. Nė vienas vartas to nemato, nes jie matuoja matomumą (plotį, šriftą, lietimo lauką), o tuščias `aria-live` mazgas yra 0 aukščio ir 0 pločio, tad į matavimo imtį nepatenka. `docs/KURINIO-STANDARTAS.md` §4 jau reikalauja, kad kiekviena būsena turėtų tekstinį atitikmenį (`api.readout`), bet reikalavimas neturi vartų. Siūloma `scripts/check_view.py` matavime (tame pačiame praėjime, kur tikrinama `sim` būsena) nuskaityti `#sim-readout` tekstą iškart po `.task` atsiradimo ir po paspaudimo „Iš naujo“, jei toks yra, ir pranešti kiekvieną modulį, kuriame tekstas tuščias. Tai pigi patikra be naujų priklausomybių: ji naudoja tą patį naršyklės praėjimą ir tą patį maršrutų sąrašą.",
+  "target": "scripts/check_view.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "docs/KURINIO-STANDARTAS.md §4: „Kiekviena būsena turi tekstinį atitikmenį (api.readout), kad veiktų be garso“",
+    "assets/js/sims/calba.js (kaipZmonesSveikinasi: readout įkėlus buvo tuščias, ištaisyta #536)",
+    "research/wiki/guidelines/pamokos.md LL-194",
+    "/home/zoltanas/.hermes/profiles/deepseek41flash/cache/scratch/probe536_scan.py — zondas per 82 modulius: prieš pataisą tuščių 1, po pataisos 0"
+  ]
+}

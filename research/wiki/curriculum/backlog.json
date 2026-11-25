@@ -1,14 +1,14 @@
 {
  "grade": 1,
- "generated": "2026-11-25T21:00:24",
- "source_hash": "500d229db9b1a863",
+ "generated": "2026-11-25T21:06:15",
+ "source_hash": "e33370f3e6d7a400",
  "source_files": {
   "1-klases-temų-žemėlapis.md": "d51dd4b59f29b1b5",
   "README.md": "f3dce4d7012404f0",
   "kti-dalykai-1-klase.md": "25b1831c4d8d4d77",
   "lietuviu-kalba-1-klase.md": "29dcf1a997bedcdc",
   "matematika-1-klase.md": "e51d1bf352397494",
-  "pasaulio-pazinimas-1-klase.md": "972747a7fa8c60a5"
+  "pasaulio-pazinimas-1-klase.md": "7435fbfe9642bf8d"
  },
  "curriculum_positions": 47,
  "counts": {
@@ -23,7 +23,7 @@
    "section": "Ko platformoje nėra",
    "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
    "topic": "medžiai, krūmai, žolės",
-   "outcome": "modulio nėra; pasiūlymai 2026-11-16-ideator-medziai-krumai-zoles.json ir 2026-11-16-metodininkas-medziai-krumai-zoles.json (M-10, target 22)",
+   "outcome": "padengta 22-medziai-krumai-zoles; augalo dalys — 41-augalo-dalys, ciklas — 09-augalo-gyvenimas, stebėjimas — 33-stebejimas (visų sources cituoja 26.2.3; 2026-11-25, #542)",
    "strand": "pasaulio-pazinimas",
    "level": "",
    "interactivity": "",
@@ -44,7 +44,7 @@
    "section": "Ko platformoje nėra",
    "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
    "topic": "gamtos ištekliai, tarša, tausojimas",
-   "outcome": "modulio nėra; pasiūlymas 2026-11-14-ideator-kas-sukure-dailka.json (target 21)",
+   "outcome": "padengta 35-gamtos-istekliai-tarsa-tausojimas, „kas sukūrė daiktą“ — 21-kas-sukure-dailka, „išmestas daiktas nedingsta“ — 23-ismestas-daiktas-nedingsta (2026-11-25, #542)",
    "strand": "pasaulio-pazinimas",
    "level": "",
    "interactivity": "",
@@ -63,7 +63,7 @@
    "section": "Ko platformoje nėra",
    "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
    "topic": "žmonių įvairovė",
-   "outcome": "modulio nėra; atmesta guidelines/klausimai.md:71 (asmens duomenys)",
+   "outcome": "padengta 36-zmoniu-ivairove (sources cituoja 26.2.1). Pastaba: guidelines/klausimai.md:71 buvo atmesta dėl asmens duomenų — modulis taisyklių nepažeidžia, nes renka ne duomenis, o požymio atpažinimą (2026-11-25, #542)",
    "strand": "pasaulio-pazinimas",
    "level": "",
    "interactivity": "",
@@ -83,7 +83,7 @@
    "section": "Ko platformoje nėra",
    "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
    "topic": "energijos reikia visiems",
-   "outcome": "atskiro modulio nėra; atmesta guidelines/klausimai.md:70 (gairių 2 klausimas)",
+   "outcome": "padengta 37-energijos-reikia-visiems (sources cituoja 26.5.1; 2026-11-25, #542)",
    "strand": "pasaulio-pazinimas",
    "level": "",
    "interactivity": "",

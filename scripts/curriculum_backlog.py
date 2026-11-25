@@ -80,6 +80,11 @@ _CODE_RE = re.compile(r"^\d+\.\d+\.\d+$")
 # wiki eilutė „nėra“ — tik teiginys, kuris gali būti pasenęs.
 _STATUS_ORDER = {"missing": 0, "partial": 1, "covered": 2}
 
+# Teiginys, kad medžiagos NĖRA. Tik toks tekstas gali būti pasenęs, kai modulis
+# repo jau yra; temos pavadinimas („Saugus elgesys“) niekada nelaikomas
+# pasenusiu teiginiu (LL-199, T13).
+_ABSENCE_RE = re.compile(r"\bn[ėe]ra\b|\btrūksta\b|\bneturi\b", re.I)
+
 
 def _slug(text: str) -> str:
     return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", scope._norm(text))).strip("-")[:48]
@@ -380,6 +385,33 @@ def _same_position(dst: dict, src: dict) -> bool:
     return not (_CODE_RE.match(a) and _CODE_RE.match(b) and a != b)
 
 
+def clear_stale_absence(rows: list[dict]) -> int:
+    """Pašalina „nėra“ teiginį iš pozicijų, kurias moduliai jau moko.
+
+    Grąžina pataisytų eilučių skaičių. Ištraukta iš `build()`, kad zondas
+    galėtų patikrinti TĄ PAČIĄ funkciją su sukurta eilute: realiame repo
+    šiandien tokių eilučių nebėra (šaltinis sutvarkytas), todėl be šito
+    apsauga atrodytų kaip nieko neveikianti.
+
+    Tai ne vien 26.1.1 atvejis: 26.2.3, 26.3.1, 26.2.1 ir 26.5.1 taip pat
+    turėjo modulį repo, o jų `outcome` (iš spragų lentelės) vis dar sakė
+    „modulio nėra“. Agentas tą eilutę skaito kaip užduotį, tad teiginys
+    keliamas į `stale_claim`, o `outcome` lieka tuščias, o ne klaidinantis.
+    Taisyklė taikoma VISOMS eilutėms, ne tam vienai, ant kurios pastebėta
+    (LL-40: taisyk priežastį, ne ruožą).
+    """
+    fixed = 0
+    for r in rows:
+        if r.get("status") != "covered":
+            continue
+        outcome = (r.get("outcome") or "").strip()
+        if _ABSENCE_RE.search(outcome):
+            r.setdefault("stale_claim", f"„{r['topic']}“: šaltinis teigia „{outcome[:120]}“")
+            r["outcome"] = ""
+            fixed += 1
+    return fixed
+
+
 def build(grade: int = GRADE) -> dict:
     rows = _gaps() + _code_rows() + _map_rows()  # eilės tvarka = vyresnumas
     for r in rows:
@@ -421,6 +453,9 @@ def build(grade: int = GRADE) -> dict:
         else:
             rest.append(r)
     rows = list(by_code.values()) + rest
+    # Po sujungimo: nė viena `covered` pozicija negali nešti „nėra“ teksto
+    # (žr. `clear_stale_absence()` — taisyklė taikoma visoms eilutėms).
+    clear_stale_absence(rows)
     # Target — po sujungimo, kad nebūtų dviejų eilučių su tuo pačiu numeriu.
     numbers: dict[str, int] = {}
     for r in rows:

@@ -166,10 +166,10 @@ Patikrinti visi 8 `content/lt/grade-01/pasaulio-pazinimas/` moduliai. Šaltinis 
 
 | Tema | Būsena |
 |---|---|
-| 26.2.3 **medžiai, krūmai, žolės** | modulio nėra; pasiūlymai `2026-11-16-ideator-medziai-krumai-zoles.json` ir `2026-11-16-metodininkas-medziai-krumai-zoles.json` (M-10, target 22) |
-| 26.3.1 **gamtos ištekliai, tarša, tausojimas** | modulio nėra; pasiūlymas `2026-11-14-ideator-kas-sukure-dailka.json` (target 21) |
-| 26.2.1 **žmonių įvairovė** | modulio nėra; atmesta `guidelines/klausimai.md:71` (asmens duomenys) |
-| 26.5.1 **energijos reikia visiems** | atskiro modulio nėra; atmesta `guidelines/klausimai.md:70` (gairių 2 klausimas) |
+| 26.2.3 **medžiai, krūmai, žolės** | padengta `22-medziai-krumai-zoles`; augalo dalys — `41-augalo-dalys`, ciklas — `09-augalo-gyvenimas`, stebėjimas — `33-stebejimas` (visų `sources` cituoja 26.2.3; 2026-11-25, #542) |
+| 26.3.1 **gamtos ištekliai, tarša, tausojimas** | padengta `35-gamtos-istekliai-tarsa-tausojimas`, „kas sukūrė daiktą“ — `21-kas-sukure-dailka`, „išmestas daiktas nedingsta“ — `23-ismestas-daiktas-nedingsta` (2026-11-25, #542) |
+| 26.2.1 **žmonių įvairovė** | padengta `36-zmoniu-ivairove` (`sources` cituoja 26.2.1). Pastaba: `guidelines/klausimai.md:71` buvo atmesta dėl asmens duomenų — modulis taisyklių nepažeidžia, nes renka ne duomenis, o požymio atpažinimą (2026-11-25, #542) |
+| 26.5.1 **energijos reikia visiems** | padengta `37-energijos-reikia-visiems` (`sources` cituoja 26.5.1; 2026-11-25, #542) |
 | 26.2.2 **naminiai ir laukiniai gyvūnai** | padengta `10-gyvunu-grupes` (perrašytas 2026-11-18, #348: kriterijus — kas duoda maistą, ne vieta) |
 | 26.1.1 **traumų prevencija** | padengta `25-traumu-prevencija` („Trauma turi priežastį“) ir `38-traumu-prevencija` („Apsauga dengia tik savo vietą“), abiejų `sources` cituoja 26.1.1; gaisro dalis — `19-dumai-ir-isejimas` (2026-11-25, #542) |
 | 26.1.2 **dienos režimas, mityba** | padengta `30-dienos-rezimas-mityba` („Vėliau keltis — trumpesni pusryčiai“, sim `dienos-juosta`, `sources` cituoja 26.1.2) ir `18-kuprine-ir-kuno-dalys` (kuprinės svoris); žr. LL-196 dėl `7:25 → −5 min.` defekto, kuris dar netaisytas (2026-11-25, #542) |

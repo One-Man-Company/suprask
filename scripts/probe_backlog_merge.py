@@ -170,6 +170,37 @@ def main() -> int:
          table_row["status"] == "covered" and not table_row.get("stale_claim"),
          f"būsena {table_row['status']}, stale_claim {table_row.get('stale_claim')!r}")
 
+    # T14 — taisyklė taikoma VISOMS eilutėms, ne tam vienai (LL-40). Realus
+    # repo šiandien tokių eilučių neturi (šaltinis sutvarkytas), todėl zondas
+    # kuria tokią eilutę pats ir kviečia TĄ PAČIĄ `clear_stale_absence()`.
+    probe_rows = [
+        row("covered", ["22-medziai-krumai-zoles"], key="26.2.3",
+            topic="medžiai", section="Ko platformoje nėra",
+            source="zondas.md:1", gap=""),
+        row("missing", [], key="D:testas", topic="testas"),
+    ]
+    probe_rows[0]["outcome"] = "modulio nėra; pasiūlymas X"
+    fixed = cb.clear_stale_absence(probe_rows)
+    case("T14 'nėra' tekstas pašalinamas tik iš covered eilutės",
+         fixed == 1 and probe_rows[0]["outcome"] == ""
+         and bool(probe_rows[0].get("stale_claim"))
+         and probe_rows[1]["outcome"] == "" and not probe_rows[1].get("stale_claim"),
+         f"pataisyta {fixed}, covered outcome {probe_rows[0]['outcome']!r}, "
+         f"stale {bool(probe_rows[0].get('stale_claim'))}")
+    lying = [r["key"] for r in data["rows"]
+             if r["status"] == "covered" and cb._ABSENCE_RE.search(r.get("outcome") or "")]
+    case("T14b realiame repo nė viena 'covered' neturi 'nėra' teksto", not lying,
+         f"klaidingos: {lying or '—'}")
+
+    # T15 — `_ABSENCE_RE` negaudo temos pavadinimo, tik nebuvimo teiginį.
+    catches = [cb._ABSENCE_RE.search(x) is not None for x in
+               ("modulio nėra", "traumų temos nėra", "yra tik gaisro dalis; temos nėra")]
+    misses = [cb._ABSENCE_RE.search(x) is not None for x in
+              ("Saugus elgesys", "padengta 25-traumu-prevencija")]
+    case("T15 nebuvimo šablonas tikslus",
+         all(catches) and not any(misses),
+         f"gaudo {catches}, negaudo {misses}")
+
     # T12 — vartai įvardija, KURIS šaltinis pasikeitė (#42779). Be to raudoni
     # vartai praneša tik „pasenęs“, trys paleidimai iš eilės kartoja tą patį
     # neuždaromą įspėjimą, ir vartai moko juos apeiti (LL-159/LL-160).

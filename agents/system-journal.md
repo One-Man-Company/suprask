@@ -547,9 +547,13 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
      (`source_files` + `changed_sources()`), nes iki tol trys paleidimai iš eilės
      pranešė „backlog.json pasenęs“ be jokio adreso (#42779) — vartai, kurių
      negalima uždaryti teisingu veiksmu, moko juos apeiti.
-  3. `research/wiki/curriculum/pasaulio-pazinimas-1-klase.md` — dvi pasenusios
-     eilutės (26.1.1, 26.1.2) pakeistos faktais su modulių vardais ir data.
-  4. `scripts/probe_backlog_merge.py` — 12 lūkesčių zondas; įsijungia į CI per
+  3. `research/wiki/curriculum/pasaulio-pazinimas-1-klase.md` — šešios
+     pasenusios eilutės (26.1.1, 26.1.2, 26.2.3, 26.3.1, 26.2.1, 26.5.1)
+     pakeistos faktais su modulių vardais ir data. Pastarosios keturios turėjo
+     modulį repo, o jų tekstas vis dar sakė „modulio nėra“ — tą pačią klaidą
+     radau tik tada, kai pataisęs 26.1.1 patikrinau VISAS `covered` eilutes
+     (`clear_stale_absence()`, zondo T14).
+  4. `scripts/probe_backlog_merge.py` — 15 lūkesčių zondas; įsijungia į CI per
      esamą `for f in probe_*.py` ciklą, be tinklo ir git, 0,3 s. T13 saugo
      priešingą klaidą: programos LENTELĖS eilutės (oficialus temos pavadinimas)
      negalima vadinti „pasenusiu teiginiu“ vien dėl silpno žodžių sutapimo.

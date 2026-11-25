@@ -1,0 +1,17 @@
+{
+  "role": "ideator",
+  "run_id": 528,
+  "created": "2026-11-25T07:45:00+02:00",
+  "type": "tema",
+  "title": "Ta pati linija, trys įrankiai: storis priklauso nuo priemonės, ne nuo spaudimo",
+  "body": "Dailėje 1 klasėje yra vienas modulis (01-spalva-ir-nuotaika), o oficialus 1 kl. pamokų ciklas „Dekoruotos ir erdvinės raidės“ išvardija keturias piešimo priemones (pieštukai, rašikliai, flomasteriai, kreidelės) ir pasiekimą A2 „Taiko pasiūlytas dailės technikas, saugiai naudoja kūrybos įrankius ir medžiagas“. Siūlau modulį, kuriame vaikas tą patį mažą piešinį (raidės vidų, akį, sagą) bando nupiešti trimis priemonėmis ir mato, kad plona linija telpa į mažą formą, o stora ją užkloja. Klaidinga nuostata: „linijos storis priklauso nuo to, kiek stipriai spaudi“ — spaudimas keičia tik tamsumą, o storį lemia įrankis. Modelis turi vieną kintamąjį (įrankį), o pasekmė matoma tame pačiame piešinyje, todėl nereikia nei vertinimo, nei paaiškinimo tekste. Tai nepakartoja 01-spalva-ir-nuotaika (ten ta pati forma, kita spalva) ir nepretenduoja į spalvų maišymą, kuris programoje yra 2 klasė. Tinka 6–7 m. vaikui: veiksmas tiesioginis, rezultatas matomas iškart, o užduotys gali likti toje pačioje piešimo plotmėje.",
+  "target": "content/lt/grade-01/daile/03-piesimo-priemones.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2655–2661 — 1 kl. ciklo „Dekoruotos ir erdvinės raidės“ kūrybos reikmenys: piešimo popierius, pieštukai, rašikliai, flomasteriai, kreidelės",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:2669–2671 — pasiekimas A2: „Taiko pasiūlytas dailės technikas, saugiai naudoja kūrybos įrankius ir medžiagas. Eksperimentuoja, negalvodamas apie galutinį rezultatą“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:19–24 — 1–2 kl. dailėje dominuoja praktinė kūrybinė raiška; 1 kl. ciklas kaip modelio pagrindas",
+    "research/wiki/curriculum/backlog.json — dailės pozicijos neturi atskiro srauto; modulis 01-spalva-ir-nuotaika yra vienintelis (content/lt/grade-01/index.json)"
+  ]
+}

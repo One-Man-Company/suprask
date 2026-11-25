@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 528,
+  "created": "2026-11-25T07:52:00+02:00",
+  "type": "tema",
+  "title": "Nežinomas žodis: paveikslėlis padeda ne visada",
+  "body": "Skaitymo dalyje programa 1–2 klasei numato atskirą gebėjimą: „ieškoti tinkamiausio būdo nežinomam žodžiui išsiaiškinti“, o platformoje jo nemoko nė vienas modulis (grep „nežinom“ lietuvių kalbos moduliuose → 0). Siūlau modelį su vienu sakiniu, kuriame yra nesuprantamas žodis, ir trimis pagalbos kortelėmis: paveikslėliu, kitu sakiniu ir garsiniu perskaitymu. Vaikas bando korteles po vieną ir mato, kad paveikslėlis išsprendžia daiktą („skėtis“), bet ne savybę („smulkus“), o savybę paaiškina kitas sakinys („Lašai buvo maži“). Klaidinga nuostata: „kiekvieną nežinomą žodį paaiškins paveikslėlis“ — būtent todėl vaikas, pamatęs piešinį, nustoja skaityti toliau. Tai neužduoda klausimų apie tekstą (tai daro 11-teksto-supratimas) ir neieško informacijos plakate (05-plakatas-ir-informacija): čia sprendžiama, kuri pagalba apskritai gali atsakyti, o pasekmė matoma tame pačiame žodyje. Modelis turi vieną kintamąjį (pagalbos kortelę) ir vieną matomą pasekmę (žodis lieka pilkas arba įgyja prasmę), todėl tinka 6–7 m. vaikui be papildomo teksto ekrane.",
+  "target": "content/lt/grade-01/lietuviu-kalba/15-nezinomas-zodis.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:233–234 — „mokiniai kartu mokosi skaitymo būdų ir aptaria skaitomus tekstus, ieško tinkamiausio būdo nežinomam žodžiui išsiaiškinti“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:7610 — B.3.1 „Remiasi iliustracijomis skaitydamas tekstą“ (iliustracijos vaidmuo, ne tapatybė su paaiškinimu)",
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:44–45 — skaitymo technikos dalis: nežinomo žodžio strategija kaip atskiras gebėjimas",
+    "research/wiki/curriculum/lietuviu-kalba-1-klase.md:142–144 — lietuvių kalbos modulių spragų sąrašas (C ir B.2 uždaryti 2026-11-23/24; nežinomo žodžio strategijos jame nėra, nes ji nepriskirta moduliui)",
+    "content/lt/grade-01/index.json — lietuvių kalba turi 12 modulių (01–07, 10–14), numeris 15 laisvas, temos apie nežinomą žodį nėra"
+  ]
+}

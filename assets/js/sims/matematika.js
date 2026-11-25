@@ -5465,6 +5465,8 @@ const taisykleIrLempa = {
     let powered = false;            // ar lempa rodo rezultatą
     let reported = false;
     const rows = new Map();         // kortelės raktas -> Map(atvejo raktas -> { guess, lit })
+    const marked = new Set();       // kortelės, kurių lentelė kada nors buvo pilna
+                                    // (požymiai lieka ir po „Iš naujo“ — LL-16)
 
     const card = () => CARDS[cardAt] || {
       key: "", label: "", op: "", gloss: "", rule: "", done: "",
@@ -5490,6 +5492,23 @@ const taisykleIrLempa = {
     };
     const doneRow = (cKey, atvejis) => rowsOf(cKey).get(atvejis.key) || null;
     const cardDone = (cKey) => CASES.length > 0 && CASES.every((c) => rowsOf(cKey).has(c.key));
+    const startCase = () => CASES.find((c) => Array.isArray(c.in)
+      && !c.in[0] && !c.in[1]) || null;
+
+    /* Pirmoji lentelės eilutė („abu išjungti“) — tai padėtis, kurią vaikas
+       randa įėjęs, todėl ji įrašoma be spėjimo. Ji įrašoma KIEKVIENAI
+       kortelei, o ne tik pirmajai: kitaip antros ir trečios kortelės lentelė
+       natūraliu keliu niekada netaptų pilna (trys bandomi deriniai + ši
+       eilutė), požymis nepasirodytų ir `api.progress` neateitų — vaikas
+       matytų tuščią eilutę ir nežinotų, ko dar trūksta (LL-17, LL-29). */
+    function ensureStart(c) {
+      const sc = startCase();
+      if (!sc || !c || !c.key) return;
+      if (doneRow(c.key, sc)) return;
+      const lit = litOf(c, [false, false]);
+      if (lit === null) return;
+      rowsOf(c.key).set(sc.key, { guess: "start", lit: Boolean(lit) });
+    }
 
     /* --- scena -------------------------------------------------------- */
     stage.innerHTML = `
@@ -5670,7 +5689,7 @@ const taisykleIrLempa = {
     }
 
     function paintMarks() {
-      const done = CARDS.filter((c) => cardDone(c.key)).map((c) => c.done);
+      const done = CARDS.filter((c) => marked.has(c.key)).map((c) => c.done);
       marksEl.innerHTML = done.map((key) => `<li>${line(key)}</li>`).join("");
       marksEl.hidden = done.length === 0;
     }
@@ -5745,8 +5764,30 @@ const taisykleIrLempa = {
       const text = line(`${atvejis.key}${lit ? "Dega" : "Tamsu"}`);
       if (text) {
         api.readout(text);
-        api.note(known ? line("repeated") || text : line(c.why) || text);
+        /* Pirmoji eilutė įrašyta be vaiko spėjimo („Pradžia“). Jei jis ją
+           paspaudžia, sakyti „jau bandei“ būtų netiesa — jis nebandė, o
+           rado. Todėl tokiai eilutei paaiškinama kortelės taisyklė. */
+        const given = known && known.guess === "start";
+        api.note(given ? (line(c.rule) || line(c.why) || text)
+          : known ? line("repeated") || text : line(c.why) || text);
         api.speak(text);
+      }
+
+      /* Kortelė baigta būtent dabar: požymis įrašomas ir pasakomas vieną
+         kartą, o antroji pilna lentelė duoda palyginimo sakinį (M-17:
+         „du požymiai vienas šalia kito“). Požymis lieka ir po „Iš naujo“. */
+      const finishedNow = cardDone(c.key) && !marked.has(c.key);
+      if (finishedNow) {
+        marked.add(c.key);
+        paintMarks();
+        const doneLine = line(c.done);
+        const compare = CARDS.filter((x) => marked.has(x.key)).length === 2
+          ? line("lyginu") : "";
+        if (doneLine) {
+          api.readout(compare || doneLine);
+          api.note(compare || line(c.why) || doneLine);
+          api.speak(compare || doneLine);
+        }
       }
 
       report();
@@ -5769,6 +5810,7 @@ const taisykleIrLempa = {
       cardAt = i;
       powered = false;
       guess = null;
+      ensureStart(card());      // kiekvienos kortelės lentelė pradeda pilna
       paint();
       const rule = line(card().rule);
       if (rule) {
@@ -5781,8 +5823,11 @@ const taisykleIrLempa = {
     function reset() {
       on = [false, false];
       guess = null;
-      powered = false;
       rows.clear();
+      ensureStart(card());      // lentelė vėl pilna taip, kaip vaikas ją rado
+      /* Lempa rodo tos pačios eilutės būseną: kitaip lentelė sakytų
+         „Degs“, o virš jos kabėtų „Neįjungta“ (LL-42). */
+      powered = Boolean(startCase());
       paint();
       const text = line("vel");
       if (text) {
@@ -5804,9 +5849,9 @@ const taisykleIrLempa = {
     /* Abu jungikliai išjungti ir lempa jau rodo rezultatą: tai padėtis,
        kurią vaikas randa įėjęs, todėl ji įrašoma į lentelę be spėjimo.
        Be jos lentelė turėtų tris eilutes ir ketvirtą nepaaiškintą lempą. */
-    const startCase = matchCase([false, false]);
-    if (startCase && CARDS.length) {
-      rowsOf(CARDS[0].key).set(startCase.key, { guess: "start", lit: Boolean(litOf(CARDS[0], [false, false])) });
+    const firstCase = startCase();
+    if (firstCase && CARDS.length) {
+      ensureStart(CARDS[0]);
       powered = true;                          // lempa dega/nedega pagal kortelę
     }
     paint();

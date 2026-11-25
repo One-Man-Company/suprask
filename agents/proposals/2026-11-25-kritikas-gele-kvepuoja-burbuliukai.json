@@ -1,0 +1,18 @@
+{
+  "role": "kritikas",
+  "run_id": 538,
+  "created": "2026-11-25T14:10:00+02:00",
+  "type": "kritika",
+  "title": "Gėlė „kvėpuoja“: sakinys siunčia į stiklinę vandens, o scena rodo burbuliukus ore",
+  "body": "Ženklas „Kvėpuoja“ atidaro sakinį „Lape yra oro. Įdėk lapą į vandenį ir pamatysi burbuliukus“, bet scenoje jokio vandens nėra: burbuliukai nupiešti ore, dešinėje nuo vazoninės gėlės, ties stiebu. Vaikas mato du skirtingus dalykus tame pačiame kadre — tekstas liepia mirkyti lapą, o modelis burbuliuoja gėlę, kuri stovi ant palangės. Tai pažeidžia standarto iliustracijos taisyklę „užrašas ir paveikslas privalo sutarti“ (docs/KURINIO-STANDARTAS.md, „Iliustracijos“). Antra, pats bandymas rodo ne kvėpavimą: panardinus lapą burbuliukai išeina iš lapo oro ertmių, o kvėpavimo dujų apykaita akyse nesimato — vaikas pasiima taisyklę „kvėpuoja = burbuliukai“, kuri vėliau kertasi su plaučių pamoka. Modulio mokytojo blokas šią ribą jau įvardija („burbuliukų bandymas rodo, kad lape yra oro, o ne kad gėlė išskiria anglies dioksidą“), bet vaikui skirta eilutė ir piešinys to nepasako. Siūlymas: arba scenoje nupiešti stiklinę su lapu ir burbuliukais (tada sakinys teisingas ir paveikslas jį atitinka), arba keisti sakinį į tai, ką scena rodo — lapas ima orą per smulkias angutes, o burbuliukų bandymą palikti mokytojo blokui.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/39-bendri-gyvu-organizmu-pozymiai.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/39-bendri-gyvu-organizmu-pozymiai.json:63 — „Lape yra oro. Įdėk lapą į vandenį ir pamatysi burbuliukus.“",
+    "assets/js/sims/pasaulis.js:6661 — `${o.has(\"kvepuoja\") ? `${airArcs(x + 22, 206 - h * 0.5)}${bubbles(x + 16, 206 - h * 0.7)}` : \"\"}` — burbuliukai piešiami šalia vazone stovinčios gėlės, vandens inde nėra",
+    "assets/js/sims/pasaulis.js:6632–6635 — `bubbles()` piešia tris apskritimus ore, be indo ir be vandens paviršiaus",
+    "docs/KURINIO-STANDARTAS.md:222 — „Užrašas ir paveikslas privalo sutarti (jei „žiema“ — ne žalios kalvos).“",
+    "content/lt/grade-01/pasaulio-pazinimas/39-bendri-gyvu-organizmu-pozymiai.json:169 — mokytojo blokas pats atskiria: „burbuliukų bandymas rodo, kad lape yra oro, o ne kad gėlė išskiria anglies dioksidą“"
+  ]
+}

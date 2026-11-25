@@ -1,0 +1,20 @@
+{
+  "role": "kritikas",
+  "run_id": 538,
+  "created": "2026-11-25T14:05:00+02:00",
+  "type": "kritika",
+  "title": "Dienos juosta: kėlimasis 7:25 duoda −5 min. pusryčių, o juosta 5 min. pravažiuoja išėjimo liniją",
+  "body": "Modelyje išėjimas fiksuotas 8:00, o pastovūs ruožai (keltis 5 + rengtis 25 + kelias 10) sudaro 40 minučių, todėl pusryčiai skaičiuojami kaip 8:00 − kėlimosi laikas − 40 min.: 6:45 → 35, 7:05 → 15, 7:25 → −5. Trečiasis laikas yra konfigūracijoje, bet neigiama reikšmė tyliai nukerpama (`Math.max(0, bf)`), todėl juostos ruožai nuslenka iki 8:05 ir keturių ruožų suma pravažiuoja raudoną „Išeinu 8:00“ liniją penkiomis minutėmis. Vaikas mato būtent tai, ką modelis turėjo paneigti: rytas ilgesnis už laiką iki išėjimo. Ta pati spraga yra 4 užduotyje: nuo 6:45 iki 7:25 dingsta 40 minučių, o modulio pačios 1 užduoties duomenimis pusryčiai tebuvo 35 minutės — 5 minutės lieka nepaskirstytos, tad teisingas atsakymas „pusryčiai“ paaiškina tik 35 iš 40 (LL-20 ir LL-01 šeima). Taisyti reikia turinį: trečią kėlimosi laiką rinktis tokį, kad mažiausia pusryčių trukmė liktų teigiama (pvz. 7:15 → 5 min.), ir atitinkamai perskaičiuoti 4 užduoties laikus; modelio pusėje `problems` sąrašui verta pridėti patikrą `breakfastOf(w) >= 0`, kad tokia konfigūracija ateityje būtų atmetama garsiai, o ne nutylima.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/30-dienos-rezimas-mityba.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/30-dienos-rezimas-mityba.json:27 — `\"wakeTimes\": [\"6:45\", \"7:05\", \"7:25\"]`",
+    "content/lt/grade-01/pasaulio-pazinimas/30-dienos-rezimas-mityba.json:54 — 1 užduotis: „kėlėsi 6:45 ir pusryčiams turėjo 35 minutes“",
+    "content/lt/grade-01/pasaulio-pazinimas/30-dienos-rezimas-mityba.json:87 — 4 užduotis: „6:45 … 7:25 … Kas penktadienį dingo?“ (40 min. skirtumas)",
+    "assets/js/sims/pasaulis.js:4850 — `const DR_FIXED = 5 + 25 + 10;` (pastovūs ruožai 40 min.)",
+    "assets/js/sims/pasaulis.js:4895 — `const breakfastOf = (wake) => DR_DEPART - wake - DR_FIXED;` (7:25 → −5)",
+    "assets/js/sims/pasaulis.js:4962 — `min: Math.max(0, bf)` neigiamą reikšmę verčia nuliu, o ruožai skaičiuojami toliau",
+    "Perskaičiavimas: 8:00−6:45−0:40=35; 8:00−7:05−0:40=15; 8:00−7:25−0:40=−5; nupiešta juosta baigiasi 8:05, t. y. 5 min. už išėjimo linijos"
+  ]
+}

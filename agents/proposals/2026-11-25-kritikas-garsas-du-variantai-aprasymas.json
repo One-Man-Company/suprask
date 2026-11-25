@@ -1,0 +1,18 @@
+{
+  "role": "kritikas",
+  "run_id": 538,
+  "created": "2026-11-25T14:10:00+02:00",
+  "type": "kritika",
+  "title": "README: „1213 tekstų po du variantus (sakinys ir skiemuo)“ — iš tikrųjų du tempai to paties teksto",
+  "body": "README teigia, kad kiekvienas tekstas turi du variantus — sakinio ir skiemens, o skaičiuoja 1213 tekstų ir 2426 įrašus. Generatoriaus kodas rodo ką kitą: `n` yra tas pats tekstas −4 % tempu (sakiniams), `s` — tas pats tekstas −12 % tempu (skiemenims ir pavieniams žodžiams), ir abu variantai generuojami kiekvienam manifesto raktui, įskaitant ištisus sakinius. Išmatavau: tas pats sakinys „Lauke ilgai lijo lietus.“ turi `n` įrašą 3,80 s ir `s` įrašą 4,56 s — tai lėtesnis to paties sakinio skaitymas, o ne skiemenų skaidymas. Mokytojas, perskaitęs README, pagrįstai tikėsis, kad kiekvienam sakiniui yra ir skiemenų įrašas; jo nėra, ir niekada nebuvo. Siūlymas formuluoti pagal tikrovę: „1213 tekstų po du tempus: sakiniams (−4 %) ir atskiriems žodžiams bei skiemenų tekstams (−12 %)“. Skaičiai 1213 ir 2426 yra teisingi — klaidingas tik paaiškinimas, kas yra antras variantas.",
+  "target": "README.md",
+  "priority": "low",
+  "status": "new",
+  "evidence": [
+    "README.md:112 — „1213 tekstų po du variantus (sakinys ir skiemuo) — 2426 įrašai, ~87 MB“",
+    "scripts/generate_audio.py:35–37 — „n = normalus (sakiniai), s = lėtas (skiemenys, pavieniai žodžiai) … RATES = {\"n\": \"-4%\", \"s\": \"-12%\"}“",
+    "scripts/generate_audio.py:55–59 — „sakiniai 0.72, atskiri žodžiai ir skiemenys 0.58“; `TEMPO = {\"n\": 0.72, \"s\": 0.58}`",
+    "assets/audio/lt/manifest.json — „Lauke ilgai lijo lietus.“ turi abu raktus: `n/a5254e82ee6080d6-49e66311.mp3` ir `s/a5254e82ee6080d6-fbaa0a68.mp3`",
+    "ffprobe: tas pats sakinys `n` = 3,796 s, `s` = 4,561 s (tas pats tekstas lėčiau, ne skiemenų įrašas)"
+  ]
+}

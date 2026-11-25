@@ -151,8 +151,11 @@ def build_repo(root: pathlib.Path) -> None:
     (root / "content" / "lt" / "grades.json").write_text(
         json.dumps({"grades": [{"grade": 1, "status": "live"}]}, ensure_ascii=False),
         encoding="utf-8")
-    (root / "index.html").write_text("<!doctype html><title>zondas</title>",
-                                     encoding="utf-8")
+    (root / "index.html").write_text(
+        "<!doctype html><title>zondas</title>"
+        '<link rel="stylesheet" href="./assets/css/main.css">'
+        '<script type="module" src="./assets/js/app.js"></script>',
+        encoding="utf-8")
     (root / "404.html").write_text("<!doctype html><title>nera</title>",
                                    encoding="utf-8")
     (root / "assets" / "audio" / "lt").mkdir(parents=True, exist_ok=True)
@@ -185,11 +188,23 @@ def init_git(repo: pathlib.Path) -> pathlib.Path:
 
 
 def publish(repo: pathlib.Path, live: pathlib.Path) -> None:
-    """Gyvos svetainės veidrodis: tai, ką `pages.yml` įkelia."""
+    """Gyvos svetainės veidrodis: tai, ką `pages.yml` įkelia.
+
+    `index.html` **ne** kopijuojamas pažodžiui: `pages.yml` prieš įkeldama
+    prirašo commit'o trumpinį prie CSS/JS nuorodų (`?v=<sha>`), ir būtent ta
+    žymė yra vienintelis `deploy_pending` šaltinis. Veidrodis be jos matuotų
+    būseną, kurios svetainėje niekada nebūna, tad zondas apie versiją
+    neįrodytų nieko (#544, LL-201).
+    """
     shutil.copytree(repo / "content", live / "content", dirs_exist_ok=True)
     shutil.copytree(repo / "assets", live / "assets", dirs_exist_ok=True)
-    for name in ("index.html", "404.html"):
+    for name in ("404.html",):
         shutil.copyfile(repo / name, live / name)
+    sha = git(repo, "rev-parse", "--short=8", "HEAD").stdout.strip()
+    html = (repo / "index.html").read_text(encoding="utf-8")
+    html = html.replace('src="./assets/js/app.js"', f'src="./assets/js/app.js?v={sha}"')
+    html = html.replace('href="./assets/css/main.css"', f'href="./assets/css/main.css?v={sha}"')
+    (live / "index.html").write_text(html, encoding="utf-8")
 
 
 def patch(root: pathlib.Path, url: str) -> None:
@@ -711,6 +726,96 @@ def main() -> int:
               f"behind {data.get('behind_commits')}, pending {data.get('deploy_pending')}, "
               f"reasons {data['verdict']['reasons']}")
         (live / "index.html").write_bytes((repo / "index.html").read_bytes())
+        # LL-201: grąžinama per `publish()`, o ne pažodine repo kopija — be
+        # `?v=` žymės veidrodis neatitiktų to, ką įkelia `pages.yml`, ir X
+        # matuotų būseną, kurios svetainėje nebūna.
+        publish(repo, live)
+
+        # X. LL-201 — `?v=` žymė iš krašto **senos** `index.html` kopijos.
+        #    `compare()` (LL-197), `_shell_state()` ir `head_state()` jau
+        #    atskirdavo krašto kopiją nuo pasenusio turinio, o `live_version()`
+        #    skaitė `index.html` be keitimo žymės — nors ši žymė yra vienintelis
+        #    `deploy_pending` šaltinis. Matuota #544 laikiname veidrodyje: visi
+        #    baitai `ok`, o `verdict` raudonas („deploy nepasivijo per 3 s“).
+        #    Vaikui tai reiškė „paleisk publikavimą“, nors publikavimas jau
+        #    įvyko. X — faktas turi likti matomas (`cdn_version_stale`), o
+        #    X2 — tikras atsilikimas (ir be žymės, ir su ja sena versija) turi
+        #    likti raudonas (neigiama kontrolė).
+        stale_index = ('<!doctype html><title>zondas</title>'
+                       '<script src="./assets/js/app.js?v=deadbeef">')
+
+        class _EdgeStaleVersion(_QuietHandler):
+            """Be žymės — sena `?v=`, su žyme — tikri `index.html` baitai."""
+
+            def do_GET(self):  # noqa: N802 - bazinės klasės vardas
+                if self.path.startswith("/index.html") and "cb=" not in self.path:
+                    body = stale_index.encode()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/html")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+                super().do_GET()
+
+        httpd9 = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0), functools.partial(_EdgeStaleVersion, directory=str(live)))
+        threading.Thread(target=httpd9.serve_forever, daemon=True).start()
+        cp.LIVE_ROOT = f"http://127.0.0.1:{httpd9.server_address[1]}/"
+        data = cp.report([1])
+        check("X: krašto sena `?v=`, baitai sutampa → NE „deploy nepasivijo“",
+              data["verdict"]["ok"] and data.get("deploy_pending") is False
+              and not data["shell_stale"] and not data["stale"],
+              f"verdict {data['verdict']['label']}, pending {data.get('deploy_pending')}")
+        check("X: faktas įvardytas `cdn_version_stale` (ne tyli žalia, LL-37)",
+              data.get("cdn_version_stale_count") == 1
+              and data["cdn_version_stale"][0].get("edge") == "deadbeef",
+              f"cdn_version {data.get('cdn_version_stale')}")
+        rc, out = run_cli(["--grade", "1"])
+        check("X: pranešimas įvardija „CDN SENA VERSIJA“, rc 0",
+              rc == 0 and "CDN SENA VERSIJA" in out,
+              f"rc {rc}, {(out.strip().splitlines() or [''])[0][:70]}")
+        # Skaičius turi atitikti matavimą, ne užklausų skaičių: `await_deploy()`
+        # klausia kas `DEPLOY_POLL` sekundžių, tad dedupe tikrinamas pakartotiniu
+        # skaitymu tame pačiame bėgime.
+        before = data.get("cdn_version_stale_count")
+        cp.live_version()
+        check("X: pakartotinas skaitymas to paties fakto nedubliuoja (LL-21)",
+              cp.CDN_VERSION["count"] == before,
+              f"prieš {before}, po {cp.CDN_VERSION['count']}")
+
+        # X2. Neigiama kontrolė: ir be žymės, ir su žyme — sena versija. Tai
+        #     tikras deploy atsilikimas, todėl turi likti raudonas.
+        class _AlwaysStaleVersion(_QuietHandler):
+            def do_GET(self):  # noqa: N802
+                if self.path.startswith("/index.html"):
+                    body = stale_index.encode()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/html")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+                super().do_GET()
+
+        httpd10 = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0), functools.partial(_AlwaysStaleVersion, directory=str(live)))
+        threading.Thread(target=httpd10.serve_forever, daemon=True).start()
+        cp.LIVE_ROOT = f"http://127.0.0.1:{httpd10.server_address[1]}/"
+        data = cp.report([1])
+        check("X2: ir su žyme sena versija → `deploy_pending` ir „deploy nepasivijo“ lieka",
+              data.get("deploy_pending") is True
+              and not data["verdict"]["ok"]
+              and any("deploy nepasivijo" in r for r in data["verdict"]["reasons"])
+              and data.get("cdn_version_stale_count") == 0,
+              f"pending {data.get('deploy_pending')}, "
+              f"cdn_version {data.get('cdn_version_stale_count')}, "
+              f"reasons {data['verdict']['reasons']}")
+        httpd9.shutdown()
+        httpd9.server_close()
+        httpd10.shutdown()
+        httpd10.server_close()
+        cp.LIVE_ROOT = url
         httpd7.shutdown()
         httpd7.server_close()
         httpd8.shutdown()

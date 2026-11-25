@@ -1341,6 +1341,14 @@ CDN_REFRESH = {"count": 0, "items": []}
 # buvo 404 (neigiama kopija), o čia — 200 su pasenusiu kūnu. Abiem atvejais
 # priežastis pasakoma, o ne nuslopinama (LL-37).
 CDN_STALE = {"count": 0, "items": []}
+# Trečias atskiras skaičius (LL-201, paleidimas #544): **versija** `?v=`, o ne
+# failo kūnas. `_shell_state()` prieš lyginimą nuima `?v=` (ji yra publikavimo
+# žymė, ne turinys), o `live_version()` skaitė tą patį `index.html` be keitimo
+# žymės — tad žymos, kuri yra vienintelis `deploy_pending` šaltinis, iš krašto
+# senos kopijos negalėjo atskirti niekas. Matuota 2026-11-25 laikiname veidrodyje:
+# visi baitai `ok` (`shell_stale` [], `stale` [], `aux_stale` []), o `verdict`
+# raudonas — „svetainė pastatyta iš bbbbbbbb … deploy nepasivijo per 3 s“.
+CDN_VERSION = {"count": 0, "items": []}
 
 
 def cache_busted(url: str) -> str:
@@ -1614,13 +1622,69 @@ def repo_version() -> str:
         return ""
 
 
-def live_version() -> str:
-    """Commit'as, iš kurio sukurta gyva svetainė (`?v=` žymė `index.html`)."""
-    blob = fetch(LIVE_ROOT + "index.html")
+def _version_of(blob: bytes | None) -> str:
+    """`?v=<commit>` žymė iš `index.html` baitų; tuščia, jei baitų nėra ar žymės nėra."""
     if blob is None:
         return ""
     match = VERSION_PARAM.search(blob.decode("utf-8", "replace"))
     return match.group(0)[3:] if match else ""
+
+
+def live_version(fresh: bool = True) -> str:
+    """Commit'as, iš kurio sukurta gyva svetainė (`?v=` žymė `index.html`).
+
+    `fresh=True` (numatytasis) klausia **su keitimo žyme**. Tai ne tas pats
+    klausimas, kaip „ką dabar atsakytų mano naršyklė“: `?v=` yra publikavimo
+    žymė, o GitHub Pages (per Fastly) laiko ir **teigiamą** `index.html` kopiją,
+    tad adresas be žymės gali atsakyti senu kūnu dar ilgai po to, kai failas
+    paskelbtas. Ši žymė yra vienintelis `deploy_pending` šaltinis, o iki #544
+    ji buvo vienintelis nuotolinis skaitymas, kuris neturėjo pakartojimo su
+    keitimo žyme: `compare()` (LL-197), `_shell_state()` ir `head_state()` tokį
+    atvejį jau skyrė nuo pasenusio turinio, o čia — ne. LL-201: laikinas
+    veidrodis, kurio `index.html` be žymės neša `bbbbbbbb`, o su žyme — repo
+    baitus, davė `shell_stale []`, `stale []`, `aux_stale []` ir vis dėlto
+    raudoną `verdict` („svetainė pastatyta iš bbbbbbbb … deploy nepasivijo per
+    3 s“). Vaikui tai reiškė „paleisk publikavimą“, nors publikavimas jau
+    įvyko, o bėgiklio `push_backlog()` toks veiksmas tik sukeltų `conflict`.
+
+    Skirtumas tarp be žymės ir su žyme gaunamo atsakymo įrašomas `CDN_VERSION`
+    ir pranešamas žodžiais, o ne nuslopinamas: vaiko naršyklė `?cb=` nededa,
+    todėl ji kurį laiką gali gauti seną `index.html`, t. y. senas `?v=` nuorodas
+    (LL-37). Būsena lieka „paskelbta“ kaip ir `CDN_STALE` atveju — vėlavimas
+    praeina pats, o kartoti publikavimo nereikia.
+
+    `fresh=False` — sąmoningai „ką atsako naršyklė“: rankiniam matavimui ir
+    zondams, kurie tikrina būtent krašto atsakymą.
+    """
+    blob = fetch(LIVE_ROOT + "index.html")
+    if blob is None:
+        return ""
+    version = _version_of(blob)
+    if not fresh:
+        return version
+    status, fresh_blob = fetch_answer(cache_busted(LIVE_ROOT + "index.html"))
+    if status != "ok":
+        # Su žyme neatsakė: tai ne „versija sena“, o „neišmatuota“. Grąžinama
+        # tai, ką davė paprastas skaitymas, o `live_error`/`deploy_pending`
+        # sprendžia `verdict()` — spėlioti nereikia (LL-37).
+        return version
+    deployed = _version_of(fresh_blob)
+    if not deployed:
+        # Su žyme gautas `index.html` neturi `?v=` — tai ne „sena versija“, o
+        # būsena, apie kurią nieko pasakyti negalima (repo `index.html` žymės
+        # neturi; ją prirašo tik `pages.yml`). Grąžinama krašto reikšmė, o ne
+        # spėjimas (LL-37).
+        return version
+    if deployed != version:
+        # Įrašoma **skirtinga pora**, ne kiekvienas skaitymas. `await_deploy()`
+        # klausia `live_version()` kas `DEPLOY_POLL` sekundžių, tad be šios
+        # sąlygos vienas faktas būtų praneštas 4 kartus (matuota #544 zonde).
+        # LL-21: skaičius turi atitikti matavimą, o ne užklausų skaičių.
+        pair = {"edge": version or "?", "origin": deployed}
+        if pair not in CDN_VERSION["items"]:
+            CDN_VERSION["items"].append(pair)
+            CDN_VERSION["count"] = len(CDN_VERSION["items"])
+    return deployed
 
 
 def await_deploy(live: str, repo: str, skip: bool = False) -> tuple[str, int, bool]:
@@ -1670,7 +1734,14 @@ def site_reachable() -> bool:
     return state != "unreachable"
 
 
-def check_shell() -> dict:
+def check_shell(live_v: str | None = None) -> dict:
+    """Svetainės kodas: baitai ir versija.
+
+    `live_v` — jau išmatuota versija (žr. `live_version()`). Perduodama, nes
+    `report()` ją skaito prieš laukimą, o antras nepriklausomas skaitymas
+    skaitytų **kitą** krašto atsakymą ir tą patį faktą įvardytų du kartus
+    (LL-21). `None` — matuojama čia (rankiniam naudojimui).
+    """
     files = shell_files()
     with ThreadPoolExecutor(max_workers=6) as pool:
         results = list(pool.map(lambda rel: (rel, _shell_state(rel)), files))
@@ -1691,7 +1762,7 @@ def check_shell() -> dict:
         "shell_gone": missing,
         "shell_unreachable": unreachable,
         "shell_count": len(files),
-        "live_version": live_version(),
+        "live_version": live_v if live_v is not None else live_version(fresh=False),
         "repo_version": repo_version(),
     }
 
@@ -1979,6 +2050,8 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     CDN_REFRESH["items"] = []
     CDN_STALE["count"] = 0
     CDN_STALE["items"] = []
+    CDN_VERSION["count"] = 0
+    CDN_VERSION["items"] = []
     # Kurių klasių apskritai ieškoma — iš `grades.json`, ir tai yra
     # **matavimas**, ne atsarginis variantas (`grade_scope()`). Anksčiau
     # neperskaitytas sąrašas virdavo `[1]`, tad sugadintas `grades.json`
@@ -2048,7 +2121,7 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
                 aux_stale.append(item)
 
     # Svetainės kodas: ką vaikas iš tikrųjų įkelia, o ne tik ką rodo turinio JSON.
-    shell = check_shell() if live_bytes_ok else {
+    shell = check_shell(live_v if live_bytes_ok else None) if live_bytes_ok else {
         "shell_stale": [], "shell_unreachable": [], "shell_count": 0,
         "live_version": "", "repo_version": "", "skipped": True,
     }
@@ -2168,6 +2241,14 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         # liko tuščias tinkamai — bet pranešimas turi tai pasakyti žodžiais.
         "cdn_stale": list(CDN_STALE["items"]),
         "cdn_stale_count": CDN_STALE["count"],
+        # LL-201: `?v=` žymė iš krašto senos `index.html` kopijos. Šis skaičius
+        # atskiras nuo `cdn_stale`, nes ten kalbama apie **failo kūną**, o čia —
+        # apie **versiją**, kuri yra vienintelis `deploy_pending` šaltinis. Be
+        # jo pataisa (#544) būtų tyli: `deploy_pending` tiesiog taptų False, o
+        # skaitytojas negalėtų atskirti „paskelbta iš karto“ nuo „paskelbta, o
+        # kraštas dar atsakinėjo senu index.html“.
+        "cdn_version_stale": list(CDN_VERSION["items"]),
+        "cdn_version_stale_count": CDN_VERSION["count"],
         "last_commit": last_commit(),
         "live_error": "; ".join(live_errors),
         "repo_error": "; ".join(repo_errors),
@@ -2774,6 +2855,21 @@ def main() -> int:
               f"su keitimo žyme — repo baitai ({len(stale_served)}): {shown}{more}")
         print("  Turinys paskelbtas; kraštas dar laiko ankstesnę kopiją. Tai "
               "vėlavimas, ne pasenęs turinys — publikavimo kartoti nereikia.")
+    version_served = data.get("cdn_version_stale") or []
+    if version_served:
+        # LL-201: ta pati krašto kopija, bet `index.html` su SENU `?v=`. Vaiko
+        # naršyklė `?cb=` nededa, tad ji dar gali gauti seną `index.html`, o su
+        # juo — senas `app.js`/`main.css` nuorodas. Todėl `deploy_pending` šiame
+        # bėgime False (matuota su keitimo žyme), bet tai pasakoma žodžiais:
+        # kitaip „sutampa“ atrodytų kaip „paskelbta iš karto“ (LL-37).
+        first = version_served[0]
+        shown = ", ".join(f"{i.get('edge', '?')} → {i.get('origin', '?')}"
+                          for i in version_served[:6])
+        print(f"CDN SENA VERSIJA — `index.html` be keitimo žymės atsakė senu "
+              f"`?v=`, su žyme — repo versija ({len(version_served)}): {shown}")
+        print(f"  Deploy'as įvykęs: baitai lyginti su {first.get('origin', '?')}. "
+              f"Vaiko naršyklė kurį laiką dar gali gauti senas CSS/JS nuorodas — "
+              f"tai vėlavimas, ne nepaskelbtas turinys.")
     if not problems(data):
         name = data.get("audio_name") or {}
         # Vardo maišas tikrinamas ir `--no-bytes` režime (jis vietinis, be
@@ -2797,6 +2893,11 @@ def main() -> int:
                         f"(pakartota su keitimo žyme)" if refreshed else "")
         stale_tail = (f", {len(stale_served)} atsakymas buvo CDN sena kopija "
                       f"(su keitimo žyme — repo baitai)" if stale_served else "")
+        # Versija atskirai nuo kūno (LL-201): „moduliai savo vietoje“ ir
+        # „`index.html` neša tą pačią versiją“ yra du teiginiai.
+        version_tail = (f", {len(version_served)} `?v=` atsakymas buvo CDN sena "
+                        f"versija (su žyme — repo versija)"
+                        if version_served else "")
         # Tvarka — matavimas, o ne prielaida: sėkmės eilutė turi pasakyti, su
         # kuo lyginta, kitaip „sutampa“ apie 72 ID nieko nesako apie jų eilę.
         order_tail = ""
@@ -2815,6 +2916,7 @@ def main() -> int:
                   f"{size_tail}"
                   f"{refresh_tail}"
                   f"{stale_tail}"
+                  f"{version_tail}"
                   f"{order_tail}"
                   f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
         else:

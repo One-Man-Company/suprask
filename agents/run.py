@@ -171,6 +171,11 @@ INFRA_MAX_ATTEMPTS = 3
 # apsauga („0 failų = ne bandymas“) niekada negalėjo suveikti.
 LOG_PREFIX = "agents/log/"
 
+# Pasiūlymų tipai, kurie KURIA naują failą. Tik jiems galioja „jau sukurtas =
+# nebe darbas“ taisyklė; `kritika`, `ux` ir `atitiktis` apie esamą modulį turi
+# egzistuojantį tikslą teisėtai, nes jų darbas — jį taisyti (#22168).
+CREATION_TYPES = ("tema", "metodas")
+
 # Laukimo užraktui ribos (#516). Viena bendra 900 s riba buvo trumpesnė už tai,
 # ko laukiama: eilės vaidmens vienas darbas trunka iki 2098 s (p95, `runs.db`
 # 2026-11-24), o `kurejas` eilė laiko užraktą dar ilgiau. Todėl paleidimas,
@@ -1181,6 +1186,62 @@ def revert(files: list[str]) -> str:
             "(atmesti, bet nesunaikinti — darbas nemokamas, kartoti brangu)")
 
 
+def already_built(target: str, created: str, kind: str = "") -> tuple[bool, str]:
+    """Ar pasiūlymo tikslas JAU sukurtas po jo datos? → (taip/ne, įrodymas).
+
+    Taikoma TIK kūrimo pasiūlymams (`tema`, `metodas`), nes `kritika` ir `ux`
+    apie jau esamą modulį teisėtai turi egzistuojantį tikslą — jų darbas yra
+    jį TAISYTI, o ne kurti. Be šio atskyrimo taisyklė uždarytų visas kritikos
+    pastabas vien todėl, kad failas yra (LL-18 šeima: taisymas, kuris gyvenime
+    teisingas, bet modeliui atrodo neteisingas).
+
+    Nurodytas #22168: pasiūlymas #19519 (metodas, tikslas
+    `22-medziai-krumai-zoles`) buvo duotas kūrėjui #347, nors tą patį modulį
+    jau sukūrė #346 (commit 4b411ea), o ideatoriaus tema #19399 jau buvo
+    `done`. Modulis vietoje ir visi vartai žali, tad vienintelis to paleidimo
+    trūkumas buvo tai, kad eilė to paties paprašė antrą kartą.
+
+    Priežastis: būseną `new` keičia trys vietos — `kurejas_queue.triage()`
+    (prieš eilės darbą), `mark_implemented()` (po publikavimo) ir
+    `curriculum_backlog` generuojama eilė. Kai paleidimas kviečiamas tiesiogiai
+    su `--proposal` (dashboard, rankinis paleidimas), `triage()` nevykdoma,
+    o `mark_implemented()` reikalauja pakeisto tikslo TAME PAČIAME commite —
+    kai darbas jau padarytas, jo nėra, tad pasiūlymas lieka pakibęs.
+
+    Ši funkcija yra VIENAS šaltinis abiem keliams (`triage()` ir `run.py`),
+    kad taisyklė negalėtų išsiskirti: du sluoksniai, skaičiuojantys tą patį
+    skirtingai, ir yra šio defekto priežastis.
+    """
+    if (kind or "").strip().lower() not in CREATION_TYPES:
+        return False, f"tipas „{kind}“ taiso esamą modulį, ne kuria naują"
+    paths = target_paths(target or "")
+    if not paths:
+        return False, "tikslas nenurodo failo kelio"
+    missing = [p for p in paths if not (ROOT / p).is_file()]
+    if missing:
+        return False, f"tikslo dar nėra: {', '.join(missing[:2])}"
+    try:
+        asked = dt.datetime.fromisoformat(created or "").timestamp()
+    except (TypeError, ValueError):
+        return False, "pasiūlymo data neperskaitoma"
+    stamps: list[tuple[str, int]] = []
+    for rel in paths:
+        try:
+            out = subprocess.run(["git", "log", "--diff-filter=A", "--format=%ct", "--", rel],
+                                 cwd=ROOT, capture_output=True, text=True, timeout=20)
+        except (OSError, subprocess.SubprocessError):
+            continue
+        for s in out.stdout.split():
+            if s.strip().isdigit():
+                stamps.append((rel, int(s)))
+    if not stamps:
+        return False, "failo sukūrimo datos nėra git istorijoje"
+    rel, made = min(stamps, key=lambda x: x[1])
+    if made <= asked:
+        return False, f"{rel} sukurtas {dt.datetime.fromtimestamp(made):%Y-%m-%d} — ne po prašymo"
+    return True, f"{rel} sukurtas {dt.datetime.fromtimestamp(made):%Y-%m-%d %H:%M}, po prašymo"
+
+
 def target_paths(target: str) -> list[str]:
     """Pasiūlymo `target` tekstas → failų keliai, kuriuos jis iš tikrųjų nurodo.
 
@@ -1962,6 +2023,22 @@ def main() -> int:
         if proposal.get("status") in ("done", "blocked") and not args.publish_only:
             print(f"Pasiūlymas #{args.proposal} jau {proposal['status']} — praleista")
             return 0
+
+        # #22168: tiesioginis paleidimas (`--proposal`, dashboard, rankinis) kaip
+        # tik eilė kviesdavo „ar tikslas jau sukurtas“. Eilės `triage()` čia
+        # nevykdoma, o `mark_implemented()` reikalauja pakeisto tikslo TAME
+        # PAČIAME commite — todėl jau padarytas darbas buvo statomas antrą
+        # kartą (kūrėjas #347 statė `22-medziai-krumai-zoles`, kurį jau sukūrė
+        # #346). Taisyklė ta pati (`already_built()`), kad abu keliai nesiskirtų.
+        if not args.publish_only:
+            built, why = already_built(proposal.get("target") or "",
+                                       proposal.get("created") or "",
+                                       proposal.get("type") or "")
+            if built:
+                db.set_proposal_status(int(proposal["id"]), "obsolete",
+                                       f"jau įgyvendinta: {why}")
+                print(f"Pasiūlymas #{args.proposal} jau įgyvendintas ({why}) — praleista")
+                return 0
 
         # Klasė, kurią žmogus išjungė dashboard'e, nekuriama — net jei pasiūlymas
         # jai jau buvo eilėje.

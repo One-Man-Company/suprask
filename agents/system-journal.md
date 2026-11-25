@@ -591,3 +591,38 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   nejudinti: seniausias **#5342** (worktree izoliacija, 17 d.), o `high` —
   #22168, #44331, #46530 (`high` eilėje taip pat #42019, kuris šiandien
   įgyvendintas ir bus uždarytas bėgiklio).
+
+## 2026-11-25 21:20 · sistemos-architektas #542 (2 dalis — #22168)
+
+- **Mačiau:** eilėje liko vienas `high` sisteminis įrašas, seniausias po #5342 —
+  **#22168** (7 d.): „Įgyvendintas metodas lieka eilėje: kūrėjas kviečiamas
+  statyti tą patį modulį antrą kartą“. Patikrinau kodą: `triage()` tikrino
+  „jau sukurta“ tik eilės kelyje (`kurejas_queue.py`), o `run.py --proposal`
+  (dashboard, rankinis paleidimas) tos patikros neturėjo. `mark_implemented()`
+  savo ruožtu reikalauja pakeisto tikslo TAME PAČIAME commite — jau padarytam
+  darbui jo nėra. Sąlyga buvo teisinga, bet gyveno viename iš dviejų įėjimų.
+- **Keičiau:** `agents/run.py`: `already_built(target, created, kind)` —
+  vienas šaltinis abiem keliams; `CREATION_TYPES = ("tema", "metodas")`, nes
+  `kritika`/`ux` teisėtai turi egzistuojantį tikslą. `kurejas_queue.triage()`
+  dabar kviečia tą pačią funkciją, o tiesioginis `--proposal` kelias — taip pat
+  (prieš klasės patikrą, kad išjungta klasė neliktų `obsolete`).
+  `scripts/probe_already_built.py` — 9 lūkesčių zondas abiem kryptimis.
+  `pamokos.md` — **LL-200** (200 įrašų).
+- **Kodėl:** du įėjimai, atsakantys į tą patį klausimą skirtingai, yra ne
+  atsitiktinumas, o konstrukcija: kiekviena nauja būsena (`exhausted`,
+  `skipped`, `timeout`) buvo pridedama prie vieno kelio ir pamirštama prie
+  kito. Be vieno šaltinio tas pats įvyks su trečiuoju įėjimu.
+- **Patikra:** `probe_already_built.py` **9/9**, rc 0 (< 1 s, be tinklo).
+  A2 su tikra #19519 data duoda „22-medziai-krumai-zoles.json sukurtas
+  2026-11-18 10:04, po prašymo“ — tiksliai užregistruotas atvejis.
+  Neigiamoji kontrolė: A3 `kritika` ir A4 `ux` su tuo pačiu egzistuojančiu
+  tikslu grąžina **ne** (jei taisyklė būtų taikoma visiems tipams, visos
+  kritikos pastabos užsidarytų vien todėl, kad failas yra). Tikrame repo
+  25 `new` pasiūlymai patikrinti `already_built()` — nė vienas klaidingai
+  „jau įgyvendintas“, tad pataisa nepašalina tikro darbo.
+  Visi 9 vartai rc 0 (`validate_content`, `check_registry`, `check_lessons`
+  200, `check_ui`, `check_art`, `check_audio` 1213/2426, `check_agents`,
+  `check_docs_facts`, `check_language --strict`); 7 zondai 9/9, 15/15, 15/15,
+  17/17, 20/20, 45/45, 9/9. `queue_repair --apply`: grąžintinų 0.
+- **Neliesta:** to paties neliečiau `agents/roles/*.md` ir `ROLES` — #22168
+  sprendžiamas kode, ne prompte (promptas negali žinoti, kas jau padaryta).

@@ -130,6 +130,18 @@ def triage() -> tuple[int, int]:
             obsolete += 1
             continue
 
+        # Bendras kelias per `run.already_built()`: „tema“ ir „metodas“, kurių
+        # tikslas jau sukurtas PO prašymo datos, yra įgyvendinti. Anksčiau ši
+        # taisyklė buvo dvi vietos (`OBSOLETE_TYPES` čia ir `mark_implemented`
+        # po publikavimo), o tiesioginis `--proposal` paleidimas jos visai
+        # neturėjo — todėl #19519 kūrėjas statė antrą kartą (#22168).
+        if target and kind in runner.CREATION_TYPES:
+            built, why = runner.already_built(target, r.get("created") or "", kind)
+            if built:
+                db.set_proposal_status(int(r["id"]), "obsolete", f"jau įgyvendinta: {why}")
+                obsolete += 1
+                continue
+
         if key in seen:
             db.set_proposal_status(int(r["id"]), "obsolete", f"dubliuoja ##{seen[key]}")
             duplicates += 1

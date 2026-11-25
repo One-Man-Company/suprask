@@ -1914,6 +1914,19 @@ def check_grade(grade: int, compare_bytes: bool = True) -> dict:
     return out
 
 
+def _rev_range(spec: str) -> tuple[list[str], bool]:
+    """(commit'ai pagal `git rev-list <spec>`, ar patikra įvyko)."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-list", spec], cwd=ROOT, capture_output=True, text=True, timeout=30
+        )
+    except Exception:  # noqa: BLE001
+        return [], False
+    if proc.returncode != 0:
+        return [], False
+    return [c for c in proc.stdout.split() if c], True
+
+
 def unpushed() -> tuple[list[str], bool]:
     """(commit'ai, kurių nėra `origin/main`, ar patikra įvyko).
 
@@ -1925,15 +1938,29 @@ def unpushed() -> tuple[list[str], bool]:
     Antrasis reikšmės narys eina į `verdict()`, kad „nepatikrinta“ būtų
     pasakyta žodžiais, o ne tylėtų.
     """
-    try:
-        proc = subprocess.run(
-            ["git", "rev-list", "origin/main..HEAD"], cwd=ROOT, capture_output=True, text=True, timeout=30
-        )
-    except Exception:  # noqa: BLE001
-        return [], False
-    if proc.returncode != 0:
-        return [], False
-    return [c for c in proc.stdout.split() if c], True
+    return _rev_range("origin/main..HEAD")
+
+
+def behind() -> tuple[list[str], bool]:
+    """(commit'ai, kurie yra `origin/main`, o šioje kopijoje jų nėra, ar įvyko).
+
+    `unpushed()` matuoja **vieną** skirtumo kryptį: ko neturi `origin/main`.
+    Priešingos krypties niekas neskaitė, o skirtumas lygiai toks pat svarbus
+    (LL-198). Jei darbinė kopija yra už `origin/main` (paleidimas vyksta iš
+    senesnio commit'o arba iš šakos, kuri dar nesujungta), gyva svetainė
+    pastatyta iš **naujesnio** commit'o, tad `live_version != repo_version`
+    visai ne dėl to, kad deploy nepasivijo. Įrankis vis dėlto laukdavo
+    `DEPLOY_WAIT` sekundžių ir pranešdavo „deploy nepasivijo per N s“, o
+    šiam vaidmeniui tai reiškia „paleisk publikavimą“ — veiksmas, kuris
+    kopiją nuo `origin/main` tik dar labiau atitolintų.
+
+    Matuota 2026-11-25 (#541) laikiname repo: HEAD atsuktas dviem commit'ais
+    (`HEAD~2`), gyva svetainė pastatyta iš `origin/main`; `unpushed` 0,
+    `deploy_pending` True, laukta 2 s (tikrasis `DEPLOY_WAIT` — 150 s),
+    `verdict` — „svetainė pastatyta iš X, o repo HEAD Y — deploy nepasivijo“
+    + „1 pasenęs modulis“. Tikroji priežastis: `HEAD..origin/main` = 2.
+    """
+    return _rev_range("HEAD..origin/main")
 
 
 def last_commit() -> str:
@@ -1969,6 +1996,13 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     # Neišsiųsti commit'ai skaičiuojami **prieš** laukimą: jei HEAD dar
     # neišstumtas, svetainė jo net negauna, tad laukti būtų be prasmės.
     unpushed_list, unpushed_ok = unpushed()
+    # Priešingos krypties skirtumas (LL-198). `unpushed()` atsako „ko neturi
+    # `origin/main`“, o čia — „ką turi `origin/main`, o ši kopija ne“. Abi
+    # kryptys reiškia, kad `live_version != repo_version` gali būti teisingas
+    # atsakymas, o ne deploy vėlavimas. Be šio matavimo `await_deploy()`
+    # laukdavo `DEPLOY_WAIT` sekundžių dėl commit'o, kurio laukti neįmanoma
+    # (jis jau senesnis), ir pranešdavo priežastį, kurios niekas neperskaitė.
+    behind_list, behind_ok = behind()
     # Deploy'aus langas: svetainė gali būti dar pastatyta iš ankstesnio
     # commit'o (bėgikas išstumia backlog'ą prieš šį darbą). Tuomet baitų
     # skirtumai yra laiko, ne turinio defektas — laukiama, kol `?v=` pasivys
@@ -1976,7 +2010,8 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     live_v = live_version() if live_bytes_ok else ""
     repo_v = repo_version()
     live_v, deploy_waited, deploy_pending = await_deploy(
-        live_v, repo_v, skip=(not live_bytes_ok) or bool(unpushed_list))
+        live_v, repo_v,
+        skip=(not live_bytes_ok) or bool(unpushed_list) or bool(behind_list))
     per_grade = [check_grade(g, compare_bytes) for g in grades]
 
     def merge(key: str) -> list:
@@ -2114,6 +2149,12 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
             g["path_order_note"] for g in per_grade if g.get("path_order_note")),
         "unpushed_commits": len(unpushed_list),
         "unpushed_checked": unpushed_ok,
+        # Priešingos krypties skirtumas (LL-198): kiek commit'ų yra
+        # `origin/main`, o šioje kopijoje ne. Atskiras raktas nuo
+        # `unpushed_commits`, nes priežastis ir veiksmas kiti: ten reikia
+        # publikavimo, čia — sujungti / persikelti, o ne publikuoti.
+        "behind_commits": len(behind_list),
+        "behind_checked": behind_ok,
         "retried_requests": RETRIES["count"],
         # Kiek 404 pasirodė buvę krašto neigiama kopija (#50319). Atskiras
         # raktas, nes tai nėra pakartojimas po laikinos klaidos: pirmas
@@ -2207,7 +2248,19 @@ def verdict(data: dict) -> dict:
     # iš ankstesnio commit'o, „N pasenęs modulis“ yra to pasekmė, o taisymas
     # ne toks (reikia palaukti / paleisti publikavimą, ne taisyti turinį).
     # #415: tas pats commit'as davė ir 35, ir 0 — skirtumas buvo tik laikas.
-    if data.get("deploy_pending"):
+    #
+    # LL-198: čia pati priežastis negali būti „deploy nepasivijo“, kai
+    # gyva versija **naujesnė** už HEAD. Tada laukta nebuvo (laukiama tik
+    # tada, kai `live != repo` ir nėra neišstumtų commit'ų), o baitų skirtumas
+    # reiškia, kad lyginama su senesne kopija. Taisymas kitas — sujungti su
+    # `origin/main`, o ne publikuoti: publikavimas atitolintų dar labiau.
+    if data.get("behind_commits"):
+        reasons.append(
+            f"{data['behind_commits']} commit'ų yra origin/main, o šioje kopijoje ne "
+            f"(HEAD {data.get('repo_version') or '?'}, gyva "
+            f"{data.get('deploy_live_version') or data.get('live_version') or '?'}) — "
+            f"baitai lyginti su senesne kopija")
+    elif data.get("deploy_pending"):
         live = data.get("deploy_live_version") or data.get("live_version") or "?"
         repo = data.get("repo_version") or "?"
         reasons.append(
@@ -2486,7 +2539,17 @@ def main() -> int:
         print(f"SVETAINĖJE NĖRA KLASĖS FAILO — svetainė atsakė 404 "
               f"({len(data['live_gone'])}): {', '.join(data['live_gone'])}")
         print("  Publikuok klasę — kiti adresai svetainėje atsakė, tad tai ne ryšio gedimas.")
-    if data.get("deploy_pending"):
+    if data.get("behind_commits"):
+        # LL-198: priešingas atvejis nei „neišstumta“. Svetainė naujesnė už
+        # HEAD, tad baitų skirtumas yra lyginimo, ne publikavimo pasekmė, o
+        # veiksmas — sujungti, o ne publikuoti. Be šios eilutės žemiau esanti
+        # „PUBLIKAVIMAS NEPASIVIJO“ kaltintų ne tą (LL-21).
+        print(f"DARBINĖ KOPIJA ATSILIĖKĖ — {data['behind_commits']} commit'ų yra "
+              f"origin/main, o čia ne (HEAD {data.get('repo_version') or '?'}, "
+              f"gyva {data.get('deploy_live_version') or data.get('live_version') or '?'}).")
+        print("  Baitai lyginti su senesne kopija; tai ne pasenęs turinys ir ne "
+              "nepasibaigęs publikavimas. Sujunk su origin/main ir kartok patikrą.")
+    elif data.get("deploy_pending"):
         # Ne „pasenęs turinys“: skirtumas yra laiko, ne failo. Vaikui skirtas
         # sprendimas kitas — laukti arba paleisti publikavimą (#415).
         print(f"PUBLIKAVIMAS NEPASIVIJO — svetainė pastatyta iš "

@@ -658,6 +658,59 @@ def main() -> int:
         check("V: baitai repo nebuvo pakeisti (zondas rašo tik į veidrodį)",
               new_bytes == (repo / "content" / "lt" / "grade-01" / "matematika" / "01-a.json").read_bytes(),
               f"repo {len(new_bytes)} B")
+
+        # W. LL-198 — darbinė kopija **atsilieka** nuo `origin/main`.
+        #    Matuota 2026-11-25 (#541): HEAD atsuktas atgal, gyva svetainė
+        #    pastatyta iš naujesnio commit'o. Įrankis laukdavo `DEPLOY_WAIT`
+        #    (tikrame bėgime 150 s), `deploy_pending` būdavo True ir
+        #    `verdict` kaltindavo „deploy nepasivijo“ — nors laukti buvo
+        #    neįmanoma, o veiksmas, kurį tai siūlė (publikuoti), kopiją nuo
+        #    `origin/main` tik dar labiau atitolintų. Be `behind()` šios
+        #    krypties neskaitė niekas: `unpushed()` matuoja tik priešingą.
+        cp.LIVE_ROOT = url
+        new_title = {"id": "02-b", "title": "naujesnis", "grade": 1}
+        mod_b = repo / "content" / "lt" / "grade-01" / "matematika" / "02-b.json"
+        mod_b.write_text(json.dumps(new_title, ensure_ascii=False), encoding="utf-8")
+        git(repo, "add", "-A")
+        git(repo, "commit", "-qm", "naujesnis turinys")
+        git(repo, "push", "-q", "origin", "main")
+        publish(repo, live)
+        # Gyva svetainė neša kitą `?v=` — be to `await_deploy()` net
+        # neįjungtų „deploy nepasivijo“ šakos ir zondas neįrodytų nieko.
+        (live / "index.html").write_text(
+            '<!doctype html><title>zondas</title><script src="./assets/js/app.js?v=deadbeef">',
+            encoding="utf-8")
+        git(repo, "reset", "-q", "--hard", "HEAD~1")
+        data = cp.report([1])
+        check("W: kopija atsilieka → `behind_commits` 1, o ne 0",
+              data.get("behind_commits") == 1 and data.get("behind_checked") is True,
+              f"behind {data.get('behind_commits')}, checked {data.get('behind_checked')}, "
+              f"unpushed {data['unpushed_commits']}")
+        check("W: nelaukta (0 s), nes laukti neįmanoma",
+              data.get("deploy_waited") == 0,
+              f"waited {data.get('deploy_waited')} s")
+        check("W: priežastis įvardija origin/main, o ne „deploy nepasivijo“",
+              any("origin/main" in r for r in data["verdict"]["reasons"])
+              and not any("deploy nepasivijo" in r for r in data["verdict"]["reasons"]),
+              f"reasons {data['verdict']['reasons']}")
+        check("W: pranešimas įvardija „ATSILIĖKĖ“, o ne „NEPASIVIJO“",
+              "ATSILIĖKĖ" in (out := run_cli(["--grade", "1"])[1])
+              and "PUBLIKAVIMAS NEPASIVIJO" not in out,
+              (out.strip().splitlines() or [""])[0][:70])
+        # Neigiama kontrolė: kopija **nepr** atsilieka, o `?v=` vis tiek
+        # kitas — tai tikras deploy vėlavimas ir jis turi likti matomas.
+        git(repo, "reset", "-q", "--hard", "origin/main")
+        publish(repo, live)
+        (live / "index.html").write_text(
+            '<!doctype html><title>zondas</title><script src="./assets/js/app.js?v=deadbeef">',
+            encoding="utf-8")
+        data = cp.report([1])
+        check("W2: neatsiliekant → `behind_commits` 0, o „deploy nepasivijo“ lieka",
+              data.get("behind_commits") == 0 and data.get("deploy_pending") is True
+              and any("deploy nepasivijo" in r for r in data["verdict"]["reasons"]),
+              f"behind {data.get('behind_commits')}, pending {data.get('deploy_pending')}, "
+              f"reasons {data['verdict']['reasons']}")
+        (live / "index.html").write_bytes((repo / "index.html").read_bytes())
         httpd7.shutdown()
         httpd7.server_close()
         httpd8.shutdown()

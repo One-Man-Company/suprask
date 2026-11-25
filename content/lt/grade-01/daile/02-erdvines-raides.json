@@ -1,0 +1,145 @@
+{
+  "id": "02-erdvines-raides",
+  "grade": 1,
+  "strand": "daile",
+  "title": "Dailė: raidė iš dalių",
+  "subtitle": "Raidę keičia dalis, o puošyba keičia tik išvaizdą",
+  "minutes": 9,
+  "outcomes": [
+    "Sudedu raidę iš dalių ir pasakau, kokia raidė gavosi.",
+    "Parodau, kuri dalis skiria raidę P nuo raidės R.",
+    "Paaiškinu, kodėl puošyba raidės nekeičia."
+  ],
+  "concept": {
+    "title": "Raidė turi dalis",
+    "big_idea": "Raidę sudaro dalys. Pridėjus dalį raidė pasikeičia, o papuošus — ne.",
+    "steps": [
+      "Įdėk lazdelę. Kortelė pasakys, kokia raidė skaitoma.",
+      "Įdėk kilpą. Kortelėje atsiras raidė P.",
+      "Įdėk dar kojelę. Raidė jau R.",
+      "Įjunk taškelius ir palygink. Kortelė rodo tą pačią raidę."
+    ],
+    "example": "Atviruke tavo vardas papuoštas gėlėmis. Raidės liko tos pačios. Vardą perskaitysi."
+  },
+  "sim": {
+    "component": "raide-is-daliu",
+    "config": {
+      "start": "",
+      "parts": [
+        { "id": "lazdele", "name": "Lazdelė", "say": "tiesi dalis" },
+        { "id": "kilpa", "name": "Kilpa", "say": "lenkta dalis" },
+        { "id": "kojele", "name": "Kojelė", "say": "įstriža dalis" }
+      ],
+      "decorations": [
+        { "id": "be", "name": "Be puošybos" },
+        { "id": "taskai", "name": "Taškeliai" },
+        { "id": "spirale", "name": "Spiralė" }
+      ],
+      "sentences": {
+        "start": "Sudėk raidę iš dalių.",
+        "tuscia": "Lenta tuščia. Įdėk dalių.",
+        "lazdele": "Viena lazdelė. Tai raidė I.",
+        "kilpa": "Kilpa viena. Dar ne raidė.",
+        "kojele": "Kojelė viena. Dar ne raidė.",
+        "lazdele-kilpa": "Lazdelė ir kilpa. Tai raidė P.",
+        "lazdele-kojele": "Lazdelė ir kojelė. Dar ne raidė.",
+        "kilpa-kojele": "Kilpa ir kojelė. Dar ne raidė.",
+        "visos": "Trys dalys. Tai raidė R.",
+        "taskai": "Taškeliai pridėti. Raidė ta pati.",
+        "spirale": "Spiralė pridėta. Raidė ta pati.",
+        "be": "Puošybos nebėra. Raidė ta pati.",
+        "taskai-ne": "Taškeliai pridėti. Raidės dar nėra.",
+        "spirale-ne": "Spiralė pridėta. Raidės dar nėra.",
+        "be-ne": "Puošybos nebėra. Raidės dar nėra.",
+        "hint-dalis": "Pabandyk prie raidės pridėti dar vieną dalį.",
+        "hint-palygink": "Dabar papuošk raidę. Paskui išjunk puošybą ir palygink.",
+        "hint-puosyba": "Pirma sudėk raidę, tada ją puošk.",
+        "sameDeco": "Ši puošyba jau įjungta.",
+        "done": "Dalys keičia raidę. Puošyba nekeičia."
+      },
+      "notes": {
+        "tuscia": "Įdėk lazdelę, kilpą ir kojelę po vieną.",
+        "lazdele": "Viena dalis. Ji jau raidė.",
+        "kilpa": "Dalių dar trūksta. Bandyk toliau.",
+        "kojele": "Dalių dar trūksta. Bandyk toliau.",
+        "lazdele-kilpa": "Dvi dalys. P turi kilpą viršuje.",
+        "lazdele-kojele": "Kojelė nieko nelaiko. Jai reikia kilpos.",
+        "kilpa-kojele": "Lazdelės trūksta. Kilpa be jos nekaba.",
+        "visos": "Pridėta kojelė raidę pakeitė.",
+        "deco-letter": "Palygink su tuo, kas buvo be puošybos.",
+        "deco-none": "Puošyba raidės nesudaro."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Lentoje yra raidė P. Kurią dalį pridėjus ji taps R?",
+      "options": [
+        "Kojelę",
+        "Dar vieną kilpą",
+        "Taškelius"
+      ],
+      "answer": 0,
+      "hint": "Palygink P ir R paveikslėlius. Ko R turi, o P neturi?",
+      "why": "R turi kojelę, kurios P neturi. Todėl skaitoma kita raidė."
+    },
+    {
+      "q": "Raidė papuošta taškeliais ir spirale. Kuri raidė dabar skaitoma?",
+      "options": [
+        "Visai kita",
+        "Jokia",
+        "Ta pati"
+      ],
+      "answer": 2,
+      "hint": "Pažiūrėk, ar pasikeitė dalys, iš kurių raidė sudaryta.",
+      "why": "Puošyba prideda ženklų, bet raidės dalių nekeičia."
+    },
+    {
+      "q": "Tavo vardas ant atviruko papuoštas gėlėmis. Ar jį perskaitysi?",
+      "options": [
+        "Ne, raidės pasikeitė",
+        "Taip, dalys liko tos pačios",
+        "Ne, reikia naujo atviruko"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, kas raidėje yra dalis, o kas puošyba.",
+      "why": "Gėlės yra puošyba. Raidės dalys liko tos pačios."
+    },
+    {
+      "q": "Pirmoje kortelėje R su spirale, antroje — P be puošybos. Kodėl pirmoji skaitoma R?",
+      "options": [
+        "Nes ją puošia spiralė",
+        "Nes ji parašyta kita spalva",
+        "Nes joje yra kojelė"
+      ],
+      "answer": 2,
+      "hint": "Spiralė yra puošyba. Ieškok dalies, kurios P neturi.",
+      "why": "Skiriasi dalis: yra kojelė. Spiralė raidės nekeičia.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kuri raidė tau pasirodė netikėta? Ką darei, kad ji pasikeistų?",
+  "teacher": {
+    "goal": "Atskirti raidės dalis nuo puošybos: raidę keičia dalis, o puošyba keičia tik tai, kaip raidė atrodo.",
+    "prompt": "Kuo P skiriasi nuo R? Ką darei, kad raidė pasikeistų?",
+    "offline": "Iškirpkite iš kartono tris dalis: tiesią juostelę, lenktą kilpą ir įstrižą kojelę. Sudėkite raidę P, paskui pridėkite kojelę — raidė pasidarys R. Nuimkite kojelę ir priklijuokite popieriaus taškelius: raidė liks P. Paklauskite vaiko, kuri raidė skaitoma dabar ir kodėl. Paskui duokite atviruką su papuoštu vardu ir paprašykite jį perskaityti.",
+    "misconceptions": [
+      "„Papuošta raidė yra kita raidė.“ Modelis puošybą piešia atskiru sluoksniu, o skaitytojo kortelė skaičiuojama tik iš dalių — paveikslas keičiasi, raidė ne.",
+      "„Raidė yra vienas paveikslėlis, jo dalių neišskirsi.“ P ir R skiriasi viena kojele: ją nuėmus, kortelė vėl rodo P.",
+      "„Bet kokia dalių krūva yra raidė.“ Trys iš aštuonių dalių rinkinių kortelėje skaitomi „dar ne raidė“."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), dailė, 1 pavyzdys 1 klasei: „Dekoruotos ir erdvinės raidės“ — erdvinė raiška, forma iš kartono ir gamtos medžiagų, lipdymas, ornamentinės ir figūrinės kompozicijos.",
+    "Dailės bendroji programa (2022), 1–2 klasė, pasiekimas A2: „Taiko pasiūlytas dailės technikas, saugiai naudoja kūrybos įrankius ir medžiagas. Eksperimentuoja, negalvodamas apie galutinį rezultatą“.",
+    "Dailės bendroji programa (2022), 1–2 klasė: meninės raiškos srityje mokiniai tyrinėja medžiagas, formas ir kompoziciją.",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:22–24 — oficialaus 1 kl. ciklo aprašymas ir platformos išvada: „raidės formos konstravimas, simetrija, spalvų derinys — ne „piešimo konkursas““.",
+    "Treiman, R., & Kessler, B. (2014). How Children Learn to Write Words. Oxford University Press. — raidės vidinė sandara (dalys ir jų vieta), ne ištisas paveikslėlis, yra tai, ką vaikas išmoksta atpažinti rašydamas."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (raidę keičia dalis, o ne puošyba), o ne raidžių abėcėlės apžvalga.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo atskirti dalį nuo puošybos naujoje situacijoje (vardas ant atviruko, dvi kortelės), o ne atkartoti sakinį.",
+    "3 žingsnis — pagalba laiku: kiekviena klaida turi užuominą, modelis nieko nebaudžia ir leidžia bandyti dar kartą.",
+    "T3.4 — praplėtimas: papildoma užduotis apie dvi korteles, kuriose kinta ir dalis, ir puošyba."
+  ]
+}

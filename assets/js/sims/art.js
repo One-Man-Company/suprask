@@ -896,6 +896,23 @@ export const art = {
     return `<path d="${d} Z" fill="${fill}"${edge}/>`;
   },
 
+  /**
+   * Brėžiama linija — kelias be užpildo, apvaliais galais.
+   *
+   * Kodėl atskira dalis: `spot()` kraštas sąmoningai banguotas (jis imituoja
+   * dažų dėmę), todėl iš jo sudėta raidė neatrodytų kaip raidė. Modeliui,
+   * kuriame forma yra PATI linija (raidės lazdelė, kilpa, kojelė), reikia
+   * tikslaus kelio, kurio storis yra visas `w`.
+   *
+   * `d` — SVG kelias, `w` — storis, `color` — spalva, `opts.dash` — brūkšniai.
+   */
+  stroke(d, w, color = "#3a342b", opts = {}) {
+    const dash = opts.dash ? ` stroke-dasharray="${opts.dash}"` : "";
+    const op = opts.opacity !== undefined ? ` stroke-opacity="${opts.opacity}"` : "";
+    return `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}"`
+      + ` stroke-linecap="round" stroke-linejoin="round"${dash}${op}/>`;
+  },
+
   /* ------------------------------------------------------------------ */
   /* Piktogramos (1 klasės daikto kilmės grandinė)                       */
   /*                                                                    */

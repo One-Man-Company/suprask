@@ -464,7 +464,316 @@ const linijosStoris = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Raidė iš dalių                                                       */
+/*                                                                     */
+/* Modelis: raidę sudaro DALYS, o ne potėpių visuma. Kiekviena dalis    */
+/* turi savo vietą lentoje, o raidės tapatybę nustato dalių rinkinys:   */
+/* lazdelė — I, lazdelė ir kilpa — P, visos trys — R. Todėl klausimas    */
+/* „kuo P skiriasi nuo R“ turi atsakymą, į kurį galima parodyti pirštu.  */
+/*                                                                     */
+/* Antra ašis — puošyba (taškeliai, spiralė). Ji piešiama ATSKIRAME     */
+/* sluoksnyje, o skaitytojo kortelė skaičiuojama tik iš dalių. Todėl     */
+/* klaidinga nuostata „papuošta raidė yra kita raidė“ tampa             */
+/* patikrinama: paveikslas keičiasi, kortelė — ne.                      */
+/*                                                                     */
+/* Geometrija fiksuota (viewBox 260×250), kiekviena dalis — savas       */
+/* `<g>`; įjungimas tik rodo/slepia tą patį kelią, nieko neperpiešia.    */
+/* Skaitoma būsena (kortelės tekstas, `aria-label`, `aria-pressed`) —    */
+/* ne vien spalva ar padėtis (prieinamumas, LL-24).                    */
+/*                                                                     */
+/* Kodėl trys raidės, o ne dvi: pora P/R skiriasi VIENA dalimi, o I     */
+/* parodo, kad paprasčiausia dalis jau yra raidė. Kitos kombinacijos    */
+/* sąžiningai skaitomos „dar ne raidė“ (LL-28: modelis turi ir          */
+/* prieštaraujančių pavyzdžių).                                         */
+/* ------------------------------------------------------------------ */
+
+const LR_INK = "#3a342b";
+const LR_DECO = "#d9534f";
+const LR_STEM_D = "M96 36 V206";
+const LR_BOWL_D = "M96 44 C196 44 214 122 96 122";
+const LR_LEG_D = "M168 108 L206 206";
+/* Taškeliai ir spiralė telpa į kilpos vidų ir į laisvą kairę pusę —
+   nė vienas jų neliečia lazdelės, kilpos ar kojelės brėžinio (LL-24). */
+const LR_DOTS = [[124, 66], [146, 70], [134, 96], [62, 120], [64, 152]];
+
+function spiralPath(cx, cy, rMax, turns) {
+  const steps = 44;
+  const pts = [];
+  for (let i = 0; i <= steps; i += 1) {
+    const t = i / steps;
+    const a = t * turns * Math.PI * 2;
+    const r = 1.5 + t * (rMax - 1.5);
+    pts.push(`${(cx + r * Math.cos(a)).toFixed(1)} ${(cy + r * Math.sin(a)).toFixed(1)}`);
+  }
+  return `M${pts[0]}${pts.slice(1).map((p) => ` L${p}`).join("")}`;
+}
+
+const raideIsDaliu = {
+  mount({ stage, controls, api, config }) {
+    const PARTS = Array.isArray(config.parts) ? config.parts : [];
+    const DECOS = Array.isArray(config.decorations) ? config.decorations : [];
+    if (PARTS.length < 3 || DECOS.length < 2) {
+      stage.innerHTML = `<p class="strand-meta">Raidės dalių dar nesukonfigūruota.</p>`;
+      return () => {};
+    }
+
+    const SENT = config.sentences || {};
+    const NOTES = config.notes || {};
+
+    /* Raidė skaičiuojama TIK iš dalių. Puošyba į šią lentelę nepatenka —
+       todėl „kortelė nepasikeitė“ yra modelio savybė, ne teksto pažadas. */
+    const LETTERS = { lazdele: "I", "lazdele-kilpa": "P", visos: "R" };
+
+    const on = new Set(config.start ? [config.start] : []);
+    /* „Be puošybos“ atpažįstama iš ID, o ne iš pirmos pozicijos: jei turinys
+       perdėliotų puošybos mygtukus, pažanga tylėtų, nes be puošybos raidė
+       būtų skaičiuojama kaip papuošta (LL-38). */
+    const NO_DECO = DECOS.some((d) => d.id === "be") ? "be" : DECOS[0].id;
+    let deco = NO_DECO;
+    let partToggles = 0;
+    let reported = false;
+    let compareAsked = false;
+
+    const seen = new Set();
+    const withDeco = new Set();
+    const withoutDeco = new Set();
+
+    function stateId() {
+      const s = on.has("lazdele");
+      const b = on.has("kilpa");
+      const k = on.has("kojele");
+      if (s && b && k) return "visos";
+      if (s && b) return "lazdele-kilpa";
+      if (s && k) return "lazdele-kojele";
+      if (b && k) return "kilpa-kojele";
+      if (s) return "lazdele";
+      if (b) return "kilpa";
+      if (k) return "kojele";
+      return "tuscia";
+    }
+
+    const letterNow = () => LETTERS[stateId()] || "";
+
+    function partsWord() {
+      const list = PARTS.filter((p) => on.has(p.id)).map((p) => String(p.name || p.id).toLowerCase());
+      return list.length ? list.join(", ") : "nieko";
+    }
+
+    function boardLabel() {
+      const letter = letterNow();
+      return letter
+        ? `Raidė ${letter}. Dalys: ${partsWord()}.`
+        : `Dar ne raidė. Dalys: ${partsWord()}.`;
+    }
+
+    const partIcon = (id) => {
+      if (id === "lazdele") return art.stroke("M30 6 V42", 6, LR_INK);
+      if (id === "kilpa") return art.stroke("M18 10 C48 10 52 34 18 34", 6, LR_INK);
+      return art.stroke("M18 12 L42 42", 6, LR_INK);
+    };
+
+    stage.innerHTML = `
+      <div style="display:grid;gap:.55rem;justify-items:center;width:100%;min-width:0">
+        <svg id="lr-board" viewBox="0 0 260 250" width="100%" role="img"
+             aria-label="${boardLabel()}"
+             style="display:block;max-width:250px;height:auto">
+          <g id="lr-leg">${art.stroke(LR_LEG_D, 16, LR_INK)}</g>
+          <g id="lr-bowl">${art.stroke(LR_BOWL_D, 16, LR_INK)}</g>
+          <g id="lr-stem">${art.stroke(LR_STEM_D, 16, LR_INK)}</g>
+          <g id="lr-taskai">${LR_DOTS.map(([x, y]) => art.spot(x - 4.5, y - 4.5, 9, 9, LR_DECO, "apvali")).join("")}</g>
+          <g id="lr-spirale">${art.stroke(spiralPath(135, 82, 16, 2.6), 3.4, LR_DECO)}</g>
+        </svg>
+
+        <div id="lr-card" role="img" aria-label="Lenta tuščia."
+             style="display:grid;justify-items:center;gap:.1rem;padding:.35rem 1.1rem;
+                    border:2px solid var(--line);border-radius:14px;background:#fdfbf3;min-width:8rem">
+          <span id="lr-glyph" aria-hidden="true"
+                style="font-size:2.5rem;line-height:1.05;font-weight:800;color:${LR_INK}">—</span>
+          <span id="lr-word" style="font-size:.95rem;font-weight:800;color:var(--ink-soft);text-align:center">lenta tuščia</span>
+        </div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div role="group" aria-label="Raidės dalys"
+           style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;width:100%">
+        ${PARTS.map((p) => `
+          <button class="btn secondary" type="button" data-part="${p.id}" aria-pressed="false"
+            aria-label="${p.name}: ${p.say || "raidės dalis"}"
+            style="display:grid;justify-items:center;align-content:center;gap:.15rem;
+                   min-width:4.6rem;min-height:3rem;padding:.3rem .45rem">
+            <svg viewBox="0 0 60 48" width="34" height="26" aria-hidden="true"
+                 style="display:block">${partIcon(p.id)}</svg>
+            <span style="font-size:.95rem;font-weight:800">${p.name}</span>
+          </button>`).join("")}
+      </div>
+      <div role="group" aria-label="Puošyba"
+           style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;width:100%">
+        ${DECOS.map((d) => `
+          <button class="btn secondary" type="button" data-deco="${d.id}" aria-pressed="false"
+            aria-label="Puošyba: ${d.name}"
+            style="min-width:5.6rem;min-height:3rem;font-size:.95rem;font-weight:800">${d.name}</button>`).join("")}
+      </div>
+      <button class="btn secondary" type="button" id="lr-reset"
+        aria-label="Pradėti iš naujo" style="min-width:6rem;font-size:.95rem">Iš naujo</button>`;
+
+    const board = stage.querySelector("#lr-board");
+    const card = stage.querySelector("#lr-card");
+    const glyph = stage.querySelector("#lr-glyph");
+    const word = stage.querySelector("#lr-word");
+    const groups = {
+      lazdele: stage.querySelector("#lr-stem"),
+      kilpa: stage.querySelector("#lr-bowl"),
+      kojele: stage.querySelector("#lr-leg"),
+    };
+    const dots = stage.querySelector("#lr-taskai");
+    const spiral = stage.querySelector("#lr-spirale");
+    const partBtns = Array.from(controls.querySelectorAll("[data-part]"));
+    const decoBtns = Array.from(controls.querySelectorAll("[data-deco]"));
+    const resetBtn = controls.querySelector("#lr-reset");
+
+    function render() {
+      const letter = letterNow();
+      const st = stateId();
+
+      Object.entries(groups).forEach(([id, g]) => {
+        if (g) g.style.display = on.has(id) ? "" : "none";
+      });
+      if (dots) dots.style.display = deco === "taskai" ? "" : "none";
+      if (spiral) spiral.style.display = deco === "spirale" ? "" : "none";
+
+      if (glyph) glyph.textContent = letter || "—";
+      if (word) {
+        word.textContent = letter
+          ? `raidė ${letter}`
+          : (st === "tuscia" ? "lenta tuščia" : "dar ne raidė");
+      }
+      if (card) {
+        card.setAttribute(
+          "aria-label",
+          letter ? `Skaitoma raidė ${letter}.` : (st === "tuscia" ? "Lenta tuščia." : "Dar ne raidė.")
+        );
+      }
+      if (board) board.setAttribute("aria-label", boardLabel());
+
+      partBtns.forEach((b) => {
+        const isOn = on.has(b.dataset.part);
+        b.setAttribute("aria-pressed", isOn ? "true" : "false");
+        b.style.borderColor = isOn ? "var(--ink)" : "var(--line)";
+      });
+      decoBtns.forEach((b) => {
+        const isOn = b.dataset.deco === deco;
+        b.setAttribute("aria-pressed", isOn ? "true" : "false");
+        b.style.borderColor = isOn ? "var(--ink)" : "var(--line)";
+      });
+    }
+
+    function noteSeen() {
+      const letter = letterNow();
+      if (!letter) return;
+      seen.add(letter);
+      if (deco === NO_DECO) withoutDeco.add(letter);
+      else withDeco.add(letter);
+    }
+
+    const compared = () => [...withDeco].some((l) => withoutDeco.has(l));
+
+    /* Pažanga: dvi raidės iš skirtingų dalių rinkinių IR ta pati raidė
+       matyta ir papuošta, ir be puošybos. Vienas žingsnis nėra „baigta“
+       (LL-29). Išvada PRIDEDAMA prie pastebėjimo, o ne pakeičia jį: kitaip
+       didysis sakinys užgožtų tai, ką vaikas ką tik pamatė (LL-33), o
+       didelis ekrano tekstas nustotų rodęs dabartinę būseną (LL-17). */
+    function finish(baseNote) {
+      let text = String(baseNote || "").trim();
+      if (!reported && seen.size >= 2 && compared()) {
+        reported = true;
+        text = `${text} ${SENT.done || "Dalys keičia raidę. Puošyba nekeičia."}`.trim();
+        api.progress({ correct: true });
+      }
+      if (text) api.note(text);
+    }
+
+    function togglePart(id) {
+      const part = PARTS.find((p) => p.id === id);
+      if (!part) return;
+      if (on.has(id)) on.delete(id); else on.add(id);
+      partToggles += 1;
+      noteSeen();
+      const st = stateId();
+      const letter = LETTERS[st] || "";
+      render();
+      api.readout(SENT[st] || "");
+      api.speak(SENT[st] || part.name || "");
+      let note = NOTES[st] || "";
+      if (!reported && !letter && partToggles >= 2 && SENT["hint-dalis"]) {
+        note = `${note} ${SENT["hint-dalis"]}`.trim();
+      }
+      if (!reported && seen.size >= 2 && !compared() && !compareAsked && SENT["hint-palygink"]) {
+        compareAsked = true;
+        note = `${note} ${SENT["hint-palygink"]}`.trim();
+      }
+      finish(note);
+    }
+
+    function chooseDeco(id) {
+      if (id === deco) {
+        api.note(SENT.sameDeco || "Ši puošyba jau įjungta.");
+        return;
+      }
+      deco = id;
+      noteSeen();
+      render();
+      const letter = letterNow();
+      const key = letter ? id : `${id}-ne`;
+      api.readout(SENT[key] || SENT[id] || "");
+      api.speak(SENT[key] || SENT[id] || "");
+      let note = NOTES[letter ? "deco-letter" : "deco-none"] || "";
+      if (!letter && SENT["hint-puosyba"]) note = `${note} ${SENT["hint-puosyba"]}`.trim();
+      finish(note);
+    }
+
+    function reset() {
+      on.clear();
+      if (config.start) on.add(config.start);
+      deco = NO_DECO;
+      partToggles = 0;
+      render();
+      api.readout(SENT.start || "Sudėk raidę iš dalių.");
+      api.note(NOTES.tuscia || "");
+    }
+
+    partBtns.forEach((b) => b.addEventListener("click", () => togglePart(b.dataset.part)));
+    decoBtns.forEach((b) => b.addEventListener("click", () => chooseDeco(b.dataset.deco)));
+    if (resetBtn) resetBtn.addEventListener("click", reset);
+
+    controls.addEventListener("keydown", (e) => {
+      const active = document.activeElement;
+      const inParts = partBtns.indexOf(active);
+      const inDeco = decoBtns.indexOf(active);
+      if (inParts >= 0 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+        e.preventDefault();
+        const step = e.key === "ArrowRight" ? 1 : -1;
+        partBtns[(inParts + step + partBtns.length) % partBtns.length].focus();
+      } else if (inDeco >= 0 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+        e.preventDefault();
+        const step = e.key === "ArrowRight" ? 1 : -1;
+        decoBtns[(inDeco + step + decoBtns.length) % decoBtns.length].focus();
+      } else if (e.key === "r" || e.key === "R") {
+        reset();
+      }
+    });
+
+    noteSeen();
+    render();
+    api.readout(SENT.start || "Sudėk raidę iš dalių.");
+    api.note(NOTES.tuscia || "");
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "deme-ir-spalvos": demeIrSpalvos,
   "linijos-storis": linijosStoris,
+  "raide-is-daliu": raideIsDaliu,
 };

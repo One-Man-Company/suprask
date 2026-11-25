@@ -710,6 +710,14 @@
       "sim": "deme-ir-spalvos"
     },
     {
+      "id": "02-erdvines-raides",
+      "title": "Dailė: raidė iš dalių",
+      "subtitle": "Raidę keičia dalis, o puošyba keičia tik išvaizdą",
+      "file": "grade-01/daile/02-erdvines-raides.json",
+      "minutes": 9,
+      "sim": "raide-is-daliu"
+    },
+    {
       "id": "03-piesimo-priemones",
       "title": "Dailė: ta pati linija, trys priemonės",
       "subtitle": "Storį lemia priemonė, o spaudimas keičia tik tamsumą",

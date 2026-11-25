@@ -951,6 +951,10 @@
   "n": "n/4e18577cf775f330-dca35c2a.mp3",
   "s": "s/4e18577cf775f330-cb8ab447.mp3"
  },
+ "Dabar papuošk raidę. Paskui išjunk puošybą ir palygink.": {
+  "n": "n/a931d3156caf116a-f207c787.mp3",
+  "s": "s/a931d3156caf116a-021d9af1.mp3"
+ },
  "Dabar rinkis vaikus ir paklausyk, ką jie sako.": {
   "n": "n/958924bc709163cf-6d4b8a03.mp3",
   "s": "s/958924bc709163cf-99bc827a.mp3"
@@ -974,6 +978,10 @@
  "Daigas": {
   "n": "n/e9ebf47dd9afa46f-0377d56d.mp3",
   "s": "s/e9ebf47dd9afa46f-aaffef6d.mp3"
+ },
+ "Dalys keičia raidę. Puošyba nekeičia.": {
+  "n": "n/79c0d33afd93b82e-bb96ff61.mp3",
+  "s": "s/79c0d33afd93b82e-8b411923.mp3"
  },
  "Dar drėgnas. Formą dar galima pakeisti.": {
   "n": "n/ce8765c54d354b53-61d758ec.mp3",
@@ -1783,6 +1791,14 @@
   "n": "n/37982dd4e99f8d05-d131cd5a.mp3",
   "s": "s/37982dd4e99f8d05-9709be79.mp3"
  },
+ "Kilpa ir kojelė. Dar ne raidė.": {
+  "n": "n/3cbd6510025be39a-6b0d3347.mp3",
+  "s": "s/3cbd6510025be39a-3e680694.mp3"
+ },
+ "Kilpa viena. Dar ne raidė.": {
+  "n": "n/090800c1e0ee95cc-31280105.mp3",
+  "s": "s/090800c1e0ee95cc-b304d18c.mp3"
+ },
  "Kilputės bėga viena po kitos. Skylutė didėja.": {
   "n": "n/c389148e9a16a404-f24e910b.mp3",
   "s": "s/c389148e9a16a404-ebbe8d82.mp3"
@@ -1826,6 +1842,10 @@
  "Knygą berniukas skaito": {
   "n": "n/e927c1df157f689c-81339e4b.mp3",
   "s": "s/e927c1df157f689c-fa32ea24.mp3"
+ },
+ "Kojelė viena. Dar ne raidė.": {
+  "n": "n/a0bbaa379f0dd78c-1fef76e8.mp3",
+  "s": "s/a0bbaa379f0dd78c-63da7652.mp3"
  },
  "Kokios spalvos buvo skėtis?": {
   "n": "n/c2f93d74f88906d6-dc35f511.mp3",
@@ -2111,6 +2131,14 @@
   "n": "n/4af97b6a0ed89064-c30eb57a.mp3",
   "s": "s/4af97b6a0ed89064-69dd4175.mp3"
  },
+ "Lazdelė ir kilpa. Tai raidė P.": {
+  "n": "n/f47b4a97209ba4de-80897872.mp3",
+  "s": "s/f47b4a97209ba4de-833ffc5c.mp3"
+ },
+ "Lazdelė ir kojelė. Dar ne raidė.": {
+  "n": "n/c1ec57e92a7f1291-bc4baf93.mp3",
+  "s": "s/c1ec57e92a7f1291-d8ae8c26.mp3"
+ },
  "Lašai": {
   "n": "n/4cff7a27a0875490-423f4672.mp3",
   "s": "s/4cff7a27a0875490-6cc8ebc9.mp3"
@@ -2134,6 +2162,10 @@
  "Lenta baigėsi. Šešios sąvaržėlės.": {
   "n": "n/ddba4fc539a8eb99-87701608.mp3",
   "s": "s/ddba4fc539a8eb99-48f9bd31.mp3"
+ },
+ "Lenta tuščia. Įdėk dalių.": {
+  "n": "n/37e359058b287d87-f99e1954.mp3",
+  "s": "s/37e359058b287d87-900369f9.mp3"
  },
  "Linija platesnė netapo.": {
   "n": "n/86ebce48ca85f9d9-46e8b929.mp3",
@@ -2434,6 +2466,10 @@
  "Pabandyk pats": {
   "n": "n/d2be6484e53549b5-663b34f1.mp3",
   "s": "s/d2be6484e53549b5-3202bbe0.mp3"
+ },
+ "Pabandyk prie raidės pridėti dar vieną dalį.": {
+  "n": "n/afb2fa31a16cc2c0-e9c1f951.mp3",
+  "s": "s/afb2fa31a16cc2c0-349208bc.mp3"
  },
  "Pabandyk tą pačią priemonę paspausti silpnai ir stipriai.": {
   "n": "n/3e58a03463e59e23-619cabc9.mp3",
@@ -2755,6 +2791,10 @@
   "n": "n/fe164bd6a1648cee-43918563.mp3",
   "s": "s/fe164bd6a1648cee-d4bc501f.mp3"
  },
+ "Pirma sudėk raidę, tada ją puošk.": {
+  "n": "n/1920c09d6c2ad121-c8ec22b1.mp3",
+  "s": "s/1920c09d6c2ad121-7d382011.mp3"
+ },
  "Pirma sudėk visus gyvūnus. Tada „Žiema“ parodys, kas pasikeis.": {
   "n": "n/cc284e4b29ed01a8-d4c4c59d.mp3",
   "s": "s/cc284e4b29ed01a8-b67b2009.mp3"
@@ -2918,6 +2958,14 @@
  "Pulsas žemai, plojimai aukštai.": {
   "n": "n/9deadd952326e379-e68d462b.mp3",
   "s": "s/9deadd952326e379-e0d247f1.mp3"
+ },
+ "Puošybos nebėra. Raidė ta pati.": {
+  "n": "n/5e80563fb93c52c9-b08e44a8.mp3",
+  "s": "s/5e80563fb93c52c9-6aa0dbbb.mp3"
+ },
+ "Puošybos nebėra. Raidės dar nėra.": {
+  "n": "n/90b1f24b9d6084e3-69d8e2bc.mp3",
+  "s": "s/90b1f24b9d6084e3-f7ccbc1c.mp3"
  },
  "Pusryčiams laiko liko.": {
   "n": "n/dfb11e9d1640ff97-d37b155e.mp3",
@@ -3203,6 +3251,14 @@
   "n": "n/18e6efb4759d8904-d4e91800.mp3",
   "s": "s/18e6efb4759d8904-9825fbc1.mp3"
  },
+ "Spiralė pridėta. Raidė ta pati.": {
+  "n": "n/0a6fbf9f919ddf02-be6f37a0.mp3",
+  "s": "s/0a6fbf9f919ddf02-62313c92.mp3"
+ },
+ "Spiralė pridėta. Raidės dar nėra.": {
+  "n": "n/66ec619a9acd953c-d480882c.mp3",
+  "s": "s/66ec619a9acd953c-d99481df.mp3"
+ },
  "Spygliai geltoni": {
   "n": "n/f66044b0ae083278-c095d3a8.mp3",
   "s": "s/f66044b0ae083278-ba2aea33.mp3"
@@ -3347,6 +3403,10 @@
   "n": "n/0fa754c7be689c79-c9b98710.mp3",
   "s": "s/0fa754c7be689c79-df42c392.mp3"
  },
+ "Sudėk raidę iš dalių.": {
+  "n": "n/23c691bfa4e5f669-f60e5b20.mp3",
+  "s": "s/23c691bfa4e5f669-0208c50e.mp3"
+ },
  "Sukai pagal laikrodžio rodyklę. Žymė keliauja ratu pagal rodyklę.": {
   "n": "n/e982e3ce11262b87-e431a53b.mp3",
   "s": "s/e982e3ce11262b87-ff808b0d.mp3"
@@ -3475,6 +3535,14 @@
   "n": "n/e24f199750565e8a-18942016.mp3",
   "s": "s/e24f199750565e8a-678c4e04.mp3"
  },
+ "Taškeliai pridėti. Raidė ta pati.": {
+  "n": "n/ff7831f155fb2c89-bf9b1815.mp3",
+  "s": "s/ff7831f155fb2c89-74a0eb90.mp3"
+ },
+ "Taškeliai pridėti. Raidės dar nėra.": {
+  "n": "n/3b6136dc6a3bbc7f-09b4ed9b.mp3",
+  "s": "s/3b6136dc6a3bbc7f-a98a2851.mp3"
+ },
  "Teisingai!": {
   "n": "n/3d4e2b06ffc71b06-490fd930.mp3",
   "s": "s/3d4e2b06ffc71b06-e65d91d6.mp3"
@@ -3574,6 +3642,10 @@
  "Trys daiktai, vienas pasikeitė.": {
   "n": "n/19477f386ec2e893-df5dac84.mp3",
   "s": "s/19477f386ec2e893-78d346f8.mp3"
+ },
+ "Trys dalys. Tai raidė R.": {
+  "n": "n/a5e0917af7b8b45e-5ddf3e78.mp3",
+  "s": "s/a5e0917af7b8b45e-f48b7967.mp3"
  },
  "Trys dešimtys ir septyni vienetai. Nauja dešimtis nesusidaro. Viso trisdešimt septyni.": {
   "n": "n/1fe1a3e843fe5d92-bf6b81fc.mp3",
@@ -3894,6 +3966,10 @@
  "Viena dovana, du jausmai.": {
   "n": "n/9a42e38296157a8d-74837e91.mp3",
   "s": "s/9a42e38296157a8d-5d075e7d.mp3"
+ },
+ "Viena lazdelė. Tai raidė I.": {
+  "n": "n/fef8d3468602b579-0c11c96c.mp3",
+  "s": "s/fef8d3468602b579-610af642.mp3"
  },
  "Viena sąvaržėlė": {
   "n": "n/d4244a5ac9b74e8c-0f697101.mp3",
@@ -4502,6 +4578,10 @@
  "Ši priemonė jau rankoje.": {
   "n": "n/21a64571aacc560c-ed7a77e1.mp3",
   "s": "s/21a64571aacc560c-27dc4062.mp3"
+ },
+ "Ši puošyba jau įjungta.": {
+  "n": "n/00162bf0fef8d44f-e8badf2f.mp3",
+  "s": "s/00162bf0fef8d44f-66ee7cb0.mp3"
  },
  "Ši seka veda ne prie vėliavos. Viena komanda klaidinga.": {
   "n": "n/6d6f88831dc26d38-c2d34fc3.mp3",

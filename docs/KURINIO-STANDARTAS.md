@@ -168,6 +168,14 @@ modulio įrašas gali turėti neprivalomą lauką `renamed_from` — senų ID s�
 - Naršyklė (`assets/js/progress.js`) perkelia žymą vieną kartą: senas raktas
   išnyksta, o įrašai sujungiami (didesnis apsilankymų skaičius, indeksų
   sąjunga). Indeksai, kurių užduočių nebeliko, nesiskaito.
+- **Senas adresas taip pat nenustoja veikti.** `renamed_from` yra ne tik
+  `localStorage` raktų žemėlapis: senas ID lieka mokytojo numatytoje
+  nuorodoje, atidarytoje kortelėje ir naršyklės istorijoje. Todėl
+  `#/modulis/1/<kryptis>/<senas-id>` nukreipiamas į įpėdinį
+  (`assets/js/app.js` `successorOf()` + `history.replaceState`), o ne rodomas
+  „Nerasta“. Grandinė A→B→C sprendžiama iki galo. Patikra:
+  `.venv/bin/python scripts/check_route_alias.py` (atidaro tikrą naršyklę,
+  kaip `check_view.py`; CI neturi nei playwright, nei Chrome).
 
 ## 8. Patikra
 

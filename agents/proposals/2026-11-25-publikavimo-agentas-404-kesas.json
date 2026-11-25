@@ -1,0 +1,17 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 526,
+  "created": "2026-11-25T06:58:00+02:00",
+  "type": "struktura",
+  "title": "Šviežiai pervadinto failo 404 gali būti CDN neigiama kopija, o įrankis jį laiko galutiniu atsakymu",
+  "body": "Paleidime #526 pirmas nekešuotas `curl` į `content/lt/grade-01/lietuviu-kalba/03-sakinio-zodziai.json` grąžino 404 (563 B GitHub klaidos puslapis), o antras bandymas su `?cb=` į tą patį adresą — 200 (5 459 B, baitiškai lygus repo). Failas svetainėje yra, bet CDN kraštas kurį laiką atsakinėja neigiama kopija (pačio 404 atsakymo antraštės rodė `x-cache: HIT`, `age: 42`). `check_published.fetch_answer()` 404/410 sąmoningai laiko galutiniu atsakymu ir nekartoja (#386) — tai teisinga tikram nebuvimui, bet ne tam atvejui, kai kelias ką tik atsirado (naujas ar pervadintas modulis, naujas kodas). Pasekmė ta pati kaip LL-21/LL-37: vartai po deploy'o praneša „1 modulio failo nėra svetainėje“, `verdict` sako „sustabdyta“, ir sekantis agentas eina ieškoti ištrinto turinio, nors reikia tik palaukti arba perkrauti. Siūloma: kai būsena `gone`, tą patį adresą pakartoti VIENĄ kartą su keitimo žyme (`?cb=<laikas>`) ir, jei atsakymas 200, o baitai sutampa su repo, laikyti `ok` su atskiru įrašu („CDN neigiama kopija, baitai sutampa“); jei ir su žyme 404 — palikti `gone` ir pranešti kaip dabar. Taip neprarandamas 404 ir nepasiekiamumo atskyrimas, o tik atskiriama „failo nėra“ nuo „kraštas dar nepersikrovė“. Zondas: `probe_publish_sets.py` atvejis su dviem atsakymais tame pačiame adrese (pirmas 404, antras 200) → rc 0 ir įvardyta priežastis, o su abiem 404 → rc 1.",
+  "target": "scripts/check_published.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "curl 2026-11-25 06:21 — https://one-man-company.github.io/suprask/content/lt/grade-01/lietuviu-kalba/03-sakinio-zodziai.json → 404 / 563 B; tas pats adresas su ?cb=<random> → 200 / 5 459 B",
+    "curl -I to paties 404 atsakymo antraštės: x-cache: HIT, age: 42, x-github-edge-region: fra; 200 atsakymo: last-modified, cache-control: max-age=600",
+    "scripts/check_published.py:1302–1304 — HTTPError 404/410 → return \"missing\", None be karto; :1366–1369 — \"missing\" → būsena \"gone\" ir verdict „modulio failo nėra svetainėje“",
+    "research/wiki/guidelines/pamokos.md LL-21, LL-37 — pasenusi / neteisinga priežastis siunčia taisyti ne to"
+  ]
+}

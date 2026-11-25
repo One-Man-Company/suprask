@@ -1,4 +1,4 @@
-import { loadGrades, loadGradeIndex, loadModule, loadPath, getSim, makeSimApi } from "./registry.js";
+import { loadGrades, loadGradeIndex, loadModule, loadPath, getSim, makeSimApi, renameMap } from "./registry.js";
 import * as progress from "./progress.js";
 
 /* Garso modulis kraunamas atskirai ir NEPRIVALOMAI.
@@ -378,11 +378,48 @@ function syncTeacherModel(moduleId) {
   if (line.textContent !== text) line.textContent = text;
 }
 
+/* Pervadinto modulio adresas. `renamed_from` saugo vaiko žymą (`progress.js`),
+ * bet senas ID gyvena ir numatytoje mokytojo nuorodoje, atidarytoje kortelėje,
+ * naršyklės istorijoje. Maršrutizatorius modulį randa **tik** pagal
+ * `index.json` `id`, todėl be šios grandinės senas adresas atvesdavo į
+ * „Nerasta“, nors pamoka svetainėje yra (#523: 03-sakinio-tvarka →
+ * 03-sakinio-zodziai). Grandinė A→B→C sprendžiama iki galo, ciklas
+ * sustabdomas, o įpėdinis ieškomas visose klasės kryptyse — pervadinimas
+ * gali perkelti modulį ir į kitą kryptį.
+ */
+function successorOf(gradeIndex, moduleId) {
+  const map = renameMap();
+  let id = moduleId;
+  for (let hop = 0; hop < 8; hop += 1) {
+    const next = map.get(id);
+    if (!next || next === id) break;
+    id = next;
+  }
+  if (id === moduleId) return null;
+  for (const strand of gradeIndex.strands) {
+    const m = (strand.modules || []).find((x) => x.id === id);
+    if (m) return { strandId: strand.id, id: m.id };
+  }
+  return null;
+}
+
 async function viewModule(grade, strandId, moduleId) {
   const g = await loadGradeIndex(grade);
   const strand = g.strands.find((x) => x.id === strandId);
   const entry = strand && strand.modules.find((m) => m.id === moduleId);
-  if (!entry) return notFound();
+  if (!entry) {
+    const successor = successorOf(g, moduleId);
+    if (successor) {
+      // `replaceState`, o ne `location.hash`: adresas iškart tampa dabartiniu,
+      // bet vaiko „atgal“ neveda atgal į numirusią nuorodą. `currentRoute`
+      // atnaujinamas, kad maršrutizatoriaus apsauga nuo pakartotinio
+      // piešimo liktų susieta su tuo adresu, kuris dabar matomas.
+      history.replaceState(null, "", `#/modulis/${grade}/${successor.strandId}/${successor.id}`);
+      currentRoute = ["modulis", grade, successor.strandId, successor.id].join("/");
+      return viewModule(grade, successor.strandId, successor.id);
+    }
+    return notFound();
+  }
 
   const mod = await loadModule(entry.file);
   document.title = `${mod.title} — Suprask!`;

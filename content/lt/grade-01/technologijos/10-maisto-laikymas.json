@@ -1,0 +1,112 @@
+{
+  "id": "10-maisto-laikymas",
+  "grade": 1,
+  "strand": "technologijos",
+  "title": "Maistas: vieta sprendžia, ne tik laikas",
+  "subtitle": "Tas pats sūris keturiose vietose per tas pačias dienas",
+  "minutes": 9,
+  "outcomes": [
+    "Skiriu vietas, kuriose maistas išsilaiko ilgiau, ir jas pavadinu.",
+    "Paaiškinu, kad tame pačiame laike maistą labiau keičia šiluma."
+  ],
+  "concept": {
+    "title": "Vieta, o ne vien laikas",
+    "big_idea": "Tas pats sūris keturiose vietose per keturias dienas pasikeičia skirtingai. Šaldiklyje jis beveik toks pat, palangėje saulėje — visai kitas. Laikas buvo vienodas, skyrėsi tik vieta.",
+    "steps": [
+      "Pirma spėk, kur sūris pasikeis mažiausiai. Bakstelėk tą vietą.",
+      "Stumk laiką po vieną dieną ir žiūrėk į sūrius.",
+      "Palygink: laikas visur vienodas, o sūriai skirtingi.",
+      "Pasakyk, kuri vieta maistą apsaugo labiausiai."
+    ],
+    "example": "Jogurtas šaldytuve ir ant stalo po dviejų dienų skiriasi."
+  },
+  "sim": {
+    "component": "maisto-laikymas",
+    "config": {
+      "sentences": {
+        "pradzia": "Tas pats sūris keturiose vietose. Kur jis pasikeis mažiausiai?",
+        "spejimas": "Spėjimas įrašytas. Dabar stumk laiką į priekį.",
+        "jau": "Spėjimas jau įrašytas.",
+        "siandien": "Šiandien visi keturi sūriai dar šviesūs.",
+        "diena-1": "Viena diena. Sūriai jau skiriasi.",
+        "diena-2": "Dvi dienos. Palangėje sūris tamsus, šaldiklyje šviesus.",
+        "diena-3": "Trys dienos. Ant stalo sūris tamsesnis už šaldiklio.",
+        "spejimas-teisingas": "Spėjai šaldiklį. Ten sūris pasikeitė mažiausiai.",
+        "spejimas-kitas": "Spėjai kitą vietą. Mažiausiai pasikeitė šaldiklyje.",
+        "is-naujo": "Pradedam iš naujo. Tas pats sūris keturiose vietose."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Sūris dvi dienas stovėjo šaldytuve ir ant stalo. Kur jis labiau pasikeitė?",
+      "options": [
+        "Ant stalo",
+        "Šaldytuve",
+        "Abiejose vietose vienodai"
+      ],
+      "answer": 0,
+      "hint": "Palygink abu sūrius tame pačiame laike.",
+      "why": "Šiltoje vietoje tas pats sūris keičiasi greičiau."
+    },
+    {
+      "q": "Atidarytą jogurtą nori valgyti vakare. Kur jį padėsi?",
+      "options": [
+        "Ant stalo",
+        "Į šaldytuvą",
+        "Ant palangės saulėje"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kuri vieta buvo vėsiausia.",
+      "why": "Šaldytuve jogurtas išlieka ilgiau negu šiltoje vietoje."
+    },
+    {
+      "q": "Vytautas sako, kad sūris dar nesenas. Kodėl sūriai ekrane skiriasi?",
+      "options": [
+        "Kad šiluma jį keitė greičiau",
+        "Kad jis visai nepakito",
+        "Kad šaltis jį sugadino"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, ką maistas patyrė ant stalo.",
+      "why": "Toje pačioje dienoje šiltesnė vieta maistą labiau pakeitė."
+    },
+    {
+      "q": "Žiemą pyragas stovėjo vėsiame balkone, vasarą – virtuvėje. Kur jis ilgiau išlaikys?",
+      "options": [
+        "Virtuvėje",
+        "Balkone žiemą",
+        "Abiem atvejais vienodai"
+      ],
+      "answer": 1,
+      "hint": "Palygink, kur vėsiau.",
+      "why": "Vėsesnėje vietoje maistas keičiasi lėčiau, net jei tai ne šaldytuvas.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kur tavo namuose maistas genda greičiausiai? Kodėl?",
+  "teacher": {
+    "goal": "Suprasti, kad maisto pasikeitimą lemia vieta ir šiluma, o ne vien laikas: tas pats sūris per tas pačias keturias dienas šaldiklyje beveik nepakinta, o palangėje saulėje pasikeičia labiausiai. Modelis rodo palyginamąją spartą, o ne mikrobų kiekį ar tikslų galiojimo terminą. Jis ir nepataria, kad šaldiklis yra tinkamiausia vieta kiekvienam produktui: sušaldytas sūris keičia tekstūrą, o atšildytas ilgai nelaikomas — kasdieniam sūriui įprasta vieta yra šaldytuvas.",
+    "prompt": "Kodėl tas pats sūris ir tas pats laikas davė skirtingą rezultatą?",
+    "offline": "Padėkite tris gabalėlius to paties sūrio (arba duonos) į tris vietas: šaldytuvą, kambario stalą ir palangę saulėje. Po dviejų dienų apžiūrėkite ir pauostykite visus tris. Nevalgykite jų. Palyginkite su tuo, ką rodė ekranas, ir paklauskite, kuri vieta labiausiai apsaugojo maistą. Tada perskaitykite pieno ar jogurto pakuotės galiojimo terminą ir paieškokite užrašo „laikyti šaldytuve“.",
+    "misconceptions": [
+      "„Maistas genda nuo senumo, o ne nuo šilumos.“ Modelyje laikas visose keturiose vietose vienodas, o tamsios dalys skiriasi — būtent todėl palyginimas atliekamas tame pačiame kadre.",
+      "„Šaldytuve negenda.“ Šaldytuve sūris irgi tamsėja, tik lėčiau už stalo. Šaltis lėtina, bet nesustabdo visai.",
+      "„Šaldiklis maistą padaro šviežią.“ Šaldiklis tik sulėtina pasikeitimą; sušalęs maistas keičia tekstūrą, o atšildytas ilgai nelaikomas.",
+      "„Jei šaldiklyje pasikeičia mažiausiai, tai šaldiklis ir yra geriausia vieta sūriui.“ Modelis lygina tik pasikeitimo spartą, o ne tinkamumą: sušaldytas sūris keičia tekstūrą, tad kasdieniam maistui skirta vieta lieka šaldytuvas.",
+      "„Jei maistas neatrodo sugedęs, jis saugus.“ Modelis rodo tik pasikeitimą, ne saugumą: kvapo, skonio ir pakuotės datos ekrane nėra, todėl sprendimą apie valgymą visada priima suaugęs."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), technologijos, 23.1.1: „Maisto produktai, jų asortimentas, laikymo sąlygos… pavojus maisto produktams/patiekalams kintančiame temperatūrų režime (šaldiklyje, šaldytuve, kambario temperatūroje, karštyje)“.",
+    "Technologijų bendroji programa (2022), 23.1.1: maisto produktų laikymo sąlygos ir temperatūrų režimas 1–2 klasėje.",
+    "Pasaulio sveikatos organizacija (2006). Five keys to safer food manual. Ženeva: WHO. — vienas iš penkių raktų: „keep food at safe temperatures“ (laikyti maistą saugioje temperatūroje).",
+    "Brophy, J., Alleman, J., & O'Mahony, C. (2001). Primary-grade students' knowledge and thinking about food as a cultural universal. Michigan State University, ERIC ED451124. — Pradinukai žino, kad maistas genda ir kad šaldytuvas padeda, bet beveik niekas nesusieja temperatūros su gedimo sparta; todėl modelis lygina tas pačias dienas skirtingose vietose, o ne aiškina mikrobus."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena didelė idėja (vieta ir šiluma, o ne vien laikas). Temperatūros skaičiai, mikrobai ir galiojimo termino skaitymas sąmoningai neįtraukti — jie lieka veiklai be ekrano.",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (jogurtas, draugo teiginys, balkonas žiemą), o ne įsimintą formuluotę.",
+    "3 žingsnis — pagalba laiku: vaikas pirma spėja, paskui mato pasekmę tame pačiame kadre, klaida nebaudžiama, yra praplėtimo užduotis.",
+    "5 žingsnis — pozityvi mokymosi aplinka: grįžtamasis ryšys lygina spėjimą su tuo, kas įvyko, o ne sako „neteisingai“."
+  ]
+}

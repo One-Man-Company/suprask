@@ -641,6 +641,14 @@
      "file": "grade-01/technologijos/09-austinis-ir-megztas-audinys.json",
      "minutes": 9,
      "sim": "audinys"
+    },
+    {
+     "id": "10-maisto-laikymas",
+     "title": "Maistas: vieta sprendžia, ne tik laikas",
+     "subtitle": "Tas pats sūris keturiose vietose per tas pačias dienas",
+     "file": "grade-01/technologijos/10-maisto-laikymas.json",
+     "minutes": 9,
+     "sim": "maisto-laikymas"
     }
    ]
   },

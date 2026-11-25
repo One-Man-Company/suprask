@@ -1403,4 +1403,120 @@ export const art = {
             fill="#ffffff" opacity=".35"/>
     </g>`;
   },
+
+  /* ------------------------------------------------------------------ */
+  /* Maisto laikymas: keturios vietos ir sūrio gabalėlis su juosta       */
+  /*                                                                    */
+  /* Kodėl atskiri metodai: tas pats sūris turi būti VIENODAS visose      */
+  /* keturiose vietose, o skirtis tik juostos ilgiu — kitaip paveikslas    */
+  /* pats pasako atsakymą (LL-13, LL-28). Geometrija rašoma vienoje       */
+  /* vietoje, o simuliacija paduoda tik `aged` reikšmę (LL-03).           */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Laikymo vieta. `kind`: saldiklis | saldytuvas | stalas | palange.
+   * Visos piktogramos telpa į 40×40 langelį (kaip `pictogram`), todėl jas
+   * galima dėti vienodo dydžio kortelėse, o vaikas vietą atpažins iš formos,
+   * ne iš užrašo (LL-06, LL-13).
+   */
+  place(kind, x = 0, y = 0, s = 1) {
+    const inner = (() => {
+      if (kind === "saldiklis") {
+        /* Skrynia su dangčiu ir snaigė: šaldiklis atpažįstamas iš snaigės,
+           o ne iš užrašo. Snaigė telpa į priekinę plokštę. */
+        const flake = [0, 60, 120].map((a) =>
+          `<line x1="26" y1="23.5" x2="26" y2="33.5" transform="rotate(${a} 26 28.5)"/>`).join("");
+        return `<g stroke-linejoin="round">
+          <rect x="5" y="16" width="30" height="19" rx="3" fill="#e9eff3" stroke="#4a5a63" stroke-width="2"/>
+          <path d="M5 22.5 H35" stroke="#4a5a63" stroke-width="2"/>
+          <rect x="9" y="24.4" width="7.4" height="2.4" rx="1.2" fill="#4a5a63"/>
+          <g stroke="#2f7fa8" stroke-width="1.7" stroke-linecap="round">${flake}</g>
+        </g>`;
+      }
+      if (kind === "saldytuvas") {
+        /* Aukšta spinta su dvejomis durelėmis ir lentynų brūkšniais:
+           forma skiriasi nuo šaldiklio skrynios, tad abi vietos nesumaišomos. */
+        return `<g stroke-linejoin="round">
+          <rect x="9" y="5" width="22" height="31" rx="3" fill="#eef3f6" stroke="#4a5a63" stroke-width="2"/>
+          <path d="M9 17 H31" stroke="#4a5a63" stroke-width="2"/>
+          <rect x="25.4" y="9" width="3" height="5.6" rx="1.5" fill="#4a5a63"/>
+          <rect x="25.4" y="20.4" width="3" height="6.4" rx="1.5" fill="#4a5a63"/>
+          <path d="M13 21.8 H21.5 M13 25.6 H21.5" stroke="#b9c6cd" stroke-width="1.6" stroke-linecap="round"/>
+        </g>`;
+      }
+      if (kind === "stalas") {
+        /* Stalas su lėkšte: lėkštė skiria jį nuo paprastos lentos, o kojos
+           parodo, kad tai baldas, o ne lentyna (LL-13). */
+        return `<g stroke-linejoin="round" stroke-linecap="round">
+          <rect x="5" y="18" width="30" height="4.4" rx="1.6" fill="#c98f56" stroke="#8a5c33" stroke-width="1.8"/>
+          <path d="M9.5 22.4 V35 M30.5 22.4 V35" stroke="#8a5c33" stroke-width="2.6"/>
+          <ellipse cx="20" cy="15.4" rx="7.4" ry="2.6" fill="#f6f8f9" stroke="#9aa7ae" stroke-width="1.6"/>
+          <ellipse cx="20" cy="15" rx="4.6" ry="1.5" fill="#e4ecef"/>
+        </g>`;
+      }
+      /* palange — langas su saule ir palangė po juo */
+      const rays = Array.from({ length: 8 }, (_, i) => {
+        const a = (i * 45 * Math.PI) / 180;
+        return `<line x1="${(26 + Math.cos(a) * 4.9).toFixed(1)}" y1="${(11 + Math.sin(a) * 4.9).toFixed(1)}"`
+          + ` x2="${(26 + Math.cos(a) * 6.4).toFixed(1)}" y2="${(11 + Math.sin(a) * 6.4).toFixed(1)}"/>`;
+      }).join("");
+      return `<g stroke-linejoin="round">
+        <rect x="6" y="4" width="28" height="24" rx="2.4" fill="#dff0f8" stroke="#5b7f96" stroke-width="2"/>
+        <circle cx="26" cy="11" r="3.2" fill="#ffc542" stroke="#d59a1c" stroke-width="1.2"/>
+        <g stroke="#e0a51c" stroke-width="1.7" stroke-linecap="round">${rays}</g>
+        <path d="M20 4 V28 M6 16 H34" stroke="#5b7f96" stroke-width="1.7"/>
+        <rect x="3" y="28" width="34" height="4.4" rx="1.6" fill="#cbb07c" stroke="#8a6239" stroke-width="1.6"/>
+      </g>`;
+    })();
+    return `<g transform="translate(${x} ${y}) scale(${s})">${inner}</g>`;
+  },
+
+  /**
+   * Sūrio gabalėlis su pasenimo juosta.
+   *
+   * `id` — unikalus clipPath vardas (kiekviena kortelė turi savo).
+   * `aged` 0..1 — kiek gabalėlio jau uždengta. Juostos plotis yra tas pats
+   * dydis, kurį modelis rodo kaip pasikeitimą, todėl jis skaičiuojamas čia,
+   * o ne scenoje (LL-03). Dangtelis turi ir tamsą, ir taškelius, ir
+   * brūkšniuotą priekinį kraštą — spalva nėra vienintelis informacijos
+   * nešėjas (standartas §4.4).
+   */
+  cheese(id, x, y, w, aged = 0) {
+    const f = (v) => v.toFixed(1);
+    const h = w * 0.66;
+    const k = Math.max(0, Math.min(1, aged));
+    const tri = `M${f(x)} ${f(y + h)} L${f(x)} ${f(y + h * 0.1)} L${f(x + w)} ${f(y + h)} Z`;
+    const holes = [[0.3, 0.74, 0.075], [0.47, 0.55, 0.06], [0.63, 0.82, 0.048]]
+      .map(([cx, cy, r]) => `<circle cx="${f(x + w * cx)}" cy="${f(y + h * cy)}" r="${f(w * r)}"`
+        + ` fill="#e0bb4d" stroke="#c39a35" stroke-width="1.1"/>`).join("");
+    const dots = Array.from({ length: 16 }, (_, i) => {
+      const cx = x + w * (0.07 + ((i * 13) % 86) / 100);
+      const cy = y + h * (0.18 + ((i * 7) % 74) / 100);
+      return `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(w * 0.016)}" fill="#4a3620" opacity=".78"/>`;
+    }).join("");
+    const band = k > 0.005
+      ? `<g clip-path="url(#${id}-c)">
+           <g clip-path="url(#${id}-b)">
+             <rect x="${f(x)}" y="${f(y)}" width="${f(w * k)}" height="${f(h + 2)}" fill="#7a5a2e" opacity=".3"/>
+             ${dots}
+           </g>
+           <line x1="${f(x + w * k)}" y1="${f(y)}" x2="${f(x + w * k)}" y2="${f(y + h)}"
+                 stroke="#5d4526" stroke-width="2.2" stroke-dasharray="3 3"/>
+         </g>`
+      : "";
+
+    return `<g>
+      <defs>
+        <clipPath id="${id}-c"><path d="${tri}"/></clipPath>
+        <clipPath id="${id}-b"><rect x="${f(x)}" y="${f(y)}" width="${f(w * k)}" height="${f(h + 2)}"/></clipPath>
+      </defs>
+      <ellipse cx="${f(x + w * 0.45)}" cy="${f(y + h + 1)}" rx="${f(w * 0.42)}" ry="2.6"
+               fill="#8a6239" opacity=".18"/>
+      <path d="${tri}" fill="#f8db6e" stroke="#c39a35" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M${f(x + 4)} ${f(y + h - 3)} L${f(x + 4)} ${f(y + h * 0.26)}"
+            stroke="#e7c14f" stroke-width="4" stroke-linecap="round" fill="none"/>
+      ${holes}
+      ${band}
+    </g>`;
+  },
 };

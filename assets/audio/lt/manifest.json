@@ -1227,6 +1227,10 @@
   "n": "n/0e7fd04576e2aa71-b5534ce5.mp3",
   "s": "s/0e7fd04576e2aa71-1ed84c7a.mp3"
  },
+ "Dvi dienos. Palangėje sūris tamsus, šaldiklyje šviesus.": {
+  "n": "n/0342072ea215c013-18b67998.mp3",
+  "s": "s/0342072ea215c013-d15d71cc.mp3"
+ },
  "Dvi naujos kaladėlės. Didelė medinė ir maža metalinė.": {
   "n": "n/e278741a836e576c-5454a6dd.mp3",
   "s": "s/e278741a836e576c-938b96b2.mp3"
@@ -2883,6 +2887,10 @@
   "n": "n/2b3f14673d68c403-f146694c.mp3",
   "s": "s/2b3f14673d68c403-53cf3a06.mp3"
  },
+ "Pradedam iš naujo. Tas pats sūris keturiose vietose.": {
+  "n": "n/4ba000629b86347d-cd92e48e.mp3",
+  "s": "s/4ba000629b86347d-6bb1f1b6.mp3"
+ },
  "Pradedam iš naujo. Tie patys žodžiai.": {
   "n": "n/d481ca1880b5fa8f-ebe4ee5d.mp3",
   "s": "s/d481ca1880b5fa8f-67a0bc47.mp3"
@@ -3287,6 +3295,10 @@
   "n": "n/21f3ca46027de9b8-2f2aef03.mp3",
   "s": "s/21f3ca46027de9b8-133a925b.mp3"
  },
+ "Spėjai kitą vietą. Mažiausiai pasikeitė šaldiklyje.": {
+  "n": "n/b1dcf0ac77845267-c9bb7839.mp3",
+  "s": "s/b1dcf0ac77845267-002defc4.mp3"
+ },
  "Spėjai teisingai. Dvi dešimtys ir aštuoni vienetai. Viso dvidešimt aštuoni.": {
   "n": "n/8046a3ea51b3e7ef-363b794d.mp3",
   "s": "s/8046a3ea51b3e7ef-6efd9994.mp3"
@@ -3298,6 +3310,14 @@
  "Spėjai teisingai. Šešios dešimtys ir aštuoni vienetai. Viso šešiasdešimt aštuoni.": {
   "n": "n/f224592d53ab2df9-30b0b05f.mp3",
   "s": "s/f224592d53ab2df9-d7c10001.mp3"
+ },
+ "Spėjai šaldiklį. Ten sūris pasikeitė mažiausiai.": {
+  "n": "n/f61477546d566937-5a7f6650.mp3",
+  "s": "s/f61477546d566937-b4b5eb0c.mp3"
+ },
+ "Spėjimas jau įrašytas.": {
+  "n": "n/c924af7a26420fdd-1794695f.mp3",
+  "s": "s/c924af7a26420fdd-18fc410b.mp3"
  },
  "Spėjimas užrašytas. Dabar keisk aukštį.": {
   "n": "n/700bd3e769105a0e-7b28c95f.mp3",
@@ -3334,6 +3354,10 @@
  "Spėjimas įrašytas. Dabar statyk kelią.": {
   "n": "n/c26817a306408861-7ba30af5.mp3",
   "s": "s/c26817a306408861-fa2f1dc5.mp3"
+ },
+ "Spėjimas įrašytas. Dabar stumk laiką į priekį.": {
+  "n": "n/7ff6529daca94a22-77bea667.mp3",
+  "s": "s/7ff6529daca94a22-2895268d.mp3"
  },
  "Spėjimas įrašytas. Spausk „Nuleisk į vandenį“.": {
   "n": "n/237272ffa0e70314-8dc07c48.mp3",
@@ -3523,6 +3547,10 @@
   "n": "n/c095a5efbdb25987-f3759fe9.mp3",
   "s": "s/c095a5efbdb25987-432ddd29.mp3"
  },
+ "Tas pats sūris keturiose vietose. Kur jis pasikeis mažiausiai?": {
+  "n": "n/8870c1becdb09997-28ee8a2d.mp3",
+  "s": "s/8870c1becdb09997-fb093f64.mp3"
+ },
  "Tas pats vaikas, ta pati vieta.": {
   "n": "n/eef975578b01cddd-169acc39.mp3",
   "s": "s/eef975578b01cddd-935f0df5.mp3"
@@ -3650,6 +3678,10 @@
  "Trys dešimtys ir septyni vienetai. Nauja dešimtis nesusidaro. Viso trisdešimt septyni.": {
   "n": "n/1fe1a3e843fe5d92-bf6b81fc.mp3",
   "s": "s/1fe1a3e843fe5d92-88968da5.mp3"
+ },
+ "Trys dienos. Ant stalo sūris tamsesnis už šaldiklio.": {
+  "n": "n/6e3f3a206e140fec-9cddca5b.mp3",
+  "s": "s/6e3f3a206e140fec-1ab0f2f2.mp3"
  },
  "Trys formos, o vandens visur tiek pat.": {
   "n": "n/829873ff3b26558a-8027e634.mp3",
@@ -3962,6 +3994,10 @@
  "Vidutinis garsumas": {
   "n": "n/f28ce8911779cd2a-ca989d7c.mp3",
   "s": "s/f28ce8911779cd2a-684c8959.mp3"
+ },
+ "Viena diena. Sūriai jau skiriasi.": {
+  "n": "n/88ca9ce1503d9bff-96a2509a.mp3",
+  "s": "s/88ca9ce1503d9bff-c7c57d41.mp3"
  },
  "Viena dovana, du jausmai.": {
   "n": "n/9a42e38296157a8d-74837e91.mp3",
@@ -4594,6 +4630,10 @@
  "Šiandien po pietų. O kur ateiti?": {
   "n": "n/9c1fa95dd74c3e7c-b8717015.mp3",
   "s": "s/9c1fa95dd74c3e7c-2abfc649.mp3"
+ },
+ "Šiandien visi keturi sūriai dar šviesūs.": {
+  "n": "n/a27fc186df0a75d0-57a176db.mp3",
+  "s": "s/a27fc186df0a75d0-298e99d5.mp3"
  },
  "Šilta, daug lapų, obuoliai noksta, bitės dūzgia.": {
   "n": "n/d37d19f4b16ea501-556a5c3f.mp3",

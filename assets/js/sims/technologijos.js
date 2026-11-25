@@ -2620,6 +2620,253 @@ const audinys = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Maisto laikymas: ta pati diena, keturios vietos                      */
+/*                                                                     */
+/* Kodėl toks modelis: 23.1.1 sritis prašo „produktų laikymo sąlygų“ ir  */
+/* „pavojaus maisto produktams kintančiame temperatūrų režime  (šaldyk- */
+/* lyje, šaldytuve, kambario temperatūroje, karštyje)“. Temperatūros     */
+/* skaičių ekrane nėra: 6–7 m. vaikui termometro rodmuo nieko nesako     */
+/* (LL-23), o ankstesnis bandymas būtent tuo ir baigėsi (klausimai.md:195).*/
+/* Modelis rodo PALYGINAMĄJĄ spartą: ta pati diena, keturios vietos,     */
+/* skirtingai uždengtas tas pats sūris. Juosta yra palyginimas, o ne     */
+/* tikslus galiojimo terminas, todėl jokių dienų skaičių ant pakuotės    */
+/* modelis nežada.                                                      */
+/*                                                                      */
+/* Klaidingos nuostatos, kurias modelis laužo tame pačiame kadre:        */
+/*   1) „maistas genda nuo senumo, o ne nuo šilumos“ — laikas visur      */
+/*      vienodas, o juostos skiriasi;                                   */
+/*   2) „šaldytuve negenda“ — šaldytuvo juosta juda, tik lėčiau;          */
+/*   3) „palangėje tas pats, kas ant stalo“ — saulė keičia greičiau.     */
+/* Brophy, Alleman & O'Mahony (2001) rado, kad pradinukai žino apie      */
+/* šaldymą, bet nesusieja temperatūros su gedimo sparta.                 */
+/* ------------------------------------------------------------------ */
+
+const ML_STYLE_ID = "cc-maisto-laikymo-style";
+
+const ML_CSS = `
+.ml-wrap { display: flex; flex-direction: column; gap: .45rem; width: 100%; max-width: 40rem; margin: 0 auto; }
+.ml-lead { margin: 0; font-weight: 800; font-size: 1rem; line-height: 1.3; text-align: center; }
+.ml-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+@media (min-width: 34rem) { .ml-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.ml-card {
+  display: flex; flex-direction: column; align-items: center; gap: .15rem; min-width: 0;
+  padding: .35rem .3rem .3rem; border: 2px solid var(--line); border-radius: var(--r-s);
+  background: var(--paper-2); color: var(--ink); font: inherit; cursor: pointer;
+}
+.ml-card .ml-name {
+  display: flex; align-items: center; justify-content: center; min-height: 2.3em;
+  font-weight: 800; font-size: .95rem; line-height: 1.15; text-align: center;
+}
+.ml-card svg { display: block; width: 100%; height: auto; }
+.ml-card.is-guessed {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 34%, transparent);
+}
+.ml-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ml-chip { min-height: 1.15rem; font-size: .9rem; font-weight: 800; line-height: 1.2; color: var(--ink-soft); }
+.ml-model { margin: .15rem 0 0; font-size: .9rem; line-height: 1.3; text-align: center; color: var(--ink-soft); }
+.ml-time { display: grid; gap: .35rem; width: 100%; max-width: 40rem; margin: 0 auto; }
+.ml-time[hidden] { display: none; }
+.ml-time label { font-weight: 800; font-size: 1rem; text-align: center; }
+.ml-time input[type="range"] { width: 100%; min-width: 0; height: 48px; margin: 0; accent-color: var(--ink); }
+.ml-day { margin: 0; font-weight: 800; font-size: 1.1rem; line-height: 1.2; text-align: center; }
+.ml-actions { display: flex; justify-content: center; gap: .5rem; }
+`;
+
+const ML_SAY = {
+  pradzia: "Tas pats sūris keturiose vietose. Kur jis pasikeis mažiausiai?",
+  spejimas: "Spėjimas įrašytas. Dabar stumk laiką į priekį.",
+  jau: "Spėjimas jau įrašytas.",
+  siandien: "Šiandien visi keturi sūriai dar šviesūs.",
+  "diena-1": "Viena diena. Sūriai jau skiriasi.",
+  "diena-2": "Dvi dienos. Palangėje sūris tamsus, šaldiklyje šviesus.",
+  "diena-3": "Trys dienos. Ant stalo sūris tamsesnis už šaldiklio.",
+  "spejimas-teisingas": "Spėjai šaldiklį. Ten sūris pasikeitė mažiausiai.",
+  "spejimas-kitas": "Spėjai kitą vietą. Mažiausiai pasikeitė šaldiklyje.",
+  "is-naujo": "Pradedam iš naujo. Tas pats sūris keturiose vietose.",
+};
+
+/* Vietos ir jų sparta, dalimis per dieną. Skaičiai yra MODELIO, o ne
+   termometro reikšmės: jie parodo kryptį (šilčiau — greičiau), o ne
+   galiojimo terminą. Todėl ekrane jų nėra. Šaldiklio juosta juda lėčiausiai,
+   bet vis tiek juda — taip paneigiama „šaldiklyje nieko nevyksta“. */
+const ML_PLACES = [
+  { id: "saldiklis", name: "Šaldiklis", rate: 0.018 },
+  { id: "saldytuvas", name: "Šaldytuvas", rate: 0.062 },
+  { id: "stalas", name: "Stalas", rate: 0.163 },
+  { id: "palange", name: "Palangė saulėje", rate: 0.25 },
+];
+
+function ensureMlStyle() {
+  if (document.getElementById(ML_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = ML_STYLE_ID;
+  style.textContent = ML_CSS;
+  document.head.appendChild(style);
+}
+
+const maistoLaikymas = {
+  mount({ stage, controls, api, config }) {
+    ensureMlStyle();
+
+    const say = config.sentences || {};
+    const line = (key) => say[key] || ML_SAY[key] || "";
+
+    let day = 0;
+    let guess = null;
+    let reported = false;
+
+    stage.innerHTML = `
+      <div class="ml-wrap">
+        <p class="ml-lead" id="ml-lead">Bakstelėk vietą, kur sūris pasikeis mažiausiai.</p>
+        <div class="ml-grid" id="ml-grid" role="group" aria-label="Keturios laikymo vietos"></div>
+        <p class="ml-model">Tamsi dalis rodo pasikeitimą. Tai palyginimas, ne tikslus terminas.</p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div class="ml-time" id="ml-time" hidden>
+        <label for="ml-days">Kiek dienų praėjo?</label>
+        <input id="ml-days" type="range" min="0" max="4" step="1" value="0"
+               aria-label="Laikas dienomis" aria-valuetext="Šiandien" />
+        <p class="ml-day" id="ml-day" aria-hidden="true">Šiandien</p>
+        <div class="ml-actions">
+          <button type="button" class="btn ghost" id="ml-reset">Iš naujo</button>
+        </div>
+      </div>`;
+
+    const grid = stage.querySelector("#ml-grid");
+    const lead = stage.querySelector("#ml-lead");
+    const timeBox = controls.querySelector("#ml-time");
+    const range = controls.querySelector("#ml-days");
+    const dayEl = controls.querySelector("#ml-day");
+
+    const oldOf = (p) => Math.min(1, p.rate * day);
+    const pick = (id) => ML_PLACES.find((p) => p.id === id);
+
+    function buildGrid() {
+      grid.innerHTML = ML_PLACES.map((p) => {
+        const chosen = guess === p.id;
+        return `<button type="button" class="ml-card${chosen ? " is-guessed" : ""}"
+            data-place="${p.id}" aria-pressed="${chosen}"
+            aria-label="${p.name}. ${chosen
+              ? "Tavo spėjimas."
+              : "Bakstelėk, jei spėji, kad čia pasikeis mažiausiai."}">
+          <span class="ml-name">${p.name}</span>
+          <svg class="ml-pic" viewBox="0 0 128 58" aria-hidden="true" focusable="false">
+            <g transform="translate(2 10) scale(0.8)">${art.place(p.id)}</g>
+            <g class="ml-food">${art.cheese(`ml-${p.id}`, 48, 6, 72, oldOf(p))}</g>
+          </svg>
+          <span class="ml-chip">${chosen ? "Tavo spėjimas" : ""}</span>
+        </button>`;
+      }).join("");
+      grid.querySelectorAll(".ml-card").forEach((btn) => {
+        btn.addEventListener("click", () => choose(btn.dataset.place));
+      });
+    }
+
+    /* Juostos perpiešiamos, o kortelių tapatybė nepakinta: vaiko fokusas
+       lieka ten, kur buvo (LL-32), o pasikeitimas matomas tame pačiame kadre. */
+    function paint() {
+      const label = day === 0 ? "Šiandien" : day === 1 ? "1 diena" : `${day} dienos`;
+      dayEl.textContent = label;
+      range.setAttribute("aria-valuetext", label);
+      grid.querySelectorAll(".ml-card").forEach((btn) => {
+        const p = pick(btn.dataset.place);
+        const host = btn.querySelector(".ml-food");
+        if (p && host) host.innerHTML = art.cheese(`ml-${p.id}`, 48, 6, 72, oldOf(p));
+      });
+    }
+
+    function choose(id) {
+      const p = pick(id);
+      if (!p) return;
+      if (guess) {
+        api.readout(line("jau"));
+        api.note("Stumk laiką ir žiūrėk, kas atsitiks.");
+        api.speak(line("jau"));
+        return;
+      }
+      guess = id;
+      grid.querySelectorAll(".ml-card").forEach((btn) => {
+        const mine = btn.dataset.place === id;
+        const other = pick(btn.dataset.place);
+        btn.classList.toggle("is-guessed", mine);
+        btn.setAttribute("aria-pressed", String(mine));
+        btn.setAttribute("aria-label", mine
+          ? `${other.name}. Tavo spėjimas.`
+          : `${other.name}.`);
+        btn.querySelector(".ml-chip").textContent = mine ? "Tavo spėjimas" : "";
+      });
+      timeBox.hidden = false;
+      lead.textContent = "Dabar stumk laiką į priekį.";
+      range.focus();
+      api.readout(line("spejimas"));
+      api.note(`Spėjai: ${p.name}.`);
+      api.speak(line("spejimas"));
+    }
+
+    function announce() {
+      const key = day === 0 ? "siandien" : `diena-${day}`;
+      if (day < 4) {
+        api.readout(line(key));
+        api.speak(line(key));
+        api.note(day === 0 ? "Stumk laiką po vieną dieną." : "Palygink sūrius tame pačiame laike.");
+        return;
+      }
+
+      /* Ketvirta diena: garsiai pasakomas SPĖJIMO palyginimas (T3.1) — tai
+         grįžtamasis ryšys, kurį vaikas turi išgirsti. Stebėjimas lieka
+         pastaboje, nes jį vaikas mato pačiame paveiksle. */
+      const feedback = guess === "saldiklis" ? "spejimas-teisingas" : "spejimas-kitas";
+      api.readout(line(feedback));
+      api.speak(line(feedback));
+      api.note("Palangėje sūris visas tamsus, šaldiklyje beveik šviesus.");
+      // Rezultatas — tik perėjus visą laiką, o ne po pirmo žingsnio (LL-29).
+      if (!reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    function reset() {
+      day = 0;
+      guess = null;
+      reported = false;
+      range.value = "0";
+      timeBox.hidden = true;
+      lead.textContent = "Bakstelėk vietą, kur sūris pasikeis mažiausiai.";
+      buildGrid();
+      paint();
+      api.readout(line("is-naujo"));
+      api.note("Bakstelėk vietą, kur sūris pasikeis mažiausiai.");
+      api.speak(line("is-naujo"));
+      const first = grid.querySelector(".ml-card");
+      if (first) first.focus();
+    }
+
+    /* `input` — tik vaizdas (juostos juda), `change` — žodžiai. Taip
+       aria-live tekstas nekeičiamas kiekvieną kadrą (LL-14). */
+    range.addEventListener("input", () => {
+      day = Number(range.value);
+      paint();
+    });
+    range.addEventListener("change", () => {
+      day = Number(range.value);
+      paint();
+      announce();
+    });
+    controls.querySelector("#ml-reset").addEventListener("click", reset);
+
+    buildGrid();
+    paint();
+    api.readout(line("pradzia"));
+    api.note("Bakstelėk vietą, kur sūris pasikeis mažiausiai.");
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "elektros-grandine": elektrosGrandine,
   "medziagu-bandymas": medziaguBandymas,
@@ -2628,4 +2875,5 @@ export const SIMS = {
   "batas": batas,
   "valdiklis": valdiklis,
   "audinys": audinys,
+  "maisto-laikymas": maistoLaikymas,
 };

@@ -238,7 +238,55 @@ MEASURE = r"""
   // „žalia“ (LL-06 taikoma tik zonai, kurią matuoja jos vartas).
   // Skaičiuojami TIK matomi tekstiniai mazgai; `aria-hidden` iliustracijos dalis
   // (pvz. dekoratyvūs skaičiai) neįtraukiamos, nes vaikas jų neskaito.
+  //
+  // Du aklosios zonos taisymai (2026-11-25):
+  // 1) SVG `<text>` `font-size` yra viewBox vienetai, ne ekrano pikseliai:
+  //    12 vienetų 360 vienetų scenoje, įsirėmusioje į 330 px, vaikui yra
+  //    ~11 px, o 20 vienetų ikonos scenoje (0 0 20 20) — 16× daugiau. Be
+  //    perskaičiavimo vartai praneša skaičių, kurio vaikas nemato, ir klysta
+  //    į abi puses (LL-38 — slenkstis nuslinkęs nuo standarto).
+  // 2) Mazgai, kuriuos scena užpildo TIK po pirmo veiksmo (`#ms-records`,
+  //    `span.ms-seen`), teksto neturi, todėl seniau nebuvo matuojami nė karto
+  //    (LL-37). Matuojami tušti mazgai, kuriems dydis DEKLARUOTAS (inline
+  //    `font-size` arba klasės taisyklė), kad dekoratyvūs konteineriai
+  //    neštų triukšmo.
+  const svgScale = (el) => {
+    if (!(el instanceof SVGElement)) return 1;
+    // `getScreenCTM()` duoda tikrą vieneto → CSS px mastelį (įskaitant
+    // viewBox ir `<g transform>`), todėl šriftas perskaičiuojamas tiksliai.
+    const ctm = el.getScreenCTM && el.getScreenCTM();
+    if (ctm && ctm.a > 0) return ctm.a;
+    const svg = el.ownerSVGElement;
+    const vb = svg && svg.viewBox && svg.viewBox.baseVal;
+    if (!vb || !vb.width || !vb.height) return 1;
+    const r = svg.getBoundingClientRect();
+    if (!r.width || !r.height) return 1;
+    // preserveAspectRatio numatytasis (`meet`) — telpa į abi ašis.
+    const k = Math.min(r.width / vb.width, r.height / vb.height);
+    return k > 0 ? k : 1;
+  };
+  const classSizes = new Map();
+  try {
+    for (const sheet of document.styleSheets) {
+      let rules = null;
+      try { rules = sheet.cssRules; } catch (e) { continue; }
+      for (const rule of rules || []) {
+        const st = rule.style;
+        if (!st || !st.fontSize) continue;
+        for (const sel of (rule.selectorText || '').split(',')) {
+          const m = sel.trim().match(/^\.([A-Za-z0-9_-]+)$/);
+          if (m && !classSizes.has(m[1])) classSizes.set(m[1], st.fontSize);
+        }
+      }
+    }
+  } catch (e) { /* skersinės kilmės lapas — lieka tik inline deklaracijos */ }
+  const selName = (el) => {
+    const cls = typeof el.className === 'string' ? el.className : (el.getAttribute('class') || '');
+    return el.tagName.toLowerCase() + (cls ? '.' + cls.trim().split(/\s+/).slice(0, 2).join('.') : '');
+  };
   const simText = [];
+  let svgScaled = 0;
+  let emptyMeasured = 0;
   for (const zone of document.querySelectorAll('#sim-stage, #sim-controls, #sim-readout, #sim-note')) {
     if (!zone.getClientRects().length) continue;
     const walker = document.createTreeWalker(zone, NodeFilter.SHOW_TEXT);
@@ -252,13 +300,33 @@ MEASURE = r"""
       if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) continue;
       const r = el.getBoundingClientRect();
       if (r.width < 1 || r.height < 1) continue;
-      const px = parseFloat(cs.fontSize) || 0;
+      const factor = svgScale(el);
+      if (factor !== 1) svgScaled++;
+      const px = (parseFloat(cs.fontSize) || 0) * factor;
       if (!px) continue;
-      const cls = typeof el.className === 'string' ? el.className : (el.getAttribute('class') || '');
       simText.push({
         px: Math.round(px * 10) / 10,
-        sel: el.tagName.toLowerCase() + (cls ? '.' + cls.trim().split(/\s+/).slice(0, 2).join('.') : ''),
+        sel: selName(el),
         text: txt.slice(0, 32),
+      });
+    }
+    // Tušti, bet deklaruoto dydžio mazgai — būsena, kuri atsiras po veiksmo.
+    for (const el of zone.querySelectorAll('*')) {
+      if (el.children.length || (el.textContent || '').trim()) continue;
+      if (el.closest('[aria-hidden="true"]')) continue;
+      const cs = getComputedStyle(el);
+      if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) continue;
+      const cls = typeof el.className === 'string' ? el.className : (el.getAttribute('class') || '');
+      const declared = /font-size\s*:/i.test(el.getAttribute('style') || '')
+        || cls.split(/\s+/).some((n) => classSizes.has(n));
+      if (!declared) continue;
+      const px = (parseFloat(cs.fontSize) || 0) * svgScale(el);
+      if (!px) continue;
+      emptyMeasured++;
+      simText.push({
+        px: Math.round(px * 10) / 10,
+        sel: selName(el),
+        text: '(tuščias)',
       });
     }
   }
@@ -287,6 +355,8 @@ MEASURE = r"""
     simFonts: {
       min: simText.length ? simText[0].px : null,
       nodes: simText.length,
+      svgScaled,
+      empty: emptyMeasured,
       worst: simText.slice(0, 3),
     },
     loading: !!document.querySelector('.loading'),
@@ -494,7 +564,9 @@ def main() -> int:
             "sim_font_strict": args.sim_font_strict,
             "sim_font_notes": [
                 {"route": r["route"], "viewport": r["viewport"],
-                 "min": r["simFonts"]["min"], "worst": r["simFonts"]["worst"]}
+                 "min": r["simFonts"]["min"], "worst": r["simFonts"]["worst"],
+                 "svg_scaled": r["simFonts"].get("svgScaled", 0),
+                 "empty": r["simFonts"].get("empty", 0)}
                 for r in font_low
             ],
             "sim_font_checked": sum(1 for r in results if (r.get("simFonts") or {}).get("min") is not None),

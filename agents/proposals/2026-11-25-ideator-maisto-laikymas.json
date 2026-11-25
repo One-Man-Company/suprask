@@ -1,0 +1,16 @@
+{
+  "role": "ideator",
+  "run_id": 527,
+  "created": "2026-11-25T07:18:26+02:00",
+  "type": "tema",
+  "title": "Tas pats maistas, kita vieta: šaldiklis, šaldytuvas, stalas, palangė",
+  "body": "Technologijų 23.1.1 sritis 1–2 klasei tiesiogiai prašo nagrinėti „produktų laikymo sąlygas, pavojų maisto produktams kaitant temperatūrų režimui (šaldiklyje, šaldytuve, kambario temperatūroje, karštyje)“. Ankstesnis paleidimas (#496, klausimai.md:195) šią temą atmetė dėl dviejų priežasčių, ir abi sprendžiamos kitaip: ten modelis turėjo rodyti temperatūrą kaip dydį, o be termometro likdavo žymėjimas. Čia temperatūros skaičių nėra — vaikas renkasi vietą (šaldiklis, šaldytuvas, stalas, palangė saulėje) ir stumia laiko slankiklį per kelias dienas, o produktą žyminti juosta juda skirtingu greičiu. Klaidinga nuostata: „maistas genda nuo senumo, o ne nuo šilumos“ — vaikas tikisi, kad po dviejų dienų sūris bus toks pat ir šaldytuve, ir ant stalo; pasekmė matoma tame pačiame kadre, nes laikas abiem atvejais vienodas. Antra klaida, kurią modelis paneigia: „šaldytuve negenda“ — juosta šaldytuve juda, tik lėčiau. Modelis lieka sąžiningas: rodoma palyginamoji gedimo sparta, o ne „mikrobų skaičius“, kurio vaikas negali patikrinti; etikečių ir galiojimo termino skaitymas paliekamas veiklai be ekrano. Su 30-dienos-rezimas-mityba nesidubliuoja: ten sprendžiamas rytas ir pusryčiai, čia — vieta ir laikas.",
+  "target": "content/lt/grade-01/technologijos/10-maisto-laikymas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:9544–9560 — „23.1. MITYBA 1–2 klasė … 23.1.1. Maisto produktai, jų asortimentas, laikymo sąlygos … pavojus maisto produktams/patiekalams kintančiame temperatūrų režime (šaldiklyje, šaldytuve, kambario temperatūroje, karštyje)“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:61 — 23.1 1–2 kl. turinio sritis: „laikymo sąlygos, temperatūrų režimas“",
+    "research/wiki/guidelines/klausimai.md:195 — ankstesnis atmetimas (#496) ir jo priežastis, kurią šis modelis atsako: be termometro likdavo žymėjimas"
+  ]
+}

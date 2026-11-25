@@ -234,3 +234,23 @@ Paleidime #496 „PROGRAMOS PADENGTIS“ blokas 1 klasei rodė 45 padengtas, 1 d
 **Programos derintojui:** `backlog.json` eilutė `A:veikejas` vis dar rodo `modules: ['01-dovana-ir-noras', '17-kryptys-ir-vieta']`. Abu neteisingi (žr. `:189`). Taisyklingas susiejimas — `14-veikejas-pagal-teksta`; jei eilutė nepergeneruota, kūrėjas vėl gaus temą kaip `covered`, o `lietuviu-kalba-1-klase.md:144` tebeteigs, kad modulio nėra.
 
 **Matuoklio pastaba (ne turinio defektas).** Rašant ketvirtą užduotį paaiškėjo, kad `check_language.py` sakinio skaidymas (`re.split(r"(?<=[.!?])\s+")`) nematė ribos, kai kabutėse esantis sakinys baigiasi `.“` ir po jo eina tarpas: `„Padavė kamuolį draugui.“ Antras: …` buvo suskaičiuotas kaip vienas 12 žodžių sakinys. Turinys perrašytas taip, kad kiekvienas sakinys baigtųsi skyrybos ženklu be kabutės, bet pats skaidytuvas vertas pataisos — kitaip autorius, rašantis trumpus sakinius kabutėse, gauna klaidingą „per ilgo sakinio“ klaidą ir taiso ne tą dalyką (LL-35 šeima).
+
+## Ideator, 2026-11-25 (#527): trys pasiūlymai ir trys eilės defektai
+
+**Pasiūlyta:** loginės operacijos NE/IR/ARBA su dviem jungikliais ir viena lempa (`2026-11-25-ideator-logines-operacijos-ir-arba.json`, B2.3, `sources:12284` — eilutė stovi 1–2 kl. stulpelyje), maisto laikymo vieta ir laikas (`2026-11-25-ideator-maisto-laikymas.json`, 23.1.1, `sources:9544–9560`) ir raidės forma iš dalių (`2026-11-25-ideator-erdvines-raides.json`, dailės 1 kl. ciklas, `sources:2635`).
+
+**Kodėl dvi iš jų siūlomos iš naujo** (abi jau atmestos — `:195`, `:198`, `:211`) — pasikeitė modelis, ne formuluotė. Maisto laikymo atmetimas rėmėsi tuo, kad be termometro lieka žymėjimas; naujasis modelis termometro nenaudoja, o lygina **tą patį laiką** skirtingose vietose (šaldiklis, šaldytuvas, stalas, palangė), todėl pasekmė matoma be skaičių. Dailės raidės atmetimas rėmėsi dviem kitais modeliais (erdvė/plokštuma ir „ta pati raidė kitoje medžiagoje“); naujasis keičia ne spalvą ir ne medžiagą, o **dalis** — įdėjus kilpą P virsta R, o papuošimas raidės nekeičia.
+
+**Atmesta šiame paleidime (nekartokite be naujo modelio):**
+
+- **Laiko kryptis „vakar / šiandien / rytoj“** — 1–2 kl. ilgalaikio plano pavyzdys ją įvardija (`sources:22941`: „laiko kaitos sąvokas: vakar, šiandien, rytoj; praeityje, dabar, ateityje“), bet `matematika-1-klase.md:150` tą pačią „parą“ priskiria „2 klasei ir vėliau“. Kol tyrėjas neišsprendė, kuri eilutė galioja 1 klasei, modulio nekūriau (LL-23 rizika). Tai atviras klausimas tyrėjui.
+- **Melodinis instrumentas (dūdelė, skylutė keičia aukštį)** — programa grojimą nuo 1 kl. rekomenduoja (`kti-dalykai-1-klase.md:35`), bet modelio branduolys būtų tas pats „aukštis ≠ garsumas“, kurį jau sprendžia `01-garso-aukstis` → gairių 5 klausimas.
+- **Sekos trūkstamas narys grupės viduryje** — `07-desningumai` ketvirta užduotis jau prašo užpildyti tuščią langelį sekos viduryje, todėl atskiro modulio nereikia.
+- **Maisto grupavimas (augaliniai/gyvuliniai, perdirbti/natūralūs)** — liko prie ankstesnio atmetimo (`:199`): tai žymėjimas, o „natūralu = sveika“ moralizuoja (T5.1).
+- **Orų, asmens higienos, saugaus eismo, nusiraminimo būdų, dienos režimo** — jau atsakyta (`:60–:77`); šiame paleidime nekartota.
+
+**Eilės defektai, kuriuos turi pataisyti programos derintojas / tyrėjas:**
+
+1. `research/wiki/curriculum/backlog.md:61` eilutė `gap:teksto-skaitymas-su-supratimu-b-1-2-tiesiogine-p` sako „nė vienas modulis nepateikia kelių sakinių teksto“, bet `content/lt/grade-01/lietuviu-kalba/11-teksto-supratimas.json` `sim.config` turi penkių sakinių tekstą („Rytas prie mokyklos“, `sentences` ilgis 5) ir penkis klausimus su kiekvieno sakinio paaiškinimu. Žyma pasenusi — eilutė turi būti uždaryta.
+2. `backlog.md:55` eilutė „Erdvinės raidės“ (`D:erdvines-raides`) pažymėta `covered`, nors nė viename dailės ar technologijų modulyje raidės forma nemodeliuojama: `grep -rn "raid" content/lt/grade-01/{daile,technologijos}/` → 0, o vienintelis „raidės formos“ paminėjimas (`assets/js/sims/calba.js:1551`) yra garsų trukmės simuliacijos sakinys. Tai ta pati šeima kaip `:193` ir `:220`: eilutė uždaryta be modulio, todėl spraga eilėje nematoma. Kai atsiras `02-erdvines-raides`, susiejimas turi būti įrašytas į eilutę, kitaip dailė liks „padengta“ su vienu moduliu apie spalvą.
+3. `matematika-1-klase.md:103` teiginys „privalomas, bet platformoje dar nepanaudotas elementas — rasti trūkstamus narius“ nebegalioja: `07-desningumai` ketvirta užduotis („Seka: 🔵🔵▢ 🔵🔵⭐ … Kas turi stovėti tuščiame langelyje?“) prašo būtent to.

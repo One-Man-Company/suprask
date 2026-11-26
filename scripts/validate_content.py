@@ -197,6 +197,130 @@ def check_sim_config(rel, comp: str, cfg, rep: Report) -> None:
                 f"{rel}: „sim.config.{key}“ simuliacija „{comp}“ ({fname}) nenaudoja — "
                 "turinys keistų garso įrašą, bet ne ekraną (#14726)"
             )
+    check_sim_palette(rel, comp, cfg, rep)
+
+
+# --- sim.config.palette: ar seką įmanoma išspręsti be spalvos ------------
+# Standartas §4.4 reikalauja, kad spalva niekada nebūtų vienintelis informacijos
+# nešėjas, bet iki šios taisyklės ji buvo tikrinama vien CSS lygmenyje
+# (`check_ui.py` skaito `main.css`). Modelio sprendžiamumas yra **duomenų**
+# savybė: 07-desningumai penkias sekas 2026-11-24 tebūtų sudėjęs iš vienodų
+# apskritimų, o visi vartai likę žali (#46530, LL-174). Ši patikra skaito
+# `sim.config`, todėl gaudo ir būsimą regresiją: config pataisymas, kuris
+# grąžina spalvotus apskritimus, tampa raudonu vartu, o ne tyliu pedagoginiu
+# defektu, kurį randa tik žmogus.
+SEQ_KEYS = ("seq", "options", "answer")
+
+
+def _palette_tasks(cfg: dict) -> list[tuple[str, dict]]:
+    """`sim.config` sąrašai, kurie yra sekos uždaviniai (turi `seq`, `options`, `answer`).
+
+    Rakto vardas sąmoningai nefiksuojamas („tasks“, „items“ …): komponentas
+    pats pasirenka, o taisyklė turi galioti visiems, kurie deklaruoja paletę.
+    """
+    out: list[tuple[str, dict]] = []
+    for key, value in cfg.items():
+        if not isinstance(value, list):
+            continue
+        for i, t in enumerate(value, 1):
+            if isinstance(t, dict) and all(k in t for k in SEQ_KEYS):
+                out.append((f"{key}[{i}]", t))
+    return out
+
+
+def _period(shapes: list[str]) -> int | None:
+    """Mažiausias periodas (ne didesnis už pusę ilgio) arba None.
+
+    Ta pati taisyklė kaip simuliacijos `ruleOf()`: periodas ieškomas iki
+    `len // 2`, nes ilgesnis „periodas“ reiškia, kad grupė nesikartoja.
+    """
+    n = len(shapes)
+    for p in range(1, n // 2 + 1):
+        if all(shapes[j] == shapes[j + p] for j in range(n - p)):
+            return p
+    return None
+
+
+def check_sim_palette(rel: str, comp: str, cfg, rep: Report) -> None:
+    """Paletės žetonai turi antrą nešėją (formą), o uždavinys — vieną sprendimą be spalvos."""
+    del comp  # adresatas jau yra `rel`; paletė tikrinama iš `sim.config`
+    if not isinstance(cfg, dict):
+        return
+    palette = cfg.get("palette")
+    if not isinstance(palette, dict) or not palette:
+        return
+    tasks = _palette_tasks(cfg)
+    if not tasks:
+        return
+    # 1) Kiekvienas žetonas egzistuoja paletėje IR turi ne tuščią formą.
+    #    Žetonas be formos būtų atpažįstamas tik atspalviu (LL-174).
+    shape: dict[str, str] = {}
+    for token, spec in palette.items():
+        if not isinstance(spec, dict):
+            rep.err(f"{rel}: „sim.config.palette.{token}“ turi būti objektas su forma (LL-174)")
+            continue
+        form = str(spec.get("shape") or "").strip()
+        if not form:
+            rep.err(
+                f"{rel}: paletės žetonas „{token}“ neturi „shape“ — be spalvos jo "
+                "neatskirtum nuo kitų (standartas §4.4)"
+            )
+            continue
+        shape[token] = form
+
+    for where, t in tasks:
+        used = [k for k in (t.get("seq") or []) if k != "?"] + list(t.get("options") or [])
+        missing = [str(k) for k in used if k not in shape]
+        if missing:
+            rep.err(
+                f"{rel}: „sim.config.{where}“ naudoja žetonus, kurių paletėje nėra arba "
+                f"kurie be formos: {', '.join(sorted(set(missing)))}"
+            )
+            continue
+        options = list(t.get("options") or [])
+        forms = [shape[k] for k in options]
+        # 2) Atsakymų variantai privalo skirtis forma. Jei du variantai turi tą
+        #    pačią formą, be spalvos abu atrodo vienodai teisingi.
+        dup = {f for f in forms if forms.count(f) > 1}
+        if dup:
+            rep.err(
+                f"{rel}: „sim.config.{where}“ atsakymų variantai nesiskiria forma "
+                f"({', '.join(sorted(dup))}) — be spalvos jų neatskirtum (LL-174)"
+            )
+            continue
+        seq = list(t.get("seq") or [])
+        if seq.count("?") != 1:
+            continue  # trūkstamos vietos skaičių tikrina simuliacijos pusė
+        slot = seq.index("?")
+        seq_forms = [shape[k] for k in seq[:slot]]
+        tail_forms = [shape[k] for k in seq[slot + 1:]]
+        solvable = []
+        for k, form in zip(options, forms):
+            filled = seq_forms + [form] + tail_forms
+            # 3) Seka po įterpimo privalo periodiškai kartotis: kitaip
+            #    „taisyklė“, kurią vaikas turi atrasti, neegzistuoja.
+            if _period(filled) is not None:
+                solvable.append(k)
+        if not solvable:
+            rep.err(
+                f"{rel}: „sim.config.{where}“ nė vienas variantas nepadaro sekos "
+                "periodiškos — uždavinys be sprendimo (LL-174)"
+            )
+        # Sąmoningai NĖRA atšakos „daugiau nei vienas sprendimas“: kai viena
+        # vieta tuščia, sprendimas be spalvos yra unikalus (patikrinta
+        # išvardijus visas 2–5 žetonų sekas iki 9 vietų — 0 atvejų). Atšaka,
+        # kuri negali suveikti, būtų tas pats, kaip vartas be imties (LL-37).
+        correct = options[t["answer"]] if isinstance(t.get("answer"), int) and 0 <= t["answer"] < len(options) else None
+        if correct is not None and solvable and correct not in solvable:
+            # Uždavinys išsišakoja: variantas, kurį modelis laiko teisingu,
+            # be spalvos nepadaro sekos periodiška, o kitas — padaro. Vaikas,
+            # kuris skaito formą, ir vaikas, kuris skaito spalvą, gautų
+            # skirtingus atsakymus (LL-18 šeima).
+            rep.err(
+                f"{rel}: „sim.config.{where}“ teisingas variantas „{correct}“ nesutampa "
+                f"su tuo, kuris sprendžiasi be spalvos ({', '.join(solvable)}) — "
+                "atsakymas priklauso nuo spalvos (standartas §4.4)"
+            )
 
 
 def word_count(text: str) -> int:

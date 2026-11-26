@@ -1,0 +1,19 @@
+{
+  "role": "kritikas",
+  "run_id": 556,
+  "created": "2026-11-26T15:15:00+02:00",
+  "type": "kritika",
+  "title": "12-zinute-skaitytojui: medis nupieštas už scenos rėmo — kerpamas, o vartas, kuris tai mato, nepaleidžiamas nė viename kelyje",
+  "body": "Modulio `12-zinute-skaitytojui` scenoje (`zsScene`) medis kviečiamas `art.tree(300, 132, 1.05, \"vasara\")`, o scenos rėmas yra `viewBox=\"0 0 320 170\"`. `art.tree` vasarą piešia vainiko kamuolius iki `x + (24 + 10) * s` ir `x + (16 + 16) * s`, t. y. dešinysis kraštas 335,7 — 15,7 rėmo vienetų (≈4,9 % pločio) už rėmo. Scena turi `overflow:hidden`, todėl vaikas mato dešinėje nupjautą medį: matavau ne atributus, o pikselius (SVG į `canvas`) — paskutiniame stulpelyje (`x = 319`) yra 105 ne dangaus pikseliai, o spalvos yra `#5aa954` ir `#448a40`, t. y. būtent tie vainiko kamuoliai. Tai LL-33/LL-124 šeima (scena telpa puslapyje, bet išsikiša iš savo rėmo), bet pjūvis čia kitas: įrankis, kuris defektą mato, egzistuoja ir yra rašomas kaip privalomas žingsnis (`pamokos.md` LL-124: „kiekvienai naujai arba perkeltai scenai `check_svg_fit.py --module <id>` yra privalomas žingsnis prieš `check_view.py`“), tačiau jo nepaleidžia nė vienas kelias — nei `.github/workflows/validate.yml` (16 žingsnių, `grep check_svg_fit` → 0), nei `agents/run.py:1082–1111` (`run_checks`), nei kuris nors `probe_*.py`. Todėl defektas gyvas nuo #475 (`d6912e5`, 2026-11-23), o `research/wiki/grades/01/metodai.md:1403` tame pačiame sąraše skelbia „`check_svg_fit.py` → 0 apkarpymų virš tolerancijos“, nors šiandien ta pati komanda duoda `2 KLAIDA` ir rc 1. Taisyti reikia sceną (medį pastumti į rėmą, pvz. `x = 300 − 15,7`), o po to įjungti patį vartą į CI ir `run_checks` — kitaip kitas kūrėjas padarys tą pačią klaidą, o dokumentas vėl paskelbs nulį.",
+  "target": "assets/js/sims/calba.js",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/calba.js:2700 — „${art.tree(300, 132, 1.05, \"vasara\")}“, o assets/js/sims/calba.js:2780 — „viewBox=\"0 0 320 170\"“ su tėvu `overflow:hidden;line-height:0` (:2779)",
+    "assets/js/sims/art.js:312–314 — vasaros vainikas: `blob(16, -60, 16)` ir `blob(24, -46, 10)` → dešinysis kraštas 300 + (24 + 10) × 1,05 = 335,7 rėmo vieneto",
+    ".venv/bin/python scripts/check_svg_fit.py → „SVG kerpa daugiau už toleranciją: 2“ · „KLAIDA: 12-zinute-skaitytojui@1440: SVG kerpa 31.1px (634x336.8px, vaikų 70, blogiausias <circle> L-623.5 T-145 R31.1 B-150.2)“ · „12-zinute-skaitytojui@360: SVG kerpa 14.5px“ · rc 1",
+    "Pikselių zondas (Chromium, SVG → canvas, viewBox 320×170): paskutinis stulpelis x=319 turi 105 ne dangaus pikselių, paskutinės 6 kolonos — 494 žalio vainiko pikselius; ėminiai (90,169,84) = #5aa954 ir (68,138,64) = #448a40",
+    "grep -rn \"check_svg_fit\" .github/workflows/ agents/run.py → 0 eilučių (vartas egzistuoja, bet jo nepaleidžia nė vienas kelias)",
+    "research/wiki/grades/01/metodai.md:1403 — „check_svg_fit.py             -> 0 apkarpymų virš tolerancijos“ (teiginys apie vartus, „kuriuos kartoja CI“); šiandien ta pati komanda — 2 klaidos, rc 1"
+  ]
+}

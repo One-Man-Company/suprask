@@ -1,0 +1,19 @@
+{
+  "role": "kritikas",
+  "run_id": 556,
+  "created": "2026-11-26T15:26:00+02:00",
+  "type": "kritika",
+  "title": "35-gamtos-istekliai: „Obuolio graužas išaugo“ — neteisingas sakinys ir modelio kriterijus, kurio jis pats neatlaiko",
+  "body": "Modulio `35-gamtos-istekliai-tarsa-tausojimas` pagrindinė idėja sako: „Lapas ir obuolio graužas **išaugo**, todėl gamta juos suyra. Butelis ir stiklinė **pagaminti**, todėl jie pievoje lieka“ (JSON:15), tą patį kartoja 1 užduoties paaiškinimas („Graužas išaugo, todėl gamta jį suyra per metus“, JSON:101), `teacher.misconceptions` („Modelis skiria ne medžiagos kilmę, o tai, ar daiktas **išaugo**, ar pagamintas“, JSON:157) ir `svietimas1` („viena sąvoka (gamta suyra tai, kas išaugo)“, JSON:167). Du sluoksniai, ir pirmas yra tiesiog neteisingas sakinys, kurį 6–7 metų vaikas pasiima kaip faktą: obuolio graužas niekada neišaugo — išaugo **obuolys**, o graužas yra tai, kas po jo liko; lapas taip pat „išaugo“ tik kaip medžio dalis, o scenoje jis guli nukritęs. Antras sluoksnis rimtesnis: paskelbtas kriterijus (išaugo ↔ pagaminta) yra **neišsamus**, todėl modelio išvada apie keturis jo paties daiktus nebeišvedama. Graužas nė vienas iš dviejų — nei išaugęs, nei pagamintas, — o vis tiek suyra; pagal tą pačią taisyklę popierius, medinis šaukštas ar medvilninė kojinė (pagaminti) turėtų likti pievoje, nors suyra, o akmuo (neišaugęs, nepagamintas) neturėtų suirti — ir nesuyra. Vaikas, kuris taisyklę pritaiko naujam daiktui, gauna atsakymą, priešingą tikrovei. Tai LL-18 šeima (klaidingas variantas, kuris gyvenime teisingas) ir LL-28 (modelyje nėra nė vieno prieštaraujančio pavyzdžio), o ne kelių atskirų pastebėjimų sąrašas. Taisyti reikia **teiginį ir kriterijų**, ne paveikslą: kriterijus, kurį modelis tikrai rodo, yra „gamta suyra **tai, kas buvo gyva** (lapas, graužas, žolė), o stiklas ir plastikas nesuyra per metus“. Tada graužas tinka (jis buvo obuolio dalis), popierius ir medvilnė nebeklaidingai išvedami (jie suyra, bet ne per metus — tai jau atskira sąvoka, kurios 1 kl. modulis imti neturi), o `concept.big_idea`, JSON:101 ir JSON:157 turi kalbėti apie tą patį kriterijų. Kol kas fiksuoju, o ne taisau: turinys — ne kritiko rašymo sritis.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/35-gamtos-istekliai-tarsa-tausojimas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/35-gamtos-istekliai-tarsa-tausojimas.json:15 — „Lapas ir obuolio graužas išaugo, todėl gamta juos suyra.“",
+    "content/lt/grade-01/pasaulio-pazinimas/35-gamtos-istekliai-tarsa-tausojimas.json:101 — „Graužas išaugo, todėl gamta jį suyra per metus.“",
+    "content/lt/grade-01/pasaulio-pazinimas/35-gamtos-istekliai-tarsa-tausojimas.json:157 — „Modelis skiria ne medžiagos kilmę, o tai, ar daiktas išaugo, ar pagamintas.“",
+    "content/lt/grade-01/pasaulio-pazinimas/35-gamtos-istekliai-tarsa-tausojimas.json:32, :42, :52, :64 — sim.config items: `lapas` ir `grauzas` (`decays: true`) bei `butelis` ir `stikline` (`decays: false`), t. y. modelis sprendžia suirimą, o kriterijaus, pagal kurį tai sprendžiama, tekste nėra",
+    "docs/KURINIO-STANDARTAS.md:222 — „Užrašas ir paveikslas privalo sutarti“; docs/SVIETIMAS-1-GAIRES.md:87–89 — 1–2 kl. abstrakcijos lygis: konkreti, viena sąvoka",
+    "research/wiki/guidelines/pamokos.md LL-28 (modelis be prieštaraujančio pavyzdžio) ir LL-18 (klaidingas variantas, kuris gyvenime teisingas)"
+  ]
+}

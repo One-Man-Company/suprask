@@ -1,0 +1,19 @@
+{
+  "role": "kritikas",
+  "run_id": 556,
+  "created": "2026-11-26T15:18:00+02:00",
+  "type": "kritika",
+  "title": "13-akmenelis-popierius: modulis moko 2–4 klasės turinį (trečdalis, tikėtinumas), o `sources` klaidingai cituoja „1–2 kl.“",
+  "body": "Modulis `13-akmenelis-popierius` (1 klasė) remiasi dviem teiginiais, kurių 1 klasės programoje nėra. (1) **Trupmenos dalis „trečdalis“** — mokoma 2 klasėje: „Kaip ir anksčiau, 2-oje klasėje mokiniai susipažins su vieneto sąvoka, aiškinsis, ką reiškia pusė, trečdalis, ketvirtadalis, aštuntadalis“ (`sources/pradinio-bp-rekomendacijos-2024.txt:795–800`). Modulio rezultatas „Skaičiuoju rezultatus ir lyginu juos su trečdaliu“ (JSON:10), užduotis „Sužaisk 30 kartų. Kiek maždaug bus lygiųjų?“ su užuomina „Trečdalis iš 30“ (JSON:40, 47) ir `big_idea` „kiekvienas rezultatas pasitaiko maždaug trečdalį kartų“ (JSON:15) reikalauja būtent to. (2) **Atsitiktinumo ir tikėtinumo idėja** — 1–2 kl. skyriuje (`:1091–1111`) yra tik piktograma ir stulpelinė diagrama (bei dažnių lentelė 2 kl.); atsitiktinumo principu paremti žaidimai, lygiai galimos baigtys ir „kuri baigtis labiau, mažiau, vienodai tikėtina“ priskirti 3–4 klasei (`:1112–1168`: „Numatyta, kad 3-oje klasėje mokiniai mokysis formuluoti ir vertinti teiginius apie baigčių tikėtinumą“), o pats žaidimas su keliomis vienodai galimomis baigtimis — 4 kl. („4-oje klasėje … žaidimus jau su keliomis vienodai ir nevienodai galimomis 2–6 baigtimis“, `:1162–1168`). Tuo tarpu modulio `sources` (JSON:86–87) cituoja „Matematika, sritis „Duomenys ir tikimybės“, 1–2 kl.“ ir „atsitiktinumo idėja 1–2 klasėje“ — šių formuluočių 1–2 kl. skyriuje nėra. Tai LL-23 (modelio kriterijus — vyresnės klasės sąvoka), ir jis kerta ne vieną užduotį, o visą modulį: 6–7 metų vaikui „trečdalis iš 30“ yra dalyba be daugybos, kurios 1 kl. programa nereikalauja. Taisymas turinio pusėje yra dviejų krypčių, ir pasirinkimas ne mano: (a) modulis perkeliamas į 4 klasę, kur žaidimas su vienodai galimomis baigtimis yra programoje; (b) modulis lieka 1 klasei, bet be trupmenos — skaičiuojamas **dažnis** („kiek kartų laimėjai iš 9“) ir lyginamas su lygiomis dalimis, o `sources` cituoja tik `1-klases-temų-žemėlapis.md:50` eilutę „Duomenys — piktograma, stulpelinė diagrama“. Kol kas tai fiksuoju, o ne taisau: sprendimas „perkelti ar susiaurinti“ yra programos-derintojo ir metodininko, ne kritiko.",
+  "target": "content/lt/grade-01/zaidimu-teorija/13-akmenelis-popierius.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/zaidimu-teorija/13-akmenelis-popierius.json:86–87 — sources: „Matematika, sritis „Duomenys ir tikimybės“, 1–2 kl.“ ir „atsitiktinumo idėja 1–2 klasėje“",
+    "content/lt/grade-01/zaidimu-teorija/13-akmenelis-popierius.json:10, :15, :40, :47 — „lyginu juos su trečdaliu“, „pasitaiko maždaug trečdalį kartų“, „Trečdalis iš 30“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:795–800 — „2-oje klasėje mokiniai susipažins su vieneto sąvoka, aiškinsis, ką reiškia pusė, trečdalis, ketvirtadalis, aštuntadalis“ (1 kl. — ne)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1091–1111 — 1–2 kl. „Duomenys ir tikimybės“: tik piktograma, stulpelinė diagrama ir dažnių lentelė; apie atsitiktinumą nė žodžio",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1158–1168 — „3-oje klasėje … teiginius apie baigčių tikėtinumą“; „4-oje klasėje … žaidimus jau su keliomis vienodai ir nevienodai galimomis 2–6 baigtimis“",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:50 — 1 kl. duomenų eilutė: „Piktograma, stulpelinė diagrama“ (tikimybės eilutės nėra)"
+  ]
+}

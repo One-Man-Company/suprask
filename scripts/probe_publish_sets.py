@@ -156,8 +156,24 @@ def build_repo(root: pathlib.Path) -> None:
         '<link rel="stylesheet" href="./assets/css/main.css">'
         '<script type="module" src="./assets/js/app.js"></script>',
         encoding="utf-8")
-    (root / "404.html").write_text("<!doctype html><title>nera</title>",
-                                   encoding="utf-8")
+    (root / "404.html").write_text(
+        '<!doctype html><title>nera</title>'
+        '<link rel="stylesheet" href="/assets/css/main.css">'
+        '<a id="i-pradzia" href="/">Į pradžią</a>'
+        # Atsarginio puslapio spalvos — `main.css` tokenų kopija (be CSS
+        # `var(--paper)` neveikia). Vartas `depth_palette_check()` lygina jas
+        # kiekvieną bėgimą, tad zondo veidrodis turi turėti abi puses.
+        '<style>body{background:#fdf8ef;color:#23201c}'
+        '.eyebrow{color:#6f665a}.lede{color:#5f574d}.btn{background:#ff8a3d;'
+        'color:#23201c}</style>',
+        encoding="utf-8")
+    (root / "assets" / "css").mkdir(parents=True, exist_ok=True)
+    (root / "assets" / "css" / "main.css").write_text(
+        ":root {\n"
+        "  --paper: #fdf8ef;\n  --ink: #23201c;\n  --ink-soft: #5f574d;\n"
+        "  --ink-faint: #6f665a;\n  --accent: #ff8a3d;\n  --on-accent: #23201c;\n"
+        "}\n",
+        encoding="utf-8")
     (root / "assets" / "audio" / "lt").mkdir(parents=True, exist_ok=True)
     (root / "assets" / "audio" / "lt" / "manifest.json").write_text("{}", encoding="utf-8")
     # Publikuojamas, o naršyklės neįkeliamas failas — `pages.yml` kopijuoja
@@ -874,6 +890,83 @@ def main() -> int:
         httpd8.shutdown()
         httpd8.server_close()
         cp.LIVE_ROOT = url
+
+        # Z. Puslapis, atiduodamas bet kuriame gylyje (#560, LL-210).
+        #    `404.html` atsakydamas 404 atiduoda GitHub Pages, o naršyklė jį
+        #    renderina **to adreso gylio** atžvilgiu. Santykinė `./assets/css/…`
+        #    todėl veda į 404, o vaikas pamato baltą puslapį su mirusiu
+        #    mygtuku. Baitų lygybė su gyva svetaine to nemato: failas
+        #    paskelbtas teisingai, tik atiduodamas kitame gylyje.
+        check("Z: 404.html su absoliučiomis nuorodomis → nėra `depth_relative`",
+              data.get("depth_relative") == [] and data.get("depth_skipped") == []
+              and data.get("depth_checked", 0) >= 1,
+              f"relative {data.get('depth_relative')}, "
+              f"checked {data.get('depth_checked')}, "
+              f"skipped {data.get('depth_skipped')}")
+        saved_404 = (repo / "404.html").read_text(encoding="utf-8")
+        # Neigiama kontrolė: ta pati nuoroda, kuri buvo gyvoje svetainėje iki
+        # #560 — santykinė. Būsena privalo būti raudona ir įvardyti eilutę.
+        (repo / "404.html").write_text(
+            saved_404.replace('href="/"', 'href="./"').replace(
+                'id="i-pradzia" href="/"', 'id="i-pradzia" href="./"'),
+            encoding="utf-8")
+        data = cp.report([1])
+        rel = data.get("depth_relative") or []
+        check("Z2: santykinė nuoroda → raudona ir įvardyta failu bei eilute",
+              bool(rel) and not data["verdict"]["ok"]
+              and any("bet kuriame gylyje" in r for r in data["verdict"]["reasons"])
+              and rel[0]["file"] == "404.html" and rel[0]["line"] > 0,
+              f"relative {rel[:1]}, reasons {data['verdict']['reasons'][:2]}")
+        rc, out = run_cli(["--grade", "1"])
+        check("Z2: CLI spausdina „SANTYKINĖ NUORODA … BET KURIAME GILYJE“, rc 1",
+              rc == 1 and "BET KURIAME GILYJE" in out
+              and "taisyk nuorodą" in out,
+              f"rc {rc}, {[l for l in out.splitlines() if 'GILYJE' in l][:1]}")
+        (repo / "404.html").write_text(saved_404, encoding="utf-8")
+        data = cp.report([1])
+        check("Z3: atstačius → vėl žalia (patikra neįsimena klaidos)",
+              data.get("depth_relative") == [] and data["verdict"]["ok"],
+              f"relative {data.get('depth_relative')}, "
+              f"verdict {data['verdict']['label']}")
+        # Z4: failo repo nėra → tai NE „švaru“, o neįvykusi patikra (LL-37).
+        saved_depth = cp.DEPTH_SERVED
+        cp.DEPTH_SERVED = ("404.html", "nera-tokio.html")
+        data = cp.report([1])
+        check("Z4: trūkstamas failas → `depth_skipped`, o ne tyli žalia",
+              data.get("depth_skipped") == ["nera-tokio.html"]
+              and not data["verdict"]["ok"]
+              and any("neįvyko" in r for r in data["verdict"]["reasons"]),
+              f"skipped {data.get('depth_skipped')}, "
+              f"reasons {data['verdict']['reasons'][:2]}")
+        cp.DEPTH_SERVED = saved_depth
+        # Z5: atsarginio puslapio spalva — `main.css` tokeno kopija. Kai
+        #     dizainas keičiasi, kopija tyliai išsiskiria (LL-21 šeima), tad
+        #     ji lyginama, o ne laikoma „maždaug ta“.
+        saved_css = (repo / "assets" / "css" / "main.css").read_text(encoding="utf-8")
+        saved_site = (repo / "404.html").read_text(encoding="utf-8")
+        (repo / "assets" / "css" / "main.css").write_text(
+            saved_css.replace("--paper: #fdf8ef;", "--paper: #abc123;"),
+            encoding="utf-8")
+        data = cp.report([1])
+        check("Z5: main.css tokenas pakeistas → `palette_mismatch` ir raudona",
+              any(m["token"] == "--paper" and m["css_value"] == "#abc123"
+                  for m in data.get("palette_mismatch") or [])
+              and not data["verdict"]["ok"]
+              and any("nebeatitinka main.css" in r
+                      for r in data["verdict"]["reasons"]),
+              f"palette {data.get('palette_mismatch')}, "
+              f"reasons {data['verdict']['reasons'][:2]}")
+        rc, out = run_cli(["--grade", "1"])
+        check("Z5: CLI spausdina „NEBEATITINKA main.css“, rc 1",
+              rc == 1 and "NEBEATITINKA main.css" in out,
+              f"rc {rc}")
+        (repo / "assets" / "css" / "main.css").write_text(saved_css, encoding="utf-8")
+        (repo / "404.html").write_text(saved_site, encoding="utf-8")
+        data = cp.report([1])
+        check("Z6: atstačius → palette švari ir verdiktas žalias",
+              data.get("palette_mismatch") == [] and data["verdict"]["ok"],
+              f"palette {data.get('palette_mismatch')}, "
+              f"verdict {data['verdict']['label']}")
     finally:
         if httpd is not None:
             httpd.shutdown()

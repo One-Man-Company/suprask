@@ -3,15 +3,87 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fdf8ef">
 <title>Suprask! — puslapis nerastas</title>
-<link rel="stylesheet" href="./assets/css/main.css">
+<!-- Ikona ta pati ir taip pat `data:` URI, kaip `index.html`: be jos naršyklė
+     prašo /favicon.ico, gauna 404 ir palieka konsolėje klaidą, kuri atrodo
+     kaip antra šio puslapio klaida. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff8a3d'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' font-family='system-ui' fill='%23fff'%3ES%3C/text%3E%3C/svg%3E">
+<!--
+  Šį failą GitHub Pages atiduoda BET KURIAME neteisingame adrese, o naršyklė jį
+  renderina **to adreso gylio** atžvilgiu. Todėl santykinės nuorodos čia lūžta:
+  adresu /suprask/content/lt/grade-01/matematika/99-nera.json `./assets/css/main.css`
+  virsta /suprask/content/lt/grade-01/matematika/assets/css/main.css → 404, o
+  `./` mygtukas — /suprask/content/lt/grade-01/matematika/ → 404.
+
+  Matuota 2026-11-26 gyvoje svetainėje (Chromium, 390 px): 2 iš 3 adresų davė
+  baltą nestiliuotą puslapį su neveikiančiu mygtuku — `body` fonas permatomas,
+  `.eyebrow` ir `.btn` be nė vienos taisyklės, 3–4 konsolės klaidos.
+
+  Todėl:
+  1. minimalūs stiliai įrašyti tiesiai. Tai **apatinė riba**, o ne dizaino
+     kopija: puslapis perskaitomas, kai `main.css` neįsikelia (be scenarijų,
+     be tinklo, su senu kešu). Kai tikrasis CSS įsikelia, jis perima tas
+     pačias deklaracijas, o abi versijos sutampa spalvomis ir matmenimis.
+  2. Šaknis nustatoma pagal publikavimo sutartį, o ne protėvių sąrašu:
+     kiekvienas neteisingas kandidatas yra 404, t. y. konsolės klaida, kuri
+     užgožia tikras klaidas. Projektinis puslapis gyvena /<repo>/, savas
+     domenas — ties šaknimi (LL-210).
+-->
+<style>
+  body { margin: 0; background: #fdf8ef; color: #23201c;
+         font-family: ui-rounded, "Segoe UI", system-ui, sans-serif;
+         font-size: 1.08rem; line-height: 1.55; }
+  main { text-align: center; padding: 4rem 1.2rem; max-width: 34rem; margin: 0 auto; }
+  h1 { font-size: clamp(1.6rem, 6vw, 2.3rem); line-height: 1.15; margin: 0 0 .5em; }
+  p { margin: 0 0 .9em; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .82rem;
+             font-weight: 900; color: #6f665a; }
+  .lede { color: #5f574d; }
+  .btn { display: inline-flex; align-items: center; justify-content: center;
+         min-height: 48px; padding: .7rem 1.4rem; border-radius: 999px;
+         background: #ff8a3d; color: #23201c; font-weight: 800;
+         text-decoration: none; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1b1916; color: #f6efe3; }
+    .eyebrow, .lede { color: #cabfae; }
+  }
+</style>
 </head>
 <body>
-<main style="text-align:center;padding-top:4rem">
+<main>
   <p class="eyebrow">404</p>
   <h1>Čia nieko nėra</h1>
-  <p class="lede" style="color:var(--ink-soft);margin-inline:auto">Puslapis nerastas. Gal jis dar nesukurtas — arba adresas pasikeitė.</p>
-  <a class="btn" href="./">Į pradžią</a>
+  <p class="lede">Puslapis nerastas. Gal jis dar nesukurtas — arba adresas pasikeitė.</p>
+  <p><a class="btn" id="i-pradzia" href="/">Į pradžią</a></p>
+  <noscript>
+    <p><strong>Grįžk į pradžią.</strong> Šioje nuorodoje adresas įjungiamas
+    scenarijumi. Įrašyk svetainės adresą adreso juostoje ir spausk „Enter“.</p>
+  </noscript>
 </main>
+<script>
+/* Svetainės šaknis — iš publikavimo sutarties, be tinklo užklausų.
+   GitHub Pages projektinis puslapis gyvena /<repo>/ (`…github.io/suprask/`),
+   savas domenas — ties šaknimi. Abu atvejai vienareikšmiški, tad klausti
+   serverio nereikia: kiekvienas neteisingas kandidatas būtų 404 ir paliktų
+   konsolėje klaidą, kuri užgožia tikras. `file://` atveju (failas atidarytas
+   iš disko) scenarijus neprasideda — lieka įrašyti stiliai ir tekstas. */
+(function () {
+  if (location.protocol === "file:") return;
+
+  var first = location.pathname.split("/").filter(Boolean)[0];
+  var root = "/";
+  if (/\.github\.io$/i.test(location.hostname) && first) {
+    root = "/" + first + "/";
+  }
+
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = root + "assets/css/main.css";
+  document.head.appendChild(css);
+
+  document.getElementById("i-pradzia").href = root;
+})();
+</script>
 </body>
 </html>

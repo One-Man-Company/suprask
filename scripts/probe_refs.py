@@ -120,12 +120,20 @@ def main() -> int:
         case("K4 lūžęs CSS url()", rc == 1 and bool(hit), f"rc {rc}, radinys {hit[:1]}")
 
         # K5 — lūžęs href HTML faile (404.html: puslapis, kurį vaikas pamato,
-        # kai adresas neteisingas).
+        # kai adresas neteisingas). Nuoroda **įrašoma**, o ne ieškoma
+        # esamos: pirmoji zondo versija keitė `./assets/css/main.css`, o kai
+        # #560 puslapį perrašė, ta eilutė liko tik komentare — zondas toliau
+        # „ėjo“ ir nebetikrino nieko (K5 rc 0). Fixture'is, priklausantis nuo
+        # tikslinio teksto, yra LL-36 atmaina: jis tyliai nustoja matuoti.
         broken = tmp / "k5"
         shutil.copytree(site, broken)
-        edit(broken / "404.html", "./assets/css/main.css", "./assets/css/main2.css")
+        page = broken / "404.html"
+        page.write_text(
+            page.read_text(encoding="utf-8")
+            + '\n<link rel="stylesheet" href="/assets/css/nera-tokio.css">\n',
+            encoding="utf-8")
         rc, data = run(broken)
-        hit = [m for m in data.get("missing", []) if "main2.css" in m.get("ref", "")]
+        hit = [m for m in data.get("missing", []) if "nera-tokio.css" in m.get("ref", "")]
         case("K5 lūžęs href", rc == 1 and bool(hit) and hit[0]["file"] == "404.html", f"rc {rc}, radinys {hit[:1]}")
 
         # K6 — dinaminis importas su šablonu: ne klaida, bet neišmatuota.

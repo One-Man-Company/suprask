@@ -1587,6 +1587,119 @@ def strip_version(text: str) -> str:
     return VERSION_PARAM.sub("", text)
 
 
+# Failai, kuriuos GitHub Pages atiduoda **bet kuriame** neteisingame adrese:
+# puslapis renderinamas to adreso gylio atžvilgiu, o ne to, kuriame failas
+# guli repo. Santykinė nuoroda (`./assets/css/main.css`, `./`) todėl veda į
+# neegzistuojantį kelią, ir vaikas pamato baltą puslapį su mirusiu mygtuku.
+#
+# Matuota 2026-11-26 gyvoje svetainėje (Chromium, 390 px, 3 adresai):
+# `/content/lt/grade-01/matematika/99-nera.json` → `body` fonas permatomas
+# (`rgba(0,0,0,0)`), `./assets/css/main.css` → 404, 3 konsolės klaidos;
+# tas pats `/klase/9/nieko` → 4 klaidos. Šaknyje (`/`) tas pats failas
+# atrodo sveikai, todėl `curl` į `index.html`/`404.html` ir baitų lygybė su
+# gyva svetaine šio defekto nemato: failas paskelbtas teisingai, bet
+# **atiduodamas kitame gylyje**, nei jis parašytas.
+DEPTH_SERVED = ("404.html",)
+# Nuoroda, kuri prasideda nuo šaknies (`/`, `/suprask/`) arba yra absoliutus
+# `http(s)`/`data:` — nuo gylio nepriklauso. Viskas kita (santykinis kelias) —
+# defektas. Bare `/` irgi absoliutus: mano pirmoji versija reikalavo `/` +
+# ne-`/` simbolio, tad `href="/"` buvo klaidingai raudonas — zondas Z tai
+# parodė prieš commit'ą.
+ABSOLUTE_REF = re.compile(r"^(?:[a-zA-Z][a-zA-Z0-9+.\-]*:|//|/)")
+# `href="x"` ir `src='x'` — abi kabutės. Tas pats raštas kaip
+# `scripts/check_refs.py`: vartai neturi matyti mažiau formų už tą įrankį,
+# kuris nuorodas jau tikrina, kitaip vienas jų bus aklas kitai formai (LL-38).
+MARKUP_REF = re.compile(r"""\b(?:href|src)\s*=\s*["']([^"']+)["']""")
+
+
+def depth_refs(rel: str) -> dict:
+    """Santykinės nuorodos puslapyje, kuris atiduodamas bet kuriame gylyje.
+
+    Tikrinamos **visos** nuorodų formos, kurias naršyklė gali įkelti be
+    scenarijaus: `href`/`src` atributai ir CSS `url(...)`. Scenarijumi
+    sukuriamos nuorodos čia nematomos sąmoningai — jų negalima patikrinti
+    be naršyklės, tad jos turi būti kuriamos absoliučios (žr. `404.html`
+    komentarą). Būsena `skipped`, kai failo repo nėra: teigti „švaru“ apie
+    neperskaitytą failą būtų ta pati tyli riba (LL-37).
+    """
+    path = ROOT / rel
+    if not path.is_file():
+        return {"file": rel, "checked": 0, "relative": [], "skipped": True}
+    text = path.read_text(encoding="utf-8", errors="replace")
+    relative: list[dict] = []
+    checked = 0
+    for match in MARKUP_REF.finditer(text):
+        raw = match.group(1).strip()
+        # `#fragmentas` ir tuščia nuoroda gylio nekeičia.
+        if not raw or raw.startswith("#"):
+            continue
+        checked += 1
+        if not ABSOLUTE_REF.match(raw):
+            relative.append({
+                "file": rel,
+                "line": text.count("\n", 0, match.start()) + 1,
+                "ref": raw,
+                "why": "santykinis kelias — atiduodant kitame gylyje veda į 404",
+            })
+    return {"file": rel, "checked": checked, "relative": relative, "skipped": False}
+
+
+def depth_served_check() -> dict:
+    """Ar puslapiai, atiduodami bet kuriame gylyje, naudoja tik absoliučias nuorodas."""
+    items = [depth_refs(rel) for rel in DEPTH_SERVED]
+    return {
+        "depth_relative": [r for i in items for r in i["relative"]],
+        "depth_checked": sum(i["checked"] for i in items),
+        "depth_skipped": [i["file"] for i in items if i["skipped"]],
+        **depth_palette_check(),
+    }
+
+
+# Tokenai, kuriuos atsarginis puslapis turi atkartoti savo `<style>` bloke:
+# be `main.css` jis neturi iš ko imti `var(--paper)`, o permatus spalvas vaikas
+# pamatytų baltą arba nesuprantamą puslapį. Sąrašas sąmoningai trumpas —
+# tik tai, ką puslapis tikrai naudoja.
+FALLBACK_TOKENS = ("--paper", "--ink", "--ink-soft", "--ink-faint",
+                   "--accent", "--on-accent")
+CSS_FILE = "assets/css/main.css"
+
+
+def depth_palette_check() -> dict:
+    """Ar atsarginio puslapio spalvos dar sutampa su `main.css` tokenais.
+
+    Atsarginis `<style>` blokas yra **vertimų kopija**: `var(--paper)` be
+    `main.css` neveikia, tad reikšmė įrašoma ranka. Tokia kopija tyliai
+    išsiskiria, kai dizainas pasikeičia — tai LL-21 šeima (skaičius, kurio
+    niekas neperskaičiuoja), tik ne dokumente, o stiliuje. Todėl reikšmės
+    lyginamos kiekvieną bėgimą: dizaineriui pakeitus tokeną, vartas raudonas,
+    o ne puslapis „šiek tiek kitoks“.
+    """
+    css_path = ROOT / CSS_FILE
+    out: dict = {"palette_mismatch": [], "palette_checked": 0}
+    if not css_path.is_file():
+        return out
+    css = css_path.read_text(encoding="utf-8", errors="replace")
+    root_block = re.search(r":root\s*\{(.*?)\}", css, re.S)
+    if not root_block:
+        return out
+    tokens: dict[str, str] = {}
+    for name in FALLBACK_TOKENS:
+        match = re.search(rf"{re.escape(name)}\s*:\s*(#[0-9a-fA-F]{{6}})", root_block.group(1))
+        if match:
+            tokens[name] = match.group(1).lower()
+    out["palette_checked"] = len(tokens)
+    for rel in DEPTH_SERVED:
+        path = ROOT / rel
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace").lower()
+        for name, value in tokens.items():
+            if value not in text:
+                out["palette_mismatch"].append(
+                    {"file": rel, "token": name, "css_value": value})
+    return out
+
+
 def published_files() -> set[str]:
     """Visi failai, kuriuos `pages.yml` įkelia į svetainę (be `AGENTS.md`).
 
@@ -2294,6 +2407,11 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         # ką išmatavau“ — o `content/audio-overrides.json` iki #558 buvo
         # svetainėje ir nebuvo matuojamas nė vieno varto.
         "coverage": coverage(grades),
+        # Puslapiai, atiduodami bet kuriame gylyje (šiuo metu `404.html`).
+        # Baitų lygybė su gyva svetaine čia nieko nesako: failas paskelbtas
+        # teisingai, bet **atiduodamas kitame gylyje**, nei parašytas, tad
+        # santykinė nuoroda veda į 404 (LL-210).
+        **depth_served_check(),
         "shell_stale": shell["shell_stale"],
         "shell_gone": shell.get("shell_gone", []),
         "shell_unreachable": shell["shell_unreachable"],
@@ -2514,6 +2632,25 @@ def verdict(data: dict) -> dict:
                        f"publikavimas neįkelia")
     if data.get("shell_stale"):
         reasons.append(f"{len(data['shell_stale'])} pasenęs kodas")
+    # Puslapis, atiduodamas bet kuriame gylyje, su santykine nuoroda: failas
+    # paskelbtas (baitai lygūs), bet vaikui jis atsiveria be stiliaus ir su
+    # mirusiu mygtuku. Taisymas ne „publikuok“, o „pataisyk nuorodą“ (LL-210).
+    if data.get("depth_relative"):
+        first = data["depth_relative"][0]
+        reasons.append(f"{len(data['depth_relative'])} santykinė nuoroda puslapyje, "
+                       f"atiduodamame bet kuriame gylyje ({first['file']}:{first['line']} "
+                       f"„{first['ref']}“)")
+    if data.get("depth_skipped"):
+        # Failo repo nėra — „švaru“ būtų teiginys apie neperskaitytą failą.
+        reasons.append(f"gylio nuorodų patikra neįvyko: {', '.join(data['depth_skipped'])}")
+    # Atsarginio puslapio spalvos yra `main.css` tokenų kopija (be CSS jis
+    # neturi `var(--paper)`). Kopija tyliai išsiskiria, kai dizainas keičiasi,
+    # todėl lyginama, o ne laikoma „maždaug ta“ (LL-21 šeima).
+    if data.get("palette_mismatch"):
+        first = data["palette_mismatch"][0]
+        reasons.append(f"{len(data['palette_mismatch'])} atsarginio puslapio spalva "
+                       f"nebeatitinka main.css ({first['file']} {first['token']} "
+                       f"{first['css_value']})")
     if data.get("shell_gone"):
         reasons.append(f"{len(data['shell_gone'])} svetainės kodo failo nėra")
     if data.get("shell_unreachable"):
@@ -2879,6 +3016,28 @@ def main() -> int:
               f"({len(cov['not_published'])}): "
               f"{', '.join(cov['not_published'][:5])} — vartas matuoja tai, "
               f"ko vaikas niekada negaus.")
+    if data.get("depth_relative"):
+        # Puslapis, atiduodamas bet kuriame gylyje (404.html), su santykine
+        # nuoroda: failas svetainėje yra ir baitai lygūs, bet vaikui jis
+        # atsiveria be stiliaus ir su mirusiu mygtuku. Taisymas — nuoroda, o
+        # ne publikavimas, todėl eilutė sava (LL-210).
+        print(f"SANTYKINĖ NUORODA PUSLAPYJE, ATIDUODAMAME BET KURIAME GILYJE "
+              f"({len(data['depth_relative'])}) — vaikas pamatys baltą puslapį "
+              f"su neveikiančiu mygtuku:")
+        for r in data["depth_relative"][:10]:
+            print(f"  - {r['file']}:{r['line']} „{r['ref']}“ — {r['why']}. "
+                  f"Rašyk nuo šaknies („/…“) arba kurk adresą scenarijumi.")
+        print("  Failo baitai su gyva svetaine sutampa: tai ne publikavimo "
+              "trūkumas ir ne pasenęs turinys — taisyk nuorodą.")
+    if data.get("depth_skipped"):
+        print(f"GYLIO NUORODŲ PATIKRA NEĮVYKO — repo nėra: "
+              f"{', '.join(data['depth_skipped'])}. Tai ne „švaru“.")
+    if data.get("palette_mismatch"):
+        print(f"ATSARGINIO PUSLAPIO SPALVA NEBEATITINKA main.css "
+              f"({len(data['palette_mismatch'])}) — puslapis be CSS atrodys kitaip:")
+        for item in data["palette_mismatch"][:8]:
+            print(f"  - {item['file']}: {item['token']} main.css yra "
+                  f"{item['css_value']}, o puslapyje jo nėra. Įrašyk tą pačią reikšmę.")
     if data.get("shell_stale"):
         print(f"PASENĘS KODAS — naršyklė vykdo kitą failą ({len(data['shell_stale'])}):")
         for s in data["shell_stale"]:
@@ -3043,6 +3202,7 @@ def main() -> int:
                   f"{version_tail}"
                   f"{order_tail}"
                   f"{', rėmas ' + str((data.get('coverage') or {}).get('published_count', 0)) + ' publikuojami failai visi matuoti' if (data.get('coverage') or {}).get('published_count') else ''}"
+                  f"{', gylio nuorodos ' + str(data.get('depth_checked', 0)) + ' tikrintos, visos absoliučios' if data.get('depth_checked') and not data.get('depth_relative') and not data.get('depth_skipped') else ''}"
                   f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
         else:
             # `--no-bytes` sąmoningai nelygina baitų, kodo ir garso. Iki #374

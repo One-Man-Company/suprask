@@ -1,0 +1,19 @@
+{
+  "role": "publikavimo-agentas",
+  "run_id": 560,
+  "created": "2026-11-26T19:35:00+02:00",
+  "type": "struktura",
+  "title": "check_refs.py sprendžia nuorodą failo vietos atžvilgiu, o ne to adreso, kuriame failas bus atidarytas",
+  "body": "Radau ir ištaisiau `404.html` defektą (#560, LL-210): GitHub Pages atsakydamas 404 atiduoda tą patį `404.html` **be peradresavimo**, todėl naršyklė dokumentą renderina to adreso gylio atžvilgiu. Failo nuorodos buvo santykinės (`href=\"./assets/css/main.css\"`, `href=\"./\"`), tad adresu `/suprask/content/lt/grade-01/matematika/99-nera.json` CSS atsakė 404, o mygtukas vedė į `/suprask/content/lt/grade-01/matematika/` — dar vieną 404. Matuota Chromium 390 px: 2 iš 3 adresų buvo balti nestiliuoti puslapiai su mirusiu mygtuku. `check_refs.py` to nepamatė ir negalėjo pamatyti, nes `rel_target()` + `scan()` sprendžia nuorodą **failo katalogo** atžvilgiu (`base = root if target.startswith(\"/\") else path.parent`), t. y. repo šaknies, kur `./assets/css/main.css` tikrai yra. Tai teisinga įprastiems puslapiams, bet ne fallback puslapiui, kuris atiduodamas savavališkame gylyje. Siūloma: `check_refs.py` gauna taisyklę, kad failams, atiduodamiems bet kuriame gylyje (`404.html` — vienintelis toks šiandien), santykinė nuoroda yra klaida, o ne „išspręsta“. Taisyklė jau įgyvendinta `check_published.py` (`depth_refs()` / `depth_served_check()`), bet `check_refs.py` lieka aklas: jis vienintelis tikrina, ar nuorodos taikinys egzistuoja, tad būtent jam ši taisyklė priklauso iš prigimties. Be to, dvi vietos su ta pačia taisykle gali išsiskirti (LL-38 šeima), todėl siūloma sąrašą `DEPTH_SERVED` laikyti viename module ir jį importuoti, o ne dubliuoti.",
+  "target": "scripts/check_refs.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_refs.py:148–175 — `scan()`: `base = root if target.startswith(\"/\") else path.parent`, t. y. nuoroda sprendžiama failo katalogo atžvilgiu, ne adreso, kuriame failas atidaromas",
+    "gyva svetainė 2026-11-26, Chromium 390 px: `/suprask/content/lt/grade-01/matematika/99-nera.json` → 404, `body` bg `rgba(0, 0, 0, 0)`, `./assets/css/main.css` → 404, 3 konsolės klaidos; `/suprask/klase/9/nieko` → 4 klaidos",
+    "gyva svetainė: `curl https://one-man-company.github.io/suprask/404.html` → 200, 563 B, baitai sutapo su repo — failo lygmenyje defekto nebuvo",
+    "scripts/check_published.py — naujas `depth_refs()` / `depth_served_check()` (šis paleidimas); `scripts/probe_publish_sets.py` Z/Z2/Z3/Z4 60/60",
+    "docs/KURINIO-STANDARTAS.md §4.6 ir SVIETIMAS-1-GAIRES T5.5 — 360 px, ≥48 px taikiniai, kontrastas ≥4,5:1 (šiame puslapyje po taisymo 15,33:1 / 6,92:1)",
+    "GitHub Pages dokumentacija: projekto 404.html atiduodamas bet kuriam nerastam keliui be peradresavimo, todėl santykinės nuorodos jame sprendžiamos nuo prašomo adreso"
+  ]
+}

@@ -160,6 +160,10 @@ def build_repo(root: pathlib.Path) -> None:
                                    encoding="utf-8")
     (root / "assets" / "audio" / "lt").mkdir(parents=True, exist_ok=True)
     (root / "assets" / "audio" / "lt" / "manifest.json").write_text("{}", encoding="utf-8")
+    # Publikuojamas, o naršyklės neįkeliamas failas — `pages.yml` kopijuoja
+    # visą `content/`. Būtent tokio failo be matavimo iki #558 niekas nematė.
+    (root / "content" / "audio-overrides.json").write_text('{"Ruduo": "rud\\u02c8uo"}',
+                                                           encoding="utf-8")
     (root / "scripts").mkdir(exist_ok=True)
     (root / "scripts" / "known_renames.json").write_text("{}", encoding="utf-8")
     (root / "scripts" / "known_path_order.json").write_text(
@@ -214,6 +218,8 @@ def patch(root: pathlib.Path, url: str) -> None:
     cp.AUX_FILES = [
         ("content/lt/grades.json", cp.CONTENT / "grades.json"),
         ("assets/audio/lt/manifest.json", root / "assets" / "audio" / "lt" / "manifest.json"),
+        # #558: publikuojamas failas, kurį iki tol matavo nė vienas vartas.
+        ("content/audio-overrides.json", root / "content" / "audio-overrides.json"),
     ]
     cp.RENAMES = root / "scripts" / "known_renames.json"
     cp.PATH_ORDER = root / "scripts" / "known_path_order.json"
@@ -264,6 +270,53 @@ def main() -> int:
         rc, out = run_cli(["--grade", "1"])
         check("A: rc 0 ir išvestis be klaidų", rc == 0 and "sutampa" in out,
               f"rc {rc}, {out.strip().splitlines()[0] if out.strip() else 'tuščia'}")
+
+        # Y. Vartų rėmas (#558): kiekvienas publikuojamas failas turi matavimą.
+        #    Be šio bloko `coverage()` būtų vartas, kurio niekas nepaleidžia —
+        #    LL-207 (vartas, kurį pamoka vadina privalomu, o nepaleidžia nė
+        #    vienas kelias).
+        check("Y: sveikame veidrodyje nėra neišmatuotų publikuojamų failų",
+              data.get("coverage", {}).get("unmeasured") == []
+              and data.get("coverage", {}).get("not_published") == []
+              and data["coverage"]["published_count"] >= 5,
+              f"coverage {data.get('coverage')}")
+        # Y2. Neigiama kontrolė: failas publikuojamas, o matavimo nėra.
+        saved_aux = list(cp.AUX_FILES)
+        cp.AUX_FILES = [a for a in cp.AUX_FILES
+                        if a[0] != "content/audio-overrides.json"]
+        data = cp.report([1])
+        rc, out = run_cli(["--grade", "1"])
+        check("Y2: publikuojamas failas be matavimo → raudona ir įvardytas",
+              not data["verdict"]["ok"]
+              and data["coverage"]["unmeasured"] == ["content/audio-overrides.json"]
+              and any("be matavimo" in r for r in data["verdict"]["reasons"])
+              and rc == 1 and "PUBLIKUOJAMAS FAILAS BE MATAVIMO" in out,
+              f"unmeasured {data['coverage']['unmeasured']}, rc {rc}, "
+              f"reasons {data['verdict']['reasons']}")
+        check("Y2: sena būsena (be įrašo `AUX_FILES`) būtų buvusi žalia — "
+              "defektas realus, o ne įsivaizduojamas",
+              "content/audio-overrides.json" not in cp.measured_files([1])
+              and data["coverage"]["published_count"]
+              > len(cp.measured_files([1]) & cp.published_files()) - 1,
+              "failas publikuojamas, bet ne matuojamas — iki #558 niekas "
+              "nepasakydavo")
+        cp.AUX_FILES = saved_aux
+        # Y3. Naujasis AUX įrašas tikrai lygina baitus: pakeitus gyvą kopiją,
+        #     turi atsirasti `aux_stale` su tuo failu.
+        live_over = live / "content" / "audio-overrides.json"
+        original = live_over.read_bytes()
+        live_over.write_bytes(original + b"\n")
+        data = cp.report([1])
+        check("Y3: pakitęs `content/audio-overrides.json` → `aux_stale`",
+              any(i["file"] == "content/audio-overrides.json"
+                  for i in data.get("aux_stale", []))
+              and not data["verdict"]["ok"],
+              f"aux_stale {[i['file'] for i in data.get('aux_stale', [])]}, "
+              f"reasons {data['verdict']['reasons']}")
+        live_over.write_bytes(original)
+        data = cp.report([1])
+        check("Y3b: atstačius failą — vėl „sutampa“", data["verdict"]["ok"],
+              f"verdict {data['verdict']['label']}")
 
         # B. Gyvame indekse trūksta vieno repo modulio.
         write_index(live, ["01-a"])

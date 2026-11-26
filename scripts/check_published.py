@@ -503,7 +503,23 @@ UA = {"User-Agent": "suprask-check/1.2"}
 AUX_FILES = [
     ("content/lt/grades.json", CONTENT / "grades.json"),
     ("assets/audio/lt/manifest.json", ROOT / "assets" / "audio" / "lt" / "manifest.json"),
+    # `content/audio-overrides.json` — tarimo korekcijos, kurias skaito
+    # `scripts/generate_audio.py`. Naršyklė jo neįkelia, bet `pages.yml`
+    # kopijuoja **visą** `content/`, tad failas svetainėje yra. Iki #558 jo
+    # nematavo nė vienas vartas: `check_audio()` ima mp3 iš manifesto,
+    # modulių ciklas eina per `content/lt/<klasė>/`, o `content/` šaknis liko
+    # už visų sąrašų. Tai ne kosmetika — tai įrodo, kad vartų rėmas buvo
+    # „failai, kuriuos naršyklė įkelia“, o ne „failai, kuriuos svetainė
+    # publikuoja“ (LL-84 šeima). `coverage()` žemiau šią spragą dar ir matuoja.
+    ("content/audio-overrides.json", ROOT / "content" / "audio-overrides.json"),
 ]
+
+# Katalogai ir failai, kuriuos `pages.yml` įkelia į svetainę (`cp -r assets
+# content`, `cp index.html 404.html`). Imami iš publikavimo sutarties, ne iš
+# atminties: `coverage()` tikrina, ar kiekvienas publikuojamas failas turi savo
+# matavimą, tad sąrašas turi būti tas pats, kurį naudoja publikavimas.
+PUBLISHED_ROOTS = ("assets", "content")
+PUBLISHED_SINGLE = ("index.html", "404.html")
 
 # Svetainės kodas, kuris vykdomas naršyklėje. `content/` baitai sako, ką vaikas
 # turėtų matyti, bet ne ką jis iš tikrųjų vykdo: simuliacijos, maršrutizatorius
@@ -1571,6 +1587,83 @@ def strip_version(text: str) -> str:
     return VERSION_PARAM.sub("", text)
 
 
+def published_files() -> set[str]:
+    """Visi failai, kuriuos `pages.yml` įkelia į svetainę (be `AGENTS.md`).
+
+    Tai **publikavimo sutartis**, o ne sąrašas to, ką įrankis moka matuoti.
+    Skirtumas paaiškėjo #558: `content/audio-overrides.json` buvo svetainėje
+    (200, tie patys baitai), o jo nematuė nė vienas vartas — `check_audio()`
+    ima mp3 iš manifesto, modulių ciklas eina per `content/lt/<klasė>/`,
+    `shell_files()` — per `assets/`. `content/` šaknis liko tarp šių sąrašų.
+    `coverage()` lygina šią aibę su matuojamų failų aibe, tad naujas
+    publikuojamas failas be matavimo nebelieka tyliai žalias (LL-37, LL-84).
+    """
+    out: set[str] = {name for name in PUBLISHED_SINGLE if (ROOT / name).exists()}
+    for root in PUBLISHED_ROOTS:
+        base = ROOT / root
+        if not base.is_dir():
+            continue
+        for path in base.rglob("*"):
+            if not path.is_file():
+                continue
+            rel = path.relative_to(ROOT).as_posix()
+            # `pages.yml` išmeta AGENTS.md (`find _site -name "AGENTS.md" -delete`).
+            if rel.rsplit("/", 1)[-1] == "AGENTS.md":
+                continue
+            out.add(rel)
+    return out
+
+
+def measured_files(grades: list[int]) -> set[str]:
+    """Failai, kurių **baitus** šis įrankis tikrina svetainėje.
+
+    Sąrašas sudaromas iš tų pačių šaltinių, iš kurių `report()` stato
+    matavimus, o ne rašomas ranka: kitaip vartas lygintų savo sąrašą su savimi
+    ir visada būtų žalias (LL-202 — vartas su atšaka, kuri negali suveikti).
+
+    Modulių failai imami **iš disko**, ne iš indekso įrašų (`index.json`
+    reikalauja egzistuojančio failo; kitaip indekso įrašas be failo atrodytų
+    kaip „matuojamas, o nepublikuojamas“ ir tą patį defektą praneštų du
+    kartus — LL-129). Failas, kuris yra diske ir nepaminėtas indekse, čia
+    skaitomas kaip padengtas: jį atskirai įvardija `orphan_module_files()`,
+    tad jis nėra tylus.
+    """
+    out: set[str] = set(shell_files())
+    out |= {url_rel for url_rel, _ in AUX_FILES}
+    for grade in grades:
+        gdir = CONTENT / grade_dir(grade)
+        out.add(f"content/lt/{grade_dir(grade)}/index.json")
+        out.add(f"content/lt/{grade_dir(grade)}/path.json")
+        if gdir.is_dir():
+            for path in gdir.glob("*/*.json"):
+                out.add(f"content/lt/{path.relative_to(CONTENT).as_posix()}")
+    out |= {AUDIO_URL_PREFIX + rel for rel, _ in audio_entries(None)[0]}
+    return out
+
+
+def coverage(grades: list[int] | None = None) -> dict:
+    """Ar kiekvienas publikuojamas failas turi savo matavimą.
+
+    `unmeasured` — failai, kuriuos `pages.yml` įkelia, o įrankis jų baitų
+    netikrina. Tai **ne** „failo nėra svetainėje“ ir ne „pasenęs turinys“:
+    tai teiginys apie pačius vartus, todėl jis ir pranešamas atskirai — kitaip
+    „sutampa“ galėtų reikšti „sutampa tai, ką išmatavau“ (LL-37).
+
+    `not_published` — priešingas atvejis: įrankis tikrina failą, kurio
+    publikavimas neįkelia. Tai irgi klaida, tik kitoje pusėje: vartas matuoja
+    tai, ko vaikas niekada negaus, tad žalias jis būtų apie nieką.
+    """
+    published = published_files()
+    measured = measured_files(grades if grades is not None else live_grades())
+    return {
+        "published_count": len(published),
+        "unmeasured": sorted(published - measured),
+        # `assets/audio/` manifestas lyginamas kaip AUX, bet patys mp3 — per
+        # `check_audio()`; jie abu įeina į `measured_files()`.
+        "not_published": sorted(measured - published),
+    }
+
+
 def _shell_state(rel: str) -> tuple[str, int, int]:
     """("ok"|"differs"|"gone"|"unreachable", repo baitai, gyvi baitai)."""
     local_path = ROOT / rel
@@ -2196,6 +2289,11 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         # kuriuos žada jo vardas“. Skyrė ne teorinis: nukirptas mp3 su senu
         # vardu praeitų HEAD patikrą, o vaikas girdėtų pusę žodžio.
         "audio_name": audio_name,
+        # Vartų rėmas (LL-37, #558): ar kiekvienas publikuojamas failas turi
+        # savo matavimą. Be šio lauko „sutampa“ gali reikšti „sutampa tai,
+        # ką išmatavau“ — o `content/audio-overrides.json` iki #558 buvo
+        # svetainėje ir nebuvo matuojamas nė vieno varto.
+        "coverage": coverage(grades),
         "shell_stale": shell["shell_stale"],
         "shell_gone": shell.get("shell_gone", []),
         "shell_unreachable": shell["shell_unreachable"],
@@ -2403,6 +2501,17 @@ def verdict(data: dict) -> dict:
         reasons.append(f"{len(data['aux_absent'])} pagrindinis failas be repo kopijos")
     if data.get("aux_gone"):
         reasons.append(f"{len(data['aux_gone'])} pagrindinio failo nėra svetainėje")
+    # Vartų rėmas: publikuojamas failas be matavimo. Tai priežastis, ne
+    # pastaba — „sutampa“ apie neišmatuotą failą yra teiginys apie matavimą,
+    # kurio nebuvo (LL-37). Atskira nuo `aux_stale`, nes taisymas kitas:
+    # įrašyti matavimą į `AUX_FILES`/`shell_files()`, o ne publikuoti.
+    cov = data.get("coverage") or {}
+    if cov.get("unmeasured"):
+        reasons.append(f"{len(cov['unmeasured'])} publikuojamas failas be "
+                       f"matavimo ({', '.join(cov['unmeasured'][:3])})")
+    if cov.get("not_published"):
+        reasons.append(f"{len(cov['not_published'])} matuojamas failas, kurio "
+                       f"publikavimas neįkelia")
     if data.get("shell_stale"):
         reasons.append(f"{len(data['shell_stale'])} pasenęs kodas")
     if data.get("shell_gone"):
@@ -2755,6 +2864,21 @@ def main() -> int:
               f"({len(data['aux_gone'])}):")
         for s in data["aux_gone"]:
             print(f"  - {s['file']}: repo {s['repo_bytes']} B, svetainėje failo nėra")
+    cov = data.get("coverage") or {}
+    if cov.get("unmeasured"):
+        # Ne „failo nėra“ ir ne „pasenęs turinys“: tai vartų rėmas. Be šios
+        # eilutės failas būtų svetainėje, o žalias „sutampa“ apie jį nieko
+        # nesakytų (#558).
+        print(f"PUBLIKUOJAMAS FAILAS BE MATAVIMO ({len(cov['unmeasured'])}) — "
+              f"svetainė jį įkelia, o baitų niekas nelygina:")
+        for rel in cov["unmeasured"][:10]:
+            print(f"  - {rel}: įrašyk į `AUX_FILES` arba `shell_files()`, "
+                  f"kitaip „sutampa“ jo neapima.")
+    if cov.get("not_published"):
+        print(f"MATUOJAMAS FAILAS, KURIO PUBLIKAVIMAS NEĮKELIA "
+              f"({len(cov['not_published'])}): "
+              f"{', '.join(cov['not_published'][:5])} — vartas matuoja tai, "
+              f"ko vaikas niekada negaus.")
     if data.get("shell_stale"):
         print(f"PASENĘS KODAS — naršyklė vykdo kitą failą ({len(data['shell_stale'])}):")
         for s in data["shell_stale"]:
@@ -2918,6 +3042,7 @@ def main() -> int:
                   f"{stale_tail}"
                   f"{version_tail}"
                   f"{order_tail}"
+                  f"{', rėmas ' + str((data.get('coverage') or {}).get('published_count', 0)) + ' publikuojami failai visi matuoti' if (data.get('coverage') or {}).get('published_count') else ''}"
                   f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
         else:
             # `--no-bytes` sąmoningai nelygina baitų, kodo ir garso. Iki #374

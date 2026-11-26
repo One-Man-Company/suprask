@@ -95,6 +95,39 @@ function teardown() {
   cleanupSim = null;
 }
 
+/* Kur vaikas baigė. `Tęsk nuo čia` iki #555 rodė PIRMĄ neatliktą kelią
+ * modulį, o ne tą, kuriame vaikas tikrai buvo: jei jis atsidarė 40-ą modulį
+ * (nes mokytojas taip pasakė, arba 3-ias pasirodė per sunkus), grįžęs
+ * namo jis vis tiek matė „Tęsk nuo čia · Skiemenų jungimas“ ir turėjo pats
+ * ieškoti savo vietos 82 eilučių sąraše. Tai prieštarauja gairių T3.6
+ * (perėjimas niekada nepraranda konteksto) ir vaidmens prioritetui
+ * „grįžimas prie mokymosi per 2 paspaudimus“.
+ *
+ * Šaltinis — ta pati `localStorage` žyma, kurią `markVisited()` rašo kiekvieną
+ * atidarymą (`last` ISO laikas). Skaitoma VIENĄ kartą: `progress.isDone()`
+ * kiekvieną kvietimą leidžia per `get()` → `read()`, t. y. 82 moduliams
+ * 82 `JSON.parse` to paties įrašo. Todėl atliktumas sprendžiamas iš to paties
+ * užrakto, ta pačia taisykle kaip `progress.js:isDone()` (jei `total > 0` —
+ * `solved.length >= total`, kitaip `solved.length > 0`).
+ *
+ * Tvarka: (1) neseniai lankytas NEATLIKTAS modulis; (2) jei tokio nėra —
+ * pirmas neatliktas kelyje (vaikas baigė tai, ką žymėjo); (3) jei visi
+ * atlikti — `null`. Klaidingo bandymo žyma nieko nekeičia (P3).
+ */
+function resumeTarget(seq) {
+  const mods = (progress.read() || {}).modules || {};
+  const done = (m) => !!m && (m.total > 0 ? m.solved.length >= m.total : m.solved.length > 0);
+  let bestId = null;
+  let bestAt = "";
+  for (const id of seq) {
+    const m = mods[id];
+    if (!m || !m.last || typeof m.last !== "string" || done(m)) continue;
+    if (m.last > bestAt) { bestAt = m.last; bestId = id; }
+  }
+  if (bestId) return bestId;
+  return seq.find((id) => !done(mods[id])) || null;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Pradžia                                                            */
 /* ------------------------------------------------------------------ */
@@ -103,7 +136,7 @@ async function viewHome() {
   const g1 = await loadGradeIndex(1);
   const { all, byId, seq } = pathSequence(g1, await loadPath(1));
   const p = progress.count(all.map((m) => m.id));
-  const nextId = seq.find((id) => !progress.isDone(id));
+  const nextId = resumeTarget(seq);
   const next = nextId ? byId.get(nextId) : null;
 
   const strip = grades.grades.map((g) => {
@@ -192,7 +225,7 @@ async function viewGrade(grade) {
   const g = await loadGradeIndex(grade);
   const { all, byId, seq } = pathSequence(g, await loadPath(grade));
 
-  const nextId = seq.find((id) => !progress.isDone(id));
+  const nextId = resumeTarget(seq);
   const next = nextId ? byId.get(nextId) : null;
   const doneCount = all.filter((m) => progress.isDone(m.id)).length;
   const continueCard = resumeCard(grade, next, { done: doneCount, total: all.length });
@@ -325,7 +358,7 @@ async function viewStrand(grade, strandId) {
    * krypties modulių — numeris lieka viso kelio numeris, o ne eilės
    * krypties viduje, nes būtent jį vaikas mato modulio apačioje
    * („Kitas žingsnis · N iš 51“). */
-  const nextId = seq.find((id) => !progress.isDone(id));
+  const nextId = resumeTarget(seq);
   const started = seq.some((id) => progress.isDone(id));
   const own = s.modules.slice().sort((a, b) => seq.indexOf(a.id) - seq.indexOf(b.id));
   const steps = own.map((m) => moduleRow(s, m, seq.indexOf(m.id) + 1, seq.length, {
@@ -464,7 +497,6 @@ async function viewModule(grade, strandId, moduleId) {
       <p class="eyebrow"><span>${esc(strand.title)}</span><span class="dot" aria-hidden="true">·</span><span class="nowrap">${mod.minutes || 8} min.</span></p>
       <h1>${esc(mod.title)}</h1>
       <p class="lede" style="color:var(--ink-soft)">${esc(mod.subtitle || "")}</p>
-      ${mod.concept && mod.concept.big_idea ? `<p class="big-idea">${esc(mod.concept.big_idea)}</p>` : ""}
     </header>
 
     ${mod.sim ? `
@@ -478,6 +510,7 @@ async function viewModule(grade, strandId, moduleId) {
 
     <section class="card" style="margin-top:1.2rem">
       <h2 style="font-size:1.2rem">${esc((mod.concept && mod.concept.title) || "Kaip tai veikia")}</h2>
+      ${mod.concept && mod.concept.big_idea ? `<p class="big-idea">${esc(mod.concept.big_idea)}</p>` : ""}
       <ol class="steps">${steps}</ol>
       ${mod.concept && mod.concept.example ? `<p style="margin:1rem 0 0;padding:.8rem 1rem;border-left:4px solid var(--sun);background:color-mix(in srgb,var(--sun) 10%, var(--paper-2));border-radius:var(--r-s)">${esc(mod.concept.example)}</p>` : ""}
     </section>

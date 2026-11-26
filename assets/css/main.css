@@ -268,6 +268,11 @@ main { display: block; max-width: var(--maxw); margin: 0 auto; padding: clamp(1r
   margin: 1rem 0 0; max-width: 52ch; font-size: 1.15rem; line-height: 1.5;
   padding-left: 1rem; border-left: 4px solid var(--accent); color: var(--ink);
 }
+/* Modulyje „didelė idėja“ dabar stovi „Kaip tai veikia“ kortelėje po simuliacijos
+   (#555): anksčiau ji buvo antraštėje prieš modelį ir nustumdavo pirmą veiksmą
+   už pirmo ekrano 50 iš 82 modulių planšetėje. Kortelėje jai reikia tarpų iš
+   abiejų pusių, o ne viršutinės paraštės. */
+.card > .big-idea { margin: 0 0 1rem; max-width: none; }
 .hero-art {
   position: absolute; inset-inline-end: 0; top: 0; width: min(38vw, 320px);
   aspect-ratio: 1; pointer-events: none; opacity: .9;

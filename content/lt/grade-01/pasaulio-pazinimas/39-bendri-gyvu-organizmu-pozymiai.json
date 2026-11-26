@@ -60,7 +60,7 @@
           ],
           "sentences": {
             "juda": "Gėlė stovi vietoje. Jos lapai lėtai pasisuka į šviesą.",
-            "kvepuoja": "Lape yra oro. Įdėk lapą į vandenį ir pamatysi burbuliukus.",
+            "kvepuoja": "Gėlė kvėpuoja visu lapu. Štai lapas vandenyje: iš jo kyla burbuliukai.",
             "maitinasi": "Šaknys ima vandenį ir maisto medžiagas iš žemės.",
             "auga": "Po savaitės išaugo naujas lapas.",
             "dauginasi": "Iš žiedo sunoksta sėklos. Iš sėklų augs naujos gėlės."
@@ -158,11 +158,11 @@
   ],
   "reflect": "Kurį ženklą parodytum draugui, kad gėlė kvėpuoja?",
   "teacher": {
-    "goal": "Suprasti, kad gyvi organizmai turi tuos pačius penkis ženklus — juda, kvėpuoja, maitinasi, auga, dauginasi — ir kad vienas ženklas dar nieko neįrodo. Modelis laiko tris būtybes viename kadre: gėlę, katę ir robotą dulkių siurblį. Vaikas tikrina po vieną ženklą ir mato, kad gėlė surenka penkis, katė penkis, o robotas vieną (jis juda). Gėlės ženklai parodomi taip, kaip juos galima pamatyti: lapai pasisuka į šviesą, oras eina per lapą, šaknys ima vandenį, išauga naujas lapas, iš žiedo sunoksta sėklos. Robotui atėjus eilė neatimama — jis lieka scenoje toks pat, ir tai yra atsakymas.",
+    "goal": "Suprasti, kad gyvi organizmai turi tuos pačius penkis ženklus — juda, kvėpuoja, maitinasi, auga, dauginasi — ir kad vienas ženklas dar nieko neįrodo. Modelis laiko tris būtybes viename kadre: gėlę, katę ir robotą dulkių siurblį. Vaikas tikrina po vieną ženklą ir mato, kad gėlė surenka penkis, katė penkis, o robotas vieną (jis juda). Gėlės ženklai parodomi taip, kaip juos galima pamatyti: lapai pasisuka į šviesą, lapas su burbuliukais stiklinėje, šaknys ima vandenį, išauga naujas lapas, iš žiedo sunoksta sėklos. Robotui atėjus eilė neatimama — jis lieka scenoje toks pat, ir tai yra atsakymas.",
     "prompt": "Ką gėlė daro su oru, vandeniu ir sėklomis?",
     "offline": "Įmeskite į stiklinę šilto vandens vieną gėlės lapą ir palaukite minutę: ant lapo krašto ir paviršiaus renkasi maži burbuliukai, o lapas vandenyje tamsėja. Tai oras, kuris buvo lape — gėlė kvėpuoja visu lapu, ne nosimi. Paskui žaiskite „Gyvas–negyvas“: ant stalo padėkite penkias korteles su ženklais (juda, kvėpuoja, maitinasi, auga, dauginasi) ir po vieną daiktą — puodą su gėle, žaislinį šunį, akmenį, obuolį, nufotografuotą robotą. Vaikai prie kiekvieno daikto deda tik tas korteles, kurias gali parodyti pirštu. Laimi ne tas, kas greičiau, o tas, kas parodo požymį: „Žaislinis šuo neauga — pažiūrėk, jis toks pat kaip pernai“.",
     "misconceptions": [
-      "„Augalas nekvėpuoja, nes neturi nosies.“ Modelis rodo oro judėjimą ties lapu ir burbuliukus, o mokytojo veikla leidžia tai patikrinti stikline vandens: oras yra lape, nors burnos nėra.",
+      "„Augalas nekvėpuoja, nes neturi nosies.“ Modelis rodo lapą stiklinėje ir nuo lapo kylančius burbuliukus, o mokytojo veikla leidžia tą patį pakartoti su tikra stikline: oras yra lape, nors burnos nėra.",
       "„Kas juda, tas gyvas; kas nejuda, tas negyvas.“ Robotas juda ir teturi vieną ženklą, o gėlė juda vos pastebimai (lapai pasisuka į šviesą) ir turi visus penkis. Judėjimas atskiria ne gyvus nuo negyvų, o greitus nuo lėtų.",
       "„Gėlei užtenka vandens, ji nevalgo.“ Modelis rodo, kad šaknys ima vandenį ir maisto medžiagas iš žemės: vanduo yra tik viena maisto dalis.",
       "„Robotas kvėpuoja, nes pučia orą.“ Jis orą judina, bet jo nenaudoja: po savaitės robotas toks pat, o gėlė per tą savaitę išaugo lapą.",
@@ -178,6 +178,6 @@
     "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (visi gyvi organizmai turi tuos pačius penkis ženklus), be augalo dalių funkcijų ir be gyvenimo ciklo — tai atskiri 26.2.3 moduliai.",
     "2 žingsnis — vienodas vertinimas: užduotys tikrina perkėlimą (obelis sode, medis žiemą, robotas dulkių siurblys), o ne pakartoja modelio sakinį.",
     "3 žingsnis — pagalba laiku: kiekvienas ženklas atidaromas atskirai ir iškart parodo, kas nutinka būtybei; skaičius „3 / 5“ auga prieš akis, nieko nereikia atsiminti.",
-    "8 žingsnis — mokytojas lieka mokytoju: lapo bandymas stiklinėje ir kortelių žaidimas „Gyvas–negyvas“ atliekami be ekrano, o burbuliukai parodo tą patį, ką modelis rodo oro kreivėmis."
+    "8 žingsnis — mokytojas lieka mokytoju: lapo bandymas stiklinėje ir kortelių žaidimas „Gyvas–negyvas“ atliekami be ekrano, o burbuliukai parodo tą patį, ką modelis rodo stiklinėje."
   ]
 }

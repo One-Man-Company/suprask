@@ -176,6 +176,32 @@ export const art = {
     </g>`;
   },
 
+  /**
+   * Stiklinė vandens su vandens paviršiumi. `x, y` — stiklinės dugno vidurys.
+   *
+   * Reikia bandymui, kuris vyksta ne paveikslėlyje, o stiklinėje: modelyje
+   * „gėlė kvėpuoja“ sakinys nurodo į vandenį, todėl scena privalo turėti indą
+   * ir vandens liniją. Burbuliukai ore šalia vazoninės gėlės vaikui sako kitą
+   * dalyką nei tekstas (LL-13, kritika #52974).
+   *
+   * Stiklinė brėžiama plonomis sienelėmis, kad viduje liktų matomas lapas;
+   * vanduo — dviejų sluoksnių (paviršius + kūnas), kad būtų aišku, kur jis
+   * prasideda.
+   */
+  glass(x, y, w = 56, h = 66) {
+    const top = y - h;
+    return `<g>
+      <ellipse cx="${x}" cy="${y + 2}" rx="${w * 0.52}" ry="4" fill="#5b6673" opacity=".2"/>
+      <path d="M${x - w / 2} ${top} L${x - w / 2 + 3} ${y} Q${x} ${y + 6} ${x + w / 2 - 3} ${y} L${x + w / 2} ${top}"
+            fill="#eaf6fd" fill-opacity=".55" stroke="#8fa9bb" stroke-width="2.2"/>
+      <path d="M${x - w / 2 + 2} ${top + 20} L${x - w / 2 + 2.6} ${y - 1} Q${x} ${y + 4} ${x + w / 2 - 2.6} ${y - 1} L${x + w / 2 - 2} ${top + 20} Z"
+            fill="${P.water}" fill-opacity=".55"/>
+      <ellipse cx="${x}" cy="${top + 20}" rx="${w / 2 - 2}" ry="4" fill="${P.water}" fill-opacity=".85"/>
+      <path d="M${x - w / 2 + 8} ${top + 6} L${x - w / 2 + 9} ${y - 12}"
+            stroke="#ffffff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>
+    </g>`;
+  },
+
   /** Sėkla su blizgesiu. */
   seed(x, y, s = 1) {
     return `<g transform="translate(${x} ${y}) scale(${s})">

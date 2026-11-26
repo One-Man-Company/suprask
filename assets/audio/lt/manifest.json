@@ -1435,6 +1435,10 @@
   "n": "n/d0fc37996ebceea1-b45433ba.mp3",
   "s": "s/d0fc37996ebceea1-9a6dad7c.mp3"
  },
+ "Gėlė kvėpuoja visu lapu. Štai lapas vandenyje: iš jo kyla burbuliukai.": {
+  "n": "n/870d15306876b817-d8316ab4.mp3",
+  "s": "s/870d15306876b817-505f029d.mp3"
+ },
  "Gėlė stovi vietoje. Jos lapai lėtai pasisuka į šviesą.": {
   "n": "n/5911ab5bb5d551a9-80731bae.mp3",
   "s": "s/5911ab5bb5d551a9-b019914f.mp3"
@@ -2118,10 +2122,6 @@
  "Lapas perlenktas pusiau. Perlenk dar kartą.": {
   "n": "n/255123887f79d358-9b6a40b1.mp3",
   "s": "s/255123887f79d358-81e61873.mp3"
- },
- "Lape yra oro. Įdėk lapą į vandenį ir pamatysi burbuliukus.": {
-  "n": "n/f37baf5a3e6a3a8a-3028bd50.mp3",
-  "s": "s/f37baf5a3e6a3a8a-3aaacc3a.mp3"
  },
  "Lapkritis": {
   "n": "n/0f959dbd67209e46-3192f592.mp3",

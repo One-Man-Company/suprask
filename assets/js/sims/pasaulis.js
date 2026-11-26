@@ -6629,10 +6629,28 @@ const gyvybesZenklai = {
       <path d="M${x} ${y + 9} q ${8 * dir} -6 ${16 * dir} 0"/>
     </g>`;
 
-    const bubbles = (x, y) => `<g fill="none" stroke="#5fb3e0" stroke-width="1.6" opacity=".9">
-      <circle cx="${x}" cy="${y}" r="3.4"/><circle cx="${x + 7}" cy="${y - 8}" r="2.4"/>
-      <circle cx="${x - 5}" cy="${y - 13}" r="1.8"/>
-    </g>`;
+    /* Bandymo rezultatas: lapas vandenyje. Burbuliukai kyla NUO LAPO į
+       vandens paviršių, o ne plaukioja ore šalia vazono — kitaip vaikas tame
+       pačiame kadre mato du skirtingus bandymus (kritika #52974, LL-13
+       „užrašas ir paveikslas privalo sutarti“, LL-205). Stiklinė statoma
+       vazono pusėje, kad neuždengtų stiebo ir žiedo. */
+    const GLASS = { dx: 52, y: 236, w: 42, h: 56 };
+    function glassTrial(fx) {
+      const gx = fx + GLASS.dx;
+      const top = GLASS.y - GLASS.h;          // stiklinės kraštas
+      const surface = top + 20;               // vandens paviršius (art.glass)
+      const leafY = GLASS.y - 16;             // lapas panardintas
+      const rise = [leafY - 4, surface + 8, surface + 4];
+      return `${art.glass(gx, GLASS.y, GLASS.w, GLASS.h)}
+        <g transform="rotate(-16 ${gx} ${leafY})">
+          ${art.leaf(gx - 3, leafY, 7, 1, false, "#4c9a45")}
+          ${art.leaf(gx + 3, leafY + 4, 6, -1, false, "#59b95a")}
+        </g>
+        <g fill="none" stroke="#5fb3e0" stroke-width="1.5" opacity=".95">
+          ${rise.map((cy, i) => `<circle cx="${gx + (i % 2 ? 4 : -3)}" cy="${cy}"
+             r="${3 - i * 0.5}"/>`).join("")}
+        </g>`;
+    }
 
     function flower(x, o) {
       const grown = o.has("auga");
@@ -6658,7 +6676,7 @@ const gyvybesZenklai = {
         ${art.stem(x, 204, h, 4, "#4c8b3a", false)}
         ${leaves}${headMark}${turn}
         ${o.has("maitinasi") ? art.drops(x - 15, 196, 3) : ""}
-        ${o.has("kvepuoja") ? `${airArcs(x + 22, 206 - h * 0.5)}${bubbles(x + 16, 206 - h * 0.7)}` : ""}
+        ${o.has("kvepuoja") ? glassTrial(x) : ""}
       </g>`;
     }
 
@@ -6756,16 +6774,24 @@ const gyvybesZenklai = {
     return `<path d="M${st.x - 6} 8 L${st.x + 6} 8 L${st.x} 15 Z"
               fill="${sel ? "#3a342b" : "transparent"}"/>
             <text x="${st.x}" y="32" text-anchor="middle" font-family="system-ui, sans-serif"
-                  font-size="14" font-weight="${sel ? 800 : 600}"
+                  font-size="16" font-weight="${sel ? 800 : 600}"
                   fill="${sel ? "#2f2a23" : "#5f574d"}">${label}</text>
-            <text x="${st.x}" y="48" text-anchor="middle" font-family="system-ui, sans-serif"
-                  font-size="13" font-weight="700" fill="#6b6357">✓ ${ticks(st.b)} / ${signs.length}</text>
+            <text x="${st.x}" y="50" text-anchor="middle" font-family="system-ui, sans-serif"
+                  font-size="16" font-weight="700" fill="#6b6357">✓ ${ticks(st.b)} / ${signs.length}</text>
             ${drawBeing(st)}`;
   }).join("")}`;
     }
 
     function sceneLabel() {
-      return `Ant palangės vazoninė gėlė, katė ir robotas dulkių siurblys. `
+      /* Bandymo aprašymas įvardijamas TADA, kai jis scenoje yra: ekrano
+         skaitytuvas neturi girdėti „stiklinė“ ten, kur jos nėra (LL-33).
+         Būtybė ieškoma pagal piešinį, ne pagal kietą id — konfigūracija
+         gali vadinti ją kitaip. */
+      const flowerBeing = beings.find((b) => b.art === "gele");
+      const trial = flowerBeing && open.get(flowerBeing.id).has("kvepuoja")
+        ? " Šalia vazono stiklinė vandens: į ją įdėtas gėlės lapas, nuo lapo kyla burbuliukai."
+        : "";
+      return `Ant palangės vazoninė gėlė, katė ir robotas dulkių siurblys.${trial} `
         + stations.map((st) => `${st.b.label}: ${ticks(st.b)} iš ${signs.length} ženklų.`).join(" ");
     }
 

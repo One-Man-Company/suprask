@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 553,
+  "created": "2026-11-26T10:32:00+02:00",
+  "type": "atitiktis",
+  "title": "Standarto dalių sąraše nėra indo (stiklinės) ir lėkštės — nors modeliai jų prašo",
+  "body": "docs/KURINIO-STANDARTAS.md skyrius „Iliustracijos“ išvardija art.js dalis, iš kurių scena privalo būti surenkama (defs, sun, cloud, hills, soil, pot, seed, stem, leaf, flower, tree, river, bridge, block, kid, grass, snow, drops), bet sąraše nėra dviejų dalių, kurias scenos jau naudoja arba kurių aiškiai trūko: art.bowl (gyvūno lėkštė su ėdalu, gyvybes-zenklai) ir art.glass (vandens stiklinė, kurią šiame darbe teko parašyti, nes modelyje „gėlė kvėpuoja“ sakinys nurodo vandenį, o piešti indo nebuvo iš ko). Sąrašas turi būti vedamas iš art.js, ne iš atminties: siūlau į standartą įrašyti visas esamas dalis (įskaitant bowl, glass, bird, cat, robot, smoke, plank, ball, fruit, solidBox, solidCylinder, solidCone, solidSphere) arba visai nuimti išvardijimą ir pasakyti „visos art.js dalys; sąrašas — art.js eksporte“, kad trečias agentas neieškotų, ko nėra, ir nepradėtų piešti savo stačiakampių (LL-13). Antra, verta pasakyti taisyklę, kurios iki šiol niekur nėra: jei modeliui reikia daikto, kurio art.js neturi, daiktas pridedamas į art.js (bendra dalis, ne vieno modulio scena), o ne piešiamas simuliacijos faile — kitaip tas pats indas kitame modulyje bus nupieštas kitaip.",
+  "target": "docs/KURINIO-STANDARTAS.md",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "docs/KURINIO-STANDARTAS.md:219–221 — dalių sąrašas be bowl ir glass",
+    "assets/js/sims/art.js:170–177 — art.bowl egzistuoja ir naudojamas (pasaulis.js, gyvybes-zenklai)",
+    "assets/js/sims/art.js — art.glass pridėtas šiame darbe (#553), nes indo nebuvo",
+    "scripts/check_art.py — tikrina tik „importuoja art.js ir ≥3 art.* kvietimus“, dalių sąrašo su standartu nelygina"
+  ]
+}

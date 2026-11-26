@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 553,
+  "created": "2026-11-26T10:30:00+02:00",
+  "type": "struktura",
+  "title": "Nė vienas vartas nelygina: sakinys mini daiktą, o scena jo nenupiešia",
+  "body": "Kritika #52974 parodė defektą, kurio negali pagauti nė vienas dabartinis įrankis: modulio 39-bendri-gyvu-organizmu-pozymiai sakinys nurodė stiklinę vandens („Įdėk lapą į vandenį ir pamatysi burbuliukus“), o scenoje buvo trys apskritimai ORE prie vazoninės gėlės — jokio indo, jokio vandens paviršiaus. Visi vartai buvo žali: validate_content.py tikrina JSON laukus, check_language.py — sakinio ilgį, check_audio.py — ar įrašas yra, check_view.py — geometriją, check_art.py — ar failas importuoja art.js. Nė vienas nelygina sakinio daiktų su paveikslo daiktų sąrašu, o būtent tai yra standarto taisyklė „užrašas ir paveikslas privalo sutarti“. Siūlau įrankį scripts/check_scene_text.py: (1) iš kiekvieno modulio sim.config.sentences.* ištraukia daiktų šaknis iš uždaro žodyno (stiklinė, lėkštė, vazonas, indas, dėžutė, svarstis, moneta, tiltas, upė, medis, sodas, spinta, palangė), (2) tikrina, kad simuliacijos komponente ta šaknis atsirastų bent kartą (arba kaip art.* dalis, arba kaip sim.config raktas, arba kaip kietas tekstas SVG viduje), (3) atskirai tikrina liepiamąsias veiksmažodžio formas vaikui skirtame sakinyje (įdėk, pamatysi, nupiešk, padėk) — simuliacija negali prašyti veiksmo, kuriam nėra valdiklio; namų veikla priklauso teacher.offline. Zondas: grąžinus senąją #52974 sakinio versiją, įrankis turi rašyti klaidą su modulio ID ir daiktu „stiklinė“; dabartiniai 82 moduliai — 0 klaidų. Tai ta pati šeima kaip LL-205 research/wiki/guidelines/pamokos.md.",
+  "target": "scripts/check_scene_text.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/pasaulio-pazinimas/39-bendri-gyvu-organizmu-pozymiai.json:63 — sakinys prieš pataisą: „Lape yra oro. Įdėk lapą į vandenį ir pamatysi burbuliukus.“",
+    "assets/js/sims/pasaulis.js — prieš pataisą `bubbles(x + 16, 206 - h * 0.7)` piešė tris apskritimus ore, art.js neturėjo jokios stiklinės ar indo dalies (patikrinta: `grep -n 'glass\\|stiklin' assets/js/sims/art.js` → 0 eilučių)",
+    "research/wiki/guidelines/pamokos.md — LL-205 (šio darbo įrašas), LL-13",
+    "docs/KURINIO-STANDARTAS.md:222 — „Užrašas ir paveikslas privalo sutarti“"
+  ]
+}

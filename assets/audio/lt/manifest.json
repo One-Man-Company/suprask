@@ -1931,6 +1931,14 @@
   "n": "n/00f8e1822fbf1cb9-16d802ec.mp3",
   "s": "s/00f8e1822fbf1cb9-ca015f6e.mp3"
  },
+ "Krūva nesuderinta su būriais.": {
+  "n": "n/b777877186bb09b6-37ab7c1e.mp3",
+  "s": "s/b777877186bb09b6-7e079c1d.mp3"
+ },
+ "Krūva visą laiką ta pati. Keisis tik būriai.": {
+  "n": "n/4244baa2256dc93a-4b18a9f0.mp3",
+  "s": "s/4244baa2256dc93a-f27017d7.mp3"
+ },
  "Kubas iš priekio atrodo kaip kvadratas.": {
   "n": "n/0a26471c3415e289-1355c62d.mp3",
   "s": "s/0a26471c3415e289-c1f846f9.mp3"
@@ -2503,6 +2511,18 @@
   "n": "n/e2f5151376275244-c8534375.mp3",
   "s": "s/e2f5151376275244-9ed496aa.mp3"
  },
+ "Pagal dydį: abu dideli, todėl vėl viename būryje.": {
+  "n": "n/0990ea94040c79c5-cf86fc3f.mp3",
+  "s": "s/0990ea94040c79c5-b5eb84f4.mp3"
+ },
+ "Pagal formą: raudonas ir geltonas trikampis — viename būryje.": {
+  "n": "n/5e2a48e4c00f31d4-537db86c.mp3",
+  "s": "s/5e2a48e4c00f31d4-035a7617.mp3"
+ },
+ "Pagal spalvą: raudonas ir geltonas — skirtinguose būriuose.": {
+  "n": "n/23cd2ef6f1c4589e-9e33e337.mp3",
+  "s": "s/23cd2ef6f1c4589e-80342a11.mp3"
+ },
  "Pagalvok ir pasakyk": {
   "n": "n/7d0a64f2091b33af-346fa946.mp3",
   "s": "s/7d0a64f2091b33af-7f4b6ce9.mp3"
@@ -2594,6 +2614,10 @@
  "Pasirink plytelę. Tada spėk, kur orui kelyje yra kliūtis.": {
   "n": "n/434bbeff547d4cbf-8b284f36.mp3",
   "s": "s/434bbeff547d4cbf-76a408cf.mp3"
+ },
+ "Pasirink požymį: forma, spalva ar dydis.": {
+  "n": "n/b64829f080002c81-ecd9f179.mp3",
+  "s": "s/b64829f080002c81-004fe235.mp3"
  },
  "Pasirink vieną ir pažiūrėk.": {
   "n": "n/ad161d55c7544049-3fd8ad22.mp3",
@@ -2807,6 +2831,10 @@
   "n": "n/ac090d01c5a41fa1-7058ffff.mp3",
   "s": "s/ac090d01c5a41fa1-06420e77.mp3"
  },
+ "Pirma spėk, tada rinkis požymį.": {
+  "n": "n/7ab89026461727d3-52b88b3e.mp3",
+  "s": "s/7ab89026461727d3-1efeab8b.mp3"
+ },
  "Pirma spėk. Tada dėk ant svarstyklių.": {
   "n": "n/99bab1d18f71938b-bf127f46.mp3",
   "s": "s/99bab1d18f71938b-20a6908b.mp3"
@@ -2814,6 +2842,10 @@
  "Pirma spėk. Tada įjunk jungiklį.": {
   "n": "n/fe164bd6a1648cee-43918563.mp3",
   "s": "s/fe164bd6a1648cee-d4bc501f.mp3"
+ },
+ "Pirma spėk: ar geltonas trikampis bus kartu su raudonu?": {
+  "n": "n/d4d9e4beff8ef53f-86713b08.mp3",
+  "s": "s/d4d9e4beff8ef53f-09ca5774.mp3"
  },
  "Pirma sudėk raidę, tada ją puošk.": {
   "n": "n/1920c09d6c2ad121-c8ec22b1.mp3",
@@ -2890,6 +2922,10 @@
  "Pradedam iš naujo. Keturi drabužiai.": {
   "n": "n/cc017c89b47faa17-33997a1b.mp3",
   "s": "s/cc017c89b47faa17-a43b1d20.mp3"
+ },
+ "Pradedam iš naujo. Krūva ta pati.": {
+  "n": "n/a9f820c6f3720d11-6b5d366b.mp3",
+  "s": "s/a9f820c6f3720d11-71d069de.mp3"
  },
  "Pradedam iš naujo. Lėkštės lieka.": {
   "n": "n/6516987f911f8fde-811a39ed.mp3",
@@ -3359,6 +3395,10 @@
   "n": "n/a76bfadbd298abf8-0bd14893.mp3",
   "s": "s/a76bfadbd298abf8-d777be8d.mp3"
  },
+ "Spėjimas įrašytas. Dabar pasirink požymį.": {
+  "n": "n/80f3b2be96191564-7d483be6.mp3",
+  "s": "s/80f3b2be96191564-33026981.mp3"
+ },
  "Spėjimas įrašytas. Dabar perjunk 24 valandų sistemą.": {
   "n": "n/c58ee21a4e528a1f-615ea451.mp3",
   "s": "s/c58ee21a4e528a1f-797c81e7.mp3"
@@ -3578,6 +3618,10 @@
  "Tarp taškų atkarpa su dviem galais. Tiesė neturi galo.": {
   "n": "n/c095a5efbdb25987-f3759fe9.mp3",
   "s": "s/c095a5efbdb25987-432ddd29.mp3"
+ },
+ "Tas pats požymis abiem — todėl jie kartu.": {
+  "n": "n/7677b2f120ea7108-197913f2.mp3",
+  "s": "s/7677b2f120ea7108-b173e11e.mp3"
  },
  "Tas pats sūris keturiose vietose. Kur jis pasikeis mažiausiai?": {
   "n": "n/8870c1becdb09997-28ee8a2d.mp3",
@@ -3879,6 +3923,14 @@
   "n": "n/2f42f4c14351d2c7-db99a444.mp3",
   "s": "s/2f42f4c14351d2c7-cdb6ea05.mp3"
  },
+ "Tu spėjai, kad jie bus atskirai.": {
+  "n": "n/4afd928afd9299c6-b79e5b81.mp3",
+  "s": "s/4afd928afd9299c6-a68e46be.mp3"
+ },
+ "Tu spėjai, kad jie bus kartu.": {
+  "n": "n/36d92acbfe173547-d26e1f09.mp3",
+  "s": "s/36d92acbfe173547-674d6370.mp3"
+ },
  "Tu taip ir sakei.": {
   "n": "n/b7ff6d050e8d9d9d-00d5e0fd.mp3",
   "s": "s/b7ff6d050e8d9d9d-4b9b9542.mp3"
@@ -4039,6 +4091,10 @@
   "n": "n/9a42e38296157a8d-74837e91.mp3",
   "s": "s/9a42e38296157a8d-5d075e7d.mp3"
  },
+ "Viena krūva. Pažymėti du trikampiai.": {
+  "n": "n/fa834c3ce5d82830-ec369dc8.mp3",
+  "s": "s/fa834c3ce5d82830-a52b8c25.mp3"
+ },
  "Viena lazdelė. Tai raidė I.": {
   "n": "n/fef8d3468602b579-0c11c96c.mp3",
   "s": "s/fef8d3468602b579-610af642.mp3"
@@ -4122,6 +4178,10 @@
  "Visi trys darbai atlikti.": {
   "n": "n/352dccd1988a710a-48109d94.mp3",
   "s": "s/352dccd1988a710a-4e487f4f.mp3"
+ },
+ "Visi trys požymiai parodyti. Krūva ta pati, būriai trys.": {
+  "n": "n/2778ee8d7efbced0-42228f64.mp3",
+  "s": "s/2778ee8d7efbced0-7fd209a4.mp3"
  },
  "Visi trys sustojo: augalas nebeauga, vaikas nebežaidžia, mašinėlė nebevažiuoja.": {
   "n": "n/7464e850f1a03ddc-430e38ff.mp3",
@@ -4262,6 +4322,18 @@
  "g": {
   "n": "n/cd0aa9856147b6c5-aa87afb1.mp3",
   "s": "s/cd0aa9856147b6c5-f5151f2c.mp3"
+ },
+ "geltonas didelis kvadratas": {
+  "n": "n/d5028e7d57f4eb6d-40dd3c37.mp3",
+  "s": "s/d5028e7d57f4eb6d-3b7e711b.mp3"
+ },
+ "geltonas didelis trikampis": {
+  "n": "n/97dc9955d62f2c03-2512b8fd.mp3",
+  "s": "s/97dc9955d62f2c03-18f889f5.mp3"
+ },
+ "geltonas mažas apskritimas": {
+  "n": "n/4372af87fffad7a6-9fee7124.mp3",
+  "s": "s/4372af87fffad7a6-ccc0833b.mp3"
  },
  "geria": {
   "n": "n/ae87882bd34b6c51-e646447c.mp3",
@@ -4442,6 +4514,18 @@
  "raidė o": {
   "n": "n/4ee8ea600650230a-d0b30b97.mp3",
   "s": "s/4ee8ea600650230a-1e4d3305.mp3"
+ },
+ "raudonas didelis trikampis": {
+  "n": "n/d70e0bdf95edfb6d-75019a14.mp3",
+  "s": "s/d70e0bdf95edfb6d-c96307e7.mp3"
+ },
+ "raudonas mažas apskritimas": {
+  "n": "n/3018fea4d25d5c25-9320f08f.mp3",
+  "s": "s/3018fea4d25d5c25-4e526a3d.mp3"
+ },
+ "raudonas mažas trikampis": {
+  "n": "n/77cda1083ba02228-330da7a7.mp3",
+  "s": "s/77cda1083ba02228-4a88dbf7.mp3"
  },
  "ryte": {
   "n": "n/f031a87bdef1b790-18a185ad.mp3",
@@ -4687,9 +4771,17 @@
   "n": "n/030eef6ef6dfa717-f45bee2e.mp3",
   "s": "s/030eef6ef6dfa717-6e3fb15c.mp3"
  },
+ "Šis požymis jau parodytas. Rinkis kitą.": {
+  "n": "n/da3e0402a231c340-f4d28b6f.mp3",
+  "s": "s/da3e0402a231c340-e7441a55.mp3"
+ },
  "Šis siūlas jau ištrauktas. Pasirink kitą lopelį.": {
   "n": "n/e65f3ca51fe02e5d-8fc5d9f3.mp3",
   "s": "s/e65f3ca51fe02e5d-fd6571b1.mp3"
+ },
+ "Šiuo požymiu jie skiriasi — todėl atskirai.": {
+  "n": "n/6c89585db888bdf1-2cdb182e.mp3",
+  "s": "s/6c89585db888bdf1-a288d0ea.mp3"
  },
  "Šlapias": {
   "n": "n/1c15874f7903baf5-be7dcac6.mp3",

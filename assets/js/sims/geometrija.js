@@ -1099,8 +1099,324 @@ const dezuteIrKilogramas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 4. Grupavimas pagal požymį (1 klasė, matematika)                    */
+/*                                                                    */
+/* Modelis: VIENA krūva, trys klausimai. Viršuje krūva nekinta nė      */
+/* viename žingsnyje — keičiasi tik požymis, pagal kurį ji skirstoma,  */
+/* todėl priežastis matoma be paaiškinimo. Ta pati pora (raudonas ir   */
+/* geltonas didelis trikampis) pagal formą atsiduria viename būryje,  */
+/* o pagal spalvą — skirtinguose. Grupė nėra daikto savybė.            */
+/*                                                                    */
+/* Ko modelyje NĖRA: jokio „neteisingo“ skirstymo (gairės P3). Visi   */
+/* trys požymiai teisingi, nes kiekvienas atsako į savo klausimą. Nėra */
+/* ir ketvirto požymio („gražus“, „mano mėgstamas“) — jo paveikslėlyje */
+/* nematyti, o modelis rodo tik tai, ką vaikas gali patikrinti akimis. */
+/*                                                                    */
+/* Būriai IŠVEDAMI iš tų pačių `items` laukelių, kuriuos mato vaikas   */
+/* (`valueOf`), o ne įrašomi atskirai — ta pati taisyklė kaip M-07 ir  */
+/* M-10. Jei modulio `claim` („šie du bus kartu / atskirai“) nesutampa */
+/* su išvesta būsena, komponentas sako klaidą garsiai (console.error),*/
+/* o ne tyliai nupiešia kitą būrį, negu teigia sakinys (LL-33, LL-25). */
+/*                                                                    */
+/* Spėjimas NĖRA vertinamas kaip teisingas ar klaidingas: jis tik      */
+/* pakartojamas prieš tai, kas atsitiko. Kadangi ta pati pora vieną    */
+/* kartą būna kartu, o kitą — ne, „neteisingo spėjimo“ sąvoka čia      */
+/* neturi prasmės, o bauda mokytų priešingai nei gairės T5.1 (LL-18).  */
+/*                                                                    */
+/* Scena surenkama iš `art.js` dalių (LL-13): art.flatShape su        */
+/* užpildu, kuris čia yra pats tiriamas požymis.                       */
+/* ------------------------------------------------------------------ */
+const KG_VIEW = 132;
+const KG_COLOR = { raudona: "#e2695c", geltona: "#f2c14e", melyna: "#6d9bd8" };
+const KG_SHAPES = ["trikampis", "kvadratas", "apskritimas"];
+const KG_SIZES = ["didelis", "mazas"];
+const KG_ATTR = { forma: "shape", spalva: "color", dydis: "size" };
+
+const kruvaIrBuriai = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+    const V = config.values || {};
+
+    /* Proza — tik iš `config.sentences` (LL-42): kode nėra nė vieno
+       sakinio, kurio negirdėtų balsas ir nematytų `check_audio.py`. */
+    const line = (key) => (typeof S[key] === "string" ? S[key] : "");
+    const lab = (key, fallback) => {
+      const v = typeof L[key] === "string" ? L[key].trim() : "";
+      return v || fallback || "";
+    };
+    const valueLabel = (id, value) => {
+      const map = V[id];
+      return map && typeof map[value] === "string" ? map[value] : "";
+    };
+
+    const ITEMS = Array.isArray(config.items) ? config.items : [];
+    const CRITERIA = Array.isArray(config.criteria) ? config.criteria : [];
+    const PAIR = config.pair && typeof config.pair === "object" ? config.pair : {};
+    const a = ITEMS.find((it) => it && it.id === PAIR.a) || null;
+    const b = ITEMS.find((it) => it && it.id === PAIR.b) || null;
+
+    const state = { criterion: "", guess: "", seen: new Set(), reported: false };
+
+    /* --- duomenų vientisumas ---------------------------------------- */
+    /* Viską, ką sakinys pasako apie būrį, komponentas perskaičiuoja iš tų
+       pačių laukelių, kuriuos mato vaikas (M-07, M-10). */
+    function integrity() {
+      if (ITEMS.length < 4) return "per mažai daiktų krūvoje";
+      if (!a || !b || a === b) return "pora nenurodyta arba sutampa";
+      for (const it of ITEMS) {
+        if (!it || !KG_SHAPES.includes(it.shape)) return `nežinoma forma „${it && it.shape}“`;
+        if (!KG_COLOR[it.color]) return `nežinoma spalva „${it.color}“`;
+        if (!KG_SIZES.includes(it.size)) return `nežinomas dydis „${it.size}“`;
+      }
+      if (!CRITERIA.length) return "nėra nė vieno požymio";
+      for (const c of CRITERIA) {
+        if (!KG_ATTR[c.id]) return `nežinomas požymis „${c.id}“`;
+        if (!line(c.id)) return `požymiui „${c.id}“ trūksta sakinio`;
+        if (!lab(c.id, c.button || "")) return `požymiui „${c.id}“ trūksta mygtuko užrašo`;
+        for (const it of ITEMS) {
+          const v = it[KG_ATTR[c.id]];
+          if (!valueLabel(c.id, v)) return `požymiui „${c.id}“ trūksta pavadinimo „${v}“`;
+        }
+        /* `together` — sakinio teiginys apie porą. Lyginamas su išvesta
+           būsena, o ne pasitikima: jei modulis pameluotų, modelio tekstas
+           rodytų vieną, o būriai — kitą. */
+        const derived = a[KG_ATTR[c.id]] === b[KG_ATTR[c.id]];
+        if (typeof c.together === "boolean" && c.together !== derived) {
+          return `teiginys „${c.id}: together=${c.together}“ nesutampa su išvesta ${derived}`;
+        }
+      }
+      return "";
+    }
+
+    const problem = integrity();
+    if (problem) {
+      console.error(`kruva-ir-buriai: ${problem}`);
+      stage.innerHTML = `<p class="sim-note" style="margin:0">${line("broken")}</p>`;
+      controls.innerHTML = "";
+      api.readout(line("broken"));
+      return null;
+    }
+
+    stage.innerHTML = `
+      <div id="kg-wrap" style="width:100%;max-width:100%;min-width:0;box-sizing:border-box">
+        <p id="kg-pile-note" class="sim-note" style="margin:0 0 .3rem">${line("pileNote")}</p>
+        <div id="kg-pile" role="img"
+             style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;align-items:flex-end;
+                    min-height:2.6rem;padding:.4rem;border:2px dashed var(--line);
+                    border-radius:var(--r-s);background:var(--paper);box-sizing:border-box"></div>
+        <div id="kg-groups" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.7rem;min-width:0"></div>
+        <ul id="kg-marks" style="margin:.55rem 0 0;padding-left:1.1rem;font-size:var(--fs-s);line-height:1.35"></ul>
+      </div>`;
+
+    controls.innerHTML = `
+      <div role="group" aria-label="${lab("guessGroup", "Pirma spėk")}"
+           style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;width:100%">
+        <button type="button" class="btn secondary" id="kg-g-yes" aria-pressed="false"
+                style="min-height:48px;min-width:0">${lab("guessYes", "Bus kartu")}</button>
+        <button type="button" class="btn secondary" id="kg-g-no" aria-pressed="false"
+                style="min-height:48px;min-width:0">${lab("guessNo", "Bus atskirai")}</button>
+      </div>
+      <div role="group" id="kg-crit" aria-label="${lab("critGroup", "Pasirink požymį")}"
+           style="display:flex;flex-direction:column;gap:.4rem;width:100%"></div>
+      <button type="button" class="btn ghost" id="kg-reset" style="min-height:48px">${lab("again", "Iš naujo")}</button>`;
+
+    const pileEl = stage.querySelector("#kg-pile");
+    const pileNoteEl = stage.querySelector("#kg-pile-note");
+    const groupsEl = stage.querySelector("#kg-groups");
+    const marksEl = stage.querySelector("#kg-marks");
+    const guessYes = controls.querySelector("#kg-g-yes");
+    const guessNo = controls.querySelector("#kg-g-no");
+    const critEl = controls.querySelector("#kg-crit");
+    const resetBtn = controls.querySelector("#kg-reset");
+
+    critEl.innerHTML = CRITERIA.map((c) => (
+      `<button type="button" class="btn secondary" data-crit="${c.id}" aria-pressed="false"
+               style="min-height:56px;width:100%;padding:.4rem .5rem;line-height:1.2">${lab(c.id, c.button)}</button>`
+    )).join("");
+    const critBtns = CRITERIA.map((c) => critEl.querySelector(`[data-crit="${c.id}"]`));
+
+    /* Piktograma: forma, spalva ir dydis matomi tame pačiame plote, todėl
+       didelis ir mažas daiktas skiriasi dydžiu, o ne tik užrašu. */
+    function icon(item) {
+      const px = item.size === "didelis" ? 40 : 27;
+      const s = item.size === "didelis" ? 96 : 64;
+      return `<svg viewBox="0 0 ${KG_VIEW} ${KG_VIEW}" width="${px}" height="${px}" aria-hidden="true"
+                   focusable="false" style="display:block;overflow:visible">${
+        art.flatShape(item.shape, KG_VIEW / 2, KG_VIEW / 2, s, 4, KG_COLOR[item.color])
+      }</svg>`;
+    }
+
+    /* Būriai išvedami iš daiktų požymių; tvarka — pirmo pasirodymo tvarka,
+       todėl mokytojas gali numatyti, ką vaikas matys, o du bandymai lieka
+       palyginami. */
+    function groupsOf(id) {
+      const order = [];
+      const byValue = new Map();
+      for (const it of ITEMS) {
+        const v = it[KG_ATTR[id]];
+        if (!byValue.has(v)) { byValue.set(v, []); order.push(v); }
+        byValue.get(v).push(it);
+      }
+      return order.map((v) => ({ value: v, label: valueLabel(id, v), items: byValue.get(v) }));
+    }
+
+    /* Ar pora dabar tame pačiame būryje — perskaičiuojama iš tų pačių
+       požymių, pagal kuriuos sudėti būriai, o ne iš atskiro laukelio. */
+    const pairTogether = (id) => a[KG_ATTR[id]] === b[KG_ATTR[id]];
+    const pairLabel = `${a.label || ""} ${lab("and", "ir")} ${b.label || ""}`;
+
+    function paintPile() {
+      pileEl.innerHTML = ITEMS.map((it) => `
+        <div style="display:flex;flex-direction:column;align-items:center;gap:.1rem;min-width:0">
+          ${icon(it)}
+          ${it.id === PAIR.a || it.id === PAIR.b
+            ? `<span style="font-size:var(--fs-s);font-weight:800;line-height:1.1">${lab("mark", "Šis")}</span>`
+            : ""}
+        </div>`).join("");
+      pileEl.setAttribute("aria-label", `${lab("pile", "Krūva")}: ${ITEMS.map((it) => it.label || "").filter(Boolean).join(", ")}`);
+      if (!line("pileNote")) pileNoteEl.hidden = true;
+    }
+
+    function paintGroups() {
+      if (!state.criterion) {
+        groupsEl.innerHTML = `<p class="sim-note" style="margin:0;width:100%">${line("pick")}</p>`;
+        groupsEl.setAttribute("aria-label", line("pick"));
+        return;
+      }
+      const groups = groupsOf(state.criterion);
+      groupsEl.innerHTML = groups.map((g) => `
+        <div role="group" aria-label="${g.label}: ${g.items.length}"
+             style="flex:1 1 6.4rem;min-width:0;box-sizing:border-box;border:2px solid var(--line);
+                    border-radius:var(--r-s);background:var(--paper-2);padding:.4rem .45rem">
+          <p style="margin:0 0 .3rem;font-size:var(--fs-s);font-weight:800;text-align:center;line-height:1.2">${g.label}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;align-items:flex-end">${
+            g.items.map(icon).join("")
+          }</div>
+        </div>`).join("");
+      groupsEl.setAttribute("aria-label", groups.map((g) => `${g.label} — ${g.items.length}`).join(", "));
+    }
+
+    function paintMarks() {
+      /* Požymiai, kurie jau parodyti, lieka ir po „Iš naujo“ (LL-16):
+         kitaip vaikas pamiršta, ką jau rado, ir žymos dingsta iki galutinio
+         dydžio (LL-20). */
+      const seen = CRITERIA.filter((c) => state.seen.has(c.id)).map((c) => line(c.id));
+      marksEl.innerHTML = seen.map((t) => `<li>${t}</li>`).join("");
+      marksEl.hidden = seen.length === 0;
+    }
+
+    function paintControls() {
+      const pairs = [[guessYes, state.guess === "yes"], [guessNo, state.guess === "no"]];
+      for (const [btn, on] of pairs) {
+        btn.setAttribute("aria-pressed", String(on));
+        btn.className = on ? "btn" : "btn secondary";
+        btn.style.minHeight = "48px";
+      }
+      critBtns.forEach((btn, i) => {
+        if (!btn) return;
+        const on = CRITERIA[i].id === state.criterion;
+        /* Mygtukai NElukinami be paaiškinimo (LL-04): vaikas gali spausti
+           bet kada, o atsakymas — sakinys „pirma spėk“ ir fokusas į spėjimą. */
+        btn.setAttribute("aria-pressed", String(on));
+        btn.className = on ? "btn" : "btn secondary";
+        btn.style.minHeight = "56px";
+        btn.style.width = "100%";
+        btn.setAttribute("aria-label",
+          `${on ? lab("nowOn", "Dabar") + " " : ""}${lab(CRITERIA[i].id, CRITERIA[i].button)}`);
+      });
+    }
+
+    const paint = () => { paintPile(); paintGroups(); paintMarks(); paintControls(); };
+    const tell = (text) => { if (text) api.speak(text); };
+
+    function pickGuess(kind) {
+      state.guess = kind;
+      paintControls();
+      const text = line(kind === "yes" ? "guessYes" : "guessNo");
+      api.readout(text);
+      api.note(line("chosen"));
+      tell(text);
+      critBtns[0]?.focus();
+    }
+
+    function pickCriterion(id) {
+      if (!state.guess) {
+        /* Ne „negalima“, o ką daryti toliau: pirma spėk, tada rinkis. Tai
+           tvarka, apsauganti nuo spaudymo bandymų būdu (LL-15), o ne bauda. */
+        api.readout(line("locked"));
+        api.note(line("locked"));
+        tell(line("locked"));
+        guessYes.focus();
+        return;
+      }
+      const first = !state.seen.has(id);
+      state.criterion = id;
+      state.seen.add(id);
+      paint();
+
+      const fact = line(id);
+      /* Spėjimas palyginamas su tuo, kas atsitiko, vieną kartą — prie pirmo
+         požymio. Toliau sakomi trys FAKTAI („pagal formą — kartu“, „pagal
+         spalvą — atskirai“, „pagal dydį — vėl kartu“), ir būtent jie patys
+         parodo, kad ta pati pora atsakė skirtingai į skirtingą klausimą.
+         Antro palyginimo nereikia, o kartojamas jis skambėtų kaip bauda
+         (T5.1). */
+      const cmp = first ? line(state.guess === "yes" ? "cmpYes" : "cmpNo") : "";
+      const allSeen = state.seen.size === CRITERIA.length;
+
+      if (allSeen && !state.reported) {
+        state.reported = true;
+        api.progress({ correct: true });
+        api.readout([fact, line("all")].filter(Boolean).join(" "));
+        api.note(line("all"));
+        tell(line("all"));
+        resetBtn.focus();
+        return;
+      }
+
+      api.readout([cmp, fact].filter(Boolean).join(" "));
+      /* Paaiškinimas — mechanizmas, o ne įvykis: „tas pats požymis abiem,
+         todėl kartu“ / „šiuo požymiu skiriasi, todėl atskirai“. Jis
+         perskaičiuojamas iš tų pačių laukelių, pagal kuriuos sudėti būriai
+         (`pairTogether`), todėl sutampa su ekranu (LL-33). */
+      api.note(first ? (pairTogether(id) ? line("noteTogether") : line("noteApart")) : line("repeat"));
+      tell(fact);
+    }
+
+    function reset() {
+      state.criterion = "";
+      state.guess = "";
+      paint();
+      api.readout(line("again"));
+      api.note(line("guess"));
+      tell(line("again"));
+      guessYes.focus();
+    }
+
+    critEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-crit]");
+      if (btn) pickCriterion(btn.dataset.crit);
+    });
+    guessYes.addEventListener("click", () => pickGuess("yes"));
+    guessNo.addEventListener("click", () => pickGuess("no"));
+    resetBtn.addEventListener("click", reset);
+
+    /* Pradinė būsena įvardijama, o ne paliekama tyli (LL-194): vaikas turi
+       žinoti, kad krūva yra viena ir nepakitusi. */
+    paint();
+    api.readout(line("start"));
+    api.note(line("guess"));
+    tell(line("start"));
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "erdvines-figuros": erdvinesFiguros,
   "ilgis-ir-vienetas": ilgisIrVienetas,
   "dezute-ir-kilogramas": dezuteIrKilogramas,
+  "kruva-ir-buriai": kruvaIrBuriai,
 };

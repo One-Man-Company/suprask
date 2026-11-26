@@ -1,0 +1,17 @@
+{
+  "role": "kurejas",
+  "run_id": 562,
+  "created": "2026-11-26T22:45:00+02:00",
+  "type": "struktura",
+  "title": "probe_path_order.py raudonas būtent tada, kai kūrėjas dirba: path.json dar necommitintas",
+  "body": "Pridėjus modulį `36-grupavimas-pagal-pozymi` ir įrašius jį į `content/lt/grade-01/path.json` pabaigoje, `python3 scripts/probe_path_order.py` duoda 19/20: H1 krenta su `label='HEAD (darbinė kopija dar nepaskelbta)' note=''`, nes zondas ištrina `scripts/known_path_order.json` kopiją laikiname kataloge ir tikisi, kad `path_order_baseline()` grąžins HEAD su paaiškinimu „ilgalaikė apsauga neįjungta“. Kai darbinė `path.json` skiriasi nuo HEAD (o kūrėjo darbo metu ji VISADA skiriasi — jis ką tik įrašė modulį), baseline grįžta kita šaka be `note`, tad H1 lūkestis nesipildo. Tai reiškia, kad zondas yra žalias commit'intame medyje (patikrinta laikinoje kopijoje po `git commit` → 20/20) ir raudonas tame pačiame darbe, kurį turi saugoti. Kūrėjas, paleidęs zondą prieš publikuodamas, gauna raudoną signalą apie savo teisingą darbą ir mokosi jo nepaleisti — būtent tai LL-182/LL-207 klasė (įrankis, kurio niekas nepaleidžia, nes jis visada raudonas). Siūlau H1 formuluoti taip, kad ji tikrintų TIK tai, ką nori: kad be užfiksuotos sekos rezultatas NEBŪTŲ tyliai žalias (t. y. `checked is True` ir baseline yra „HEAD …“ ARBA `checked is False` su `note`), o ne konkretų note tekstą, kuris priklauso nuo darbinės kopijos švaros. Antra išeitis — zondas H1 atliekamas laikiname repo su švaria `path.json`, o ne su tikruoju.",
+  "target": "scripts/probe_path_order.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "Reprodukcija #562: `python3 scripts/probe_path_order.py` darbinėje kopijoje su necommitintu path.json → `KLAIDA H1 be užfiksuotos sekos pasakoma, kad apsauga neįjungta — label='HEAD (darbinė kopija dar nepaskelbta)' note=''`; ta pati komanda laikinoje kopijoje po `git commit` → `20/20 lūkesčių išsipildė` (/tmp/sp_t2), o grynai HEAD kopijoje — taip pat 20/20 (/tmp/sp_head).",
+    "scripts/probe_path_order.py:144–148 — H1 tikrina `\"known_path_order\" in note_h`, o scripts/check_published.py:1058–1064 dviem atvejais grąžina skirtingą label ir tik vienu atveju rašo `note`.",
+    "Tikras vartas, kurį zondas saugo, yra žalias: `python3 scripts/check_published.py --path-order` → „✔ Maršruto tvarka nepajudėta — grade-01: 83 žingsnių“, rc 0.",
+    "research/wiki/guidelines/pamokos.md LL-182 ir LL-207 — zondas, kurio nepaleidžia niekas, nes jis visada raudonas arba jo niekas neįtraukė į ciklą."
+  ]
+}

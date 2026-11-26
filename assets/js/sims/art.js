@@ -700,9 +700,14 @@ export const art = {
   /**
    * Plokščias vaizdas — tai, ką matai žiūrėdamas iš vienos pusės.
    * kind: trikampis | apskritimas | kvadratas | staciakampis.
+   *
+   * `fill` — užpildo spalva. Ji reikalinga ten, kur spalva yra pats tiriamas
+   * požymis (grupavimas pagal spalvą, formą ir dydį), o ne puošmena: tada ta
+   * pati forma piešiama kelis kartus ir skiriasi būtent užpildu. Numatytasis
+   * variantas nekeičiamas, todėl seni kvietimai piešia taip pat kaip iki šiol.
    */
-  flatShape(kind, cx, cy, s, strokeWidth = 3) {
-    const a = `fill="${SOLID.top}" stroke="${SOLID.edge}" stroke-width="${strokeWidth}" stroke-linejoin="round"`;
+  flatShape(kind, cx, cy, s, strokeWidth = 3, fill = SOLID.top) {
+    const a = `fill="${fill}" stroke="${SOLID.edge}" stroke-width="${strokeWidth}" stroke-linejoin="round"`;
     if (kind === "apskritimas") {
       return `<circle cx="${cx}" cy="${cy}" r="${(s * 0.46).toFixed(1)}" ${a}/>`;
     }

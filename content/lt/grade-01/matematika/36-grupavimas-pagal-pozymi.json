@@ -1,0 +1,221 @@
+{
+  "id": "36-grupavimas-pagal-pozymi",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Ta pati krūva, kitas požymis",
+  "subtitle": "Viena krūva — trys būriai: grupę pasako klausimas, o ne daiktas",
+  "minutes": 9,
+  "outcomes": [
+    "Grupuoju tuos pačius daiktus pagal formą, spalvą ir dydį.",
+    "Paaiškinu, kodėl tas pats daiktas atsiduria skirtinguose būriuose.",
+    "Pasakau, kad būrį pasako klausimas, o ne pats daiktas."
+  ],
+  "concept": {
+    "title": "Būrį pasako klausimas",
+    "big_idea": "Ta pati krūva gali būti suskirstyta keliais būdais. Pagal formą būriai vieni, pagal spalvą — kiti. Todėl būrys priklauso nuo klausimo, o ne nuo daikto.",
+    "steps": [
+      "Spėk, ar geltonas trikampis bus kartu su raudonu.",
+      "Paspausk „Forma“ ir pažiūrėk, kas atsidūrė viename būryje.",
+      "Paspausk „Spalva“: krūva ta pati, o būriai kiti.",
+      "Paspausk „Dydis“ ir rask, kas vėl pasikeitė."
+    ],
+    "example": "Krepšyje trys raudonos kojinės ir trys baltos. Pagal spalvą — du būriai. Pagal ilgį tos pačios kojinės gal suskiltų visai kitaip."
+  },
+  "sim": {
+    "component": "kruva-ir-buriai",
+    "config": {
+      "pair": {
+        "a": "k1",
+        "b": "k3"
+      },
+      "items": [
+        {
+          "id": "k1",
+          "shape": "trikampis",
+          "color": "raudona",
+          "size": "didelis",
+          "label": "raudonas didelis trikampis"
+        },
+        {
+          "id": "k2",
+          "shape": "trikampis",
+          "color": "raudona",
+          "size": "mazas",
+          "label": "raudonas mažas trikampis"
+        },
+        {
+          "id": "k3",
+          "shape": "trikampis",
+          "color": "geltona",
+          "size": "didelis",
+          "label": "geltonas didelis trikampis"
+        },
+        {
+          "id": "k4",
+          "shape": "kvadratas",
+          "color": "geltona",
+          "size": "didelis",
+          "label": "geltonas didelis kvadratas"
+        },
+        {
+          "id": "k5",
+          "shape": "apskritimas",
+          "color": "geltona",
+          "size": "mazas",
+          "label": "geltonas mažas apskritimas"
+        },
+        {
+          "id": "k6",
+          "shape": "apskritimas",
+          "color": "raudona",
+          "size": "mazas",
+          "label": "raudonas mažas apskritimas"
+        }
+      ],
+      "criteria": [
+        {
+          "id": "forma",
+          "button": "Forma",
+          "together": true
+        },
+        {
+          "id": "spalva",
+          "button": "Spalva",
+          "together": false
+        },
+        {
+          "id": "dydis",
+          "button": "Dydis",
+          "together": true
+        }
+      ],
+      "values": {
+        "forma": {
+          "trikampis": "Trikampiai",
+          "kvadratas": "Kvadratai",
+          "apskritimas": "Apskritimai"
+        },
+        "spalva": {
+          "raudona": "Raudoni",
+          "geltona": "Geltoni"
+        },
+        "dydis": {
+          "didelis": "Dideli",
+          "mazas": "Maži"
+        }
+      },
+      "labels": {
+        "pile": "Krūva",
+        "mark": "Šis",
+        "and": "ir",
+        "guessGroup": "Pirma spėk",
+        "guessYes": "Bus kartu",
+        "guessNo": "Bus atskirai",
+        "critGroup": "Pasirink požymį",
+        "again": "Iš naujo",
+        "nowOn": "Dabar"
+      },
+      "sentences": {
+        "start": "Viena krūva. Pažymėti du trikampiai.",
+        "guess": "Pirma spėk: ar geltonas trikampis bus kartu su raudonu?",
+        "pileNote": "Krūva visą laiką ta pati. Keisis tik būriai.",
+        "pick": "Pasirink požymį: forma, spalva ar dydis.",
+        "chosen": "Spėjimas įrašytas. Dabar pasirink požymį.",
+        "locked": "Pirma spėk, tada rinkis požymį.",
+        "forma": "Pagal formą: raudonas ir geltonas trikampis — viename būryje.",
+        "spalva": "Pagal spalvą: raudonas ir geltonas — skirtinguose būriuose.",
+        "dydis": "Pagal dydį: abu dideli, todėl vėl viename būryje.",
+        "cmpYes": "Tu spėjai, kad jie bus kartu.",
+        "cmpNo": "Tu spėjai, kad jie bus atskirai.",
+        "noteTogether": "Tas pats požymis abiem — todėl jie kartu.",
+        "noteApart": "Šiuo požymiu jie skiriasi — todėl atskirai.",
+        "repeat": "Šis požymis jau parodytas. Rinkis kitą.",
+        "all": "Visi trys požymiai parodyti. Krūva ta pati, būriai trys.",
+        "again": "Pradedam iš naujo. Krūva ta pati.",
+        "broken": "Krūva nesuderinta su būriais."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Simuliacijoje buvo viena krūva. Kodėl pagal formą būrių buvo trys, o pagal spalvą — du?",
+      "options": [
+        "Nes daiktų krūvoje sumažėjo",
+        "Nes klausimas buvo kitas",
+        "Nes pirmas skirstymas buvo neteisingas"
+      ],
+      "answer": 1,
+      "hint": "Palygink, ar krūva viršuje pasikeitė, kai spaudei spalvą.",
+      "why": "Krūva liko ta pati. Keitėsi tik požymis."
+    },
+    {
+      "q": "Trys vienodo dydžio kamuoliai: du raudoni ir vienas mėlynas. Pagal kurį požymį juos skirtum į du būrius?",
+      "options": [
+        "Pagal formą",
+        "Pagal dydį",
+        "Pagal spalvą"
+      ],
+      "answer": 2,
+      "hint": "Kuris požymis tuos kamuolius tikrai skiria?",
+      "why": "Forma ir dydis visų vienodi, tad skiria tik spalva."
+    },
+    {
+      "q": "Lentynoje dvi raudonos kepurės ir viena žalia. Pagal spalvą — du būriai. Kiek kepurių didesniame būryje?",
+      "options": [
+        "2",
+        "3",
+        "1"
+      ],
+      "answer": 0,
+      "hint": "Suskaičiuok kepures, kurių spalva ta pati.",
+      "why": "Raudonos dvi, žalia viena, todėl didesniame būryje dvi kepurės."
+    },
+    {
+      "q": "Vienas vaikas aukštas, kitas žemas, abiem raudoni marškiniai. Kas juos sujungia?",
+      "options": [
+        "Marškiniai",
+        "Ūgis",
+        "Vardas"
+      ],
+      "answer": 0,
+      "hint": "Kuris požymis abiem toks pat?",
+      "why": "Ūgis skiriasi, o marškiniai abiem raudoni, todėl būrį pasako marškiniai."
+    },
+    {
+      "q": "Trys mėlyni kvadratai ir trys mėlyni trikampiai. Kiek būrių bus pagal spalvą?",
+      "options": [
+        "Trys",
+        "Vienas",
+        "Du"
+      ],
+      "answer": 1,
+      "hint": "Ar visų šešių daiktų spalva tokia pati?",
+      "why": "Visų spalva tokia pati, todėl būrys vienas.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip suskirstytum savo žaislus į dvi grupes? Pagal ką dar galėtum juos suskirstyti?",
+  "teacher": {
+    "goal": "Suprasti, kad grupavimas yra pasirinkimas, o ne daikto savybė: ta pati krūva pagal formą, spalvą ir dydį duoda skirtingus būrius. Modelis nekeičia krūvos — keičiasi tik požymis, todėl priežastis matoma be paaiškinimo. Formų savybių (kampų, kraštinių) čia nekartojame — jas moko 18-taskas-tiese-spindulys-atkarpa ir 06-figuros.",
+    "prompt": "Kodėl tas pats raudonas trikampis vieną kartą buvo su geltonu trikampiu, o kitą — ne?",
+    "offline": "Išdėkite ant stalo šešis daiktus: tris trikampius, du apskritimus ir kvadratą, dviejų spalvų ir dviejų dydžių. Vaikas pats suskirsto juos į būrius ir pasako, pagal ką skirstė. Tada paprašykite suskirstyti iš naujo pagal kitą požymį ir paklauskite, ar daiktai pasikeitė.",
+    "misconceptions": [
+      "„Daiktas priklauso vienai grupei“: vaikas ieško vieno teisingo būrio. Modelis to paties daikto kaimynus rodo tris kartus: pagal formą, pagal spalvą, pagal dydį — nė vienas būrys neteisingas.",
+      "„Grupuoti galima tik pagal formą“: pirmas būdas, kurį vaikas pamato, tampa vieninteliu. Todėl mygtukai yra trys ir kiekvienas rodo tą pačią krūvą iš naujo.",
+      "„Jei būriai kiti, tai pirmas skirstymas buvo klaidingas“: krūva viršuje nekinta nė viename žingsnyje; pasikeitusi būrių sudėtis yra įrodymas, kad klausimas buvo kitas.",
+      "„Grupė yra tai, kas gražu arba mėgstama“: tokių požymių modelis sąmoningai neturi — jų paveikslėlyje nematyti, o grupavimas mokomas tik pagal matomą požymį."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, A2.1 slenkstinis lygis (1–2 kl.): „Naudodamasis netiesiogiai teikiama pagalba paprasčiausiais atvejais nustato panašumus ir analogijas, apibūdina ir pratęsia dėsningumą, konstruoja elementų sekas pagal nurodytą taisyklę, grupuoja objektus pagal vieną požymį“ (sources/pradinio-bp-rekomendacijos-2024.txt:33537–33544; 1–2 kl. blokas — :33492).",
+    "Matematikos bendroji programa (2022), „Modeliai ir sąryšiai, 1–2 klasė“: panašumų ir analogijų nustatymas, grupavimas pagal požymį.",
+    "research/wiki/curriculum/matematika-1-klase.md §3 — dėsningumų ir sąryšių sritis 1 klasei; geometrijos branduolys (taškas, tiesė, atkarpa) yra atskiruose moduliuose, todėl šis modulis formų savybių nekartoja.",
+    "research/wiki/foundations/pozymis-ir-dydis.md — kai grupę apibrėžia vienas požymis, o kitas (ryškus) požymis yra matomas, vaikas renkasi ryškųjį; todėl modelio teiginys turi būti išvestas iš tų pačių laukelių, kuriuos vaikas mato, o požymis — matomas tame pačiame kadre.",
+    "Skirtumas nuo esamų modulių: 06-figuros rūšiuoja į iš anksto duotas dėžes ir moko formos pastovumo sukant; 23-piktograma-ir-stulpelis skaičiuoja jau sudarytas grupes. Nė vienas nekeičia grupavimo požymio toje pačioje krūvoje."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena idėja (būrys priklauso nuo klausimo); būrių skaičiavimas ir formų savybės sąmoningai neįtraukti — jie yra kituose moduliuose",
+    "3 žingsnis — pagalba laiku: spėjimas įrašomas prieš pirmą veiksmą ir pakartojamas prieš tai, kas atsitiko, klaida nebaudžiama, užuominos nukreipia į palyginimą, yra praplėtimo užduotis, jokių laikmačių",
+    "5 žingsnis — pozityvi aplinka: grįžtamasis ryšys įvardija, kas pasikeitė ekrane, o ne vertina vaiką; nė vienas būrys nevadinamas neteisingu, nes kiekvienas atsako į savo klausimą"
+  ]
+}

@@ -1966,6 +1966,38 @@ Pirmoji juodraščio versija davė **du tikrus radinius** ir abu pataisyti, o ne
 
 - _(kas šioje klasėje dar nepatikrinta; žr. [[../../guidelines/klausimai|klausimus]])_
 
+### M-19 — Grupavimas: ta pati krūva, trys klausimai
+
+**Data:** 2026-11-26 · **Tema:** `agents/proposals/2026-11-26-ideator-grupavimas-pagal-pozymi.json` (A2.1 slenkstinis 1–2 kl.) · **Tikslas:** `content/lt/grade-01/matematika/36-grupavimas-pagal-pozymi.json` · **Šaltinis:** `research/wiki/foundations/pozymis-ir-dydis.md`
+
+**Viena didelė idėja.** Būrį pasako klausimas, o ne daiktas. Ta pati krūva pagal formą duoda tris būrius, pagal spalvą — du, pagal dydį — vėl du, ir nė vienas skirstymas nėra neteisingas.
+
+**Kodėl modelis, o ne sakinys.** Programa prašo „grupuoja objektus pagal vieną požymį“ (`sources/pradinio-bp-rekomendacijos-2024.txt:33537–33544`). Sakinys „tą pačią krūvą galima skirstyti įvairiai“ pirmokui lieka tuščias tol, kol jis pats nepamato, kad daiktai nejuda, o būriai kinta: reikia trijų būsenų, kurių paveikslėlyje nėra. `foundations/pozymis-ir-dydis.md` rodo, kad vaikas kategoriją nustato pagal ryškiausią požymį (dažniausiai dydį), o ne pagal apibrėžiamąjį — todėl modelis turi leisti požymį perjungti pačiam vaikui, o dydis turi būti matomas tame pačiame kadre, kad jį būtų galima atskirti nuo formos ir spalvos.
+
+**Skirtumas nuo artimų modulių.** `06-figuros` rūšiuoja į **iš anksto duotas** dėžes ir moko formos pastovumo sukant (dėžė nekinta — keičiasi padėtis). `23-piktograma-ir-stulpelis` skaičiuoja **jau sudarytas** grupes. Čia krūva nekeičiama ir neskaičiuojama — keičiasi tik tas požymis, pagal kurį ji skirstoma, todėl grupė parodoma kaip pasirinkimas.
+
+**Simuliacijos specifikacija.** Komponentas `kruva-ir-buriai`, failas `assets/js/sims/geometrija.js` (ten, kur jau importuojamas `art.js`; registracija `SIMS` bloke eilute `"kruva-ir-buriai": kruvaIrBuriai,`). `config`:
+
+| Laukas | Reikšmė | Kodėl taip |
+|---|---|---|
+| `items[]` | 6 daiktai, kiekvienas su `shape`, `color`, `size`, `label` | Krūva — VIENA ir ta pati visame modelyje |
+| `criteria[]` | `forma`, `spalva`, `dydis` su `button` ir `together` | `together` yra teiginys apie porą; komponentas jį **perskaičiuoja** ir nesutapus rašo `console.error` |
+| `values` | požymio reikšmė → būrio pavadinimas | Būrio pavadinimas nekoduojamas komponente |
+| `pair` | `{a, b}` — raudonas ir geltonas didelis trikampis | Pora ta, kurios elgesys keičiasi; spėjimas klausia būtent apie ją |
+| `sentences` | 19 raktų | Proza tik iš `config` (LL-42); visi tekstai turi garso įrašą |
+
+**Būsena išvedama, o ne įrašyta.** Būriai sudaromi `groupsOf(id)` iš tų pačių `items` laukelių, o poros buvimas kartu — `pairTogether(id) = a[attr] === b[attr]`. Jei modulio `criteria[].together` nesutampa su išvesta reikšme, komponentas nepiešia klaidingo būrio, o sako klaidą garsiai — ta pati taisyklė kaip M-07 (`kiekis = board.px / unit.px`) ir M-10 (`groupOf(p)`). Sakinys „abu dideli, todėl vėl viename būryje“ ir ekrane matomi būriai todėl negali išsiskirti (LL-33, LL-25).
+
+**Privalomas spėjimo žingsnis prieš pirmą skirstymą.** `api.readout` pradžioje: „Pirma spėk: ar geltonas trikampis bus kartu su raudonu?“ Kol vaikas nepasirinko, požymio mygtukai neaktyvūs **bet ne tylūs**: atsakymas „Pirma spėk, tada rinkis požymį.“ ir fokusas į spėjimą (LL-04). Spėjimas palyginamas su tuo, kas atsitiko, vieną kartą; toliau sakomi trys faktai. Be spėjimo modelis virstų spaudymu bandymų būdu — tas pats pavojus kaip M-01–M-18 (`foundations/sujungti-dydziai.md`).
+
+**Nė vienas būrys nėra neteisingas.** Visi trys požymiai vienodai teisingi, nes kiekvienas atsakija į savo klausimą, o spėjimas „bus kartu“ vieną kartą pasitvirtina, kitą — ne. Tai sąmoningai NE „klaidingo varianto“ užduotis (LL-18): modelis nebaudžia ir nevadina spėjimo klaida, jis tik pakartoja jį prieš tai, kas atsitiko (T5.1).
+
+**Pažanga — tik po trečio požymio.** `api.progress` kviečiamas, kai parodyti visi trys požymiai, o ne po pirmo (LL-29, LL-17; standartas §4). Tarpiniai žingsniai turi savo grįžtamąjį ryšį (`api.note`), bet ne pažangos įrašo.
+
+**Ką tai reiškia modulio autoriui.** `title` — „Ta pati krūva, kitas požymis“; `subtitle` — „Viena krūva — trys būriai: grupę pasako klausimas, o ne daiktas“; `minutes` — 9; trys `outcomes`; `concept.title` — „Būrį pasako klausimas“; `concept.steps` — keturi žingsniai; `teacher.offline` — šeši daiktai ant stalo ir du skirstymai iš eilės; keturios `teacher.misconceptions` (pirmoji — „daiktas priklauso vienai grupei“, paskutinė — modelio riba: požymių, kurių nematyti, modelis sąmoningai neturi).
+
+**Įgyvendinta 2026-11-26 (#562, pasiūlymas #54788).** Modulis įrašytas `content/lt/grade-01/index.json` (matematika, po `34-dvizenklis-plius-dvizenklis`) ir `path.json` pabaigoje. Vartai: `validate_content --grade 1 --strict` 0/0, `check_language --grade 1 --strict` 0 klaidų, `check_registry` 83/83 · 364 užduotys · našlaičiai 0, `check_audio` 1236 tekstų / 2472 įrašų, `check_docs_facts` 0 klaidų, `check_view --module 36-… --viewports desktop,phone,small --sim-font-strict` → `problems 0, sim_font_problems 0, min 15,2 px`, `--text-scale 200` → 0 problemų, `check_svg_fit` → 0 apkarpymų, `scripts/probe_kruva_ir_buriai.py` → 20/20 lūkesčių.
+
 ## Šaltiniai
 
 - Oficiali programa: `research/wiki/curriculum/`

@@ -1,0 +1,20 @@
+{
+  "role": "leidejas",
+  "run_id": 559,
+  "created": "2026-11-26T17:05:00+02:00",
+  "type": "struktura",
+  "title": "Senas localStorage įrašas be `solved` palieka pradžią, klasę ir kryptį be modulių sąrašo: normalizuoti reikia skaitymo kelyje",
+  "body": "`assets/js/progress.js` normalizuoja išsaugotą įrašą (`record()`, `tidySolved()`), bet tik rašymo kelyje — `slot()`, `markVisited()`, `mergeOld()`. `read()` — vienintelis kelias, kuriuo duomenys ateina į atvaizdavimą — grąžia `JSON.parse` rezultatą tokį, koks jis diske. Todėl `count()` (`progress.js:233`), `isDone()` ir #555 `resumeTarget()` (`app.js:119`) skaito `m.solved.length`, o įrašas be `solved` (forma `{seen, tasks, tasksCorrect, last}`, kurią `progress.js` rašė 2026-11-03 13:43–13:53, commit `0f35296`) meta `TypeError: Cannot read properties of undefined (reading 'length')`. Matuota gyvai svetainėje Chromium 360 px (3 paleidimai × 3 maršrutai): su tokiu įrašu `#/`, `#/klase/1` ir `#/klase/1/matematika` modulių eilučių yra 0 (8/9 paleidimų — „Nepavyko įkelti“, vienas — likęs „Kraunama…“ su 1 eilute), o modulio puslapis atsidaro sveikas — tad vaikas modulio iš sąrašo pasirinkti negali. Papildomai 9,5 s po įkėlimo iššoka statinis `.boot-fallback` („Puslapis neįsikėlė … Brave naršyklė: spausk liūto ikoną“), kuris priežastį priskiria naršyklės skydams, nors ji — įrašo forma; klaidingas paaiškinimas vaikui blogiau už tylą. Tai nėra #555 regresija (matuota `git worktree` prie `7eba00e^` — ta pati klaida per `progress.js:233`) ir nėra dabartinio commit'o gedimas — tai schema, kuri keitėsi, o skaitytojas supranta vieną formą. Siūloma: `read()` grąžina tik normalizuotus įrašus (per `record()`), o senas `{tasks, tasksCorrect}` atvaizduojamas į `total = tasks`, `solved = [0..tasksCorrect-1]`, kad vaiko atliktas darbas liktų „atlikta“ (T3.5), o ne būtų atmestas. Normalizavimas, kurį kviečia tik pervadinimas, yra ne apsauga, o iliuzija jos.",
+  "target": "assets/js/progress.js",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "assets/js/progress.js:135-146 — `read()` grąžia `JSON.parse(raw)` be normalizavimo; `record()` ir `tidySolved()` kviečiami tik iš `slot()` (160), `markVisited()` (175), `markTask()` (198) ir `mergeOld()` (86-87)",
+    "assets/js/progress.js:233 — `count()`: `if (m.total > 0 ? m.solved.length >= m.total : m.solved.length > 0)` — `solved` gali būti `undefined`",
+    "assets/js/app.js:119 — #555 `resumeTarget()`: `const done = (m) => !!m && (m.total > 0 ? m.solved.length >= m.total : m.solved.length > 0);`",
+    "git show 0f35296:assets/js/progress.js — 2026-11-03 13:43 forma `{seen: 0, tasks: 0, tasksCorrect: 0, last: null}`, `isDone()` = `m.tasksCorrect >= m.tasks`; `aa7739a` (13:53) jau turi `solved`",
+    "Matuota gyvai (CDP, Chromium, 360 px): įrašas `{seen:2,tasks:4,tasksCorrect:2}` → `#/`, `#/klase/1`, `#/klase/1/matematika` h1 = „Nepavyko įkelti“ / „Puslapis neįsikėlė“, 0 eilučių, `TypeError` konsolėje; kontrolė su `{total,solved}` → „Suprask, o ne įsimink.“, kortelė yra, 0 klaidų",
+    "Ne regresija: tas pats zondas prieš #555 (`git worktree` prie `7eba00e^` = `e291cf1`) → ta pati klaida `progress.js:233` per `viewHome` `app.js:105`; HEAD (su #555) → `app.js:119` per `app.js:138`",
+    "research/wiki/guidelines/pamokos.md LL-209 — pamoka užregistruota šiame paleidime"
+  ]
+}

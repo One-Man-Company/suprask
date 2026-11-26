@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 549,
+  "created": "2026-11-26T08:15:00+02:00",
+  "type": "tema",
+  "title": "Dėmė matoma todėl, kad skiriasi nuo fono",
+  "body": "Dailės 1–2 klasių programos reikšminių žodžių sąraše yra ir „dėmė (juoda, balta, spalvota, didelė, maža)“, ir „fonas (vienspalvis, įvairiaspalvis ir kt.)“, o platformoje fondo nė vienas modulis neliečia: dailėje trys moduliai, visi apie formą, spalvą, raidę ir linijos storį. Siūlau modulį, kuriame ta pati tamsi dėmė keliama ant trijų fonų — vienspalvio, dryžuoto ir margo — ir vaikas mato, kad dėmė ne „turi“ spalvą, o matoma tik tiek, kiek skiriasi nuo to, kas po ja. Klaidinga nuostata: „dėmė matoma dėl savo spalvos“ (ir atmaina „fonas — tai tik popieriaus spalva, jis nieko nekeičia“). Modelis turi vieną kintamąjį (foną) ir vieną matomą pasekmę: ant margo fondo dėmė pasimeta, nors ji ta pati. Tai nepakartoja `01-spalva-ir-nuotaika`, kur kinta pati dėmės spalva ir keičiasi nuotaika; čia dėmė nekeičiama — keičiasi tik tai, kas aplink ją. 6–7 m. vaikui pakanka bakstelėjimo, rezultatas matomas iškart, o užduotys gali likti toje pačioje plokštumoje be skaičių.",
+  "target": "content/lt/grade-01/daile/04-deme-ir-fonas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:13558 — dailės „Reikšminiai žodžiai. 1-2 klasės“ (1–2 klasių turinio sąrašas, ne vyresnių klasių)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:13576 — „fonas (vienspalvis, įvairiaspalvis ir kt.)“ — fondo sąvoka programoje priskirta 1–2 klasei",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:13571 — „dėmė (juoda, balta, spalvota, didelė, maža ir kt.)“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:19–24 — 1–2 kl. dailėje dominuoja praktinė kūrybinė raiška, o modelio pagrindas — oficialus turinio sąrašas",
+    "Patikra: content/lt/grade-01/daile/ turi 01-spalva-ir-nuotaika, 02-erdvines-raides, 03-piesimo-priemones; numeris 04 laisvas, grep „fonas|fone|fono“ dailėje → 0 atvejų"
+  ]
+}

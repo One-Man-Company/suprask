@@ -1,0 +1,17 @@
+{
+  "role": "ideator",
+  "run_id": 549,
+  "created": "2026-11-26T08:16:00+02:00",
+  "type": "tema",
+  "title": "Ta pati krūva, kitas požymis — kitos grupės",
+  "body": "Matematikos 1–2 klasių slenkstinis pasiekimas A2.1 baigiasi žodžiais „grupuoja objektus pagal vieną požymį“, o platformoje grupavimo kaip pasirinkimo nėra: `06-figuros` rūšiuoja figūras į iš anksto duotas dėžes pagal formą, `23-piktograma-ir-stulpelis` skaičiuoja jau suskaičiuotas grupes. Siūlau modulį su viena ir ta pačia šešių daiktų krūva, kurioje vaikas pats perjungia požymį (forma / spalva / dydis) ir mato, kad grupės persirikiuoja — nė viena versija nėra neteisinga, bet kiekviena atsako į savo klausimą. Klaidinga nuostata: „daiktas priklauso vienai grupei“ — grupė yra ne daikto savybė, o pasirinktas požymis, todėl toje pačioje krūvoje jų gali būti kelios. Modelis turi vieną kintamąjį (požymį) ir matomą pasekmę (persirikiuojančios krūvos), todėl nereikia nei skaičių, nei paaiškinimo tekste. Skirtumas nuo `06-figuros`: ten figūra sukama ir formą turi atpažinti, čia krūva nekeičiama — keičiasi tik klausimas, kurį jai užduodame. 6–7 m. vaikui veiksmas tiesioginis: bakstelėk požymį ir pažiūrėk, kas pasikeitė.",
+  "target": "content/lt/grade-01/matematika/36-grupavimas-pagal-pozymi.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33537–33544 — A2.1 (1–2 kl. slenkstinis lygis): „Naudodamasis netiesiogiai teikiama pagalba paprasčiausiais atvejais… grupuoja objektus pagal vieną požymį“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33492, :33494 — A grupės lygių lentelė priklauso „1–2 klasės“ blokui su „Pasiekimų lygiai I II III IV“",
+    "Patikra: content/lt/grade-01/matematika/ — moduliai 04–07, 14–30, 32–35; numeris 36 laisvas; grep „grupav|grupuo|pagal požym“ matematikos moduliuose → 0 atvejų",
+    "Skirtumas nuo esamų: 06-figuros (sukimo invariantas, dėžės duotos iš anksto), 23-piktograma-ir-stulpelis (skaičiuoja grupes) — nė vienas nekeičia grupavimo požymio"
+  ]
+}

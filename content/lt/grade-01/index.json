@@ -748,6 +748,14 @@
       "file": "grade-01/daile/03-piesimo-priemones.json",
       "minutes": 9,
       "sim": "linijos-storis"
+    },
+    {
+      "id": "04-deme-ir-fonas",
+      "title": "Dailė: ta pati dėmė, trys lapai",
+      "subtitle": "Dėmės kraštas matosi tik ten, kur spalva skiriasi",
+      "file": "grade-01/daile/04-deme-ir-fonas.json",
+      "minutes": 9,
+      "sim": "deme-ir-fonas"
     }
    ]
   }

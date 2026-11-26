@@ -772,8 +772,363 @@ const raideIsDaliu = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* Ta pati dėmė, trys lapai                                             */
+/*                                                                     */
+/* Modelis: VIENA dėmė (4 × 3 langeliai tame pačiame lape) nekeičiama nė */
+/* karto. Keičiasi tik tai, kas ją liečia: niekas (4 matomos pusės),     */
+/* juostos viršuje ir apačioje (2), lopai prie trijų pusių (1).          */
+/*                                                                     */
+/* Kodėl skaičiuojamos pusės, o ne „atspalvis“: simultaninio kontrasto   */
+/* jautrumas su amžiumi DIDĖJA (Rosetti ir kt., 2025), tad 6–7 metų      */
+/* vaikas efekto gali nemanyti matyti — modelis jam meluotų. Pusių       */
+/* skaičius yra fizinis faktas: jį vaikas suskaičiuoja pirštais.          */
+/*                                                                     */
+/* Kodėl lopas NIEKADA nedengia dėmės langelio: dėmė ir fonas yra TAS     */
+/* PATS dažų sluoksnis ant lapo. Lopas dedamas ŠALIA ir susilieja tik su  */
+/* bendra riba (LL-27, LL-33). Komponentas tai tikrina pats: jei config  */
+/* langelis kristų ant dėmės, modelis sustoja ir pasako „broken“.        */
+/*                                                                     */
+/* Matomos pusės NESURĄŠytos config'e — išvedamos iš `grounds[].same`,    */
+/* nes sakinys ir paveikslas turi imti tuos pačius skaičius (LL-21).      */
+/* Config'e esantis `sides` tėra sutarties patikra: jeigu jis nesutampa   */
+/* su išvestu skaičiumi, tai defektas, o ne tekstas.                     */
+/* ------------------------------------------------------------------ */
+
+/* Sakinio raktai — tikslūs, o ne surinkti iš dalių: kiekvieną jų turi
+   rasti ir `scripts/generate_audio.py`, ir `validate_content.py` (LL-42).
+   `SHOWN_*` įvardija, kas ekrane pasikeitė, ir pusių skaičiaus NESAKO —
+   jį vaikas turi suskaičiuoti pats (LL-22, P2 veiksmas prieš paaiškinimą).
+   `NOTE_*` paaiškina mechanizmą ir sakomas tik PO vaiko skaičiaus. */
+const SHOWN_KEY = { sviesus: "shownSviesus", juostos: "shownJuostos", lopai: "shownLopai" };
+const NOTE_KEY = { sviesus: "noteSviesus", juostos: "noteJuostos", lopai: "noteLopai" };
+
+const DF_SIDES = ["virsus", "apacia", "kaire", "desine"];
+const DF_SIDE_LT = { virsus: "viršus", apacia: "apačia", kaire: "kairė", desine: "dešinė" };
+
+const demeIrFonas = {
+  mount({ stage, controls, api, config }) {
+    const SENT = config.sentences || {};
+    const L = config.labels || {};
+    const GROUNDS = Array.isArray(config.grounds) ? config.grounds : [];
+    const SHEET = config.sheet || {};
+    const SC = config.spotCells || {};
+    const SPOT = config.spot || {};
+
+    const line = (key) => (typeof SENT[key] === "string" ? SENT[key] : "");
+    const lab = (key, fallback) => {
+      const v = typeof L[key] === "string" ? L[key].trim() : "";
+      return v || fallback || "";
+    };
+    const say = (key) => { const t = line(key); if (t) api.speak(t, { rate: 0.95 }); return t; };
+
+    /* --- langeliai už dėmės pusės (ta pati taisyklė kaip zonde) ---- */
+    const outside = (side) => {
+      const { col, row, cols, rows } = SC;
+      if (side === "virsus") return Array.from({ length: cols }, (_, i) => [col + i, row - 1]);
+      if (side === "apacia") return Array.from({ length: cols }, (_, i) => [col + i, row + rows]);
+      if (side === "kaire") return Array.from({ length: rows }, (_, i) => [col - 1, row + i]);
+      return Array.from({ length: rows }, (_, i) => [col + cols, row + i]);
+    };
+
+    const visibleSides = (g) => {
+      const same = new Set((g.same || []).map(([c, r]) => `${c},${r}`));
+      return DF_SIDES.filter((s) => !outside(s).every(([c, r]) => same.has(`${c},${r}`)));
+    };
+
+    /* --- duomenų vientisumas -------------------------------------- */
+    function integrity() {
+      if (!GROUNDS.length) return "nėra nė vieno lapo";
+      if (typeof SPOT.hex !== "string" || typeof config.paper !== "string") return "trūksta spalvų";
+      if (!(SHEET.cols > 0 && SHEET.rows > 0 && SHEET.cell > 0)) return "neteisinga lapo geometrija";
+      if (!(SC.cols > 0 && SC.rows > 0)) return "neteisinga dėmės geometrija";
+      if (SC.col < 1 || SC.row < 1 || SC.col + SC.cols > SHEET.cols - 1 || SC.row + SC.rows > SHEET.rows - 1) {
+        return "dėmė turi likti bent vieno langelio atstumu nuo lapo krašto";
+      }
+      for (const g of GROUNDS) {
+        if (!g || !g.id || !line(g.id)) return `lapui „${g && g.id}“ trūksta sakinio`;
+        const same = g.same || [];
+        for (const [c, r] of same) {
+          if (!(c >= 0 && c < SHEET.cols && r >= 0 && r < SHEET.rows)) return `${g.id}: langelis už lapo`;
+          /* Fonas dedamas ŠALIA — jei langelis uždengtų dėmę, modelis
+             mokytų, kad „fonas padedamas ant piešinio“. */
+          if (c >= SC.col && c < SC.col + SC.cols && r >= SC.row && r < SC.row + SC.rows) {
+            return `${g.id}: langelis (${c}, ${r}) dengia pačią dėmę`;
+          }
+        }
+        for (const side of DF_SIDES) {
+          const hits = outside(side).map(([c, r]) => same.some(([a, b]) => a === c && b === r));
+          if (hits.some(Boolean) && !hits.every(Boolean)) {
+            return `${g.id}: ${DF_SIDE_LT[side]} pusė dengiama dalinai — vaikas nesuskaičiuotų pusių`;
+          }
+        }
+        const derived = visibleSides(g).length;
+        if (g.sides !== derived) {
+          return `${g.id}: config skelbia ${g.sides} pusių, o geometrija duoda ${derived}`;
+        }
+      }
+      return "";
+    }
+
+    const problem = integrity();
+    if (problem) {
+      console.error(`deme-ir-fonas: ${problem}`);
+      stage.innerHTML = `<p class="sim-note" style="margin:0">${line("broken")}</p>`;
+      controls.innerHTML = "";
+      api.readout(line("broken"));
+      return () => {};
+    }
+
+    const byId = new Map(GROUNDS.map((g) => [g.id, g]));
+    const actual = new Map(GROUNDS.map((g) => [g.id, visibleSides(g).length]));
+    const start = byId.has(config.start) ? config.start : GROUNDS[0].id;
+
+    const state = { guess: null, sheet: start, seen: new Set(), marks: new Map(), reported: false, dashed: false };
+
+    const VB_W = 328;
+    const VB_H = SHEET.y * 2 + SHEET.rows * SHEET.cell;
+
+    stage.innerHTML = `
+      <div style="display:grid;gap:.55rem;justify-items:center;width:100%;min-width:0">
+        <svg id="df-scene" viewBox="0 0 ${VB_W} ${VB_H}" width="100%" role="img" aria-label=""
+             style="display:block;max-width:${VB_W}px;height:auto"></svg>
+        <div id="df-marks" role="list" aria-label="${lab("marks", "Lapų žymos")}"
+             style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;width:100%;min-height:0"></div>
+      </div>`;
+
+    controls.innerHTML = `
+      <div role="group" id="df-guess" aria-label="Pirma spėk"
+           style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.4rem;width:100%">
+        ${["1", "2", "3", "4"].map((n, i) => `
+          <button class="btn secondary" type="button" data-count="${i + 1}"
+            aria-label="Spėju ${n} pusių" aria-pressed="false"
+            style="min-height:48px;min-width:0;font-size:var(--fs-m);font-weight:800">${n}</button>`).join("")}
+      </div>
+      <div role="group" aria-label="${lab("ground", "Lapas")}"
+           style="display:flex;gap:.45rem;justify-content:center;flex-wrap:wrap;width:100%">
+        ${GROUNDS.map((g) => `
+          <button class="btn secondary" type="button" data-sheet="${g.id}"
+            aria-label="Lapas ${g.name}. Pirma pasakyk skaičių." aria-pressed="false"
+            style="flex:1 1 6.2rem;min-height:48px;font-size:var(--fs-s);font-weight:800">${g.name}</button>`).join("")}
+      </div>
+      <div style="display:flex;gap:.45rem;justify-content:center;flex-wrap:wrap;width:100%">
+        <button class="btn secondary" type="button" id="df-edge" aria-pressed="false"
+          style="flex:1 1 8rem;min-height:48px;font-size:var(--fs-s)">${lab("edge", "Parodyk kraštą")}</button>
+        <button class="btn ghost" type="button" id="df-reset"
+          style="flex:1 1 6rem;min-height:48px;font-size:var(--fs-s)">${lab("reset", "Iš naujo")}</button>
+      </div>`;
+
+    const scene = stage.querySelector("#df-scene");
+    const marksEl = stage.querySelector("#df-marks");
+    const guessEl = controls.querySelector("#df-guess");
+    const countBtns = Array.from(controls.querySelectorAll("[data-count]"));
+    const sheetBtns = Array.from(controls.querySelectorAll("[data-sheet]"));
+    const edgeBtn = controls.querySelector("#df-edge");
+    const resetBtn = controls.querySelector("#df-reset");
+
+    function paintScene() {
+      const g = byId.get(state.sheet);
+      scene.innerHTML = art.sheetGrid({
+        x: SHEET.x, y: SHEET.y, cell: SHEET.cell,
+        cols: SHEET.cols, rows: SHEET.rows,
+        paper: config.paper, ink: config.outline,
+        spot: SPOT.hex, spotCells: SC, sameCells: g.same || [], dashed: state.dashed,
+      });
+      /* `aria-label` NESAKO pusių skaičiaus: ekrano skaitytuvas persakytų
+         tą patį, ką vaikas turi suskaičiuoti (LL-213). Jis įvardija tik
+         lapą ir dėmės vietą. */
+      scene.setAttribute("aria-label", `Lapas ${g.name}. Dėmė lapo viduryje.`);
+    }
+
+    /* Žyma: 3 × 3 langeliai, kurių keturi kraštiniai reiškia keturias
+       dėmės puses (matoma — nudažyta, paslėpta — tuščia). Skaičius rašomas
+       ir žodžiu, tad spalva nėra vienintelis informacijos nešėjas (T5.5). */
+    function paintMarks() {
+      const list = GROUNDS.filter((g) => state.marks.has(g.id));
+      marksEl.hidden = list.length === 0;
+      marksEl.innerHTML = list.map((g) => {
+        const mine = state.marks.get(g.id);
+        const vis = new Set(visibleSides(g));
+        const cells = ["1,0", "0,1", "2,1", "1,2"].map((pos) => {
+          const side = { "1,0": "virsus", "0,1": "kaire", "2,1": "desine", "1,2": "apacia" }[pos];
+          const on = vis.has(side);
+          const [x, y] = pos.split(",").map(Number);
+          return `<span aria-hidden="true" style="grid-column:${x + 1};grid-row:${y + 1};width:1rem;height:1rem;`
+            + `border-radius:3px;box-sizing:border-box;border:1.5px solid ${on ? SPOT.hex : "var(--line)"};`
+            + `background:${on ? SPOT.hex : "transparent"}"></span>`;
+        }).join("");
+        return `
+          <div role="listitem" style="display:grid;justify-items:center;gap:.15rem;min-width:5rem">
+            <span style="font-size:var(--fs-s);font-weight:800;line-height:1.15">${g.name}</span>
+            <span style="display:grid;grid-template-columns:repeat(3,1rem);gap:2px" aria-hidden="true">${cells}</span>
+            <span style="font-size:var(--fs-s);font-weight:800;color:var(--ink-soft)">${mine}</span>
+          </div>`;
+      }).join("");
+      if (list.length) {
+        marksEl.setAttribute(
+          "aria-label",
+          `${lab("marks", "Lapų žymos")}: ${list.map((g) => `${g.name} — ${state.marks.get(g.id)}`).join(", ")}`
+        );
+      }
+    }
+
+    function paintControls() {
+      countBtns.forEach((b) => {
+        const n = Number(b.dataset.count);
+        const on = state.marks.get(state.sheet) === n && n > 0;
+        b.setAttribute("aria-pressed", String(on));
+        b.className = on ? "btn" : "btn secondary";
+        b.style.opacity = state.guess === null ? "1" : "0.95";
+      });
+      guessEl.setAttribute("aria-label", state.guess === null
+        ? lab("guessTitle", "Pirma pasakyk, kiek pusių matysi")
+        : lab("countTitle", "Kiek pusių matai?"));
+      sheetBtns.forEach((b) => {
+        /* Lapas NĖRA `disabled` ir NĖRA `aria-disabled`: jis paspaudžiamas,
+           o modelis paaiškina, ko dar trūksta (LL-04). Užrašas sako tą
+           patį, ką pasakytų atsakymas, tad būsena aiški ir be spalvos. */
+        const g = byId.get(b.dataset.sheet);
+        const on = b.dataset.sheet === state.sheet;
+        b.setAttribute("aria-pressed", String(on));
+        b.className = on ? "btn" : "btn secondary";
+        b.setAttribute(
+          "aria-label",
+          state.guess === null
+            ? `Lapas ${g.name}. Pirma pasakyk skaičių.`
+            : `Lapas ${g.name}${on ? ", rodomas" : ""}`
+        );
+        b.style.opacity = state.guess === null && !on ? "0.7" : "1";
+      });
+      edgeBtn.setAttribute("aria-pressed", String(state.dashed));
+    }
+
+    const paint = () => { paintScene(); paintMarks(); paintControls(); };
+
+    const allCounted = () => GROUNDS.every((g) => state.marks.get(g.id) === actual.get(g.id));
+
+    function chooseSheet(id) {
+      if (state.guess === null) {
+        /* Ne „negalima“, o ką daryti toliau (LL-04, LL-15): vaikas turi
+           žinoti, kad pirma spėjama, ir kur spaudžiama. */
+        api.readout(line("locked"));
+        api.note(line("locked"));
+        say("locked");
+        countBtns[0].focus();
+        return;
+      }
+      if (id === state.sheet) {
+        api.note(line("sameSheet"));
+        return;
+      }
+      state.sheet = id;
+      state.dashed = false;
+      state.seen.add(id);
+      paint();
+      /* Sakinys įvardija TIK tai, kas pasikeitė ekrane, o pusių skaičiaus
+         nesako: jį vaikas turi suskaičiuoti pats (LL-22). */
+      api.readout(say(SHOWN_KEY[id] || ""));
+      api.note(line("countPrompt"));
+    }
+
+    /* Vienas spaudimas — vienas skaičius. PIRMAS skaičius yra ir spėjimas
+       (jis palyginamas su tuo, kas iškart matoma), o ne atskiras žingsnis:
+       6–7 metų vaikui du kartus spausti tą patį skaičių tame pačiame lape
+       būtų ta pati užduotis du kartus. Spėjimas lieka šalia rezultato —
+       žymoje matosi vaiko skaičius, o greta jo — tikros pusės (LL-15). */
+    function recordCount(n) {
+      state.marks.set(state.sheet, n);
+      state.seen.add(state.sheet);
+      paint();
+      const truth = actual.get(state.sheet);
+
+      if (state.guess === null) {
+        state.guess = n;
+        api.readout(line(n === truth ? "cmpYes" : "cmpNo"));
+        api.note(line(n === truth ? "cmpYesNote" : "cmpNoNote"));
+        say(n === truth ? "cmpYes" : "cmpNo");
+        sheetBtns[0].focus();
+        return;
+      }
+
+      const fact = line(state.sheet);
+      if (n === truth) {
+        api.readout(fact);
+        api.note(line("countOk"));
+        say(state.sheet);
+      } else {
+        /* Klaida nebaudžiama, bet IR nepaliekama be tiesos: sakinys iškart
+           pasako, kiek pusių iš tikrųjų matosi, todėl vaiko skaičių galima
+           palyginti tame pačiame kadre (T2.3, T5.1). */
+        api.readout(`${line("countNo")} ${fact}`.trim());
+        api.note(line(NOTE_KEY[state.sheet] || ""));
+        say(NOTE_KEY[state.sheet] || "");
+      }
+      /* Baigimo sakinys PRIDEDAMAS prie rezultato, o ne jį pakeičia: kitaip
+         vaikas nebegalėtų perskaityti to, ką ką tik pamatė (LL-14). */
+      if (!state.reported && state.seen.size === GROUNDS.length && allCounted()) {
+        state.reported = true;
+        api.readout(`${n === truth ? fact : line("countNo")} ${line("all")}`.trim());
+        api.note(line("all"));
+        say("all");
+        api.progress({ correct: true });
+        edgeBtn.focus();
+      }
+    }
+
+    function toggleEdge() {
+      state.dashed = !state.dashed;
+      paint();
+      api.readout(say(state.dashed ? "edgeOn" : "edgeOff"));
+      api.note(line(state.dashed ? "edgeOn" : "edgeOff"));
+    }
+
+    function reset() {
+      state.guess = null;
+      state.sheet = start;
+      state.seen.clear();
+      state.dashed = false;
+      /* Žymos LIEKA (LL-16): tai, ką vaikas jau suskaičiavo, neturi
+         išgaruoti po „Iš naujo“ (LL-20). */
+      paint();
+      api.readout(say("vel"));
+      api.note(line("velNote"));
+      countBtns[0].focus();
+    }
+
+    countBtns.forEach((b) => b.addEventListener("click", () => recordCount(Number(b.dataset.count))));
+    sheetBtns.forEach((b) => b.addEventListener("click", () => chooseSheet(b.dataset.sheet)));
+    edgeBtn.addEventListener("click", toggleEdge);
+    resetBtn.addEventListener("click", reset);
+
+    controls.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") {
+        if (e.key === "r" || e.key === "R") reset();
+        return;
+      }
+      const active = document.activeElement;
+      const inCount = countBtns.indexOf(active);
+      const inSheet = sheetBtns.indexOf(active);
+      const step = e.key === "ArrowRight" ? 1 : -1;
+      if (inCount >= 0) {
+        e.preventDefault();
+        countBtns[(inCount + step + countBtns.length) % countBtns.length].focus();
+      } else if (inSheet >= 0) {
+        e.preventDefault();
+        sheetBtns[(inSheet + step + sheetBtns.length) % sheetBtns.length].focus();
+      }
+    });
+
+    paint();
+    api.readout(say("start"));
+    api.note(line("guessNote"));
+
+    return () => {};
+  },
+};
+
 export const SIMS = {
   "deme-ir-spalvos": demeIrSpalvos,
   "linijos-storis": linijosStoris,
   "raide-is-daliu": raideIsDaliu,
+  "deme-ir-fonas": demeIrFonas,
 };

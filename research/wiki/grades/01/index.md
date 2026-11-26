@@ -39,11 +39,11 @@ atnaujinta: 2026-11-09
 | Technologijos | Elektra: kelias turi būti vientisas · Medžiagos: tinkamumą parodo bandymas · Vienas kirpimas — kelios skylės · Balti skalbsis atskirai nuo spalvotų · Batas išdžius toks, koks džiūsta · Mygtukas grįžta, jungiklis lieka · Kodėl kojinė pabyra, o džinsai ne · Maistas: vieta sprendžia, ne tik laikas | 8 — gyva |
 | Gyvenimo įgūdžiai | Dovana: kodėl vienas džiaugiasi, kitas ne · Jausmas turi savo vardą | 2 — gyva |
 | Dorinis ugdymas | Kai vienas nustoja, nukenčia visi · Ekranas žmogaus nepaslepia | 2 — gyva |
-| Dailė | Dailė: ta pati forma, kita spalva · Dailė: raidė iš dalių · Dailė: ta pati linija, trys priemonės | 3 — gyva |
+| Dailė | Dailė: ta pati forma, kita spalva · Dailė: raidė iš dalių · Dailė: ta pati linija, trys priemonės · Dailė: ta pati dėmė, trys lapai | 4 — gyva |
 
 ## Statusas
 
-**Live.** 83 modulių, 9 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
+**Live.** 84 modulių, 9 kryptys. Skaičius imamas iš `content/lt/grade-01/index.json`; patikra — `python3 scripts/check_docs_facts.py`. Žr. `content/lt/grade-01/`.
 
 ## Susieti
 

@@ -1,0 +1,288 @@
+{
+  "id": "04-deme-ir-fonas",
+  "grade": 1,
+  "strand": "daile",
+  "title": "Dailė: ta pati dėmė, trys lapai",
+  "subtitle": "Dėmės kraštas matosi tik ten, kur spalva skiriasi",
+  "minutes": 9,
+  "outcomes": [
+    "Suskaičiuoju, kiek dėmės pusių matosi.",
+    "Parodau, kad lopas tos pačios spalvos panaikina kraštą.",
+    "Pasakau, kodėl tame pačiame lape matau mažiau pusių."
+  ],
+  "concept": {
+    "title": "Dėmė ir jos kraštas",
+    "big_idea": "Dėmė matosi tik ten, kur jos spalva skiriasi nuo aplinkos. Kur spalva ta pati, krašto nebėra.",
+    "steps": [
+      "Paspausk lapą ir skaičiuok, kiek pusių matosi.",
+      "Ta pati dėmė lieka, keičiasi tik tai, kas ją liečia.",
+      "Lopas tos pačios spalvos susilieja su dėmės kraštu.",
+      "Skaičiukas žymoje — tavo atsakymas, o langeliai rodo tikrąsias puses."
+    ],
+    "example": "Lipdukas tokios pat spalvos kaip sąsiuvinis nesimato. Ant balto lapo jis matosi."
+  },
+  "sim": {
+    "component": "deme-ir-fonas",
+    "config": {
+      "spot": {
+        "hex": "#7b6b50"
+      },
+      "paper": "#faf6ec",
+      "outline": "#23201c",
+      "sheet": {
+        "x": 12,
+        "y": 14,
+        "cell": 38,
+        "cols": 8,
+        "rows": 5
+      },
+      "spotCells": {
+        "col": 2,
+        "row": 1,
+        "cols": 4,
+        "rows": 3
+      },
+      "grounds": [
+        {
+          "id": "sviesus",
+          "name": "Šviesus",
+          "same": [],
+          "sides": 4
+        },
+        {
+          "id": "juostos",
+          "name": "Juostos",
+          "same": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              7,
+              4
+            ]
+          ],
+          "sides": 2
+        },
+        {
+          "id": "lopai",
+          "name": "Lopai",
+          "same": [
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          "sides": 1
+        }
+      ],
+      "start": "sviesus",
+      "labels": {
+        "ground": "Lapas",
+        "guessTitle": "Pirma pasakyk, kiek pusių matysi.",
+        "countTitle": "Kiek pusių matai?",
+        "edge": "Parodyk kraštą",
+        "reset": "Iš naujo",
+        "marks": "Lapų žymos"
+      },
+      "sentences": {
+        "start": "Pirma pasakyk, kiek pusių matysi.",
+        "guessNote": "Suskaičiuok dėmės puses. Tada rink lapą.",
+        "countPrompt": "Kiek pusių matai? Rink skaičių.",
+        "locked": "Pirma pasakyk skaičių. Tada rink lapą.",
+        "sameSheet": "Šis lapas jau rodomas. Rink kitą.",
+        "cmpYes": "Taip. Šiame lape matomos keturios pusės.",
+        "cmpNo": "Skaičius kitas. Žiūrėk, ką liečia dėmę.",
+        "cmpYesNote": "Niekas dėmės neliečia. Skaičius lieka žymoje.",
+        "cmpNoNote": "Lape niekas dėmės neliečia. Suskaičiuok puses.",
+        "shownSviesus": "Šviesus lapas. Niekas dėmės neliečia.",
+        "noteSviesus": "Niekas dėmės neliečia. Todėl matosi visas kraštas.",
+        "shownJuostos": "Juostos viršuje ir apačioje.",
+        "noteJuostos": "Juostos tokios pat spalvos. Viršus ir apačia susilieja.",
+        "shownLopai": "Lopai prie trijų pusių.",
+        "noteLopai": "Lopai tokios pat spalvos. Trys pusės susilieja.",
+        "countOk": "Skaičius sutampa su tuo, ką matai.",
+        "countNo": "Žiūrėk, kurie langeliai liečia dėmę.",
+        "edgeOn": "Rodau dėmės kraštą. Dėmė visur ta pati.",
+        "edgeOff": "Kontūras paslėptas. Dėmė visur ta pati.",
+        "all": "Visi trys lapai apžiūrėti. Dėmė ta pati.",
+        "vel": "Pradedam iš naujo. Vėl šviesus lapas.",
+        "velNote": "Pirma vėl pasakyk skaičių. Žymos lieka.",
+        "broken": "Lapų piešinys nesutvarkytas. Sakyk mokytojui.",
+        "sviesus": "Šviesus lapas. Matomos keturios pusės.",
+        "juostos": "Juostos viršuje ir apačioje. Matomos dvi pusės.",
+        "lopai": "Lopai prie trijų pusių. Lieka viena pusė."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Lape juostos virš dėmės ir po ja. Kiek pusių matysi?",
+      "options": [
+        "Keturias",
+        "Dvi",
+        "Nė vienos"
+      ],
+      "answer": 1,
+      "hint": "Suskaičiuok puses, kurių niekas neuždengia.",
+      "why": "Juostos dengia viršų ir apačią, tad matomos dvi."
+    },
+    {
+      "q": "Lipdukas tokios pat spalvos kaip sąsiuvinis. Kur jis matysis?",
+      "options": [
+        "Niekur, jis susilies",
+        "Tik kamputyje",
+        "Visur, nes lipdukas storesnis"
+      ],
+      "answer": 0,
+      "hint": "Palygink lipduko spalvą su sąsiuvinio spalva.",
+      "why": "Kai spalvos tokios pat, krašto tarp jų nebėra."
+    },
+    {
+      "q": "Drugio sparnai tokios pat spalvos kaip žievė. Kuo tai naudinga?",
+      "options": [
+        "Jis skrenda greičiau",
+        "Jį sunkiau pastebėti",
+        "Sparnai ryškesni už kitus"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, kas atsitiko dėmei po lopu.",
+      "why": "Suliejęs su žieve drugys sunkiau pastebimas."
+    },
+    {
+      "q": "Baltas lapas ir balta dėmė. Kurį dalyką keisti?",
+      "options": [
+        "Lapą",
+        "Dėmės vietą",
+        "Nieko, ji ir taip matosi"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, ką keitei modelyje.",
+      "why": "Kai spalvos skiriasi, kraštas vėl matosi.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kodėl toje pačioje vietoje dėmė kartais turi mažiau pusių?",
+  "teacher": {
+    "goal": "Atskirti dėmės spalvą nuo jos krašto: matomumą lemia tai, ar besiliečianti spalva skiriasi, o ne pati dėmė.",
+    "prompt": "Kodėl ta pati dėmė viename lape turi keturias puses, o kitame — vieną?",
+    "offline": "Duokite tris vienodus rudus apskritimus ir tris lapus: baltą, su storomis rudomis juostomis viršuje ir apačioje, ir su rudais lopais prie trijų pusių. Vaikas klijuoja po apskritimą ir pirštu braukia per kraštą. Paskui tepkite rudą lopą šalia apskritimo: kraštas dingsta, o pats apskritimas nepasikeičia.",
+    "misconceptions": [
+      "„Dėmė matoma dėl savo spalvos.“ Modelis dėmės nekeičia nė karto: trijuose lapuose ji ta pati, o matomų pusių skaičius 4, 2 ir 1. Jei matomumą lemtų spalva, skaičius nekistų.",
+      "„Jei krašto nesimato, dėmė dingo.“ Lopas tos pačios spalvos dėmės neuždengia: jis dedamas šalia, o susilieja tik jų bendra riba. Dėmė ten pat.",
+      "„Lopas dedamas ant piešinio viršaus.“ Tikrovėje dėmė ir fonas yra tas pats dažų sluoksnis ant lapo. Modelis, kuriame lopas uždengia dėmę, mokytų neteisingo dalyko.",
+      "„Daugiau lopų — mažiau matosi.“ Skaičiuojama ne lopų kiekis, o tai, ar lopas liečia visą dėmės pusę."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), dailė, „Reikšminiai žodžiai. 1-2 klasės“: „dėmė (juoda, balta, spalvota, didelė, maža ir kt.)“ ir „fonas (vienspalvis, įvairiaspalvis ir kt.)“.",
+    "Dailės bendroji programa (2022), 1–2 klasė: meninės raiškos srityje mokiniai tyrinėja spalvą, formą ir foną, o ne kopijuoja pavyzdį.",
+    "Cuthill, I. C., Stevens, M., Sheppard, J., Maddocks, T., Párraga, C. A., & Troscianko, T. S. (2005). Disruptive coloration and background pattern matching. Nature, 434, 72–74. https://doi.org/10.1038/nature03312 — raštas ant kūno kontūro slepia labiau negu tas pats raštas kūno viduje.",
+    "Stevens, M., & Merilaita, S. (2009). Animal camouflage: current issues and new perspectives. Philosophical Transactions of the Royal Society B, 364(1516), 423–427. https://doi.org/10.1098/rstb.2008.0217 — fono atitikimas ir trikdantysis raštas yra du skirtingi mechanizmai.",
+    "Yoon, J. M. D., Winawer, J., Witthoft, N., & Markman, E. M. (2007). Striking deficiency in top-down perceptual reorganization of two-tone images in preschool children. Proceedings of the 6th IEEE International Conference on Development and Learning — figūros ir fono atskyrimas šiame amžiuje dar lavinamas.",
+    "Rosetti, M., Navarrete, V., Montiel, V., Alarcon, M., Ulloa, R. E., Szenczi, P., & Bánszegi, O. (2025). Heterochronic development of the perception of different types of visual illusions. Developmental Neuroscience, 47(5), 350–361. https://doi.org/10.1159/000543308 — todėl modelis sąmoningai remiasi skaičiuojamu kraštu, o ne suvokimo iliuzija.",
+    "research/wiki/grades/01/metodai.md — M-18; research/wiki/foundations/iliuzija-ir-faktas.md — kodėl iliuzijos branduolys netinka šiam amžiui."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (dėmės kraštą lemia tai, kas ją liečia), o ne fondo rūšių sąrašas.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo taikyti taisyklę lipdukui ir drugiui, o ne atkartoti sakinį.",
+    "3 žingsnis — pagalba laiku: kiekviena klaida turi užuominą, modelis leidžia bandyti dar kartą be baudimo.",
+    "T3.4 — praplėtimas: užduotis, kurioje reikia keisti lapą, o ne dėmę, greitesniems vaikams."
+  ]
+}

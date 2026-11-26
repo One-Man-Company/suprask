@@ -928,6 +928,85 @@ export const art = {
   },
 
   /**
+   * Lapas su langelių tinkleliu (1 klasės dailė: „dėmė ir fonas“).
+   *
+   * Kodėl atskira dalis: modelio prasmė yra TA, kad tos pačios spalvos langeliai
+   * neturi matomos ribos. Todėl langeliai brėžiami be apvalinimo ir be tarpų —
+   * su `rx` ar su tarpu „susiliejusi“ riba liktų matoma, ir piešinys teigtų
+   * priešingai, negu sako sakinys (LL-13, LL-33). Tinklelio linijos piešiamos
+   * PO popieriumi, o tos pačios spalvos langeliai ir dėmė jas uždengia, tad
+   * viduje siūlės nedingsta, o krašto struktūra lieka matoma.
+   *
+   * `sameCells` — [[col, row], ...] sąrašas langelių, nudažytų dėmės spalva.
+   * `spotCells` — {col, row, cols, rows} dėmė. Ji piešiama tame pačiame
+   * tinklelyje, todėl „dėmė“ ir „fonas“ yra vienas dažų sluoksnis, o ne dvi
+   * figūros viena ant kitos (LL-27).
+   */
+  sheetGrid({ x, y, cell, cols, rows, paper, ink, spot, spotCells, sameCells = [], dashed = false }) {
+    const f = (v) => v.toFixed(1);
+    const W = cols * cell;
+    const H = rows * cell;
+    const px = (c) => x + c * cell;
+    const py = (r) => y + r * cell;
+
+    const grid = [];
+    for (let c = 1; c < cols; c += 1) {
+      grid.push(`<line x1="${f(px(c))}" y1="${f(y)}" x2="${f(px(c))}" y2="${f(y + H)}"`);
+      grid.push(`stroke="${ink}" stroke-opacity=".12" stroke-width="1"/>`);
+    }
+    for (let r = 1; r < rows; r += 1) {
+      grid.push(`<line x1="${f(x)}" y1="${f(py(r))}" x2="${f(x + W)}" y2="${f(py(r))}"`);
+      grid.push(`stroke="${ink}" stroke-opacity=".12" stroke-width="1"/>`);
+    }
+
+    const same = sameCells
+      .map(([c, r]) => `<rect x="${f(px(c))}" y="${f(py(r))}" width="${f(cell)}" height="${f(cell)}"`
+        + ` fill="${spot}" shape-rendering="crispEdges"/>`)
+      .join("");
+
+    const sc = spotCells || { col: 0, row: 0, cols: 1, rows: 1 };
+    const sx = px(sc.col);
+    const sy = py(sc.row);
+    const sw = sc.cols * cell;
+    const sh = sc.rows * cell;
+    const spotRect = `<rect x="${f(sx)}" y="${f(sy)}" width="${f(sw)}" height="${f(sh)}"`
+      + ` fill="${spot}" shape-rendering="crispEdges"/>`;
+
+    /* Potėpio žymės dėmės VIDUJE: be jų taisyklingas stačiakampis atrodytų
+       kaip sąsajos dėžutė, o ne kaip dažų dėmė (LL-13). Jos sąmoningai
+       nepasiekia krašto (≥ 6 px atstumas), todėl pusių skaičius nesikeičia —
+       žymė yra puošmena, o kraštą piešia tik tinklelis. */
+    const paint = [];
+    if (sw > 24 && sh > 24) {
+      const inset = 6;
+      [0.3, 0.55, 0.78].forEach((t, i) => {
+        const yy = sy + sh * t;
+        paint.push(`<path d="M${f(sx + inset)} ${f(yy)} Q ${f(sx + sw * 0.45)} ${f(yy - 5 + i * 3)}`
+          + ` ${f(sx + sw - inset)} ${f(yy + 2 - i)}"`
+          + ` fill="none" stroke="${paper}" stroke-opacity=".16" stroke-width="${2.6 - i * 0.5}"`
+          + ` stroke-linecap="round"/>`);
+      });
+    }
+
+    /* Kraštas rodomas brūkšninis ir ATSKIRAI nuo užpildo, todėl jis nieko
+       neuždengia: vaikas mato tą pačią dėmę, o ne „pažymėtą“ figūrą (LL-24). */
+    const edge = dashed
+      ? `<rect x="${f(px(sc.col))}" y="${f(py(sc.row))}"`
+        + ` width="${f(sc.cols * cell)}" height="${f(sc.rows * cell)}"`
+        + ` fill="none" stroke="${ink}" stroke-width="2.4" stroke-dasharray="7 6"/>`
+      : "";
+
+    return `<g>
+      <rect x="${f(x)}" y="${f(y)}" width="${f(W)}" height="${f(H)}"
+            fill="${paper}" stroke="${ink}" stroke-opacity=".3" stroke-width="1.5"/>
+      ${grid.join(" ")}
+      ${same}
+      ${spotRect}
+      ${edge}
+    </g>`;
+  },
+
+  /**
    * Brėžiama linija — kelias be užpildo, apvaliais galais.
    *
    * Kodėl atskira dalis: `spot()` kraštas sąmoningai banguotas (jis imituoja

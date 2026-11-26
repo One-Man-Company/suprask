@@ -1811,6 +1811,156 @@ Pirmoji juodraščio versija davė **du tikrus radinius**, ir abu pataisyti, o n
 
 **Pastaba dėl pasiūlymo.** Ideatorius (#50535) temą įrašė (`agents/proposals/2026-11-25-ideator-logines-operacijos-ir-arba.json`), ir šis metodas ją **susieja ir sugriežtina**: (1) ideatorius siūlė, kad vaikas pasirinktų taisyklę ir pamatytų, jog „įjungus abu jungiklius lempa užsidega“ — palikta, bet papildyta spėjimu prieš kiekvieną įjungimą ir keturių eilučių lentele, nes be jų pasekmė matoma, o sąryšis ne (gairių P2, `sujungti-dydziai.md`); (2) ideatorius „NE“ apibūdino kaip reikšmės apvertimą — tai išlaikyta, bet NE tapo **atskira kortele**, kuri neigia sakinį „abu įjungti“, o ne trečiąja nepriklausoma taisykle, nes 6–7 metų vaikui „NE“ be sakinio, kurį neigia, neturi ką apversti (T1.2, LL-23); (3) ideatoriaus sakinys „vaikas mano, kad 'arba' reiškia vieną ar kitą, bet ne abu“ yra teisingas kaip **kalbos** pastebėjimas (Morris, 2008), todėl jis nepaverstas klaida, kurią reikia išguiti: kortelė turi savo užrašą, o modelio ribose pasakyta, kad kasdienė vartosena išlieka (LL-18); (4) ideatorius rėmėsi tik programos tekstu, o metodas prideda šešis recenzuojamus šaltinius su DOI ir vieną naują `foundations` įrašą.
 
+### M-18 — Dailė: ta pati dėmė, trys lapai — keturios, dvi ir viena pusė
+
+**Data:** 2026-11-26 · **Tema:** 1 klasės dailė, „Meninės išraiškos bruožai“: „dėmė (juoda, balta, spalvota, didelė, maža ir kt.)“ ir „fonas (vienspalvis, įvairiaspalvis ir kt.)“ (`sources/pradinio-bp-rekomendacijos-2024.txt:13571, 13576`; sąrašo antraštė „Reikšminiai žodžiai. 1-2 klasės“ — `:13558`) · **Tikslas:** `content/lt/grade-01/daile/04-deme-ir-fonas.json` · **Pasiūlymas:** #54787 · **Šaltinis:** [[../../foundations/iliuzija-ir-faktas|iliuzija ir faktas]]
+
+**Viena didelė idėja.** Dėmė neturi savo „matomumo“. Kraštas matomas tik ten, kur jį liečia **kita** spalva. Todėl toje pačioje vietoje, su ta pačia dėme, galima turėti keturias matomas puses, dvi arba vieną — ir dėmė nebus pakeista nė karto.
+
+**Ką sako programa ir ko platformoje nėra.** Dailės 1–2 klasių reikšminių žodžių sąraše yra ir **dėmė**, ir **fonas** („vienspalvis, įvairiaspalvis ir kt.“), ir jie yra toje pačioje „Meninės išraiškos bruožų“ grupėje kaip forma, linija ir spalva. Platformoje dailėje trys moduliai — `01-spalva-ir-nuotaika` (spalva keičia įspūdį, forma lieka), `02-erdvines-raides` (raidė iš dalių) ir `03-piesimo-priemones` (linijos storį lemia priemonė). Dėmė juose jau yra (`grep -c 'dėmė\|dėmės\|dėmę'` → 01: **9**, 02: 0, 03: **1**), bet ten keičiasi **pati dėmės spalva**, o ne tai, kas ją liečia. **Fondo nėra nė viename**: `grep -c 'fonas\|fono\|fone\|foną\|fonų' content/lt/grade-01/daile/*.json` → 0, 0, 0. Fondo sąvoka programoje priskirta būtent 1–2 klasei, tad tai ne vyresnės klasės temos nuleidimas žemyn.
+
+**Kodėl modelis, o ne paveikslėlis ir ne sakinys.** Paveikslas su trimis lapais jau pasako atsakymą, o jį perskaičius nereikia nieko daryti. Modelis duoda tai, ko paveikslas negali: **tą pačią dėmę tame pačiame lape**, kur keičiasi tik tai, kas liečiasi su jos kraštu. Vaikas pats perjungia lapą ir pamato, kad dėmė nejudėjo — pasikeitė tik jos kraštas. Antras argumentas yra skaičiuojamumas: matomų pusių skaičius yra 4, 2 ir 1, ir jį vaikas gali suskaičiuoti pirštais, o ne „pajausti“.
+
+**Kodėl NE iliuzija (ir tai yra svarbiausias šio metodo sprendimas).** Ideatorius siūlė simultaninį kontrastą — tą pačią pilką dėmę ant šviesaus ir tamsaus fono. To daryti negalima, nes **to efekto jautrumas su amžiumi didėja**: Rosetti ir kt. (2025), ištyrę 513 dalyvių nuo 6,5 iki 18,9 metų, rado, kad kontrasto, judančių gyvačių ir Kanizsa iliuzijų jautrumas didėja, Müller-Lyer — mažėja, o Ebbinghaus — nekinta. Tas pats darbas rodo, kad kontrasto iliuzijos **kontrolinėje** sąlygoje rezultatas su amžiumi gerėjo, t. y. šviesumo suvokimas 6 metais dar nesusiformavęs. Jei modelio branduolys būtų „dėmė atrodo tamsesnė“, 6–7 metų vaikas gali efekto nemanyti matyti — o tada modelis jam meluoja, o tekstas „matai, kaip pasikeitė?“ prašo patvirtinti tai, ko nėra. Todėl matas pakeistas iš **juntamo atspalvio** į **suskaičiuojamą kraštą**. Iliuzija lieka ne atmesta kaip neteisinga, o atidėta vyresnei klasei, kur mokinys jau skiria „aš žinau“ nuo „aš matau“.
+
+**Ką rodo tyrimai (ir kodėl būtent taip).**
+
+1. **Kraštas yra tas, kuris slepia.** Cuthill, Stevens, Sheppard, Maddocks, Párraga ir Troscianko (2005) lauko eksperimente su paukščiais parodė, kad kamufliažo raštai **ant kūno kontūro** slepia labiau negu tie patys raštai kūno viduje, o didelis kontrastas tą efektą sustiprina. Tai tiesioginis pagrindas modeliui, kuriame keičiamasi ne dėmės vidus, o tai, kas liečia jos kraštą.
+2. **Fonas nėra „fonas“ kaip dekoracija.** Stevens ir Merilaita (2009) apžvalgoje atskiria fono atitikimą (krypsį) ir trikdantįjį raštą kaip du skirtingus maskavimosi mechanizmus. Modeliui tai reiškia, kad „fonas“ nėra viena savybė: lapas su juostomis ir lapas su lopais duoda **skirtingą** rezultatą, nors abu yra „ne tušti“.
+3. **Šviesumas priklauso nuo santykinio ploto.** Gilchrist ir Radonjic (2009) parodė, kad dvejopos sferos atveju tamsesnio sektoriaus šviesumas priklauso nuo jo ploto, o šviesiausias plotas visada atrodo baltas. Tai paaiškina, kodėl didelis tos pačios spalvos plotas keičia ir dėmės šviesumą — dar vienas argumentas, kodėl suvokimo efektas netinka būti 6–7 metų vaiko matu.
+4. **Figūros ir fono atskyrimas šiame amžiuje dar lavinamas.** Yoon, Winawer, Witthoft ir Markman (2007) parodė, kad ikimokyklinukai labai sunkiai atpažįsta dviejų tonų nuotraukoje paslėptą gyvūną net su originalu šalia, o vyresni vaikai tą patį padaro nesunkiai. Todėl modelis turi duoti bandyti daug kartų ir neturi vieno „teisingo“ žiūrėjimo.
+
+**Klaidingos nuostatos ir kaip jos paneigiamos.**
+
+1. **„Dėmė matoma dėl savo spalvos.“** Tai ta pati nuostata kaip M-06 („spalva yra daikto pavadinimas“) ir M-07 („skaičius pasako ilgį“), tik apie matomumą. Paneigiama tuo, kad modelis dėmės nekeičia nė karto: trijuose lapuose ji ta pati, o matomų pusių skaičius 4 → 2 → 1. Jei matomumą lemtų spalva, skaičius nekistų.
+2. **„Jei krašto nesimato, dėmė dingo.“** Vaikas, pamatęs susiliejusį plotą, gali manyti, kad lopas dėmę uždengė. Paneigiama mygtuku „Parodyk kraštą“, kuris toje pačioje vietoje parodo brūkšninį kontūrą: dėmė ten pat, tik jos ribos su tos pačios spalvos lopu nėra.
+3. **„Lopas dedamas ant dėmės viršaus.“** Tai suaugusiojo, ne vaiko klaida, ir ji labai tikėtina kuriant modelį. Realybėje dėmė ir fonas yra **tas pats dažų sluoksnis** ant lapo: lopas dedamas šalia, o susilieja tik jų bendra riba. Modelis, kuriame lopas uždengia dėmę, mokytų neteisingo dalyko — kad fonas „padedamas ant“ piešinio.
+4. **„Daugiau lopų — mažiau matosi.“** Antras lapas turi 16 lopų langelių ir 6 matomas atkarpas, trečias — 15 lopų ir 3 atkarpas. Skaičiuojama ne lopų kiekis, o tai, ar lopas liečia **visą** krašto pusę.
+
+**Seka (konkretumas → modelis → simbolis → perkėlimas), 5 žingsniai.**
+
+1. **Klasė be ekrano, trys lapai ir trys apskritimai.** Mokytojas duoda tris vienodus rudus apskritimus ir tris lapus: baltą, su storomis rudomis juostomis viršuje ir apačioje, ir su rudais lopais prie trijų pusių. Vaikas klijuoja po apskritimą ir pirštu braukia per kraštą. Tikslas: pajausti, kad apskritimas nepasikeitė, o jo kraštas — taip.
+2. **Ekranas, pirmas lapas.** Ta pati dėmė šviesiame lape. Vaikas spėja, kiek pusių matys. Tikslas: pamatyti pasekmę savo veiksmu ir turėti su kuo lyginti.
+3. **Antras lapas — juostos.** Dvi juostos liečia dėmę iš viršaus ir apačios. Matomų pusių lieka dvi, o šoninės lieka visos. Tikslas: skirti **kuri** pusė dingo, o ne „dėmė pasikeitė“.
+4. **Trečias lapas — lopai ir simbolis.** Trys lopai liečia tris puses. Lieka viena. Po kiekvienu lapu atsiranda **tas pats** žymėjimas: keturi langeliai, iš kurių matomi nuspalvinami, o paslėpti lieka tušti. Trys žymėjimai sustoja vienas šalia kito. Tikslas: matomumą įvardyti skaičiumi, o ne atspalviu.
+5. **Perkėlimas.** Trys užduotys be modelio: lipdukas tokios pat spalvos kaip sąsiuvinis, drugio sparnai tokios pat spalvos kaip žievė, ir atvirkštinė užduotis — baltas lapas su balta dėme, kur reikia keisti lapą, o ne dėmę. Tikslas: taikyti taisyklę ten, kur modelio nėra.
+
+**Privalomas spėjimo žingsnis prieš pirmą lapą.** `api.readout` sako: „Pirma pasakyk, kiek pusių matysi.“ Kol vaikas nepasirinko, lapo mygtukai neaktyvūs, bet **ne `disabled`**: jie paaiškina „Pirma pasakyk skaičių. Tada rink lapą.“ ir perkelia fokusą į spėjimo mygtukus (LL-04, LL-32). Spėjimas niekada neištrinamas ir niekada nevadinamas klaida: jis lieka šalia rezultato, todėl palyginimas matomas (LL-15). Be spėjimo modelis virstų lapų perjunginėjimu: vaikas spaudo tol, kol pamato įdomią būseną, ir sąryšio nesudaro (tas pats pavojus kaip M-01–M-17, `research/wiki/foundations/sujungti-dydziai.md`).
+
+**Simuliacijos specifikacija.** Komponentas `deme-ir-fonas`, failas `assets/js/sims/daile.js` (`registry.js` jau importuoja `daile.js`, registracijos keisti nereikia). `config`:
+
+```json
+{ "spot": { "name": "Dėmė", "hex": "#7b6b50" },
+  "paper": "#faf6ec",
+  "outline": "#23201c",
+  "sheet": { "x": 12, "y": 20, "cell": 38, "cols": 8, "rows": 5 },
+  "spotCells": { "col": 2, "row": 1, "cols": 4, "rows": 3 },
+  "grounds": [
+    { "id": "sviesus", "name": "Šviesus", "same": [] },
+    { "id": "juostos", "name": "Juostos",
+      "same": [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],
+               [0,4],[1,4],[2,4],[3,4],[4,4],[5,4],[6,4],[7,4]] },
+    { "id": "lopai", "name": "Lopai",
+      "same": [[2,0],[3,0],[4,0],[5,0],[1,1],[1,2],[1,3],
+               [2,4],[3,4],[4,4],[5,4],[0,0],[7,0],[0,4],[7,4]] } ],
+  "start": "sviesus",
+  "labels": { "spot": "Dėmė", "ground": "Lapas",
+              "sides": "Matomos pusės", "reset": "Iš naujo" },
+  "sentences": { "start": "Pirma pasakyk, kiek pusių matysi.",
+                 "sviesus": "Šviesus lapas. Dėmė keturių pusių.",
+                 "juostos": "Juostos viršuje ir apačioje. Dvi pusės.",
+                 "lopai": "Lopai prie trijų pusių. Viena pusė.",
+                 "rode": "Rodau dėmės kraštą. Ji visur ta pati.",
+                 "vel": "Valom nuo pradžių. Šviesus lapas.",
+                 "visi": "Trys lapai. Dėmė ta pati." } }
+```
+
+**Būsena išvedama, o ne įrašyta.** `config.grounds[]` sąmoningai neturi lauko, kiek pusių matosi: tai vienintelė taisyklė komponente —
+
+```
+pusės = [ 'virsus', 'apacia', 'kaire', 'desine' ]
+mati(kraštas, lapas) = kraštas.visosLangeliai.every(l => !lapas.same.includes(l))
+
+matomos = pusės.filter(p => mati(p, lapas)).length
+```
+
+Konkrečiai iš aukščiau pateiktos konfigūracijos (skaičiuota `m18_galutine.py`, tikrinta `check_config.py`, abu skaito **tą patį** JSON):
+
+| Lapas | Fono langelių | Matomi krašto langeliai | Matomos pusės | Dalinai padengtos | Paslėptos |
+|---|---|---|---|---|---|
+| Šviesus | 0 | 14 / 14 | **4** | 0 | 0 |
+| Juostos | 16 | 6 / 14 | **2** | 0 | 2 |
+| Lopai | 15 | 3 / 14 | **1** | 0 | 3 |
+
+Svarbi modelio savybė: **nė viena pusė nėra padengta dalinai.** Kiekviena iš keturių pusių yra arba matoma visa, arba paslėpta visa, todėl vaikas gali suskaičiuoti puses pirštais ir nesusipainios. Pirmoji konfigūracijos versija šios savybės neturėjo: `juostos` lape šoninės pusės buvo dengtos 2 iš 3 langelių, o tekstas sakė „Dvi pusės“ — vaikas būtų skaičiavęs 2 ir 3, ir modelis būtų buvęs neteisingas. Tai rasta automatine patikra (`check_config.py` → `AR TEKSTAS TEISINGAS: NE — yra daliniu pusiu`), o ne akimis, ir pataisyta pačioje konfigūracijoje.
+
+Kontrastas skaičiuotas WCAG formule, o ne akimis: dėmė `#7b6b50` (L = 0,153) prieš lapą `#faf6ec` (L = 0,923) = **4,79:1** — kraštas matomas; tos pačios spalvos lopas prieš dėmę = **1,00:1** — kraštas neišvengiamai dingsta. Tai ir yra modelio teiginys: dingimas ne iliuzija, o tiksliai 1,00:1 kontrastas.
+
+| Būsena | Ką vaikas mato | `readout` | `api.note` |
+|---|---|---|---|
+| pradžia | šviesus lapas, dėmė keturių pusių, spėjimo mygtukai 1–4 | `sentences.start` | `sentences.sviesus` |
+| spėjimas pasirinktas | pasirinktas skaičius matomas, lapų mygtukai aktyvūs | — | — |
+| juostos | dvi juostos, matomos dvi šoninės pusės | `sentences.juostos` | ta pati frazė |
+| lopai | trys lopai, matoma viena pusė | `sentences.lopai` | ta pati frazė |
+| „Parodyk kraštą“ | brūkšninis kontūras toje pačioje vietoje | `sentences.rode` | ta pati frazė |
+| visi trys lapai apžiūrėti | trys žymėjimai vienas šalia kito | `sentences.visi` | `sentences.visi` |
+| „Iš naujo“ | šviesus lapas, žymėjimai lieka | `sentences.vel` | — |
+
+Dešimt savybių, kurių negalima praleisti:
+
+- **Vienas kintamasis:** `lapas` (kuris iš trijų). Dėmė nekeičiama nė karto: `spotCells` yra vienas ir tas pats visiems lapams, o `config.grounds[].same` keičia tik **tai, kas liečia kraštą**. Lopas niekada nedengia dėmės langelio — jis dedamas **šalia**, todėl dėmė ne „dingsta po lopu“, o susilieja su juo (LL-27).
+- **Lapas niekada neužrakinamas.** Vaikas gali grįžti į bet kurį lapą bet kada, be nuobaudų (LL-04). Spėjimas gali būti neteisingas ir tai nėra baudžiama.
+- **Geometrija 360 px:** scena `viewBox="0 0 328 230"`, `max-width:328px`, `width:100%`; lapo tinklelis 8 × 5 po 38 px su 12 px šonu ir 20 px viršuje bei apačioje; dėmė 152 × 114 px (x 88–240, y 58–172). 360 px ekrane su `sim-shell` 13 px pamušalu lieka 334 px, tad 328 px telpa be horizontalaus slinkimo. Dėmė yra 152 px pločio — pakankamai didelė, kad 6–7 metų vaikas pirštu rodytų į kiekvieną pusę atskirai.
+- **Dėmės spalva nėra vienintelis informacijos nešėjas** (T5.5, LL-143): matomų pusių skaičius rodomas ir skaičiumi, ir keturių langelių žymėjimu, o „Parodyk kraštą“ duoda brūkšninį kontūrą. Vaikas, kuris neskiria rudos nuo smėlinės, vis tiek perskaito būseną.
+- **Įėjimai ir klaviatūra:** spėjimo mygtukai 1–4 po ≥ 48 × 48 px (`aria-pressed`), trys lapų mygtukai 328 × 56 px (`aria-pressed`), „Parodyk kraštą“ ir „Iš naujo“ ≥ 48 px. `Tab` eilė: spėjimas → lapai → „Parodyk kraštą“ → „Iš naujo“; `Enter` / `Space` aktyvuoja; `aria-live="polite"` — `readout`.
+- **Fokusas** (LL-32): pasirinkus spėjimą fokusas eina į pirmą lapo mygtuką; po trečio lapo — į „Parodyk kraštą“; po „Iš naujo“ — į spėjimą. Neaktyvūs elementai žymimi `aria-disabled` ir lieka fokusuojami, o bandymas juos paspausti paaiškinamas `api.note`, ne tyli.
+- **Grįžtamasis ryšys paaiškina kodėl**, o ne „teisingai“: `readout` įvardija lapą ir pusių skaičių, o `api.note` duoda priežastį („Juostos tokios pat spalvos, tad viršus ir apačia susilieja.“). Niekada „neteisingai“ (T2.3, T5.1). `readout` neperrašomas kiekvieną kadrą (LL-14).
+- **Pažanga** (`api.progress({ correct: true })`) — vieną kartą, kai **visi trys** lapai apžiūrėti ir vaikas pasakė pusių skaičių bent du kartus teisingai **dabartinėje** būsenoje (LL-17), o ne po pirmo lapo (LL-29). „Iš naujo“ pažangos netrina (LL-16).
+- **Garsas:** tariamos tik `config.sentences` frazės (7), kiekviena gauna po du įrašus (`n` ir `s`), tad manifestas išaugs 14 įrašų, jei tų pačių sakinių dar neturi. Lapų pavadinimai ir mygtukų užrašai netariami. `api.note` rodo **tą patį** sakinį, kuris tariamas.
+- **Be laikmačių, be ėjimų limito, be „game over“.** Lapą galima keisti tiek kartų, kiek vaikas nori; „Iš naujo“ nieko nebando.
+
+**Užduotys.**
+
+| # | Tipas | Klausimas ir variantai | Teisingas | Tipinė klaida | Užuomina |
+|---|---|---|---|---|---|
+| 1 | atpažinimas | „Lape juostos virš dėmės ir po ja. Kiek pusių matysi?“ — Dvi / Keturias / Nė vienos | Dvi (0) | „Keturias“ — skaičiuojama dėmė, o ne jos kraštas | „Suskaičiuok puses, kurių niekas neuždengia.“ |
+| 2 | taikymas | „Lipdukas tokios pat spalvos kaip sąsiuvinis. Kur jis matysis?“ — Niekur, jis susilies / Tik kamputyje / Visur, nes lipdukas storesnis | Niekur, jis susilies (0) | „Visur“ — storis painiojamas su kontrastu | „Palygink lipduko spalvą su sąsiuvinio spalva.“ |
+| 3 | perkėlimas | „Drugio sparnai tokios pat spalvos kaip žievė. Kuo tai naudinga?“ — Jis skrenda greičiau / Jį sunkiau pastebėti / Sparnai ryškesni už kitus | Jį sunkiau pastebėti (1) | pirmas — spalva painiojama su greičiu | „Pagalvok, kas atsitiko dėmei po lopu.“ |
+| 4 | perkėlimas (`optional: true`) | „Baltas lapas ir balta dėmė. Kurį dalyką keisti, kad dėmė pasirodytų?“ — Lapą / Dėmės vietą / Nieko, ji ir taip matosi | Lapą (0) | „Dėmės vietą“ — keičiama tai, kas nekeičia kontrasto | „Prisimink, ką keitei modelyje.“ |
+
+Atsakymų indeksai 0 / 0 / 1 / 0 — pirmos dvi užduotys tame pačiame indekse, todėl patikrinta, kad `validate_content.py` pasiskirstymo netikrina kaip absoliutaus reikalavimo (`content/lt/grade-01/daile/03-piesimo-priemones.json` taip pat turi 0 / 1 / 0 / 2). Nė viena užuomina nepasako atsakymo: 1-oji nurodo į skaičiavimą, 2-oji — į palyginimą, 3-ioji — į modelio įvykį, 4-oji — į modelio veiksmą. 2 užduotyje sąmoningai nėra varianto „Kamputis kitos spalvos“: toks atvejis gyvenime teisingas, tad jis negali būti neteisingas atsakymas (LL-18). 3 užduotyje trečias variantas perkeltas iš „Jis ryškesnis už kitus“ į „Sparnai ryškesni už kitus“, nes `check_language` rado neaiškią nuorodą įvardžio pradžioje — tai tikras radinys, o ne vartų triukas.
+
+**Refleksija.** „Kodėl toje pačioje vietoje dėmė kartais turi mažiau pusių?“ Klausiama žodžiu, nevertinama; laukiamas atsakymas apie savo patirtį („Nes lopas tokios pat spalvos“), o ne taisyklės kartojimas (T5.3).
+
+**Modelio ribos (pasakomos vaikui ir mokytojui).**
+
+1. **Tai ne iliuzija ir sąmoningai.** Modelis nerodo, kad ta pati spalva *atrodo* kitaip. Jis rodo, kad tos pačios spalvos plotai **neturi matomos ribos** — tai optinis ir fizinis faktas, o ne suvokimo efektas. Iliuzija su 6–7 metų vaiku neveiktų taip stipriai kaip su suaugusiu (Rosetti ir kt., 2025), todėl ji atidėta vyresnei klasei.
+2. **Spalvos modelis dvejetainis: ta pati arba ne.** Tikrovėje yra atspalvių, apšvietimo ir popieriaus tekstūros. Modelis sąmoningai naudoja tik `1,00:1` ir `4,79:1` — du kraštutinumus, kad priežastis būtų vienareikšmė. Tarpiniai atspalviai paliekami tikrovei ir mokytojo veiklai.
+3. **Lopas ne „dengia“, o „liečiasi“.** Tai pasakyta ir mokytojo bloke, nes tai labiausiai tikėtina suaugusiojo klaida kuriant modelį. Jei kas nors kada nors perrašys komponentą taip, kad lopas eitų ant dėmės viršaus, modelis ims mokyti neteisingo dalyko.
+4. **Keturių pusių skaičius yra modelio savybė, ne gamtos dėsnis.** Dėmė yra stačiakampis, todėl ji turi keturias puses. Apvali dėmė neturi pusių, ir pusių skaičiuoti negalima — todėl modelis sąmoningai naudoja stačiakampę dėmę, o ne „dėmę“ kaip lašą.
+5. **Tai ne įgūdžio įrodymas.** Teisingas atsakymas reiškia, kad vaikas suskaičiavo kraštą ir palygino su spėjimu, o ne kad jis savarankiškai skiria figūrą nuo fono; Yoon ir kt. (2007) rodo, kad tas atskyrimas šiame amžiuje dar lavinamas.
+6. **Vaikas gali nemanyti matyti skirtumo.** Jei vaikas sako „nematau“, tai gali būti teisingas jo suvokimo aprašymas. Todėl teisingas atsakymas visada pasiekiamas **suskaičiavus**, o ne „įsižiūrėjus“.
+
+**Ką tai reiškia modulio autoriui.** `id` — `04-deme-ir-fonas`; `title` — „Dailė: ta pati dėmė, trys lapai“ (32 simboliai); `subtitle` — „Dėmės kraštas matosi tik ten, kur spalva skiriasi“ (54); `minutes` — 9; trys `outcomes` („Suskaičiuoju, kiek dėmės pusių matosi.“, „Parodau, kad lopas tos pačios spalvos panaikina kraštą.“, „Pasakau, kodėl dėmė atrodo kitaip tame pačiame lape.“); `concept.title` — „Dėmė ir jos kraštas“; `concept.big_idea` — „Dėmė matosi tik ten, kur jos spalva skiriasi nuo aplinkos. Kur spalva ta pati, krašto nebėra.“ (95); `concept.steps` — keturi žingsniai iš sekos 2–4; `concept.example` — „Lipdukas tokios pat spalvos kaip sąsiuvinis nesimato. Ant balto lapo jis matosi.“; `teacher.offline` — trys lapai ir trys apskritimai; `teacher.misconceptions` — trys nuostatos iš šio skyriaus; `sim` — `{ "component": "deme-ir-fonas", "config": { … } }`. Modulis įrašomas į `content/lt/grade-01/index.json` (dailė, po `03-piesimo-priemones`) ir į `path.json` **po `03-piesimo-priemones`**: ten vaikas rinko priemonę pagal linijos storį, čia — žiūri, kas liečia kraštą; abu moduliai yra „savybė priklauso nuo to, kas šalia“. Numeris `04-` laisvas (`ls content/lt/grade-01/daile/` → 01, 02, 03).
+
+**Patikra.** Metodo specifikacija surašyta kaip juodraštinis modulis, laikinai įrašytas tikslioje vietoje (`content/lt/grade-01/daile/04-deme-ir-fonas.json`) ir po patikros ištrintas; po ištrynimo `git status` rodo tik wiki failus. Komponentas `deme-ir-fonas` vartams paduotas kaip registruotas (jo dar nėra), todėl kūno patikra neįvyko:
+
+```
+validate_content.check_module   -> 0 klaidų, 1 įspėjimas
+   (įspėjimas: „nepavyko perskaityti simuliacijos „deme-ir-fonas“ kūno —
+    sim.config gyvumas nepatikrintas“)
+check_language.check_module     -> 0 radinių (1 kl. riba — 10 žodžių sakinyje)
+validate_content.py --grade 1   -> 0 klaidų, 0 įspėjimų (be juodraščio)
+```
+
+Pirmoji juodraščio versija davė **du tikrus radinius** ir abu pataisyti, o ne apeiti: 3 užduoties variantas prasidėjo įvardžiu „Jis“ (`check_language` „neaiški nuoroda pradžioje“), o 4 užduoties klausimas prasidėjo „Ką keisti…“ ir neturėjo klausiamojo žodžio iš `check_language.py:266` sąrašo — performuluota į „Kurį dalyką keisti…“. Modulio konfigūracija davė **trečią** tikrą defektą, kurio vartai nemato: `juostos` lape šoninės pusės buvo dengtos 2 iš 3 krašto langelių, tad tekstas „Dvi pusės“ buvo neteisingas. Tai rasta atskiru skaičiuotuvu (`check_config.py`), kuris lygina `sim.config` su `sentences`, ir pataisyta konfigūracijoje; dabar visos keturios pusės visuose trijuose lapuose yra arba visos matomos, arba visos paslėptos.
+
+Įspėjimas paliktas sąmoningai ir neapeitas: komponento dar nėra, todėl `sim.config` gyvumo (LL-61) patikrinti negalima. Jį privalo paleisti tas, kas rašys `deme-ir-fonas` į `daile.js`: su tikru komponento kūnu tas pats vartas turi duoti 0 įspėjimų, o `pusiųSkaiciuokle()` turi būti lyginama su `grounds[].same` aibe, ne su lapo pavadinimu.
+
+**Šaltiniai.** NŠA (2024). *Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos*, dailė, „Reikšminiai žodžiai. 1-2 klasės“ (`sources/pradinio-bp-rekomendacijos-2024.txt:13558, 13571, 13576`). Rosetti, M., Navarrete, V., Montiel, V., Alarcon, M., Ulloa, R. E., Szenczi, P., & Bánszegi, O. (2025). Heterochronic development of the perception of different types of visual illusions. *Developmental Neuroscience, 47*(5), 350–361. https://doi.org/10.1159/000543308 · Gilchrist, A. L., & Radonjic, A. (2009). Anchoring of lightness values by relative luminance and relative area. *Journal of Vision, 9*(9), 13. https://doi.org/10.1167/9.9.13 · Cuthill, I. C., Stevens, M., Sheppard, J., Maddocks, T., Párraga, C. A., & Troscianko, T. S. (2005). Disruptive coloration and background pattern matching. *Nature, 434*, 72–74. https://doi.org/10.1038/nature03312 · Stevens, M., & Merilaita, S. (2009). Animal camouflage: current issues and new perspectives. *Philosophical Transactions of the Royal Society B, 364*(1516), 423–427. https://doi.org/10.1098/rstb.2008.0217 · Yoon, J. M. D., Winawer, J., Witthoft, N., & Markman, E. M. (2007). Striking deficiency in top-down perceptual reorganization of two-tone images in preschool children. *Proceedings of the 6th IEEE International Conference on Development and Learning*. · Kearney, M. (2004). Classroom use of multimedia-supported predict–observe–explain tasks. *Research in Science Education, 34*(4), 427–453. https://doi.org/10.1007/s11165-004-8795-y
+
+**Pastaba dėl pasiūlymo.** Ideatorius (#54787) temą įrašė (`agents/proposals/2026-11-26-ideator-deme-ir-fonas.json`), ir šis metodas ją **susieja ir sugriežtina**: (1) ideatorius siūlė simultaninį kontrastą — „ta pati dėmė keliama ant trijų fonų ir vaikas mato, kad dėmė ne *turi* spalvą“; branduolys paliktas (dėmė nekeičiama), bet **mechanizmas pakeistas** iš suvokimo efekto į skaičiuojamą kraštą, nes to efekto jautrumas su amžiumi didėja (Rosetti ir kt., 2025), o 6–7 metų vaikas gali jo nemanyti matyti; (2) ideatoriaus siūlyti trys fonai (vienspalvis, dryžuotas, margas) išlaikyti, bet **dryžuoto fono konfigūracija pakeista** taip, kad kiekviena pusė būtų dengiama visa, o ne dalinai — kitaip vaikas negalėtų suskaičiuoti pusių; (3) ideatorius rašė, kad „ant margo fondo dėmė pasimeta“ — tai neteisinga mechaniškai: dėmė pasimeta ne dėl margumo, o dėl to, kad lopas **tokios pat spalvos** liečia kraštą. Modelis tai rodo tiksliai, o mokytojo bloke pasakyta, kodėl „lopas dengia“ yra klaidinga; (4) ideatorius rėmėsi tik programos tekstu, o metodas prideda penkis recenzuojamus šaltinius su DOI ir vieną naują `foundations` įrašą ([[../../foundations/iliuzija-ir-faktas|iliuzija ir faktas]]).
+
 ## Atviros prielaidos
 
 

@@ -1,0 +1,24 @@
+{
+  "role": "metodininkas",
+  "run_id": 550,
+  "created": "2026-11-26T10:28:48+02:00",
+  "type": "metodas",
+  "title": "M-18 — Dailė: ta pati dėmė, trys lapai — keturios, dvi ir viena pusė",
+  "body": "Dailės 1–2 klasių reikšminių žodžių sąraše yra ir „dėmė“, ir „fonas (vienspalvis, įvairiaspalvis ir kt.)“ (BP rekomendacijos 2024, eil. 13571 ir 13576), o platformoje fondo neliečia nė vienas dailės modulis: trys esami kalba apie spalvos įspūdį, raidę iš dalių ir linijos storį. Metodas ima vieną nekeičiamą dėmę ir tris lapus, kuriuose keičiasi tik tai, kas liečia dėmės kraštą — šviesus lapas (keturios matomos pusės), juostos viršuje ir apačioje (dvi) ir lopai prie trijų pusių (viena). Vaikas prieš pirmą lapą spėja pusių skaičių, o skaičius lieka šalia rezultato. SVARBIAUSIAS SPRENDIMAS: ideatoriaus siūlytas simultaninis kontrastas („ta pati dėmė atrodo kitokia ant kito fondo“) atsisakytas. Rosetti ir kt. (2025), ištyrę 513 dalyvių nuo 6,5 iki 18,9 metų, rado, kad kontrasto iliuzijos jautrumas su amžiumi DIDĖJA (o Müller-Lyer mažėja, Ebbinghaus nekinta), tad 6–7 metų vaikas to efekto gali nemanyti matyti — modelis jam meluotų, o tekstas prašytų patvirtinti tai, ko nėra. Vietoj juntamo atspalvio matas pakeistas į suskaičiuojamą kraštą: kiek pusių turi matomą ribą. Tai ne iliuzija, o fizinis faktas, pagrįstas Cuthill ir kt. (2005) radiniu, kad kamufliažas ant kūno kontūro slepia labiau negu tas pats raštas kūno viduje. Antras svarbus sprendimas: dėmė ir fonas yra TAS PATS dažų sluoksnis ant lapo, todėl lopas niekada neuzdedamas ant dėmės viršaus — jis dedamas šalia ir susilieja tik bendra riba. Trečias: konfigūracija priversta taip, kad kiekviena iš keturių pusių būtų dengiama ARBA VISA, ARBA NIEKO — pirmoji versija šoninę pusę dengė 2 iš 3 langelių, ir tekstas „Dvi pusės“ buvo neteisingas; tai rasta automatiniu skaičiuotuvu, lyginančiu sim.config su sentences, o ne akimis. Specifikacija paruošta taip, kad kūrėjas neklausytų nė vieno papildomo klausimo: 5 žingsnių seka, config blokas, 7 būsenų lentelė, pusių skaičiavimo taisyklė, geometrija 360 px, fokaso seka (LL-32), api.progress tik po visų trijų lapų (LL-17, LL-29), 4 užduotys, 6 modelio ribos, 6 šaltiniai su DOI.",
+  "target": "content/lt/grade-01/daile/04-deme-ir-fonas.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/metodai.md — M-18 (šis paleidimas, eil. 1814–1963): seka, config, būsenų lentelė, pusių skaičiavimas, geometrija, užduotys, modelio ribos",
+    "research/wiki/foundations/iliuzija-ir-faktas.md — naujas šio paleidimo foundations įrašas: kodėl iliuzijos branduolys netinka, kai jos jautrumas su amžiumi didėja",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:13571 — „dėmė (juoda, balta, spalvota, didelė, maža ir kt.)“; :13576 — „fonas (vienspalvis, įvairiaspalvis ir kt.)“; sąrašo antraštė :13558 („Reikšminiai žodžiai. 1-2 klasės“)",
+    "grep -c 'fonas|fono|fone|foną|fonų' content/lt/grade-01/daile/*.json → 01: 0, 02: 0, 03: 0 (fondo nėra nė viename); grep -c 'dėmė|dėmės|dėmę' → 01: 9, 02: 0, 03: 1 (dėmė yra, bet ten keičiasi pati spalva, ne tai, kas ją liečia); ls content/lt/grade-01/daile/ → 01, 02, 03, tad numeris 04 laisvas",
+    "Patikra su tikru sim.config: check_config.py → šviesus 14/14 krašto, 4 pusės; juostos 6/14, 2 pusės; lopai 3/14, 1 pusė; dalinai padengtų pusių 0 (pirmoji versija turėjo 2 — defektas rastas ir pataisytas)",
+    "Kontrastas WCAG: dėmė #7b6b50 (L=0,153) / lapas #faf6ec (L=0,923) = 4,79:1; dėmė / tos pačios spalvos lopas = 1,00:1",
+    "Rosetti, M., Navarrete, V., Montiel, V., Alarcon, M., Ulloa, R. E., Szenczi, P., & Bánszegi, O. (2025). Heterochronic development of the perception of different types of visual illusions. Developmental Neuroscience, 47(5), 350–361. https://doi.org/10.1159/000543308 — kontrasto jautrumas su amžiumi didėja (513 dalyvių, 6,5–18,9 m.)",
+    "Cuthill, I. C., Stevens, M., Sheppard, J., Maddocks, T., Párraga, C. A., & Troscianko, T. S. (2005). Disruptive coloration and background pattern matching. Nature, 434, 72–74. https://doi.org/10.1038/nature03312 — raštas ant kontūro slepia labiau negu kūno viduje",
+    "Gilchrist, A. L., & Radonjic, A. (2009). Anchoring of lightness values by relative luminance and relative area. Journal of Vision, 9(9), 13. https://doi.org/10.1167/9.9.13 — šviesumas priklauso nuo santykinio ploto",
+    "Stevens, M., & Merilaita, S. (2009). Animal camouflage: current issues and new perspectives. Philosophical Transactions of the Royal Society B, 364(1516), 423–427. https://doi.org/10.1098/rstb.2008.0217 — fono atitikimas ir trikdantysis raštas yra du skirtingi mechanizmai",
+    "Vartai (juodraštis laikinai įrašytas ir po patikros ištrintas): validate_content.check_module → 0 klaidų, 1 įspėjimas (komponento kūno nėra); check_language.check_module → 0 radinių. Pirmoji versija davė 2 tikrus radinius (įvardis varianto pradžioje, klausiamasis žodis), abu pataisyti"
+  ]
+}

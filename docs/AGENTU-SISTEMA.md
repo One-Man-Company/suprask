@@ -92,6 +92,24 @@ paleidimas baigiasi — kitas tikrina vėl pagal grafiką (09:30).
 
 Agentui **draudžiama** daryti `git commit`, `git push`, `gh pr create` — tai buvo pagrindinė priežastis, kodėl per parą 9 paleidimai nedavė nė vieno pokyčio svetainėje.
 
+Draudimas yra taisyklė, o ne vartas: modelis turi terminalą ir kartais commit'ą
+padaro vis tiek (2026-11-24 #516, 2026-11-25 #542 — 5 commit'ai). Iki
+2026-11-26 bėgiklis tokį darbą laikė **nematomu**: `changed_files()` matuoja
+`git status`, o sukomitavus darbinė kopija švari, tad paleidimas įrašomas
+`empty`/`exhausted` su `artifacts = []`, nors commit'ai jau `main`. Pasekmės
+buvo trys: nenaudingų procentas melavo (architektas 43 %), **vartai nebuvo
+paleisti** (turinys galėjo patekti į `main` be `validate_content.py`), o
+pasiūlymai liko `new`, tad eilė tą patį darbą būtų davusi antrą kartą.
+
+Nuo 2026-11-26 bėgiklis (`agents/run.py: own_commits_since`) lygina HEAD prieš
+paleidimą ir po jo: commit'ai, kurių antraštė `[vaidmuo] #<paleidimas>:`, yra
+įtraukiami į failų sąrašą, todėl jiems paleidžiami vartai, o nepavykus —
+`undo_own_commits()` atsuka juos (tik jei tarp jų nėra svetimo commit'o ir nė
+vienas nėra pasiekęs `origin/main`). `scripts/system_report.py` tuo pačiu
+lygina `runs.db` statusą su git istorija ir rodo „Sąskaita nesutampa su git
+istorija“ — jei matavimas vėl ims meluoti, tai bus matoma kiekvieną paleidimą
+(LL-211).
+
 ## Statusai (`agents/runs.db`)
 
 | Statusas | Reikšmė |

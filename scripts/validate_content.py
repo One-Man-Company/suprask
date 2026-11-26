@@ -368,6 +368,45 @@ def hint_leaks_option(options: list, answer: int, hint: str, question: str) -> l
     return leaks
 
 
+def check_index_matches_module(entry: dict, data: dict, mod_path: Path, rep: Report) -> None:
+    """`index.json` eilutė ir modulio JSON turi skelbti TĄ PATĮ modulį (#16892).
+
+    Klasės sąrašo kortelė (`assets/js/app.js`) rašo `title`, `subtitle` ir
+    `minutes` iš `index.json`, o modulio puslapis tuos pačius tris laukus ima
+    iš modulio JSON. Tai dvi to paties teiginio kopijos, kurių iki šiol niekas
+    nesulygino: `validate_content.py` tikrino tik `id` ir `strand`, o
+    `check_published.py` lygina failus su gyva svetaine, ne failus tarpusavyje.
+
+    2026-11-14 (kai pasiūlymas #16892 užregistruotas) skirtumo nebuvo — 82
+    moduliai, 0 nesutapimų. Bet jei kas nors pataisys trukmę ar pavadinimą tik
+    modulio faile, vaikas sąraše matys „8 min.“, o atidaręs modulį — „10 min.“,
+    ir nė vieni vartai to nepasakys. Tai LL-21 klasė (skaičius, kurio niekas
+    neperskaičiuoja), tik ne dokumente, o dviejuose turinio failuose.
+
+    Nesutapimas yra KLAIDA, o ne įspėjimas: tai ne stilius, o du skirtingi
+    teiginiai tam pačiam vaikui. `sim` lyginamas atsargiai — indekse jis yra
+    komponento ID (tekstas), modulyje — `sim.component`.
+    """
+    rel = mod_path.relative_to(ROOT)
+    for key in ("title", "subtitle", "minutes"):
+        if key not in entry or key not in data:
+            continue
+        if entry.get(key) != data.get(key):
+            rep.err(
+                f"{rel}: „{key}“ nesutampa su klasės indeksu "
+                f"(indeksas: {entry.get(key)!r}, modulis: {data.get(key)!r}) — "
+                "vaikas sąraše ir modulyje matytų skirtingą teiginį (#16892)"
+            )
+    sim_entry = entry.get("sim")
+    sim_component = (data.get("sim") or {}).get("component") if isinstance(data.get("sim"), dict) else None
+    if sim_entry and sim_component and sim_entry != sim_component:
+        rep.err(
+            f"{rel}: „sim“ nesutampa su klasės indeksu "
+            f"(indeksas: {sim_entry!r}, modulis: {sim_component!r}) — "
+            "registro patikra ir sąrašas rodytų skirtingą simuliaciją (#16892)"
+        )
+
+
 def check_module(path: Path, data: dict, rep: Report, sims: set[str], grades_meta: dict) -> None:
     rel = path.relative_to(ROOT)
     for field in REQUIRED_MODULE:
@@ -609,6 +648,7 @@ def main() -> int:
                     rep.err(f"{mod_path.relative_to(ROOT)}: „id“ ({data.get('id')}) nesutampa su indeksu ({mid})")
                 if data.get("strand") != strand.get("id"):
                     rep.err(f"{mod_path.relative_to(ROOT)}: „strand“ nesutampa su katalogo kryptimi")
+                check_index_matches_module(m, data, mod_path, rep)
                 check_module(mod_path, data, rep, sims, meta_by_grade)
 
         # `renamed_from` yra ne komentaras, o duomenys, kuriuos skaito naršyklė

@@ -18,6 +18,7 @@ import argparse
 import datetime as dt
 import json
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -287,6 +288,57 @@ def roles_config() -> dict:
     }
 
 
+def ledger_gap(rows: list[dict]) -> list[dict]:
+    """Paleidimai, kurių statusas sako „darbo nėra“, o commit'as YRA istorijoje.
+
+    Kodėl tai atskira matavimo dalis (LL-211): 2026-11-24/25 du architekto
+    paleidimai (#516, #542) paskelbė penkis commit'us į `origin/main`, o
+    `runs.db` juos įrašė `exhausted` ir `empty` su `artifacts = []`. Priežastis
+    buvo matavimo, ne darbo: bėgiklis darė išvadą iš `git status`, o modelis
+    buvo pats sukomitavęs, todėl darbinė kopija atrodė švari. Statistika tokius
+    paleidimus skaičiavo kaip nenaudingus (architektas 43 %), ir tai nukreipė
+    dėmesį nuo tikros problemos.
+
+    Todėl ataskaita lygina DU šaltinius — `runs.db` statusą ir git istoriją —
+    ir įvardija kiekvieną nesutapimą. Tai nėra „įspėjimas dėl tvarkos“: kol
+    nesutapimas yra, nenaudingų procentas meluoja, o pasiūlymai lieka eilėje.
+
+    Commit'as laikomas TO paleidimo įrodymu tik tada, kai antraštė yra
+    `[role] #<id>:` — ta pati taisyklė, kurią taiko bėgiklis
+    (`agents/run.py: own_commits_since`). Kito vaidmens ar kito numerio
+    commit'as nesutapimu nelaikomas.
+    """
+    if not rows:
+        return []
+    since = min((r.get("started") or "") for r in rows) or ""
+    try:
+        raw = subprocess.run(
+            ["git", "log", "--all", "--no-merges", f"--since={since}",
+             "--format=%H%x00%s"], cwd=ROOT, capture_output=True, text=True, timeout=60,
+        ).stdout
+    except (OSError, subprocess.SubprocessError):
+        return []
+    pattern = re.compile(r"^\[(?P<role>[a-z0-9-]+)\]\s+#(?P<run>\d+):")
+    seen: dict[tuple[str, int], list[str]] = {}
+    for line in raw.splitlines():
+        if "\x00" not in line:
+            continue
+        sha, subject = line.split("\x00", 1)
+        found = pattern.match(subject.strip())
+        if found:
+            seen.setdefault((found.group("role"), int(found.group("run"))), []).append(sha.strip())
+    gaps: list[dict] = []
+    for r in rows:
+        key = (r.get("role") or "", int(r.get("id") or 0))
+        status = (r.get("status") or "").lower()
+        if status not in USELESS and status != "exhausted":
+            continue
+        if key in seen:
+            gaps.append({"id": key[1], "role": key[0], "status": status,
+                         "commits": [s[:7] for s in seen[key]]})
+    return sorted(gaps, key=lambda g: g["id"])
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", action="store_true")
@@ -311,6 +363,9 @@ def main() -> int:
             "enabled": grade_scope.enabled_grades(),
             "report": grade_scope.report(),
         },
+        # Sąskaitos nesutapimas: statusas sako „nėra darbo“, o commit'as yra.
+        # Be šio lauko matavimas gali būti klaidingas ir niekas to nepamatys.
+        "ledger_gap": ledger_gap(rows),
     }
 
     if args.json:
@@ -359,6 +414,17 @@ def main() -> int:
     for name, c in data["checks"].items():
         mark = "✔" if c["ok"] else ("…" if c["ok"] is None else "✘")
         print(f"  {mark} {name}: {c['line']}")
+
+    # Sąskaitos nesutapimas (LL-211). Rodomas PIRMIAU grafikų, nes jo buvimas
+    # keičia tai, kaip reikia skaityti nenaudingų procentą aukščiau.
+    gaps = data["ledger_gap"]
+    if gaps:
+        print(f"\nSąskaita nesutampa su git istorija: {len(gaps)} paleid.(-ų) su commit'ais, "
+              "kurių statusas sako „darbo nėra“")
+        for g in gaps:
+            print(f"  #{g['id']} {g['role']} · {g['status']} · commit "
+                  f"{', '.join(g['commits'][:3])}{' …' if len(g['commits']) > 3 else ''}")
+        print("  (nenaudingų procentas aukščiau šių paleidimų neskaičiuoja kaip darbo)")
 
     print("\nGrafikai:")
     for t in data["timers"]:

@@ -1003,6 +1003,112 @@ def git(*args: str, timeout: int = 180) -> subprocess.CompletedProcess:
     return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, timeout=timeout)
 
 
+def head_sha() -> str:
+    """Dabartinis HEAD. `""`, jei git neatsako (šviežias klonas be istorijos)."""
+    try:
+        out = git("rev-parse", "HEAD", timeout=20).stdout.strip()
+        return out if re.fullmatch(r"[0-9a-f]{7,40}", out) else ""
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+# Commit'o antraštė, kurią bėgiklis laiko ĮRODYTU šio paleidimo darbu:
+# `[vaidmuo] #<paleidimas>: …`. Modelis, kuris nusprendžia sukomituoti pats
+# (o taip nutiko bent du kartus — #516 ir #542), rašo būtent tokią antraštę,
+# nes ją mato kiekvieno ankstesnio commit'o žinutėje.
+OWN_COMMIT_RE = re.compile(r"^\[(?P<role>[a-z0-9-]+)\]\s+#(?P<run>\d+):")
+
+
+def own_commits_since(base_head: str, role: str, run_id: int) -> tuple[list[str], list[str], str]:
+    """Ką modelis sukomitavo PATS per šį paleidimą → (failai, sha, pastaba).
+
+    Kodėl tai būtina (#516, #542): `changed_files()` matuoja `git status`, t. y.
+    tik NEKOMITUOTUS pakeitimus. Jei modelis darbo pabaigoje padaro
+    `git commit` (jam niekas to nedraudžia, o commit'o antraštę jis mato
+    kiekviename `git log`), darbinė kopija tampa švari, `changed_files()`
+    grąžina tuščią sąrašą, o bėgiklis paleidimą įrašo „empty / Pakeista tik
+    paleidimo ataskaita“ — nors darbas JAU yra istorijoje.
+
+    Pasekmės buvo trys, visos matuojamos:
+      1. statistika tokius paleidimus skaičiavo kaip nenaudingus (architektas
+         43 %), nors jie paskelbė 5 commit'us;
+      2. `publish()` negavo failų sąrašo, todėl **nė vienas vartas nebuvo
+         paleistas** — modulio/scenarijaus turinys galėjo patekti į `main`
+         be `validate_content.py`, be garso ir kalbos patikros (LL-211);
+      3. pasiūlymai liko `new`, tad eilė tą patį darbą būtų davusi antrą kartą.
+
+    Autorystė imama TIK iš antraštės `[role] #<run_id>:` — tai vienintelis
+    įrodymas, kurį galima perskaityti be spėjimo (LL-49 principas: atmesti
+    galima tik tai, kas įrodyta). Kito vaidmens ar kito paleidimo commit'as
+    neįtraukiamas, kad svetimas darbas nebūtų priskirtas (LL-45).
+    """
+    if not base_head:
+        return [], [], ""
+    try:
+        raw = git("log", "--format=%H%x00%s", "--no-merges", f"{base_head}..HEAD",
+                  timeout=30).stdout
+    except Exception:  # noqa: BLE001
+        return [], [], ""
+    shas: list[str] = []
+    for line in raw.splitlines():
+        if "\x00" not in line:
+            continue
+        sha, subject = line.split("\x00", 1)
+        found = OWN_COMMIT_RE.match(subject.strip())
+        if found and found.group("role") == role and int(found.group("run")) == run_id:
+            shas.append(sha.strip())
+    if not shas:
+        return [], [], ""
+    files: list[str] = []
+    for sha in shas:
+        try:
+            names = git("show", "--name-only", "--format=", sha, timeout=30).stdout
+        except Exception:  # noqa: BLE001
+            continue
+        for name in names.splitlines():
+            name = name.strip()
+            if name and not is_runtime_artifact(name) and name not in files:
+                files.append(name)
+    if not files:
+        return [], shas, ""
+    note = (f"modelis pats sukomitavo {len(shas)} commit'ą (-us) "
+            f"({', '.join(s[:7] for s in shas[:3])}{' …' if len(shas) > 3 else ''}): "
+            f"{len(files)} failų įtraukti į patikrą, nors darbinė kopija švari")
+    return files, shas, note
+
+
+def undo_own_commits(base_head: str, shas: list[str]) -> str:
+    """Atsuka modelio pačio commit'us, jei jie yra VISI tarp `base_head..HEAD`.
+
+    Reikia tik tada, kai tokio commit'o turinys NEpraeina vartų: įprastas
+    `revert()` atstato failus iš HEAD, o jei darbas jau HEAD'e — jis nieko
+    nepakeistų, ir ataskaita meluotų („pakeitimai atmesti“, nors jie liko).
+
+    Dvi sąlygos, abi būtinos:
+      1. tarp `base_head..HEAD` nėra NĖ VIENO kito commit'o — kitaip atsukimas
+         numestų ir svetimą darbą;
+      2. nė vienas savas commit'as nėra pasiekęs `origin/main` — jau išstumto
+         negalima „atšaukti“ lokaliniu reset'u, tik pasakyti žodžiais.
+    """
+    if not base_head or not shas:
+        return ""
+    try:
+        between = [c for c in git("rev-list", f"{base_head}..HEAD", timeout=30).stdout.split() if c]
+    except Exception:  # noqa: BLE001
+        return ""
+    if set(between) != set(shas):
+        return (f"commit'ų atsukti negalima: tarp jų yra ir kitų "
+                f"({len(between)} tarp {base_head[:7]}..HEAD, savų {len(shas)})")
+    for sha in shas:
+        if git("merge-base", "--is-ancestor", sha, "origin/main", timeout=30).returncode == 0:
+            return (f"commit'as {sha[:7]} jau yra origin/main — lokalus atsukimas "
+                    f"tik atitolintų kopiją; reikia pataisymo commit'o")
+    if git("-c", "advice.detachedHead=false", "reset", "--hard", base_head,
+           timeout=30).returncode == 0:
+        return f"{len(shas)} savo commit'ų atsukta į {base_head[:7]} po nepavykusios validacijos"
+    return ""
+
+
 def _tracked(rel: str) -> bool:
     """Ar failas jau yra repo istorijoje (ištrintas failas lieka trackinamas)."""
     return git("ls-files", "--error-unmatch", rel).returncode == 0
@@ -1859,15 +1965,18 @@ def commit_message(role: str, run_id: int, files: list[str], summary: str,
 
 def publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True,
             implemented_id: int | None = None, foreign_roles: list[str] | None = None,
-            notes: list[str] | None = None, declared: list[int] | None = None) -> dict:
+            notes: list[str] | None = None, declared: list[int] | None = None,
+            own_base: str = "", own_shas: list[str] | None = None) -> dict:
     with git_lock():
         return _publish(role, run_id, files, summary, allow_revert, implemented_id,
-                        foreign_roles or [], notes or [], declared or [])
+                        foreign_roles or [], notes or [], declared or [],
+                        own_base, own_shas or [])
 
 
 def _publish(role: str, run_id: int, files: list[str], summary: str, allow_revert: bool = True,
              implemented_id: int | None = None, foreign_roles: list[str] | None = None,
-             notes: list[str] | None = None, declared: list[int] | None = None) -> dict:
+             notes: list[str] | None = None, declared: list[int] | None = None,
+             own_base: str = "", own_shas: list[str] | None = None) -> dict:
     """Validuoja ir paskelbia agento pakeitimus. Grąžina rezultatą.
 
     `foreign_roles` — kiti vaidmenys, kurie ėjo per tą patį laiką (LL-49).
@@ -1907,8 +2016,14 @@ def _publish(role: str, run_id: int, files: list[str], summary: str, allow_rever
         # `--publish-only` neturi ko atsukti: ten pakeitimai galėjo būti padaryti
         # žmogaus, ne agento. Todėl rankiniu atveju tik pranešame, o neatmetame.
         if allow_revert and not foreign:
+            # Jei darbas jau modelio sukomituotas, `revert()` jo neatšauktų
+            # (atstato iš HEAD, o HEAD jau turi tą darbą) — todėl pirmiau
+            # atsukame jo commit'us (#516/#542, LL-211).
+            undone = undo_own_commits(own_base, own_shas or [])
             note = revert(files)
             detail = "Validacija nepraėjo — pakeitimai atmesti."
+            if undone:
+                detail += f" {undone}."
             if note:
                 detail += f" {note}."
         elif allow_revert:
@@ -2145,6 +2260,10 @@ def main() -> int:
     fd, query_path = tempfile.mkstemp(prefix=f"suprask-{args.role}-", suffix=".txt")
     goal_path = query_path + ".goal"
     before = git_snapshot()
+    # HEAD prieš paleidimą — tam, kad pabaigoje pamatytume ir commit'us, kuriuos
+    # modelis padarė PATS (žr. `own_commits_since`, #516/#542/LL-211). Be šito
+    # savarankiškas `git commit` padarydavo paleidimą „empty“ ir apeidavo vartus.
+    head_before = head_sha()
     # Stebėjimas prasideda TĄ PAČIĄ akimirką kaip ir `before` nuotrauka: tik
     # tada laiko tarpas ir „kas dar dirbo“ matuojami tais pačiais rėmais (LL-49).
     watch = RoleWatch(args.role).start()
@@ -2268,9 +2387,17 @@ def main() -> int:
         )
 
         files = changed_files(before)
+        # Modelio pačio commit'ai: `changed_files()` jų nemato (darbinė kopija
+        # švari), todėl be šito paleidimas liktų „empty“ ir vartai nebūtų
+        # paleisti (#516, #542, LL-211).
+        own_files, own_shas, own_note = own_commits_since(head_before, args.role, run_id)
+        if own_files:
+            files = sorted(set(files) | set(own_files))
         watch.stop()
         foreign = watch.roles()
         files, foreign_files, notes = publication_plan(files, args.role, foreign)
+        if own_note:
+            notes = notes + [own_note]
         # #5400: dokumentų skaičiai atnaujinami PRIEŠ publikavimą, kad vartai
         # tikrintų tai, kas bus išstumta. Svetimo vaidmens atveju neliečiama —
         # tada shared failas gali būti jo nebaigtas darbas (LL-49).
@@ -2317,7 +2444,8 @@ def main() -> int:
         result = publish(args.role, run_id, files, out or args.role,
                          implemented_id=int(proposal["id"]) if proposal else None,
                          foreign_roles=foreign, notes=notes,
-                         declared=declared_proposals(out or ""))
+                         declared=declared_proposals(out or ""),
+                         own_base=head_before, own_shas=own_shas)
         # LL-10 vienu lygmeniu aukščiau: paleidimo rezultatas yra PASKELBTI
         # failai, o ne modelio išėjimo kodas. `hermes` one-shot dažnai išeina su
         # 1 po pilno atsakymo (todėl `partial`), o modelis, palikęs paskutinius
@@ -2382,11 +2510,21 @@ def main() -> int:
         try:
             watch.stop()
             foreign = watch.roles()
+            # Modelio pačių commit'ų atvejis galioja ir čia: laikas gali baigtis
+            # PO to, kai darbas jau sukomituotas (#516, #542, LL-211).
+            own_files, own_shas_t, own_note_t = own_commits_since(
+                head_before if "head_before" in dir() else "", args.role, run_id)
+            if own_files:
+                files = sorted(set(files) | set(own_files))
             files, foreign_files, notes = publication_plan(files, args.role, foreign)
+            if own_note_t:
+                notes = notes + [own_note_t]
             if work_files(files):
                 result = publish(args.role, run_id, files, "laiko limitas — publikuojamas jau paruoštas darbas",
                                  implemented_id=int(proposal["id"]) if proposal else None,
-                                 foreign_roles=foreign, notes=notes)
+                                 foreign_roles=foreign, notes=notes,
+                                 own_base=head_before if "head_before" in dir() else "",
+                                 own_shas=own_shas_t)
                 published = f" Laikas baigėsi, bet darbas paskelbtas: {result['detail']}"
                 db.finish_run(run_id, result["status"], 124, elapsed, str(log_path.relative_to(ROOT)),
                               "Laiko limitas; paruoštas darbas paskelbtas.",

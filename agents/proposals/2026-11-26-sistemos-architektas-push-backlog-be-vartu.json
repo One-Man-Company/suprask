@@ -1,0 +1,17 @@
+{
+  "role": "sistemos-architektas",
+  "run_id": 561,
+  "created": "2026-11-26T21:02:00+02:00",
+  "type": "struktura",
+  "title": "push_backlog() išstumia commit'us į main be jokių vartų",
+  "body": "Šiandien išmatavau, kad #516 ir #542 darbas (5 commit'ai) atsidūrė origin/main, nors tų paleidimų statusas buvo exhausted/empty — t. y. jų turinys nebuvo validuotas nei bėgiklio, nei CI (CI tikrina tik push į main, o lokalus commit'as prieš push'ą jau fiksuoja turinį). Bėgiklio pusę sutvarkiau (#561): own_commits_since() įtraukia tokius commit'us į failų sąrašą, todėl run_checks() paleidžiamas, o nepavykus — undo_own_commits(). Lieka antroji pusė: publikavimo agentas savo darbo pradžioje kviečia push_backlog(), kuris ima rev-list origin/main..HEAD ir tiesiog push'ina — be jokio turinio vartų. Jei kuris nors paleidimas bus atmestas po to, kai modelis jau sukomitavo (arba commit'as liks iš nutrūkusio paleidimo), push_backlog() jį vis tiek išstums į main. Siūloma: push_backlog() prieš push paleidžia bent validate_content.py ir check_registry.py toms failų grupėms, kurias liečia laukiantys commit'ai, o nepavykus — NEpushina ir grąžina sąrašą commit'ų su priežastimi, kad sprendimą priimtų žmogus arba atitinkamas vaidmuo. Tai ta pati LL-10/LL-211 šeima: „paskelbta“ turi reikšti „praėjo vartus“, o ne „buvo git istorijoje“.",
+  "target": "agents/run.py",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "git log --all --format='%h %s' --grep='#542' — 5568018, cc061be, f886b7e, fe39073 yra origin/main, o agents/runs.db #542 statusas 'empty', artifacts='[]'",
+    "agents/runs.db #516 statusas 'exhausted', commit_sha='', o 5fe3e90 yra origin/main",
+    "agents/run.py: push_backlog() (1752–1784) daro git rev-list origin/main..HEAD ir git push be run_checks()",
+    "scripts/system_report.py: nauja skiltis 'Sąskaita nesutampa su git istorija' rodo būtent #516 ir #542 — matavimas pats randa atvejus"
+  ]
+}

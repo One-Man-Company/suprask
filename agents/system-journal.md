@@ -626,3 +626,74 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   17/17, 20/20, 45/45, 9/9. `queue_repair --apply`: grąžintinų 0.
 - **Neliesta:** to paties neliečiau `agents/roles/*.md` ir `ROLES` — #22168
   sprendžiamas kode, ne prompte (promptas negali žinoti, kas jau padaryta).
+
+## 2026-11-26 20:58 · sistemos-architektas #561 (matavimas melavo: sukomituotas darbas buvo nematomas)
+
+- **Mačiau:** `system_report` rodė architektą su **43 % nenaudingų** (7 paleidimai:
+  3 published, 1 `empty`, 2 `exhausted`, 1 kita) ir tai buvo didžiausias nuostolis
+  sistemoje. Patikrinau ne skaičių, o paleidimus: **#516** (2741 s) ir **#542**
+  (3486 s) `agents/runs.db` įrašyti `exhausted`/`empty` su
+  „Pakeista tik paleidimo ataskaita“ ir `artifacts = []`, o `git log origin/main`
+  turi **penkis jų commit'us** (`5fe3e90`, `5568018`, `cc061be`, `f886b7e`,
+  `fe39073`) su antrašte `[sistemos-architektas] #542: …`. Per visą istoriją
+  (nuo 11-01) tokių paleidimų su savo commit'ais ir „tuščiu“ statusu — 6.
+- **Keičiau:**
+  1. `agents/run.py` — `head_sha()`, `own_commits_since()` (commit'as
+     priskiriamas paleidimui TIK pagal antraštę `[vaidmuo] #<paleidimas>:`) ir
+     `undo_own_commits()` (atsuka savo commit'us, jei tarp jų nėra svetimo ir nė
+     vienas nepasiekė `origin/main`). `main()` renka failus iš DVIEJŲ šaltinių:
+     `git status` + savo commit'ai; vartai paleidžiami abiem atvejais.
+  2. `scripts/system_report.py` — nauja skiltis „Sąskaita nesutampa su git
+     istorija“ (`ledger_gap()`): lygina `runs.db` statusą su git antraštėmis ir
+     įvardija paleidimus, kurių statusas sako „darbo nėra“, o commit'as yra.
+  3. `scripts/validate_content.py` — `check_index_matches_module()` (#16892):
+     `title`, `subtitle`, `minutes`, `sim` lyginami tarp `index.json` eilutės ir
+     modulio JSON; nesutapimas — klaida, nes sąrašo kortelė ir modulio puslapis
+     skelbtų skirtingą teiginį tam pačiam vaikui. Šiandien 82 moduliai, 0
+     nesutapimų — vartas įsijungė be triukšmo.
+  4. `scripts/probe_own_commits.py` (15 lūkesčių) ir
+     `scripts/probe_index_fields.py` (8) — paleidžiami įrodymai, įsijungia į CI
+     per esamą `probe_*.py` ciklą.
+  5. `docs/AGENTU-SISTEMA.md` (ką bėgiklis daro su savarankišku commit'u),
+     `research/wiki/guidelines/pamokos.md` — **LL-211** (211 įrašų).
+  6. `scripts/queue_repair.py --apply --prove '#16338=check_sim_config'` —
+     #16338 (sim.config gyvumo vartai) jau buvo įgyvendintas, bet kabėjo 12 d.;
+     uždarytas su trimis įrodymais.
+- **Kodėl:** tai ne „vienas blogas paleidimas“, o **matavimo vienetas, kuris
+  neatitinka darbo**. Bėgiklis klausė „ar darbinė kopija nešvari“, o tai, ką
+  modelis padarė, gali būti jau istorijoje. Trys pasekmės buvo realios, ne
+  kosmetinės: (a) nenaudingų procentas neteisingas, tad architektas ieškojo
+  priežasties, kurios nėra (praėjęs paleidimas kaltino biudžetą ir siūlė
+  trumpinti promptą); (b) **vartai nebuvo paleisti** — 5 commit'ai į `main`
+  galėjo patekti be `validate_content.py`, garso ir kalbos patikros; (c)
+  pasiūlymai liko `new`, tad eilė tą patį darbą būtų davusi antrą kartą. Be to,
+  matavimas buvo vienas šaltinis — todėl jis ir melavo; nuo šiol jis lyginamas
+  su git istorija.
+- **Patikra (prieš / po):**
+  - `probe_own_commits.py`: **15/15**, rc 0 (~1 s, be tinklo), įsk. tikrą #542
+    scenarijų: `changed_files()` → `[]`, o su commit'ais → 2 failai, ir
+    `work_files()` turi darbo failą, ne tik ataskaitą. Neigiamosios kontrolės
+    tame pačiame rinkle: kito vaidmens, kito numerio ir `[sistema]` commit'ai
+    nepriskirti; svetimas commit'as tarp savų — „atsukti negalima“; išstumtas
+    (`origin/main`) — „jau yra origin/main“.
+  - `probe_index_fields.py`: **8/8**, rc 0; B8 tikrame repo — 82 moduliai,
+    0 klaidų (vartas įsijungia be triukšmo). Neigiamos kontrolės B2–B5: klaida
+    įvardija lauką ir abi reikšmes; B7 trūkstamas laukas — NE klaida (schema
+    yra kito varto reikalas).
+  - `system_report`: atsirado skiltis, kurioje **#516 (1 commit)** ir
+    **#542 (4 commit'ai)** — matavimas pats randa atvejus, dėl kurių pataisytas.
+  - Sisteminiai pasiūlymai **23 → 22** (#16338 uždarytas su įrodymu).
+  - Vartai rc 0: `validate_content` (0/0), `check_registry`, `check_lessons`
+    (211), `check_ui`, `check_art`, `check_audio`, `check_agents`,
+    `check_docs_facts`, `check_language --strict`; 9 zondai
+    (9/9, 15/15, 15/15, 17/17, 20/20, 63/63, 15/15, 8/8, 7/7).
+  - Grafikai neliesti (ROLES nekeistas) — `gen_timers` nereikėjo; dashboard
+    neliestas.
+- **Neliesta sąmoningai:** `content/` ir `assets/js/sims/` (kūrėjo ir
+  inžinieriaus darbas), `agents/scope.json` (žmogaus sprendimas), `AGENTS.md`,
+  kitų vaidmenų failai. #5342 (worktree izoliacija, 18 d.) liko — tai
+  daugiaetapis darbas, kurio negalima padaryti saugiai vienu žingsniu.
+- **Neišspręsta:** 22 sisteminiai pasiūlymai liko; #42973 (šaknies `AGENTS.md`
+  deklaruoja 7 vaikų DOX failus, kurių nė vieno nėra) — `AGENTS.md` man
+  draudžiamas, tad tik užregistruota; `kritikas` 43 % (1 `empty`, 2 `skipped`
+  po 900 s — užrakto laukimas, ta pati #516 šeima, bet nepakartota).

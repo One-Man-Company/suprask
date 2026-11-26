@@ -42,6 +42,16 @@ import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
+# Scenos rėmo slenkstis ir sąmoningo pertekliaus sąrašas yra VIENAME šaltinyje
+# (`check_svg_fit.py`), kad `check_view` ir atskiras įrankis nesiskirtų (LL-38).
+# Importuojama iš to paties katalogo, todėl veikia ir paleidus
+# `python3 scripts/check_view.py`, ir importavus kaip modulį.
+try:
+    from check_svg_fit import EXCEPTIONS as SVG_FIT_EXCEPTIONS, TOL as SVG_TOL
+except ImportError:  # paleidimas iš repo šaknies be scripts/ sys.path
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+    from check_svg_fit import EXCEPTIONS as SVG_FIT_EXCEPTIONS, TOL as SVG_TOL
+
 VIEWPORTS = {
     "desktop": {"width": 1440, "height": 900},
     "tablet": {"width": 1024, "height": 768},
@@ -332,6 +342,34 @@ MEASURE = r"""
   }
   simText.sort((a, b) => (a.px - b.px) || (a.text.length - b.text.length));
 
+  // Scena gali tilpti puslapyje ir vis tiek būti kerpama SAVO SVG rėmo
+  // (`overflow:hidden`), o tada vaikas mato nukirptą medį (LL-124, LL-207).
+  // `check_svg_fit.py` matuoja būtent tai, bet jo nepaleido nė vienas kelias;
+  // todėl tas pats matavimas atliekamas čia, kurį kiekvienas vaidmuo ir taip
+  // paleidžia savo baigties sąlygoje. Slenkstis ir išimtys — iš `check_svg_fit`
+  // (vienas šaltinis, kad dokumente cituojamas skaičius nesiskirtų nuo vartų).
+  const svgClip = [];
+  for (const svg of document.querySelectorAll('#sim-stage svg')) {
+    const box = svg.getBoundingClientRect();
+    if (box.width < 2 || box.height < 2) continue;
+    let over = 0, worst = null;
+    for (const el of svg.querySelectorAll('path,rect,circle,ellipse,line,polygon,polyline,text,image,use')) {
+      const r = el.getBoundingClientRect();
+      if (r.width === 0 && r.height === 0) continue;
+      const m = Math.max(box.left - r.left, box.top - r.top, r.right - box.right, r.bottom - box.bottom);
+      if (m > over) { over = m; worst = el.tagName.toLowerCase(); }
+    }
+    if (over > 0) {
+      svgClip.push({
+        over: Math.round(over * 10) / 10,
+        tag: worst,
+        w: Math.round(box.width),
+        h: Math.round(box.height),
+        overflowStyle: getComputedStyle(svg).overflow,
+      });
+    }
+  }
+
   return {
     width: vw,
     scrollWidth: de.scrollWidth,
@@ -362,6 +400,10 @@ MEASURE = r"""
     loading: !!document.querySelector('.loading'),
     fatal: !!document.querySelector('.boot-fallback') && getComputedStyle(document.querySelector('.boot-fallback')).opacity === '1',
     title: document.querySelector('h1') ? document.querySelector('h1').innerText : null,
+    // Scenos rėmo kerpamumas (`check_svg_fit.py` matavimas tame pačiame
+    // puslapio įkėlime). Žalias tik tada, kai nieko nekerpa ARBA perteklius
+    // neviršija tolerancijos; sprendimą priima `check_route()` su išimtimis.
+    svgClip,
   };
 }
 """
@@ -382,6 +424,24 @@ def discover(base: str) -> list[dict]:
     return out
 
 
+def svg_fit_verdict(module_id: str, clips: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Scenos rėmo sprendimas: (klaidos, sąmoningos išimtys).
+
+    Išskirta iš `check_route()`, kad zondas galėtų patikrinti sprendimą be
+    naršyklės: slenkstis, `overflow` sąlyga ir `EXCEPTIONS` yra tos pačios
+    taisyklės, kurias naudoja `check_svg_fit.py` (LL-38).
+    """
+    bad, notes = [], []
+    for c in clips or []:
+        if float(c.get("over") or 0) <= SVG_TOL:
+            continue
+        if c.get("overflowStyle") == "visible":
+            # Neriboja – vaikas mato visą piešinį, net jei jis didesnis už rėmą.
+            continue
+        (notes if module_id in SVG_FIT_EXCEPTIONS else bad).append(c)
+    return bad, notes
+
+
 def check_route(page, base: str, route: str, viewport: dict) -> dict:
     errors: list[str] = []
     page.on("pageerror", lambda e: errors.append(str(e)[:160]))
@@ -399,6 +459,12 @@ def check_route(page, base: str, route: str, viewport: dict) -> dict:
     data["route"] = route
     data["viewport"] = viewport["width"]
     data["errors"] = errors[:5]
+    # Scenos rėmas (LL-124, LL-207). Slenkstis ir sąmoningo pertekliaus sąrašas
+    # imami iš `check_svg_fit.py`, kad vartai ir dokumente cituojamas skaičius
+    # nesiskirtų (LL-38). Sprendžiama TIK tada, kai SVG tikrai kerpa
+    # (`overflow != visible`) ir perteklius viršija toleranciją.
+    module_id = route.rsplit("/", 1)[-1]
+    data["svgClipped"], data["svgClipNotes"] = svg_fit_verdict(module_id, data.get("svgClip") or [])
     # Antraštės metaduomenys: žymos lūžimas — klaida visur; bloko lūžimas —
     # klaida ties standarto riba ir plačiau, o žemiau jos toleruojamas ir
     # parodomas kaip pastaba (LL-05 vs LL-37, #4348). Sąmoningai NEginčijama
@@ -423,6 +489,7 @@ def check_route(page, base: str, route: str, viewport: dict) -> dict:
         and data["chipTall"] == 0
         and not data["voiceOnly"]
         and not data["simHiddenControls"]
+        and not data["svgClipped"]
     )
     return data
 
@@ -571,6 +638,23 @@ def main() -> int:
             ],
             "sim_font_checked": sum(1 for r in results if (r.get("simFonts") or {}).get("min") is not None),
             "sim_font_problems": [r["route"] for r in font_bad],
+            # Scenos rėmo matavimas (LL-124, LL-207): tas pats, kurį daro
+            # `check_svg_fit.py`, bet atliktas kiekvieno modulio patikros metu,
+            # todėl jo nepaleisti nebegalima atskirai „neprisiminus“.
+            "svg_fit_tol": SVG_TOL,
+            "svg_fit_checked": sum(1 for r in results if r.get("svgClip") is not None),
+            "svg_fit_unmeasured": [
+                {"route": r["route"], "viewport": r["viewport"]}
+                for r in results if r.get("svgClip") is None
+            ],
+            "svg_fit_problems": [
+                {"route": r["route"], "viewport": r["viewport"], "worst": r["svgClipped"][0]}
+                for r in results if r.get("svgClipped")
+            ],
+            "svg_fit_notes": [
+                {"route": r["route"], "viewport": r["viewport"], "worst": r["svgClipNotes"][0]}
+                for r in results if r.get("svgClipNotes")
+            ],
             # 200 % teksto režimas (#7396) — tik kai paprašytas; `null` reiškia
             # „nematuota“, o ne „švaru“.
             "text_scale": args.text_scale or None,
@@ -609,6 +693,9 @@ def main() -> int:
                 bits.append("simuliacijoje nėra matomo valdiklio")
             if r.get("simHiddenControls"):
                 bits.append(f"paslėpti valdikliai: {', '.join(r['simHiddenControls'][:2])}")
+            if r.get("svgClipped"):
+                c = r["svgClipped"][0]
+                bits.append(f"scena kerpama savo rėme {c['over']}px (<{c['tag']}>, {c['w']}×{c['h']}px)")
             if r.get("loading"):
                 bits.append("amžinas „Kraunama…“")
             if r.get("fatal"):
@@ -622,6 +709,12 @@ def main() -> int:
         for r in soft:
             print(f"  · {r['route']} @{r['viewport']}px: antraštė {r['eyebrowLines']} eilutės — "
                   f"plotis žemiau standarto {STANDARD_MIN_WIDTH} px; žyma vienoje eilutėje")
+        # Sąmoningas scenos perteklius (EXCEPTIONS) — ne klaida, bet parodomas,
+        # kad deklaruota išimtis neliktų nematoma (LL-37, LL-38).
+        for r in results:
+            for c in (r.get("svgClipNotes") or []):
+                print(f"  · {r['route']} @{r['viewport']}px: scena sąmoningai kerpa {c['over']}px — "
+                      f"{SVG_FIT_EXCEPTIONS[r['route'].rsplit('/', 1)[-1]]}")
         # Simuliacijų skaitomumas: VISADA spausdinama, jei yra ką pasakyti.
         # Riba dar nėra docs/ dokumente, todėl numatytai tai pastaba; su
         # `--sim-font-strict` — klaida. Skaičius + sąrašas, kad neliktų „tylios

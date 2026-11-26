@@ -2682,6 +2682,16 @@ const pasakojimoVidurys = {
    nereikia klaviatūros, visos kortelės yra ištisi žodžiai su garsu. */
 const ZS_SLOTS = ["kam", "kada", "kur"];
 
+/* Medžio padėtis skaičiuojama nuo rėmo krašto, ne įrašoma apytikriai:
+   vasaros vainiko dešinysis kamuolys yra x + (24 + 10) · s, o rėmas baigiasi
+   ties 320. Rašant x = 300 medis išlindo 15,7 rėmo vieneto ir buvo kerpamas
+   (LL-124, LL-207). 4 vienetai — paraštė, kad vainikas neliestų rėmo.
+   `baseY` taip pat perkeltas nuo kalvos linijos (132) ant žemės (150):
+   kitaip vainikas užkloja saulę ir vaikas mato ne medį, o žalią apskritimą. */
+const ZS_TREE_S = 1.05;
+const ZS_TREE_X = 320 - 34 * ZS_TREE_S - 4;   // 280,3
+const ZS_TREE_BASE_Y = 150;
+
 function zsScene(moved) {
   const mx = moved ? 240 : 74;
   return `${art.defs("zs")}
@@ -2697,7 +2707,7 @@ function zsScene(moved) {
     ${art.grass(24, 156, 1)}
     ${art.grass(150, 158, 0.9)}
     ${art.grass(196, 155, 0.95)}
-    ${art.tree(300, 132, 1.05, "vasara")}
+    ${art.tree(ZS_TREE_X, ZS_TREE_BASE_Y, ZS_TREE_S, "vasara")}
     ${art.kid(mx, 158, 1.2, "#6c5bb0", "#f2c9a0")}
     ${art.birds(200, 56)}`;
 }
@@ -2780,11 +2790,11 @@ const zinuteSkaitytojui = {
             <svg viewBox="0 0 320 170" role="img" aria-label="${esc(sceneAlt(st.ok))}" style="display:block;width:100%;height:auto">${zsScene(st.ok)}</svg>
           </div>
           <div style="margin-top:.6rem;border:3px solid var(--line);border-radius:12px;background:#fffdf6;padding:.6rem .75rem;min-width:0">
-            <p style="margin:0 0 .25rem;font-size:clamp(.76rem,3vw,.88rem);font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft)">Mama sako</p>
+            <p style="margin:0 0 .25rem;font-size:clamp(.88rem,3.3vw,1rem);font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft)">Mama sako</p>
             <p id="zs-say" style="margin:0;font-size:clamp(.98rem,3.8vw,1.12rem);line-height:1.4;overflow-wrap:anywhere">${esc(st.text)}</p>
           </div>
           <div style="margin-top:.6rem;border:3px solid var(--line);border-radius:12px;background:#fff;padding:.6rem .75rem;min-width:0">
-            <p style="margin:0 0 .3rem;font-size:clamp(.76rem,3vw,.88rem);font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft)">${esc(title || "Žinutė")}</p>
+            <p style="margin:0 0 .3rem;font-size:clamp(.88rem,3.3vw,1rem);font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft)">${esc(title || "Žinutė")}</p>
             <p style="margin:0;font-family:var(--font-head);font-weight:900;font-size:clamp(1.05rem,4.4vw,1.3rem);line-height:1.3;overflow-wrap:anywhere">${esc(noteText)}</p>
             ${lines.length
               ? `<ul style="list-style:none;margin:.35rem 0 0;padding:0;display:grid;gap:.2rem">

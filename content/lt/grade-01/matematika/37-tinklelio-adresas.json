@@ -1,0 +1,142 @@
+{
+  "id": "37-tinklelio-adresas",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Tinklelio adresas: du ženklai",
+  "subtitle": "Raidė viena rodo stulpelį, skaičius vienas — eilutę",
+  "minutes": 9,
+  "outcomes": [
+    "Pasakau, kiek langelių paryškina raidė viena pati.",
+    "Perskaitau langelio adresą B1 ir surandu tą langelį.",
+    "Paaiškinu, kodėl vieno ženklo vietai pasakyti neužtenka."
+  ],
+  "concept": {
+    "title": "Adresą sudaro du ženklai",
+    "big_idea": "Langelio adresą sudaro du ženklai: raidė ir skaičius. Raidė viena pati rodo visą stulpelį, skaičius vienas — visą eilutę. Tik abu kartu pasako vieną langelį.",
+    "steps": [
+      "Paspausk raidę B. Paryškinama visa stulpelio juosta, o ne vienas langelis.",
+      "Paspausk skaičių 1 po raidės. Dabar paryškintas vienas langelis B1.",
+      "Paspausk „Iš naujo“ ir tada vieną skaičių 2. Paryškinama visa eilutė.",
+      "Raidė ir skaičius kartu pasako vieną vietą. Raidė viena — visą juostą."
+    ],
+    "example": "Ant sienos kabo tinklelis: raidės viršuje, skaičiai kairėje. Raidė B ir skaičius 1 kartu rodo vieną langelį."
+  },
+  "sim": {
+    "component": "tinklelio-adresas",
+    "config": {
+      "cols": 4,
+      "rows": 3,
+      "items": [
+        { "cell": "A1", "figure": "pauksciukas", "label": "paukščiukas" },
+        { "cell": "B1", "figure": "varlyte", "label": "varlytė" },
+        { "cell": "C1", "figure": "obuolys", "label": "obuolys" },
+        { "cell": "A2", "figure": "gelyte", "label": "gėlytė" },
+        { "cell": "C2", "figure": "pauksciukas", "label": "paukščiukas" },
+        { "cell": "D2", "figure": "drugelis", "label": "drugelis" },
+        { "cell": "A3", "figure": "drugelis", "label": "drugelis" },
+        { "cell": "B3", "figure": "gelyte", "label": "gėlytė" },
+        { "cell": "C3", "figure": "obuolys", "label": "obuolys" },
+        { "cell": "D3", "figure": "varlyte", "label": "varlytė" }
+      ],
+      "labels": {
+        "again": "Iš naujo"
+      },
+      "sentences": {
+        "start": "Tinklelis. Raidės viršuje, skaičiai kairėje. Pasirink raidę.",
+        "startNote": "Raidė rodo stulpelį. Skaičius rodo eilutę.",
+        "letter": "Raidė viena pati rodo visą stulpelį.",
+        "letterNote": "Ar to užtenka pasakyti, kur sėdi varlytė? Pridėk skaičių.",
+        "number": "Skaičius vienas pats rodo visą eilutę.",
+        "numberNote": "Taip pat ne vienas langelis. Dabar pridėk raidę.",
+        "lit": "langeliai paryškinti.",
+        "cell": "Dabar du ženklai rodo vieną langelį.",
+        "cellNote": "Keisk raidę arba skaičių. Paryškinamas kitas langelis.",
+        "empty": "Šis langelis tuščias.",
+        "emptyNote": "Du ženklai rodo vietą, nors joje nieko nėra.",
+        "again": "Pradedam iš naujo. Nė vienas langelis neparyškintas.",
+        "broken": "Tinklelis nesuderintas su daiktais."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Simuliacijoje paspaudei raidę B. Kiek langelių paryškinta?",
+      "options": [
+        "Vienas",
+        "Trys",
+        "Keturi"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, kiek langelių sustatyta po raide B. Raidė juos apima visus.",
+      "why": "Raidė viena pati rodo visą stulpelį, o jame trys langeliai."
+    },
+    {
+      "q": "Iš pradžių paspaudei tik skaičių 2. Kas paryškinta tinklelyje?",
+      "options": [
+        "Visi langeliai su raide C",
+        "Vienas langelis B2",
+        "Visa antra eilutė"
+      ],
+      "answer": 2,
+      "hint": "Skaičius žymi eilę, o eilė eina per visą tinklelį.",
+      "why": "Skaičius vienas pats rodo visą eilutę, o ne vieną langelį."
+    },
+    {
+      "q": "Kuris užrašas pasako vieną langelį, o ne visą juostą?",
+      "options": [
+        "B",
+        "1",
+        "B1"
+      ],
+      "answer": 2,
+      "hint": "Palygink, ką paryškina raidė viena pati, o ką — abu ženklai.",
+      "why": "Vieną langelį pasako tik raidė ir skaičius kartu."
+    },
+    {
+      "q": "Varlytė sėdi B1, drugelis — D2. Kuris užrašas rodo drugelį?",
+      "options": [
+        "2D",
+        "D2",
+        "D"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, kokia tvarka ženklai sustatyti virš tinklelio ir šalia jo.",
+      "why": "Adresas rašomas raidė pirmiau, skaičius paskui."
+    },
+    {
+      "q": "Kuriame langelyje yra gėlytė, esanti B stulpelyje ir 3 eilutėje?",
+      "options": [
+        "B3",
+        "3B",
+        "C3"
+      ],
+      "answer": 0,
+      "hint": "Raidė pasako stulpelį, skaičius — eilutę. Sudėk juos ta pačia tvarka.",
+      "why": "B stulpelis ir 3 eilutė susitinka langelyje B3.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip draugui paaiškintum, kodėl vien raidės B pasakyti neužtenka?",
+  "teacher": {
+    "goal": "Suprasti, kad langelio adresą sudaro raidė ir skaičius kartu: raidė viena pati žymi visą stulpelį, skaičius vienas — visą eilutę, o vieną langelį pasako tik abu.",
+    "prompt": "Kai paspaudei raidę B, kiek langelių paryško? O kai pridėjai skaičių 1?",
+    "offline": "Ant lapo nupieškite tinklelį 4 × 3 ir virš stulpelių parašykite raides A–D, o šalia eilučių — skaičius 1–3. Į langelius dėkite po žaisliuką. Vaikas vienu pirštu uždengia visą stulpelį („raidė“), paskui visą eilutę („skaičius“) ir pasako, kiek daiktų uždengė. Tada uždengia vieną langelį ir pasako jo adresą. Pabaigoje jūs sakote adresą B1, o vaikas padeda daiktą ten, kur reikia.",
+    "misconceptions": [
+      "„Vieno ženklo užtenka pasakyti, kur daiktas“ — vaikas adresą laiko vienu ženklu (raidė arba skaičius). Modelis to neleidžia pamiršti: paspaudus raidę paryškinama visa juosta, o langelių skaičius matomas tame pačiame kadre.",
+      "„B1 yra pirmas langelis“ — vaikas adresą skaito kaip eilės numerį. Simuliacijoje B1 yra antrame stulpelyje ir pirmoje eilutėje, o pirmasis tinklelio langelis turi adresą A1; todėl raidė ir skaičius skaitomi atskirai.",
+      "„Skaičius rašomas pirmiau“ — lietuviškai sakome „varlytė langelyje B1“, o ne „1B“. Vaikas, matęs tik skaičių eilutes, gali sukeisti tvarką; todėl tinklelio antraštės rodo raidę viršuje ir skaičių kairėje, o užduotis prašo palyginti 2D ir D2.",
+      "„Tuščiame langelyje nieko nėra, tad adresas neteisingas“ — modelyje langelis D1 sąmoningai tuščias; vaikas įsitikina, kad adresas rodo vietą, o ne daiktą."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, 1 klasė, „Transformacijos“: „Varlytė nupiešta langelyje B1. Kuriame langelyje yra drugelis? Kas yra pavaizduota C3 langelyje?“ (sources/pradinio-bp-rekomendacijos-2024.txt:34017–34023).",
+    "Matematikos bendroji programa (2022), „Geometrija, matavimai ir statistika“: 1–2 klasė — apibūdinti objekto padėtį ir pavaizduoti ją schema.",
+    "research/wiki/curriculum/matematika-1-klase.md §4.3 — 1 klasės Transformacijų pavyzdys su langelių tinkleliu; ten pat: 1-oko baigtis „perskaito tinklelio adresą (B1, C3)“.",
+    "research/wiki/curriculum/matematika-1-klase.md §4.1 — koordinačių plokštuma prasideda 4 klasėje, todėl šis modulis naudoja tinklelį su raidėmis ir skaičiais, o ne ašis."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (adresą sudaro du ženklai); koordinačių plokštuma, posūkiai ir judėjimas tinkleliu sąmoningai palikti kitiems moduliams",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę naujoje situacijoje (kitas tinklelis, sukeista ženklų tvarka), o ne įsimintą pavyzdį B1",
+    "3 žingsnis — pagalba laiku: pirmas ženklas niekada neparyškina vieno langelio, todėl klaidinga nuostata parodoma, o ne baudžiama; kiekviena užduotis turi užuominą į modelį, yra praplėtimo užduotis, jokių laikmačių"
+  ]
+}

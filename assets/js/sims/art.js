@@ -549,6 +549,56 @@ export const art = {
   },
 
   /**
+   * Varlytė — sėdi, plačios užpakalinės kojos, iškilusios akys.
+   *
+   * Reikėjo atskiro piešinio, nes 1 klasės programos pavyzdys kalba būtent apie
+   * varlytę tinklelio langelyje (NŠA 2024, „Transformacijos“). Vaikas turi
+   * atpažinti tą patį gyvūną kiekviename langelyje, todėl siluetas turi būti
+   * konkretus, o ne dėmė (LL-13). `x` — kūno centras, `baseY` — letenų linija.
+   */
+  frog(x, baseY, s = 1) {
+    return `<g transform="translate(${x} ${baseY}) scale(${s})">
+      <ellipse cx="0" cy="-1" rx="25" ry="5" fill="#2f4a28" opacity=".18"/>
+      <path d="M-15 -8 Q -31 -10 -31 1 Q -30 6 -21 6" fill="none"
+            stroke="#4f7f3c" stroke-width="7" stroke-linecap="round"/>
+      <path d="M15 -8 Q 31 -10 31 1 Q 30 6 21 6" fill="none"
+            stroke="#4f7f3c" stroke-width="7" stroke-linecap="round"/>
+      <path d="M-22 -8 Q -25 -25 -8 -30 Q 10 -33 22 -22 Q 28 -12 20 -8 Q 0 -2 -22 -8 Z"
+            fill="#79b556" stroke="#3f6b2e" stroke-width="2.6" stroke-linejoin="round"/>
+      <circle cx="-11" cy="-30" r="8" fill="#79b556" stroke="#3f6b2e" stroke-width="2.6"/>
+      <circle cx="11" cy="-30" r="8" fill="#79b556" stroke="#3f6b2e" stroke-width="2.6"/>
+      <circle cx="-11" cy="-31" r="3.4" fill="#2c2620"/>
+      <circle cx="11" cy="-31" r="3.4" fill="#2c2620"/>
+      <path d="M-15 -15 Q 0 -9 15 -15" fill="none" stroke="#3f6b2e"
+            stroke-width="2.4" stroke-linecap="round"/>
+    </g>`;
+  },
+
+  /**
+   * Drugelis — du dideli viršutiniai ir du mažesni apatiniai sparnai, siūbuojančios
+   * antenos. Sparnų poros skiriasi DYDŽIU ir vieta, todėl siluetas atpažįstamas
+   * ir be spalvos (LL-13). `cx, cy` — kūno vidurys.
+   */
+  butterfly(cx, cy, s = 1) {
+    const wing = (fill, edge) => `fill="${fill}" stroke="${edge}" stroke-width="2.4" stroke-linejoin="round"`;
+    return `<g transform="translate(${cx} ${cy}) scale(${s})">
+      <path d="M0 -3 Q -18 -32 -33 -18 Q -40 -6 -22 -2 Q -10 -1 0 -3 Z"
+            ${wing("#f2a24e", "#a35f22")}/>
+      <path d="M0 -3 Q 18 -32 33 -18 Q 40 -6 22 -2 Q 10 -1 0 -3 Z"
+            ${wing("#f2a24e", "#a35f22")}/>
+      <path d="M0 1 Q -16 4 -19 17 Q -16 26 -2 12 Z" ${wing("#e97fa6", "#a33f63")}/>
+      <path d="M0 1 Q 16 4 19 17 Q 16 26 2 12 Z" ${wing("#e97fa6", "#a33f63")}/>
+      <path d="M-3 -16 Q -14 -30 -20 -32" fill="none" stroke="#4a3f33"
+            stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M3 -16 Q 14 -30 20 -32" fill="none" stroke="#4a3f33"
+            stroke-width="2.2" stroke-linecap="round"/>
+      <rect x="-3" y="-16" width="6" height="30" rx="3"
+            fill="#4a3f33" stroke="#2f2922" stroke-width="1.6"/>
+      <circle cx="0" cy="-17" r="4.6" fill="#4a3f33" stroke="#2f2922" stroke-width="1.6"/>
+    </g>`;
+  },
+
+  /**
    * Robotas dulkių siurblys — žemas diskas su šviesomis. `x, y` — grindų taškas.
    *
    * Brėžiamas kaip mašina, ne kaip būtybė: jokių akių, jokios burnos. Būtent

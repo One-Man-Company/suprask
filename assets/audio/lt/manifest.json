@@ -723,6 +723,10 @@
   "n": "n/1bb5ec81e8be2b76-8239b08a.mp3",
   "s": "s/1bb5ec81e8be2b76-ee6d5cf1.mp3"
  },
+ "Ar to užtenka pasakyti, kur sėdi varlytė? Pridėk skaičių.": {
+  "n": "n/e7b63df02068ca08-df469c51.mp3",
+  "s": "s/e7b63df02068ca08-ccc57476.mp3"
+ },
  "Ar šis ėjimas baigsis saugiai?": {
   "n": "n/ed482fbd6864674f-732c4efa.mp3",
   "s": "s/ed482fbd6864674f-f12e5241.mp3"
@@ -966,6 +970,10 @@
  "Dabar aišku. Šiandien po pietų einu į kiemą.": {
   "n": "n/cdaf44a71351d012-b03275c3.mp3",
   "s": "s/cdaf44a71351d012-1a0890a3.mp3"
+ },
+ "Dabar du ženklai rodo vieną langelį.": {
+  "n": "n/a4c66409b38942d0-89b49326.mp3",
+  "s": "s/a4c66409b38942d0-6114c536.mp3"
  },
  "Dabar eik pirmyn ir pažiūrėk, kas bus nuo 29.": {
   "n": "n/4e18577cf775f330-dca35c2a.mp3",
@@ -1242,6 +1250,10 @@
  "Du trintukai": {
   "n": "n/442c5f55b789e782-81475ca4.mp3",
   "s": "s/442c5f55b789e782-3272b377.mp3"
+ },
+ "Du ženklai rodo vietą, nors joje nieko nėra.": {
+  "n": "n/2cc25774f9d16526-cde74dfd.mp3",
+  "s": "s/2cc25774f9d16526-6232ea33.mp3"
  },
  "Duok man kamuolį.": {
   "n": "n/b164dccb050b9e75-a6272ebe.mp3",
@@ -1754,6 +1766,10 @@
  "Katė ėda iš savo lėkštės.": {
   "n": "n/8b8b412d30eb00b7-20fc83c9.mp3",
   "s": "s/8b8b412d30eb00b7-dd5cc86b.mp3"
+ },
+ "Keisk raidę arba skaičių. Paryškinamas kitas langelis.": {
+  "n": "n/e153e7735138f3ef-f2dc71f9.mp3",
+  "s": "s/e153e7735138f3ef-92e91068.mp3"
  },
  "Keli stiebai nuo žemės, todėl krūmas.": {
   "n": "n/9b337ffbd084d72a-1e96eb0b.mp3",
@@ -3035,6 +3051,10 @@
   "n": "n/6516987f911f8fde-811a39ed.mp3",
   "s": "s/6516987f911f8fde-f66d2d90.mp3"
  },
+ "Pradedam iš naujo. Nė vienas langelis neparyškintas.": {
+  "n": "n/77f82cfc45166640-4801ec3e.mp3",
+  "s": "s/77f82cfc45166640-39cbecfa.mp3"
+ },
  "Pradedam iš naujo. Padėk tašką ant tiesės.": {
   "n": "n/6d7863e56d1ac8c6-7771c9df.mp3",
   "s": "s/6d7863e56d1ac8c6-ca948b0b.mp3"
@@ -3166,6 +3186,14 @@
  "Radai abu.": {
   "n": "n/70e2bec95837a90a-05883401.mp3",
   "s": "s/70e2bec95837a90a-5d98d0e6.mp3"
+ },
+ "Raidė rodo stulpelį. Skaičius rodo eilutę.": {
+  "n": "n/1c34639f0788c989-bb7a95d8.mp3",
+  "s": "s/1c34639f0788c989-1c465ea1.mp3"
+ },
+ "Raidė viena pati rodo visą stulpelį.": {
+  "n": "n/d6622797befe1630-db70829a.mp3",
+  "s": "s/d6622797befe1630-b9475eff.mp3"
  },
  "Raudona dėmė. Formos tos pačios.": {
   "n": "n/51841b83c864cc90-a41c5d40.mp3",
@@ -3390,6 +3418,10 @@
  "Skaičius sutampa su tuo, ką matai.": {
   "n": "n/ab87a8cd02ceae6e-64f70793.mp3",
   "s": "s/ab87a8cd02ceae6e-f3ee99b7.mp3"
+ },
+ "Skaičius vienas pats rodo visą eilutę.": {
+  "n": "n/537291b07eaccdf2-72fe053d.mp3",
+  "s": "s/537291b07eaccdf2-3c934d76.mp3"
  },
  "Skiemenų per daug. Du balsiai greta skamba vienu balsu.": {
   "n": "n/42e1a584c22b7ae6-910841aa.mp3",
@@ -3719,6 +3751,10 @@
   "n": "n/ba8cb74f673436c8-53fc588c.mp3",
   "s": "s/ba8cb74f673436c8-5c89699d.mp3"
  },
+ "Taip pat ne vienas langelis. Dabar pridėk raidę.": {
+  "n": "n/b25f7c90a96e3c04-e7eda441.mp3",
+  "s": "s/b25f7c90a96e3c04-ea201f1b.mp3"
+ },
  "Taip. Ieva yra Adomo mama.": {
   "n": "n/bf349a8354439b17-d5dda648.mp3",
   "s": "s/bf349a8354439b17-25ebd31d.mp3"
@@ -3802,6 +3838,14 @@
  "Tinka:": {
   "n": "n/bfdd3580d320f60e-f14b2dcd.mp3",
   "s": "s/bfdd3580d320f60e-9b787831.mp3"
+ },
+ "Tinklelis nesuderintas su daiktais.": {
+  "n": "n/7e5270095ebd9751-8068ad9b.mp3",
+  "s": "s/7e5270095ebd9751-1d7760ed.mp3"
+ },
+ "Tinklelis. Raidės viršuje, skaičiai kairėje. Pasirink raidę.": {
+  "n": "n/cec30677b2afa4e2-7c2d1ea2.mp3",
+  "s": "s/cec30677b2afa4e2-94594a49.mp3"
  },
  "Toks užrašas jau įrašytas. Perkelk kubelį.": {
   "n": "n/0938835be31f8351-b665e974.mp3",
@@ -4443,6 +4487,10 @@
   "n": "n/d9c64e4f5da5cab4-d63494b7.mp3",
   "s": "s/d9c64e4f5da5cab4-9ecd3a16.mp3"
  },
+ "drugelis": {
+  "n": "n/153421e6ca3d2dfe-74051fe0.mp3",
+  "s": "s/153421e6ca3d2dfe-f9581874.mp3"
+ },
  "duo": {
   "n": "n/fdd823e31be438f6-36d88af4.mp3",
   "s": "s/fdd823e31be438f6-44f39cee.mp3"
@@ -4482,6 +4530,10 @@
  "gobšus": {
   "n": "n/d8b1dab1bf3ed948-0365a609.mp3",
   "s": "s/d8b1dab1bf3ed948-5d6cc88a.mp3"
+ },
+ "gėlytė": {
+  "n": "n/81c42d85b584e023-2053372f.mp3",
+  "s": "s/81c42d85b584e023-59574aca.mp3"
  },
  "h": {
   "n": "n/aaa9402664f1a41f-54aec787.mp3",
@@ -4546,6 +4598,10 @@
  "laikas": {
   "n": "n/d8f1cb5734f12989-3bcc6bfd.mp3",
   "s": "s/d8f1cb5734f12989-1df35588.mp3"
+ },
+ "langeliai paryškinti.": {
+  "n": "n/1c086fa10b735328-665f52da.mp3",
+  "s": "s/1c086fa10b735328-c485b65c.mp3"
  },
  "linksmas": {
   "n": "n/40477ca3b1e3dc44-19f764a7.mp3",
@@ -4622,6 +4678,10 @@
  "pa": {
   "n": "n/9513229d43597826-d3e7a355.mp3",
   "s": "s/9513229d43597826-ab8f9601.mp3"
+ },
+ "paukščiukas": {
+  "n": "n/cc83a5e156fc0226-e6f0477e.mp3",
+  "s": "s/cc83a5e156fc0226-16d038b5.mp3"
  },
  "paėmė": {
   "n": "n/d7bf76fd4d77b77d-950ac163.mp3",
@@ -4738,6 +4798,10 @@
  "vaikai": {
   "n": "n/1e6f43ca03f499d1-c008dacd.mp3",
   "s": "s/1e6f43ca03f499d1-4bcdc3b0.mp3"
+ },
+ "varlytė": {
+  "n": "n/fdb4ed1d5efe99f5-5864b6d2.mp3",
+  "s": "s/fdb4ed1d5efe99f5-6ce1c94d.mp3"
  },
  "y": {
   "n": "n/a1fce4363854ff88-af3e54bb.mp3",
@@ -4910,6 +4974,10 @@
  "Šioje vietoje žodis nesustoja. Skaičiuok, kiek skiemenų girdi.": {
   "n": "n/030eef6ef6dfa717-f45bee2e.mp3",
   "s": "s/030eef6ef6dfa717-6e3fb15c.mp3"
+ },
+ "Šis langelis tuščias.": {
+  "n": "n/1bdad69c0b55ae7f-eedac404.mp3",
+  "s": "s/1bdad69c0b55ae7f-a79bcaed.mp3"
  },
  "Šis lapas jau rodomas. Rink kitą.": {
   "n": "n/03a06e325b9d78b2-3aa4ba0b.mp3",

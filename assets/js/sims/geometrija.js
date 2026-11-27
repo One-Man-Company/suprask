@@ -1414,9 +1414,309 @@ const kruvaIrBuriai = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 5. Tinklelio adresas (1 klasė, matematika)                          */
+/*                                                                    */
+/* Viena sąvoka: LANGELIO ADRESĄ sudaro DU ženklai. Raidė viena pati   */
+/* žymi visą stulpelį (kelis langelius), skaičius vienas pats — visą    */
+/* eilutę. Tik raidė IR skaičius kartu pasako vieną langelį.            */
+/*                                                                    */
+/* Klaidinga nuostatą, kurią modelis parodo: „vieno ženklo užtenka     */
+/* pasakyti, kur daiktas“ (jos atmaina — „B1 yra pirmas langelis“).    */
+/* Todėl pirmas paspaustas ženklas NIEKADA neparyškina vieno langelio: */
+/* jis paryškina visą liniją, o langelių skaičius ekrane perskaičiuoja- */
+/* mas iš to paties tinklelio, kurį vaikas mato (M-07).                */
+/*                                                                    */
+/* Ko modelyje NĖRA: koordinačių plokštumos (ji — 4 klasė), posūkių ir */
+/* judėjimo (tai `24-komandu-seka`), skaičių lentelės tvarkos (tai     */
+/* `19-simto-skaiciu-lentele`). Čia daiktas nejuda — keičiasi tik tai,  */
+/* KIEK ženklų jo vietą pasako.                                        */
+/*                                                                    */
+/* Scena surenkama iš `art.js` dalių (LL-13): art.frog / butterfly /   */
+/* flower / bird / leaf / fruit — vaikas turi atpažinti tą patį        */
+/* gyvūną kiekviename langelyje be užrašo skaitymo.                    */
+/* ------------------------------------------------------------------ */
+const TA_LETTERS = ["A", "B", "C", "D", "E", "F"];
+const TA_CELL = 62;
+const TA_GAP = 6;
+const TA_TOP = 26;
+const TA_VIEW_W = 320;
+
+/* Figūros piešiamos tame pačiame 48 × 48 lauke, todėl langelio turinys
+   nepriklauso nuo to, kurią figūrą modulis įdėjo (LL-24). Mastelis kiekvienai
+   figūrai atskiras: skirtingos `art.js` dalys piešiamos skirtingo dydžio
+   koordinatėse, todėl vienas bendras `s` vieną gyvūną padarytų 21 px, kitą —
+   45 px tame pačiame 62 vienetų langelyje. */
+const TA_FIGURES = {
+  varlyte: (cx, cy) => art.frog(cx, cy + 13.5 * 0.72, 0.72),
+  drugelis: (cx, cy) => art.butterfly(cx, cy + 2, 0.58),
+  gelyte: (cx, cy) => art.flower(cx, cy + 2, 1.55),
+  pauksciukas: (cx, cy) => art.bird(cx, cy + 17 * 0.73, 0.73),
+  obuolys: (cx, cy) => art.fruit(cx, cy + 7, 1.4, 1),
+};
+
+const tinklelioAdresas = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+
+    /* Proza — tik iš `config.sentences` (LL-42): kode nėra nė vieno
+       sakinio, kurio negirdėtų balsas ir nematytų `check_audio.py`.
+       Mygtuko užrašas imamas iš `config.labels` — jis netariamas, bet
+       ir negali būti kode (LL-222: etiketė yra žodis, ne sakinys). */
+    const line = (key) => (typeof S[key] === "string" ? S[key].trim() : "");
+    const lab = (key, fallback) => {
+      const v = typeof L[key] === "string" ? L[key].trim() : "";
+      return v || fallback || "";
+    };
+    const tell = (key) => { const t = line(key); if (t) api.speak(t); };
+
+    const clampInt = (value, lo, hi, dflt) => {
+      const n = Number(value);
+      if (!Number.isFinite(n)) return dflt;
+      return Math.max(lo, Math.min(hi, Math.round(n)));
+    };
+
+    const cols = clampInt(config.cols, 2, TA_LETTERS.length, 4);
+    const rows = clampInt(config.rows, 2, 4, 3);
+    const letters = TA_LETTERS.slice(0, cols);
+
+    /* `items` — kas sėdi kiekviename langelyje. Adresas imamas iš `cell`
+       (pvz. „B1“), o ne iš masyvo eilės: modulio tekstas kalba tais
+       pačiais adresais, kuriuos vaikas mato, ir jei jie išsiskyrę,
+       komponentas tai pasako garsiai, o ne piešia kitą tinklelį. */
+    const cellOf = (raw) => {
+      const m = /^([A-F])([1-4])$/.exec(String(raw || "").trim().toUpperCase());
+      if (!m) return null;
+      const col = TA_LETTERS.indexOf(m[1]);
+      const row = Number(m[2]) - 1;
+      if (col >= cols || row >= rows) return null;
+      return { col, row, addr: `${m[1]}${m[2]}` };
+    };
+
+    const items = [];
+    for (const raw of Array.isArray(config.items) ? config.items : []) {
+      const pos = cellOf(raw && raw.cell);
+      const figure = String((raw && raw.figure) || "");
+      const label = String((raw && raw.label) || "");
+      if (!pos || !TA_FIGURES[figure] || !label) {
+        console.error(`tinklelio-adresas: blogas įrašas ${JSON.stringify(raw)}`);
+        stage.innerHTML = `<p class="sim-note" style="margin:0">${line("broken")}</p>`;
+        controls.innerHTML = "";
+        api.readout(line("broken"));
+        return null;
+      }
+      items.push({ ...pos, figure, label });
+    }
+
+    const itemAt = (col, row) => items.find((it) => it.col === col && it.row === row) || null;
+
+    /* --- būsena ------------------------------------------------------- */
+    /* `letter` ir `number` — KIEK ženklų vaikas jau davė. Tai vienintelis
+       modelio kintamasis; viskas kita (kiek langelių, kuris langelis)
+       perskaičiuojama iš jo (LL-17: sėkmės sąlyga žiūri dabartį). */
+    let letter = -1;
+    let number = -1;
+    let reported = false;
+
+    const both = () => letter >= 0 && number >= 0;
+    const litCount = () => (both() ? 1 : letter >= 0 ? rows : number >= 0 ? cols : 0);
+    const isLit = (col, row) => (both()
+      ? letter === col && number === row
+      : letter >= 0 ? letter === col : number >= 0 ? number === row : false);
+
+    /* --- scena -------------------------------------------------------- */
+    const boardW = cols * TA_CELL + (cols - 1) * TA_GAP;
+    const boardH = rows * TA_CELL + (rows - 1) * TA_GAP;
+    const offX = (TA_VIEW_W - boardW) / 2 + 7;
+    const offY = TA_TOP;
+    const viewH = offY + boardH + 12;
+    const cellX = (col) => offX + col * (TA_CELL + TA_GAP);
+    const cellY = (row) => offY + row * (TA_CELL + TA_GAP);
+    const midX = (col) => cellX(col) + TA_CELL / 2;
+    const midY = (row) => cellY(row) + TA_CELL / 2;
+
+    stage.innerHTML = `
+      <div id="ta-wrap" style="width:100%;max-width:100%;min-width:0;box-sizing:border-box">
+        <svg id="ta-svg" viewBox="0 0 ${TA_VIEW_W} ${viewH}" width="100%" role="img"
+             style="display:block;width:100%;max-width:23rem;height:auto;margin:0 auto"></svg>
+      </div>`;
+
+    const svg = stage.querySelector("#ta-svg");
+    const f = (v) => Number(v).toFixed(1);
+
+    /* Antraštės (raidės ir skaičiai) — ne puošmena: be jų langelio
+       adresas neturi iš kur kilti. Raidės viršuje, skaičiai kairėje. */
+    const head = [];
+    letters.forEach((ch, col) => {
+      head.push(`<text x="${f(midX(col))}" y="18" text-anchor="middle"
+        style="font-family:var(--font-head);font-size:17px;font-weight:900;fill:var(--ink)">${ch}</text>`);
+    });
+    for (let row = 0; row < rows; row += 1) {
+      head.push(`<text x="${f(offX - 15)}" y="${f(midY(row) + 6)}" text-anchor="middle"
+        style="font-family:var(--font-head);font-size:17px;font-weight:900;fill:var(--ink)">${row + 1}</text>`);
+    }
+
+    const cells = [];
+    for (let row = 0; row < rows; row += 1) {
+      for (let col = 0; col < cols; col += 1) {
+        cells.push(`<rect data-cell="${col}-${row}" x="${f(cellX(col))}" y="${f(cellY(row))}"
+          width="${TA_CELL}" height="${TA_CELL}" rx="12"
+          style="fill:var(--paper-2);stroke:var(--line);stroke-width:2"/>`);
+      }
+    }
+
+    svg.innerHTML = `${head.join("")}<g id="ta-cells">${cells.join("")}</g><g id="ta-figs"></g>`;
+
+    const figG = svg.querySelector("#ta-figs");
+    for (const it of items) {
+      const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      g.setAttribute("data-fig", `${it.col}-${it.row}`);
+      g.setAttribute("aria-hidden", "true");
+      g.innerHTML = TA_FIGURES[it.figure](midX(it.col), midY(it.row));
+      figG.appendChild(g);
+    }
+
+    const rects = [...svg.querySelectorAll("rect[data-cell]")];
+
+    controls.innerHTML = `
+      <div role="group" aria-label="Raidė — kuriame stulpelyje" id="ta-letters"
+           style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;width:100%;min-width:0"></div>
+      <div role="group" aria-label="Skaičius — kurioje eilutėje" id="ta-numbers"
+           style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;width:100%;min-width:0"></div>
+      <div style="display:flex;justify-content:center;width:100%">
+        <button type="button" class="btn ghost" id="ta-reset" style="min-height:48px">${lab("again", "Iš naujo")}</button>
+      </div>`;
+
+    const lettersEl = controls.querySelector("#ta-letters");
+    const numbersEl = controls.querySelector("#ta-numbers");
+    const resetBtn = controls.querySelector("#ta-reset");
+
+    /* Mygtukai — vieninteliai lietimo taikiniai. Jie sukurti iš to paties
+       `cols`/`rows`, iš kurių nupieštas tinklelis, todėl mygtuko ženklas
+       niekada nenurodo nieko, ko tinklelyje nėra (LL-03). */
+    const BTN = "min-height:56px;min-width:56px;padding:.5rem .9rem;"
+      + "font-family:var(--font-head);font-weight:900;font-size:1.15rem";
+    lettersEl.innerHTML = letters.map((ch, col) => `<button type="button" class="btn secondary"
+      data-letter="${col}" aria-pressed="false" aria-label="Raidė ${ch}" style="${BTN}">${ch}</button>`).join("");
+    numbersEl.innerHTML = Array.from({ length: rows }, (_, row) => `<button type="button"
+      class="btn secondary" data-number="${row}" aria-pressed="false"
+      aria-label="Skaičius ${row + 1}" style="${BTN}">${row + 1}</button>`).join("");
+
+    const letterBtns = [...lettersEl.querySelectorAll("button")];
+    const numberBtns = [...numbersEl.querySelectorAll("button")];
+
+    /* --- piešimas ------------------------------------------------------ */
+    function paint() {
+      rects.forEach((rect) => {
+        const [col, row] = rect.dataset.cell.split("-").map(Number);
+        const lit = isLit(col, row);
+        /* Spalva nėra vienintelis informacijos nešėjas: paryškintas
+           langelis turi ir storą brūkšniuotą rėmą (standartas §4.4). */
+        rect.style.fill = lit ? "var(--sun)" : "var(--paper-2)";
+        rect.style.stroke = lit ? "var(--ink)" : "var(--line)";
+        rect.style.strokeWidth = lit ? "3.5" : "2";
+        rect.style.strokeDasharray = lit ? "7 5" : "";
+      });
+
+      letterBtns.forEach((btn, i) => {
+        const on = i === letter;
+        btn.setAttribute("aria-pressed", String(on));
+        btn.className = on ? "btn" : "btn secondary";
+      });
+      numberBtns.forEach((btn, i) => {
+        const on = i === number;
+        btn.setAttribute("aria-pressed", String(on));
+        btn.className = on ? "btn" : "btn secondary";
+      });
+
+      const lit = litCount();
+      const addr = both() ? `${letters[letter]}${number + 1}` : "";
+      svg.setAttribute("aria-label", both()
+        ? `Tinklelis ${rows} eilučių ir ${cols} stulpelių. Paryškintas vienas langelis ${addr}.`
+        : `Tinklelis ${rows} eilučių ir ${cols} stulpelių. Paryškinta langelių: ${lit}.`);
+      return { lit, addr };
+    }
+
+    /* --- veiksmai ------------------------------------------------------ */
+    function showFixed() {
+      const { lit, addr } = paint();
+      if (both()) {
+        const it = itemAt(letter, number);
+        const text = it ? `${addr} — ${it.label}. ${line("cell")}` : `${addr}. ${line("empty")}`;
+        api.readout(text);
+        api.note(line(it ? "cellNote" : "emptyNote"));
+        tell(it ? "cell" : "empty");
+        if (!reported) {
+          /* Pažanga — tik įvardijus VIENĄ langelį (visas ciklas), o ne po
+             pirmo ženklo (LL-29). */
+          reported = true;
+          api.progress({ correct: true });
+        }
+        return;
+      }
+      if (letter >= 0) {
+        api.readout(`${letters[letter]} — ${lit} ${line("lit")} ${line("letter")}`);
+        api.note(line("letterNote"));
+        tell("letter");
+        return;
+      }
+      if (number >= 0) {
+        api.readout(`${number + 1} — ${lit} ${line("lit")} ${line("number")}`);
+        api.note(line("numberNote"));
+        tell("number");
+        return;
+      }
+      api.readout(line("start"));
+      api.note(line("startNote"));
+    }
+
+    function pickLetter(col) {
+      /* Nauja raidė numeta skaičių: taip vaikas pats pamato, kad vieno
+         ženklo atgal nebeužtenka — vėl paryškinama visa linija. */
+      letter = col;
+      number = -1;
+      showFixed();
+    }
+
+    function pickNumber(row) {
+      number = row;
+      showFixed();
+    }
+
+    function reset() {
+      letter = -1;
+      number = -1;
+      paint();
+      api.readout(line("again"));
+      api.note(line("startNote"));
+      tell("again");
+      letterBtns[0]?.focus();
+    }
+
+    lettersEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-letter]");
+      if (btn) pickLetter(Number(btn.dataset.letter));
+    });
+    numbersEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-number]");
+      if (btn) pickNumber(Number(btn.dataset.number));
+    });
+    resetBtn.addEventListener("click", reset);
+
+    /* Pradinė būsena įvardijama, o ne paliekama tyli (LL-194). */
+    paint();
+    api.readout(line("start"));
+    api.note(line("startNote"));
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "erdvines-figuros": erdvinesFiguros,
   "ilgis-ir-vienetas": ilgisIrVienetas,
   "dezute-ir-kilogramas": dezuteIrKilogramas,
   "kruva-ir-buriai": kruvaIrBuriai,
+  "tinklelio-adresas": tinklelioAdresas,
 };

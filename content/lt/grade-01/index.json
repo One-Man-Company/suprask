@@ -341,6 +341,14 @@
      "file": "grade-01/matematika/36-grupavimas-pagal-pozymi.json",
      "minutes": 9,
      "sim": "kruva-ir-buriai"
+    },
+    {
+     "id": "37-tinklelio-adresas",
+     "title": "Tinklelio adresas: du ženklai",
+     "subtitle": "Raidė viena rodo stulpelį, skaičius vienas — eilutę",
+     "file": "grade-01/matematika/37-tinklelio-adresas.json",
+     "minutes": 9,
+     "sim": "tinklelio-adresas"
     }
    ]
   },

@@ -1,0 +1,133 @@
+{
+  "id": "16-pokalbio-eile",
+  "grade": 1,
+  "strand": "lietuviu-kalba",
+  "title": "Kol vienas kalba, kitas laukia",
+  "subtitle": "Tie patys žodžiai suprantami tik kalbant pakaitomis",
+  "minutes": 9,
+  "outcomes": [
+    "Klausausi pokalbio ir pasakau, ar kalbama pakaitomis, ar kartu.",
+    "Pastebiu, kad kalbėdami abu iš karto žmonės nesupranta vienas kito.",
+    "Palaukiu, kol pašnekovas baigia, ir tik tada kalbu."
+  ],
+  "concept": {
+    "title": "Pokalbis — tai eilė",
+    "big_idea": "Kai du žmonės kalba kartu, žodžiai susilieja ir nieko nesupranti. Kai kalba pakaitomis, tuos pačius žodžius supranti.",
+    "steps": [
+      "Pasirink, kaip kalbės abu: pakaitomis arba kartu.",
+      "Spausk „Paleisk“ ir klausykis juostos.",
+      "Kai kalba kartu, pažiūrėk, kas lieka iš žodžių.",
+      "Kai kalba pakaitomis, palauk, kol vienas baigs."
+    ],
+    "example": "Klasėje du vaikai atsakymą šaukia tuo pačiu metu. Mokytoja nesupranta nė vieno."
+  },
+  "sim": {
+    "component": "pokalbio-eile",
+    "config": {
+      "speakers": {
+        "a": {
+          "name": "Ieva"
+        },
+        "b": {
+          "name": "Matas"
+        }
+      },
+      "modes": {
+        "turns": "Pakaitomis",
+        "together": "Kartu"
+      },
+      "word": {
+        "a": [
+          "Labas, Matas!",
+          "Ar nori žaisti?",
+          "Aš turiu kamuolį."
+        ],
+        "b": [
+          "Labas, Ieva!",
+          "Noriu žaisti!",
+          "Duok man kamuolį."
+        ]
+      },
+      "sentences": {
+        "start": "Spausk „Paleisk“ ir klausykis pokalbio.",
+        "play": "Paleisk",
+        "turns": "Vienas baigia, tada pradeda kitas.",
+        "together": "Abu kalba kartu. Žodžiai susilieja — nieko nesupranti.",
+        "done": "Perskaitei pokalbį pakaitomis. Žodžiai tapo suprantami.",
+        "again": "Pokalbis grįžo į pradžią. Būdas liko toks, koks pasirinktas.",
+        "reset": "Iš naujo"
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Pasakyk, ką girdi, kai abu kalba kartu.",
+      "options": [
+        "Du žodžius iš eilės",
+        "Vieną susiliejusį ruožą",
+        "Tylą be garso"
+      ],
+      "answer": 1,
+      "hint": "Paklausyk dar kartą. Ar gali atskirti, kas ką sako?",
+      "why": "Kai kalba abu, žodžiai susilieja ir nė vieno neatskiri."
+    },
+    {
+      "q": "Ieva pradeda pokalbį. Pasakyk, ką tuo metu daro Matas.",
+      "options": [
+        "Laukia savo eilės",
+        "Kartoja tuos pačius žodžius",
+        "Pradeda pokalbį iš naujo"
+      ],
+      "answer": 0,
+      "hint": "Pokalbyje du žmonės nekalba tuo pačiu metu.",
+      "why": "Kai vienas kalba, kitas laukia, kol jis baigs."
+    },
+    {
+      "q": "Kas pasikeis, jei pokalbį pradės Matas, o ne Ieva?",
+      "options": [
+        "Žodžių bus daugiau",
+        "Tas pats pokalbis skaitysis kita tvarka",
+        "Pokalbis taps nesuprantamas"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, ar žodžių skaičius pasikeitė.",
+      "why": "Abiem atvejais žodžiai tie patys. Keičiasi tik jų tvarka."
+    },
+    {
+      "q": "Parduotuvėje du žmonės klausia pardavėjos kartu. Ar pardavėja supras abu?",
+      "options": [
+        "Taip, jei kalba garsiai",
+        "Ne, kol abu nebaigs",
+        "Taip, jei klausimai trumpi"
+      ],
+      "answer": 1,
+      "hint": "Prisimink, kas atsitiko juostai, kai abu kalbėjo kartu.",
+      "why": "Pardavėja girdi du susiliejusius klausimus, kol vienas nebaigia.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kai kalbiesi su draugu, ar palauki, kol jis baigia? Pasakyk pavyzdį.",
+  "teacher": {
+    "goal": "Lietuvių kalbos A sritis (kalbėjimas, klausymasis ir sąveika), A.2.3 — 1 klasei pakanka I lygio (A.2.3.1: „stengiasi laikytis tam tikrų mandagaus bendravimo susitarimų“). Modelyje vaikas pats atranda, kad suprantamumą lemia kalbėjimo eilė, o ne žodžių kiekis, ir kad mandagus susitarimas „vienas baigia — kitas pradeda“ nėra taisyklė iš atminties, o sąlyga, be kurios pokalbio nesuprasti.",
+    "prompt": "Kurį pokalbį tu supratai: kai kalbėjo abu, ar kai kalbėjote pakaitomis?",
+    "offline": "Susodinkite du vaikus vienas priešais kitą. Abu iš karto pasako savo sakinį — klasė bando atpasakoti, ką girdėjo, ir nepavyksta. Paskui tas pačius sakinius jie pasako pakaitomis: vienas baigia, kitas pradeda. Paklauskite, kas pasikeitė, nors žodžiai buvo tie patys. Tada pasukite ratą: trečias vaikas turi palaukti, kol pirmas baigs, ir tik tada atsakyti.",
+    "misconceptions": [
+      "„Kad tave suprastų, reikia kalbėti daugiau.“ Modelyje žodžių skaičius nekinta — ir pakaitomis, ir kartu jų tiek pat; keičiasi tik tai, ar kiekvienas žodis turi savo akimirką.",
+      "„Kai abu kalba, garsiau pasakytas žodis nuskamba.“ Modelis rodo, kad abu žodžiai susilieja į vieną ruožą — atskirti negalima nė vieno, nesvarbu, kaip garsiai.",
+      "„Pokalbį tvarko tas, kuris pradeda.“ Pakeitus pradininką pokalbis pasikeičia tvarka, bet lieka suprantamas: tvarką laiko tai, kad niekas nekalba du kartu.",
+      "„Palaukti — tai netekti savo minties.“ Veikloje be ekrano vaikas patiria, kad palaukęs jis atsako tiksliau, o ne pamiršta."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Lietuvių kalba ir literatūra“: „A.2.3. Klausydamas ar kalbėdamas atsižvelgia į adresatą ir komunikavimo situaciją, kai yra suteikiama pagalba; leidžia pašnekovui išsakyti savo mintis, laikosi mandagaus bendravimo susitarimų“ (sources/pradinio-bp-rekomendacijos-2024.txt:40703).",
+    "Ten pat, I lygis: „A.2.3.1. Klausydamas ar kalbėdamas iš dalies atsižvelgia į adresatą (vaiką arba pažįstamą suaugusįjį); stengiasi laikytis tam tikrų mandagaus bendravimo susitarimų“ (sources/pradinio-bp-rekomendacijos-2024.txt:40708–40713).",
+    "Ten pat, 1–2 klasių turinys: „Kalbėjimo ir klausymo paskirtis ir tikslai. Mokomasi suprasti kalbėjimo paskirtį ir įvairių komunikavimo priemonių teikiamas galimybes“ (sources/pradinio-bp-rekomendacijos-2024.txt:40838–40839).",
+    "Ten pat, komunikacinė sąveika: „kai pakaitomis suprantame savo pašnekovo užkoduotas idėjas ir tuo pat metu pateikiame atsakymų į šias idėjas“ (sources/pradinio-bp-rekomendacijos-2024.txt:17129–17131)."
+  ],
+  "svietimas1": [
+    "1 žingsnis — viena didelė idėja: pokalbį suprantamą daro eilė, o ne žodžių kiekis; klausymosi įgūdžiai ir žodynas lieka kitiems moduliams.",
+    "2 žingsnis — užduotys perkelia taisyklę į parduotuvę ir klasę, o ne kartoja modulio sakinį (T2.2).",
+    "3 žingsnis — pagalba laiku: užuomina siūlo paklausyti dar kartą, o ne pasako atsakymą (T3.1); laikmačių ir galutinių klaidų nėra (T3.3), yra praplėtimo užduotis (T3.4).",
+    "5 žingsnis — grįžtamasis ryšys apie veiksmą, o ne apie vaiką (T5.1); veikla be ekrano atliekama be ekrano ir be interneto (T8.3)."
+  ]
+}

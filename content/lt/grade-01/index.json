@@ -116,6 +116,14 @@
      "file": "grade-01/lietuviu-kalba/15-nezinomas-zodis.json",
      "minutes": 9,
      "sim": "nezinomas-zodis"
+    },
+    {
+     "id": "16-pokalbio-eile",
+     "title": "Kol vienas kalba, kitas laukia",
+     "subtitle": "Tie patys žodžiai suprantami tik kalbant pakaitomis",
+     "file": "grade-01/lietuviu-kalba/16-pokalbio-eile.json",
+     "minutes": 9,
+     "sim": "pokalbio-eile"
     }
    ]
   },

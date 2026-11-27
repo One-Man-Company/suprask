@@ -3385,6 +3385,377 @@ const nezinomasZodis = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 16. Pokalbio eilė: kol vienas nebaigia, kitas nesupranta            */
+/* ------------------------------------------------------------------ */
+/* Modelis turi DU parametrus, ir abiejų pasekmė matoma tame pačiame
+   rate:
+     1) `mode`  — „pakaitomis“ (vienas baigia, tada kitas) arba „kartu“
+        (abu tuo pačiu metu);
+     2) `first` — kuris pradeda: Rūta ar Tomas.
+   To paties keturių žodžių pokalbio replikos klojamos į juostą. Kai jos
+   eina pakaitomis, kiekviena turi SAVO akimirką ir yra perskaitoma; kai
+   abi geros klojamos tame pačiame laike, du žodžiai atsiduria viename
+   langelyje ir susilieja — vaikas neatskirs nė vieno. Todėl sakinys
+   „pokalbis vyksta pakaitomis“ turi prieš akis įrodymą, o ne paaiškinimą
+   (LL-13: piešinys ir užrašas sutaria).
+
+   Klaidinga nuostata: „kad tave suprastų, reikia kalbėti daugiau arba
+   kartu su kitu“. Modelis rodo priešingai: suprantamumą lemia EILĖ, o ne
+   žodžių kiekis — abiem atvejais žodžių keturi. Antras parametras
+   (`first`) parodo, kad pokalbį tvarko ne tai, kas pradeda, o tai, kad
+   niekas nekalba du kartu: abi tvarkos pakaitomis lieka skaitomos, o abi
+   tvarkos „kartu“ virsta tuo pačiu susiliejusiu ruožu.
+
+   Ko modelis nedaro: neklausia vaiko apie jo paties elgesį ir neteisia
+   „gerai/blogai“ — vaikas pats girdi ir mato, kuris pokalbis
+   suprantamas. Jokio laikmačio ir jokios galutinės klaidos: būdą galima
+   perjungti be galo.
+
+   Pažanga žymima įveikus VISĄ juostą pakaitomis (LL-29), o ne po pirmo
+   žodžio; „Iš naujo“ grąžina būseną pagal DABARTINĮ pasirinkimą, o ne
+   praeitą (LL-17). Tekstai imami iš `sim.config` (LL-61), nes juos taria
+   ir rodo tas pats šaltinis. */
+
+const PE_STYLE_ID = "cc-pokalbio-eile-style";
+
+const PE_CSS = `
+.pe-wrap { width: 100%; max-width: 34rem; margin: 0 auto; display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+.pe-scene { margin: 0; border: 3px solid var(--line); border-radius: var(--r-m); overflow: hidden; line-height: 0; }
+.pe-scene svg { display: block; width: 100%; height: auto; }
+.pe-tape { display: grid; gap: .45rem; min-width: 0; }
+.pe-slot {
+  display: grid; gap: .05rem; width: 100%; min-width: 0; min-height: 48px;
+  padding: .4rem .7rem; border: 3px solid var(--line); border-radius: var(--r-s);
+  background: var(--paper-2); color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+}
+.pe-slot { min-width: 0; }
+.pe-slot.is-now { border-color: var(--ink); box-shadow: 0 0 0 2px var(--line); }
+.pe-who { font-size: .95rem; line-height: 1.2; font-weight: 800; color: var(--ink-soft); }
+.pe-line { font-size: 1.05rem; line-height: 1.35; font-weight: 800; overflow-wrap: anywhere; }
+/* Susiliejusi akimirka: dviejų žodžių raidės sumaišytos į vieną ruožą.
+   Tai ne puošmena — taip juosta parodo, kad dviejų kalbėtojų žodžių
+   nebeatskirsi (LL-13: piešinys ir sakinys sutaria). */
+.pe-gib {
+  background: repeating-linear-gradient(135deg, var(--line) 0 7px, var(--paper-2) 7px 14px);
+  letter-spacing: .04em;
+}
+.pe-count { margin: 0; text-align: center; font-size: .98rem; line-height: 1.35; font-weight: 800; color: var(--ink-soft); }
+.pe-modes { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+.pe-modes .btn { min-height: 48px; }
+`;
+
+function ensurePeStyle() {
+  if (document.getElementById(PE_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = PE_STYLE_ID;
+  style.textContent = PE_CSS;
+  document.head.appendChild(style);
+}
+
+/* Scena: du vaikai vienas priešais kitą. „Kalbėjimo ženklas“ (trys taškai)
+   rodomas TIK tam, kuris dabar kalba, todėl akimirką, kai kalba abu,
+   vaikas pamato du ženklus iš karto — tai ta pati būsena, kurią juosta
+   rodo susiliejusiais žodžiais. */
+function peScene() {
+  const dots = (x) => `<g fill="#ffffff" stroke="#8fa3b3" stroke-width="2">
+      <circle cx="${x}" cy="96" r="3.4"/><circle cx="${x + 10}" cy="96" r="3.4"/>
+      <circle cx="${x + 20}" cy="96" r="3.4"/></g>`;
+  return `${art.defs("pe")}
+    <rect x="0" y="0" width="320" height="170" rx="14" fill="url(#pe-sky)"/>
+    ${art.cloud(56, 26, 0.9)}
+    ${art.cloud(244, 34, 0.75)}
+    ${art.hills(320, 122)}
+    ${art.grass(38, 166, 1)}
+    ${art.grass(280, 166, 1)}
+    ${art.kid(106, 166, 1.15, "#3f5d8a", "#f2c9a0")}
+    ${art.kid(214, 166, 1.15, "#c56a3f", "#e8bb92")}
+    <g id="pe-a-mark" style="display:none">${dots(92)}</g>
+    <g id="pe-b-mark" style="display:none">${dots(200)}</g>`;
+}
+
+const pokalbioEile = {
+  mount({ stage, controls, api, config }) {
+    ensurePeStyle();
+    const esc = (s) => String(s ?? "").replace(/[&<>\"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const S = config.sentences && typeof config.sentences === "object" ? config.sentences : {};
+    const say = (k) => String(S[k] ?? "").trim();
+    const speakers = config.speakers && typeof config.speakers === "object" ? config.speakers : {};
+    const modes = config.modes && typeof config.modes === "object" ? config.modes : {};
+    const lines = config.word && typeof config.word === "object" ? config.word : {};
+    const IDS = ["a", "b"];
+    const nameOf = (w) => String((speakers[w] && speakers[w].name) || "").trim();
+    const own = (w) => (Array.isArray(lines[w]) ? lines[w].map((t) => String(t ?? "").trim()).filter(Boolean) : []);
+
+    /* Modelis neturi prasmės be dviejų kalbėtojų, po dvi replikas ir be
+       tekstų: kitaip juosta būtų tuščia, o mygtukai spaustų nieko (LL-03). */
+    const valid = IDS.every((w) => nameOf(w) && own(w).length >= 2)
+      && ["start", "together", "turns", "done", "again", "play", "reset"].every((k) => say(k))
+      && Boolean(String(modes.turns ?? "").trim()) && Boolean(String(modes.together ?? "").trim());
+
+    if (!valid) {
+      console.error("[pokalbio-eile] reikia dviejų kalbėtojų su dviem replikomis, „modes“ ir tekstų:", config);
+      stage.innerHTML = `<p class="error-box">Pokalbio duomenys nesuderinti.</p>`;
+      controls.innerHTML = "";
+      api.readout("Pokalbio duomenys nesuderinti.");
+      api.note("");
+      return () => {};
+    }
+
+    let mode = "pakaitomis";   // 1 parametras: kaip kalba abu
+    let first = "a";           // 2 parametras: kas pradeda
+    let step = -1;             // kuri akimirka dabar skamba (pakaitomis)
+    let playing = false;
+    let reported = false;
+    const timers = [];
+
+    /* Akimirkos — vienintelis modelio išvedimas. Abi tvarkos ima TĄ PATĮ
+       keturių replikų pokalbį, todėl žodžių skaičius nepasikeičia: keičiasi
+       tik tai, ar dvi replikos turi tą pačią akimirką. */
+    function moments() {
+      const n = Math.min(own("a").length, own("b").length);
+      if (mode === "kartu") {
+        return Array.from({ length: n }, (_, i) => ({
+          both: true, who: ["a", "b"], texts: [own("a")[i], own("b")[i]],
+        }));
+      }
+      const order = first === "a" ? ["a", "b"] : ["b", "a"];
+      const out = [];
+      for (let i = 0; i < n; i += 1) {
+        order.forEach((w) => out.push({ both: false, who: [w], texts: [own(w)[i]] }));
+      }
+      return out;
+    }
+
+    stage.innerHTML = `
+      <div class="pe-wrap">
+        <figure class="pe-scene" role="img" aria-label="${esc(`${nameOf("a")} ir ${nameOf("b")} kalbasi vienas su kitu`)}">
+          <svg viewBox="0 0 320 170">${peScene()}</svg>
+        </figure>
+        <div class="pe-tape" id="pe-tape" role="group" aria-label="Pokalbio juosta"></div>
+        <p class="pe-count" id="pe-count"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div class="pe-modes" role="group" aria-label="Kaip kalba abu žmonės">
+        <button class="btn secondary" type="button" data-mode="pakaitomis" aria-pressed="true">${esc(modes.turns)}</button>
+        <button class="btn secondary" type="button" data-mode="kartu" aria-pressed="false">${esc(modes.together)}</button>
+        <button class="btn" type="button" id="pe-play">${esc(say("play"))}</button>
+      </div>
+      <div class="pe-modes" role="group" aria-label="Kas pradeda pokalbį">
+        <button class="btn ghost" type="button" data-first="a" aria-pressed="true">Pradeda ${esc(nameOf("a"))}</button>
+        <button class="btn ghost" type="button" data-first="b" aria-pressed="false">Pradeda ${esc(nameOf("b"))}</button>
+        <button class="btn ghost" type="button" id="pe-again">${esc(say("reset"))}</button>
+      </div>`;
+
+    const tapeEl = stage.querySelector("#pe-tape");
+    const countEl = stage.querySelector("#pe-count");
+    const playBtn = controls.querySelector("#pe-play");
+
+    function paintMarks() {
+      const list = moments();
+      const cur = playing && step >= 0 && step < list.length ? list[step] : null;
+      /* „Kartu“ būsenoje kalbėjimo ženklai rodomi ABUEMS iš karto — ta pati
+         akimirka, kurią juosta rodo susiliejusiais žodžiais. */
+      const allSpeak = mode === "kartu";
+      IDS.forEach((w) => {
+        const g = stage.querySelector(`#pe-${w}-mark`);
+        if (!g) return;
+        const on = allSpeak || Boolean(cur && cur.who.includes(w));
+        g.style.display = on ? "" : "none";
+      });
+    }
+
+    /* Dviejų žodžių raidės sumaišomos į vieną ruožą: būtent taip atrodo
+       juosta, kai abu kalba tuo pačiu metu. Tai ne puošmena — be šito
+       „kartu“ atrodytų kaip tvarkinga eilė, o modelis teigtų priešingai,
+       negu rodo (LL-13, LL-33). `pe-gib` fonas ir raidžių tankis sako, kad
+       čia nėra žodžių, kuriuos galėtum perskaityti. */
+    function interleave(a, b) {
+      const A = String(a).replace(/\s+/g, "");
+      const B = String(b).replace(/\s+/g, "");
+      let out = "";
+      for (let k = 0; k < Math.max(A.length, B.length); k += 1) {
+        out += (A[k] || "") + (B[k] || "");
+      }
+      return out;
+    }
+
+    function slotMarkup(m, i) {
+      const now = playing && step === i;
+      if (m.both) {
+        return `<button class="pe-slot pe-gib${now ? " is-now" : ""}" type="button" data-slot="${i}"
+          aria-label="Abu kalba tuo pačiu metu: ${esc(m.texts[0])} ir ${esc(m.texts[1])} — žodžiai susilieja, nė vieno neatskiri">
+          <span class="pe-who">${esc(m.who.map(nameOf).join(" ir "))} — kartu</span>
+          <span class="pe-line">${esc(interleave(m.texts[0], m.texts[1]))}</span>
+        </button>`;
+      }
+      return `<button class="pe-slot${now ? " is-now" : ""}" type="button" data-slot="${i}"
+        aria-label="${esc(`${nameOf(m.who[0])}: ${m.texts[0]}`)}">
+        <span class="pe-who">${esc(nameOf(m.who[0]))}</span>
+        <span class="pe-line">${esc(m.texts[0])}</span>
+      </button>`;
+    }
+
+    /* Juostos perpiešimas naikina mygtukus, o naršyklė numeta fokusą į
+       dokumento pradžią (LL-32). Todėl būsena keičiama vietoje: kai
+       sąrašas tas pats, tik žymimos akimirkos. Juosta perkuriama tik tada,
+       kai keičiasi pats modelio išvedimas (būdas ar pradininkas). */
+    let paintedKey = "";
+
+    function slotSignature(list) {
+      return `${mode}|${first}|${list.map((m) => `${m.both ? "b" : "t"}:${m.texts.join("~")}`).join("|")}`;
+    }
+
+    function markNow() {
+      tapeEl.querySelectorAll("[data-slot]").forEach((b) => {
+        const i = Number(b.dataset.slot);
+        b.classList.toggle("is-now", playing && step === i);
+      });
+      paintMarks();
+    }
+
+    function paint() {
+      const list = moments();
+      const key = slotSignature(list);
+      /* Skaičius ekrane skaičiuojamas iš modelio, o ne rašomas ranka
+         (LL-21): pasikeitus replikų skaičiui `sim.config` faile, sakinys
+         pasikeičia pats. */
+      const words = own("a").length + own("b").length;
+      countEl.textContent = mode === "kartu"
+        ? `Žodžių ${words} · akimirkų ${list.length} · kiekviena akimirka turi du žodžius.`
+        : `Žodžių ${words} · akimirkų ${list.length} · kiekvienas žodis turi savo akimirką.`;
+      controls.querySelectorAll("[data-mode]").forEach((b) => {
+        b.setAttribute("aria-pressed", String(b.dataset.mode === mode));
+      });
+      controls.querySelectorAll("[data-first]").forEach((b) => {
+        b.setAttribute("aria-pressed", String(b.dataset.first === first));
+      });
+      playBtn.textContent = say("play");
+
+      if (key === paintedKey) {
+        markNow();
+        return;
+      }
+      paintedKey = key;
+      tapeEl.innerHTML = list.map((m, i) => slotMarkup(m, i)).join("");
+      tapeEl.querySelectorAll("[data-slot]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const m = moments()[Number(b.dataset.slot)];
+          if (!m) return;
+          if (m.both) {
+            api.readout(say("together"));
+            api.speak(say("together"));
+            return;
+          }
+          api.readout(`${nameOf(m.who[0])}: ${m.texts[0]}`);
+          api.speak(m.texts[0], { rate: .8 });
+        });
+      });
+      markNow();
+    }
+
+    function stop() {
+      playing = false;
+      step = -1;
+      while (timers.length) clearTimeout(timers.pop());
+    }
+
+    function tick() {
+      if (!playing) return;
+      const list = moments();
+      const m = list[step];
+      if (!m) { finish(list.length); return; }
+      api.readout(`${nameOf(m.who[0])}: ${m.texts[0]}`);
+      api.speak(m.texts[0], { rate: .8 });
+      const hold = Math.min(2800, 900 + m.texts[0].length * 55);
+      timers.push(setTimeout(() => {
+        if (!playing) return;
+        step += 1;
+        if (step >= list.length) { finish(list.length); return; }
+        paint();
+        tick();
+      }, hold));
+    }
+
+    /* Tikslas pasiektas DABAR — įveikta visa juosta pakaitomis, o ne po
+       pirmo žodžio (§4, LL-29). */
+    function finish(count) {
+      playing = false;
+      step = -1;
+      paint();
+      const text = say("done");
+      api.readout(text);
+      api.note(text);
+      api.speak(text);
+      if (!reported) {
+        reported = true;
+        api.progress({ moments: count });
+      }
+    }
+
+    function play() {
+      stop();
+      if (mode === "kartu") {
+        /* Garsas negali skambėti dviem balso takeliais, todėl modelis
+           neslepia: žodžių neperskaito, o pasako, kas atsitiko. */
+        const text = say("together");
+        api.readout(text);
+        api.note(text);
+        api.speak(text);
+        paint();
+        return;
+      }
+      playing = true;
+      step = 0;
+      api.note("");
+      paint();
+      tick();
+    }
+
+    function setMode(next) {
+      if (mode === next) return;
+      mode = next;
+      stop();
+      paint();
+      const text = say(next === "kartu" ? "together" : "turns");
+      api.readout(text);
+      api.note(text);
+      api.speak(text);
+    }
+
+    function setFirst(next) {
+      if (first === next) return;
+      first = next;
+      stop();
+      paint();
+      api.readout(say("turns"));
+      api.speak(say("turns"));
+    }
+
+    controls.querySelectorAll("[data-mode]").forEach((b) => {
+      b.addEventListener("click", () => setMode(String(b.dataset.mode)));
+    });
+    controls.querySelectorAll("[data-first]").forEach((b) => {
+      b.addEventListener("click", () => setFirst(String(b.dataset.first)));
+    });
+    playBtn.addEventListener("click", play);
+    controls.querySelector("#pe-again").addEventListener("click", () => {
+      stop();
+      paint();
+      api.readout(say("again"));
+      api.speak(say("again"));
+    });
+
+    paint();
+    api.readout(say("start"));
+    api.note(say("start"));
+    api.speak(say("start"));
+
+    return () => { stop(); };
+  },
+};
+
 export const SIMS = {
   "garso-raides": garsoRaides,
   "skiemenu-jungimas": skiemenuJungimas,
@@ -3399,4 +3770,5 @@ export const SIMS = {
   "zinute-skaitytojui": zinuteSkaitytojui,
   "veikejas-pagal-teksta": veikejasPagalTeksta,
   "nezinomas-zodis": nezinomasZodis,
+  "pokalbio-eile": pokalbioEile,
 };

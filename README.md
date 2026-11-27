@@ -109,7 +109,7 @@ HTTP prieiga ribojama Tailscale tinklu — jokio prisijungimo ekrano. Žr. [`das
 
 ## Garsas
 
-Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 1262 tekstų po du variantus (sakinys ir skiemuo) — 2524 įrašai, ~92 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
+Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė: 1262 tekstų, ir kiekvienas įrašytas du kartus — tempu 0,72× ir lėčiau, 0,58×. Tai ne du skirtingi tekstai (pavyzdžiui, sakinys ir jo skaidymas skiemenimis), o tas pats tekstas dviem tempais: lėtesnis įrašas grojamas tada, kai simuliacija prašo skaityti lėčiau. Iš viso 2524 įrašai, ~92 MB. Numatytasis variklis yra Piper (`lt_LT-reginute1`), nes jis kirtį ima iš 189 262 formų kirčio žodyno, o ne spėlioja; lietuvių kalboje kirtis keičia reikšmę. Azure/Edge balsas (`--engine edge`) paliktas atsarginiam perklausos variantui, o naršyklės balsas naudojamas tik tada, kai teksto nėra manifests ir yra lietuviškas balsas. Generavimas — `scripts/generate_audio.py`, pilnumas tikrinamas `scripts/check_audio.py`.
 
 ## Licencijos
 

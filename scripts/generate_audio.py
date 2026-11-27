@@ -32,9 +32,10 @@ AUDIO = ROOT / "assets" / "audio" / "lt"
 MANIFEST = AUDIO / "manifest.json"
 
 VOICES = {"ona": "lt-LT-OnaNeural", "leonas": "lt-LT-LeonasNeural"}
-# n = normalus (sakiniai), s = lėtas (skiemenys, pavieniai žodžiai).
-# −4 % ir −12 % skamba natūraliau nei −6 %/−16 %, o vaikui vis dar aiškiau už įprastą tempą.
-RATES = {"n": "-4%", "s": "-12%"}  # n = sakiniai, s = skiemenys / pavieniai žodžiai
+# n = įprastas tempas, s = lėtas. Abu variantai generuojami KIEKVIENAM tekstui —
+# tai ne sakinys ir jo skaidymas skiemenimis, o tas pats tekstas dviem tempais.
+# −4 % ir −12 % (Piper: 0,72× ir 0,58×) skamba natūraliau nei −6 %/−16 %, o vaikui vis dar aiškiau už įprastą tempą.
+RATES = {"n": "-4%", "s": "-12%"}  # n = įprastas tempas, s = lėtas (tas pats tekstas)
 
 # --------------------------------------------------------------------------
 # Piper (lt_LT-reginute1) — PAGRINDINIS variklis.
@@ -52,7 +53,8 @@ PIPER_MODEL = PIPER_DIR / "lt_LT-reginute1-medium.onnx"
 # Recepto `length_scale` tempo beveik nekeičia (jis normalizuoja trukmę iki tikslo),
 # todėl tempą valdome tiksliai, jau sugeneruotą garsą sulėtindami `atempo` filtru:
 # 1.0 = kaip yra, 0.72 = 28 % lėčiau, 0.58 = 42 % lėčiau (aukštis išlieka).
-# 6–7 metų vaikui: sakiniai 0.72, atskiri žodžiai ir skiemenys 0.58.
+# Abu tempai sugeneruoti visiems tekstams; simuliacija pasirenka pagal tai, kokio
+# tempo prašo (`speech.js`: rate <= 0.85 → `s`), o ne pagal teksto tipą.
 # Lėtinama grandine po 0,8–0,85 — vienas didelis `atempo` žemiau 0,75 skamba
 # metaliniu garsu.
 LENGTH_SCALE = 1.05

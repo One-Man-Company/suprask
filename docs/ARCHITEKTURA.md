@@ -131,7 +131,8 @@ Azure balsas paliktas kaip **atsarginis** (`--engine edge`) — jei perklausoje 
 ### Kaip veikia
 
 - `scripts/generate_audio.py --engine piper` → `assets/audio/lt/{n|s}/<sha256-prefix>.mp3` (22 050 Hz, mono, 64 kbps);
-- du variantai: `n` (sakiniai, 0,72× tempo) ir `s` (skiemenys ir atskiri žodžiai, 0,58× tempo);
+- du įrašai tam pačiam tekstui: `n` (0,72× tempo) ir `s` (0,58× tempo). Tai **ne** skirtingi tekstai,
+  o to paties teksto du tempai: `s` grojamas tada, kai simuliacija prašo skaityti lėčiau;
   tempas keičiamas `atempo` grandine (po 0,80–0,85 žingsnį, kad balsas neskambėtų metališkai)
   jau sugeneruotame garse, nes Piper recepto `length_scale` trukmę normalizuoja;
 - pradžioje 150 ms tylos ir pabaigoje 60 ms — be jų pirmas priebalsis nuskamba „nukirptas";

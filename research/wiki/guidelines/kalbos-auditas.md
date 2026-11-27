@@ -334,3 +334,46 @@ Papildomai `--text-scale 32` (200 % teksto) @390 ir @360: `overflow` 0, `scale_a
 **Palikta sąmoningai:** `title` „Kas gyvena tvarte?“ ir `subtitle` (indekso kopija — LL-05/LL-21; keitimas reikalautų `index.json` sinchronizacijos, o sakinys po #509 jau tikslus); `concept.big_idea` (3 trumpi sakiniai, kriterijus „maistas, o ne vieta“ — sutampa su `sentences.rule`); `concept.example` (karvė / gandras — tie patys du gyvūnai kaip 1 užduotyje, prasmė tiksli); `sentences.start/ask/pickFirst/wrong/lock/done/rule/winter/summer/winterTitle` (tariami, sakiniai trumpi ir vienareikšmiai; „Pažiūrėk ne į vietą, o į tai, kas duoda maistą“ — kontrastinis, ne dvigubas neiginys, 9 žodžiai); `teacher.*`, `sources`, `svietimas1` (suaugusiojo tekstas ir šaltiniai, ne vaiko laukas); visi `answer` indeksai (1, 2, 1, 0, 2) ir variantų tvarka — nepaliesti nė viename.
 
 **Nauji pasiūlymai:** `2026-11-27-kalbu-redaktorius-gyvunu-lauku-garsas.json` (18 rodomų `place`/`trait`/`winter` tekstų neturi nė vieno garso įrašo — `generate_audio.collect()` renka tik `word/syllables/words/sentences/label`) ir `2026-11-27-kalbu-redaktorius-sim-lentele.json` (sim sakinys įvardijo ekrano sritį, kurios modelyje nėra ir kuri neturi vardo). Nauja pamoka: **LL-224**.
+
+## Taisymo būsena (paleidimas #585, 2026-11-27)
+
+Modulis **19-simto-skaiciu-lentele** (1 kl., matematika). Šį kartą žiūrėta ne tik į sakinio ilgį, bet į **tai, ką vaikas palygina**: visi penki klausimai prašo palyginti du lentelės langelius, tad kiekvienas tekstas, kuris tuos langelius vadina skirtingai, vaiką klaidina labiau nei ilgas sakinys.
+
+| Laukas | Prieš | Po | Priežastis |
+|---|---|---|---|
+| `title` | „Šimto lentelė: žemyn **reiškia dešimt**“ | „Šimto lentelė: žemyn **— dešimčia daugiau**“ | „reiškia“ — vertinys; 1 klasei dešimt yra **eilutė**, o ne reikšmė. Formuluotė dabar skaitoma kaip veiksmas |
+| `subtitle` | „Į dešinę skaičius **padidėja** vienu, o žemyn **padidėja** dešimčia“ | „**Dešinėn** skaičius **didėja** vienu, **žemyn — dešimčia**“ | tas pats veiksmažodis du kartus sakinyje (įrankio „kartojasi žodis“ slenkstis 4 raidės jo nepagavo, nes žodžiai ilgesni), o „į dešinę“ ir „žemyn“ — du skirtingi krypties pavadinimai mygtukams „Dešinėn“ / „Žemyn“ |
+| `outcomes[0]` | „Skaitau šimto lentelę. Į dešinę skaičius padidėja vienu, o žemyn padidėja dešimčia.“ (12 ž.) | „Skaitau skaičius šimto lentelėje.“ (5 ž.) | 12 žodžių > 10 (standartas §6) ir dvi instrukcijos viename rezultate; krypties taisyklė kartojo `subtitle`, ne rezultatą |
+| `outcomes[1]` | „Paaiškinu, kodėl **žemiau** 19 stovi 29, o ne 20.“ | „Paaiškinu, kodėl **lentelėje** žemiau 19 stovi 29, o ne 20.“ | „žemiau“ be daikto — žemiau ko? Kambaryje, lentynoje? Modulis apie lentelę, tad daiktas įvardijamas |
+| `concept.big_idea` | „…skaičiai sustatyti **dešimtukais**“ | „…skaičiai sustatyti **eilutėmis po dešimt**“ | „dešimtukas“ šiame modulyje yra 10 langelių grupė (`05-desimtukas`), o čia kalbama apie **eilutę**; du pavadinimai tam pačiam dalykui |
+| `concept.steps[0]` | „Rask 19. **Jis** stovi antroje eilutėje, devintas.“ | „Rask 19. Antroje eilutėje **jis** devintas iš kairės.“ | sakinys prasidėjo įvardžiu, kurio antecedentė — ankstesnio sakinio „19“; be to „devintas“ be krypties: devintas iš kairės ar iš dešinės? |
+| `concept.steps[2]` | „Palygink 19 ir 29. Pabaiga ta pati, o dešimtis kita.“ | „Palygink 19 ir 29. **Abu baigiasi 9**, o dešimtis kita.“ | „pabaiga“ — autoriaus žodis; vaikas skaito **skaitmenis**. Dabar sakinys pasako, ką tikrinti |
+| `concept.steps[3]` | „…yra 20**:** ten skaičius didėja vienu.“ | „…yra 20**. Ten** skaičius didėja vienu.“ | dvitaškis jungė dvi mintis į vieną sakinį; 1 klasei du trumpi sakiniai skaitomi lengviau |
+| `sim.config.sentences.spejimas` | „**Spėjimas įrašytas.** Dabar spausk Žemyn.“ | „**Spėjai.** Dabar spausk Žemyn.“ | „spėjimas įrašytas“ — neveikiamasis vertinys; vaikas ką tik pats paspaudė, tad veikėjas yra jis |
+| `sim.config.sentences.baigta` | „Dešinėn keičiasi pabaiga, žemyn keičiasi dešimtis.“ | „Dešinėn keičiasi pabaiga**. Žemyn** keičiasi dešimtis.“ | ta pati dvitaškio/brukšnio problema: du veiksmai, vienas sakinys |
+| `tasks[0].q` | „Simuliacijoje **nuo 19 eini** vienu langeliu žemyn. Kuris skaičius **pažymėtas**?“ | „Simuliacijoje **nuo 19 nueik** vienu langeliu žemyn. Kuris skaičius **bus pažymėtas**?“ | esamasis laikas „eini“ skamba kaip aprašymas, o ne kaip užduotis; „pažymėtas“ (būtasis) rodo į tai, kas jau įvyko, o vaikas dar nepajudėjo |
+| `tasks[0].hint` | „Žemyn reiškia **kitą eilutę, o ne kitą skaičių iš eilės**.“ | „Žemyn — **kita eilutė, o ne sekantis skaičius**.“ | 10 žodžių, o užuomina turi būti trumpa; „skaičius iš eilės“ — netaisyklinga konstrukcija |
+| `tasks[1].hint` | „Skaičiuok **dešimtukais**, o ne po vieną.“ | „Skaičiuok **dešimtimis**, o ne po vieną.“ | „dešimtukais“ čia reiškia „grupėmis po dešimt“ — teisinga forma „dešimtimis“ (kaip `34-dvizenklis-plius-dvizenklis`: „dešimtys sudedamos su dešimtimis“) |
+| `tasks[2].why` | „72 + 1 = 73**:** pasikeičia tik pabaiga.“ | „72 + 1 = 73**. Pasikeičia** tik pabaiga.“ | dvitaškis 1 klasei — du sakiniai skaitomi aiškiau |
+| `tasks[3].hint` | „Vienas langelis žemyn **reiškia dešimt**. **Suskaičiuok** tris dešimtis.“ | „Vienas langelis žemyn **prideda dešimt**. **Skaičiuok** tris dešimtis.“ | „reiškia dešimt“ — ta pati vertinio šeima kaip `title`; „suskaičiuok“ (11 raidžių) keičiamas kasdieniu „skaičiuok“ |
+| `tasks[4].q` | „Eik nuo 87 du **žingsnius** kairėn ir vieną žemyn.“ | „Eik nuo 87 du **langelius** kairėn ir vieną žemyn.“ | tame pačiame sakinyje „žingsnius“ ir „langelį“ — du matai tam pačiam judesiui; modelis juda **langeliais** |
+| `reflect` | „Pagalvok, kodėl **žemiau** 19 yra 29.“ | „Pagalvok, kodėl **lentelėje** žemiau 19 yra 29.“ | ta pati priežastis kaip `outcomes[1]`: „žemiau“ be daikto |
+
+**Skaičiai.** `check_language.py --grade 1`: klaidos **0 → 0**, įspėjimai **0 → 0**, pastabos **58 → 58**; modulyje **0 įrašų ir prieš, ir po** (LL-52/LL-53 šeima: vertinys, tas pats veiksmažodis du kartus, žodis be daikto — ne sakinio ilgis). Žmogaus akių radiniai: **17 → 0**. `validate_content.py` (be parametrų ir `--grade 1`): **0 klaidų, 0 įspėjimų**. `check_audio.py`: **1275 tekstų / 2550 įrašų**; 2 pakeisti tariami sakiniai (`spejimas`, `baigta`) → 2 nauji įrašai × 2 tempus, 2 seni pašalinti (`--prune`), visi 2550 mp3 naudojami. `blokas` sąmoningai grąžintas į seną tekstą („Toliau lentelėje nieko nėra.“ — 5 ž., vienareikšmis). Simuliacijos kodo šablone pakeistas ir neskambantis įvadinis sakinys `#shl-lead` („Judėk rodyklėmis“ → „Pirma spėk, paskui judėk“), nes iki spėjimo rodyklių mygtukai scenoje **nerodomi**, o sakinys liepė atlikti veiksmą, kurio tuo metu nėra (LL-205 šeima).
+
+**`check_view.py` (Brave skydų imitacija, 127.0.0.1:8972, `--module 19-simto-skaiciu-lentele`), prieš = po:**
+
+| Plotis | overflow | smallCount | minTaskFont | tasksVisible | clipped | simFont min | loading/fatal | problems |
+|---|---|---|---|---|---|---|---|---|
+| 1440 | 0 | 0 | 21,44 px | 5/5 | [] | 13,4 px | false | [] |
+| 1024 | 0 | 0 | 21,44 px | 5/5 | [] | 13,4 px | false | [] |
+| 390 | 0 | 0 | 19,14 px | 5/5 | [] | 10,5 px | false | [] |
+| 360 | 0 | 0 | 18,96 px | 5/5 | [] | 9,7 px | false | [] |
+
+Papildomai `--viewports small,tiny` @360 ir @320: `overflow` 0, `smallCount` 0, `minTaskFont` 18,96 / 18,72. `--text-scale 200` @390 ir @360: `overflow` 0, `scale_applied` true, `scaled_problems: []`.
+
+**DOM zondas** (`scratch/probe585_shl.py`, 390/360/1440 px, `localStorage`/`crypto.subtle`/`speechSynthesis` užblokuoti): spėjimas „29“ → „Tavo spėjimas: 29. Sutapo.“, pastaba „Spėjai. Dabar spausk Žemyn.“, žemyn → „19 → 29. Pabaiga ta pati (9), dešimtis kita (1 → 2). Spėjai 29. Tai sutapo.“, po keturių krypčių — „…Dešinėn keičiasi pabaiga. Žemyn keičiasi dešimtis.“; 4 garso įrašai groja; konsolės klaidų **0**.
+
+**Palikta sąmoningai:** `concept.example` (plakatas, tas pats 19 → 29 → 20 kaip 1 užduotyje — pavyzdys turi kartoti modelį); `concept.title` „Lentelė, o ne sąrašas“ (kontrastinis, 1 klasei suprantamas, kartoja `big_idea`); `tasks[0..4].why` skaičių užrašai („19 + 10 = 29“ — modelio kalba, ne ilga proza); `tasks[4].hint` („Judant kairėn keičiasi pabaiga, judant žemyn keičiasi dešimtis“ — 8 ž., abi kryptys įvardytos); `sim.config.sentences.spek/is-naujo` ir `blokas` (trumpi, vienareikšmiai); `teacher.*`, `sources`, `svietimas1` (suaugusiojo laukai); **visi `answer` indeksai (1, 2, 0, 2, 0) ir variantų tvarka — nepaliesti nė viename**. `title` keitimas atliktas tik po to, kai patikrinta, kad jis nesutampa su `index.json` (LL-05) ir su `research/wiki/grades/01/index.md`.
+
+**Nauji pasiūlymai:** `2026-11-27-kalbu-redaktorius-wiki-vardas-nelyginamas.json` (wiki krypties lentelė lygina tik pirmą pavadinimo žodį, todėl `title` pakeitimas lieka nelyginamas — neigiamas zondas rc 0). Nauja pamoka: **LL-227**.

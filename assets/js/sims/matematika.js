@@ -3444,13 +3444,13 @@ const SHL_DIR_KEY = { right: "desinen", left: "kairen", down: "zemyn", up: "auks
 
 const SHL_SAY = {
   spek: "Kas bus vienu langeliu žemyn?",
-  spejimas: "Spėjimas įrašytas. Dabar spausk Žemyn.",
+  spejimas: "Spėjai. Dabar spausk Žemyn.",
   desinen: "Dešinėn skaičius didėja vienu.",
   kairen: "Kairėn skaičius mažėja vienu.",
   zemyn: "Žemyn skaičius didėja dešimčia.",
   aukstyn: "Aukštyn skaičius mažėja dešimčia.",
   blokas: "Toliau lentelėje nieko nėra.",
-  baigta: "Dešinėn keičiasi pabaiga, žemyn keičiasi dešimtis.",
+  baigta: "Dešinėn keičiasi pabaiga. Žemyn keičiasi dešimtis.",
   "is-naujo": "Pradedam iš naujo. Pirma spėk.",
 };
 
@@ -3475,7 +3475,7 @@ const simtoLentele = {
     stage.innerHTML = `
       <div id="shl-wrap" style="width:100%;max-width:34rem;margin:0 auto;box-sizing:border-box">
         <p class="sim-note" id="shl-lead" style="margin:0 0 .45rem;text-align:center">
-          Vienas langelis pažymėtas. Judėk rodyklėmis.
+          Vienas langelis pažymėtas. Pirma spėk, paskui judėk.
         </p>
         <div id="shl-grid" role="img" aria-label="Šimto lentelė"
              style="display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:2px;width:100%;max-width:100%;padding:.3rem;box-sizing:border-box;border:2px solid var(--line);border-radius:var(--r-m);background:var(--paper)"></div>

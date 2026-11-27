@@ -1,0 +1,18 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 585,
+  "created": "2026-11-27T17:30:00+02:00",
+  "type": "struktura",
+  "title": "Wiki krypties lentelė lygina tik modulio pavadinimo pirmą žodį, todėl senas vardas lieka amžinai",
+  "body": "Pakeitus modulio `19-simto-skaiciu-lentele` pavadinimą, `content/lt/grade-01/index.json`, modulio JSON ir wiki `research/wiki/grades/01/index.md` turi sutapti, bet wiki vis dar skelbė seną vardą, o `check_docs_facts.py` sakė „Sutampa su failais“. Priežastis: `check_wiki_table()` ima `re.split(r\"[:\\s,]\", module)[0]` (t. y. „Šimto“) ir tikrina, ar tas žodis yra eilutėje; tokią pat sąlygą turi `sync_docs_facts.align_items()`, kuris sąmoningai išlaiko žmogaus parašytą tekstą. Todėl bet koks `title` pakeitimas po dvitaškio (o taip keičiama beveik visada) vartams yra nematomas, o wiki lieka antruoju, nelyginamu pavadinimo šaltiniu — būtent ten žmogus ir agentas ieško „kas jau padaryta“. Siūloma: `check_wiki_table()` papildyti antru signalu — kai įrašas surastas pagal raktą, lyginti jį su `index.json` `title` pagal `difflib` (slenkstis 0,6) ir įspėti, kai skirtumas didelis; o `sync_docs_facts.py` tokį įrašą perrašyti tikruoju pavadinimu. Neigiamas zondas: grąžinus seną vardą TIK į wiki, vartas privalo būti raudonas (šiandien rc 0).",
+  "target": "scripts/check_docs_facts.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/grades/01/index.md:35 — po kalbos taisymo #585 vis dar „Šimto lentelė: žemyn reiškia deimt“ (senas vardas), o content/lt/grade-01/index.json:211 — „Šimto lentelė: žemyn — dešimčia daugiau“",
+    "scripts/check_docs_facts.py:361-371 — `needle = re.split(r\"[:\\s,]\", module)[0]`, `if not any(needle in item.lower() ...)`",
+    "scripts/sync_docs_facts.py:91-101 — `align_items()` ta pati susiejimo sąlyga (`key(title) in low`), todėl sinchronizatorius seno teksto nepastebi",
+    "Neigiamas zondas 2026-11-27: senas vardas įrašytas TIK į wiki → `check_docs_facts.py` „0 klaidų, 0 įspėjimų · Sutampa su failais“ ir `sync_docs_facts.py` „Dokumentai jau sutampa su failais — keisti nereikia“",
+    "research/wiki/guidelines/pamokos.md LL-226, LL-188 — vartas, kuris lygina įvestį ir skelbia išvestį suderinta"
+  ]
+}

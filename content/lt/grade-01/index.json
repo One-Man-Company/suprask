@@ -208,8 +208,8 @@
     },
     {
      "id": "19-simto-skaiciu-lentele",
-     "title": "Šimto lentelė: žemyn reiškia dešimt",
-     "subtitle": "Į dešinę skaičius padidėja vienu, o žemyn padidėja dešimčia",
+     "title": "Šimto lentelė: žemyn — dešimčia daugiau",
+     "subtitle": "Dešinėn skaičius didėja vienu, žemyn — dešimčia",
      "file": "grade-01/matematika/19-simto-skaiciu-lentele.json",
      "minutes": 9,
      "sim": "simto-lentele"

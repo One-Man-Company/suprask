@@ -1,7 +1,7 @@
 ---
 title: "1 klasės programos padengties eilė"
 tipas: padengtis
-atnaujinta: 2026-11-25
+atnaujinta: 2026-11-27
 saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curriculum/"
 ---
 
@@ -11,7 +11,7 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **82**
+- Modulių dabar: **84**
 - Padengta / iš dalies / nėra: **46 / 0 / 1**
 
 ## Ko dar nėra (prioritetas)

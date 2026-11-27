@@ -4830,7 +4830,7 @@ const traumosApsauga = {
 /* --- Dienos režimas ir mityba (1 klasė, 26.1.2) ------------------------
    Modelis: rytas nuo kėlimosi iki išėjimo į mokyklą. Vaikas keičia VIENĄ
    dalyką — kėlimosi laiką. Visi kiti dydžiai nekinta: pasiruošimas (5 min.),
-   rengimasis (25 min.), ėjimas į mokyklą (10 min.) ir išėjimo laikas 7:45.
+   rengimasis (25 min.), ėjimas į mokyklą (10 min.) ir išėjimo laikas 8:00.
    Todėl pusryčiams liekantis laikas IŠVEDAMAS, o ne įrašytas:
    `breakfast = departure - wake - (keltis + rengimasis + ėjimas)`.
    Klaidinga nuostata, kurią modelis griauja: „jei prabundu vėliau, viską
@@ -4848,6 +4848,11 @@ const DR_Y = 156;                  // juostos viršus
 const DR_H = 26;
 const DR_DEPART = 8 * 60;          // išėjimas į mokyklą
 const DR_FIXED = 5 + 25 + 10;      // keltis + rengimasis + ėjimas
+/* Ženklų dydis matuojamas taip, kad telpa: SVG 328 vienetų rėmas telefone
+   (360 px) rodomas ~301 px, t. y. 16 vienetų ženklas iškrenta ~14,7 px —
+   14 px yra mažiausias leidžiamas (standartas, LL-06). 16 vienetų išmatuoti
+   pločiai: „rengtis“ 64,2 · „pusryčiai“ 81,9 · „kelias“ 52,4 · „keltis“ 49,2. */
+const DR_TEXT = 16;
 
 const drX = (min) => DR_X0 + ((min - DR_START) * (DR_X1 - DR_X0)) / (DR_END - DR_START);
 
@@ -4874,6 +4879,14 @@ const dienosJuosta = {
     wakes.forEach((w) => {
       if (w.min === null) problems.push(`laikas „${w.text}“ ne HH:MM formato`);
       else if (w.min < DR_START || w.min >= DR_DEPART) problems.push(`laikas „${w.text}“ už ašies ribų`);
+      /* Likutis turi sudaryti fiksuotą visumą: pastovūs ruožai + pusryčiai =
+         laikas iki išėjimo. Neigiamas likutis reiškia, kad konfigūracija
+         neįmanoma, todėl atmetama garsiai, o ne kerpama iki nulio — kitaip
+         juosta pravažiuoja „Išeinu“ liniją ir vaikas mato, kad rytas ilgesnis
+         už laiką iki išėjimo (LL-196, kritika #52972). */
+      else if (DR_DEPART - w.min - DR_FIXED < 0) {
+        problems.push(`kėlimasis ${w.text} palieka ${DR_DEPART - w.min - DR_FIXED} min. pusryčiams`);
+      }
     });
     ["wakeTitle", "guessTitle", "guessed", "yes", "no", "show", "again", "depart"].forEach((k) => {
       if (!L[k]) problems.push(`užrašo „${k}“ nėra`);
@@ -4898,9 +4911,9 @@ const dienosJuosta = {
       <div style="width:100%;min-width:0;max-width:min(21rem,100%);margin:0 auto">
         <p id="dr-guess" style="margin:0 0 .3rem;min-width:0;text-align:center;font-weight:800;
            font-size:.88rem;line-height:1.2;overflow-wrap:anywhere;color:var(--ink-soft)"></p>
-        <svg id="dr-scene" viewBox="0 0 328 280" width="100%"
+        <svg id="dr-scene" viewBox="0 0 328 316" width="100%"
              style="display:block;max-width:328px;height:auto;margin:0 auto"
-             role="img" aria-label="Ryto juosta nuo 6:30 iki 8:00."></svg>
+             role="img" aria-label="Ryto juosta nuo 6:30 iki 8:10."></svg>
       </div>`;
 
     controls.innerHTML = `
@@ -4959,7 +4972,7 @@ const dienosJuosta = {
       const cuts = [
         { key: "keltis", min: 5, fill: "#f2b13c", label: "" },
         { key: "rengtis", min: 25, fill: "#8fb8d8", label: "" },
-        { key: "valgyti", min: Math.max(0, bf), fill: "#7fc98a", label: "" },
+        { key: "valgyti", min: bf, fill: "#7fc98a", label: "" },
         { key: "eiti", min: 10, fill: "#c98fb8", label: "" },
       ];
       let cursor = wake;
@@ -4970,11 +4983,15 @@ const dienosJuosta = {
         cursor += c.min;
         const words = c.key === "keltis" ? "keltis" : c.key === "rengtis" ? "rengtis"
           : c.key === "valgyti" ? "pusryčiai" : "kelias";
-        const fit = w > 46;
+        /* Etiketė telpa tik tada, kai jos plotis mažesnis už ruožą. Išmatuota
+           (16 vienetų šriftas): „rengtis“ 64,2 ir „pusryčiai“ 81,9, o 15 min.
+           pusryčių ruožas yra 42 vienetų — jam etiketė netelpa ir ruožas lieka
+           tuščias, o ne nukirptas (LL-06, LL-31). */
+        const fit = w > 64;
         return `<g><rect x="${x.toFixed(1)}" y="${DR_Y}" width="${w.toFixed(1)}" height="${DR_H}"
                  rx="4" fill="${c.fill}" stroke="#3a342b" stroke-width="1.6"/>
-          ${fit ? `<text x="${(x + w / 2).toFixed(1)}" y="${DR_Y + 17}" text-anchor="middle"
-                 font-family="system-ui, sans-serif" font-size="10.5" font-weight="800"
+          ${fit ? `<text x="${(x + w / 2).toFixed(1)}" y="${DR_Y + 18}" text-anchor="middle"
+                 font-family="system-ui, sans-serif" font-size="${DR_TEXT}" font-weight="800"
                  fill="#26323c">${words}</text>` : ""}</g>`;
       }).join("");
 
@@ -4985,34 +5002,41 @@ const dienosJuosta = {
         const x = drX(t);
         return `<line x1="${x.toFixed(1)}" y1="${DR_Y + DR_H + 4}" x2="${x.toFixed(1)}"
                   y2="${DR_Y + DR_H + 10}" stroke="#5c6772" stroke-width="2"/>
-          <text x="${x.toFixed(1)}" y="${DR_Y + DR_H + 24}" text-anchor="middle"
-                font-family="system-ui, sans-serif" font-size="11" font-weight="700"
+          <text x="${x.toFixed(1)}" y="${DR_Y + DR_H + 26}" text-anchor="middle"
+                font-family="system-ui, sans-serif" font-size="${DR_TEXT}" font-weight="700"
                 fill="#3a342b">${drClock(t)}</text>`;
       }).join("");
 
       /* Lėkštė: spindulys iš tų pačių minučių. Minusas — perbraukta lėkštė,
-         o ne tuščia vieta, kad dingimas būtų įvardytas, ne nutylėtas. */
-      const r = bf > 0 ? Math.min(30, 10 + bf * 0.55) : 0;
+         o ne tuščia vieta, kad dingimas būtų įvardytas, ne nutylėtas.
+         Skaičius rašomas lėkštės dešinėje, o ne viduje: 15 min. lėkštė yra
+         33 vienetų pločio, o „15 min.“ užima ~50 — viduje jis būtų nukirptas
+         (LL-31). Skaičius nevartojamas du kartus — lėkštė rodo dydį, užrašas
+         įvardija kiekį. */
+      const r = bf > 0 ? Math.min(24, 8 + bf * 0.55) : 26;
+      /* Lėkštė remiasi į lentą (lentos viršus y = 278), todėl jos centras
+         skaičiuojamas iš spindulio — maža lėkštė nekyba ore, o stovi ant tos
+         pačios lentos kaip ir didelė. */
+      const cy = 278 - r;
       const plate = bf > 0
-        ? `<g>${art.ball(64, 224, r, "#f6f1e3", "#b9a87f")}
-             <text x="64" y="228" text-anchor="middle" font-family="system-ui, sans-serif"
-               font-size="13" font-weight="800" fill="#26323c">${bf} min.</text>
-             <text x="110" y="204" font-family="system-ui, sans-serif" font-size="11.5"
-               font-weight="700" fill="#3a342b">pusryčiams</text></g>`
-        : `<g><circle cx="64" cy="224" r="26" fill="none" stroke="#b23a2e" stroke-width="2.4"
+        ? `<g>${art.ball(56, cy, r, "#f6f1e3", "#b9a87f")}
+             <text x="92" y="${(cy + 5).toFixed(1)}" font-family="system-ui, sans-serif"
+               font-size="${DR_TEXT}" font-weight="800"
+               fill="#26323c">pusryčiams ${bf} min.</text></g>`
+        : `<g><circle cx="56" cy="${cy}" r="26" fill="none" stroke="#b23a2e" stroke-width="2.4"
              stroke-dasharray="7 6"/>
-           <path d="M46 206 L82 242 M82 206 L46 242" stroke="#b23a2e" stroke-width="3.2"
-             stroke-linecap="round"/>
-           <text x="104" y="228" font-family="system-ui, sans-serif" font-size="12"
-             font-weight="800" fill="#b23a2e">pusryčių nebeliko</text></g>`;
+           <path d="M38 ${cy - 18} L74 ${cy + 18} M74 ${cy - 18} L38 ${cy + 18}"
+             stroke="#b23a2e" stroke-width="3.2" stroke-linecap="round"/>
+           <text x="92" y="${(cy + 5).toFixed(1)}" font-family="system-ui, sans-serif"
+             font-size="${DR_TEXT}" font-weight="800" fill="#b23a2e">pusryčių nebeliko</text></g>`;
 
       return `${art.defs("dr")}
-        ${art.plank(12, 262, 304, 14)}
+        ${art.plank(12, 292, 304, 14)}
         ${segs}
-        <line x1="${dx.toFixed(1)}" y1="${DR_Y - 16}" x2="${dx.toFixed(1)}" y2="${DR_Y + DR_H}"
+        <line x1="${dx.toFixed(1)}" y1="${DR_Y - 20}" x2="${dx.toFixed(1)}" y2="${DR_Y + DR_H}"
               stroke="#b23a2e" stroke-width="2.6" stroke-dasharray="6 5"/>
-        <text x="${dx.toFixed(1)}" y="${DR_Y - 22}" text-anchor="middle"
-              font-family="system-ui, sans-serif" font-size="11" font-weight="800"
+        <text x="${(dx - 3).toFixed(1)}" y="${DR_Y - 25}" text-anchor="end"
+              font-family="system-ui, sans-serif" font-size="${DR_TEXT}" font-weight="800"
               fill="#b23a2e">${escDr(L.depart)} ${drClock(DR_DEPART)}</text>
         ${ticks}
         ${plate}`;

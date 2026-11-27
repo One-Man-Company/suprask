@@ -1,14 +1,14 @@
 {
  "grade": 1,
- "generated": "2026-11-25T21:06:15",
- "source_hash": "e33370f3e6d7a400",
+ "generated": "2026-11-27T02:11:17",
+ "source_hash": "c7cf15d5f954aed6",
  "source_files": {
   "1-klases-temų-žemėlapis.md": "d51dd4b59f29b1b5",
   "README.md": "f3dce4d7012404f0",
   "kti-dalykai-1-klase.md": "25b1831c4d8d4d77",
   "lietuviu-kalba-1-klase.md": "29dcf1a997bedcdc",
   "matematika-1-klase.md": "e51d1bf352397494",
-  "pasaulio-pazinimas-1-klase.md": "7435fbfe9642bf8d"
+  "pasaulio-pazinimas-1-klase.md": "f394365b5ed4ab8b"
  },
  "curriculum_positions": 47,
  "counts": {
@@ -16,7 +16,7 @@
   "partial": 0,
   "missing": 1
  },
- "modules_now": 82,
+ "modules_now": 84,
  "rows": [
   {
    "key": "26.2.3",
@@ -142,7 +142,7 @@
    "section": "Ko platformoje nėra",
    "sritis": "Gamtos mokslai / Visuomeninis ugdymas",
    "topic": "dienos režimas, mityba",
-   "outcome": "padengta 30-dienos-rezimas-mityba („Vėliau keltis — trumpesni pusryčiai“, sim dienos-juosta, sources cituoja 26.1.2) ir 18-kuprine-ir-kuno-dalys (kuprinės svoris); žr. LL-196 dėl 7:25 → −5 min. defekto, kuris dar netaisytas (2026-11-25, #542)",
+   "outcome": "padengta 30-dienos-rezimas-mityba („Vėliau keltis — trumpesni pusryčiai“, sim dienos-juosta, sources cituoja 26.1.2) ir 18-kuprine-ir-kuno-dalys (kuprinės svoris); trečias kėlimosi laikas 7:20 (pusryčiams 0 min.), o neigiamas likutis simuliacijoje atmetamas garsiai (LL-196 išspręsta 2026-11-27, #567)",
    "strand": "pasaulio-pazinimas",
    "level": "Suprasti",
    "interactivity": "„Kiek sveria tavo kuprinė?“ + kūno dalių žemėlapis",
@@ -171,7 +171,7 @@
     "39-bendri-gyvu-organizmu-pozymiai",
     "10-gyvunu-grupes",
     "34-bendruomenes",
-    "12-bendradarbiavimo-tiltas"
+    "36-grupavimas-pagal-pozymi"
    ],
    "status": "covered",
    "target": ""

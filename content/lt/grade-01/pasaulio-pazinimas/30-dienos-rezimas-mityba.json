@@ -19,12 +19,12 @@
       "Paspausk „Rodyk“ ir pažiūrėk į lėkštę.",
       "Palygink visus tris rytus."
     ],
-    "example": "Keliaisi 6:45 — pusryčiams lieka 35 minutės. Keliesi 7:25 — nebelieka nė vienos."
+    "example": "Keliaisi 6:45 — pusryčiams lieka 35 minutės. Keliesi 7:20 — nebelieka nė vienos."
   },
   "sim": {
     "component": "dienos-juosta",
     "config": {
-      "wakeTimes": ["6:45", "7:05", "7:25"],
+      "wakeTimes": ["6:45", "7:05", "7:20"],
       "labels": {
         "wakeTitle": "Kada keliesi?",
         "guessTitle": "Ar spėsi pavalgyti?",
@@ -84,7 +84,7 @@
       "why": "Vakare atliktas darbas sutrumpina rytą, todėl laiko lieka abiem."
     },
     {
-      "q": "Ketvirtadienį vaikas kėlėsi 6:45, penktadienį — 7:25. Abu kartus išėjo 8:00. Kas penktadienį dingo?",
+      "q": "Ketvirtadienį vaikas kėlėsi 6:45, penktadienį — 7:20. Abu kartus išėjo 8:00. Kas penktadienį dingo?",
       "options": [
         "Rengimosi laiką",
         "Kelią į mokyklą",

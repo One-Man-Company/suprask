@@ -5998,8 +5998,8 @@ const giminesGrandine = {
 /* Kas lieka pievoje po metų                                           */
 /* ------------------------------------------------------------------ */
 /*
- * Viena sąvoka: gamta suyra tai, kas išaugo (lapas, obuolys), o žmogaus
- * pagaminti daiktai (stiklas, plastikas) lieka. Modelis skirtas nuostatai
+ * Viena sąvoka: gamta per metus suyra tai, kas buvo gyva (lapas, obuolio
+ * graužas), o stiklas ir plastikas nesuyra. Modelis skirtas nuostatai
  * „palikau gamoje — suirs“: vaikas pirma pažymi, kas, jo manymu, liks,
  * tada pats pasuka laiką ir pamato, kad butelis ir stiklinė tebeguli, o
  * lapo ir graužo nebėra.
@@ -6087,7 +6087,7 @@ const kasLiekaPievoje = {
         <p id="klp-count" style="margin:.4rem 0 0;min-width:0;text-align:center;font-weight:800;
            font-size:.95rem;line-height:1.25;overflow-wrap:anywhere"></p>
         <p id="klp-fate" class="sim-note" style="margin:.2rem 0 0;line-height:1.3"></p>
-        <p style="margin:.1rem 0 0;text-align:center;font-size:.78rem;line-height:1.3;color:var(--ink-soft)">
+        <p style="margin:.1rem 0 0;text-align:center;font-size:.9rem;line-height:1.3;color:var(--ink-soft)">
           Scena rodo pievą, ne visą mišką.
         </p>
       </div>`;

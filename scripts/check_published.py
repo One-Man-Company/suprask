@@ -463,6 +463,31 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   su žyme → vis dar `stale`, rc 1; neigiama kontrolė, kad pataisa
   nemaskuoja tikro atsilikimo).
 
+2026-11-27 (paleidimas #573): dingusių ID patikra skaitoma per **visą** indekso
+  istoriją, o jos ribos viršijimas — nebe tyli žalia.
+  `historical_ids()` ėjo `git log --max-count=400`, o pasiekus ribą tik
+  pridėdavo pastabą „istorija ribota“ ir **grąžindavo `checked = True`**.
+  Pasekmė: modulis, išimtas iš indekso anksčiau nei prieš 400 indekso
+  revizijų, nebeatpažįstamas, o įrankis sako „sutampa“ ir rc 0 — nors šio
+  įrankio vienintelė garantija yra „vaiko `localStorage` žyma nelieka be
+  modulio“. Šiandien repo turi 86 indekso revizijas (~3 per dieną), tad riba
+  būtų pasiekta maždaug per keturis mėnesius, tyliai (LL-37). Dabar:
+  - istorija skaitoma visa, o blob'ai imami **vienu** `git cat-file --batch`
+    procesu (`_batch_blobs()`), nes 20 000 atskirų `git show` būtų minutės —
+    būtent dėl tos kainos riba ir buvo įvesta;
+  - `HISTORY_LIMIT` (20 000) liko kaip **išteklių** apsauga, o viršijus ją
+    `checked` yra `False` → rc 1 su priežastimi „dingusių ID patikra
+    neįvyko“; tai ne „dingusių nėra“;
+  - tuščia kelio istorija (ne tas kelias, tuščias klonas, ne git katalogas)
+    irgi `checked = False`, o ne „švaru“;
+  - `history_note` nebėra „riba“; pranešimas vadina priežastį: „DINGUSIŲ ID
+    PATIKRA NEATLIKTA — …“.
+  Įrodymas: `scripts/probe_published_history.py` — laikinas git repo su 420
+  indekso revizijų, A1 (išimtas ID matomas), A2 (400 revizijų riba jo
+  nematytų — defektas realus), B3 (`vanished` + `verdict()` raudonas),
+  C4 (pervadinimas lieka `resolved`/`alias_ok`), D5 (riba → `checked False`),
+  E6/F7 (ne git, tuščia istorija, trūkstamas blob'as).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -564,7 +589,21 @@ RENAMES = ROOT / "scripts" / "known_renames.json"
 # matuojama tik vieno commit'o atžvilgiu — t. y. viena diena, o ne sutartis.
 PATH_ORDER = pathlib.Path(os.environ.get("SUPRASK_PATH_ORDER")
                           or (ROOT / "scripts" / "known_path_order.json"))
-HISTORY_LIMIT = 400
+# Viršutinė riba, kiek `index.json` revizijų dar skaitoma. Tai **išteklių**
+# apsauga (kad vienas bėgimas nepradėtų trinti dešimčių tūkstančių blob'ų), o
+# ne matavimo riba: viršijus ją patikra grąžinama kaip **neįvykusi**
+# (`checked=False` → rc 1 su priežastimi), o ne kaip „dingusių nėra“.
+#
+# Iki #573 čia buvo `--max-count=HISTORY_LIMIT`, o pasiekus ribą būdavo
+# spausdinama pastaba „istorija ribota … senesni ID nepatikrinti“ ir
+# `checked` likdavo `True`. Pasekmė tyli: modulis, išimtas iš indekso
+# anksčiau nei prieš 400 indekso revizijų, nebeatpažįstamas, o įrankis toliau
+# sako „sutampa“ — nors būtent šio įrankio vienintelė garantija yra „vaiko
+# žyma niekada nelieka be modulio“ (LL-37: sąrašas nukertamas, o rezultatas
+# pranešamas kaip pilnas). Šiandien indekso revizijų 86, tad riba dar
+# nepasiekta, bet `git log` rodo ~3 revizijas per dieną — ji būtų pasiekta
+# maždaug per keturis mėnesius, tyliai.
+HISTORY_LIMIT = 20000
 
 # Garsas. Manifestas jau lyginamas kaip `AUX_FILES` įrašas, bet baitų lygybė
 # sako tik tiek, kad sąrašas gyvas — ne kad failai, į kuriuos jis rodo, yra
@@ -870,6 +909,67 @@ def renamed_from_map(grade: int) -> dict[str, str]:
     return out
 
 
+def _batch_blobs(specs: list[str]) -> tuple[list[bytes | None], str]:
+    """Visi `<rev>:<kelias>` blob'ai **vienu** `git cat-file --batch` procesu.
+
+    Kodėl ne `git show` cikle: iki #573 istorija buvo ribojama 400 revizijų
+    būtent todėl, kad kiekviena revizija kainavo atskirą procesą (matuota
+    2,07 ms/revizijai, t. y. 400 ≈ 0,8 s). Nuėmus ribą, bet palikus ciklą,
+    20 000 revizijų būtų ~0,7 min. `--batch` priima sąrašą objektų iš `stdin`
+    ir atsako srautu, tad kaina lieka vienas procesas ir tiesinis skaitymas
+    (0,015 s prie 86 revizijų, 12× pigiau nei ciklas).
+
+    Grąžina (`blob'ai`, klaida). `None` sąraše reiškia „šioje revizijoje to
+    kelio nėra“ — tai atsakymas, ne gedimas. Tuščia klaida — sėkmė; bet kokia
+    kita reikšmė reiškia, kad patikra **neįvyko** ir jos rezultatas neturi
+    atrodyti kaip „dingusių nėra“ (LL-37, LL-175).
+    """
+    if not specs:
+        return [], ""
+    try:
+        proc = subprocess.run(
+            ["git", "cat-file", "--batch"], cwd=ROOT,
+            input=("\n".join(specs) + "\n").encode("utf-8"),
+            capture_output=True, timeout=300,
+        )
+    except Exception as exc:  # noqa: BLE001
+        return [], f"`git cat-file` nepavyko ({type(exc).__name__})"
+    if proc.returncode != 0:
+        first = (proc.stderr or b"").decode("utf-8", "replace").strip().splitlines()
+        return [], (f"`git cat-file` grąžino {proc.returncode}"
+                    + (f" ({first[0]})" if first else ""))
+    data = proc.stdout
+    out: list[bytes | None] = []
+    pos = 0
+    for spec in specs:
+        nl = data.find(b"\n", pos)
+        if nl < 0:
+            return [], (f"`git cat-file` atsakymas nutrūko ties "
+                        f"{len(out) + 1} iš {len(specs)} objektų")
+        header = data[pos:nl].decode("utf-8", "replace")
+        pos = nl + 1
+        # Trūkstamas objektas: `<spec> missing`. Tikrinama pabaiga, o ne
+        # skaidymas, nes `<spec>` gali turėti tarpų (kelias su tarpu) — tada
+        # antraštė turi 5 laukus, o ne 3, ir griežtas `split()` klaidingai
+        # praneštų „netikėta antraštė“ apie sveiką atsakymą.
+        if header.endswith(" missing"):
+            out.append(None)
+            continue
+        # `<spec> <tipas> <dydis>` — skaidoma iš dešinės, nes tik paskutiniai
+        # du laukai yra fiksuoti, o `<spec>` yra mūsų įvestis.
+        parts = header.rsplit(" ", 2)
+        if len(parts) != 3 or not parts[2].isdigit():
+            return [], f"netikėta `git cat-file` antraštė: {header[:60]!r}"
+        size = int(parts[2])
+        chunk = data[pos:pos + size]
+        if len(chunk) != size:
+            return [], (f"`git cat-file` atsakymas trumpesnis, nei žadėta "
+                        f"({len(chunk)} iš {size} baitų)")
+        out.append(chunk)
+        pos += size + 1  # po turinio eina skiriamasis newline
+    return out, ""
+
+
 def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
     """Visi ID, kada nors buvę klasės `index.json`, pastaba ir ar patikra įvyko.
 
@@ -881,6 +981,14 @@ def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
     Trečias reikšmės narys `checked` saugo nuo tylios „0 dingusių“: jei istorijos
     perskaityti nepavyksta, tai nėra švarus rezultatas (LL-37/LL-10).
 
+    Nuo #573 skaitoma **visa** indekso istorija, o ne paskutinės 400 revizijų.
+    Ribos buvimas nebuvo neutralus: pasiekus ją `checked` likdavo `True`, o
+    pranešimas tik pridėdavo pastabą — taigi seniai išimtas modulis išnykdavo
+    iš patikros, o įrankis vis tiek sakydavo „sutampa“. Dabar riba yra tik
+    išteklių apsauga ir viršijus ją patikra pranešama kaip neįvykusi.
+    Revizijos skaitomos vienu `git cat-file --batch` procesu (visi blob'ai iš
+    karto), nes po vieną `git show` 20 000 revizijų reikštų 20 000 procesų.
+
     Kiekviena git užklausa tikrinama pagal **išėjimo kodą**, ne tik pagal
     išvestį. `subprocess.run()` rūpestingai atspausdina klaidą, grąžindamas
     tuščią `stdout`; iki #506 būtent taip atsitikdavo ne git kataloge arba be
@@ -890,7 +998,6 @@ def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
     žyma liktų be modulio (LL-175 — įrankio nebuvimas nėra tuščias rezultatas).
     """
     path = f"content/lt/{grade_dir(grade)}/index.json"
-    note = ""
     try:
         probe = subprocess.run(
             ["git", "rev-parse", "--is-shallow-repository"],
@@ -904,7 +1011,7 @@ def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
         if probe.stdout.strip() == "true":
             return {}, "git istorija sekli — dingusių ID patikra neįmanoma", False
         log = subprocess.run(
-            ["git", "log", f"--max-count={HISTORY_LIMIT}", "--format=%h", "--", path],
+            ["git", "log", "--format=%h", "--", path],
             cwd=ROOT, capture_output=True, text=True, timeout=120,
         )
         if log.returncode != 0:
@@ -916,22 +1023,30 @@ def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
     except Exception as exc:  # noqa: BLE001
         return {}, f"git istorijos nepavyko perskaityti ({type(exc).__name__})", False
 
-    if len(revs) >= HISTORY_LIMIT:
-        note = f"istorija ribota iki {HISTORY_LIMIT} revizijų — senesni ID nepatikrinti"
+    # Nė viena revizija nėra „dingusių nėra“: tai teiginys apie failą, kurio
+    # istorijos nematėme (ne git katalogas, ne tas kelias, tuščias klonas).
+    if not revs:
+        return {}, ("git log negrąžino nė vienos indekso revizijos — "
+                    "dingusių ID patikra neatlikta"), False
+    # Išteklių apsauga, o ne matavimo riba: viršijus ją sakome „neatlikta“,
+    # nes tyliai nukirpta istorija yra būtent tas defektas, kurį #573 šalina.
+    if len(revs) > HISTORY_LIMIT:
+        return {}, (f"indekso istorija didesnė už {HISTORY_LIMIT} revizijų — "
+                    "dingusių ID patikra neatlikta (padidink HISTORY_LIMIT)"), False
+
+    blobs, batch_error = _batch_blobs([f"{rev}:{path}" for rev in revs])
+    if batch_error:
+        return {}, f"git istorijos nepavyko perskaityti: {batch_error}", False
 
     seen: dict[str, str] = {}
     unreadable = 0
-    for rev in revs:
+    for rev, blob in zip(revs, blobs):
+        if blob is None:
+            # Revizijoje indekso dar nebuvo arba jis ne JSON — tai atsakymas,
+            # todėl skaičiuojama, bet ne laikoma gedimu.
+            continue
         try:
-            show = subprocess.run(
-                ["git", "show", f"{rev}:{path}"],
-                cwd=ROOT, capture_output=True, text=True, timeout=30,
-            )
-            if show.returncode != 0:
-                # Revizijoje indekso dar nebuvo arba jis ne JSON — tai
-                # atsakymas, todėl skaičiuojama, bet ne laikoma gedimu.
-                continue
-            data = json.loads(show.stdout)
+            data = json.loads(blob.decode("utf-8"))
         except Exception:  # noqa: BLE001
             unreadable += 1
             continue
@@ -945,7 +1060,7 @@ def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
     if revs and not seen and unreadable == len(revs):
         return {}, (f"git istorijos nepavyko perskaityti: nė viena iš "
                     f"{len(revs)} revizijų neperskaityta"), False
-    return seen, note, True
+    return seen, "", True
 
 
 def vanished(grade: int, current_ids: list[str]) -> dict:
@@ -2587,7 +2702,10 @@ def verdict(data: dict) -> dict:
     if orphan:
         reasons.append(f"{len(orphan)} pervadintas ID be alias (žyma liktų našlaite)")
     if data.get("history_unchecked"):
-        reasons.append("dingusių ID patikra neįvyko")
+        # Įvardijama ir klasė: be jos priežastis nesiunčia prie failo, o
+        # „neįvyko“ be vietos yra tas pats kaip „nežinau kur“ (LL-21).
+        grades = ", ".join(grade_dir(g) for g in data["history_unchecked"])
+        reasons.append(f"dingusių ID patikra neįvyko ({grades})")
     # Tyli riba: git istorijos neperskaičius, „tvarka nepajudėta“ būtų
     # teiginys apie matavimą, kurio nebuvo (LL-37).
     if data.get("path_order_checked") is False:
@@ -2960,7 +3078,11 @@ def main() -> int:
                          f"„{succ}“ nėra renamed_from")
             print(f"  - grade-{v['grade']:02d} {v['id']} → {succ} ({state})")
     if data.get("history_note"):
-        print(f"Dingusių ID patikros riba: {data['history_note']}")
+        # Nuo #573 ši pastaba yra ne „riba“ (istorija skaitoma visa), o
+        # priežastis, kodėl patikra neįvyko (sekli istorija, ne git katalogas,
+        # tuščia kelio istorija). Pavadinus ją „riba“ būtų teigiama, kad
+        # trūksta tik seniausių revizijų, nors gali būti neperskaityta nieko.
+        print(f"DINGUSIŲ ID PATIKRA NEATLIKTA — {data['history_note']}")
     if data["path_differs"]:
         print(f"path.json seka skiriasi: klasė {', '.join(map(str, data['path_differs']))}")
     if data.get("path_reordered"):

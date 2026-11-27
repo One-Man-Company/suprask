@@ -1182,6 +1182,11 @@ const svarstyklesLygybe = {
     const whole = Math.max(1, Math.min(20, Number(config.whole ?? 8)));
     const maxBox = Math.max(1, Math.min(20, Number(config.maxBox ?? 10)));
     const say = config.sentences || {};
+    // Klausimas prieš pirmą judesį. Sąmoningai NE config rakte: jo balsas
+    // netariamas (kvietimas skaityti yra `aria-live`), o garso vartai
+    // reikalautų įrašo, kurį vaikas išgirstų niekada (LL-104). Todėl vienas
+    // šaltinis — kodo konstanta.
+    const PROMPT = "Kiek kubelių reikia įdėti? Pirmiausia spėk.";
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const CX = 180;        // ašis
@@ -1191,6 +1196,8 @@ const svarstyklesLygybe = {
 
     let box = 0;           // kiek kubelių įdėta (vienintelis kintamasis)
     let locked = true;     // kol vaikas nepasakė spėjimo, dėti negalima
+    let guess = null;      // vaiko spėjimas: kiek kubelių dėžutėje
+    let compared = false;  // spėjimas palyginamas su tuo, kas įvyko, vieną kartą
     let flipped = false;   // ta pati būsena perskaityta kita kryptimi
     let reported = false;
     let lastSaid = "";
@@ -1211,9 +1218,16 @@ const svarstyklesLygybe = {
         <p class="sim-note" id="sv-msg"></p>
       </div>`;
 
+    // Spėjimo mygtukai generuojami iš konfigūracijos: modulis gali turėti
+    // dešimtį galimų kiekų, o sąrašas turi likti vienas šaltinis (LL-26).
+    const guessChoices = Array.from({ length: Math.min(maxBox, 10) + 1 }, (_, i) => i);
     controls.innerHTML = `
-      <div id="sv-guess" style="display:flex;justify-content:center">
-        <button class="btn" id="sv-start">Pradedu dėti</button>
+      <div id="sv-guess" style="display:grid;gap:.45rem;justify-items:center;max-width:34rem;margin:0 auto">
+        <p id="sv-guess-q" style="margin:0;font-family:var(--font-head);font-weight:800;font-size:1.02rem;line-height:1.3;text-align:center">${PROMPT}</p>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center">
+          ${guessChoices.map((n) => `<button class="btn secondary" type="button" data-guess="${n}" `
+            + `aria-label="Spėju ${n} kubelių" style="min-width:48px;min-height:48px">${n}</button>`).join("")}
+        </div>
       </div>
       <div id="sv-tools" style="display:none;gap:.6rem;flex-wrap:wrap;justify-content:center;align-items:center">
         <button class="btn" id="sv-plus">Įdėk 1</button>
@@ -1317,6 +1331,10 @@ const svarstyklesLygybe = {
     }
 
     /* --- būsena ------------------------------------------------------- */
+    // Proza — iš `sim.config.sentences` (LL-42): ekrane ir garse tas pats
+    // sakinys turi vieną šaltinį. Atsarginis tekstas suformuluotas kitais
+    // žodžiais ir pasirodo tik tada, kai modulis sakinio nepateikė.
+    const line = (key, fallback) => String(say[key] || fallback || "").trim();
     function sayOnce(key) {
       const t = say[key];
       if (!t || lastSaid === key) return;
@@ -1324,23 +1342,40 @@ const svarstyklesLygybe = {
       api.speak(t);
     }
 
+    /* Spėjimas yra duomuo, o ne durys (LL-15): jis palyginamas su tuo, kas
+       įvyko, pirmos lygybės metu ir tik vieną kartą. Skaičiai — modelio, ne
+       teksto: kai vaikas jau pasiekė lygybę, pasakymas „dėžutėje tiek“
+       nebeatstoja atsakymo, o paaiškina, kuo prognozė skyrėsi. */
+    function guessResult() {
+      if (compared || guess === null || diff() !== 0) return "";
+      compared = true;
+      if (guess === box) return `Spėjai ${guess}. Tiek pat, kiek dėžutėje.`;
+      return guess > box
+        ? `Spėjai ${guess}, o dėžutėje ${box}. Prognozė buvo didesnė.`
+        : `Spėjai ${guess}, o dėžutėje ${box}. Prognozė buvo mažesnė.`;
+    }
+
     function feedback() {
       const d = diff();
       if (locked) {
-        api.readout("Kiek kubelių reikia įdėti? Pasakyk, tada dėk.");
+        api.readout(PROMPT);
         return;
       }
       if (d > 0) {
-        api.readout("Kairė sunkesnė");
+        api.readout(line("kaire", "Kairėje daugiau."));
         msg.textContent = box === 0 ? "Dėžutė tuščia. Įdėk kubelį." : "Per daug. Išimk po vieną.";
         sayOnce("kaire");
       } else if (d < 0) {
-        api.readout("Dešinė sunkesnė");
+        api.readout(line("desine", "Dešinėje daugiau."));
         msg.textContent = box === 0 ? "Dėžutė tuščia. Įdėk kubelį." : "Dar trūksta.";
         sayOnce("desine");
       } else {
-        api.readout(flipped ? "Ta pati lygybė" : "Abi pusės lygios");
-        msg.textContent = `${known} ir ${box} yra ${whole}. Abi pusės lygios.`;
+        const cmp = guessResult();
+        const head = line(flipped ? "ta-pati" : "lygios", flipped ? "Ta pati lygybė." : "Abi pusės lygios.");
+        // Spėjimas papildo, o ne pakeičia pagrindinį sakinį: lygybė lieka
+        // pasakyta, o palyginimas — prie jos (LL-15). Skaičiai — modelio.
+        api.readout(cmp ? `${head} ${cmp}` : head);
+        msg.textContent = cmp || `${known} ir ${box} yra ${whole}. Abi pusės lygios.`;
         sayOnce(flipped ? "ta-pati" : "lygios");
         if (!reported) { reported = true; api.progress({ correct: true }); }
       }
@@ -1378,7 +1413,12 @@ const svarstyklesLygybe = {
 
     function setBox(n) {
       if (locked) {
-        msg.textContent = "Pirma pasakyk, kiek kubelių reikia įdėti.";
+        // Užraktas niekada nėra tylus (LL-04, LL-32): pasakoma, ko trūksta,
+        // ir fokusas perkeliamas ten, kur vaikas gali atsakyti.
+        msg.textContent = "Pirma spėk, kiek kubelių reikia įdėti.";
+        api.readout(PROMPT);
+        const first = controls.querySelector("[data-guess]");
+        if (first) first.focus({ preventScroll: true });
         return;
       }
       box = Math.max(0, Math.min(maxBox, n));
@@ -1394,7 +1434,11 @@ const svarstyklesLygybe = {
       lastSaid = "";
       paint();
       feedback();
-      msg.textContent = "Pradedam iš naujo. Dėžutė tuščia.";
+      // Spėjimas nepametamas ir po „Iš naujo“ (LL-16): jis liko vaiko
+      // prognozė, o palyginimas jau įvyko — kartoti jo nereikia.
+      msg.textContent = guess === null
+        ? "Iš naujo. Dėžutė tuščia."
+        : `Iš naujo. Dėžutė tuščia, o spėjimas liko ${guess}.`;
     }
 
     /* --- įėjimai ------------------------------------------------------ */
@@ -1421,26 +1465,52 @@ const svarstyklesLygybe = {
     });
 
     // Tas pats atrakinimas ir balsui, ir įrašytam spėjimui (pamoka LL-11).
-    function startAdding(guess) {
+    // Spėjimas yra SĄLYGA, o ne pasirinkimas (LL-110): kol jo nėra, dėti
+    // negalima, o atsisakymas paaiškinamas ir nukreipia į spėjimo mygtukus.
+    function startAdding(n) {
+      if (!Number.isFinite(n) || n < 0) {
+        api.readout(PROMPT);
+        api.note("Spėk skaičių, tada dėk kubelius. Spėjimas nėra atsakymas — jį palyginsi su tuo, kas įvyks.");
+        const first = controls.querySelector("[data-guess]");
+        if (first) first.focus({ preventScroll: true });
+        return;
+      }
+      // Spėjimas, viršijantis dėžutės talpą, vis tiek yra spėjimas: jį
+      // palyginsime su tuo, kas įvyks, o ne atmesime.
+      guess = Math.round(n);
       locked = false;
       guessAsk.remove();
-      controls.querySelector("#sv-guess").style.display = "none";
-      controls.querySelector("#sv-tools").style.display = "flex";
-      if (Number.isFinite(guess) && guess >= 0) {
-        api.note(`Tavo spėjimas: ${guess}. Dabar dėk kubelius ir pažiūrėk, ar svarstyklės lygios.`);
-      }
+      const gq = controls.querySelector("#sv-guess");
+      if (gq) gq.style.display = "none";
+      const tools = controls.querySelector("#sv-tools");
+      tools.style.display = "flex";
+      tools.querySelector("#sv-plus").focus({ preventScroll: true });
+      api.readout(`Spėjai ${guess}. Dabar dėk kubelius ir pažiūrėk, ar svarstyklės lygios.`);
       paint();
       feedback();
-      wrap.focus();
     }
 
-    controls.querySelector("#sv-start").addEventListener("click", () => startAdding(NaN));
+    controls.querySelectorAll("[data-guess]").forEach((b) => {
+      b.addEventListener("click", () => startAdding(Number(b.dataset.guess)));
+    });
+
+    /* Laisvas skaičiaus laukas lieka tam, kas nori spėti daugiau nei 5 —
+       mygtukai yra greitasis kelias, ne vienintelis (LL-11: tylioje klasėje
+       vaikas turi galėti atsakyti raštu). Laukas NEužrakina galimybės
+       praleisti spėjimą, nes `startAdding(NaN)` jo nebeleidžia. */
 
     const guessAsk = api.ask({
       label: "Kiek kubelių?",
       type: "number",
       submitLabel: "Atsakyti",
       onValue: (value) => {
+        // Tuščias laukas NĖRA spėjimas 0: `Number("")` yra 0, todėl be šios
+        // eilutės tuščias paspaudimas taptų sąmoningu spėjimu (LL-110 šeima).
+        if (!String(value || "").trim()) {
+          api.readout(PROMPT);
+          api.note("Įrašyk skaičių, pavyzdžiui 3.");
+          return;
+        }
         const n = Number(String(value).replace(/[^0-9]/g, ""));
         if (!Number.isFinite(n)) {
           api.note("Įrašyk skaičių, pavyzdžiui 3.");
@@ -1451,7 +1521,7 @@ const svarstyklesLygybe = {
     });
 
     paint();
-    api.readout("Kiek kubelių reikia įdėti? Pasakyk, tada dėk.");
+    api.readout(PROMPT);
 
     return null;
   },

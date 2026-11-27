@@ -1,0 +1,17 @@
+{
+  "role": "simuliaciju-inzinierius",
+  "run_id": 578,
+  "created": "2026-11-27T11:40:00+02:00",
+  "type": "struktura",
+  "title": "api.ask() perduoda tuščią įvestį kaip reikšmę — kiekviena simuliacija turi saugotis pati",
+  "body": "`assets/js/registry.js` `makeSimApi().ask({ onValue })` kviečia `onValue(input.value.trim())` ir neturi jokios sąlygos dėl tuščios įvesties. Todėl kiekviena simuliacija, kuri ima skaičių (`Number(String(v).replace(/[^0-9]/g,\"\")`), gauna `0` ir negali atskirti „vaikas neatsakė“ nuo „vaikas atsakė 0“. Šiame paleidime tai buvo tikras defektas `16-lygybe-svarstykles` (spėjimas „dėžutėje 0 kubelių“ atsirasdavo palietus „Atsakyti“ nieko neįrašius, o tada buvo sąžiningai palyginamas su 3 — vaikas gavo grįžtamąjį ryšį apie spėjimą, kurio nepadarė; pamoka LL-223). Taisiau tik savo simuliaciją, bet spraga yra bendra: `api.ask` yra platformos kodas, o `grep` rodo, kad juo naudojasi ir `pinigine-ir-kaina`. Siūlau, kad helperis pats nekvietų `onValue` tuščiai įvestei (arba perduotų `null`), ir kad `validate_content.py` įspėtų, jei sim vartoja `api.ask` su `type:\"number\"` ir neturi tuščios įvesties patikros. Taip taisyklė gyventų vienoje vietoje, o ne kiekviename komponente atskirai.",
+  "target": "assets/js/registry.js",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/registry.js:110-116 — `const send = () => { if (typeof onValue === \"function\") onValue(input.value.trim()); }` — tuščia eilutė perduodama kaip reikšmė",
+    "assets/js/sims/matematika.js — `16-lygybe-svarstykles` `api.ask` onValue; `Number(\"\") === 0` (patikrinta node: 0, isFinite true)",
+    "assets/js/sims/matematika.js — `pinigine-ir-kaina` tas pats `Number(String(value).replace(/[^0-9]/g,\"\"))`, ten gelbsti atsitiktinė `n <= 0` sąlyga",
+    "research/wiki/guidelines/pamokos.md — LL-223 „Tuščia įvestis, kuri tampa sąmoningu atsakymu“ (šis paleidimas)"
+  ]
+}

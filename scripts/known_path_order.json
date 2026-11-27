@@ -1,9 +1,9 @@
 {
-  "note": "Užfiksuota 1 klasės ėjimo tvarka: tai, ką vaikas jau mato svetainėje. Naujus modulius pridėk į `path.json` pabaigą (arba sąmoningai įterpk į vidurį) ir, jei tvarka keičiama sąmoningai, atnaujink šį failą tame pačiame commit'e — kitaip `check_published.py` praneš „SEKOS TVARKA PAJUDĖTA“.",
+  "note": "Užfiksuota 1 klasės ėjimo tvarka: tai, ką vaikas jau mato svetainėje. Naujus modulius pridėk į `path.json` pabaigą (arba sąmoningai įterpk į vidurį); jei tvarka keičiama sąmoningai, atnaujink šį failą tame pačiame commit'e — kitaip `check_published.py` praneš „SEKOS TVARKA PAJUDĖTA“. Aprėptis (ar seka apima VISUS `path.json` ID, ne tik tuos, kurie buvo užfiksavimo metu) tikrinama kiekvieną bėgimą: trūkstami ID rodomi kaip `path_unpinned`, o užfiksuojami `--accept-order --apply` (be `--apply` — tik sausa eiga).",
   "grades": {
     "1": {
-      "accepted_at": "2026-11-23T15:40:00+02:00",
-      "note": "Pradinė užfiksuota seka (72 moduliai). Ji užfiksuota po to, kai #481 perkėlė `07-elektronika` iš 70 į 48 poziciją (prie `01-elektros-grandine`): perkėlimas jau paskelbtas, jo atšaukimas vėl pajudintų vaiko „Tęsk nuo čia“, todėl tvarka priimta tokia, kokia gyvai, o ne grąžinta atgal.",
+      "accepted_at": "2026-11-28T00:05:01+02:00",
+      "note": "Aprėptis išplėsta #592: seka aprėpė 72 ID, o `path.json` turi 87; pridėta 15 ID, kurių tvarka anksčiau nebuvo matuojama (jų perstatymas nebuvo pastebimas). Jau užfiksuotų ID santykinė tvarka nepasikeitė — tai patikrinta prieš įrašant.",
       "sequence": [
         "01-garsas-ir-raide",
         "02-skiemenu-jungimas",
@@ -17,7 +17,10 @@
         "05-plakatas-ir-informacija",
         "11-teksto-supratimas",
         "13-pasakojimo-vidurys",
+        "14-veikejas-pagal-teksta",
         "12-zinute-skaitytojui",
+        "15-nezinomas-zodis",
+        "16-pokalbio-eile",
         "05-desimtukas",
         "22-sudetis-per-desimti",
         "29-atimtis-per-desimti",
@@ -29,7 +32,11 @@
         "20-kas-gyvas",
         "21-kas-sukure-dailka",
         "22-medziai-krumai-zoles",
+        "41-augalo-dalys",
         "01-spalva-ir-nuotaika",
+        "02-erdvines-raides",
+        "03-piesimo-priemones",
+        "04-deme-ir-fonas",
         "06-figuros",
         "18-taskas-tiese-spindulys-atkarpa",
         "25-ilgis-ir-vienetas",
@@ -37,6 +44,7 @@
         "21-erdvines-figuros",
         "17-kryptys-ir-vieta",
         "24-komandu-seka",
+        "35-logines-operacijos-ir-arba-ne",
         "32-transformacijos-konstravimas",
         "23-piktograma-ir-stulpelis",
         "10-gyvunu-grupes",
@@ -63,6 +71,7 @@
         "25-traumu-prevencija",
         "38-traumu-prevencija",
         "30-dienos-rezimas-mityba",
+        "10-maisto-laikymas",
         "34-bendruomenes",
         "36-zmoniu-ivairove",
         "33-stebejimas",
@@ -73,10 +82,16 @@
         "35-gamtos-istekliai-tarsa-tausojimas",
         "24-kieta-vandens-forma",
         "06-drabuziu-prieziura",
+        "08-avalynes-dziovinimas",
+        "09-austinis-ir-megztas-audinys",
         "33-trukstamas-demuo",
         "40-as-ir-mano-seima",
         "37-energijos-reikia-visiems",
-        "39-bendri-gyvu-organizmu-pozymiai"
+        "39-bendri-gyvu-organizmu-pozymiai",
+        "34-dvizenklis-plius-dvizenklis",
+        "36-grupavimas-pagal-pozymi",
+        "37-tinklelio-adresas",
+        "04-dermes-garsai"
       ]
     }
   }

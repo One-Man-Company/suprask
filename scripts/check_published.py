@@ -513,6 +513,52 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
     → rc 1, o ne „dingusių klasių nėra“ (LL-221 taisyklė klasių lygmenyje).
   Įrodymas: `scripts/probe_lost_grades.py` (be tinklo, su tikru git).
 
+2026-11-27 (paleidimas #592): tvarkos sutartis pagaliau matuoja **aprėptį**, ne
+  tik sutapimą.
+  `reordered_ids()` lygina tik tas ID poras, kurių **abu** nariai yra
+  užfiksuotoje sekoje. ID, pridėtas po to, kai seka užfiksuota, į nė vieną
+  porą neįeina — jo perstatymas nepastebimas iš principo. Matuota šiame
+  repo: `scripts/known_path_order.json` turėjo 72 ID (užfiksuota 2026-11-23),
+  o `path.json` — 87, tad **15 modulių** (visi, pridėti po 2026-11-23) buvo
+  visiškai už matavimo ribos. Neigiama kontrolė: sukeitus du iš jų vietomis
+  (`14-veikejas-pagal-teksta` ↔ `16-pokalbio-eile`), `reordered_ids()` grąžino
+  tuščią sąrašą, o `--path-order` — „✔ Maršruto tvarka nepajudėta“ ir rc 0,
+  nors vaiko „Tęsk nuo čia“ žingsnis persikėlė. Tai ta pati #481 istorija, tik
+  apie modulius, kurių užfiksavimo metu dar nebuvo, ir ji būtų pasikartojusi
+  po kiekvieno naujo modulio — visam laikui, tyliai (LL-37: matavimo bazė
+  susiaurėjo, o rezultatas pranešamas kaip pilnas).
+  Dabar:
+  - `unpinned_ids()` įvardija ID, kurių tvarka neužfiksuota; jie patenka į
+    `path_unpinned` (per klasę ir bendrame `report()`), o `path_order_steps`
+    duoda vardiklį, kad „15 neaprėpta“ nebūtų skaičius be konteksto;
+  - publikavimo bėgime tai **priežastis** (`verdict()` → rc 1), nes jį
+    paleidžia vaidmuo, kuris ir nusprendžia, kokia tvarka jau yra sutartis;
+    CI režime (`--path-order`) lieka geltona su rc 0 — ten naują modulį
+    įterpti į vidurį yra teisingas darbas, o vartai, draudžiantys teisingą
+    darbą, moko juos apeiti (LL-38);
+  - `--accept-order [--apply]` užfiksuoja dabartinę seką **sąmoningu, `git
+    diff` matomu** veiksmu. Jis atsisako, jei jau užfiksuotų ID tvarka
+    pajudėta (tai perstatymas, o ne aprėpties spraga) ir jei sekos failas
+    neperskaitytas (tylus sutarties perrašymas būtų praradimas).
+  Šiame paleidime seka papildyta 72 → 87 (15 ID), o jau užfiksuotų ID
+  santykinė tvarka nepasikeitė — tai patikrinta prieš įrašant. Įrodymas:
+  `scripts/probe_path_order.py` **27/27** (L1–L7 nauji: L1 neigiama
+  kontrolė — su siauresne baze sukeitimas nemato `reordered`, tik `unpinned`;
+  L2 sausa eiga; L3 papildymas nekeičia senų ID tvarkos; L4 po užfiksavimo
+  tas pats sukeitimas jau raudonas; L5 perstatymas atmetamas ir failas
+  neperrašomas; L6 sugadintas failas neperrašomas; L7 tikrame repo aprėptis
+  87/87). Su senuoju įrankiu zondas krenta (`KeyError: 'path_unpinned'`), o
+  su sena 72 ID seka `check_published.py --no-bytes` duoda rc 1 su priežastimi
+  „15 modulių tvarka neužfiksuota“.
+
+  Tame pačiame darbe išspręstas #56887: `path_order_baseline()` pastabą
+  („nėra `known_path_order.json` įrašo — ilgalaikė apsauga neįjungta“) rašydavo
+  **tik švariame medyje**. Kūrėjo darbe `path.json` visada papildytas, tad
+  pastaba dingdavo, o zondas `probe_path_order.py` H1 tapdavo raudonas būtent
+  tada, kai saugomas darbas vyksta — ir kūrėjas mokydavosi zondo nepaleisti
+  (LL-182/LL-207). Pastaba dabar pasako faktą (apsaugos nėra), o ne darbinės
+  kopijos būseną, ir rašoma abiem atvejais; tai patikrina H1b.
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -520,6 +566,8 @@ Naudojimas:
     python3 scripts/check_published.py --no-bytes    # greita: tik ID ir seka
     python3 scripts/check_published.py --path-order   # be tinklo: tik maršruto tvarka (CI)
     python3 scripts/check_published.py --scope        # be tinklo: tik klasių rėmas (CI)
+    python3 scripts/check_published.py --accept-order # be tinklo: ko seka dar neaprėpia
+    python3 scripts/check_published.py --accept-order --apply   # užfiksuok (matomas git diff)
     python3 scripts/check_published.py --audio-full  # tas pats kaip numatyta
     python3 scripts/check_published.py --audio-sample 48   # greitas, aklas
 """
@@ -1345,10 +1393,18 @@ def path_order_baseline(grade: int, current_seq: list[str]) -> dict:
     if head == current_seq:
         out["checked"] = True
         out["label"] = "HEAD (nepaskelbtų pakeitimų nėra)"
-        out["note"] = ("nėra `scripts/known_path_order.json` įrašo — "
-                       "ilgalaikė apsauga neįjungta, matuotas tik HEAD")
-        return out
-    out.update(seq=head, label="HEAD (darbinė kopija dar nepaskelbta)", checked=True)
+    else:
+        out.update(seq=head, label="HEAD (darbinė kopija dar nepaskelbta)",
+                   checked=True)
+    # Pastaba vienoda abiem atvejais: ji pasako **faktą** (ilgalaikės apsaugos
+    # nėra), o ne darbinės kopijos būseną. Iki #56887 ji buvo rašoma tik
+    # švariame medyje, todėl kūrėjo darbo metu (path.json ką tik papildytas)
+    # įrankis apie išjungtą apsaugą nutylėdavo — o zondas, kurio vienas
+    # lūkestis yra būtent šis sakinys, tapdavo raudonas būtent tada, kai
+    # saugomas darbas vyksta (LL-38 atvirkštinė pusė: vartai, kurie baudžia
+    # teisingą darbą, moko jų nepaleisti).
+    out["note"] = ("nėra `scripts/known_path_order.json` įrašo — "
+                   "ilgalaikė apsauga neįjungta, matuotas tik HEAD")
     return out
 
 
@@ -1402,17 +1458,49 @@ def inserted_midsequence(current: list[str], baseline: list[str]) -> list[str]:
     return [mid for i, mid in enumerate(current) if mid not in base_set and i < last_base]
 
 
+def unpinned_ids(current: list[str], baseline: list[str]) -> list[str]:
+    """ID, kurie yra `path.json`, bet nėra užfiksuotoje sekoje — ta tvarka nematuota.
+
+    Kodėl tai atskiras matavimas, o ne aibės skirtumas pranešimui. Nuo #484
+    `reordered_ids()` atsako į klausimą „ar senų ID santykinė tvarka
+    nepajudėta“, ir jis lygina **tik poras, kurių abu nariai yra bazėje**.
+    ID, pridėtas po to, kai seka buvo užfiksuota, į nė vieną porą neįeina —
+    jis nematomas. Matuota 2026-11-27 (#592): užfiksuota 72 ID, o `path.json`
+    turi 87, tad 15 ID (visi nuo 2026-11-23 pridėti moduliai) buvo **visiškai
+    už matavimo ribos**. Sukeitus du iš jų vietomis, `reordered_ids()` grąžina
+    tuščią sąrašą, o vartai sako „senų ID tvarka nepajudėta“ ir rc 0 — nors
+    vaiko „Tęsk nuo čia“ žingsnis persikėlė. Tai ta pati #481 istorija, tik
+    apie modulius, kurių tuo metu dar nebuvo: perstatymas rastas tik tada,
+    kai jau buvo svetainėje, ir beliko konstatuoti.
+
+    Todėl trūkstami ID yra **įvardijami**, o ne nutylimi (LL-37: sąrašas
+    nukerpamas, o rezultatas pranešamas kaip pilnas). Jų tvarka netampa
+    raudona automatiškai: naują modulį įterpti į vidurį yra teisingas
+    darbas (`inserted_midsequence` — geltona), o vartai, kurie draudžia
+    teisingą darbą, moko juos apeiti (LL-38). Uždarymas yra sąmoningas
+    veiksmas — `--accept-order`, kuris įrašo dabartinę tvarką ir niekada
+    neperstumia jau užfiksuoto ID.
+    """
+    base = set(baseline)
+    return [mid for mid in current if mid not in base]
+
+
 def path_order_check(grade: int, current_seq: list[str]) -> dict:
     """Santykinės `path.json` tvarkos patikra vienam klasiui.
 
-    Grąžina `path_reordered` (raudona: senų ID tvarka pajudėta), o
+    Grąžina `path_reordered` (raudona: senų ID tvarka pajudėta),
     `path_inserted_midsequence` (geltona: nauji įterpti į vidurį),
+    `path_unpinned` (geltona: ID, kurių tvarka užfiksuota seka nemato),
     `path_order_baseline` (su kuo lyginta) ir `path_order_checked`.
     """
     baseline = path_order_baseline(grade, current_seq)
     out: dict = {
         "path_reordered": [],
         "path_inserted_midsequence": [],
+        "path_unpinned": [],
+        # Kiek žingsnių iš viso yra (aprėpties vardiklis). Be jo pranešimas
+        # galėtų pasakyti „17 neaprėpta“, o skaitytojas nežinotų, iš kiek.
+        "path_order_steps": len(current_seq),
         "path_order_baseline": baseline.get("label", ""),
         "path_order_checked": bool(baseline.get("checked")),
     }
@@ -1420,9 +1508,13 @@ def path_order_check(grade: int, current_seq: list[str]) -> dict:
         out["path_order_note"] = baseline["note"]
     base = baseline.get("seq") or []
     if not base:
+        # Be bazės `unpinned_ids()` pavadintų visus ID „neužfiksuotais“, o tai
+        # būtų teiginys apie sąrašą, kurio nematėme (LL-37). Apie tai jau
+        # pasako `path_order_note` / `path_order_checked`.
         return out
     out["path_reordered"] = reordered_ids(current_seq, base)
     out["path_inserted_midsequence"] = inserted_midsequence(current_seq, base)
+    out["path_unpinned"] = unpinned_ids(current_seq, base)
     return out
 
 
@@ -1443,13 +1535,20 @@ def path_order_gate(grade: int) -> dict:
     temos kaimyno yra teisinga, tik tai turi būti matoma pranešime, o ne
     atrandama vaiko ekrane.
 
+    `unpinned` (nuo #592) irgi geltona, bet ji **turi būti matoma**: tai ID,
+    kurių tvarkos užfiksuota seka neaprėpia, tad jiems `reordered` negali
+    suveikti iš principo. Šiandien (2026-11-27) tokių buvo 15 iš 87 — visi
+    moduliai, pridėti po to, kai seka buvo užfiksuota 2026-11-23. Be šios
+    eilutės vartai sakydavo „tvarka nepajudėta“ apie 72 ID, o likusius 15
+    palikdavo visiškai už matavimo ribos (LL-37).
+
     Grąžina dict su `ok` — vieninteliu lauku, kuriuo remiasi `main()`.
     """
     gd = grade_dir(grade)
     out: dict = {
         "grade": grade, "file": f"content/lt/{gd}/path.json", "ok": False,
         "checked": False, "baseline": "", "reordered": [], "inserted": [],
-        "sequence_len": 0, "error": "", "note": "",
+        "unpinned": [], "sequence_len": 0, "error": "", "note": "",
     }
     try:
         seq = list(json.loads((CONTENT / gd / "path.json")
@@ -1475,8 +1574,127 @@ def path_order_gate(grade: int) -> dict:
     base = pin["seq"]
     out["reordered"] = reordered_ids(seq, base)
     out["inserted"] = inserted_midsequence(seq, base)
+    out["unpinned"] = unpinned_ids(seq, base)
     out["ok"] = not out["reordered"]
     return out
+
+
+def accept_order(grade: int, apply: bool) -> dict:
+    """Įrašo dabartinę `path.json` tvarką į `scripts/known_path_order.json`.
+
+    Kodėl reikia atskiro veiksmo, o ne automatinio papildymo. Užfiksuota seka
+    yra **sutartis su vaiku**: ji sako, kokia eile jau ėjai ir kur yra tavo
+    „Tęsk nuo čia“. Jei ji būtų papildoma kiekvieno bėgimo metu, perstatymas,
+    įvykęs prieš tą bėgimą, būtų tyliai įteisintas — vartai, kurie visada
+    žali, yra tas pats kaip jokių (LL-37 atvirkštinė pusė). Todėl:
+
+      - papildoma **tik** tai, ko sekoje nėra (`unpinned_ids()`), ir tik tada,
+        kai jau užfiksuotų ID santykinė tvarka **nepajudėta**. Jei pajudėta —
+        atsisakoma: tai ne aprėpties spraga, o perstatymas, ir jis turi būti
+        sprendimas, matomas `git diff`, o ne įrankio šalutinis poveikis;
+      - be `apply` nieko nerašoma (sausa eiga), o rezultatas pasakomas
+        žodžiais — taip pat, kaip `sync_docs_facts.py`.
+
+    Grąžina `{grade, ok, applied, added, sequence_len, pinned_before, error}`.
+    """
+    gd = grade_dir(grade)
+    out: dict = {"grade": grade, "ok": False, "applied": False, "added": [],
+                 "sequence_len": 0, "pinned_before": 0, "error": ""}
+    try:
+        seq = list(json.loads((CONTENT / gd / "path.json")
+                              .read_text(encoding="utf-8")).get("sequence", []))
+    except (OSError, json.JSONDecodeError) as exc:
+        out["error"] = f"{gd}/path.json neperskaitytas ({type(exc).__name__}: {exc})"
+        return out
+    out["sequence_len"] = len(seq)
+    if not seq:
+        out["error"] = f"{gd}/path.json seka tuščia"
+        return out
+
+    pin = pinned_sequence(grade)
+    base = pin["seq"] if pin else []
+    out["pinned_before"] = len(base)
+    moved = reordered_ids(seq, base) if base else []
+    if moved:
+        # Ne „papildyk seka“, o „grąžink tvarką“: tai du skirtingi darbai, o
+        # sumaišius juos įrankis įteisintų būtent tą perstatymą, kurį turi
+        # sustabdyti.
+        out["error"] = (f"{len(moved)} jau užfiksuotų ID tvarka pajudėta "
+                        f"({', '.join(moved)}) — tai perstatymas, o ne trūkstami "
+                        f"ID. Grąžink seną tvarką; jei perstatymas sąmoningas, "
+                        f"keisk `scripts/known_path_order.json` ranka, kad "
+                        f"sprendimas būtų matomas `git diff`.")
+        return out
+
+    added = unpinned_ids(seq, base)
+    out["added"] = added
+    out["ok"] = True
+    if not added:
+        return out
+    if not apply:
+        return out
+
+    try:
+        data = json.loads(PATH_ORDER.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        # Sugadinto failo negalima „papildyti“: jo turinys būtų prarastas, o
+        # tai būtų tyli sutarties perrašymas (LL-37).
+        out["ok"] = False
+        out["error"] = (f"{PATH_ORDER.name} neperskaitytas — nerąšau, kad "
+                        f"neprarasčiau jau užfiksuotų klasių")
+        return out
+    grades = data.setdefault("grades", {})
+    entry = grades.setdefault(str(grade), {})
+    entry["sequence"] = seq
+    # Ta pati forma kaip įrašą rašė žmogus (`+02:00`, ne `+0200`): failą
+    # skaito `pinned_sequence()`, bet `git diff` turi likti skaitomas žmogui.
+    stamp = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+    entry["accepted_at"] = stamp[:-2] + ":" + stamp[-2:] if len(stamp) > 5 else stamp
+    entry["note"] = (
+        f"Aprėptis išplėsta #592: seka aprėpė {len(base)} ID, o `path.json` "
+        f"turi {len(seq)}; pridėta {len(added)} ID, kurių tvarka anksčiau "
+        f"nebuvo matuojama (jų perstatymas nebuvo pastebimas). Jau užfiksuotų "
+        f"ID santykinė tvarka nepasikeitė — tai patikrinta prieš įrašant.")
+    PATH_ORDER.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n",
+                          encoding="utf-8")
+    out["applied"] = True
+    return out
+
+
+def accept_order_main(grade: int, apply: bool, as_json: bool) -> int:
+    """`--accept-order [--apply]`: aprėpties papildymas be tinklo ir be git.
+
+    rc 1, kai papildyti negalima (perstatymas arba neperskaitytas failas) —
+    tada reikia žmogaus sprendimo, o ne įrankio veiksmo.
+    """
+    grades = [grade] if grade else live_grades()
+    if not grades:
+        print("MARŠRUTO TVARKOS APRĖPTIS NEIŠMATUOTA — nė viena klasė "
+              "neskelbiama „live“, tad nėra ko užfiksuoti")
+        return 1
+    rows = [accept_order(g, apply) for g in grades]
+    ok = all(r["ok"] for r in rows)
+    if as_json:
+        print(json.dumps({"ok": ok, "applied": apply, "grades": rows},
+                         ensure_ascii=False))
+        return 0 if ok else 1
+    for r in rows:
+        name = grade_dir(r["grade"])
+        if r["error"]:
+            print(f"NEUŽFIKSUOTA — {name}: {r['error']}")
+            continue
+        if not r["added"]:
+            print(f"✔ {name}: seka jau aprėpia visus {r['sequence_len']} ID — "
+                  f"papildyti nereikia.")
+            continue
+        verb = "užfiksuota" if r["applied"] else "būtų užfiksuota"
+        print(f"{'✔' if r['applied'] else '·'} {name}: {verb} {len(r['added'])} ID "
+              f"({r['pinned_before']} → {r['sequence_len']}): "
+              f"{', '.join(r['added'])}.")
+        if not r["applied"]:
+            print("  Tai sausa eiga — nieko neįrašyta. Įrašyk: "
+                  "`python3 scripts/check_published.py --accept-order --apply`.")
+    return 0 if ok else 1
 
 
 def path_order_main(grade: int, as_json: bool) -> int:
@@ -1526,6 +1744,13 @@ def path_order_main(grade: int, as_json: bool) -> int:
             print(f"  Nauji moduliai įterpti į vidurį (ne į pabaigą): "
                   f"{', '.join(r['inserted'])} — leidžiama, bet „kitas žingsnis“ "
                   f"pasikeitė po jų einantiems.")
+        if r["unpinned"]:
+            # Ne klaida, bet tyla būtų melas apie aprėptį: šiems ID
+            # `reordered` negali suveikti, tad „tvarka nepajudėta“ apie juos
+            # nieko nesako. Užfiksuoti galima `--accept-order`.
+            print(f"  Tvarka NEAPIMA {len(r['unpinned'])} ID (iš {r['sequence_len']}): "
+                  f"{', '.join(r['unpinned'])} — jų perstatymas nebūtų pastebėtas. "
+                  f"Užfiksuok: `python3 scripts/check_published.py --accept-order`.")
     return 0 if ok else 1
 
 
@@ -2731,6 +2956,15 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         # „įrašyk trūkstamą ID“ (`not_in_path`) ar „seka pasenusi“ (`path_differs`).
         "path_reordered": merge("path_reordered"),
         "path_inserted_midsequence": merge("path_inserted_midsequence"),
+        # ID, kurių tvarkos užfiksuota seka neaprėpia (#592). Ne klaida ir ne
+        # raudona: jų perstatymas tiesiog **nebuvo matuojamas**. Be šio rakto
+        # „senų ID tvarka nepajudėta“ atrodytų kaip teiginys apie visą 87
+        # žingsnių kelią, nors jis galiojo 72 (LL-37).
+        "path_unpinned": merge("path_unpinned"),
+        # Sudedama, o ne imamas didžiausias: `path_unpinned` irgi sulietas iš
+        # visų klasių, tad vardiklis turi būti tos pačios aibės (LL-21 —
+        # skaičius turi atitikti matavimą, o ne būti „gražesnis“).
+        "path_order_steps": sum(g.get("path_order_steps", 0) for g in per_grade),
         "path_order_baseline": "; ".join(
             f"{grade_dir(g['grade'])} {g['path_order_baseline']}"
             for g in per_grade if g.get("path_order_baseline")),
@@ -2936,6 +3170,21 @@ def verdict(data: dict) -> dict:
     # „seka pasenusi“, todėl ir priežastis sava (LL-21).
     if data.get("path_reordered"):
         reasons.append(f"{len(data['path_reordered'])} senų ID tvarka pajudėta")
+    # Aprėptis, ne perstatymas. `reordered` lygina tik poras, kurių abu nariai
+    # yra užfiksuotoje sekoje — ID, pridėtas po užfiksavimo, į nė vieną porą
+    # neįeina, tad jo perstatymas nepastebimas iš principo (#592, matuota:
+    # 15 iš 87 tokių). Tai raudona **publikavimo** bėgime, nes jį paleidžia
+    # vaidmuo, kuris ir nusprendžia, kokia tvarka jau yra sutartis: uždarymas
+    # yra `--accept-order --apply`, t. y. matomas `git diff`. CI režime
+    # (`--path-order`) ši būsena lieka geltona, nes ten naują modulį įterpti į
+    # vidurį yra teisingas darbas, o vartai, draudžiantys teisingą darbą,
+    # moko juos apeiti (LL-38).
+    if data.get("path_unpinned"):
+        steps = data.get("path_order_steps", 0)
+        reasons.append(f"{len(data['path_unpinned'])} modulių tvarka neužfiksuota "
+                       f"(jų perstatymas nematomas"
+                       + (f", iš {steps} žingsnių" if steps else "")
+                       + ")")
     if data.get("aux_stale"):
         reasons.append(f"{len(data['aux_stale'])} pasenęs pagrindinis failas")
     if data.get("aux_absent"):
@@ -3085,6 +3334,12 @@ def main() -> int:
     ap.add_argument("--scope", action="store_true",
                     help="be tinklo ir be git: klasių rėmas (grades.json ↔ "
                          "katalogai ↔ indeksai) — CI vartams")
+    ap.add_argument("--accept-order", action="store_true",
+                    help="be tinklo ir be git: parodyk, kokių ID maršruto "
+                         "tvarka dar neaprėpia (sausa eiga; įrašo tik su --apply)")
+    ap.add_argument("--apply", action="store_true",
+                    help="kartu su --accept-order: įrašyk papildytą seką į "
+                         "`scripts/known_path_order.json`")
     ap.add_argument("--audio-full", action="store_true",
                     help="tikrinti visus garso įrašus (tai yra ir numatytasis režimas)")
     ap.add_argument("--audio-sample", type=int, default=0,
@@ -3098,6 +3353,8 @@ def main() -> int:
     # svetaine, kuri PR metu dar nerodo šio commit'o.
     if args.path_order:
         return path_order_main(args.grade, args.json)
+    if args.accept_order:
+        return accept_order_main(args.grade, args.apply, args.json)
     if args.scope:
         return scope_main(args.json)
 
@@ -3330,6 +3587,17 @@ def main() -> int:
         print(f"Nauji moduliai įterpti į maršruto vidurį (ne į pabaigą) "
               f"({len(inserted)}): {', '.join(inserted)} — tai leidžiama, bet "
               f"„kitas žingsnis“ pasikeitė jiems ir po jų einantiems.")
+    unpinned = data.get("path_unpinned") or []
+    if unpinned:
+        # Aprėptis, o ne klaida. `reordered` lygina tik poras, kurių abu
+        # nariai yra užfiksuotoje sekoje; šiems ID jis suveikti negali iš
+        # principo, tad „tvarka nepajudėta“ apie juos nieko nesako (LL-37).
+        print(f"SEKOS TVARKA NEAPIMA {len(unpinned)} MODULIŲ — jų perstatymas "
+              f"nebūtų pastebėtas ({len(unpinned)} iš "
+              f"{data.get('path_order_steps', 0) or '?'} žingsnių): "
+              f"{', '.join(unpinned[:8])}"
+              f"{' …' if len(unpinned) > 8 else ''}. "
+              f"Užfiksuok: `python3 scripts/check_published.py --accept-order`.")
     if data.get("path_order_note"):
         print(f"Sekos tvarka: {data['path_order_note']}")
     if data.get("path_order_checked") is False:
@@ -3537,13 +3805,22 @@ def main() -> int:
         # kuo lyginta, kitaip „sutampa“ apie 72 ID nieko nesako apie jų eilę.
         order_tail = ""
         if data.get("path_order_checked"):
-            order_tail = (f" (senų ID tvarka nepajudėta, lyginta su "
-                          f"{data.get('path_order_baseline') or '?'})")
+            # Aprėptis sakoma žodžiais, ne prielaida: `reordered` lygina tik
+            # užfiksuotos sekos ID poras, tad „nepajudėta“ be vardiklio būtų
+            # teiginys apie visą kelią, nors išmatuota buvo jo dalis (#592).
+            steps = data.get("path_order_steps", 0)
+            unpinned_n = len(data.get("path_unpinned") or [])
+            cover = (f"{steps - unpinned_n}/{steps} žingsnių" if steps
+                     else "aprėptis nežinoma")
+            order_tail = (f" (senų ID tvarka nepajudėta — užfiksuota "
+                          f"{cover}, lyginta su {data.get('path_order_baseline') or '?'}")
             inserted_n = len(data.get("path_inserted_midsequence") or [])
             if inserted_n:
-                order_tail = (f" (senų ID tvarka nepajudėta, lyginta su "
-                              f"{data.get('path_order_baseline') or '?'}, "
-                              f"{inserted_n} naujas įterptas į vidurį)")
+                order_tail += f", {inserted_n} naujas įterptas į vidurį"
+            if unpinned_n:
+                order_tail += (f", {unpinned_n} be užfiksuotos tvarkos — "
+                               f"paleisk `--accept-order`")
+            order_tail += ")"
         if data.get("bytes_checked", True):
             print(f"✔ Repo ir gyva svetainė sutampa (ID, seka, modulių ir pagrindinių failų baitai, "
                   f"svetainės kodas {data.get('shell_count', 0)} failų"

@@ -146,6 +146,20 @@ def main() -> int:
               and "known_path_order" in note_h
               and "HEAD" in out["path_order_baseline"],
               f"label={out['path_order_baseline']!r} note={note_h[:60]!r}")
+        # H1b (#56887): tas pats, bet su NEcommitintu `path.json` — būtent
+        # tokia būsena vyksta kūrėjo darbe. Iki pataisos `path_order_baseline()`
+        # pastabą rašydavo tik švariame medyje, tad zondas tapdavo raudonas
+        # būtent tada, kai saugomas darbas vyksta — ir kūrėjas mokydavosi jo
+        # nepaleisti. Pastaba dabar pasako faktą (apsaugos nėra), o ne darbo
+        # kopinėjimo būseną, todėl abu atvejai įvardijami.
+        dirty_seq = real_path_seq + ["99-tik-zonde"]
+        out_dirty = cp.path_order_check(1, dirty_seq)
+        check("H1b necommitintas path.json taip pat įvardija išjungtą apsaugą",
+              out_dirty["path_order_checked"] is True
+              and "known_path_order" in out_dirty.get("path_order_note", "")
+              and "darbinė kopija" in out_dirty["path_order_baseline"],
+              f"label={out_dirty['path_order_baseline']!r} "
+              f"note={out_dirty.get('path_order_note', '')[:50]!r}")
         shuffled_real = real_path_seq[:]
         shuffled_real[3], shuffled_real[4] = shuffled_real[4], shuffled_real[3]
         out = cp.path_order_check(1, shuffled_real)
@@ -282,8 +296,105 @@ def main() -> int:
               rc_offline == 0 and f"{len(gate_seq)} žingsnių" in buf.getvalue(),
               f"rc={rc_offline} laukta {len(gate_seq)} žingsnių, "
               f"išvestis={buf.getvalue().strip()[:60]!r}")
+
+        # L. Aprėptis (#592). Tai ne perstatymas, o tai, ar `reordered` apskritai
+        #    GALI suveikti: jis lygina tik poras, kurių abu nariai yra bazėje,
+        #    tad ID, pridėtas po užfiksavimo, buvo visiškai už matavimo ribos.
+        #    Matuota 2026-11-27 tikrame repo: 72 užfiksuoti, 87 sekoje.
+        #
+        #    L1 — neigiama kontrolė: su sena (siauresne) baze dviejų
+        #    neužfiksuotų ID sukeitimas `reordered` NEMATO, o `unpinned` jį
+        #    įvardija. Būtent šis lūkestis ir būtų raudonas be šios pataisos
+        #    (senas įrankis `unpinned` neturėjo).
+        base8 = [f"a-0{i}" for i in range(1, 9)]
+        grown8 = base8[:6] + ["a-07", "a-08"]
+        write_pin(pin, 1, base8[:6])
+        swapped_new = grown8[:]
+        swapped_new[-1], swapped_new[-2] = swapped_new[-2], swapped_new[-1]
+        out = cp.path_order_check(1, swapped_new)
+        check("L1 neužfiksuotų ID sukeitimas nemato „reordered“, bet įvardija „unpinned“",
+              out["path_reordered"] == [] and out["path_unpinned"] == ["a-08", "a-07"],
+              f"reordered={out['path_reordered']} unpinned={out['path_unpinned']}")
+
+        #    L2 — sausos eigos `--accept-order` nieko nerašo, o pasako, ką
+        #    užfiksuotų. Sąrašas turi būti būtent trūkstami ID. `CONTENT`
+        #    nukreipiamas į laikiną katalogą: zondas negali rašyti į repo.
+        tmp_content = tmp / "content"
+        (tmp_content / "grade-01").mkdir(parents=True, exist_ok=True)
+        real_content = cp.CONTENT
+        cp.CONTENT = tmp_content
+        (tmp_content / "grade-01" / "path.json").write_text(
+            json.dumps({"sequence": grown8}, ensure_ascii=False), encoding="utf-8")
+        dry = cp.accept_order(1, apply=False)
+        check("L2 `accept_order` sausa eiga: nieko neįrašo, įvardija trūkstamus",
+              dry["ok"] is True and dry["applied"] is False
+              and dry["added"] == ["a-07", "a-08"]
+              and dry["pinned_before"] == 6 and dry["sequence_len"] == 8,
+              f"ok={dry['ok']} applied={dry['applied']} added={dry['added']}")
+
+        #    L3 — `--apply` užfiksuoja TIK trūkstamus, o užfiksuotų ID
+        #    santykinės tvarkos nekeičia. Tai sutarties sąlyga: papildymas
+        #    negali tyliai įteisinti perstatymo.
+        applied = cp.accept_order(1, apply=True)
+        pin_doc = json.loads(pin.read_text(encoding="utf-8"))["grades"]["1"]
+        check("L3 `--apply` papildo seka, senų ID tvarkos nekeičia",
+              applied["applied"] is True
+              and pin_doc["sequence"] == grown8
+              and ordered(pin_doc["sequence"], base8[:6]),
+              f"seq={pin_doc['sequence']}")
+
+        #    L4 — po užfiksavimo tas pats sukeitimas JAU raudonas. Tai ir yra
+        #    uždarymas: anksčiau nematomas perstatymas tampa matomu.
+        out = cp.path_order_check(1, swapped_new)
+        check("L4 po užfiksavimo tas pats sukeitimas yra perstatymas",
+              len(out["path_reordered"]) >= 1 and out["path_unpinned"] == [],
+              f"reordered={out['path_reordered']} unpinned={out['path_unpinned']}")
+
+        #    L5 — jei jau užfiksuotų ID tvarka pajudėta, `accept_order`
+        #    ATSISAKO: tai sprendimas, o ne aprėpties spraga. Priešingu atveju
+        #    įrankis įteisintų būtent tą perstatymą, kurį turi sustabdyti
+        #    (LL-37 atvirkštinė pusė — vartai, kurie visada žali).
+        moved_seq = list(grown8)
+        moved_seq[1], moved_seq[2] = moved_seq[2], moved_seq[1]
+        (tmp_content / "grade-01" / "path.json").write_text(
+            json.dumps({"sequence": moved_seq}, ensure_ascii=False), encoding="utf-8")
+        before = pin.read_text(encoding="utf-8")
+        refused = cp.accept_order(1, apply=True)
+        after = pin.read_text(encoding="utf-8")
+        check("L5 perstatymas atmetamas, o seka neperrašoma",
+              refused["ok"] is False and "perstatymas" in refused["error"]
+              and after == before,
+              f"ok={refused['ok']} error={refused['error'][:70]!r} nepakito={after == before}")
+
+        #    L6 — sugadintas užfiksuotos sekos failas: nerąšoma, kad
+        #    neprarastume kitų klasių įrašų (tylus sutarties perrašymas).
+        (tmp_content / "grade-01" / "path.json").write_text(
+            json.dumps({"sequence": grown8}, ensure_ascii=False), encoding="utf-8")
+        write_pin(pin, 1, base8[:6])
+        pin.write_text("{ ne json", encoding="utf-8")
+        corrupt = cp.accept_order(1, apply=True)
+        check("L6 sugadintas sekos failas neperrašomas",
+              corrupt["ok"] is False and corrupt["applied"] is False,
+              f"ok={corrupt['ok']} error={corrupt['error'][:60]!r}")
+        cp.CONTENT = real_content
+
+        #    L7 — tikras repo: užfiksuota seka turi aprėpti VISĄ `path.json`,
+        #    t. y. `unpinned` tuščias. Šis lūkestis po #592 pataisos žalias,
+        #    o prieš ją būtų buvęs 15.
+        cp.PATH_ORDER = original
+        real_out = cp.path_order_check(1, path_seq)
+        check("L7 repo seka aprėpia visus path.json ID",
+              real_out["path_order_checked"] is True
+              and real_out["path_unpinned"] == []
+              and real_out["path_reordered"] == [],
+              f"pin aprėptis {len(path_seq) - len(real_out['path_unpinned'])}/"
+              f"{len(path_seq)}")
     finally:
         cp.PATH_ORDER = original
+        # `CONTENT` gali likti nukreiptas į laikiną katalogą, jei lūkestis
+        # išmetė išimtį tarp L2 ir L6 — tada likęs procesas matuotų ištrintą
+        # katalogą (LL-36 atvirkštinė pusė).
+        cp.CONTENT = ROOT / "content" / "lt"
 
     failed = [name for name, ok, _ in results if not ok]
     print(f"\n{len(results) - len(failed)}/{len(results)} lūkesčių išsipildė")

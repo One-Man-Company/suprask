@@ -6,19 +6,20 @@
   "subtitle": "Kodėl negalima tiksliai numatyti",
   "minutes": 10,
   "outcomes": [
-    "Paaiškinu, kodėl laimėjimas priklauso nuo atsitiktinumo.",
-    "Skaičiuoju rezultatus ir lyginu juos su trečdaliu.",
-    "Nustoju tikėti, kad laimėsiu visada. Laimiu maždaug kas trečią kartą."
+    "Skaičiuoju laimėjimus, pralaimėjimus ir lygiąsias.",
+    "Palyginu, kurio rezultato buvo daugiausia.",
+    "Paaiškinu, kodėl ėjimo iš anksto žinoti negalima."
   ],
   "concept": {
-    "title": "Niekas nelaimi dažniau",
-    "big_idea": "Žaidime trys lygūs pasirinkimai. Nė vienas nelaimi dažniau, jei abu žaidėjai renkasi atsitiktinai. Po daug ėjimų kiekvienas rezultatas pasitaiko maždaug trečdalį kartų.",
+    "title": "Skaičiuok, o ne spėk",
+    "big_idea": "Žaidime trys ėjimai. Nė vienas nėra stipresnis: kiekvienas nugali vieną ir pralaimi kitam. Todėl iš anksto nežinai, kas laimės.",
     "steps": [
-      "Yra trys ėjimai: akmenėlis, žirklės, popierius. Kiekvienas nugali vieną ir pralaimi kitam.",
-      "Todėl vienas ėjimas nugali tik vieną iš trijų.",
-      "Sužaisk 30 kartų. Laimėsi apie 10 kartų, kartais mažiau, kartais daugiau."
+      "Parodyk savo ėjimą: akmenėlį, žirkles ar popierių.",
+      "Kiekvienas ėjimas nugali vieną ir pralaimi kitam.",
+      "Po kiekvieno ėjimo pažymėk, kas laimėjo.",
+      "Po daug ėjimų palygink, kiek buvo kiekvieno rezultato."
     ],
-    "example": "Laimėjai 5 kartus iš eilės? Taip gali nutikti atsitiktinai. Po 30 ėjimų laimėjimų paprastai būna apie 10. Kartais bus 7, kartais 14."
+    "example": "Tu parodei akmenėlį, draugas — žirkles. Akmenėlis nugalėjo. Kitą kartą gali būti atvirkščiai."
   },
   "sim": {
     "component": "akmenelis-popierius",
@@ -26,68 +27,82 @@
   },
   "tasks": [
     {
-      "q": "Kitas žaidėjas ėjimą renkasi atsitiktinai. Kiek tu laimėsi iš trijų ėjimų?",
+      "q": "Laimėjai 4, pralaimėjai 2, lygiosios 3. Kiek ėjimų buvo?",
       "options": [
-        "Vienas iš trijų",
-        "Vienas iš dviejų",
-        "Visi trys"
-      ],
-      "answer": 0,
-      "hint": "Galvok apie kito žaidėjo ėjimus, ne apie savo.",
-      "why": "Iš trijų atvejų laimėsi vieną kartą — trečdalį visų ėjimų."
-    },
-    {
-      "q": "Sužaisk 30 kartų. Kiek maždaug bus lygiųjų?",
-      "options": [
-        "Apie 25",
-        "Apie 10",
-        "Nulis"
+        "6",
+        "9",
+        "12"
       ],
       "answer": 1,
-      "hint": "Trečdalis iš 30.",
-      "why": "Trečdalis iš 30 yra 10. Todėl lygiosios bus apie 10 kartų."
+      "hint": "Sudėk tris skaičius: laimėjimus, pralaimėjimus ir lygiąsias.",
+      "why": "4 + 2 + 3 = 9, todėl ėjimų buvo devyni."
     },
     {
-      "q": "Laimėjai 5 kartus iš eilės. Kodėl taip atsitiko?",
+      "q": "Po devynių ėjimų buvo 4 laimėjimai ir 2 pralaimėjimai. Kiek buvo lygiųjų?",
       "options": [
-        "Nes visada laimėsiu",
-        "Nes kitas žaidėjas klysta",
-        "Nes taip nutinka atsitiktinai"
-      ],
-      "answer": 2,
-      "hint": "Pažaisk simuliacijoje dar kelis kartus. Ar laimėsi visada?",
-      "why": "Keli laimėjimai dar ne taisyklė. Kitas ėjimas gali būti bet koks."
-    },
-    {
-      "q": "Kuris ėjimas nugali žirkles?",
-      "options": [
-        "Akmenėlis",
-        "Popierius",
-        "Žirklės"
+        "3",
+        "4",
+        "9"
       ],
       "answer": 0,
-      "hint": "Kiekvienas ėjimas nugali vieną ir pralaimi kitam. Išbandyk visus tris simuliacijoje.",
-      "why": "Akmenėlis nugali žirkles. Žirklės nugali popierių. Popierius nugali akmenėlį.",
+      "hint": "Iš devynių atimk laimėjimus, paskui pralaimėjimus.",
+      "why": "9 − 4 − 2 = 3, todėl lygiosios buvo trys."
+    },
+    {
+      "q": "Laimėjimų 4, pralaimėjimų 2, lygiųjų 3. Kuri juosta ilgiausia?",
+      "options": [
+        "Pralaimėjimų",
+        "Lygiųjų",
+        "Laimėjimų"
+      ],
+      "answer": 2,
+      "hint": "Palygink tris skaičius: 4, 2 ir 3.",
+      "why": "Keturi yra daugiausia, todėl ilgiausia laimėjimų juosta."
+    },
+    {
+      "q": "Ar žinai iš anksto, ką parodys draugas?",
+      "options": [
+        "Taip, jei gerai pažiūriu",
+        "Ne, jis renkasi iš naujo",
+        "Taip, jei žaidžiu greitai"
+      ],
+      "answer": 1,
+      "hint": "Pagalvok, ar jis žino, ką parodysi tu.",
+      "why": "Draugas kiekvieną ėjimą renkasi iš naujo. Todėl visų laimėjimų žinoti negalima."
+    },
+    {
+      "q": "Žaidei devynis ėjimus. Ar galėjo būti nulis lygiųjų?",
+      "options": [
+        "Galėjo, taip nutinka",
+        "Ne, taip nebūna",
+        "Ne, lygiosios būna visada"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, jog abu galite parodyti skirtingus ėjimus.",
+      "why": "Jei niekada neparodėte to paties ėjimo, lygiųjų nebūna.",
       "optional": true
     }
   ],
-  "reflect": "Sužaisk su draugu 20 ėjimų. Suskaičiuok, kiek kartų laimėjo kiekvienas. Ar rezultatas nustebino?",
+  "reflect": "Sužaisk su draugu dešimt ėjimų. Kurio rezultato buvo daugiausia?",
   "teacher": {
-    "goal": "Tikimybės ir atsitiktinumo intuicija; apsauga nuo „karštos rankos“ klaidos.",
-    "prompt": "Kaip sužinoti, ar žaidimas sąžiningas?",
-    "offline": "Sužaiskite 30 ėjimų ir baltame lape braukite po vieną brūkšnį kiekvienam rezultatui. Suskaičiuokite ir palyginkite su trečdaliu.",
+    "goal": "Sąžiningas žaidimas be stipresnio ėjimo: vaikas pats skaičiuoja tris rezultatus ir lygina, kurio buvo daugiausia, kaip piktogramoje 1 klasėje. Tikėtinumo sąvokos ir trupmenų (trečdalis) sąmoningai nėra — tai 3–4 ir 2 klasės turinys.",
+    "prompt": "Kodėl nė vienas ėjimas nėra stipresnis už kitus?",
+    "offline": "Sužaiskite devynis ėjimus be ekrano. Po kiekvieno ėjimo vaikas deda po vieną kaladėlę į tris krūvas: laimėjau, pralaimėjau, lygiosios. Tada sulyginkite krūvų aukštį ir paklauskite, kuri krūva aukščiausia ir ar ji tokia bus ir kitą kartą.",
     "misconceptions": [
-      "Vaikai tiki „sėkmės serijomis“ ir strategija, kurios nėra.",
-      "„Trys variantai“ painiojami su „50/50“, nes dažnos poros.",
-      "Po kelių lygiųjų tikimasi, kad kitas ėjimas būtinai laimės."
+      "„Jei laimėjau tris kartus iš eilės, laimėsiu ir ketvirtą“: seriją vaikas laiko taisykle. Simuliacija leidžia žaisti toliau ir parodyti, kad kitas ėjimas gali būti bet koks.",
+      "„Akmenėlis stipriausias, nes jį renkuosi dažniausiai“: savo pasirinkimą vaikas painioja su ėjimo galia. Modelyje visi trys ėjimai yra lygūs pagal taisykles.",
+      "„Lygiosios nereiškia nieko“: lygiosios yra trečias rezultatas ir turi savo juostą, todėl jos irgi skaičiuojamos."
     ]
   },
   "sources": [
-    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, sritis „Duomenys ir tikimybės“, 1–2 kl.",
-    "Matematikos bendroji programa (2022): duomenų rinkimas, dažnių palyginimas, atsitiktinumo idėja 1–2 klasėje."
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Matematika“, 1 klasė: „Duomenys ir jų interpretavimas. Mokomasi perskaityti piktogramoje, stulpelinėje diagramoje pateikiamą informaciją, ja remtis atsakant į pagrindinį tyrimo klausimą“ (sources/pradinio-bp-rekomendacijos-2024.txt:40393–40394).",
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijose (2024), „Matematika“: 1 klasėje mokiniai registruoja renkamus duomenis, kai yra 2–3 stebimo požymio reikšmės, ir vaizduoja juos piktograma ar stulpine diagrama (sources/pradinio-bp-rekomendacijos-2024.txt:23028–23031).",
+    "research/wiki/curriculum/1-klases-temų-žemėlapis.md:50 — duomenų sritis 1 klasei: piktograma ir stulpelinė diagrama.",
+    "research/wiki/curriculum/matematika-1-klase.md §6 — dažnių lentelė ir baigčių tikėtinumas 1 klasei nepriklauso: dažnių lentelė — 2 kl., tikėtinumas — 3–4 kl."
   ],
   "svietimas1": [
-    "1 žingsnis — gylis: tikimybė parodoma per savo paties duomenis, ne per formulę",
-    "3 žingsnis — pažanga: rezultatas skaičiuojamas iškart, palyginama su lūkesčiu"
+    "1 žingsnis — gylis: viena idėja (nė vienas ėjimas nestipresnis), be trupmenų ir be tikėtinumo sąvokos",
+    "2 žingsnis — vienodas vertinimas: užduotys skaičiuoja ir lygina vaiko paties surinktus rezultatus, o ne įsimintą formuluotę",
+    "3 žingsnis — pagalba laiku: simuliacija rezultatą rodo iškart, klaidingas spėjimas nebaudžiamas ir galima žaisti toliau"
   ]
 }

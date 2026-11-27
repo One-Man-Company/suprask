@@ -282,18 +282,16 @@ const akmenelisPopierius = {
       { id: "popierius", emoji: "✋", label: "Popierius", acc: "popierių", beats: "akmenelis" },
     ];
     const ROWS = [
-      { k: "win", label: "Laimėjimai", c: "#4fc3a1" },
-      { k: "lose", label: "Pralaimėjimai", c: "#f2708a" },
-      { k: "draw", label: "Lygiosios", c: "#ffc94d" },
+      { k: "win", label: "Laimėjimai", gen: "Laimėjimų", c: "#4fc3a1" },
+      { k: "lose", label: "Pralaimėjimai", gen: "Pralaimėjimų", c: "#f2708a" },
+      { k: "draw", label: "Lygiosios", gen: "Lygiųjų", c: "#ffc94d" },
     ];
-    /* Modulio rezultatas žada „stebiu rezultatus ir lyginu juos su lūkesčiu“,
-       o simuliacija anksčiau tik skaičiavo ir po dešimto ėjimo PASKELBDAMA
-       „kiekvienas variantas laimi maždaug trečdalį kartų“ — neparodžiusi nei
-       lūkesčio, nei palyginimo su juo. Dabar trečdalis rodomas kaip skaičius,
-       o palyginti kviečiamas vaikas (P2: pirma veiksmas, paskui
-       paaiškinimas). Trečdalis imamas ties 9 ėjimais, nes 9 : 3 = 3 —
-       sveikas skaičius, kurį vaikas perskaičiuoja pats. */
-    const THIRD_AT = 9;
+    /* Modulio rezultatas žada „skaičiuoju rezultatus ir lyginu, kurio buvo
+       daugiausia“, o simuliacija anksčiau skelbė, jog visi trys rezultatai
+       pasitaiko po lygiai — t. y. mokė trupmeną, kurios 1 klasės programoje
+       nėra (#55709). Dabar rodomas tik skaičius ir palyginimas: ilgiausia
+       juosta ir skaičius, kuris ją padaro ilgiausia. */
+    const GOAL_AT = 9;
     const DUEL = "Akmenėlis nugali žirkles. Žirklės nugali popierių. Popierius nugali akmenėlį.";
     const ejimai = (n) => (n % 10 === 1 && n % 100 !== 11 ? "ėjimas" : "ėjimai");
     const score = { win: 0, lose: 0, draw: 0 };
@@ -312,7 +310,7 @@ const akmenelisPopierius = {
         </div>
         <p id="ap-msg" style="font-family:var(--font-head);font-weight:800;min-height:1.6rem"></p>
         <div id="ap-bars" style="display:flex;flex-direction:column;gap:.4rem;max-width:26rem;margin:0 auto"></div>
-        <p id="ap-third" style="font-size:.95rem;font-weight:700;margin:.6rem 0 0"></p>
+        <p id="ap-most" style="font-size:.95rem;font-weight:700;margin:.6rem 0 0"></p>
       </div>`;
     controls.innerHTML = `
       <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;min-width:0">
@@ -323,7 +321,7 @@ const akmenelisPopierius = {
     const pcEl = stage.querySelector("#ap-pc");
     const msgEl = stage.querySelector("#ap-msg");
     const barsEl = stage.querySelector("#ap-bars");
-    const thirdEl = stage.querySelector("#ap-third");
+    const mostEl = stage.querySelector("#ap-most");
 
     function bars() {
       const total = score.win + score.lose + score.draw || 1;
@@ -339,23 +337,35 @@ const akmenelisPopierius = {
           </span>
           <span style="flex:0 0 auto;min-width:1.2rem;text-align:right">${score[r.k]}</span>
         </div>`).join("");
-      /* Trečdalis imamas iš TIKRŲ ėjimų, o ne paskelbiamas iš anksto: kai
-         ėjimų skaičius nesidalija iš 3, neišgalvotas skaičius nerodomas.
+      /* Palyginimas imamas iš TIKRŲ ėjimų: sakoma, kurio rezultato juosta
+         ilgiausia ir kiek ji rodo. Lygumas sprendžiamas PAGAL TIKRĄ lygiųjų
+         skaičių: dvi lygios juodos nėra „visos trys“ (LL-18, LL-40 — sakinys
+         turi galioti kiekvienai būsenai, ne tik tai, kurią matė autorius).
+         Trupmenos nėra: tai 2 klasės sąvoka, o modulis — 1 klasei (#55709).
+         Vardas „juosta“ — toks, koks daiktas nupieštas (horizontali juosta),
+         ir toks pat kaip modulio užduotyse: vienas daiktas — vienas vardas.
          „1 ėjimas“ / „2 ėjimai“ — skaičiaus forma, ne daugiskaita visada. */
       const played = score.win + score.lose + score.draw;
-      thirdEl.textContent = played === 0
-        ? "Iš viso 0 ėjimų."
-        : played % 3 === 0
-          ? `${played} ${ejimai(played)}. Jei visi trys lygūs — po ${played / 3}.`
-          : `${played} ${ejimai(played)}.`;
+      if (played === 0) {
+        mostEl.textContent = "Iš viso 0 ėjimų.";
+        return;
+      }
+      const best = Math.max(score.win, score.lose, score.draw);
+      const top = ROWS.filter((r) => score[r.k] === best);
+      const longest = top.length === 1
+        ? `${top[0].gen} juosta ilgiausia`
+        : top.length === 2
+          ? `${top[0].gen} ir ${top[1].gen.toLowerCase()} juostos lygios`
+          : "Visos trys juostos vienodos";
+      mostEl.textContent = `${played} ${ejimai(played)}. ${longest}: ${best}.`;
     }
 
     /* Trys paaiškinimo eilės, visos trumpesnės už 10 žodžių. Serija rodoma
-       TIK jai prasidėjus, o ne po dešimto ėjimo: kitaip vaikas „karštą ranką“
+       TIK jai prasidėjus, o ne po devinto ėjimo: kitaip vaikas „karštą ranką“
        jau spėja įsidėmėti, o neigimą išgirsta kaip pamokymą, ne pastebėjimą. */
     function explain(played) {
       if (streak.n >= 3) return `Jau ${streak.n} tokie patys rezultatai iš eilės. Kitas ėjimas gali būti bet kuris.`;
-      if (played > 0 && played % 3 === 0) return `Po ${played} ėjimų trečdalis — po ${played / 3}. Palygink su savo skaičiais.`;
+      if (played >= GOAL_AT) return "Palygink juostas. Kitą kartą ilgiausia gali būti kita.";
       return DUEL;
     }
 
@@ -381,7 +391,12 @@ const akmenelisPopierius = {
       bars();
       api.readout(`Laimėjimai ${score.win}, pralaimėjimai ${score.lose}, lygiosios ${score.draw}. Ėjimų ${played}.`);
       api.note(explain(played));
-      if (played >= THIRD_AT && !announced) {
+      /* Pažanga žymima tik įveikus VISĄ ciklą: devyni ėjimai (po tris
+         kiekvienam pasirinkimui) IR visi trys rezultatai jau matyti — kitaip
+         palyginti nėra ko, o žyma „atlikta“ pasirodytų po pirmo bandymo
+         (LL-29). */
+      const allSeen = score.win > 0 && score.lose > 0 && score.draw > 0;
+      if (played >= GOAL_AT && allSeen && !announced) {
         announced = true;
         api.progress({ correct: true });
       }

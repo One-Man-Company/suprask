@@ -122,6 +122,6 @@ Lietuviškas garsas — iš anksto sugeneruoti įrašai, ne naršyklės sintezė
 | | |
 |---|---|
 | Versija | 0.1 (2026-11) |
-| Parengta | 1 klasė — 9 kryptys, 84 modulių, 84 simuliacijų, 369 užduočių |
+| Parengta | 1 klasė — 9 kryptys, 84 modulių, 84 simuliacijų, 370 užduočių |
 | Toliau | 2 klasė, tada 3–4 |
 | Kalbos | lietuvių (struktūra paruošta kitoms) |

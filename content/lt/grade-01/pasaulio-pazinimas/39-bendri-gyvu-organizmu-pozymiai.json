@@ -60,7 +60,7 @@
           ],
           "sentences": {
             "juda": "Gėlė stovi vietoje. Jos lapai lėtai pasisuka į šviesą.",
-            "kvepuoja": "Gėlė kvėpuoja visu lapu. Štai lapas vandenyje: iš jo kyla burbuliukai.",
+            "kvepuoja": "Gėlė kvėpuoja lapais, ne nosimi. Stiklinėje nuo lapo kyla burbuliukai. Tai oras, kuris buvo lape.",
             "maitinasi": "Šaknys ima vandenį ir maisto medžiagas iš žemės.",
             "auga": "Po savaitės išaugo naujas lapas.",
             "dauginasi": "Iš žiedo sunoksta sėklos. Iš sėklų augs naujos gėlės."
@@ -144,6 +144,17 @@
       "why": "Obelis turi visus ženklus, nors stovi vietoje."
     },
     {
+      "q": "Kodėl iš gėlės lapo vandenyje kyla burbuliukai?",
+      "options": [
+        "Kad gėlė kvėpuoja būtent burbuliukais",
+        "Kad lapas vandenyje pradeda pūti",
+        "Kad lape buvo oro, kuris dabar išeina"
+      ],
+      "answer": 2,
+      "hint": "Pagalvok, kada burbuliukai kyla: visą laiką ar tik vandenyje?",
+      "why": "Burbuliukai rodo orą, kuris buvo lape, o ne patį kvėpavimą."
+    },
+    {
       "q": "Žiemą medis be lapų ir nejuda. Kodėl jis vis dar gyvas organizmas?",
       "options": [
         "Nes jį judina vėjas",
@@ -160,9 +171,10 @@
   "teacher": {
     "goal": "Suprasti, kad gyvi organizmai turi tuos pačius penkis ženklus — juda, kvėpuoja, maitinasi, auga, dauginasi — ir kad vienas ženklas dar nieko neįrodo. Modelis laiko tris būtybes viename kadre: gėlę, katę ir robotą dulkių siurblį. Vaikas tikrina po vieną ženklą ir mato, kad gėlė surenka penkis, katė penkis, o robotas vieną (jis juda). Gėlės ženklai parodomi taip, kaip juos galima pamatyti: lapai pasisuka į šviesą, lapas su burbuliukais stiklinėje, šaknys ima vandenį, išauga naujas lapas, iš žiedo sunoksta sėklos. Robotui atėjus eilė neatimama — jis lieka scenoje toks pat, ir tai yra atsakymas.",
     "prompt": "Ką gėlė daro su oru, vandeniu ir sėklomis?",
-    "offline": "Įmeskite į stiklinę šilto vandens vieną gėlės lapą ir palaukite minutę: ant lapo krašto ir paviršiaus renkasi maži burbuliukai, o lapas vandenyje tamsėja. Tai oras, kuris buvo lape — gėlė kvėpuoja visu lapu, ne nosimi. Paskui žaiskite „Gyvas–negyvas“: ant stalo padėkite penkias korteles su ženklais (juda, kvėpuoja, maitinasi, auga, dauginasi) ir po vieną daiktą — puodą su gėle, žaislinį šunį, akmenį, obuolį, nufotografuotą robotą. Vaikai prie kiekvieno daikto deda tik tas korteles, kurias gali parodyti pirštu. Laimi ne tas, kas greičiau, o tas, kas parodo požymį: „Žaislinis šuo neauga — pažiūrėk, jis toks pat kaip pernai“.",
+    "offline": "Įmeskite į stiklinę šilto vandens vieną gėlės lapą ir palaukite minutę: ant lapo krašto ir paviršiaus renkasi maži burbuliukai, o lapas vandenyje tamsėja. Pasakykite vaikams, kad burbuliukai — tai oras, kuris buvo lape; jis išeina, nes lapas orą ima lapais, ne nosimi. Paskui žaiskite „Gyvas–negyvas“: ant stalo padėkite penkias korteles su ženklais (juda, kvėpuoja, maitinasi, auga, dauginasi) ir po vieną daiktą — puodą su gėle, žaislinį šunį, akmenį, obuolį, nufotografuotą robotą. Vaikai prie kiekvieno daikto deda tik tas korteles, kurias gali parodyti pirštu. Laimi ne tas, kas greičiau, o tas, kas parodo požymį: „Žaislinis šuo neauga — pažiūrėk, jis toks pat kaip pernai“.",
     "misconceptions": [
       "„Augalas nekvėpuoja, nes neturi nosies.“ Modelis rodo lapą stiklinėje ir nuo lapo kylančius burbuliukus, o mokytojo veikla leidžia tą patį pakartoti su tikra stikline: oras yra lape, nors burnos nėra.",
+      "„Gėlė kvėpuoja burbuliukais.“ Burbuliukai tik parodo, kad lape buvo oro, o ne kad gėlė kvėpuoja būtent jais: oras į lapą įeina ir išeina per mažas angutes visą dieną, o bandymas jį padaro matomą.",
       "„Kas juda, tas gyvas; kas nejuda, tas negyvas.“ Robotas juda ir teturi vieną ženklą, o gėlė juda vos pastebimai (lapai pasisuka į šviesą) ir turi visus penkis. Judėjimas atskiria ne gyvus nuo negyvų, o greitus nuo lėtų.",
       "„Gėlei užtenka vandens, ji nevalgo.“ Modelis rodo, kad šaknys ima vandenį ir maisto medžiagas iš žemės: vanduo yra tik viena maisto dalis.",
       "„Robotas kvėpuoja, nes pučia orą.“ Jis orą judina, bet jo nenaudoja: po savaitės robotas toks pat, o gėlė per tą savaitę išaugo lapą.",

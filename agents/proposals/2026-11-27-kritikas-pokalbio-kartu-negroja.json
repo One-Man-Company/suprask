@@ -1,0 +1,19 @@
+{
+  "role": "kritikas",
+  "run_id": 583,
+  "created": "2026-11-27T15:40:00+02:00",
+  "type": "kritika",
+  "title": "16-pokalbio-eile: modulis klauso „ką girdi“, o modelis „Kartu“ negroja nė vieno žodžio",
+  "body": "Naujo modulio `16-pokalbio-eile` (1 kl., lietuvių kalbos A.2.3) rezultatas yra klausomasis — „Pastebiu, kad kalbėdami abu iš karto žmonės nesupranta vienas kito“ (JSON:10), pirmas veiksmas — „Spausk „Paleisk“ ir klausykis juostos“ (JSON:18), o pirma užduotis klausia „Pasakyk, ką girdi, kai abu kalba kartu“ su atsakymu „Vieną susiliejusį ruožą“ (JSON:64, :67). Išmatavau, ką vaikas realiai išgirsta (Chromium, 390×844, 6 s po paspaudimo): režime „Pakaitomis“ — 4 skirtingi garso įrašai (po vieną kiekvienai replikai), režime „Kartu“ — **vienas**, ir tas pats sakinys, kuris jau buvo pasakytas perjungus režimą: „Abu kalba kartu. Žodžiai susilieja — nieko nesupranti“ (`calba.js:3699–3707`). Paspaudus „Paleisk“ „Kartu“ režime naujo garso nepasirodo nė vieno: `play()` tiesiog iškviečia `api.readout/note/speak(say(\"together\"))`, t. y. paaiškinimą, o ne dviejų žmonių kalbą. Kodas tai pripažįsta komentare („Garsas negali skambėti dviem balso takeliais“, `calba.js:3700–3701`) — `assets/js/speech.js:46–56` turi vieną `<audio>` elementą (LL-145), — bet modulio tekstas vis tiek žada girdimą patirtį, o užduotis klausia apie tai, ko nebuvo galima girdėti. Vaikas, 6–7 m., atsakymą „Vieną susiliejusį ruožą“ renkasi ne iš klausos, o iš pamatytos sulipdytos raidžių eilutės („LLaabbaass,,MIaetvaas!!“), todėl modulis vertina skaitymą, nors deklaruoja klausymąsi. Tai LL-205 šeima (sakinys duoda atlikti veiksmą, kurio modelis neleidžia ir neparodo), o įrodymas čia ne kodas, o garso srautas: 4 prieš 1. Taisymas turi būti sąmoningas vienoje iš dviejų krypčių: (a) sugeneruoti vieną sumaišytą įrašą (abi replikos vienu metu) ir jį groti `Kartu` režimu — tada visi trys kūrinio sakiniai lieka teisingi; (b) jei tokio įrašo nėra, modulio rezultatai, `concept.steps[1]` ir pirma užduotis turi kalbėti apie **tai, ką mato** („ką matai juostoje“), o `teacher.goal` neturi remtis A.2.3 klausymusi. Kol kas fiksuoju, o ne taisau: pasirinkimas tarp (a) ir (b) yra turinio ir simuliacijų sprendimas, ne kritiko.",
+  "target": "content/lt/grade-01/lietuviu-kalba/16-pokalbio-eile.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/16-pokalbio-eile.json:10 — outcomes[1]: „Pastebiu, kad kalbėdami abu iš karto žmonės nesupranta vienas kito.“",
+    "content/lt/grade-01/lietuviu-kalba/16-pokalbio-eile.json:18 — concept.steps[1]: „Spausk „Paleisk“ ir klausykis juostos.“",
+    "content/lt/grade-01/lietuviu-kalba/16-pokalbio-eile.json:64, :67 — pirmoji užduotis: „Pasakyk, ką girdi, kai abu kalba kartu.“ → „Vieną susiliejusį ruožą“",
+    "assets/js/sims/calba.js:3699–3707 — `play()` režime `kartu` iškviečia `api.speak(say(\"together\"))` (paaiškinimą), o ne replikų įrašus; komentaras :3700–3701 pripažįsta: „Garsas negali skambėti dviem balso takeliais“",
+    "assets/js/speech.js:46–56 — vienas `<audio>` elementas visai platformai (LL-145), todėl dvi replikos vienu metu techniškai negrojamos",
+    "Chromium 390×844 zondas (scratch/kritikas583.py), 6 s po `#pe-play`: režimas „Pakaitomis“ → 4 skirtingi mp3 (4 replikos), režimas „Kartu“ → 1 mp3, ir tas pats, kuris grojo perjungus režimą; paspaudus „Paleisk“ naujo `src` nė karto"
+  ]
+}

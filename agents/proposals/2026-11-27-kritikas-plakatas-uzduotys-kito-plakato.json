@@ -1,0 +1,20 @@
+{
+  "role": "kritikas",
+  "run_id": 583,
+  "created": "2026-11-27T15:46:00+02:00",
+  "type": "kritika",
+  "title": "05-plakatas-ir-informacija: dvi užduotys klausia apie plakatą, kurio modulis neturi (rankų plovimas, gesintuvas)",
+  "body": "Modulio teiginys yra „Plakate informacija būna ir užrašyta, ir nupiešta“ (JSON:15) ir modelis turi **vieną** plakatą „Saugus kelias į mokyklą“ su penkiomis dalimis: trys užrašai (atšvaitas, dviratis, gatvė) ir du piešiniai (berniukas, dviratis) — JSON:28–60; simuliacijos klausimai ima būtent tas zonas (`uzrasas-atsvaitas`, `piesinys-atsvaitas`, `piesinys-dviratis`, `uzrasas-gatva`). Pirmoji ir ketvirtoji užduotys (JSON:114, :147) klausia apie kitą plakatą, kurio ekrane nėra: „Plauk rankas 20 sekundžių“ su piešiniu „su muilo putomis“, trys konteineriai „be užrašų“ ir gaisro gesintuvas. Patikrinau visą `sim.config` tekstą: žodžių „Plauk rankas“, „muilo“, „konteiner“, „gesintuv“ jame **0**, o piešinių registre `PLAKATAS_PIESINIais` (`calba.js:1034`) gesintuvo nėra (grep „gesintuv“ `art.js` → 0). Dar daugiau: pasirinkimai mini plakato dalis, kurių šiame modelyje nėra nė vienos — „Užrašas po pavadinimu“ (JSON:117), „Iš užrašo po piešiniu“ (JSON:128), „Plakato pavadinimas“ (JSON:118), „Antraštėje“ (JSON:149), „Po plakatu“ (JSON:151); modelio dalys žymimos tik „UŽRAŠAS“ ir „PIEŠINYS“ (`calba.js:1070`), o po piešiniu jokio teksto nėra. Antros užduoties užuomina (JSON:132) sako „Plakate nėra nė vieno sakinio“, o modulio plakate yra trys sakiniai — užuomina prieštarauja tam pačiam modeliui, kurį vaikas mato. 6–7 m. vaikas, kuriam plakatas yra akivaizdžiai priešais, ieško muilo putų ir gesintuvo, neranda ir daro išvadą, kad ieškojo neteisingai, nors klaidinga yra užduotis. Tai LL-166 šeima (užduotis pavadina daiktą, kurio modelyje nėra) su LL-205 atspalviu (klausiama apie tai, ko scena neparodo). Taisymas: (a) perkelti tas dvi užduotis į plakato modelio dalis (atšvaitas, dviratis, gatvė — pvz. „Kurioje dalyje pasakyta, kiek atšvaitų?“), arba (b) jei užduotis sąmoningai perkelia į kitą plakatą, tai pasakyti klausime („Kitame plakate parašyta…“), o pasirinkimus formuluoti taip, kad atsakymas būtų išvedamas iš **pateikto teksto**, ne iš ekrano dalių, kurių nėra. Kol kas fiksuoju, o ne taisau: turinys — ne kritiko rašymo sritis.",
+  "target": "content/lt/grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json:114 — užduotis „Plakate parašyta: „Plauk rankas 20 sekundžių“…“",
+    "content/lt/grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json:117, :128, :118, :149, :151 — pasirinkimai „Užrašas po pavadinimu“, „Iš užrašo po piešiniu“, „Plakato pavadinimas“, „Antraštėje“, „Po plakatu“ — tokių plakato dalių modelyje nėra",
+    "content/lt/grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json:132 — užuomina „Plakate nėra nė vieno sakinio“, nors to paties modelio plakate trys užrašai (:34, :47, :60)",
+    "content/lt/grade-01/lietuviu-kalba/05-plakatas-ir-informacija.json:28–60 — modelio plakatas „Saugus kelias į mokyklą“: zonos uzrasas-atsvaitas, piesinys-atsvaitas, uzrasas-dviratis, piesinys-dviratis, uzrasas-gatva",
+    "assets/js/sims/calba.js:1069 — ekrane dalys žymimos tik „Užrašas“ / „Piešinys“, jokio „pavadinimo“, „antraštės“ ar teksto po piešiniu",
+    "assets/js/sims/calba.js:1034 — PLAKATAS_PIESINIAI registre nėra gesintuvo; grep „gesintuv“ assets/js/sims/art.js → 0",
+    "Grep’as per visą sim.config: „Plauk rankas“ 0, „muilo“ 0, „konteiner“ 0, „gesintuv“ 0 (tekstai yra tik tasks[])"
+  ]
+}

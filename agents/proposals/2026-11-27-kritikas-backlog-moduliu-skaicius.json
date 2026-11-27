@@ -1,0 +1,20 @@
+{
+  "role": "kritikas",
+  "run_id": 583,
+  "created": "2026-11-27T15:52:00+02:00",
+  "type": "kritika",
+  "title": "backlog.json: „Modulių dabar 84“, kai jų 85 — vartas žalias, nes perskaito tik šaltinio maišą",
+  "body": "Dokumentų ir tikrovės patikra. `research/wiki/curriculum/backlog.json:19` skelbia `modules_now: 84`, o `research/wiki/curriculum/backlog.md:14` — „Modulių dabar: **84**“. Tikrovė: `content/lt/grade-01/index.json` turi 85 modulius ir `content/lt/grade-01/*/*.json` (be indekso) yra 85 failai; `python3 scripts/curriculum_backlog.py --json` šiandien duoda `modules_now: 85`. Skaičių skaito ne tik žmogus: `agents/run.py:663` (`_backlog_brief`) įdėda jį į kiekvieno agento promptą — „PROGRAMOS PADENGTIS … Modulių dabar 84“, o paleidimo antraštė skelbia 85, tad agentas gauna du skirtingus to paties kiekio skaičius ir negali žinoti, kuris teisingas. Vartai `python3 scripts/curriculum_backlog.py --check` šiandien — **rc 0, „✔ Padengties eilė suderinta“**, nes palygina tik `source_hash` (`scripts/curriculum_backlog.py:591`), o tas maišas imamas iš `research/wiki/curriculum/*.md` — su `content/` failais jis neturi nieko bendra. Todėl išvestinis laukas (`modules_now`, ir kartu `backlog.md` eilutė) gali atsilikti kiek nori, o vartas, kurio vienintelė paskirtis yra „eilė suderinta“, lieka žalias. Šiandien atsilikimas — vienas modulis (`16-pokalbio-eile`, pridėtas #577 `c26d842`), bet kadangi `modules_now` yra vienintelis šio failo kiekis, kurį agentai mato, klaida yra ne „vienu skaičiumi mažiau“, o klaidinga informacija, kuria remiamasi sprendžiant, ar dar reikia modulių (LL-21). Taisymas: `--check` turi lyginti ir tuos laukus, kurie skaičiuojami iš `content/` (`modules_now`, `counts`, `curriculum_positions`, `rows[].status/modules`), ne vien `source_hash`; o jei `backlog.json` generuojamas tik tada, kai keičiasi `curriculum/*.md`, tai `modules_now` iš jo reikia išimti arba prieš kiekvieną publikavimą pergeneruoti (`run_checks`) — dabar nė vienas kelias to nedaro. Kol kas fiksuoju, o ne taisau: `scripts/` ir `research/wiki/curriculum/` — ne kritiko rašymo sritis.",
+  "target": "scripts/curriculum_backlog.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "research/wiki/curriculum/backlog.json:19 — „modules_now“: 84",
+    "research/wiki/curriculum/backlog.md:14 — „- Modulių dabar: **84**“",
+    "content/lt/grade-01/index.json — 85 moduliai; `ls content/lt/grade-01/*/*.json | grep -v index.json | wc -l` → 85",
+    "python3 scripts/curriculum_backlog.py --json → `modules_now: 85` (šviežias build), o faile 84 — `--check` vis tiek rc 0",
+    "scripts/curriculum_backlog.py:591 — `if old.get(\"source_hash\") != data[\"source_hash\"]`, t. y. lyginamas tik curriculum/*.md maišas, ne iš `content/` skaičiuojami laukai",
+    "agents/run.py:663 — „… Modulių dabar {data.get('modules_now')}.“ — tas skaičius patenka į agento promptą",
+    "python3 scripts/check_docs_facts.py → 0 klaidų: jis tikrina README/ARCHITEKTURA/grades.json/wiki skaičius, bet ne research/wiki/curriculum/backlog.json"
+  ]
+}

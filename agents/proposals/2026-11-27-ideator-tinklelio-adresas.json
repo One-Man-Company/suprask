@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 574,
+  "created": "2026-11-27T07:52:00+02:00",
+  "type": "tema",
+  "title": "Tinklelio adresas: vienas ženklas rodo eilę, ne langelį",
+  "body": "1 klasės programos Transformacijų tema duoda būtent šį pavyzdį: „Varlytė nupiešta langelyje B1. Kuriame langelyje yra drugelis? Kas yra pavaizduota C3 langelyje?“ Platformoje langelio adreso nėra: `17-kryptys-ir-vieta` jį sąmoningai atmetė kaip antrą sąvoką (`content/lt/grade-01/matematika/17-kryptys-ir-vieta.json:127`), `24-komandu-seka` juda tinkleliu, bet langelių nevadina, `19-simto-skaiciu-lentele` adresuoja skaičiais. Siūlau modelį, kuriame vaikas langelį vadina iš pradžių vienu ženklu (tik raidė arba tik skaičius) ir mato, kad paryškinama visa eilutė arba visas stulpelis — keliolika langelių; pridėjęs antrą ženklą, paryškina vieną. Klaidinga nuostata: „vieno ženklo užtenka pasakyti, kur daiktas“ (jos atmaina — „B1 yra pirmas langelis“). Modelis turi vieną kintamąjį (kiek ženklų duodi) ir skaičiuojamą pasekmę (kiek langelių paryškinta), todėl sakinys tekste nepakeičia to, ką vaikas pamato. Skirtumas nuo `24-komandu-seka`: ten komandos veda robotą, čia daiktas nejuda — keičiasi tik tai, kiek ženklų jo vietą pasako.",
+  "target": "content/lt/grade-01/matematika/37-tinklelio-adresas.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:34017–34018 — „1 klasė. Transformacijos. Nagrinėjamos situacijos, kuriose mokomasi apibūdinti objektų ar žmonių vietą ar padėtį vienas kito atžvilgiu…“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:34020–34023 — oficialus 1 kl. užduoties tekstas: „Varlytė nupiešta langelyje B1. Kuriame langelyje yra drugelis? Kas yra pavaizduota C3 langelyje?“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17306 — 1 kl. metų planas: „Transformacijos 4“",
+    "research/wiki/curriculum/matematika-1-klase.md:124 ir :176 — „perskaito tinklelio adresą (B1, C3)“ įrašyta į 1-ojo ko mokymosi baigtį",
+    "content/lt/grade-01/matematika/17-kryptys-ir-vieta.json:127 — „tinklelio adresas ir priekis/atgal sąmoningai neįtraukti — tai antros sąvokos“; content/lt/grade-01/matematika/24-komandu-seka.json `sim.config` turi `cols`/`rows`, bet jokių raidžių ar skaičių užrašų",
+    "Patikra: content/lt/grade-01/matematika/ moduliai 04–07, 14–30, 32–36; numeris 37 laisvas; grep „tinklelio adres|langelio adres|B1|C3“ matematikos moduliuose randa tik `14-pinigai` (kaina) ir `16-lygybe-svarstykles` (A1.1 kodas šaltinyje), t. y. 0 modelių"
+  ]
+}

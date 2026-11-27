@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 574,
+  "created": "2026-11-27T07:56:00+02:00",
+  "type": "tema",
+  "title": "Pokalbis: kol vienas nebaigia, kitas nesupranta",
+  "body": "1–2 klasių lietuvių kalbos A srities (kalbėjimas, klausymasis ir sąveika) pasiekimas A.2.3 sako: „leidžia pašnekovui išsakyti savo mintis, laikosi mandagaus bendravimo susitarimų“, o net 1 kl. reikia tik I lygio — „stengiasi laikytis tam tikrų mandagaus bendravimo susitarimų“. Platformoje A srities nėra nė vieno modulio: visi 13 lietuvių kalbos modulių priskirti B, C ir D sritims (patikrinta ieškant pasiekimų kodų modulių `sources`). Siūlau modelį su dviem kalbėtojais ir dviem žodžių juostomis: vaikas įjungia abi iš karto ir juostos susilieja į vieną neįskaitomą ruožą, o paleidęs pakaitomis — sakinys susidaro ir pasidaro suprantamas. Klaidinga nuostata: „kad tave suprastų, reikia kalbėti daugiau (arba kartu su kitu)“. Pasekmė matoma akimis ir girdima: susiliejusio ruožo neskaido nė vienas žodis, o pakaitomis einantys žodžiai sudaro prasmę. Modelis neturi taisyklių sąrašo ir neklausia vaiko apie jo paties elgesį — todėl nesikartoja `02-virtualumas` (žodis per ekraną), o skirtumas nuo `04-kaip-zmones-sveikinasi` yra tas, kad ten renkami pastebėjimai, čia — pats pokalbio tempas.",
+  "target": "content/lt/grade-01/lietuviu-kalba/16-pokalbio-eile.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:40703 — „A.2.3. Klausydamas ar kalbėdamas atsižvelgia į adresatą ir komunikavimo situaciją, kai yra suteikiama pagalba; leidžia pašnekovui išsakyti savo mintis, laikosi mandagaus bendravimo susitarimų“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:40708–40713 — I lygis (A.2.3.1): „…iš dalies atsižvelgia į adresatą (vaiką arba pažįstamą suaugusįjį); stengiasi laikytis tam tikrų mandagaus bendravimo susitarimų“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:40838–40841 — 1–2 kl. turinys: „Kalbėjimo ir klausymo paskirtis ir tikslai… Aptariama, kokiais tikslais, kodėl žmonės kalbasi“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:17129–17131 — „Komunikacinė sąveika… kai pakaitomis suprantame savo pašnekovo užkoduotas idėjas“",
+    "Patikra: content/lt/grade-01/lietuviu-kalba/ — 13 modulių, `sources` koduose yra B, C, D, bet nė vieno A (patikrinta ieškant `[ABCD]\\.\\d+` visuose lietuvių kalbos moduliuose); numeris 16 laisvas; grep „pokalb|pašnekov|pakaitom“ visame grade-01 → tik `15-nezinomas-zodis` teacher.offline tekste"
+  ]
+}

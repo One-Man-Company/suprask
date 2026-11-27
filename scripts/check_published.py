@@ -488,6 +488,31 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   C4 (pervadinimas lieka `resolved`/`alias_ok`), D5 (riba → `checked False`),
   E6/F7 (ne git, tuščia istorija, trūkstamas blob'as).
 
+2026-11-27 (paleidimas #588): „dingęs ID“ tikrinamas ir **klasių** lygmenyje,
+  ne vien modulio.
+  Iki šiol garantija „vaiko žyma nelieka be modulio“ galiojo tik toms
+  klasėms, kurios šiandien yra `live`: `check_grade()` kviečiamas tik
+  joms (`grade_scope()`). Klasė, išjungta `grades.json`e IR ištrinta iš
+  `content/lt/`, iškrenta iš **visų** vartų vienu metu: `validate_content.py`
+  eina per `live` klases, `check_registry.py` per katalogus (kurių nebėra),
+  `--scope` `undeclared_grades` reikalauja egzistuojančio katalogo su
+  moduliais, `--path-order` — to paties `live` rėmo. Matuota laikiname repo
+  (#588): 2 klasės `live`, paskui `grade-01` katalogas pašalintas ir
+  `grades.json` pakeistas — `report()` grąžino `verdict ok True`,
+  „sutampa“, rc 0. Dingsta ne vienas modulis, o 85 (šiandien) ir visos
+  vaiko žymos pagal juos.
+  Dabar `historical_grades()` skaito `grades.json` istoriją tuo pačiu
+  `git cat-file --batch` keliu kaip `historical_ids()`, o `lost_grades()`
+  įvardija klasę, kuri buvo `live`, o katalogo nebėra. Trys taisyklės:
+  - klasė su išlikusiu `index.json` čia **nepatenka** (tai išjungimas, kurį
+    matuoja `undeclared_grades`; dublikato nėra — LL-129);
+  - sąmoningas pašalinimas užrašomas `scripts/known_lost_grades.json`
+    (įrašas be `reason` negalioja) — kitaip vartai būtų amžinai raudoni,
+    o tokie vartai yra tas pats kaip jokių (LL-37);
+  - neperskaityta `grades.json` istorija yra `grades_history_checked: false`
+    → rc 1, o ne „dingusių klasių nėra“ (LL-221 taisyklė klasių lygmenyje).
+  Įrodymas: `scripts/probe_lost_grades.py` (be tinklo, su tikru git).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -583,6 +608,13 @@ DEPLOY_POLL = max(1, int(os.environ.get("SUPRASK_DEPLOY_POLL", "10")))
 # sprendimas buvo peržiūrėtas. Be jo kiekvienas sąmoningas pervadinimas darytų
 # vartus amžinai raudonus, o amžinai raudoni vartai — tas pats kaip jokių (LL-37).
 RENAMES = ROOT / "scripts" / "known_renames.json"
+# Priimti **klasių** pašalinimai (`{grade, reason, run, date}`). To paties
+# pobūdžio įrankio duomenys kaip `known_renames.json`: klasės katalogo
+# ištrinimas gali būti teisingas sprendimas, bet turi būti matomas `git diff`,
+# o ne tylus `git rm`. Be šio failo kiekvienas dingęs katalogas raudonas —
+# būtent to ir reikia, bet sąmoningas sprendimas turi turėti kur užsirašyti.
+LOST_GRADES = pathlib.Path(os.environ.get("SUPRASK_LOST_GRADES")
+                           or (ROOT / "scripts" / "known_lost_grades.json"))
 # Užfiksuota ėjimo tvarka (`path.json` santykinė ID seka). Tai tos pačios
 # rūšies įrankio duomenys kaip `known_renames.json`: failas sako, kokia tvarka
 # jau yra sutartis su vaiku. Be jo „ar senų ID tvarka nepajudėta“ gali būti
@@ -1061,6 +1093,146 @@ def historical_ids(grade: int) -> tuple[dict[str, str], str, bool]:
         return {}, (f"git istorijos nepavyko perskaityti: nė viena iš "
                     f"{len(revs)} revizijų neperskaityta"), False
     return seen, "", True
+
+
+def historical_grades() -> tuple[dict[int, str], str, bool]:
+    """Klasės, kada nors buvusios `status: live`, su **naujausia** revizija.
+
+    Kodėl klasės lygmenyje, o ne tik modulio (žr. `vanished()`). `vanished()`
+    saugo garantiją „vaiko žyma nelieka be modulio“, bet ji galioja tik toms
+    klasėms, kurios **šiandien** yra `live`: `check_grade()` kviečiamas tik
+    joms (`grade_scope()`). Jei klasė išjungiama ir **jos katalogas
+    ištrinamas**, nei `validate_content.py` (eina per `live` klases), nei
+    `check_registry.py`, nei `--scope` (`undeclared_grades` reikalauja
+    egzistuojančio katalogo su moduliais), nei `--path-order` (to paties
+    `live` rėmo) jos nebemato — o visi jos modulių ID dingsta iš repo
+    negrįžtamai. Matuota 2026-11-27 (#588) laikiname repo: 2 klasės `live`,
+    paskui `grade-01` katalogas pašalintas ir `grades.json` pakeistas —
+    `report()` grąžino `verdict ok True`, „sutampa“, rc 0,
+    `history_unchecked []`.
+
+    Trečias narys `checked` — ta pati taisyklė kaip `historical_ids()`:
+    neperskaityta istorija nėra „dingusių nėra“ (LL-37 / LL-221).
+    """
+    path = "content/lt/grades.json"
+    try:
+        probe = subprocess.run(
+            ["git", "rev-parse", "--is-shallow-repository"],
+            cwd=ROOT, capture_output=True, text=True, timeout=20,
+        )
+        if probe.returncode != 0:
+            return {}, "git istorijos nepavyko perskaityti (`git rev-parse`)", False
+        if probe.stdout.strip() == "true":
+            return {}, "git istorija sekli — klasių istorijos patikra neįmanoma", False
+        log = subprocess.run(
+            ["git", "log", "--format=%h", "--", path],
+            cwd=ROOT, capture_output=True, text=True, timeout=120,
+        )
+        if log.returncode != 0:
+            return {}, "git istorijos nepavyko perskaityti (`git log`)", False
+        revs = [r for r in log.stdout.split() if r]
+    except Exception as exc:  # noqa: BLE001
+        return {}, f"git istorijos nepavyko perskaityti ({type(exc).__name__})", False
+    if not revs:
+        return {}, ("git log negrąžino nė vienos `grades.json` revizijos — "
+                    "klasių istorijos patikra neatlikta"), False
+    if len(revs) > HISTORY_LIMIT:
+        return {}, (f"`grades.json` istorija didesnė už {HISTORY_LIMIT} revizijų — "
+                    "klasių istorijos patikra neatlikta"), False
+
+    blobs, err = _batch_blobs([f"{rev}:{path}" for rev in revs])
+    if err:
+        return {}, f"git istorijos nepavyko perskaityti: {err}", False
+    seen: dict[int, str] = {}
+    unreadable = 0
+    for rev, blob in zip(revs, blobs):
+        if blob is None:
+            continue
+        try:
+            doc = json.loads(blob.decode("utf-8"))
+        except Exception:  # noqa: BLE001
+            unreadable += 1
+            continue
+        for entry in doc.get("grades") or []:
+            if not isinstance(entry, dict) or entry.get("status") != "live":
+                continue
+            try:
+                num = int(entry["grade"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            seen.setdefault(num, rev)
+    if revs and not seen and unreadable == len(revs):
+        return {}, (f"`grades.json` istorijos nepavyko perskaityti: nė viena iš "
+                    f"{len(revs)} revizijų neperskaityta"), False
+    return seen, "", True
+
+
+def known_lost_grades() -> dict[int, dict]:
+    """Sąmoningai pašalintos klasės — `{klasė: įrašas}`.
+
+    Amžinai raudoni vartai yra tas pats kaip jokių (LL-37). Klasės
+    pašalinimas gali būti teisingas sprendimas (pernumeravimas, katalogo
+    perkėlimas), bet jis turi būti **matomas failo pakeitimas** `git diff`e,
+    o ne tyli `git rm`. Tai ta pati sutartis kaip `known_renames.json` ir
+    `known_path_order.json`: failas yra įrankio duomenys, ne turinio schema,
+    ir jį keičia žmogus sąmoningai.
+
+    Įrašas be `reason` negalimas — pašalinimas be priežasties yra būtent tai,
+    ką šis vartas saugo. Grąžinama tuščia, jei failo nėra: tada niekas
+    nepriimta ir kiekvienas dingęs katalogas raudonas.
+    """
+    try:
+        data = json.loads(LOST_GRADES.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    out: dict[int, dict] = {}
+    for item in data.get("grades") or []:
+        if not isinstance(item, dict):
+            continue
+        try:
+            num = int(item["grade"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if not str(item.get("reason") or "").strip():
+            continue
+        out[num] = item
+    return out
+
+
+def lost_grades(current_live: list[int]) -> dict:
+    """Klasės, kurios buvo `live`, o jų katalogo repo nebėra.
+
+    Tai **ne** „išjungta klasė“: išjungimas yra žmogaus sprendimas
+    (`agents/scope.py`, dashboard'o jungiklis), o katalogas tada lieka vietoje
+    ir jį mato `undeclared_grades` / `grade_scope_missing_index`. Čia
+    kalbama apie tai, ko nebeatkurs nė vienas vartas — apie **ištrintą
+    katalogą**, su kuriuo drauge dingo visi jo modulių ID. Vaiko
+    `localStorage` žymos pagal tuos ID lieka, bet modulio, į kurį jos rodytų,
+    nebeliko (LL-88 klasė, tik klases lygmenyje).
+
+    Atskyrimas būtinas ir tam, kad vienas defektas nebūtų praneštas du
+    kartus (LL-129): klasė su išlikusiu `index.json` čia nepatenka.
+    Sąmoningai priimti pašalinimai (`known_lost_grades.json`) irgi
+    nepatenka — bet įrašo be priežasties sąrašas jų neatleidžia.
+    """
+    hist, note, checked = historical_grades()
+    live = set(current_live)
+    accepted = known_lost_grades()
+    items: list[dict] = []
+    for num, rev in sorted(hist.items()):
+        if num in live:
+            continue
+        gd = grade_dir(num)
+        if (CONTENT / gd / "index.json").exists():
+            # Katalogas vietoje — tai išjungimo ar nelyginimo atvejis, kurį
+            # matuoja `undeclared_grades`. Dublikato nekuriama.
+            continue
+        files = sorted((CONTENT / gd).glob("*/*.json")) if (CONTENT / gd).is_dir() else []
+        items.append({"grade": num, "last_rev": rev, "dir": gd,
+                      "module_files": len(files),
+                      "resolved": num in accepted,
+                      "reason": (accepted.get(num) or {}).get("reason", "")})
+    return {"items": items, "note": note, "checked": checked}
 
 
 def vanished(grade: int, current_ids: list[str]) -> dict:
@@ -2471,6 +2643,15 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
     # patikrą „yra toks failas“ į „yra tie baitai“ (#426).
     audio_name = audio_name_digest()
 
+    # Klasių lygmuo (žr. `historical_grades()`). Kiekvienas modulio ID yra
+    # saugomas `vanished()` — bet tik toms klasėms, kurios šiandien `live`.
+    # Klasė, išjungta IR ištrinta, iškrenta iš visų vartų rėmų, o su ja —
+    # visi jos modulių ID ir vaiko žymos pagal juos. Matuojama prieš
+    # `out = {...}`, nes šis skaitomas į jį. Lyginama su **skelbiamu** sąrašu
+    # (`scope["grades"]`), ne su `--grade` rinkiniu: `--grade 2` yra rėmas
+    # tikrinimui, o ne teiginys, kad 1 klasė išjungta.
+    lost = lost_grades(scope["grades"])
+
     # Neišsiųsti commit'ai jau perskaityti prieš laukimą (žr. `report()`):
     # git klaida anksčiau atrodė kaip „0 neišsiųstų“ (žr. funkcijos docstring).
 
@@ -2500,6 +2681,11 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "not_in_path": merge("not_in_path"),
         "orphan_files": merge("orphan_files"),
         "vanished_ids": merge("vanished_ids"),
+        # Klasių lygmuo: buvusi `live`, o katalogo repo nebėra. `checked`
+        # atskirai, nes neperskaityta istorija nėra „dingusių nėra“.
+        "lost_grades": lost["items"],
+        "grades_history_checked": lost["checked"],
+        "grades_history_note": lost["note"],
         "history_note": "; ".join(g.get("history_note", "") for g in per_grade if g.get("history_note")),
         "history_unchecked": [g["grade"] for g in per_grade if g.get("history_checked") is False],
         "stale": merge("stale"),
@@ -2693,6 +2879,25 @@ def verdict(data: dict) -> dict:
     unexplained = [v for v in data.get("vanished_ids", []) if not v.get("resolved")]
     if unexplained:
         reasons.append(f"{len(unexplained)} dingęs ID (pažanga liko be modulio)")
+    # Klasių lygmuo (LL-88 toje pačioje garantijoje, tik aukščiau): klasė
+    # buvo `live`, o jos katalogo repo nebėra. Tai ne „išjungta“ — išjungimas
+    # palieka katalogą, kurį matuoja `undeclared_grades`. Čia dingo ir
+    # katalogas, ir visi jo modulių ID, o vaiko žymos pagal juos liko.
+    if data.get("lost_grades"):
+        # Priimti pašalinimai (`known_lost_grades.json`) sąraše lieka su
+        # `resolved: true`, kad sprendimas būtų matomas, bet rc nekeičia:
+        # priešingu atveju vartai būtų amžinai raudoni (LL-37 atvirkštinė
+        # pusė — vartai, kurių neįmanoma praeiti, moko juos apeiti).
+        unresolved = [g for g in data["lost_grades"] if not g.get("resolved")]
+        if unresolved:
+            items = ", ".join(f"{g['dir']} ({g['module_files']})" for g in unresolved)
+            reasons.append(f"{len(unresolved)} klasės katalogas dingo iš repo: "
+                           f"{items} (vaiko žymos liko be modulių)")
+    if data.get("grades_history_checked") is False:
+        # Perskaityta istorija yra matavimas. Be šios šakos nebuvimas
+        # atrodytų kaip „dingusių klasių nėra“ (LL-37, ta pati taisyklė
+        # kaip `history_unchecked` modulio lygmenyje).
+        reasons.append("klasių istorijos patikra neįvyko")
     # Pervadinimas, kurio naršyklė neperkelia: `known_renames.json` sako
     # „įpėdinis yra“, o `index.json` `renamed_from` neturi — žyma liktų
     # našlaite. Tai ne tas pats kaip „mechanizmo nėra“ (#356), todėl
@@ -3077,6 +3282,31 @@ def main() -> int:
                 state = (f"DĖMESIO: žyma liktų našlaite — index.json įraše "
                          f"„{succ}“ nėra renamed_from")
             print(f"  - grade-{v['grade']:02d} {v['id']} → {succ} ({state})")
+    if data.get("lost_grades"):
+        # Ne „išjungta klasė“: išjungimas palieka katalogą. Čia dingo
+        # katalogas ir visi jo modulių ID — vaiko žymos pagal juos liko
+        # našlaitėmis, o nė vienas kitas vartas to nemato (rėmas eina
+        # per `live` klases).
+        unresolved = [g for g in data["lost_grades"] if not g.get("resolved")]
+        accepted = [g for g in data["lost_grades"] if g.get("resolved")]
+        if unresolved:
+            print(f"KLASĖS KATALOGAS DINGO IŠ REPO — buvo „live“, dabar jo nėra "
+                  f"({len(unresolved)}):")
+            for g in unresolved:
+                print(f"  - {g['dir']}: paskutinį kartą „live“ {g['last_rev']}, "
+                      f"modulių failų repo {g['module_files']}. Grąžink katalogą "
+                      f"arba įrašyk sprendimą į `scripts/known_lost_grades.json`.")
+        if accepted:
+            # Sprendimas, ne defektas — bet ne tyla: kitaip sąrašas atrodytų,
+            # lyg klasė vis dar būtų `live` (LL-37).
+            for g in accepted:
+                print(f"Klasės katalogas pašalintas sąmoningai: {g['dir']} "
+                      f"(priežastis: {g['reason']}). Vaiko žymos pagal jo modulių "
+                      f"ID niekur neberodys — tai priimtas sprendimas.")
+    if data.get("grades_history_checked") is False:
+        print(f"KLASIŲ ISTORIJOS PATIKRA NEATLIKTA — "
+              f"{data.get('grades_history_note') or 'priežastis neįvardyta'}. "
+              f"Tai ne „dingusių klasių nėra“.")
     if data.get("history_note"):
         # Nuo #573 ši pastaba yra ne „riba“ (istorija skaitoma visa), o
         # priežastis, kodėl patikra neįvyko (sekli istorija, ne git katalogas,

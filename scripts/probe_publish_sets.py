@@ -97,7 +97,7 @@ results: list[tuple[str, bool, str]] = []
 # po zondo šiame procese liktų tikrasis repo (kitaip vėlesnis `report()` šiame
 # procese matuotų ištrintą katalogą — LL-36 atvirkštinė pusė).
 PATCHED = ("ROOT", "CONTENT", "GRADES", "AUX_FILES", "RENAMES", "PATH_ORDER",
-           "AUDIO_MANIFEST", "LIVE_ROOT", "DEPLOY_WAIT", "RETRY_PAUSE")
+           "LOST_GRADES", "AUDIO_MANIFEST", "LIVE_ROOT", "DEPLOY_WAIT", "RETRY_PAUSE")
 
 
 def check(name: str, ok: bool, detail: str) -> None:
@@ -238,6 +238,9 @@ def patch(root: pathlib.Path, url: str) -> None:
         ("content/audio-overrides.json", root / "content" / "audio-overrides.json"),
     ]
     cp.RENAMES = root / "scripts" / "known_renames.json"
+    # Zondo veidrodis neturi skaityti TIKRO repo `known_lost_grades.json`:
+    # kitaip zondas matuotų dviejų repo sankirtą, o ne savo būseną.
+    cp.LOST_GRADES = root / "scripts" / "known_lost_grades.json"
     cp.PATH_ORDER = root / "scripts" / "known_path_order.json"
     cp.AUDIO_MANIFEST = root / "assets" / "audio" / "lt" / "manifest.json"
     cp.LIVE_ROOT = url

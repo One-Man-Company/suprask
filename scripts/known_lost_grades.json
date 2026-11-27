@@ -1,0 +1,4 @@
+{
+  "note": "Sąmoningai pašalinti KLASIŲ katalogai. Įrašas čia reiškia: klasė buvo `status: live` (`content/lt/grades.json` istorijoje), jos katalogas `content/lt/grade-NN/` ištrintas, ir tai yra priimtas sprendimas, ne regresija. Tai to paties pobūdžio įrankio duomenys kaip `known_renames.json`: failas nekeičia turinio schemos, jį keičia žmogus sąmoningai, o pakeitimą mato `git diff`. Be įrašo `scripts/check_published.py` (`lost_grades()`) tokį katalogą vadina dingusiu ir grąžina rc 1 — nes kartu su katalogu dingsta visi jo modulių ID ir vaiko `localStorage` žymos pagal juos lieka be modulių (LL-88 klasė klasių lygmenyje). Įrašas be `reason` NEgalioja: pašalinimas be priežasties yra būtent tai, ką vartas saugo. Klasė, kurios katalogas vietoje, o tik `status` pakeistas į `planned`, čia nerašoma — tai išjungimas, kurį matuoja `undeclared_grades` ir dashboard'o jungiklis (`agents/scope.py`).",
+  "grades": []
+}

@@ -63,14 +63,40 @@ function canonical(moduleId) {
   return id;
 }
 
-/** Vienodas įrašo skaitymas: trūkstami laukai nepakiša `undefined` aritmetikos. */
+/** Vienodas įrašo skaitymas: trūkstami laukai nepakiša `undefined` aritmetikos.
+ *
+ * Data vieną kartą keitė formą: iki #343 (2026-11-03 13:43–13:53, `0f35296`)
+ * įrašas buvo `{seen, tasks, tasksCorrect, last}` — `tasks` buvo bandymų
+ * skaičius, `tasksCorrect` — teisingų skaičius, o `solved` masyvo nebuvo.
+ * Toks įrašas šiandien vis dar guli vaikų naršyklėse, todėl jo forma
+ * **atvaizduojama**, ne atmetama (T3.5: vaikas nepraranda darbo):
+ * `total = tasks`, `solved = [0 … tasksCorrect-1]`. Tada `tasksCorrect >= tasks`
+ * lieka „atlikta“, o `tasksCorrect < tasks` — ne, kaip ir senoje `isDone()`.
+ *
+ * LL-209: ši funkcija — vienas šaltinis visiems skaitytojams, o ne rašymo
+ * šalutinis kelias. Kas jos nekviečia, tas mato `undefined`.
+ */
+const tally = (value) => (Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0);
+
 function record(value) {
-  if (!value || typeof value !== "object") return null;
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  // `tasks`/`tasksCorrect` skaitomi tik tada, kai naujos formos lauko nėra:
+  // įrašas, turintis ir `solved`, ir senus laukus, yra jau perkeltas.
+  const legacy = !Array.isArray(value.solved) && !Number.isFinite(value.total);
+  const total = Number.isFinite(value.total) ? tally(value.total) : tally(value.tasks);
+  const seen = Number.isFinite(value.seen) ? value.seen : 0;
+  const attempts = Number.isFinite(value.attempts)
+    ? value.attempts
+    : (legacy ? tally(value.tasks) : 0);
   const out = {
-    seen: Number.isFinite(value.seen) ? value.seen : 0,
-    attempts: Number.isFinite(value.attempts) ? value.attempts : 0,
-    total: Number.isFinite(value.total) ? value.total : 0,
-    solved: Array.isArray(value.solved) ? value.solved.filter(Number.isInteger) : [],
+    seen,
+    attempts,
+    total,
+    solved: Array.isArray(value.solved)
+      ? value.solved.filter(Number.isInteger)
+      : legacy
+        ? Array.from({ length: Math.min(tally(value.tasksCorrect), total) }, (_, i) => i)
+        : [],
     last: typeof value.last === "string" ? value.last : null,
   };
   if (value.simDone === true) out.simDone = true;
@@ -132,15 +158,66 @@ function tidySolved(m) {
   m.solved = [...new Set(m.solved.filter((i) => Number.isInteger(i) && i < m.total))];
 }
 
+/** Kanoninio įrašo laukai — `record()` grąžina tik juos, `canonicalRecord()`
+ *  su jais lygina. Naujas laukas turi atsirasti abiejose vietose. */
+const FIELDS = ["seen", "attempts", "total", "solved", "last", "simDone"];
+
+/** Ar išsaugotas įrašas jau toks, kokį grąžintų `record()` — be perrašymo. */
+function canonicalRecord(raw, m) {
+  if (!raw || typeof raw !== "object" || !m) return false;
+  const keys = Object.keys(raw);
+  if (keys.length !== Object.keys(m).length) return false;
+  if (keys.some((k) => !FIELDS.includes(k))) return false;
+  return raw.seen === m.seen
+    && raw.attempts === m.attempts
+    && raw.total === m.total
+    && raw.last === m.last
+    && raw.simDone === m.simDone
+    && Array.isArray(raw.solved)
+    && raw.solved.length === m.solved.length
+    && raw.solved.every((v, i) => v === m.solved[i]);
+}
+
+/**
+ * Normalizuoja VISUS įrašus vietoje. Tai skaitymo kelio dalis (LL-209):
+ * `read()` grąžina tik tokią formą, kokią supranta kiekvienas skaitytojas,
+ * nesvarbu, kada įrašas atsirado ir kokia buvo schema tą dieną.
+ *
+ * @returns {boolean} true — bent vienas įrašas buvo ne kanoninės formos
+ *   (reikia įrašyti atgal, kad normalizavimas nebūtų kartojamas kiekvieną
+ *   skaitymą ir `updated` nesisuktų).
+ */
+function normalizeAll(d) {
+  if (!d.modules || typeof d.modules !== "object" || Array.isArray(d.modules)) {
+    d.modules = {};
+    return true;
+  }
+  let changed = false;
+  for (const [id, raw] of Object.entries(d.modules)) {
+    const m = record(raw);
+    if (!m) { delete d.modules[id]; changed = true; continue; }
+    tidySolved(m); // LL-20/LL-31: sutrumpėjęs modulis negali likti „atliktas“
+    if (!canonicalRecord(raw, m)) changed = true;
+    d.modules[id] = m;
+  }
+  return changed;
+}
+
 export function read() {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return empty();
     const data = JSON.parse(raw);
     if (!data || typeof data !== "object" || !data.modules) return empty();
+    // Forma normalizuojama PIRMIAU už pervadinimą: `mergeOld()` ima
+    // `record()` šaltinį, o skaitytojai (`count`, `isDone`, `get`,
+    // `resumeTarget`) turi matyti vieną formą — ne tą, kuri atsitiktinai
+    // guli diske.
+    let changed = normalizeAll(data);
     // Pervadinimas: žyma keliama po dabartiniu ID, o senas raktas išnyksta
     // (ne kopijuojama), kad įrašai negalėtų išsiskirti.
-    if (migrate(data)) write(data);
+    if (migrate(data)) changed = true;
+    if (changed) write(data);
     return data;
   } catch {
     return empty();

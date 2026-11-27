@@ -38,6 +38,21 @@ LITHUANIAN_CHARS = set("ąčęėįšųūžĄČĘĖĮŠŲŪŽ")
 
 SIMPLIFIED_MAX = {1: 60, 2: 70, 3: 90, 4: 100}
 
+# Simbolių ribos iš `docs/KURINIO-STANDARTAS.md` §2 lentelės. Tai **antras**
+# egzempliorius, todėl `check_limits_against_standard()` kiekvieno paleidimo
+# pradžioje lygina jį su dokumentu (LL-38): kai šios ribos buvo neprižiūrimos,
+# `concept.big_idea` vartas tikrino 260 simbolių, o standartas jau seniai sakė
+# 240 — modulis, kurio `big_idea` 245 simboliai, atrodė praėjęs patikrą.
+FIELD_LIMITS = {
+    "title": 42,
+    "subtitle": 80,
+    "concept.title": 40,
+    "concept.big_idea": 240,
+    "concept.steps": 200,  # kiekvienas žingsnis atskirai
+}
+STANDARD_DOC = ROOT / "docs" / "KURINIO-STANDARTAS.md"
+
+
 
 class Report:
     def __init__(self) -> None:
@@ -407,12 +422,113 @@ def check_index_matches_module(entry: dict, data: dict, mod_path: Path, rep: Rep
         )
 
 
+def standard_field_limits() -> dict[str, int] | None:
+    """Iš standarto §2 lentelės išskaito simbolių ribas (None — nepavyko).
+
+    Lentelės eilutė atrodo taip::
+
+        | `title` | string | ✔ | iki 42 simbolių, be taško gale |
+        | `concept.steps` | string[] | ✔ | 2–4 žingsniai, kiekvienas iki 200 simbolių |
+
+    Imama pirmoji „iki N simbolių“ toje eilutėje. Jei kuri nors eilutė
+    dingsta, grąžinamas `None`, o ne dalinė lentelė: dalinė lentelė reikštų,
+    kad vartas tyliai nustojo tikrinti tą lauką (LL-37).
+    """
+    try:
+        text = STANDARD_DOC.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    found: dict[str, int] = {}
+    for key in FIELD_LIMITS:
+        row = re.search(rf"^\|\s*`{re.escape(key)}`\s*\|[^\n]*$", text, re.M)
+        if not row:
+            return None
+        num = re.search(r"iki\s+(\d+)\s+simbol", row.group(0))
+        if not num:
+            return None
+        found[key] = int(num.group(1))
+    return found
+
+
+def check_field_limits_against_standard(rep: Report) -> None:
+    """Saugiklis nuo dviejų normų: FIELD_LIMITS turi sutapti su standartu.
+
+    Būtent taip `concept.big_idea` riba nuslinko nuo 240 iki 260 ir liko
+    nepastebėta: dokumentas ir įrankis buvo du egzemplioriai, kurių niekas
+    nelygino (LL-38).
+    """
+    limits = standard_field_limits()
+    if limits is None:
+        rep.err(
+            f"{STANDARD_DOC.relative_to(ROOT)}: nerasta visų §2 laukų simbolių ribų "
+            f"({', '.join(sorted(FIELD_LIMITS))}) — simbolių vartai liktų be normos"
+        )
+        return
+    if limits != FIELD_LIMITS:
+        diff = ", ".join(
+            f"{k}: {FIELD_LIMITS.get(k)}≠{limits.get(k)}"
+            for k in sorted(set(FIELD_LIMITS) | set(limits))
+            if FIELD_LIMITS.get(k) != limits.get(k)
+        )
+        rep.err(
+            "scripts/validate_content.py:FIELD_LIMITS — ribos nesutampa su standartu §2 "
+            f"(lentelėje {FIELD_LIMITS}, standarte {limits}; {diff})"
+        )
+
+
+def check_field_limits(rel, data: dict, rep: Report) -> None:
+    """Standarto §2 simbolių ribos — iki šiol netikrintos nė vienu vartu.
+
+    `validate_content.py` tikrino `big_idea` prie 260 (ne 240) ir **nieko**
+    apie `title` (42), `subtitle` (80), `concept.title` (40) bei `concept.steps`
+    elementus (200). Modulis su 90 simbolių `subtitle` praeidavo visus vartus,
+    nors standartas jį atmeta, o `.subtitle` yra tai, ką vaikas skaito klasės
+    sąraše. Pažeidimas yra `error`, nes standartas jį įvardija kaip reikalavimą.
+    """
+    concept = data.get("concept") or {}
+    values = {
+        "title": data.get("title"),
+        "subtitle": data.get("subtitle"),
+        "concept.title": concept.get("title"),
+        "concept.big_idea": concept.get("big_idea"),
+    }
+    for key, limit in FIELD_LIMITS.items():
+        if key == "concept.steps":
+            continue
+        text = values.get(key)
+        if not isinstance(text, str):
+            continue
+        if len(text) > limit:
+            rep.err(
+                f"{rel}: „{key}“ {len(text)} simbolių, standartas §2 leidžia {limit}"
+            )
+    for i, step in enumerate(concept.get("steps") or [], 1):
+        if isinstance(step, str) and len(step) > FIELD_LIMITS["concept.steps"]:
+            rep.err(
+                f"{rel}: „concept.steps[{i}]“ {len(step)} simbolių, "
+                f"standartas §2 leidžia {FIELD_LIMITS['concept.steps']}"
+            )
+    title = data.get("title")
+    if isinstance(title, str) and title.rstrip().endswith("."):
+        rep.err(f"{rel}: „title“ baigiasi tašku — standartas §2 sako „be taško gale“")
+
+
 def check_module(path: Path, data: dict, rep: Report, sims: set[str], grades_meta: dict) -> None:
     rel = path.relative_to(ROOT)
+    # Ankstyvas grįžimas galimas TIK tada, kai trūksta privalomo lauko: be jo
+    # tolesnės patikros neturi ką skaityti. Anksčiau sąlyga buvo
+    # `any(str(rel) in e for e in rep.errors[-len(REQUIRED_MODULE):])`, t. y.
+    # **bet kokia** ką tik įrašyta šio failo klaida — įskaitant
+    # `check_index_matches_module()` nesutapimą — nutraukdavo visą modulio
+    # patikrą. Matuota #572: modulis su nesutapusiu `subtitle` indekse ir
+    # papildomai 90 simbolių `subtitle`, 30 min. trukme bei 2 užduotimis davė
+    # **1** klaidą, o ne 4 — likusios liko nematomos. Tai LL-37 šeima: vartas
+    # tyliai nutrūksta, o rezultatas pranešamas kaip pilnas.
+    before = len(rep.errors)
     for field in REQUIRED_MODULE:
         if field not in data or data[field] in (None, "", [], {}):
             rep.err(f"{rel}: trūksta privalomo lauko „{field}“")
-    if rep.errors and any(str(rel) in e for e in rep.errors[-len(REQUIRED_MODULE):]):
+    if len(rep.errors) > before:
         return
 
     grade = data.get("grade")
@@ -439,8 +555,8 @@ def check_module(path: Path, data: dict, rep: Report, sims: set[str], grades_met
     for key in ("title", "big_idea", "steps"):
         if not concept.get(key):
             rep.err(f"{rel}: trūksta „concept.{key}“")
-    if len(concept.get("big_idea", "")) > 260:
-        rep.warn(f"{rel}: „big_idea“ ilgesnė nei 260 simbolių")
+    # Simbolių ribos — §2; čia tik vienas kvietimas, kad riba būtų viena.
+    check_field_limits(rel, data, rep)
     steps = concept.get("steps") or []
     if not (2 <= len(steps) <= 4):
         rep.warn(f"{rel}: „concept.steps“ rekomenduojama 2–4 (dabar {len(steps)})")
@@ -541,6 +657,9 @@ def main() -> int:
     sims = registered_sims()
     if not sims:
         rep.err("Nerasta nė viena simuliacija (assets/js/sims/*.js)")
+    # Norma turi vieną egzempliorių: jei standarte kas pakeis §2 ribą, o
+    # FIELD_LIMITS liks sena, tai turi būti klaida, ne tyli žalia (LL-38).
+    check_field_limits_against_standard(rep)
 
     grades_file = CONTENT / "grades.json"
     if not grades_file.exists():

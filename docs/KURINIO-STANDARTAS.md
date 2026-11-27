@@ -201,6 +201,14 @@ būtų apie nieką, o ne apie „telpa“).
 
 Validatorius tikrina: JSON validumą, privalomus laukus, ID unikalumą, nuorodų į failus egzistavimą, simuliacijos registravimą, užduočių skaičių, `hint`/`why` buvimą, atsakymų pasiskirstymą, teksto ilgį, diakritiką, draudžiamus žodžius, `renamed_from` vienareikšmiškumą (§7.1) ir jo sutapimą su `scripts/known_renames.json`.
 
+Simbolių ribos iš §2 lentelės (`title` 42, `subtitle` 80, `concept.title` 40,
+`concept.big_idea` 240, kiekvienas `concept.steps` elementas 200, `title` be
+taško gale) tikrinamos kaip klaidos, o pati lentelė kiekvieno paleidimo pradžioje
+lyginama su šiuo dokumentu: jei §2 pasikeis, o `FIELD_LIMITS` liks sena, vartai
+nešauks „0 klaidų“, o praneš normų nesutapimą (LL-38). Neigiamas zondas:
+`python3 scripts/probe_field_limits.py`.
+
+
 Jei modelis deklaruoja `sim.config.palette` (§4.4), validatorius papildomai tikrina sprendžiamumą **be spalvos**: kiekvienas uždavinyje naudojamas žetonas turi egzistuoti paletėje ir turėti ne tuščią `shape`, atsakymų variantai turi skirtis forma, o po teisingo žetono įterpimo seka turi būti periodiška. Be to, teisingas variantas (`answer`) privalo būti tas, kuris be spalvos padaro seką periodiška — kitaip atsakymas priklauso nuo spalvos. Neigiamas zondas: `python3 scripts/probe_palette_gate.py`.
 
 ## 9. Naujos klasės pridėjimas

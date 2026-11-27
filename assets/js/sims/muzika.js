@@ -1029,8 +1029,404 @@ const klausymas = {
   },
 };
 
+/* ---------- dermės garsai: trys gaidos, šešios eilės ---------- */
+
+/**
+ * Modelis: TOS PAČIOS trys fiksuotos gaidos (sol, mi, re). Vaikas keičia TIK
+ * jų eilę — kuri pirma, kuri antra, kuri trečia — o modelis pagroja naują
+ * eilę ir suskaičiuoja, kiek skirtingų eilių jau rasta iš šešių.
+ *
+ * Klaidinga nuostata: „jei gaidos tos pačios, tai ir daina ta pati“ (atmaina
+ * „eilė nesvarbi, svarbu tik, kokios gaidos“). Trys gaidos duoda šešias
+ * skirtingas eiles, o atvirkštinė eilė skamba kaip klausimas ir atsakymas —
+ * programos prašymas „perskaityti (perrašyti, pagroti) nuo pradžios ir nuo
+ * pabaigos (simetrija, klausimo-atsakymo struktūros pažinimas)“.
+ *
+ * Kodėl schema, o ne scena: nėra dangaus, žemės ar augalų, kuriems reikėtų
+ * `art.js` dalių (LL-13). Rodoma būtent tai, ką vaikas girdi: trys vietos su
+ * to paties aukščio žymėmis (aukštis — ne vardas), eilė žodžiais ir rastų
+ * eilių sąrašas. Todėl modelis lieka prasmingas ir be garso (LL-11).
+ *
+ * Kodėl vietos keičiamos dviem paspaudimais — paėmus vieną, spaudžiant kitą,
+ * o ne tempimu: 6–7 m. vaikui bakstelėjimas yra tikslus, o tempimas ne
+ * (LL-12). Be to, taip aibė gaidų niekada nepakinta (niekas nepametama ir
+ * nepridedama), kinta tik eilė — vienas kintamasis, kaip reikalauja T1.2.
+ *
+ * Kodėl eilė rodoma ir žodžiais, ir aukščiu: 5–7 m. vaikams garso aukščio
+ * lygis ryškesnis už melodijos pokytį (Stalinski & Schellenberg, 2010), todėl
+ * eilės skirtumas, paliktas vien klausai, liktų nepastebėtas; aukštis nekeičia
+ * nieko, o tvarka — viską.
+ */
+const GE_NOTES = [
+  { id: "sol", label: "Sol", hz: 392.0 },
+  { id: "mi", label: "Mi", hz: 329.63 },
+  { id: "re", label: "Re", hz: 293.66 },
+];
+const GE_STEP_S = 0.45; // viena gaida ≈ 133 dūžiai per minutę
+
+function geFactorial(n) {
+  let total = 1;
+  for (let i = 2; i <= n; i += 1) total *= i;
+  return total;
+}
+
+const dermesGarsai = {
+  mount({ stage, controls, api, config }) {
+    const NOTES = Array.isArray(config.notes) && config.notes.length >= 2 ? config.notes : GE_NOTES;
+    const IDS = NOTES.map((n) => n.id);
+    const BY_ID = new Map(NOTES.map((n) => [n.id, n]));
+    const SENT = config.sentences || {};
+    const TOTAL = geFactorial(IDS.length);
+    const asked = (Array.isArray(config.start) ? config.start : []).filter(
+      (id, i, arr) => BY_ID.has(id) && arr.indexOf(id) === i
+    );
+    const BASE = asked.length === IDS.length ? asked : IDS.slice();
+
+    /* Gaidos aukštis brėžiamas kaip juostos aukštis toje pačioje vietoje:
+       tai antra informacijos nešėja (ne tik vardas), todėl eilę galima
+       sekti ir visiškai be garso. */
+    const lo = Math.min(...NOTES.map((n) => n.hz));
+    const hi = Math.max(...NOTES.map((n) => n.hz));
+    const span = Math.max(1, hi - lo);
+    const heightOf = (id) => 34 + Math.round(((BY_ID.get(id).hz - lo) / span) * 52);
+    const names = (list) => list.map((id) => BY_ID.get(id).label.toLowerCase()).join(", ");
+
+    let order = BASE.slice();
+    let picked = -1;
+    let unlocked = false;
+    let reported = false;
+    let halfNoted = false;
+    const found = [];
+    const foundSet = new Set();
+    let timers = [];
+    let ctx = null;
+    const live = new Set();
+    const btns = [];
+
+    stage.innerHTML = `
+      <div style="display:grid;gap:.55rem;width:100%;max-width:28rem;min-width:0">
+        <p id="ge-order" style="margin:0;font-family:var(--font-head);font-weight:900;font-size:1.05rem;text-align:center;overflow-wrap:anywhere">
+          ${names(BASE)}
+        </p>
+        <div id="ge-slots" role="group" aria-label="Trys vietos: kuri gaida pirma, kuri antra, kuri trečia"
+          style="display:grid;grid-template-columns:repeat(${BASE.length},minmax(0,1fr));gap:.45rem;min-width:0"></div>
+        <p id="ge-count" style="margin:0;font-size:.9rem;font-weight:800;color:var(--ink-soft);text-align:center">
+          Jau rasta: 0 iš ${TOTAL}
+        </p>
+        <div id="ge-found" role="list" aria-label="Rastos eilės"
+          style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:.35rem;min-width:0"></div>
+      </div>`;
+
+    const slots = stage.querySelector("#ge-slots");
+    const orderEl = stage.querySelector("#ge-order");
+    const countEl = stage.querySelector("#ge-count");
+    const foundEl = stage.querySelector("#ge-found");
+
+    BASE.forEach((_, i) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.dataset.i = String(i);
+      /* Aukštis fiksuotas px, o ne rem: 200 % tekste langelis neturi išpūsti
+         eilės, o 48 px taikinys tenkinamas ir 16 px šaknyje (LL-40). */
+      btn.style.cssText = "display:grid;justify-items:center;align-content:center;gap:.2rem;" +
+        "min-height:48px;min-width:0;padding:.4rem .2rem;border:2px solid var(--line);" +
+        "border-radius:12px;background:var(--paper);color:var(--ink);font:inherit;cursor:pointer";
+      btn.innerHTML =
+        '<span class="ge-num" aria-hidden="true" style="font-size:.8rem;font-weight:800;color:var(--ink-soft)"></span>' +
+        '<span class="ge-col" aria-hidden="true" style="display:flex;align-items:flex-end;justify-content:center;width:100%;height:2.6rem"></span>' +
+        '<span class="ge-name" style="font-family:var(--font-head);font-weight:900;font-size:1rem"></span>';
+      btn.addEventListener("click", () => tap(i));
+      slots.appendChild(btn);
+      btns.push(btn);
+    });
+
+    function ensureCtx() {
+      if (ctx) return ctx;
+      if (!AC) return null;
+      try { ctx = new AC(); } catch { ctx = null; }
+      return ctx;
+    }
+
+    function after(ms, fn) {
+      timers.push(setTimeout(fn, ms));
+    }
+
+    function clearTimers() {
+      timers.forEach((id) => clearTimeout(id));
+      timers = [];
+    }
+
+    function speak(key) {
+      const text = SENT[key];
+      if (text) api.speak(text, { rate: 0.95 });
+    }
+
+    function paint() {
+      btns.forEach((btn, i) => {
+        const id = order[i];
+        const note = BY_ID.get(id);
+        const on = picked === i;
+        btn.querySelector(".ge-num").textContent = String(i + 1);
+        btn.querySelector(".ge-name").textContent = note.label;
+        btn.querySelector(".ge-col").innerHTML =
+          `<span style="display:block;width:.85rem;height:${heightOf(id)}%;background:var(--ink);border-radius:5px"></span>`;
+        btn.style.background = on ? "var(--paper-2)" : "var(--paper)";
+        btn.style.borderColor = on ? "var(--accent-press)" : "var(--line)";
+        btn.style.boxShadow = on ? "inset 0 0 0 3px var(--accent-press)" : "none";
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        btn.setAttribute(
+          "aria-label",
+          on
+            ? `${i + 1} vieta: ${note.label}. Paimta — spausk kitą vietą ir gaidos susikeis.`
+            : `${i + 1} vieta: ${note.label}. Spausk, kad paimtum.`
+        );
+      });
+      orderEl.textContent = names(order);
+      countEl.textContent = `Jau rasta: ${found.length} iš ${TOTAL}`;
+    }
+
+    function paintFound() {
+      foundEl.innerHTML = found.map((key, i) => `
+        <span role="listitem" style="padding:.25rem .45rem;border:2px solid ${i === found.length - 1 ? "var(--accent-press)" : "var(--line)"};
+          border-radius:999px;font-size:.9rem;font-weight:700;text-align:center;overflow-wrap:anywhere">
+          ${names(key.split("-"))}
+        </span>`).join("");
+    }
+
+    function tone(when, freq, dur) {
+      const c = ctx;
+      if (!c) return;
+      let osc = null;
+      let gain = null;
+      try {
+        osc = c.createOscillator();
+        gain = c.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, when);
+        gain.gain.setValueAtTime(0.0001, when);
+        gain.gain.exponentialRampToValueAtTime(0.12, when + 0.02);
+        gain.gain.setValueAtTime(0.12, when + dur * 0.7);
+        gain.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(when);
+        osc.stop(when + dur + 0.04);
+      } catch {
+        return;
+      }
+      live.add(osc);
+      osc.onended = () => {
+        live.delete(osc);
+        try { osc.disconnect(); gain.disconnect(); } catch { /* jau atjungta */ }
+      };
+    }
+
+    function stopSound() {
+      clearTimers();
+      live.forEach((osc) => { try { osc.stop(); } catch { /* jau sustabdytas */ } });
+      live.clear();
+      /* Nutildžius lieka degančios žymės, jei jų nenutriname: vaikas matytų
+         „groja toliau“, nors garsas jau nutilo (LL-17). */
+      paint();
+    }
+
+    function flash(i) {
+      const btn = btns[i];
+      if (!btn) return;
+      btn.style.borderColor = "var(--accent-press)";
+      btn.style.boxShadow = "inset 0 0 0 3px var(--accent-press)";
+      after(320, () => {
+        if (picked === i) return; // paimta žymė lieka
+        btn.style.borderColor = "var(--line)";
+        btn.style.boxShadow = "none";
+      });
+    }
+
+    /** Groja esamą eilę. Grąžina `true`, jei garsas tikrai skambėjo. */
+    function play() {
+      stopSound();
+      const c = ensureCtx();
+      if (!c || !soundEnabled()) return false;
+      if (c.state === "suspended" && typeof c.resume === "function") c.resume().catch(() => {});
+      const base = c.currentTime + 0.06;
+      order.forEach((id, i) => {
+        tone(base + i * GE_STEP_S, BY_ID.get(id).hz, GE_STEP_S * 0.86);
+        after(60 + i * GE_STEP_S * 1000, () => flash(i));
+      });
+      return true;
+    }
+
+    /**
+     * Pažanga žymima TIK išgirdus visas eiles (LL-29: ne po pirmo žingsnio).
+     * Tarpinis pranešimas po pusės eilių yra grįžtamasis ryšys, o ne „atlikta“.
+     */
+    function checkProgress() {
+      if (!reported && found.length >= TOTAL) {
+        reported = true;
+        api.progress({ correct: true });
+        api.readout(SENT.all || "Rastos visos šešios eilės.");
+        api.note("Tos pačios trys gaidos, šešios skirtingos eilės.");
+        speak("all");
+        return true;
+      }
+      if (!halfNoted && found.length >= Math.ceil(TOTAL / 2)) {
+        halfNoted = true;
+        api.note(SENT.half || "Pusiaukelė. Dar ne visos eilės!");
+        return true;
+      }
+      return false;
+    }
+
+    function soundNote() {
+      const c = ensureCtx();
+      return c ? (SENT.nosound || "") : (SENT.nosupport || "");
+    }
+
+    function remember() {
+      const key = order.join("-");
+      if (foundSet.has(key)) return false;
+      foundSet.add(key);
+      found.push(key);
+      paintFound();
+      return true;
+    }
+
+    function lockedHint() {
+      api.note(SENT.guess || "Pirma pasakyk, tada perstatyk gaidas.");
+      speak("guess");
+      if (guessBtn) guessBtn.focus();
+    }
+
+    function tap(i) {
+      if (!unlocked) {
+        lockedHint();
+        return;
+      }
+      if (picked === -1) {
+        picked = i;
+        paint();
+        api.readout(`Paimta: ${BY_ID.get(order[i]).label}.`);
+        api.note(SENT.take || "Dabar spausk kitą vietą.");
+        api.speak(BY_ID.get(order[i]).label);
+        return;
+      }
+      if (picked === i) {
+        picked = -1;
+        paint();
+        api.readout(`${names(order)}.`);
+        api.note(SENT.unpick || "Gaida padėta atgal.");
+        return;
+      }
+      const from = picked;
+      [order[from], order[i]] = [order[i], order[from]];
+      picked = -1;
+      const isNew = remember();
+      paint();
+      api.readout(`${names(order)}.`);
+      const heard = play();
+      if (!checkProgress()) {
+        let msg = isNew ? (SENT.found || "Nauja eilė.") : (SENT.same || "Šitą eilę jau radai.");
+        if (!heard) msg += ` ${soundNote()}`;
+        api.note(msg);
+        speak(isNew ? "found" : "same");
+      }
+    }
+
+    function reverse() {
+      if (!unlocked) {
+        lockedHint();
+        return;
+      }
+      order.reverse();
+      picked = -1;
+      remember();
+      paint();
+      api.readout(`${names(order)}.`);
+      const heard = play();
+      if (!checkProgress()) {
+        let msg = SENT.reverse || "Eilė apsukta: pradžia tapo pabaiga.";
+        if (!heard) msg += ` ${soundNote()}`;
+        api.note(msg);
+        speak("reverse");
+      }
+    }
+
+    function reset() {
+      stopSound();
+      order = BASE.slice();
+      picked = -1;
+      paint();
+      api.readout(`${names(order)}.`);
+      api.note(SENT.reset || "Vėl pradžia.");
+      speak("reset");
+    }
+
+    function unlock() {
+      unlocked = true;
+      /* `hidden` savybės čia nepakanka: `.btn` turi autorinę
+         `display:inline-flex`, kuri laimi prieš naršyklės `[hidden]{display:none}`,
+         todėl mygtukas liktų matomas ir atrodytų, kad nieko nedaro (LL-32 šeima). */
+      guessBtn.hidden = true;
+      guessBtn.style.display = "none";
+      [listenBtn, reverseBtn, resetBtn].forEach((b) => b.removeAttribute("aria-disabled"));
+      api.readout(SENT.start || "Trys gaidos. Kiek eilių rasi?");
+      api.note("Dabar perstatyk gaidas ir klausyk.");
+      speak("start");
+      btns[0].focus();
+    }
+
+    controls.innerHTML = `
+      <button class="btn" type="button" id="ge-guess" style="min-width:min(6.5rem,100%)">Sakau</button>
+      <button class="btn secondary" type="button" id="ge-listen" aria-disabled="true"
+        aria-label="Paklausyk esamos eilės" style="min-width:min(7.5rem,100%)">Paklausyk</button>
+      <button class="btn secondary" type="button" id="ge-reverse" aria-disabled="true"
+        aria-label="Apversk eilę nuo pabaigos" style="min-width:min(7rem,100%)">Apversk</button>
+      <button class="btn secondary" type="button" id="ge-reset" aria-disabled="true"
+        aria-label="Grąžink pradinę eilę" style="min-width:min(6rem,100%)">Iš naujo</button>`;
+
+    const guessBtn = controls.querySelector("#ge-guess");
+    const listenBtn = controls.querySelector("#ge-listen");
+    const reverseBtn = controls.querySelector("#ge-reverse");
+    const resetBtn = controls.querySelector("#ge-reset");
+
+    guessBtn.addEventListener("click", unlock);
+    listenBtn.addEventListener("click", () => {
+      if (!unlocked) { lockedHint(); return; }
+      api.readout(`${names(order)}.`);
+      if (!play()) api.note(soundNote());
+      else speak("listen");
+    });
+    reverseBtn.addEventListener("click", reverse);
+    resetBtn.addEventListener("click", reset);
+
+    slots.addEventListener("keydown", (e) => {
+      const i = btns.indexOf(document.activeElement);
+      if (i < 0) return;
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      e.preventDefault();
+      const next = (i + (e.key === "ArrowRight" ? 1 : -1) + btns.length) % btns.length;
+      btns[next].focus();
+    });
+
+    paintFound();
+    paint();
+    api.readout(SENT.ask || "Kas pasikeis, kai gaidas perstatysi?");
+    api.note("Pirma pasakyk savo spėjimą, tada spausk gaidas.");
+
+    return () => {
+      clearTimers();
+      live.forEach((osc) => { try { osc.stop(); } catch { /* jau sustabdytas */ } });
+      live.clear();
+      if (ctx && typeof ctx.close === "function") { try { ctx.close(); } catch { /* jau uždarytas */ } }
+      ctx = null;
+    };
+  },
+};
+
 export const SIMS = {
   "garso-aukstis": garsoAukstis,
   "ritmas-ir-pulsas": ritmasIrPulsas,
   "melodija-ir-pritarimas": klausymas,
+  "dermes-garsai": dermesGarsai,
 };
+

@@ -1,6 +1,6 @@
 {
  "grade": 1,
- "generated": "2026-11-27T20:51:28",
+ "generated": "2026-11-27T23:36:40",
  "source_hash": "c7cf15d5f954aed6",
  "source_files": {
   "1-klases-temų-žemėlapis.md": "d51dd4b59f29b1b5",
@@ -16,7 +16,7 @@
   "partial": 0,
   "missing": 1
  },
- "modules_now": 85,
+ "modules_now": 87,
  "rows": [
   {
    "key": "26.2.3",
@@ -249,9 +249,9 @@
    "strand": "lietuviu-kalba",
    "modules": [
     "01-garsas-ir-raide",
+    "04-dermes-garsai",
     "01-garso-aukstis",
-    "04-kaip-zmones-sveikinasi",
-    "06-garso-trukme"
+    "04-kaip-zmones-sveikinasi"
    ],
    "status": "covered",
    "target": ""
@@ -270,8 +270,8 @@
    "modules": [
     "01-garsas-ir-raide",
     "02-erdvines-raides",
-    "01-garso-aukstis",
-    "06-garso-trukme"
+    "04-dermes-garsai",
+    "01-garso-aukstis"
    ],
    "status": "covered",
    "target": ""
@@ -603,7 +603,8 @@
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:50",
    "strand": "matematika",
    "modules": [
-    "23-piktograma-ir-stulpelis"
+    "23-piktograma-ir-stulpelis",
+    "37-tinklelio-adresas"
    ],
    "status": "covered",
    "target": ""
@@ -734,7 +735,8 @@
    "modules": [
     "02-erdvines-raides",
     "01-garsas-ir-raide",
-    "21-erdvines-figuros"
+    "21-erdvines-figuros",
+    "37-tinklelio-adresas"
    ],
    "status": "covered",
    "target": ""

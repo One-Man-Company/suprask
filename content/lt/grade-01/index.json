@@ -575,6 +575,14 @@
      "file": "grade-01/muzika/03-klausymasis.json",
      "minutes": 9,
      "sim": "melodija-ir-pritarimas"
+    },
+    {
+     "id": "04-dermes-garsai",
+     "title": "Trys gaidos, šešios eilės",
+     "subtitle": "Tos pačios gaidos, kita eilė — kita melodija",
+     "file": "grade-01/muzika/04-dermes-garsai.json",
+     "minutes": 10,
+     "sim": "dermes-garsai"
     }
    ]
   },

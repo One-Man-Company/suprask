@@ -987,6 +987,10 @@
   "n": "n/958924bc709163cf-6d4b8a03.mp3",
   "s": "s/958924bc709163cf-99bc827a.mp3"
  },
+ "Dabar spausk kitą vietą. Gaidos susikeis.": {
+  "n": "n/3fbe9edebf2bbc15-ab2e34f3.mp3",
+  "s": "s/3fbe9edebf2bbc15-03f2a672.mp3"
+ },
  "Dabar spausk „Eik“.": {
   "n": "n/4d4d65ccf59bb3f5-03f1af0d.mp3",
   "s": "s/4d4d65ccf59bb3f5-d4f2b451.mp3"
@@ -1339,6 +1343,10 @@
   "n": "n/1f7125f49e94f038-825393a2.mp3",
   "s": "s/1f7125f49e94f038-6d70e2d8.mp3"
  },
+ "Eilė apsukta. Pradžia tapo pabaiga.": {
+  "n": "n/5d1fb59e7aa51f52-3fb20593.mp3",
+  "s": "s/5d1fb59e7aa51f52-2b5a3fcd.mp3"
+ },
  "Emilis": {
   "n": "n/4ea1ed702de88fab-80b74c72.mp3",
   "s": "s/4ea1ed702de88fab-5c634f23.mp3"
@@ -1371,6 +1379,10 @@
   "n": "n/333e0a1e27815d0c-0c135f4c.mp3",
   "s": "s/333e0a1e27815d0c-41491a62.mp3"
  },
+ "Gaida padėta atgal.": {
+  "n": "n/4c16aa989564f5e1-745ea9db.mp3",
+  "s": "s/4c16aa989564f5e1-fcb84404.mp3"
+ },
  "Gali bandyti iš naujo.": {
   "n": "n/9047d71491bb5f87-9fe2355a.mp3",
   "s": "s/9047d71491bb5f87-ff910e0e.mp3"
@@ -1398,6 +1410,10 @@
  "Garsas išjungtas. Įjunk garsą viršuje ir paleisk dar kartą.": {
   "n": "n/c5c4012c37b8788e-c9234d64.mp3",
   "s": "s/c5c4012c37b8788e-a59a30bb.mp3"
+ },
+ "Garsas išjungtas. Įjunk garsą viršuje.": {
+  "n": "n/59028bf7a93a7c60-5c660f18.mp3",
+  "s": "s/59028bf7a93a7c60-d24d978b.mp3"
  },
  "Garsas įjungtas": {
   "n": "n/061db2d7c4edc72f-8c518491.mp3",
@@ -1707,6 +1723,10 @@
   "n": "n/321b34b9907971fe-24d33db1.mp3",
   "s": "s/321b34b9907971fe-73613a46.mp3"
  },
+ "Kas pasikeis, kai gaidas perstatysi?": {
+  "n": "n/d75e1e8cad51e55f-55b2ea47.mp3",
+  "s": "s/d75e1e8cad51e55f-5edd9a0a.mp3"
+ },
  "Kas pasikeis, kai pakeisi korteles: pulsas ar ritmas?": {
   "n": "n/d9b40529fa3121c9-772cc6da.mp3",
   "s": "s/d9b40529fa3121c9-04a356d4.mp3"
@@ -1894,6 +1914,10 @@
  "Klausyk abiejų: pulsas žemai, plojimai aukštai.": {
   "n": "n/2b053f0b8f2c5df5-ed72ef17.mp3",
   "s": "s/2b053f0b8f2c5df5-8a06b845.mp3"
+ },
+ "Klausyk visos eilės iš eilės.": {
+  "n": "n/34ddcfeb07154fa1-56f02a5b.mp3",
+  "s": "s/34ddcfeb07154fa1-97b02d06.mp3"
  },
  "Klevas": {
   "n": "n/da9e105ea0b55dd0-6bd09a18.mp3",
@@ -2387,6 +2411,10 @@
   "n": "n/2285765af1dbe56e-bc832664.mp3",
   "s": "s/2285765af1dbe56e-10f0e8c4.mp3"
  },
+ "Mi": {
+  "n": "n/d8f33a13ae6e93fa-694365e9.mp3",
+  "s": "s/d8f33a13ae6e93fa-2dd67af0.mp3"
+ },
  "Minkštas stiebas, todėl žolė.": {
   "n": "n/742f77b07ca6cc45-8261ca87.mp3",
   "s": "s/742f77b07ca6cc45-cfe999e4.mp3"
@@ -2450,6 +2478,10 @@
  "Naudosiu dar": {
   "n": "n/6fff13367b0e28e1-fa0b75b5.mp3",
   "s": "s/6fff13367b0e28e1-3e71feb8.mp3"
+ },
+ "Nauja eilė. Klausyk, kaip skamba.": {
+  "n": "n/954ad19d5145d151-ba17ea57.mp3",
+  "s": "s/954ad19d5145d151-5277f092.mp3"
  },
  "Naujas lapas. Perlenk jį du kartus.": {
   "n": "n/426b063e55abbc05-4bb40f1f.mp3",
@@ -2891,6 +2923,10 @@
   "n": "n/bbbfb4885794d2cd-da6961e3.mp3",
   "s": "s/bbbfb4885794d2cd-0ea8cb4a.mp3"
  },
+ "Pirma pasakyk savo spėjimą, tada perstatyk gaidas.": {
+  "n": "n/0cd53e79ca8336cf-71718a5d.mp3",
+  "s": "s/0cd53e79ca8336cf-9bd9a705.mp3"
+ },
  "Pirma pasakyk savo spėjimą, tada rinkis atlikėją.": {
   "n": "n/bfc0094d6494c181-98448997.mp3",
   "s": "s/bfc0094d6494c181-dec1d643.mp3"
@@ -3167,6 +3203,10 @@
   "n": "n/90b1f24b9d6084e3-69d8e2bc.mp3",
   "s": "s/90b1f24b9d6084e3-f7ccbc1c.mp3"
  },
+ "Pusiaukelė. Dar ne visos eilės.": {
+  "n": "n/8d62f95a2f439454-5e914733.mp3",
+  "s": "s/8d62f95a2f439454-e61fe550.mp3"
+ },
  "Pusryčiams laiko liko.": {
   "n": "n/dfb11e9d1640ff97-d37b155e.mp3",
   "s": "s/dfb11e9d1640ff97-fdfd19c1.mp3"
@@ -3195,6 +3235,10 @@
   "n": "n/d6622797befe1630-db70829a.mp3",
   "s": "s/d6622797befe1630-b9475eff.mp3"
  },
+ "Rastos visos šešios eilės.": {
+  "n": "n/a5adde61039788ff-4a474c12.mp3",
+  "s": "s/a5adde61039788ff-9e4b9389.mp3"
+ },
  "Raudona dėmė. Formos tos pačios.": {
   "n": "n/51841b83c864cc90-a41c5d40.mp3",
   "s": "s/51841b83c864cc90-6dcfdf77.mp3"
@@ -3202,6 +3246,10 @@
  "Rašiklis. Kiek storesnė linija.": {
   "n": "n/e9a1aa1efb0d6966-4ba24ad3.mp3",
   "s": "s/e9a1aa1efb0d6966-216a5292.mp3"
+ },
+ "Re": {
+  "n": "n/78f76459d525088a-96507997.mp3",
+  "s": "s/78f76459d525088a-750f991d.mp3"
  },
  "Ritinys iš priekio atrodo kaip stačiakampis.": {
   "n": "n/3cc41c23fdbd3079-7e46fd23.mp3",
@@ -3442,6 +3490,10 @@
  "Sniegas tirpsta, paukščiai grįžta, medžiai žydi.": {
   "n": "n/c685e0360afa3917-c5f4e703.mp3",
   "s": "s/c685e0360afa3917-04cee785.mp3"
+ },
+ "Sol": {
+  "n": "n/361847a8cfe5a8dd-38cde0e9.mp3",
+  "s": "s/361847a8cfe5a8dd-cb53a281.mp3"
  },
  "Spalis": {
   "n": "n/60be12bf25a6cd50-aa12c32f.mp3",
@@ -3943,6 +3995,10 @@
   "n": "n/829873ff3b26558a-8027e634.mp3",
   "s": "s/829873ff3b26558a-b2d78395.mp3"
  },
+ "Trys gaidos. Kiek skirtingų eilių rasi?": {
+  "n": "n/b7101cfc299170f4-9c2726c7.mp3",
+  "s": "s/b7101cfc299170f4-ec84f209.mp3"
+ },
  "Trys klausimai, trys atsakymai. Paveikslėlis tas pats.": {
   "n": "n/5b90edb4fc88f8a3-dcacee97.mp3",
   "s": "s/5b90edb4fc88f8a3-f58247b5.mp3"
@@ -4410,6 +4466,10 @@
  "Vėl mėlyna. Paveikslas toks pat.": {
   "n": "n/fc293c945c8bbe85-c16d0ef9.mp3",
   "s": "s/fc293c945c8bbe85-aa31561d.mp3"
+ },
+ "Vėl pradžia: sol, mi, re.": {
+  "n": "n/ba89e2861be34d4f-a9fa3835.mp3",
+  "s": "s/ba89e2861be34d4f-e334e4b9.mp3"
  },
  "Vėl pradžia: visos kortelės tam.": {
   "n": "n/27dea463eaa139ea-905081de.mp3",
@@ -4990,6 +5050,10 @@
  "Šis siūlas jau ištrauktas. Pasirink kitą lopelį.": {
   "n": "n/e65f3ca51fe02e5d-8fc5d9f3.mp3",
   "s": "s/e65f3ca51fe02e5d-fd6571b1.mp3"
+ },
+ "Šitą eilę jau radai. Pabandyk kitą.": {
+  "n": "n/3438d2ddc8030b74-64bb35bd.mp3",
+  "s": "s/3438d2ddc8030b74-850443ad.mp3"
  },
  "Šiuo požymiu jie skiriasi — todėl atskirai.": {
   "n": "n/6c89585db888bdf1-2cdb182e.mp3",

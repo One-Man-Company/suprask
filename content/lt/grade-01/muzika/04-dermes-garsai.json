@@ -1,0 +1,134 @@
+{
+  "id": "04-dermes-garsai",
+  "grade": 1,
+  "strand": "muzika",
+  "title": "Trys gaidos, šešios eilės",
+  "subtitle": "Tos pačios gaidos, kita eilė — kita melodija",
+  "minutes": 10,
+  "outcomes": [
+    "Perstatau tris gaidas ir išgirstu, kad melodija pakito.",
+    "Suskaičiuoju, kiek skirtingų eilių duoda trys gaidos.",
+    "Paaiškinu, kodėl viena apsukta eilė skamba kaip atsakymas."
+  ],
+  "concept": {
+    "title": "Gaidos ir jų eilė",
+    "big_idea": "Trys gaidos gali skambėti šešiais būdais. Melodiją kuria ne vien gaidos, o jų eilė.",
+    "steps": [
+      "Pirma pasakyk, kas pasikeis, kai gaidas perstatysi.",
+      "Spausk vieną gaidą, paskui kitą. Jos susikeis vietomis.",
+      "Klausyk, kaip skamba nauja eilė. Skaičiuok rastas eiles.",
+      "Spausk „Apversk“ ir išgirsk eilę nuo pabaigos."
+    ],
+    "example": "Skambutis „sol, mi“ ir „mi, sol“ skamba skirtingai."
+  },
+  "sim": {
+    "component": "dermes-garsai",
+    "config": {
+      "notes": [
+        { "id": "sol", "label": "Sol", "hz": 392 },
+        { "id": "mi", "label": "Mi", "hz": 329.63 },
+        { "id": "re", "label": "Re", "hz": 293.66 }
+      ],
+      "start": ["sol", "mi", "re"],
+      "sentences": {
+        "ask": "Kas pasikeis, kai gaidas perstatysi?",
+        "guess": "Pirma pasakyk savo spėjimą, tada perstatyk gaidas.",
+        "start": "Trys gaidos. Kiek skirtingų eilių rasi?",
+        "take": "Dabar spausk kitą vietą. Gaidos susikeis.",
+        "unpick": "Gaida padėta atgal.",
+        "found": "Nauja eilė. Klausyk, kaip skamba.",
+        "same": "Šitą eilę jau radai. Pabandyk kitą.",
+        "half": "Pusiaukelė. Dar ne visos eilės.",
+        "all": "Rastos visos šešios eilės.",
+        "reverse": "Eilė apsukta. Pradžia tapo pabaiga.",
+        "reset": "Vėl pradžia: sol, mi, re.",
+        "listen": "Klausyk visos eilės iš eilės.",
+        "nosound": "Garsas išjungtas. Įjunk garsą viršuje.",
+        "nosupport": "Šiame įrenginyje garso groti nepavyko."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Du vaikai groja tas pačias gaidas. Pirmas groja sol, mi, re, antras re, mi, sol. Ar tai ta pati melodija?",
+      "options": [
+        "Ta pati, nes gaidos tos pačios",
+        "Kita, nes pasikeitė eilė",
+        "Kita, nes pasikeitė aukštis"
+      ],
+      "answer": 1,
+      "hint": "Palygink, kuri gaida pirma, o kuri trečia.",
+      "why": "Gaidos tos pačios, bet kita eilė duoda kitą melodiją."
+    },
+    {
+      "q": "Mokytojas pagrojo sol, mi, re. Kuri eilė skamba kaip atsakymas į ją?",
+      "options": [
+        "re, mi, sol",
+        "sol, mi, re",
+        "mi, sol, re"
+      ],
+      "answer": 0,
+      "hint": "Atsakyme pradžia ir pabaiga susikeičia vietomis.",
+      "why": "Apsukta eilė kartoja garsus atbulai, todėl skamba kaip atsakymas."
+    },
+    {
+      "q": "Kiek skirtingų eilių duoda trys skirtingos gaidos?",
+      "options": [
+        "Tris",
+        "Šešias",
+        "Devynias"
+      ],
+      "answer": 1,
+      "hint": "Pirmą gaidą renkiesi iš trijų, antrą — iš dviejų.",
+      "why": "Trys gaidos duoda 3 × 2 × 1, tai yra šešias eiles."
+    },
+    {
+      "q": "Juosta raudona, geltona, žalia. Ar atvirkščia eilė — ta pati juosta?",
+      "options": [
+        "Ta pati",
+        "Kita, nes kita tvarka",
+        "Kita, nes kitos spalvos"
+      ],
+      "answer": 1,
+      "hint": "Aibė ta pati — pažiūrėk, kas stovi pirmoje vietoje.",
+      "why": "Tvarka keičia darinį ir muzikoje, ir juostose."
+    },
+    {
+      "q": "Kurioje eilėje garsai kyla aukštyn, o ne leidžiasi?",
+      "options": [
+        "re, mi, sol",
+        "sol, mi, re",
+        "mi, re, sol"
+      ],
+      "answer": 0,
+      "hint": "Aukštis brėžiamas juostos aukščiu. Žiūrėk į trečią vietą.",
+      "why": "re, mi, sol kyla, o sol, mi, re leidžiasi.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kuri eilė tau skambėjo kaip klausimas, o kuri kaip atsakymas?",
+  "teacher": {
+    "goal": "Atskleisti, kad melodiją kuria ne vien gaidų aibė, o jų eilė: trys skirtingos gaidos duoda šešias skirtingas eiles. Modelyje aibė nepajudinama — niekas nepridedama ir nepametama, keičiasi tik tvarka, todėl priežastis matoma ir išgirstama, o ne išvedama iš paaiškinimo.",
+    "prompt": "Kodėl dvi dainelės, kuriose skamba tos pačios trys gaidos, skamba visai kitaip?",
+    "offline": "Trys vaikai pasiima po kortelę su viena gaida: sol, mi arba re. Jie sustoja į eilę ir klasė eilę padainuoja. Paskui vaikai keičiasi vietomis, o klasė vėl dainuoja tą pačią eilę. Kiekviena nauja eilė užrašoma lentoje. Pabaigoje suskaičiuokite, kiek eilių radote: turi išeiti šešios. Pasirinkite dvi eiles ir paklauskite, kuri skamba kaip klausimas, o kuri kaip atsakymas.",
+    "misconceptions": [
+      "„Jei gaidos tos pačios, tai ir daina ta pati.“ Modelyje gaidos tos pačios visą laiką, o šešios eilės skamba skirtingai; kinta tik tvarka.",
+      "„Pakeitus eilę atsiranda nauja gaida.“ Aibė nepakinta: kiekviena eilė turi lygiai tris gaidas, tik kita tvarka.",
+      "„Apsukta eilė yra ta pati daina.“ Apsukta eilė skiriasi tuo, kas pirma ir kas pabaiga, todėl skamba kaip atsakymas.",
+      "„Trys gaidos duoda tris melodijas.“ Kiekviena gaida gali būti pirmoji, antroji arba trečioji, todėl eilių šešios."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Muzikos kūryba, komponavimas, 1–2 klasė: „Žaidimai dermės garsais. Tai užduočių grupė, apimanti dermės garsų kombinatorinių galimybių tyrinėjimą. Pirmoje ir antroje klasėje apsiribojama trumpais melodiniais dariniais, sudarytais iš 2-3 skirtingų gaidų (pvz., sol-mi, re-mi-sol ar pan.). Taikomos įvairios užduotys: darinio garsus išdėstyti įvairia eilės tvarka (pvz., tris skirtingas gaidas išdėstyti šešiais nepasikartojančiais būdais); siūlomus darinius perskaityti (perrašyti, pagroti) nuo pradžios ir nuo pabaigos (simetrija, klausimo-atsakymo struktūros pažinimas)“ (failas sources/pradinio-bp-rekomendacijos-2024.txt, 3526–3536 eil.); ta pati formuluotė mokymosi turinio skyriuje (13871–13876 eil.).",
+    "NŠA. Tos pačios rekomendacijos, to paties skyriaus įvadas: „1-2 klasėse mokiniams pateikiamos tokios komponavimo užduotys, kurios atitinka šio amžiaus vaikų išgales ir supratimą. Šių užduočių esmė – komponavimas pagal pateiktą salygą“ (3508–3512 eil.); modelis duoda būtent sąlygą — tris gaidas, kurias reikia išdėstyti.",
+    "Muzikos bendroji programa (2022), pasiekimų sritis B (Muzikos kūryba): 1–2 klasėje kuriama pagal pateiktą sąlygą, eksperimentuojama dermės garsais; ritmo ir melodijos elementai atliekami balsu (sources/pradinio-bp-rekomendacijos-2024.txt, 3500–3545 eil.).",
+    "Stalinski, S. M., & Schellenberg, E. G. (2010). Shifting perceptions: Developmental changes in judgments of melodic similarity. Developmental Psychology, 46(6), 1799–1803. https://doi.org/10.1037/a0020658 — 5–12 m. vaikams duotos tos pačios melodijos, kuriose tos pačios gaidos perstatytos; 5–7 m. vaikai labiau pastebi bendrą aukščio lygį negu gaidų eilės pokytį, todėl modelyje eilė rodoma ne tik garsu, bet ir tvarka bei juostos aukščiu — kad pokytis būtų pastebimas, o ne vien girdimas.",
+    "Dowling, W. J. (1978). Scale and contour: Two components of a theory of memory for melodies. Psychological Review, 85(4), 341–354. https://doi.org/10.1037/0033-295X.85.4.341 — melodijos kontūras (kaip garsai kyla ir leidžiasi) saugomas atmintyje atskirai nuo tikslių intervalų, todėl eilė yra savarankiška melodijos tapatybės dalis, o ne gaidos „prisirišusios“ prie vietų."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena nauja sąvoka (gaidų eilė), o garsas, aukštis ir ritmas lieka žinomi dydžiai; gaidų skaičius modelyje nesikeičia.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo atpažinti eilės poveikį naujoje situacijoje (juostelės, apsukta eilė, kylanti eilė), o ne pakartoti modulio sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas prieš pirmą perstatymą, kiekviena klaida turi užuominą, modelis nieko nebaudžia ir leidžia bandyti iš naujo; 5-a užduotis — praplėtimas.",
+    "P2 / T3.4 / T5.5: veiksmas prieš paaiškinimą; eilė skiriama ir žodžiu, ir juostos aukščiu, ir numeriu, niekada vien spalva; lietimo taikiniai ≥ 48 px."
+  ]
+}

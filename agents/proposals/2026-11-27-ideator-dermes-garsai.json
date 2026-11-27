@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 575,
+  "created": "2026-11-27T08:41:00+02:00",
+  "type": "tema",
+  "title": "Trys gaidos, šešios eilės: ta pati medžiaga, kita melodija",
+  "body": "Programos komponavimo užduotyse 1–2 klasei įvardyti „Žaidimai dermės garsais“: trumpi melodiniai dariniai iš 2–3 gaidų, o darinio garsus prašoma „išdėstyti įvairia eile tvarka (pvz., tris skirtingas gaidas išdėstyti šešiais nepasikartojančiais būdais)“. Platformoje tai nemodeliuota: `02-ritmas-ir-perkusija` tvarko ritmo korteles pagal pulsą, `03-klausymasis` keičia atlikėjų sudėtį, o gaidų eilės niekas nekeičia. Siūlau modelį su trimis fiksuotomis gaidomis (sol, mi, re): vaikas jas perstato, modelis pagroja ir skaičiuoja, kiek skirtingų eilių jau rasta iš šešių. Klaidinga nuostata: „jei gaidos tos pačios, tai ir daina ta pati“ (atmaina „eilė nesvarbi, svarbu tik, kokios gaidos“). Modelis turi vieną kintamąjį — eilių tvarką — ir matomą pasekmę: ta pati trijų gaidų medžiaga duoda šešias skirtingas melodijas, o apsukta eilė skamba kaip klausimas ir atsakymas. Skirtumas nuo `02-ritmas-ir-perkusija`: ten keičiasi, *kada* ploji, čia — *kuria tvarka* kyla garsai, o gaidų skaičius nesikeičia.",
+  "target": "content/lt/grade-01/muzika/04-dermes-garsai.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:3508–3512 — „1-2 klasėse mokiniams pateikiamos tokios komponavimo užduotys, kurios atitinka šio amžiaus vaikų išgales… Šių užduočių esmė – komponavimas pagal pateiktą salygą“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:3526–3536 — „Žaidimai dermės garsais… Pirmoje ir antroje klasėje apsiribojama trumpais melodiniais dariniais, sudarytais iš 2-3 skirtingų gaidų (pvz., sol-mi…)… darinio garsus išdėstyti įvairia eile tvarka (pvz., tris skirtingas gaidas išdėstyti šešiais nepasikartojančiais būdais)“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:13871–13875 — ta pati formuluotė mokymosi turinio skyriuje (ne vien planas)",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:36–38 — 1–2 kl. improvizavimas ir komponavimas: eksperimentavimas garsais, kūryba pagal sąlygą",
+    "Patikra: content/lt/grade-01/muzika/ turi 3 modulius (01–03), numeris 04 laisvas; grep „gaid|derm“ per content/lt/grade-01/ → 0 atvejų; `03-klausymasis` sim `melodija-ir-pritarimas` keičia tik atlikėjo sluoksnius (config.components.layers), gaidų eilės neturi"
+  ]
+}

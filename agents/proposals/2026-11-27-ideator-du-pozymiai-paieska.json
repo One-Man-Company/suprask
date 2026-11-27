@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 575,
+  "created": "2026-11-27T08:44:00+02:00",
+  "type": "tema",
+  "title": "Du požymiai iš karto: raudona ir didelė — ne ta pati krūva",
+  "body": "1–2 klasių integruotas duomenų skyrius prašo: „Mokiniai atrinks duomenis pagal vieną ar du nurodytus požymius. Mokiniai mokės grupuoti (klasifikuoti) daiktus pagal vieną ar kelis nurodytus požymius“. Platformoje modeliuojamas tik vienas požymis: `36-grupavimas-pagal-pozymi` rodo tą pačią krūvą tris kartus, bet kaskart pagal vieną požymį, o `23-piktograma-ir-stulpelis` skaičiuoja vienos grupės figūras. Siūlau modelį, kuriame vaikas pažymi du langelius (pvz., „raudona“ ir „didelė“) ir mato, kas lieka: pažymėjus vieną, paryškinama daug, pažymėjus abu — tik tie, kurie tenkina abu, ir skaičius sumažėja. Klaidinga nuostata: „jei pažymėjau raudoną, tai visi raudoni tinka“ (atmaina „du požymiai tik susiaurina tą patį sąrašą, o ne kitaip“). Modelis turi du nepriklausomus kintamuosius ir skaičiuojamą pasekmę (likusių daiktų skaičius), todėl sakinys tekste nepakeičia to, ką vaikas pamato. Skirtumas nuo `36-grupavimas-pagal-pozymi`: ten keičiamas požymis vienas ir krūva *padalijama* į būrius, o čia požymiai veikia kartu ir iš krūvos *atrenkama* dalis — tai kita sąvoka (abu iš karto), ne tas pats grupavimas kita formuluote.",
+  "target": "content/lt/grade-01/matematika/38-du-pozymiai-paieska.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:22934–22938 — „Mokiniai atrinks duomenis pagal vieną ar du nurodytus požymius. Mokiniai mokės grupuoti (klasifikuoti) daiktus pagal vieną ar kelis nurodytus požymius (spalvą, dydį, formą, padėtį erdvėje, sunkumą…)“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:22614–22615 — bloko antraštė „Ilgalaikio plano pavyzdys su galima dalykų integracija 1–2 klasėms“ (įrašas priklauso 1–2 kl., ne vyresnei klasei); jo matematikos stulpelis :22927–22929",
+    "content/lt/grade-01/matematika/36-grupavimas-pagal-pozymi.json:15 ir :203–206 — modelis sąmoningai keičia po vieną požymį ir krūvos nekeičia; dviejų požymių kartu jis neturi",
+    "Patikra: content/lt/grade-01/matematika/ turi 26 modulius (04–07, 14–30, 32–36); numeris 37 skirtas #574 pasiūlymui (`37-tinklelio-adresas`), todėl imtas 38; grep „du požym|abu požym“ per content/lt/grade-01/ → 0 modelių",
+    "Amžiaus pagrindas (šaltinis nepatikrintas šiame repo, todėl žymima): 6–7 m. vaikas patikimai klasifikuoja pagal vieną požymį, o dviejų suderinimas yra riba (Inhelder ir Piaget, 1964, ankstyvosios logikos raida) — todėl modelis rodo skaičių, o ne prašo paaiškinti"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "role": "ideator",
+  "run_id": 575,
+  "created": "2026-11-27T08:42:00+02:00",
+  "type": "tema",
+  "title": "Transporto priemonė ne greičiausia, o tinkama keliui",
+  "body": "1 klasės 26.4.1 temoje programa siūlo žaidimą „Kelionių agentūra“: poromis sudaryti nurodyto maršruto įveikimo būdus ir transporto priemonės pasirinkimą *pagrįsti*, o integracijos lentelėje gebėjimas įrašytas atskirai — „atpažinti ir įvardinti transporto priemones; parinkti transporto priemonę skirtingam atstumui įveikti“. Platformoje priemonės pasirinkimo nėra: `17-judejimas` sprendžia nuožulniosios plokštumos aukštį ir greitį, o kelio tinkamumo niekas nemodeliuoja (grep „transporto priemon|maršrut“ → 1 eilutė, ir ji apie modelio ribą). Siūlau modelį su trimis tikslais (per kiemą, per upę, į kitą miestą) ir trimis priemonėmis (pėsčiomis, dviračiu, valtimi); vaikas priskiria priemonę tikslui ir mato, ar kelias įveikiamas. Klaidinga nuostata: „visur reikia greičiausios priemonės“ (atmaina „upė žemėlapyje — tik brūkšnys, per ją galima pėsčiomis“). Pasekmė matoma be paaiškinimo: per kiemą valtis nejuda, o pėsčiasis į kitą miestą nepajuda per visą dieną, todėl pasirinkimas grindžiamas atstumu ir kliūtimi, o ne greičiu. Skirtumas nuo `17-judejimas`: ten kintamasis — plokštumos aukštis, čia — kliūtis ir atstumas, o modelis nevaizduoja greičio lenktynių.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/42-transporto-priemone-marsrutui.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:1564–1567 — „1 klasė. 26.4.1 Judėjimas… Nagrinėjant transporto priemonių rūšis siūloma žaisti žaidimą „Kelionių agentūra“. Mokiniai poromis turi sudaryti nurodyto maršruto įveikimo būdus… Siekiama, kad mokiniai transporto priemonės pasirinkimą pagrįstų“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:14985–14987 — 1 klasės projektas „Atminties žaidimo TRANSPORTO PRIEMONĖS kūrimas“, tikslas „įtvirtinti oro, sausumos, vandens transporto priemones“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:22944–22946 — 1–2 kl. integracijos lentelė: „atpažinti ir įvardinti transporto priemones; parinkti transporto priemonę skirtingam atstumui įveikti“",
+    "Patikra: content/lt/grade-01/pasaulio-pazinimas/ turi 22 modulius (08–41), numeris 42 laisvas; grep „transporto priemon|maršrut“ per content/lt/grade-01/ → 2 eilutės (`20-kas-gyvas` tyrimo citata, `21-kas-sukure-dailka` modelio riba), modelio 0"
+  ]
+}

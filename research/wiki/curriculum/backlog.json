@@ -1,6 +1,6 @@
 {
  "grade": 1,
- "generated": "2026-11-27T09:00:26",
+ "generated": "2026-11-27T20:51:28",
  "source_hash": "c7cf15d5f954aed6",
  "source_files": {
   "1-klases-temų-žemėlapis.md": "d51dd4b59f29b1b5",
@@ -16,7 +16,7 @@
   "partial": 0,
   "missing": 1
  },
- "modules_now": 84,
+ "modules_now": 85,
  "rows": [
   {
    "key": "26.2.3",

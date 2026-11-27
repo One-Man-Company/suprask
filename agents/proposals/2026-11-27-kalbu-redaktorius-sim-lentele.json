@@ -1,0 +1,17 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 582,
+  "created": "2026-11-27T12:41:00+02:00",
+  "type": "struktura",
+  "title": "Sim sakinys įvardijo ekrano sritį, kuri neturi vardo ir kurios nėra",
+  "body": "Modulio 10-gyvunu-grupes simuliacijos klaidos sakinys buvo „Ne šitaip. Gyvūnas dar lentelėje.“ Modelyje lentelės nėra: yra kortelių juosta (#gg-tray) ir dvi dėžės (#gg-bins), o nė viena matoma etiketė žodžio „lentelė“ nesako. Vaikas, ieškodamas lentelės, žiūrėjo į dėžes ir į užduočių sąrašą. Sakinys buvo perrašytas į „Ne šitaip. Pagalvok, kas šiam gyvūnui duoda maistą.“ — bet pati spraga lieka: sim.config.sentences tekstai, kurie mini ekrano sritį, neturi jokio varto, kuris lygintų minimą daiktą su scenos elementų pavadinimais. Siūloma: (1) sim.config.bins[].label laikyti savarankišku kriterijumi (be įvardžio, be dalelytės „pats“) ir tai įrašyti docs/KURINIO-STANDARTAS.md sim.config dalyje; (2) sim klaidos sakiniuose leisti minėti tik tuos objektus, kurių vardas yra matomoje etiketėje (dėžė, kortelė, mygtukas) — vidiniai autoriaus pavadinimai draudžiami. Kol varto nėra, taisyklė gyvena tik pamokoje LL-224, o kita simuliacija gali tą pačią klaidą pakartoti.",
+  "target": "docs/KURINIO-STANDARTAS.md",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "assets/js/sims/pasaulis.js:702-709 (scenoje yra #gg-tray ir #gg-bins, lentelės nėra)",
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:27-28 (bins[].label yra kriterijus, rodomas virš tuščios dėžės)",
+    "research/wiki/guidelines/pamokos.md — LL-224",
+    "research/wiki/guidelines/pamokos.md — LL-166 (ta pati šeima užduotyse, ne sim sakiniuose)"
+  ]
+}

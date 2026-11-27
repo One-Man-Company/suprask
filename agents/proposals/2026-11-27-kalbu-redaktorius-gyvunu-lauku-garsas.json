@@ -1,0 +1,17 @@
+{
+  "role": "kalbu-redaktorius",
+  "run_id": 582,
+  "created": "2026-11-27T12:40:00+02:00",
+  "type": "ux",
+  "title": "18 rodomų sim teksto laukų neturi nė vieno garso įrašo",
+  "body": "Modulio 10-gyvunu-grupes simuliacija rodo 18 vaikui skaitomų tekstų, kurių niekas netaria: animals[].place (6), animals[].trait (6) ir animals[].winter (6). Juos vaikas mato kortelėje po gyvūno vardu, priskyrimo pranešime ir žiemos sąraše. check_audio.py jų nemato, nes generate_audio.collect() renka tekstus tik pagal raktus word, syllables, words, sentences, label (scripts/generate_audio.py:201) — place, trait ir winter į tą sąrašą nepatenka, tad vartai sąžiningai sako „2550 iš 2550“, nors 18 ekrane rodomų sakinių neturi balso. Tai ne šio modulio ypatumas: tie patys raktai naudojami ir kitose simuliacijose, todėl spraga yra bendra. Siūloma: (1) įtraukti place, trait, winter į generate_audio.collect() raktų sąrašą arba (2) jei jie sąmoningai netariami (kad balsas neperskaitytų viso sąrašo), įrašyti tai dokumente ir check_audio.py išvestyje parodyti aprėptį („18 rodomų, bet netariamų laukų“), o ne tylėti. Kol sprendimo nėra, vaikas, kuris remiasi balsu, modelio paaiškinimo negirdi.",
+  "target": "scripts/generate_audio.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/generate_audio.py:198-217 (collect(): keys = {word, syllables, words, sentences, label})",
+    "content/lt/grade-01/pasaulio-pazinimas/10-gyvunu-grupes.json:30-60 (animals[].place/trait/winter)",
+    "assets/js/sims/pasaulis.js:742-749, 829, 854-857 (place, trait ir winter rodomi ir skaitomi ekrane)",
+    "python3 scripts/check_audio.py → „1275 tekstų … 2550 įrašų“ (šie 18 neįskaičiuoti)"
+  ]
+}

@@ -759,9 +759,9 @@
   "n": "n/65dc70d3619e6b68-384c019b.mp3",
   "s": "s/65dc70d3619e6b68-bc774712.mp3"
  },
- "Atėjo žiema, o grupė liko ta pati. Karvė vis dar naminė, o gandras — laukinis.": {
-  "n": "n/b648869c56c2bcfd-ff66b795.mp3",
-  "s": "s/b648869c56c2bcfd-70528314.mp3"
+ "Atėjo žiema, o grupė liko ta pati. Karvė vis dar naminė. Gandras vis dar laukinis.": {
+  "n": "n/c83770f311cc5783-7d1ef4b1.mp3",
+  "s": "s/c83770f311cc5783-745d6a64.mp3"
  },
  "Atėmei devynias. Liko keturios.": {
   "n": "n/b30a200f32c93a65-bdf116ed.mp3",
@@ -1703,6 +1703,10 @@
   "n": "n/b96bcd36a283ba3f-70ab9fbd.mp3",
   "s": "s/b96bcd36a283ba3f-943d8de7.mp3"
  },
+ "Kas pasikeis, pamatysi, kai visi gyvūnai bus savo vietose.": {
+  "n": "n/7e2bd7e24cd527c5-345323a6.mp3",
+  "s": "s/7e2bd7e24cd527c5-e4d81404.mp3"
+ },
  "Kas pasikeis: formos ar nuotaika? Pasakyk, tada keisk.": {
   "n": "n/4d4a059e036dc52a-2292c4c0.mp3",
   "s": "s/4d4a059e036dc52a-746b3262.mp3"
@@ -2307,9 +2311,9 @@
   "n": "n/7ba84418484e027c-f1c7481b.mp3",
   "s": "s/7ba84418484e027c-42161ac8.mp3"
  },
- "Maistą susiranda pats": {
-  "n": "n/9ab19ec14d02bcc2-390d207c.mp3",
-  "s": "s/9ab19ec14d02bcc2-61eb293c.mp3"
+ "Maistą susiranda pats gyvūnas": {
+  "n": "n/3eb82679ef71b7f8-26f513f0.mp3",
+  "s": "s/3eb82679ef71b7f8-98ac1ce2.mp3"
  },
  "Maitinasi": {
   "n": "n/731483447b536fea-548aa8b4.mp3",
@@ -2443,9 +2447,9 @@
   "n": "n/38cebf4836a918cb-65706811.mp3",
   "s": "s/38cebf4836a918cb-7211c8dd.mp3"
  },
- "Ne šitaip. Gyvūnas dar lentelėje.": {
-  "n": "n/1deef733283a4bea-93194613.mp3",
-  "s": "s/1deef733283a4bea-38cb730a.mp3"
+ "Ne šitaip. Pagalvok, kas šiam gyvūnui duoda maistą.": {
+  "n": "n/beb4970f59e8dc3c-a6653abf.mp3",
+  "s": "s/beb4970f59e8dc3c-5b3fa734.mp3"
  },
  "Nepažymėjai nė vieno daikto.": {
   "n": "n/163cf2eac22f1bab-6cc5f5b0.mp3",
@@ -2554,10 +2558,6 @@
  "P": {
   "n": "n/5c62e091b8c0565f-5df0e1a2.mp3",
   "s": "s/5c62e091b8c0565f-89285630.mp3"
- },
- "Paaiškės, kai visi gyvūnai bus savo vietose.": {
-  "n": "n/3a852637fb317514-a5d6dc5b.mp3",
-  "s": "s/3a852637fb317514-e69a99ce.mp3"
  },
  "Pabandyk dar kartą.": {
   "n": "n/cde614009bc30075-3ba3cb9a.mp3",

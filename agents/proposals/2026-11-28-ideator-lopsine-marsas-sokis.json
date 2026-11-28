@@ -1,0 +1,17 @@
+{
+  "role": "ideator",
+  "run_id": 596,
+  "created": "2026-11-28T07:46:00+02:00",
+  "type": "tema",
+  "title": "Ta pati melodija: lopšinė, maršas ar šokis — sprendžia tempas",
+  "body": "Muzikos 1–2 klasių sąvokų sąraše oficialiai įvardyti „muzikos tempas (lėtai, ramiai, gyvai, greitai)“ ir „daina, šokis, maršas; lopšinė, sutartinė“, o aranžavimo metodas 1–2 klasei yra „judesių pritaikymas dainai“. Platformoje tempo ir kūrinio paskirties nėra: `01-garso-aukstis` keičia aukštį ir garsumą, `02-ritmas-ir-perkusija` keičia, *ką* ploji ant pastovaus pulso, `03-klausymasis` — atlikėjų skaičių, `04-dermes-garsai` — gaidų eilę. Siūlau modelį su viena fiksuota melodija: vaikas pasirenka, ar ji skamba lopšinei, maršui ar šokiui, o modelis paleidžia tą pačią melodiją lėtu, tolygiu ar greitu pulsu ir parodo judesį, kuris prie jos tinka. Klaidinga nuostata: „lopšinė yra tyli daina, o maršas — garsi“ (jos atmaina „paskirtį pasako melodija, o ne tempas“). Modelis keičia tik vieną dalyką — pulso greitį — o melodija, aukštis ir garsumas lieka tie patys, todėl vaikas girdi, kad paskirtį keičia tempas. Tai ir tarpdalykinė sąsaja: muzika + judesys (fizinis ugdymas), kuriame vertinama ne pavadinimas, o „kuris judesys tinka“. Skirtumas nuo `02-ritmas-ir-perkusija`: ten pulsas pastovus ir keičiasi ritmo kortelės; čia kortelės tos pačios, o keičiasi pats pulsas.",
+  "target": "content/lt/grade-01/muzika/05-lopsine-marsas-sokis.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:13927–13930 — 1–2 klasių sąvokų sąrašas: „muzikos tempas (pvz.: lėtai, ramiai, gyvai, greitai), tembras… daina, šokis, maršas; lopšinė, sutartinė“",
+    "research/wiki/curriculum/kti-dalykai-1-klase.md:37–39 — 1–2 kl. eksperimentavimas garsais ir aranžavimas: „(a) judesių pritaikymas dainai“, „paprasto ritminio pritarimo (pulso, ostinato) pritaikymas“; klausymasis 1–2 kl. — žanrai (klasikinė, populiarioji, liaudies, bažnytinė)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:13802–13806 — „Eksperimentavimas garsais leidžia pažinti pagrindines keturias garso savybes: trukmę, stiprį, aukštį ir tembrą“ — tempas čia neįvardytas kaip garso savybė, todėl modulis nepretenduoja į garso savybių šeimą (atviras klausimas research/wiki/guidelines/klausimai.md:15 neliečiamas)",
+    "Patikra: content/lt/grade-01/muzika/ turi 4 modulius (01–04), numeris 05 laisvas; `grep -rn \"tempas|lopšin|maršas\" content/lt/grade-01/` → 0 modulių (tik `03-klausymasis` offline veikloje minimas lėtesnis dainavimas); `01-garso-aukstis` sim keičia `gain` (garsumą) ir aukštį, tempo kintamojo neturi"
+  ]
+}

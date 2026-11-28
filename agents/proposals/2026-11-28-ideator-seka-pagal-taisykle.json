@@ -1,0 +1,19 @@
+{
+  "role": "ideator",
+  "run_id": 596,
+  "created": "2026-11-28T07:45:00+02:00",
+  "type": "tema",
+  "title": "Seką sudaryti sunkiau nei tęsti: taisyklė turi galioti kiekvienai grupei",
+  "body": "Programa 1 klasei reikalauja ne tik atpažinti ir pratęsti seką, bet ir „sudaryti seką pagal nurodytą taisyklę, sukurti savo“ (tai įrašyta trijose vietose: A2.4 įvade, 1–2 kl. gebėjimų stulpelyje ir 1 klasės sekų apraše). Platformoje yra `07-desningumai`: vaikas *tęsia* duotą seką ir randa trūkstamą narį viduryje, bet pats sekos niekada nesudaro — vaidmuo „vartotojas“ be „autoriaus“. Siūlau modulį, kuriame vaikas stata savo seką iš trijų žetonų tipų pagal duotą taisyklę („du geltoni, vienas žalias“), o modelis jo statinį pratęsia dešimčiai žingsnių ir parodo, ar taisyklė laikosi kiekvienoje grupėje, ne tik pirmoje. Klaidinga nuostata: „seka sudaryta teisingai, jei pirmoji grupė atitinka taisyklę“ — vaikas įprastai stato vieną grupę ir nustoja, o modelis atskleidžia, kad toliau tvarka lūžta. Vienas kintamasis — žetonų eilė; pasekmė matoma iškart, be laikmačio. Skirtumas nuo `07-desningumai`: ten eilė duota ir klausiama, kas toliau; čia eilę kuria vaikas ir klausiama, ar ji teisinga *visur*, todėl modelis priverstas pratęsti vaiko sprendimą už jo paties parašyto galo.",
+  "target": "content/lt/grade-01/matematika/39-seka-pagal-taisykle.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:918–921 — „1-oje klasėje mokiniai mokysis atpažinti ir apibūdinti įvairias objektų sekas iš 2–3 pasikartojančių narių grupių, jas pratęsti, rasti trūkstamus sekų narius… sudaryti seką pagal nurodytą taisyklę, sukurti savo“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:12296–12300 — 1–2 kl. gebėjimų stulpelis: „Tyrinėti objektų sekas iš 2–4 pasikartojančių narių grupių… mokytis jas atpažinti ir apibūdinti, pratęsti, rasti trūkstamus narius, sudaryti seką pagal nurodytą taisyklę, sukurti savo“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:33560–33564 — „1 klasė. Sekos. … mokomasi jas atpažinti ir apibūdinti, pratęsti, rasti trūkstamus narius, sudaryti seką pagal nurodytą taisyklę, sukurti savo“",
+    "research/wiki/curriculum/matematika-1-klase.md:90–104 — sekų branduolys ir saugi 1 kl. riba (2–3 narių grupė); pažymėta, kad platformoje dar nepanaudotas elementas yra „rasti trūkstamus narius“, o „sudaryti seką pagal taisyklę“ neturi nė vieno modulio",
+    "research/wiki/curriculum/backlog.json — eilutė `B:sekos-desningumai` numato interaktyvumą „Sekos „tęsėjas“ + savos taisyklės kūrimas“, bet įgyvendintas modulis `07-desningumai` turi tik tęsėją: `sim.config.tasks` laukai yra `seq / options / answer / prompt`, o nė viena iš 4 užduočių neprašo vaiko sudaryti ar sukurti sekos",
+    "Patikra: content/lt/grade-01/matematika/ turi 27 modulius, didžiausias numeris 37, `38-du-pozymiai-paieska` rezervuotas #59753 pasiūlymo → imtas 39; tema turi du modulius (leidžiama, nes programa skiria atskirą gebėjimą „sudaryti seką pagal nurodytą taisyklę“), o antrasis modulis ima būtent jį, pirmasis — tęsimą"
+  ]
+}

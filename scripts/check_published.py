@@ -559,6 +559,33 @@ sako „mėginys“ ir niekada nepranešamas kaip pilnas (LL-37).
   (LL-182/LL-207). Pastaba dabar pasako faktą (apsaugos nėra), o ne darbinės
   kopijos būseną, ir rašoma abiem atvejais; tai patikrina H1b.
 
+2026-11-28 (paleidimas #609): puslapių sąrašas pagaliau imamas iš disko, ne
+  ranka, ir surinkimas bei matavimas naudoja **tą patį** sąrašą.
+  #607 sutvarkė kodo žymes (`?v=`) ir vardiklį „N/M“, bet abu jie rėmėsi
+  sąrašu, kuris buvo parašytas ranka **trijose** vietose: `PUBLISHED_SINGLE`,
+  `SHELL_GLOBS` ir `pages.yml` `cp index.html 404.html _site/`. Matuota
+  2026-11-28 šiame darbe: laikiname repo įdėtas trečias šaknies puslapis
+  (`apie.html`) — `code_pages()` grąžino `['404.html', 'index.html']`,
+  `published_files()` ir `measured_files()` jo neturėjo, `coverage().unmeasured`
+  liko `[]`, `published_count` liko 2843, o surinkimo žingsnis į `_site` įkėlė
+  2 puslapius vietoj 3. Kitaip tariant: failas yra repo, jo **nėra** svetainėje,
+  ir nė vienas vartas to nesako — ta pati tylios ribos klasė kaip #558 ir #607
+  (LL-37, LL-240), tik ne žymėse, o pačiame puslapių sąraše. Dabar:
+  - `root_pages()` skaito `*.html` iš `ROOT` **kiekvieną kvietimą** (ne importo
+    metu: zondai perjungia `ROOT`, tad sustingusi konstanta matuotų tikrą repo);
+    slapti `.probe-*` failai neįtraukiami — `pages.yml` jų neįkelia;
+  - `SHELL_GLOBS` nebėra puslapių sąrašas, `shell_files()` ir `code_pages()`
+    prideda `root_pages()` rezultatą;
+  - `pages.yml` surinkimo žingsnis kopijuoja **visus** šaknies `*.html`
+    (`find . -maxdepth 1 -name "*.html" -not -name ".*"`), ne du vardus.
+  Įrodymas: `scripts/probe_root_pages.py` — 14/14, be tinklo, < 0,5 s. Jis
+  paleidžia **tikrą** `pages.yml` surinkimo žingsnį ir tikrina **tikrus**
+  vartus; 5-as lūkestis yra neigiama kontrolė (senasis `cp index.html 404.html`
+  pameta trečią puslapį), 6-as — kad ketvirtas puslapis įsijungia be kodo
+  pakeitimo. Su `git show HEAD:scripts/check_published.py` zondas grąžina
+  rc 1 („neturi `root_pages`“), su senu `pages.yml` ir nauju įrankiu — 12/14
+  (krenta 4 ir 6: trečias ir ketvirtas puslapis į `_site` nepatenka).
+
 Naudojimas:
     python3 scripts/check_published.py               # žmogui
     python3 scripts/check_published.py --json        # dashboard'ui
@@ -612,25 +639,57 @@ AUX_FILES = [
     ("content/audio-overrides.json", ROOT / "content" / "audio-overrides.json"),
 ]
 
-# Katalogai ir failai, kuriuos `pages.yml` įkelia į svetainę (`cp -r assets
-# content`, `cp index.html 404.html`). Imami iš publikavimo sutarties, ne iš
-# atminties: `coverage()` tikrina, ar kiekvienas publikuojamas failas turi savo
-# matavimą, tad sąrašas turi būti tas pats, kurį naudoja publikavimas.
+# Katalogai, kuriuos `pages.yml` įkelia į svetainę (`cp -r assets content`).
+# Imami iš publikavimo sutarties, ne iš atminties: `coverage()` tikrina, ar
+# kiekvienas publikuojamas failas turi savo matavimą, tad sąrašas turi būti tas
+# pats, kurį naudoja publikavimas.
 PUBLISHED_ROOTS = ("assets", "content")
-PUBLISHED_SINGLE = ("index.html", "404.html")
+
+
+def root_pages() -> list[str]:
+    """Šaknies HTML puslapiai — iš disko, ne iš ranka rašyto sąrašo.
+
+    Kodėl funkcija, o ne konstanta. Iki #609 sąrašas buvo dvi eilutės
+    (`("index.html", "404.html")`) trijose vietose: `PUBLISHED_SINGLE`,
+    `SHELL_GLOBS` ir `pages.yml` `cp`. Matuota 2026-11-28: įdėjus trečią
+    šaknies puslapį (`apie-zondas.html`, 34 B), `code_pages()` jo nematė,
+    `published_files()` ir `measured_files()` — irgi, `coverage().unmeasured`
+    liko `[]`, `published_count` liko 2843, o `pages.yml` surinkimo žingsnis
+    (`cp index.html 404.html _site/`) jo į `_site` neįkėlė nė vienu failu.
+    Tai trejopai tyli spraga: failas yra repo, jo **nėra** svetainėje, ir
+    nė vienas vartas apie jį nieko nesako (LL-242).
+
+    Imama iš `ROOT` kiekvieną kvietimą, ne importo metu: zondai perjungia
+    `cp.ROOT` į laikiną repo, ir importo metu sustingusi konstanta matuotų
+    tikrą repo (LL-36 atvirkštinė pusė). Slapti failai (`.probe-*.html`,
+    `.gitignore`) praleidžiami: `pages.yml` jų neįkelia, nes `cp ./*.html`
+    jų nesugriebia.
+
+    Tvarka: `index.html` pirmas (tai pagrindinis puslapis ir istoriškai
+    pirmas pranešimuose), kiti — abėcėlės tvarka. Tvarka svarbi todėl, kad
+    `code_pages()` rezultatas patenka į pranešimą, o kintanti eilė klaidintų
+    lyginant du bėgimus.
+    """
+    names = sorted(p.name for p in ROOT.glob("*.html")
+                   if p.is_file() and not p.name.startswith("."))
+    head = [n for n in names if n == "index.html"]
+    return head + [n for n in names if n != "index.html"]
 
 # Svetainės kodas, kuris vykdomas naršyklėje. `content/` baitai sako, ką vaikas
 # turėtų matyti, bet ne ką jis iš tikrųjų vykdo: simuliacijos, maršrutizatorius
 # ir stilius gyvena `assets/`. Nepaskelbtas `assets/js/sims/*.js` pataisymas
 # anksčiau likdavo nematomas — visi modulių baitai sutapdavo (LL-83).
 SHELL_GLOBS = [
-    ("index.html", None),
-    # `404.html` irgi įkeliamas naršyklės: tai puslapis, kurį vaikas pamato,
-    # kai modulio adresas neteisingas arba failas nepaskelbtas. Jis kopijuojamas
-    # į svetainę (`pages.yml`: `cp index.html 404.html _site/`), bet nebuvo nė
-    # viename varte — #306 paliko tai atviru, #308 įrodė zondą: veidrodis su
-    # 563 B → 594 B `404.html` davė rc 0 ir „sutampa“, nors gyvas failas kitas.
-    ("404.html", None),
+    # Šaknies HTML puslapiai čia **neišvardijami** — jie imami `root_pages()`
+    # kiekvieną kvietimą (žr. `shell_files()` ir `code_pages()`). Konstanta
+    # importo metu užšaldytų sąrašą, o zondai perjungia `ROOT` į laikiną repo:
+    # sustingusi reikšmė matuotų tikrą repo (LL-36 atvirkštinė pusė).
+    #
+    # `404.html` taip pat įkeliamas naršyklės: tai puslapis, kurį vaikas
+    # pamato, kai modulio adresas neteisingas arba failas nepaskelbtas. Jis
+    # kopijuojamas į svetainę, bet nebuvo nė viename varte — #306 paliko tai
+    # atviru, #308 įrodė zondą: veidrodis su 563 B → 594 B `404.html` davė
+    # rc 0 ir „sutampa“, nors gyvas failas kitas.
     ("assets/js", "*.js"),
     ("assets/css", "*.css"),
 ]
@@ -2082,10 +2141,11 @@ def same_bytes(rel: str) -> tuple[str, int, int]:
 
 
 def shell_files() -> list[str]:
-    """Svetainės failai, kuriuos naršyklė įkelia (`index.html`, JS, CSS, kiti `assets/`).
+    """Svetainės failai, kuriuos naršyklė įkelia (HTML puslapiai, JS, CSS, kiti `assets/`).
 
     Sąrašas imamas iš katalogų, ne įrašomas ranka: nauja simuliacija
-    `assets/js/sims/` faile atsiranda be įrankio pakeitimo.
+    `assets/js/sims/` faile atsiranda be įrankio pakeitimo, o naujas šaknies
+    HTML puslapis — per `root_pages()`.
 
     `SHELL_GLOBS` išvardija tik `*.js` ir `*.css`, o `pages.yml` publikuoja
     visą `assets/` (`cp -r assets`). Todėl po jų pridedami visi kiti `assets/`
@@ -2093,12 +2153,16 @@ def shell_files() -> list[str]:
     būtų paskelbtas be vartų: baitai žali, o vaikas paveikslo adrese randa 404
     (LL-37 — riboja sąrašas, ne svetainė). `assets/audio/` praleidžiamas:
     garsą tikrina `check_audio()` ir AUX `manifest.json`.
+
+    `root_pages()` kviečiamas **čia**, o ne importo metu: zondai perjungia
+    `ROOT` į laikiną repo, tad sąrašas turi būti skaitomas tuo metu, kai
+    matuojama (LL-242).
     """
-    out: list[str] = []
+    out: list[str] = [name for name in root_pages() if (ROOT / name).exists()]
     for name, pattern in SHELL_GLOBS:
         path = ROOT / name
         if pattern is None:
-            if path.exists():
+            if path.exists() and name not in out:
                 out.append(name)
             continue
         if path.is_dir():
@@ -2245,7 +2309,7 @@ def published_files() -> set[str]:
     `coverage()` lygina šią aibę su matuojamų failų aibe, tad naujas
     publikuojamas failas be matavimo nebelieka tyliai žalias (LL-37, LL-84).
     """
-    out: set[str] = {name for name in PUBLISHED_SINGLE if (ROOT / name).exists()}
+    out: set[str] = {name for name in root_pages() if (ROOT / name).exists()}
     for root in PUBLISHED_ROOTS:
         base = ROOT / root
         if not base.is_dir():
@@ -2392,14 +2456,14 @@ CODE_LITERAL = re.compile(
 def code_pages() -> list[str]:
     """HTML puslapiai, kuriuos naršyklė įkelia su kodu (šiuo metu 2).
 
-    Imami iš `SHELL_GLOBS`, ne įrašomi ranka: naujas HTML puslapis įsijungia
-    į patikrą tame pačiame pakeitime, kuriame atsiranda (LL-84 taisyklė).
-    Iki #607 ši patikra ėjo tik per `index.html` — vardiklis „2/2“ buvo
-    teisingas tik todėl, kad antras įkeliamas puslapis (`404.html`) neįėjo
-    nė į skaičių.
+    Imami iš disko per `root_pages()`, ne įrašomi ranka: naujas HTML puslapis
+    įsijungia į patikrą tame pačiame pakeitime, kuriame atsiranda (LL-84
+    taisyklė). Iki #607 ši patikra ėjo tik per `index.html` — vardiklis „2/2“
+    buvo teisingas tik todėl, kad antras įkeliamas puslapis (`404.html`)
+    neįėjo nė į skaičių. Iki #609 sąrašas vis dar buvo ranka rašytos dvi
+    eilutės, tad trečias puslapis būtų buvęs nematomas (LL-242).
     """
-    return [name for name, pattern in SHELL_GLOBS
-            if pattern is None and name.endswith(".html")]
+    return [name for name in root_pages() if name.endswith(".html")]
 
 
 def shell_version_stamps(blob: bytes | None, page: str = "index.html") -> dict:

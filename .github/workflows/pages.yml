@@ -23,7 +23,15 @@ jobs:
       - name: Surinkti tik svetainės failus
         run: |
           mkdir -p _site
-          cp index.html 404.html _site/
+          # **Visi** šaknies HTML puslapiai, ne du vardai ranka. Iki #609 čia
+          # stovėjo `cp index.html 404.html _site/`: trečias puslapis
+          # (`apie.html`, `spausdinti.html`) būtų likęs repo ir nebūtų
+          # patekęs į svetainę — be jokio varto, kuris tai pasakytų
+          # (LL-242). `check_published.py` skaito tą patį sąrašą iš disko
+          # (`root_pages()`), tad surinkimas ir matavimas negali išsiskirti.
+          # Slapti failai (`.probe-*.html`) neįkeliami: jie yra zondų
+          # artefaktai, o ne puslapiai.
+          find . -maxdepth 1 -name "*.html" -not -name ".*" -exec cp {} _site/ \;
           cp -r assets content _site/
           # katalogų indeksai neįkeliami kaip turinys — jie yra repo dokumentacija
           find _site -name "AGENTS.md" -delete

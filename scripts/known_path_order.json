@@ -2,8 +2,8 @@
   "note": "Užfiksuota 1 klasės ėjimo tvarka: tai, ką vaikas jau mato svetainėje. Naujus modulius pridėk į `path.json` pabaigą (arba sąmoningai įterpk į vidurį); jei tvarka keičiama sąmoningai, atnaujink šį failą tame pačiame commit'e — kitaip `check_published.py` praneš „SEKOS TVARKA PAJUDĖTA“. Aprėptis (ar seka apima VISUS `path.json` ID, ne tik tuos, kurie buvo užfiksavimo metu) tikrinama kiekvieną bėgimą: trūkstami ID rodomi kaip `path_unpinned`, o užfiksuojami `--accept-order --apply` (be `--apply` — tik sausa eiga).",
   "grades": {
     "1": {
-      "accepted_at": "2026-11-28T09:35:38+02:00",
-      "note": "Aprėptis išplėsta #592: seka aprėpė 87 ID, o `path.json` turi 88; pridėta 1 ID, kurių tvarka anksčiau nebuvo matuojama (jų perstatymas nebuvo pastebimas). Jau užfiksuotų ID santykinė tvarka nepasikeitė — tai patikrinta prieš įrašant.",
+      "accepted_at": "2026-11-28T12:22:10+02:00",
+      "note": "Aprėptis išplėsta #602 (2026-11-28): seka aprėpė 88 ID, o `path.json` turi 89; pridėta 1 ID, kurių tvarka anksčiau nebuvo matuojama (jų perstatymas nebuvo pastebimas). Jau užfiksuotų ID santykinė tvarka nepasikeitė — tai patikrinta prieš įrašant. Numeris atnaujintas ranka: iki šio pataisymo įrankis įrašydavo kietai `#592`.",
       "sequence": [
         "01-garsas-ir-raide",
         "02-skiemenu-jungimas",
@@ -92,7 +92,8 @@
         "36-grupavimas-pagal-pozymi",
         "37-tinklelio-adresas",
         "04-dermes-garsai",
-        "38-du-pozymiai-paieska"
+        "38-du-pozymiai-paieska",
+        "42-transporto-priemone-marsrutui"
       ]
     }
   }

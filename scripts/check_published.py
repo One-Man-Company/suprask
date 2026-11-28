@@ -1579,7 +1579,7 @@ def path_order_gate(grade: int) -> dict:
     return out
 
 
-def accept_order(grade: int, apply: bool) -> dict:
+def accept_order(grade: int, apply: bool, run_id: int | None = None) -> dict:
     """Įrašo dabartinę `path.json` tvarką į `scripts/known_path_order.json`.
 
     Kodėl reikia atskiro veiksmo, o ne automatinio papildymo. Užfiksuota seka
@@ -1650,18 +1650,40 @@ def accept_order(grade: int, apply: bool) -> dict:
     # skaito `pinned_sequence()`, bet `git diff` turi likti skaitomas žmogui.
     stamp = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     entry["accepted_at"] = stamp[:-2] + ":" + stamp[-2:] if len(stamp) > 5 else stamp
-    entry["note"] = (
-        f"Aprėptis išplėsta #592: seka aprėpė {len(base)} ID, o `path.json` "
-        f"turi {len(seq)}; pridėta {len(added)} ID, kurių tvarka anksčiau "
-        f"nebuvo matuojama (jų perstatymas nebuvo pastebimas). Jau užfiksuotų "
-        f"ID santykinė tvarka nepasikeitė — tai patikrinta prieš įrašant.")
+    entry["note"] = _coverage_note(len(base), len(seq), len(added), run_id)
     PATH_ORDER.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n",
                           encoding="utf-8")
     out["applied"] = True
     return out
 
 
-def accept_order_main(grade: int, apply: bool, as_json: bool) -> int:
+def _coverage_note(before: int, after: int, added: int,
+                   run_id: int | None = None) -> str:
+    """Pastaba, kurią `--accept-order --apply` įrašo į sekos failą.
+
+    Kodėl atskira funkcija, o ne `f` eilutė vietoje (LL-21, LL-236). Iki
+    #602 pastaba buvo `f"Aprėptis išplėsta #592: …"` — paleidimo numeris
+    **įrašytas ranka**. Jis buvo teisingas lygiai vieną kartą (tada, kai
+    taisymas rašytas), o po to kiekvienas `--apply` įrašydavo tą patį `#592`
+    su naujais skaičiais: 2026-11-28 paleidimas #602 užfiksavo 89 žingsnius,
+    o failas skelbė „#592“. `git diff` atrodė kaip tiksli provenencija, nors
+    buvo neteisinga — ir niekas to nematė, nes šią eilutę skaito tik žmogus.
+
+    Numeris imamas iš to, kas jį tikrai žino (`--run-id`, kurį paduoda
+    `agents/run.py`), o ne spėjamas. Jei numerio nėra (rankinis bėgimas),
+    rašoma data be numerio: „nežinau“ yra teisinga, „#592“ — ne.
+    """
+    when = time.strftime("%Y-%m-%d")
+    head = f"Aprėptis išplėsta #{run_id} ({when})" if run_id else \
+           f"Aprėptis išplėsta ({when})"
+    return (f"{head}: seka aprėpė {before} ID, o `path.json` turi {after}; "
+            f"pridėta {added} ID, kurių tvarka anksčiau nebuvo matuojama "
+            f"(jų perstatymas nebuvo pastebimas). Jau užfiksuotų ID santykinė "
+            f"tvarka nepasikeitė — tai patikrinta prieš įrašant.")
+
+
+def accept_order_main(grade: int, apply: bool, as_json: bool,
+                      run_id: int | None = None) -> int:
     """`--accept-order [--apply]`: aprėpties papildymas be tinklo ir be git.
 
     rc 1, kai papildyti negalima (perstatymas arba neperskaitytas failas) —
@@ -1672,7 +1694,7 @@ def accept_order_main(grade: int, apply: bool, as_json: bool) -> int:
         print("MARŠRUTO TVARKOS APRĖPTIS NEIŠMATUOTA — nė viena klasė "
               "neskelbiama „live“, tad nėra ko užfiksuoti")
         return 1
-    rows = [accept_order(g, apply) for g in grades]
+    rows = [accept_order(g, apply, run_id) for g in grades]
     ok = all(r["ok"] for r in rows)
     if as_json:
         print(json.dumps({"ok": ok, "applied": apply, "grades": rows},
@@ -3452,6 +3474,9 @@ def main() -> int:
     ap.add_argument("--apply", action="store_true",
                     help="kartu su --accept-order: įrašyk papildytą seką į "
                          "`scripts/known_path_order.json`")
+    ap.add_argument("--run-id", type=int, default=0,
+                    help="paleidimo numeris, įrašomas į sekos failo pastabą "
+                         "(paduoda agents/run.py; be jo rašoma data be numerio)")
     ap.add_argument("--audio-full", action="store_true",
                     help="tikrinti visus garso įrašus (tai yra ir numatytasis režimas)")
     ap.add_argument("--audio-sample", type=int, default=0,
@@ -3466,7 +3491,8 @@ def main() -> int:
     if args.path_order:
         return path_order_main(args.grade, args.json)
     if args.accept_order:
-        return accept_order_main(args.grade, args.apply, args.json)
+        return accept_order_main(args.grade, args.apply, args.json,
+                                 args.run_id or None)
     if args.scope:
         return scope_main(args.json)
 

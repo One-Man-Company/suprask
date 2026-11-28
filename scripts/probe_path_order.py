@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import re
 import sys
 import tempfile
 
@@ -342,6 +343,40 @@ def main() -> int:
               and pin_doc["sequence"] == grown8
               and ordered(pin_doc["sequence"], base8[:6]),
               f"seq={pin_doc['sequence']}")
+
+        #    L3a — provenencija (LL-236). Pastaba, kurią `--apply` įrašo,
+        #    iki #602 buvo `f"Aprėptis išplėsta #592: …"` — numeris ranka.
+        #    Todėl kiekvienas paleidimas įrašydavo tą patį skaičių su
+        #    naujais dydžiais, o `git diff` atrodė kaip tiksli žymė.
+        #    Zondas klausia ne „ar yra numeris“, o „ar tai TAS numeris,
+        #    kuris buvo perduotas“ — kitaip kieta konstanta praeitų.
+        #    Seka vėl susiaurinama: po L3 `added` būtų tuščias, o tada
+        #    `accept_order()` grąžina anksčiau, nieko neįrašęs.
+        write_pin(pin, 1, base8[:6])
+        applied_run = cp.accept_order(1, apply=True, run_id=602)
+        note_run = json.loads(pin.read_text(encoding="utf-8"))["grades"]["1"]["note"]
+        check("L3a pastaba neša perduotą paleidimo numerį, ne kietą #592",
+              applied_run["applied"] is True and "#602" in note_run,
+              f"applied={applied_run['applied']} note={note_run[:40]!r}")
+
+        #    L3b — neigiama kontrolė: be numerio (rankinis bėgimas) pastaba
+        #    neturi skelbti NEI vieno `#<skaičius>` — „nežinau“ yra teisinga,
+        #    o išgalvotas numeris yra tas pats defektas kita forma.
+        write_pin(pin, 1, base8[:6])
+        no_run = cp.accept_order(1, apply=True)
+        note_no_run = json.loads(pin.read_text(encoding="utf-8"))["grades"]["1"]["note"]
+        check("L3b be paleidimo numerio pastaba neturi išgalvoto #<nr>",
+              no_run["applied"] is True
+              and not re.search(r"#\d+", note_no_run),
+              f"note={note_no_run[:40]!r}")
+
+        #    L3c — dydžiai pastaboje perskaičiuojami iš to paties matavimo,
+        #    kuriuo remiasi `--apply`, o ne rašomi ranka (LL-21). Šis
+        #    lūkestis lygina abu skaičius su tikru sekos ilgiu.
+        check("L3c pastabos skaičiai = seka, o ne ranka rašyti",
+              f"turi {len(grown8)}" in note_no_run
+              and f"seka aprėpė {len(base8[:6])}" in note_no_run,
+              f"note={note_no_run[:90]!r}")
 
         #    L4 — po užfiksavimo tas pats sukeitimas JAU raudonas. Tai ir yra
         #    uždarymas: anksčiau nematomas perstatymas tampa matomu.

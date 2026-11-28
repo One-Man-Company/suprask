@@ -2371,17 +2371,39 @@ def _version_of(blob: bytes | None) -> str:
 
 
 # `href="…"` / `src='…'` reikšmė — su kabute, kuri ją atidarė (kad nesugriebtų
-# kito atributo). Naudojama tik `index.html` kodo nuorodoms.
+# kito atributo). Naudojama tik HTML puslapių kodo nuorodoms.
 REF_ATTR = re.compile(r"""(?:href|src)\s*=\s*(["'])([^"']+)\1""")
 # Nuoroda yra „svetainės kodas“, jei rodo į `assets/css/*.css` arba
 # `assets/js/*.js`. Paveikslai, `data:` URI ir garso manifestas čia neįeina:
 # jiems `pages.yml` žymos nededa ir nereikia — jie neimportuojami, o prašomi
 # tiesiogiai.
 CODE_REF = re.compile(r"assets/(?:css|js)/[^?#]+\.(?:css|js)$")
+# Kodo nuoroda, sudaryta **scenarijumi**, o ne atributu: `css.href = root +
+# "assets/css/main.css"` (`404.html`). Atributo `href`/`src` ten nėra, tad
+# `REF_ATTR` jos nemato, o `pages.yml` du kietai įrašyti `sed` raštai — irgi.
+# Skaitoma tik kabutėse esanti eilutė, kuri **baigiasi** failo plėtiniu:
+# komentare esanti `./assets/css/main.css` (404.html tokią turi) neturi
+# kabučių ir į skaičių neįeina (LL-38: vartas neturi matyti mažiau formų, bet
+# ir daugiau — klaidingai raudonas vartas moko jį apeiti).
+CODE_LITERAL = re.compile(
+    r"""(["'])((?:\./)?assets/(?:css|js)/[^"'?#\s]+\.(?:css|js))((?:\?v=[0-9a-f]{6,40})?)\1""")
 
 
-def shell_version_stamps(blob: bytes | None) -> dict:
-    """Ar **kiekviena** kodo nuoroda `index.html` turi `?v=<commit>` (LL-233).
+def code_pages() -> list[str]:
+    """HTML puslapiai, kuriuos naršyklė įkelia su kodu (šiuo metu 2).
+
+    Imami iš `SHELL_GLOBS`, ne įrašomi ranka: naujas HTML puslapis įsijungia
+    į patikrą tame pačiame pakeitime, kuriame atsiranda (LL-84 taisyklė).
+    Iki #607 ši patikra ėjo tik per `index.html` — vardiklis „2/2“ buvo
+    teisingas tik todėl, kad antras įkeliamas puslapis (`404.html`) neįėjo
+    nė į skaičių.
+    """
+    return [name for name, pattern in SHELL_GLOBS
+            if pattern is None and name.endswith(".html")]
+
+
+def shell_version_stamps(blob: bytes | None, page: str = "index.html") -> dict:
+    """Ar **kiekviena** puslapio kodo nuoroda turi `?v=<commit>` (LL-233).
 
     Kodėl to reikia. `_version_of()` grąžina **pirmą** rastą žymę ir vadina ją
     „svetainės versija“. Tai tiesa tik tada, kai žymų tiek pat, kiek kodo
@@ -2411,38 +2433,104 @@ def shell_version_stamps(blob: bytes | None) -> dict:
     stamped: list[str] = []
     unstamped: list[str] = []
     versions: set[str] = set()
-    for match in REF_ATTR.finditer(text):
-        url = match.group(2).strip()
-        path = url.split("?", 1)[0].split("#", 1)[0]
-        if not CODE_REF.search(path):
-            continue
+    seen: set[str] = set()
+
+    def note(path: str, url: str) -> None:
+        # Ta pati nuoroda, rasta du kartus (atributas + literalas), skaičiuojama
+        # kartą: kitaip vardiklis „N/M“ išpūstas, o vaikas failą įkelia vieną.
+        if path in seen:
+            return
+        seen.add(path)
         ver = VERSION_PARAM.search(url)
         if ver:
             stamped.append(path)
             versions.add(ver.group(0)[3:])
         else:
             unstamped.append(path)
-    return {
+
+    for match in REF_ATTR.finditer(text):
+        url = match.group(2).strip()
+        path = url.split("?", 1)[0].split("#", 1)[0]
+        if not CODE_REF.search(path):
+            continue
+        note(path, url)
+    # Scenarijumi sudarytos kodo nuorodos (`404.html`: `root + "assets/…"`).
+    # `pages.yml` jų nepažymi NĖ VIENA savo `sed` raštu, tad jos privalo būti
+    # skaitomos čia — kitaip „2/2“ yra teiginys apie vieną puslapį iš dviejų.
+    # Be `?v=` tokiai nuorodai galioja GitHub Pages tarpinė atmintis (matuota:
+    # `assets/css/main.css` → 200, `cache-control: max-age=600`), tad vaikas
+    # iki 10 min. neteisingu adresu mato seną stilių. Būsena pranešama kaip
+    # trūkstama žymė, o taisymas — `pages.yml` raštas, kuris ją mato.
+    for match in CODE_LITERAL.finditer(text):
+        path = match.group(2)
+        if match.group(3):
+            path = f"{path}{match.group(3)}"
+        note(match.group(2), path)
+    out = {
         "stamped": stamped,
         "unstamped": unstamped,
         "versions": sorted(versions),
         "refs": len(stamped) + len(unstamped),
     }
+    return out
+
+
+def shell_versions_all() -> dict:
+    """`shell_version_stamps()` visiems įkeliamiems HTML puslapiams (LL-240).
+
+    Kodėl atskira funkcija, o ne vienas kvietimas. Vardiklis „kodo nuorodos su
+    `?v=`: N/M“ yra **teiginys apie svetainę**, o iki #607 jis ėjo per vieną
+    failą (`index.html`). Bet naršyklė įkelia ir `404.html` — tą, kurį vaikas
+    pamato neteisingu adresu, — o jo CSS nuoroda sudaryta scenarijumi. Du
+    duomenys (refs, stamped) sumuojami per puslapius, `pages` žemėlapis lieka
+    tam, kas turi žinoti, kur defektas. `measured` — visi puslapiai perskaityti:
+    jei vieno nepavyko, vardiklis nėra teiginys apie visą svetainę (LL-37).
+    """
+    pages: dict[str, dict] = {}
+    measured = True
+    refs = 0
+    stamped: list[str] = []
+    unstamped: list[str] = []
+    versions: set[str] = set()
+    all_pages = code_pages()
+    for page in all_pages:
+        st, blob = fetch_answer(cache_busted(LIVE_ROOT + page), attempts=1)
+        if st != "ok":
+            measured = False
+            continue
+        got = shell_version_stamps(blob)
+        pages[page] = got
+        refs += got["refs"]
+        # Puslapis įvardijamas, kai jų daugiau nei vienas: pranešimas
+        # „1 kodo nuoroda be ?v= (assets/css/main.css)“ nepasako, KURIAME
+        # puslapyje jos ieškoti — o `index.html` ir `404.html` tai skirtingi
+        # taisymai (LL-21).
+        tag = "" if len(all_pages) == 1 else f"{page}: "
+        stamped += [f"{tag}{p}" for p in got["stamped"]]
+        unstamped += [f"{tag}{p}" for p in got["unstamped"]]
+        versions |= set(got["versions"])
+    return {
+        "measured": measured,
+        "stamped": stamped,
+        "unstamped": unstamped,
+        "versions": sorted(versions),
+        "refs": refs,
+        "pages": pages,
+    }
 
 
 def shell_version_check() -> dict:
-    """`shell_version_stamps()` prieš gyvą `index.html`; be tinklo — tuščia.
+    """`shell_version_stamps()` prieš gyvus HTML puslapius; be tinklo — tuščia.
 
     Skaitoma su keitimo žyme, nes būtent žymė yra matavimo objektas: be jos
     kraštas gali atiduoti seną `index.html`, kuriame žymos dar nėra, ir
     vartas praneštų apie publikavimo defektą, kurio priežastis — tarpinė
-    atmintis (LL-201 šeima).
+    atmintis (LL-201 šeima). Matuojami **visi** įkeliami puslapiai
+    (`code_pages()`), ne vien `index.html` (LL-240).
     """
-    status, blob = fetch_answer(cache_busted(LIVE_ROOT + "index.html"), attempts=1)
-    if status != "ok" or blob is None:
-        # Neišmatuota nėra „viskas pažymėta“ (LL-37).
+    if not LIVE_ROOT:
         return {"measured": False, **shell_version_stamps(None)}
-    return {"measured": True, **shell_version_stamps(blob)}
+    return shell_versions_all()
 
 
 def live_version(fresh: bool = True) -> str:

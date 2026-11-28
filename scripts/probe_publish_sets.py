@@ -158,7 +158,14 @@ def build_repo(root: pathlib.Path) -> None:
         encoding="utf-8")
     (root / "404.html").write_text(
         '<!doctype html><title>nera</title>'
-        '<link rel="stylesheet" href="/assets/css/main.css">'
+        # Scenarijumi sudaryta nuoroda — KAIP TIKRAME `404.html`. HTML
+        # atributas čia netinka: šis veidrodis atiduodamas bet kuriame gylyje,
+        # tad santykinė nuoroda lūžtų (LL-210), o būtent šitą formą turi ir
+        # `pages.yml` žymų žingsnis (`root + "assets/css/main.css"`).
+        '<script>var root = "/";'
+        'var css = document.createElement("link");'
+        'css.href = root + "assets/css/main.css";'
+        'document.head.appendChild(css);</script>'
         '<a id="i-pradzia" href="/">Į pradžią</a>'
         # Atsarginio puslapio spalvos — `main.css` tokenų kopija (be CSS
         # `var(--paper)` neveikia). Vartas `depth_palette_check()` lygina jas
@@ -225,6 +232,12 @@ def publish(repo: pathlib.Path, live: pathlib.Path) -> None:
     html = html.replace('src="./assets/js/app.js"', f'src="./assets/js/app.js?v={sha}"')
     html = html.replace('href="./assets/css/main.css"', f'href="./assets/css/main.css?v={sha}"')
     (live / "index.html").write_text(html, encoding="utf-8")
+    # `404.html` — irgi žymimas: `pages.yml` žymų žingsnis pažymi ir
+    # scenarijumi sudarytas nuorodas, tad veidrodis be žymės matuotų būseną,
+    # kurios svetainėje nebūna (tas pats argumentas kaip `index.html` aukščiau).
+    n404 = (live / "404.html").read_text(encoding="utf-8")
+    n404 = n404.replace('"assets/css/main.css"', f'"assets/css/main.css?v={sha}"')
+    (live / "404.html").write_text(n404, encoding="utf-8")
 
 
 def patch(root: pathlib.Path, url: str) -> None:

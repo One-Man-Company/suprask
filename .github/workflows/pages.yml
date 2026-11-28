@@ -42,6 +42,17 @@ jobs:
           # todėl viengubos likdavo be žymos (LL-38: vartai nemato standarto).
           find _site/assets/js -name "*.js" -print0 | xargs -0 -r sed -i -E \
             "s#(from )(['\"])(\./[^'\"]+\.js)\2#\1\2\3?v=$SHA\2#g; s#(import\()(['\"])(\./[^'\"]+\.js)\2#\1\2\3?v=$SHA\2#g"
+          # Kodo nuorodos, sudarytos SCENARIJUMI, o ne atributu. `404.html`
+          # rašo `css.href = root + "assets/css/main.css"` — dviejų kietai
+          # įrašytų `sed` raštų aukščiau jiems nepakliūna, `assets/js` vartas
+          # skaito tik JS katalogą, o `check_published.py` iki #607 skaitė tik
+          # `index.html`. Pasekmė tokia pat kaip LL-233: adresas atsako 200,
+          # bet `cache-control: max-age=600` (matuota gyvai), tad iki 10 min.
+          # naršyklė ima seną `main.css` — būtent tai, ko ši žymė saugo.
+          # Todėl žymė dedama į patį literalą, prieš kabutę; raštas tinka ir
+          # atributams, tad antras kartas žymės nebesudvigubina.
+          find _site -maxdepth 1 -name "*.html" -print0 | xargs -0 -r sed -i -E \
+            "s#(['\"])((\./)?assets/(css|js)/[^'\"?#[:space:]]+\.(css|js))\1#\1\2?v=$SHA\1#g"
           # Vartai: jei bent vienas santykinis importas liko be žymos, publikavimas
           # stabdomas. Kitaip deploy būtų žalias, o vaikas iki ~10 min. matytų seną
           # JS — ir nė viena patikra to nepasakytų.
@@ -61,20 +72,37 @@ jobs:
           #
           # Sąmoningai skaitoma **visos** `assets/css` ir `assets/js` nuorodos,
           # ne trys žinomos: kitaip tas pats defektas grįžtų su ketvirta.
+          #
+          # Nuo #607 skaitomi **visi šaknyje atiduodami HTML puslapiai**, ne
+          # vien `index.html`, ir abi nuorodų formos: atributas
+          # (`href="./assets/css/main.css"`) IR literalas scenarijuje
+          # (`root + "assets/css/main.css"`, `404.html`). Matuota: iki šio
+          # pataisymo šis žingsnis davė „Kodo nuorodos: visos su ?v=“ rc 0,
+          # nors `404.html` CSS nuorodos neturėjo nė vieno žymės ženklo, o
+          # `check_published.py` vardiklis „2/2“ skaičiavo tik `index.html`.
           python3 - <<'PY'
           import re, pathlib, sys
-          html = pathlib.Path("_site/index.html").read_text(encoding="utf-8")
-          code = re.compile(r"assets/(?:css|js)/[^?#]+\.(?:css|js)$")
-          bad = []
-          for m in re.finditer(r"""(?:href|src)\s*=\s*(["'])([^"']+)\1""", html):
-              url = m.group(2).strip()
-              path = url.split("?", 1)[0].split("#", 1)[0]
-              if code.search(path) and not re.search(r"\?v=[0-9a-f]{6,40}", url):
-                  bad.append(url)
+          code = re.compile(r"assets/(?:css|js)/[^?#\s]+\.(?:css|js)$")
+          attr = re.compile(r"""(?:href|src)\s*=\s*(["'])([^"']+)\1""")
+          lit = re.compile(
+              r"""(["'])((?:\./)?assets/(?:css|js)/[^"'?#\s]+\.(?:css|js))"""
+              r"""((?:\?v=[0-9a-f]{6,40})?)\1""")
+          bad, pages = [], []
+          for page in sorted(pathlib.Path("_site").glob("*.html")):
+              html = page.read_text(encoding="utf-8")
+              pages.append(page.name)
+              for m in attr.finditer(html):
+                  url = m.group(2).strip()
+                  path = url.split("?", 1)[0].split("#", 1)[0]
+                  if code.search(path) and not re.search(r"\?v=[0-9a-f]{6,40}", url):
+                      bad.append(f"{page.name}: {url}")
+              for m in lit.finditer(html):
+                  if not m.group(3):
+                      bad.append(f"{page.name}: {m.group(2)} (scenarijuje)")
           if bad:
               print(f"::error::Kodo nuoroda be ?v= ({len(bad)}): {', '.join(bad)}")
               sys.exit(1)
-          print("Kodo nuorodos: visos su ?v=")
+          print(f"Kodo nuorodos: visos su ?v= ({len(pages)} puslapiai: {', '.join(pages)})")
           PY
           echo "versija: $SHA"; grep -o "main.css?v=[a-f0-9]*" _site/index.html | head -1
 

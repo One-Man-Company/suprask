@@ -63,6 +63,30 @@ function parseHash() {
   return raw.split("/").filter(Boolean);
 }
 
+/* Kur prasideda naujas puslapis.
+ *
+ * Naršyklė slinkties NENUSTATO: `#/modulis/…` → `#/modulis/…` yra to paties
+ * dokumento fragmentas, todėl dokumentas lieka toje slinkties vietoje, kur
+ * buvo senojo puslapio pabaiga. Matuota Chromium (žr. `check_navigation.py`):
+ * 61 iš 92 perėjimų atsidarė ne viršuje (2280–3251 px), o kartojant TĄ PATĮ
+ * paspaudimą rezultatas šokinėjo (0 px, 2375 px, 2281 px @1440) — vaikas matė
+ * vidurį puslapio, kurio dar neskaitė, o naujo modulio antraštė likdavo už
+ * ekrano. Tai ne CSS geometrija, o būsena, kuri atkeliauja iš ankstesnio
+ * puslapio.
+ *
+ * `history.scrollRestoration = "manual"` čia nepadeda: ji valdo tik
+ * persikrovimą, o fragmento navigacija vyksta tame pačiame dokumente.
+ * Naršyklės atkurtos slinkties irgi negalima palikti: ji grąžina SENO
+ * puslapio likutį ir dar nukerpa jį pagal naujo puslapio aukštį (matuota:
+ * 4045 px modulio apačioje 3201 px → grįžus į 1391 px sąrašą 547 px, t. y.
+ * sąrašo apačioje; @1440: 2534 px → 157 px). Todėl slinktis nustatoma
+ * vienodai visais keliais — kiekvienas puslapis prasideda nuo savo viršaus,
+ * ten, kur yra „Tęsk nuo čia“ ir krypties žyma.
+ */
+function resetScroll() {
+  window.scrollTo(0, 0);
+}
+
 async function route() {
   const parts = parseHash();
   const key = parts.join("/");
@@ -71,6 +95,11 @@ async function route() {
   teardown();
   document.title = SITE_TITLE;
   app.innerHTML = `<div class="loading">Kraunama…</div>`;
+  /* Slinktis nustatoma PRIEŠ piešiant: kitaip naršyklė trumpam parodo
+   * puslapį senoje vietoje, o tada jį peršoka. Fokuso NEjudiname —
+   * pelės naudotojui tai būtų nematomas, bet trikdantis rėmelis, o
+   * klaviatūros naudotojas po Enter ir taip pradeda nuo dokumento pradžios. */
+  resetScroll();
   try {
     if (parts.length === 0) return viewHome();
     if (parts[0] === "apie") return viewAbout();
@@ -752,5 +781,25 @@ setTimeout(() => {
   if (app.querySelector(".loading")) showFatal("Turinys neįsikėlė per 8 sekundes.");
 }, 8000);
 
+/* „Pereiti prie turinio“ — pirma klaviatūros vartotojo sustojimo vieta.
+ *
+ * Nuoroda ėjo į `#app`, o `#app` maršrutizatoriui yra maršrutas „app“:
+ * paspaudus ją vaikas pamatydavo „Nerasta“ vietoj savo puslapio (matuota
+ * Chromium @1440 ir @390: `hash=#app`, `h1=Nerasta`). Pirmoji puslapio
+ * nuoroda negali sugriauti puslapio, tad fokusas perkeliamas tiesiogiai,
+ * o adresas nekeičiamas — jis ir taip žymi tą patį puslapį.
+ */
+const skipLink = document.querySelector(".skip-link");
+if (skipLink) {
+  skipLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    try { app.focus({ preventScroll: true }); } catch { app.focus(); }
+    resetScroll();
+  });
+}
+
+/* „Atgal“ ir „į priekį“: naršyklė atkuria slinktį, bet ji yra SENO puslapio
+ * likutis (matuota: grįžus į 4045 px ilgio modulį dokumentas liko 3201 px
+ * apačioje). Todėl ir šiame kelyje `route()` pradeda nuo viršaus. */
 window.addEventListener("hashchange", route);
 route();

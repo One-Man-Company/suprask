@@ -193,6 +193,22 @@ python3 scripts/check_view.py --viewports tiny            # 320 px, žemiau stan
 python3 scripts/check_view.py --text-scale 200            # WCAG 1.4.4, šaknis 16 → 32 px
 ```
 
+Perėjimo patikra (`check_navigation.py`) matuoja tai, ko `check_view.py`
+nepamato iš principo: jis kiekvieną maršrutą atidaro **nauju įkėlimu**, o tada
+slinktis visada 0. Visi maršrutai gyvena viename dokumente (hash
+maršrutizatorius), todėl fragmento navigacija slinkties nekeičia — vaikas,
+paspaudęs „Toliau“ modulio apačioje, pamatydavo kito modulio vidurį, o jo
+antraštė likdavo už ekrano (matuota: 61 iš 92 perėjimų ne viršuje,
+2280–3251 px). Zondas atidaro modulį, nuslenka į apačią ir spaudžia nuorodą, o
+ne `page.goto`, ir turi dvi neigiamas kontroles (§8 aukščiau — `#app` vis dar
+„Nerasta“, o slinktis prieš paspaudimą tikrai ≠ 0). Kaip `check_view.py` ir
+`check_route_alias.py`, jis atidaro tikrą naršyklę, tad CI jo nepaleidžia:
+
+```bash
+.venv/bin/python scripts/check_navigation.py              # visi perėjimai
+.venv/bin/python scripts/check_navigation.py --limit 12   # greitas rinkinys
+```
+
 `--text-scale` atskirai nuo numatytojo bėgimo sąmoningai: 200 % teksto yra
 realus naudotojas, bet raudoni vartai be pataisymo moko juos apeiti. Režimas
 spausdina konkretų išlindusį elementą ir jo perteklių pikseliais, o `--json`

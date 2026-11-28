@@ -11,14 +11,14 @@ saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curricu
 Šį failą agentų promptui paduoda `agents/run.py::scope_brief`.
 
 - Programos pozicijų: **47**
-- Modulių dabar: **89**
-- Padengta / iš dalies / nėra: **46 / 0 / 1**
+- Modulių dabar: **90**
+- Padengta / iš dalies / nėra: **46 / 1 / 0**
 
 ## Ko dar nėra (prioritetas)
 
 | Būsena | Tema | Kodas | Rezultatas | Šaltinis |
 |---|---|---|---|---|
-| missing | Funkciniai judesiai | D:funkciniai-judesiai | „Susipažinimas su mokinių turimais ir trūkstamais judėjimo gebėjimais“; „abi kūno pusės tolygiai“ | `1-klases-temų-žemėlapis.md:77` |
+| partial | Funkciniai judesiai | D:funkciniai-judesiai | „Susipažinimas su mokinių turimais ir trūkstamais judėjimo gebėjimais“; „abi kūno pusės tolygiai“ | `1-klases-temų-žemėlapis.md:77` |
 | covered | Garsas kalbos sraute | A:garsas-kalbos-sraute | „Skiria lietuvių kalbos garsus kalbos sraute“ (D.1.1) | `1-klases-temų-žemėlapis.md:26` |
 | covered | Garsas vs raidė | A:garsas-vs-raide | „Paaiškina, kuo raidė skiriasi nuo garso“ (D.1.1) | `1-klases-temų-žemėlapis.md:27` |
 | covered | Garsinė sandara | A:garsine-sandara | „Žino garsinę sandarą: balsius, priebalsius, dvibalsius“ (1 lentelė) | `1-klases-temų-žemėlapis.md:28` |

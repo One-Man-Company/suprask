@@ -1,6 +1,6 @@
 {
  "grade": 1,
- "updated": "2026-11-26",
+ "updated": "2026-11-28",
  "note": "Rekomenduojamas kelias: kalbiniai ir matematiniai moduliai kaitaliojami, kad viena sritis neišnaudotų vaiko dėmesio. Tvarką gali keisti dizainerio agentas, jei tai pagrindžia priklausomybėmis.",
  "sequence": [
   "01-garsas-ir-raide",
@@ -91,6 +91,7 @@
   "37-tinklelio-adresas",
   "04-dermes-garsai",
   "38-du-pozymiai-paieska",
-  "42-transporto-priemone-marsrutui"
+  "42-transporto-priemone-marsrutui",
+  "05-lopsine-marsas-sokis"
  ]
 }

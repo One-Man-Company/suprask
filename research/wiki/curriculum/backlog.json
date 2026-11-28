@@ -1,6 +1,6 @@
 {
  "grade": 1,
- "generated": "2026-11-28T20:52:21",
+ "generated": "2026-11-28T21:32:24",
  "source_hash": "c7cf15d5f954aed6",
  "source_files": {
   "1-klases-temų-žemėlapis.md": "d51dd4b59f29b1b5",
@@ -13,10 +13,10 @@
  "curriculum_positions": 47,
  "counts": {
   "covered": 46,
-  "partial": 0,
-  "missing": 1
+  "partial": 1,
+  "missing": 0
  },
- "modules_now": 89,
+ "modules_now": 90,
  "rows": [
   {
    "key": "26.2.3",
@@ -843,8 +843,10 @@
    "svietimas": "#3 — tik individuali ūgtis",
    "source": "research/wiki/curriculum/1-klases-temų-žemėlapis.md:77",
    "strand": null,
-   "modules": [],
-   "status": "missing",
+   "modules": [
+    "05-lopsine-marsas-sokis"
+   ],
+   "status": "partial",
    "target": ""
   },
   {

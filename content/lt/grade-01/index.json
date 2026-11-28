@@ -599,6 +599,14 @@
      "file": "grade-01/muzika/04-dermes-garsai.json",
      "minutes": 10,
      "sim": "dermes-garsai"
+    },
+    {
+     "id": "05-lopsine-marsas-sokis",
+     "title": "Lopšinė, maršas ar šokis",
+     "subtitle": "Tą pačią melodiją tempas daro lopšine, maršu ar šokiu",
+     "file": "grade-01/muzika/05-lopsine-marsas-sokis.json",
+     "minutes": 10,
+     "sim": "melodija-ir-tempas"
     }
    ]
   },

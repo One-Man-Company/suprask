@@ -1423,10 +1423,470 @@ const dermesGarsai = {
   },
 };
 
+/* ---------- ta pati melodija: lopšinė, maršas ar šokis ---------- */
+
+/**
+ * Modelis: TA PATI aštuonių gaidų melodija atliekama trimis tempais — lėtai,
+ * tolygiai, greitai. Garsumas keičiamas atskirai ir paskirties NEKEIČIA,
+ * todėl vaikas girdi ir mato: kūrinio paskirtį sprendžia tempas, ne garsumas
+ * (klaidinga nuostata „lopšinė tyli, o maršas garsus“).
+ *
+ * Kodėl schema, o ne scena: muzikos pamoka nevyksta lauke, tad `art.js`
+ * dangaus, kalvų ir žemės dalys čia netiktų (LL-13). Rodomas matavimo
+ * prietaisas — gaidos savo aukštyje ir pulso juosta, kuri dega pasirinktu
+ * tempu. Todėl modelis lieka prasmingas ir be garso (LL-11): lėtas pulsas
+ * dega retai, greitas — dažnai.
+ *
+ * Kodėl melodija fiksuota: jei kartu kistų ir melodija, palyginimas nieko
+ * neįrodytų. Kinta vienas dydis — laikas tarp gaidos ir gaidos.
+ *
+ * Garsas sintetinamas `AudioContext` laikrodžiu, o šviesos — atskirai, todėl
+ * lėtas įrenginys negroja „plaukiojančio“ tempo.
+ */
+const LS_MELODY = [392, 392, 440, 440, 494, 494, 440, 392];
+
+const LS_TEMPOS = [
+  { id: "letai", label: "Lėtai", note_ms: 1000, aria: "Tempas lėtas, kaip lopšinė" },
+  { id: "tolygiai", label: "Tolygiai", note_ms: 620, aria: "Tempas tolygus, kaip maršas" },
+  { id: "greitai", label: "Greitai", note_ms: 380, aria: "Tempas greitas, kaip šokis" },
+];
+
+/* Paskirtis siejama su tempu, o ne su garsumu: `tempo` laukas yra vienintelis
+ * ryšys, todėl modelis negali „pameluoti“ dėl garsumo. */
+const LS_PURPOSES = [
+  { id: "lopsine", label: "Lopšinė", move: "linguoja lėtai", tempo: "letai" },
+  { id: "marsas", label: "Maršas", move: "žygiuoja tolygiai", tempo: "tolygiai" },
+  { id: "sokis", label: "Šokis", move: "šokinėja greitai", tempo: "greitai" },
+];
+
+const LS_VOLUMES = [
+  { id: "tyliai", label: "Tyliai", gain: 0.05 },
+  { id: "garsiai", label: "Garsiai", gain: 0.15 },
+];
+
+const melodijosTempas = {
+  mount({ stage, controls, api, config }) {
+    const MELODY = (Array.isArray(config.melody) ? config.melody : LS_MELODY)
+      .filter((n) => typeof n === "number" && n > 0);
+    const NOTES = MELODY.length ? MELODY : LS_MELODY;
+    const TEMPOS = Array.isArray(config.tempos) && config.tempos.length >= 2
+      ? config.tempos : LS_TEMPOS;
+    const VOLUMES = Array.isArray(config.volumes) && config.volumes.length
+      ? config.volumes : LS_VOLUMES;
+    const PURPOSES = Array.isArray(config.purposes) && config.purposes.length
+      ? config.purposes : LS_PURPOSES;
+    const SENT = config.sentences || {};
+
+    let ti = 1;                       // tempas: 0 lėtai … paskutinis greitai
+    let vi = 0;                       // garsumas
+    let unlocked = false;
+    let playing = false;
+    let reported = false;
+    /* `heard` yra ir pažangos, ir žymos šaltinis: žyma „tinka / netinka“ yra
+       modelio IŠVADA, todėl ji rodoma tik tam tempui, kurio vaikas jau
+       klausėsi — kitaip ekranas pasakytų atsakymą prieš patirtį (LL-244). */
+    const heard = new Set();
+    let timers = [];
+    let ctx = null;
+    const live = new Set();
+    const reduce = typeof matchMedia === "function"
+      && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const tempo = () => TEMPOS[ti];
+    const volume = () => VOLUMES[vi];
+    const purposeOf = (tempoId) => PURPOSES.find((p) => p.tempo === tempoId) || null;
+    const current = () => purposeOf(tempo().id);
+
+    const lo = Math.min(...NOTES);
+    const hi = Math.max(...NOTES);
+    const span = Math.max(1, hi - lo);
+    const pitchTop = (hz) => 12 + Math.round(((hz - lo) / span) * 76);
+
+    stage.innerHTML = `
+      <div style="display:grid;gap:.5rem;width:100%;max-width:30rem;min-width:0">
+        <p style="margin:0;font-size:.95rem;font-weight:800;color:var(--ink-soft)">Melodija — ta pati visą laiką</p>
+        <div id="lt-pitch" role="img" aria-label="Aštuonios tos pačios gaidos savo aukštyje"
+          style="display:flex;align-items:flex-end;gap:.3rem;height:4.2rem;min-width:0"></div>
+        <p style="margin:.2rem 0 0;font-size:.95rem;font-weight:800;color:var(--ink-soft)">Pulsas — dega pasirinktu tempu</p>
+        <div id="lt-pulses" role="group" aria-label="Pulso juosta"
+          style="display:grid;grid-template-columns:repeat(${NOTES.length},minmax(0,1fr));gap:.3rem;min-width:0"></div>
+        <div id="lt-purpose" role="list" aria-label="Kam tinka šis tempas"
+          style="display:grid;gap:.4rem;min-width:0"></div>
+      </div>`;
+
+    const pitchRow = stage.querySelector("#lt-pitch");
+    const pulseRow = stage.querySelector("#lt-pulses");
+    const purposeList = stage.querySelector("#lt-purpose");
+
+    const markEls = [];
+    NOTES.forEach((hz) => {
+      const cell = document.createElement("span");
+      /* Aukštis imamas iš juostos aukščio, o ne iš jos pločio: procentinis
+         `margin-bottom` būtų skaičiuojamas pagal TĖVO plotį ir gaidos
+         „kiltų“ skirtingai priklausomai nuo ekrano (LL-40). Todėl tarpas yra
+         atskiras flex vaikas su `%`, o juosta turi `rem` aukštį. */
+      cell.style.cssText = "flex:1 1 0;min-width:0;display:flex;flex-direction:column;"
+        + "justify-content:flex-end;height:100%";
+      const dot = document.createElement("span");
+      dot.style.cssText = "width:100%;max-width:1.1rem;aspect-ratio:1;border-radius:50%;"
+        + "border:2px solid var(--ink-soft);background:transparent;flex:0 0 auto";
+      const spacer = document.createElement("span");
+      spacer.style.cssText = `flex:0 0 auto;min-height:0;height:${pitchTop(hz)}%`;
+      cell.append(dot, spacer);
+      pitchRow.appendChild(cell);
+      markEls.push(dot);
+    });
+
+    const pulseEls = [];
+    NOTES.forEach(() => {
+      const dot = document.createElement("span");
+      dot.className = "lt-pulse";
+      /* Aukštis fiksuotas px, o ne rem: 200 % tekste juosta neturi išpūsti
+         tinklelio, o 48 px taikinio čia nereikia — elementas neinteraktyvus. */
+      dot.style.cssText = "display:block;height:14px;border-radius:999px;"
+        + "background:var(--paper-2);border:2px solid var(--line);min-width:0";
+      pulseRow.appendChild(dot);
+      pulseEls.push(dot);
+    });
+
+    const purposeEls = new Map();
+    PURPOSES.forEach((p) => {
+      const card = document.createElement("div");
+      card.setAttribute("role", "listitem");
+      card.style.cssText = "display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;"
+        + "gap:.5rem;padding:.45rem .6rem;border:2px solid var(--line);border-radius:10px;"
+        + "background:var(--paper);min-width:0";
+      const text = document.createElement("span");
+      text.style.cssText = "display:grid;gap:.1rem;min-width:0;overflow-wrap:anywhere";
+      text.innerHTML = `<strong style="font-family:var(--font-head);font-weight:900;font-size:.98rem">${p.label}</strong>`
+        + `<span style="font-size:.95rem;color:var(--ink-soft)">${p.move}</span>`;
+      const badge = document.createElement("span");
+      badge.style.cssText = "font-size:.95rem;font-weight:800;text-align:right;overflow-wrap:anywhere";
+      card.append(text, badge);
+      purposeList.appendChild(card);
+      purposeEls.set(p.id, { card, badge });
+    });
+
+    function ensureCtx() {
+      if (ctx) return ctx;
+      if (!AC) return null;
+      try { ctx = new AC(); } catch { ctx = null; }
+      return ctx;
+    }
+
+    function after(ms, fn) {
+      timers.push(setTimeout(fn, ms));
+    }
+
+    function clearTimers() {
+      timers.forEach((id) => clearTimeout(id));
+      timers = [];
+    }
+
+    function speak(key) {
+      const text = SENT[key];
+      if (text) api.speak(text, { rate: key === "letai" || key === "slow" ? 0.85 : 0.95 });
+    }
+
+    function paintPurpose() {
+      /* Žyma rodoma TIK tada, kai vaikas jau girdėjo BŪTENT tą tempą, kuris
+         dabar pasirinktas. Kitaip ekranas išduotų atsakymą prieš patirtį:
+         po pirmo paleidimo visos trys kortelės būtų pažymėtos, ir likusius
+         tempus vaikas „atpažintų“ nespausdęs „Paleisk“ (LL-244). */
+      const fit = current();
+      const revealed = !!fit && heard.has(tempo().id);
+      PURPOSES.forEach((p) => {
+        const entry = purposeEls.get(p.id);
+        if (!entry) return;
+        const on = revealed && fit.id === p.id;
+        entry.card.style.borderColor = on ? "var(--accent-press)" : "var(--line)";
+        entry.card.style.background = on ? "var(--paper-2)" : "var(--paper)";
+        entry.card.style.opacity = revealed && !on ? ".72" : "1";
+        entry.badge.textContent = revealed ? (on ? "tinka" : "netinka") : "";
+        entry.badge.style.color = on ? "var(--ink)" : "var(--ink-soft)";
+        entry.card.setAttribute("aria-label", !revealed
+          ? `${p.label}: ${p.move}.`
+          : (on ? `${p.label}: ${p.move}. Tinka šiam tempui.`
+                : `${p.label}: ${p.move}. Netinka šiam tempui.`));
+      });
+    }
+
+    function paintControls() {
+      tempoButtons.forEach((btn) => {
+        const on = btn.dataset.tempo === tempo().id;
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        btn.style.background = on ? "var(--accent)" : "var(--paper)";
+        btn.style.color = on ? "var(--ink)" : "inherit";
+        btn.style.borderColor = on ? "var(--accent-press)" : "var(--line)";
+      });
+      volButtons.forEach((btn) => {
+        const on = btn.dataset.vol === volume().id;
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        btn.style.background = on ? "var(--accent)" : "var(--paper)";
+        btn.style.color = on ? "var(--ink)" : "inherit";
+        btn.style.borderColor = on ? "var(--accent-press)" : "var(--line)";
+      });
+      playBtn.textContent = playing ? "Sustabdyk" : "Paleisk";
+      playBtn.setAttribute("aria-label", playing ? "Sustabdyk atlikimą" : "Paleisk melodiją šiuo tempu");
+    }
+
+    function light(i, on) {
+      const dot = pulseEls[i];
+      if (!dot) return;
+      dot.style.background = on ? "var(--accent)" : "var(--paper-2)";
+      dot.style.borderColor = on ? "var(--accent-press)" : "var(--line)";
+    }
+
+    function clearPulses() {
+      pulseEls.forEach((_, i) => light(i, false));
+      markEls.forEach((dot) => {
+        dot.style.background = "transparent";
+        dot.style.borderColor = "var(--ink-soft)";
+      });
+    }
+
+    function tone(when, freq, dur, peak) {
+      const c = ctx;
+      if (!c) return;
+      let osc = null;
+      let gain = null;
+      try {
+        osc = c.createOscillator();
+        gain = c.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, when);
+        gain.gain.setValueAtTime(0.0001, when);
+        gain.gain.exponentialRampToValueAtTime(peak, when + 0.03);
+        gain.gain.setValueAtTime(peak, when + dur * 0.7);
+        gain.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(when);
+        osc.stop(when + dur + 0.02);
+      } catch {
+        return;
+      }
+      live.add(osc);
+      osc.onended = () => {
+        live.delete(osc);
+        try { osc.disconnect(); gain.disconnect(); } catch { /* jau atjungta */ }
+      };
+    }
+
+    function stopSound(byUser) {
+      clearTimers();
+      live.forEach((osc) => { try { osc.stop(); } catch { /* jau sustabdytas */ } });
+      live.clear();
+      clearPulses();
+      playing = false;
+      paintControls();
+      if (byUser) {
+        api.readout(SENT.stop || "Sustabdyta.");
+        api.note("Dabar keisk tempą ir paleisk dar kartą.");
+        speak("stop");
+      }
+    }
+
+    /* Užbaigus visą melodiją: pažanga žymima tik išgirdus VISUS tris tempus
+       (LL-29 — ne po pirmo bandymo). Žyma atsiranda TIK dabar, nes tik dabar
+       vaikas tikrai išgirdo šį tempą (LL-244). */
+    function finish() {
+      clearTimers();
+      clearPulses();
+      playing = false;
+      heard.add(tempo().id);
+      paintPurpose();
+      paintControls();
+      const fit = current();
+      if (heard.size >= TEMPOS.length) {
+        if (!reported) {
+          reported = true;
+          api.progress({ correct: true });
+          api.readout(SENT.done || "Ta pati melodija trimis tempais.");
+          api.note("Melodija buvo ta pati. Keitėsi tik tempas.");
+          speak("done");
+          return;
+        }
+      }
+      api.readout(SENT[tempo().id] || (fit ? `${tempo().label}. ${fit.label}.` : tempo().label));
+      api.note(heard.size >= TEMPOS.length
+        ? (SENT.heard || "Visi trys tempai išgirsti.")
+        : (SENT.again || "Palygink su kitais tempais."));
+      speak(tempo().id);
+    }
+
+    function play() {
+      if (playing) {
+        stopSound(true);
+        return;
+      }
+      if (!unlocked) {
+        api.note(SENT.guess || "Pirma pasakyk spėjimą, tada keisk tempą.");
+        speak("guess");
+        guessBtn.focus();
+        return;
+      }
+      const c = ensureCtx();
+      const useSound = !!c && soundEnabled();
+      if (c && c.state === "suspended" && typeof c.resume === "function") c.resume().catch(() => {});
+      if (c && reduce && typeof c.resume === "function") c.resume().catch(() => {});
+
+      clearTimers();
+      clearPulses();
+      playing = true;
+      paintControls();
+
+      const ms = tempo().note_ms;
+      const peak = volume().gain;
+      const base = useSound ? c.currentTime + 0.12 : 0;
+
+      NOTES.forEach((hz, i) => {
+        const at = i * ms;
+        after(at, () => {
+          light(i, true);
+          if (!reduce) {
+            markEls[i].style.background = "var(--sun)";
+            markEls[i].style.borderColor = "var(--accent-press)";
+          }
+        });
+        after(at + ms * 0.7, () => {
+          light(i, false);
+          markEls[i].style.background = "transparent";
+          markEls[i].style.borderColor = "var(--ink-soft)";
+        });
+        if (useSound) tone(base + at / 1000, hz, (ms * 0.86) / 1000, peak);
+      });
+
+      after(NOTES.length * ms + 260, finish);
+
+      const fit = current();
+      api.readout(SENT[tempo().id] || (fit ? `${tempo().label}.` : tempo().label));
+      api.note(SENT.play || "Klausyk melodijos ir pulso.");
+      speak(tempo().id);
+
+      if (!useSound) {
+        api.note(c ? (SENT.nosound || "") : (SENT.nosupport || ""));
+      }
+    }
+
+    controls.innerHTML = `
+      <button class="btn" type="button" id="lt-guess" style="min-width:min(6.5rem,100%)">Sakau</button>
+      ${TEMPOS.map((t) => `
+        <button class="btn secondary" type="button" data-tempo="${t.id}" aria-disabled="true"
+          aria-pressed="false" aria-label="${t.aria}" style="min-width:min(6.5rem,100%)">${t.label}</button>`).join("")}
+      ${VOLUMES.map((v) => `
+        <button class="btn secondary" type="button" data-vol="${v.id}" aria-disabled="true"
+          aria-pressed="false" aria-label="Garsumas: ${v.label}" style="min-width:min(5.5rem,100%)">${v.label}</button>`).join("")}
+      <button class="btn" type="button" id="lt-play" aria-label="Paleisk melodiją šiuo tempu"
+        style="min-width:min(7rem,100%)">Paleisk</button>`;
+
+    const guessBtn = controls.querySelector("#lt-guess");
+    const playBtn = controls.querySelector("#lt-play");
+    const tempoButtons = [...controls.querySelectorAll("[data-tempo]")];
+    const volButtons = [...controls.querySelectorAll("[data-vol]")];
+
+    function unlock() {
+      unlocked = true;
+      /* `hidden` savybės čia nepakanka: `.btn` turi autorinę `display`, kuri
+         laimi prieš naršyklės `[hidden]` (LL-32 šeima). */
+      guessBtn.hidden = true;
+      guessBtn.style.display = "none";
+      tempoButtons.forEach((b) => b.removeAttribute("aria-disabled"));
+      volButtons.forEach((b) => b.removeAttribute("aria-disabled"));
+      api.readout(SENT.start || "Melodija ta pati. Keisk tempą ir klausyk.");
+      api.note("Rinkis tempą ir spausk „Paleisk“.");
+      speak("start");
+      tempoButtons[ti].focus();
+    }
+
+    function setVolume(id) {
+      vi = Math.max(0, VOLUMES.findIndex((v) => v.id === id));
+      paintControls();
+      const fit = current();
+      const revealed = !!fit && heard.has(tempo().id);
+      api.note(SENT.volume || "Garsumas kitas, o paskirtis ta pati.");
+      /* Atsakymą į „ar paskirtis pasikeitė“ modelis pasako tik tada, kai
+         vaikas šį tempą jau girdėjo — kitaip ekranas tą patį atsakymą
+         išduotų ir tempui, kurio dar niekas nepaleido (LL-244). */
+      api.readout(revealed
+        ? `Garsumas — ${volume().label.toLowerCase()}. Melodija tinka ${fit.label.toLowerCase()}.`
+        : `Garsumas — ${volume().label.toLowerCase()}.`);
+      api.speak(volume().label, { rate: 0.9 });
+    }
+
+    function setTempo(id, viaUser) {
+      const next = TEMPOS.findIndex((t) => t.id === id);
+      if (next < 0) return;
+      if (playing) {
+        /* LL-04: užraktas turi paaiškinti, o ne tyliai neveikti. */
+        api.note(SENT.locked || "Pirma sustabdyk, tada keisk tempą.");
+        playBtn.focus();
+        return;
+      }
+      ti = next;
+      const fit = current();
+      const revealed = !!fit && heard.has(tempo().id);
+      paintControls();
+      paintPurpose();
+      api.readout(revealed
+        ? `${tempo().label}. Melodija tinka ${fit.label.toLowerCase()}.`
+        : `${tempo().label}. Paleisk ir paklausyk.`);
+      api.note(tempo().label);
+      if (viaUser) api.speak(tempo().label, { rate: 0.9 });
+    }
+
+    tempoButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!unlocked) {
+          api.note(SENT.guess || "Pirma pasakyk spėjimą, tada keisk tempą.");
+          speak("guess");
+          guessBtn.focus();
+          return;
+        }
+        setTempo(btn.dataset.tempo, true);
+      });
+    });
+
+    volButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!unlocked) {
+          api.note(SENT.guess || "Pirma pasakyk spėjimą, tada keisk tempą.");
+          speak("guess");
+          guessBtn.focus();
+          return;
+        }
+        if (playing) {
+          api.note(SENT.locked || "Pirma sustabdyk, tada keisk garsumą.");
+          playBtn.focus();
+          return;
+        }
+        if (btn.dataset.vol !== volume().id) setVolume(btn.dataset.vol);
+      });
+    });
+
+    guessBtn.addEventListener("click", unlock);
+    playBtn.addEventListener("click", play);
+
+    paintControls();
+    paintPurpose();
+    api.readout(SENT.ask || "Kas pasikeis, kai melodija skambės greičiau?");
+    api.note("Pirma pasakyk savo spėjimą, tada rinkis tempą.");
+
+    return () => {
+      clearTimers();
+      live.forEach((osc) => { try { osc.stop(); } catch { /* jau sustabdytas */ } });
+      live.clear();
+      if (ctx && typeof ctx.close === "function") { try { ctx.close(); } catch { /* jau uždarytas */ } }
+      ctx = null;
+    };
+  },
+};
+
 export const SIMS = {
   "garso-aukstis": garsoAukstis,
   "ritmas-ir-pulsas": ritmasIrPulsas,
   "melodija-ir-pritarimas": klausymas,
   "dermes-garsai": dermesGarsai,
+  "melodija-ir-tempas": melodijosTempas,
 };
 

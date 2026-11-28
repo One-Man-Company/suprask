@@ -1467,9 +1467,17 @@
   "n": "n/061db2d7c4edc72f-8c518491.mp3",
   "s": "s/061db2d7c4edc72f-1be7692b.mp3"
  },
+ "Garsiai": {
+  "n": "n/8bcb6bb04ad1a1ca-dab5a93e.mp3",
+  "s": "s/8bcb6bb04ad1a1ca-4ba4385b.mp3"
+ },
  "Garsiau": {
   "n": "n/bc8a2ce01bbf62ec-042997ed.mp3",
   "s": "s/bc8a2ce01bbf62ec-06cae6ac.mp3"
+ },
+ "Garsumas kitas, o paskirtis ta pati.": {
+  "n": "n/67a063fdd2479c01-64e993ab.mp3",
+  "s": "s/67a063fdd2479c01-1ad7c2bd.mp3"
  },
  "Garsus garsas": {
   "n": "n/2158679009f55bad-86b3544d.mp3",
@@ -1498,6 +1506,14 @@
  "Graužo vis dar nebėra.": {
   "n": "n/ed500f8d85b1cd4a-c735157e.mp3",
   "s": "s/ed500f8d85b1cd4a-3b045bb2.mp3"
+ },
+ "Greitai": {
+  "n": "n/b7e1de95d1293914-4a922f28.mp3",
+  "s": "s/b7e1de95d1293914-a1a5a314.mp3"
+ },
+ "Greitai. Ši melodija šokinėja kaip šokis.": {
+  "n": "n/64f855ab4cddeb70-027c8a24.mp3",
+  "s": "s/64f855ab4cddeb70-5dbbd3e2.mp3"
  },
  "Greičiau": {
   "n": "n/60d89cb04b7054d4-88245fc5.mp3",
@@ -1779,6 +1795,10 @@
   "n": "n/d75e1e8cad51e55f-55b2ea47.mp3",
   "s": "s/d75e1e8cad51e55f-5edd9a0a.mp3"
  },
+ "Kas pasikeis, kai melodija skambės greičiau?": {
+  "n": "n/a2743f6022a9816c-a77419d0.mp3",
+  "s": "s/a2743f6022a9816c-25769b88.mp3"
+ },
  "Kas pasikeis, kai pakeisi korteles: pulsas ar ritmas?": {
   "n": "n/d9b40529fa3121c9-772cc6da.mp3",
   "s": "s/d9b40529fa3121c9-04a356d4.mp3"
@@ -1970,6 +1990,10 @@
  "Klausyk abiejų: pulsas žemai, plojimai aukštai.": {
   "n": "n/2b053f0b8f2c5df5-ed72ef17.mp3",
   "s": "s/2b053f0b8f2c5df5-8a06b845.mp3"
+ },
+ "Klausyk melodijos ir pulso.": {
+  "n": "n/2a02abedd57e6fb6-12ec7205.mp3",
+  "s": "s/2a02abedd57e6fb6-826abc35.mp3"
  },
  "Klausyk visos eilės iš eilės.": {
   "n": "n/34ddcfeb07154fa1-56f02a5b.mp3",
@@ -2403,9 +2427,21 @@
   "n": "n/bd1e1f56307262e3-01d947a3.mp3",
   "s": "s/bd1e1f56307262e3-b52be6ff.mp3"
  },
+ "Lopšinė": {
+  "n": "n/faab32cb02615b0d-0ddab627.mp3",
+  "s": "s/faab32cb02615b0d-31c402b1.mp3"
+ },
  "Lygiosios": {
   "n": "n/e8f8397e285c5f87-8a122b20.mp3",
   "s": "s/e8f8397e285c5f87-99131409.mp3"
+ },
+ "Lėtai": {
+  "n": "n/89718dae397f87d3-5afec4dc.mp3",
+  "s": "s/89718dae397f87d3-3ac5596e.mp3"
+ },
+ "Lėtai. Ši melodija lingiuoja kaip lopšinė.": {
+  "n": "n/29f8875e75d346fa-bc7dc3df.mp3",
+  "s": "s/29f8875e75d346fa-af13f2c6.mp3"
  },
  "Lėčiau": {
   "n": "n/4a93b4c998b00b54-0abb8529.mp3",
@@ -2439,6 +2475,10 @@
   "n": "n/9773842e3bc62a21-d470cfcb.mp3",
   "s": "s/9773842e3bc62a21-85918c52.mp3"
  },
+ "Maršas": {
+  "n": "n/9c97352151ae1b07-03003bdf.mp3",
+  "s": "s/9c97352151ae1b07-c8c86541.mp3"
+ },
  "Mašinėlė": {
   "n": "n/786ed2c3838dfb78-90f98740.mp3",
   "s": "s/786ed2c3838dfb78-14fe91b6.mp3"
@@ -2470,6 +2510,10 @@
  "Melodija": {
   "n": "n/ba1616826a974136-bb16de0d.mp3",
   "s": "s/ba1616826a974136-ae01ff16.mp3"
+ },
+ "Melodija ta pati. Keisk tempą ir klausyk.": {
+  "n": "n/ea8eff404ae0d4aa-ad70f067.mp3",
+  "s": "s/ea8eff404ae0d4aa-071bf24b.mp3"
  },
  "Melodija yra viena linija. Klausyk jos visą laiką.": {
   "n": "n/78812d3302626ba1-7f0e5da7.mp3",
@@ -2747,6 +2791,10 @@
   "n": "n/e2c3c41a3f0bb8ee-c7db9c56.mp3",
   "s": "s/e2c3c41a3f0bb8ee-58662b22.mp3"
  },
+ "Palygink su kitais tempais.": {
+  "n": "n/ae6ad738b61c669a-a4bfb63d.mp3",
+  "s": "s/ae6ad738b61c669a-d9629499.mp3"
+ },
  "Palygink su kitu atlikėju.": {
   "n": "n/a8022620320bfff9-d8925bf9.mp3",
   "s": "s/a8022620320bfff9-af4d0e71.mp3"
@@ -3022,6 +3070,10 @@
  "Pilnas dešimtukas!": {
   "n": "n/bbbfb4885794d2cd-da6961e3.mp3",
   "s": "s/bbbfb4885794d2cd-0ea8cb4a.mp3"
+ },
+ "Pirma pasakyk savo spėjimą, tada keisk tempą.": {
+  "n": "n/d6ca84a09d5b0c9b-ea95feac.mp3",
+  "s": "s/d6ca84a09d5b0c9b-6f41c3f0.mp3"
  },
  "Pirma pasakyk savo spėjimą, tada perstatyk gaidas.": {
   "n": "n/0cd53e79ca8336cf-71718a5d.mp3",
@@ -3883,6 +3935,10 @@
   "n": "n/01ee2b818c81f5a6-08f8b980.mp3",
   "s": "s/01ee2b818c81f5a6-c96d8272.mp3"
  },
+ "Sustabdyta.": {
+  "n": "n/e358e7bc4c1c3bd7-204f1457.mp3",
+  "s": "s/e358e7bc4c1c3bd7-65c8466f.mp3"
+ },
  "Sustabdyta. Gali keisti korteles.": {
   "n": "n/06988fc50cfab3d9-83dbbf11.mp3",
   "s": "s/06988fc50cfab3d9-ceb10e90.mp3"
@@ -3922,6 +3978,10 @@
  "Ta pati lygybė.": {
   "n": "n/a9dad1a5182e618f-eddbe215.mp3",
   "s": "s/a9dad1a5182e618f-ee034586.mp3"
+ },
+ "Ta pati melodija trimis tempais.": {
+  "n": "n/29c9cebf03143620-3e9b1532.mp3",
+  "s": "s/29c9cebf03143620-dbcfafc3.mp3"
  },
  "Ta pati pora jungiklių. Kita kortelė, kita lempa.": {
   "n": "n/28045c028fe17057-cc219f8d.mp3",
@@ -4062,6 +4122,14 @@
  "Toliau tinklelio nėra.": {
   "n": "n/0253ab164bcb0b07-f01987e2.mp3",
   "s": "s/0253ab164bcb0b07-16fe9a02.mp3"
+ },
+ "Tolygiai": {
+  "n": "n/641c6ac3dce2f37b-2c994c7a.mp3",
+  "s": "s/641c6ac3dce2f37b-21a519c5.mp3"
+ },
+ "Tolygiai. Ši melodija žygiuoja kaip maršas.": {
+  "n": "n/5a881f15d18746c1-c9b28440.mp3",
+  "s": "s/5a881f15d18746c1-64238965.mp3"
  },
  "Tomas": {
   "n": "n/86c496b088a575d6-c0860daf.mp3",
@@ -4326,6 +4394,10 @@
  "Tyla. Pulsas teka toliau.": {
   "n": "n/ea7f02c0ca090085-e978a36e.mp3",
   "s": "s/ea7f02c0ca090085-7809cb8d.mp3"
+ },
+ "Tyliai": {
+  "n": "n/253f3d445a88ec00-81462d24.mp3",
+  "s": "s/253f3d445a88ec00-f45fffad.mp3"
  },
  "Tyliau": {
   "n": "n/50a192a31d5d4db0-5afd4ca2.mp3",
@@ -4602,6 +4674,10 @@
  "Visi trys sustojo: augalas nebeauga, vaikas nebežaidžia, mašinėlė nebevažiuoja.": {
   "n": "n/7464e850f1a03ddc-430e38ff.mp3",
   "s": "s/7464e850f1a03ddc-fad97f9f.mp3"
+ },
+ "Visi trys tempai išgirsti.": {
+  "n": "n/58c9e185c6be7427-1649c5dd.mp3",
+  "s": "s/58c9e185c6be7427-68980d2c.mp3"
  },
  "Visi trys vėl turi savo šaltinį: saulė, maistas, baterija.": {
   "n": "n/b0cd4dff40fd0561-d93f56b4.mp3",
@@ -5294,6 +5370,10 @@
  "Šlapios grindys": {
   "n": "n/310e5aa3d68ec76f-e21f548d.mp3",
   "s": "s/310e5aa3d68ec76f-d0f6c2f8.mp3"
+ },
+ "Šokis": {
+  "n": "n/b884c619db132783-3b869aac.mp3",
+  "s": "s/b884c619db132783-d83b306a.mp3"
  },
  "Šviesa dega. Pirštas dar laiko.": {
   "n": "n/c871f9fbbadcd21d-941ce0e4.mp3",

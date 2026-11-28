@@ -1,0 +1,191 @@
+{
+  "id": "05-lopsine-marsas-sokis",
+  "grade": 1,
+  "strand": "muzika",
+  "title": "Lopšinė, maršas ar šokis",
+  "subtitle": "Tą pačią melodiją tempas daro lopšine, maršu ar šokiu",
+  "minutes": 10,
+  "outcomes": [
+    "Skiriu lėtą, tolygų ir greitą tempą ta pačia melodija.",
+    "Pasakau, koks judesys tinka prie kiekvieno tempo.",
+    "Paaiškinu, kodėl garsumas paskirties nekeičia."
+  ],
+  "concept": {
+    "title": "Tempas keičia paskirtį",
+    "big_idea": "Melodija gali likti ta pati, o kūrinys — visai kitas. Kai gaidos skamba lėtai, ji lingiuoja kaip lopšinė. Kai tolygiai — žygiuoja kaip maršas. Kai greitai — šokinėja kaip šokis.",
+    "steps": [
+      "Pirma pagalvok: ar greitesnė melodija tampa kitokia daina?",
+      "Rinkis tempą ir spausk „Paleisk“. Klausyk tų pačių gaidų.",
+      "Pakeisk garsumą. Pažiūrėk, ar paskirtis pasikeitė.",
+      "Kartok visus tris tempus ir palygink."
+    ],
+    "example": "Ta pati dainelė lėtai lingiuoja lopšį, o greitai kviečia šokti."
+  },
+  "sim": {
+    "component": "melodija-ir-tempas",
+    "config": {
+      "melody": [
+        392,
+        392,
+        440,
+        440,
+        494,
+        494,
+        440,
+        392
+      ],
+      "tempos": [
+        {
+          "id": "letai",
+          "label": "Lėtai",
+          "note_ms": 1000,
+          "aria": "Tempas lėtas, kaip lopšinė"
+        },
+        {
+          "id": "tolygiai",
+          "label": "Tolygiai",
+          "note_ms": 620,
+          "aria": "Tempas tolygus, kaip maršas"
+        },
+        {
+          "id": "greitai",
+          "label": "Greitai",
+          "note_ms": 380,
+          "aria": "Tempas greitas, kaip šokis"
+        }
+      ],
+      "purposes": [
+        {
+          "id": "lopsine",
+          "label": "Lopšinė",
+          "move": "linguoja lėtai",
+          "tempo": "letai"
+        },
+        {
+          "id": "marsas",
+          "label": "Maršas",
+          "move": "žygiuoja tolygiai",
+          "tempo": "tolygiai"
+        },
+        {
+          "id": "sokis",
+          "label": "Šokis",
+          "move": "šokinėja greitai",
+          "tempo": "greitai"
+        }
+      ],
+      "volumes": [
+        {
+          "id": "tyliai",
+          "label": "Tyliai",
+          "gain": 0.05
+        },
+        {
+          "id": "garsiai",
+          "label": "Garsiai",
+          "gain": 0.15
+        }
+      ],
+      "sentences": {
+        "ask": "Kas pasikeis, kai melodija skambės greičiau?",
+        "guess": "Pirma pasakyk savo spėjimą, tada keisk tempą.",
+        "start": "Melodija ta pati. Keisk tempą ir klausyk.",
+        "letai": "Lėtai. Ši melodija lingiuoja kaip lopšinė.",
+        "tolygiai": "Tolygiai. Ši melodija žygiuoja kaip maršas.",
+        "greitai": "Greitai. Ši melodija šokinėja kaip šokis.",
+        "play": "Klausyk melodijos ir pulso.",
+        "stop": "Sustabdyta.",
+        "locked": "Pirma sustabdyk, tada keisk.",
+        "volume": "Garsumas kitas, o paskirtis ta pati.",
+        "done": "Ta pati melodija trimis tempais.",
+        "heard": "Visi trys tempai išgirsti.",
+        "again": "Palygink su kitais tempais.",
+        "nosound": "Garsas išjungtas. Įjunk garsą viršuje.",
+        "nosupport": "Šiame įrenginyje garso groti nepavyko."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Ta pati melodija skamba lėtai ir greitai. Kuri tinka lopšinei?",
+      "options": [
+        "Lėtoji",
+        "Greitoji",
+        "Abi vienodai"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kaip linguoja lopšys.",
+      "why": "Lėtas tempas lingiuoja, todėl tinka lopšinei."
+    },
+    {
+      "q": "Padidinai garsumą, o tempo nekeitei. Kas pasikeitė?",
+      "options": [
+        "Pasikeitė paskirtis",
+        "Pasikeitė tempas",
+        "Pasikeitė tik garsumas"
+      ],
+      "answer": 2,
+      "hint": "Pažiūrėk, kuris valdiklis liko tame pačiame laipsnyje.",
+      "why": "Garsumas keičia stiprumą, o paskirtį sprendžia tempas."
+    },
+    {
+      "q": "Žygiuojant kojos kyla tolygiai. Kuris tempas tinka maršui?",
+      "options": [
+        "Tolygus",
+        "Labai lėtas",
+        "Labai greitas"
+      ],
+      "answer": 0,
+      "hint": "Palygink, kaip dažnai kyla koja žygiuojant.",
+      "why": "Maršas žygiuoja tolygiai, todėl tempas irgi tolygus."
+    },
+    {
+      "q": "Berniukas šoka greitai, o mergaitė lingiuoja lėtai. Ar jos klauso tos pačios melodijos?",
+      "options": [
+        "Ne, melodijos skirtingos",
+        "Taip, skiriasi tempas",
+        "Taip, skiriasi garsumas"
+      ],
+      "answer": 1,
+      "hint": "Palygink, ar tos pačios gaidos skamba abiem atvejais.",
+      "why": "Melodija ta pati, tik vienu atveju ji lėtesnė."
+    },
+    {
+      "q": "Būgnininkas muša greitai ir tyliai. Kuris judesys prie to tinka?",
+      "options": [
+        "Lėtas lingavimas",
+        "Tolygus žygiavimas",
+        "Greitas šokis"
+      ],
+      "answer": 2,
+      "hint": "Garsumas čia ne prie ko — klausyk, kaip dažnai muša.",
+      "why": "Greitas pulsas kviečia šokti, net jei mušama tyliai.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kokį judesį tu pats rodytum išgirdęs lėtą melodiją? O greitą?",
+  "teacher": {
+    "goal": "Atskleisti, kad kūrinio paskirtį sprendžia tempas, o ne garsumas: ta pati aštuonių gaidų melodija, paleista lėtai, tolygiai ar greitai, atrodo kaip lopšinė, maršas ar šokis. Modelyje melodija fiksuota ir garsumas keičiamas atskirai, todėl vaikas girdi vieną kintamąjį, o ne spėlioja iš pavadinimo.",
+    "prompt": "Kodėl ta pati dainelė kartais užliūliuoja, o kartais norisi šokti?",
+    "offline": "Pasirinkite trumpą dainelę, kurią visi moka. Pirmą kartą dainuokite ją labai lėtai ir linguokite kūnu. Antrą kartą — tolygiai, tarsi žygiuodami vietoje. Trečią — greitai, ploti ir šokinėti. Po kiekvieno karto paklauskite: ar pasikeitė dainelė? Ar pasikeitė žodžiai? Kas pasikeitė? Pabaigoje paprašykite vaikų patiems sugalvoti judesį lėtai ir greitai melodijai ir parodyti klasei. Garsumo nekeiskite — taip išlieka vienas kintamasis.",
+    "misconceptions": [
+      "„Lopšinė tyli, o maršas garsus.“ Modelyje garsumas yra atskiras valdiklis: garsiai lopšinė lieka lopšine, o tyliai maršas — maršu.",
+      "„Jei melodija greitesnė, tai jau kita daina.“ Gaidos visą laiką tos pačios ir toje pačioje eilėje; kinta tik laikas tarp gaidų.",
+      "„Tempą galima atpažinti iš natų aukščio.“ Aukštis nepakinta keičiant tempą; aukštis ir tempas — du skirtingi dalykai.",
+      "„Greitas kūrinys visada šokis.“ Paskirtį sprendžia tempas kartu su judesiu, todėl modelis rodo tris judesius: lingavimą, žygiavimą ir šokį."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), 1–2 klasių muzikos sąvokų sąrašas: „muzikos tempas (pvz.: lėtai, ramiai, gyvai, greitai), tembras, smuiko raktas; daina, šokis, maršas; lopšinė, sutartinė“ (failas sources/pradinio-bp-rekomendacijos-2024.txt, 13928–13930 eil.) — modulis jungia būtent šias dvi sąvokų grupes: tempą ir kūrinio paskirtį.",
+    "NŠA. Tos pačios rekomendacijos, Muzikos klausymasis, 1–2 klasė: „Judesiais ar kūno perkusija perteikti muzikos ritmą, metrą, tempo pokyčius“ (3296–3298 eil.) — modelio paskirties kortelėse parašyta, koks judesys tinka prie kiekvieno tempo.",
+    "NŠA. Tos pačios rekomendacijos, Aranžavimas, 1–2 klasė: „vaikams tinkamos šios aranžavimo idėjos: (a) judesių pritaikymas dainai“ (13843 eil.) — vaikas ne tik klauso, bet ir pasirenka judesį, kuris prie tempo tinka.",
+    "Muzikos bendroji programa (2022), pasiekimų sritis A (Muzikavimas) ir C (Muzikos pažinimas ir vertinimas): 1–2 klasėje mokinys atpažįsta tempo pokyčius ir perteikia juos judesiu.",
+    "Dalla Bella, S., Farrugia, N., Benoit, C.-E., Begel, V., Verga, L., Harding, E., & Kotz, S. A. (2015). BAASTA: Battery for the Assessment of Auditory Sensorimotor and Timing Abilities. Behavior Research Methods, 47(3), 1004–1017. https://doi.org/10.3758/s13428-014-0519-3 — sinchronizacija su lėtu ir greitu pulsu matuojama atskirai, tad vaikui lengviau atpažinti tempą, kai jis rodomas ir judesiu, o ne vien klausomasi."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena nauja sąvoka (tempas kaip paskirties šaltinis); melodija, gaidos ir garsumas lieka žinomi dydžiai, o instrumentų ar žanrų sąrašas neplečiamas.",
+    "2 žingsnis — vienodas vertinimas: užduotys prašo atpažinti tempą naujoje situacijoje (berniukas ir mergaitė, tylus būgnininkas, žygiavimas), o ne pakartoti modulio sakinį.",
+    "3 žingsnis — pagalba laiku: spėjimas prieš tempą, kiekviena klaida turi užuominą, modelis nieko nebaudžia ir leidžia bandyti iš naujo; 5-a užduotis — praplėtimas.",
+    "P2 / T3.4 / T5.5: veiksmas prieš paaiškinimą (pirma klausai, tada skaitai), praplėtimo užduotis, 48 px taikiniai; tempas skiriamas ir žodžiu, ir pulso dažniu, ir „tinka / netinka“ žyma, niekada vien spalva."
+  ]
+}

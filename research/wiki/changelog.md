@@ -2,6 +2,15 @@
 
 Kiekvienas žinių bazės pakeitimas — vienas įrašas. Naujausi viršuje. Formatas: data · failas · kas pasikeitė · kodėl.
 
+## 2026-11-28 — Kūrimas #611: naujas modulis „Lopšinė, maršas ar šokis“ — paskirtį sprendžia tempas, o ne garsumas
+
+- **`grades/01` (muzika)** — naujas modulis `05-lopsine-marsas-sokis` (10 min., 5 užduotys, 1 `optional`): ta pati aštuonių gaidų melodija paleidžiama lėtu, tolygiu ir greitu tempu, o prie jos rodomi trys judesiai (lingavimas, žygiavimas, šokis). Garsumas keičiamas atskiru valdikliu ir paskirties nejudina — būtent tai paneigia klaidingą nuostatą.
+- **`assets/js/sims/muzika.js`** — naujas komponentas `melodija-ir-tempas`. Skirtumas nuo `02-ritmas-ir-pulsas`: ten pulsas pastovus ir keičiasi kortelės, čia kortelės tos pačios ir keičiasi pats pulsas. Pažanga žymima tik išgirdus visus tris tempus (LL-29), o išvados žyma „tinka / netinka“ nepripiešiama iki pirmo vaiko paleidimo (LL-244).
+- **`guidelines/pamokos.md`** — LL-244 „Išvada ekrane prieš vaikui atliekant veiksmą“: modelio išvada yra išvestis, o ne įvestis, tad iki pirmo veiksmo ji negali būti matoma; matomumo vartai tos klasės nemato iš principo.
+- **`guidelines/pilotai.md`** — P-029 su hipoteze ir matavimo kriterijais.
+- **Šaltinis:** NŠA „Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos“ (2024), 1–2 kl. sąvokos „muzikos tempas (lėtai, ramiai, gyvai, greitai)… daina, šokis, maršas; lopšinė“ (13928–13930 eil.), „judesiais perteikti tempo pokyčius“ (3296–3298 eil.).
+- **Poveikis platformai:** 1 klasė — 90 modulių, 90 simuliacijų, 399 užduotys (`check_docs_facts.py` 0 klaidų). Techninė patikra: `scripts/probe_lopsine_marsas_sokis.py` 21/21, `check_view.py` 3 plotai 0 problemų, `check_svg_fit.py` 0 px.
+
 ## 2026-11-28 — Publikavimo patikra #609: repo **89 / paskelbta 89**, o trečias šaknies puslapis nebūtų pasiekęs svetainės (trys ranka rašyti sąrašai)
 
 - **Būsena (`python3 scripts/check_published.py`, rc 0).** „Repozitorija: 89 moduliai / Klasės: grade-01 / Paskelbta: 89 moduliai · grade-01: repo 89, gyvai 89“; `missing_on_live`, `hidden_locally`, `not_in_path`, `orphan_files`, `missing_in_repo`, `live_missing`, `stale`, `stale_unknown`, `aux_*` — visi tušti. Garsas 2 730/2 730 pasiekiami, dydžiai 2 730/2 730 = `Content-Length`, vardo maišas 2 730/2 730 = baitai ir tekstas. Svetainės kodas 19 failų baitais lygus; rėmas 2 843 publikuojami failai; seka 89/89; versija `02293808` abiejose pusėse; **kodo nuorodos su `?v=`: 3/3**, mišrių žymių 0. Vienintelis pervadinimas (`03-sakinio-tvarka → 03-sakinio-zodziai`) lieka priimtas ir su alias.

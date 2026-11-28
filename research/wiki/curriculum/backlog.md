@@ -1,7 +1,7 @@
 ---
 title: "1 klasės programos padengties eilė"
 tipas: padengtis
-atnaujinta: 2026-11-27
+atnaujinta: 2026-11-28
 saltinis: "sugeneruota `scripts/curriculum_backlog.py` iš research/wiki/curriculum/"
 ---
 

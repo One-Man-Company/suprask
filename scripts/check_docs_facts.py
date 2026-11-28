@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import difflib
 import json
 import re
 import sys
@@ -335,6 +336,28 @@ def check_wiki(check: Check, f: dict) -> None:
         check.expect(f"{list_page}:{line_of(text, '[[01/index')}", "modulių", int(found.group(1)), f["module_count"])
 
 
+def title_words(title: str) -> set[str]:
+    """Pavadinimo žodžiai, lyginimui: be skyrybos, mažosiomis, be „lentelė“ tipo žodžių.
+
+    Imami žodžiai nuo 3 raidžių: 1 klasės pavadinimuose „ir“, „o“, „ne“, „kas“
+    nesiekia 3 raidžių, bet 3 raidžių žodžiai („kas“, „ne“) priklauso tekstui,
+    tad riba — 3. Skaičiai („2“, „14:00“) praleidžiami: jie yra laiko
+    užrašas, o ne pavadinimo turinys.
+    """
+    words = re.split(r"[^\wąčęėįšųūž]+", title.lower())
+    return {w for w in words if len(w) > 2 and not w.isdigit()}
+
+
+def title_similarity(item: str, module: str) -> float:
+    """Kiek wiki įrašas panašus į modulio pavadinimą (0…1).
+
+    Naudojamas tik tam, kad iš kelių kandidatų būtų pasirinktas artimiausias —
+    vienos krypties sąraše gali būti keli įrašai, kuriuose yra tas pats pirmas
+    žodis („Kas gyvena tvarte?“ ir „Kas gyvas: auga ir reaguoja…“).
+    """
+    return difflib.SequenceMatcher(None, item.lower(), module.lower()).ratio()
+
+
 def check_wiki_table(check: Check, where: str, text: str, f: dict) -> None:
     """Wiki krypties lentelė: modulių sąrašas ir „N — gyva“ turi atitikti indeksą.
 
@@ -345,6 +368,18 @@ def check_wiki_table(check: Check, where: str, text: str, f: dict) -> None:
     wiki yra vieta, kur žmogus ir agentas ieško, „kas jau padaryta“, todėl
     trūkstamas modulis atrodo kaip nepadarytas darbas ir eilė kuria jį antrą
     kartą (LL-19, #19519 atvejis).
+
+    2026-11-28 (LL-227): susiejimas ėjo TIK pagal `re.split("[:\\s,]", title)[0]`,
+    t. y. pirmą žodį. Todėl „Bendradarbiavimo tiltas“ wiki buvo laikomas
+    modulio „Tiltas: kai dirbame kartu“ įrašu, nors tai senas vardas, o
+    „Komandų seka: viena klaida pakreipia kelią“ — modulio „…nuveda ne ten“.
+    Pervadinimas po dvitaškio vartams buvo nematomas. Todėl dabar, kai įrašas
+    surastas pagal raktą, lyginama ir pavadinimo žodžių aibė: wiki įrašas gali
+    būti TRUMPESNIS už `index.json` `title` (žmogaus suvesta santrumpa —
+    „Figūros“ vietoje „Figūros aplink mus“), bet negali turėti žodžio, kurio
+    tikrame pavadinime nebėra — toks žodis reiškia, kad įrašas liko nuo seno
+    vardo. `sync_docs_facts.align_items()` naudoja tą pačią sąlygą, tad
+    sinchronizatorius tokį įrašą gali pataisyti, o ne pranešti „sutampa“.
     """
     row_re = re.compile(r"^\|\s*(?P<title>[^|]+?)\s*\|\s*(?P<items>.+?)\s*\|\s*(?P<count>\d+)\s*—\s*gyva\s*\|")
     rows = {}
@@ -364,10 +399,23 @@ def check_wiki_table(check: Check, where: str, text: str, f: dict) -> None:
         check.expect(f"{where}:{at}", f"„{title}“ modulių lentelėje", count, len(strand["modules"]))
         for module in strand["modules"]:
             needle = re.split(r"[:\s,]", module)[0].rstrip(":").lower()
-            if not any(needle in item.lower() for item in listed):
+            candidates = [item for item in listed if needle in item.lower()]
+            if not candidates:
                 check.fail(
                     f"{where}:{at}: „{title}“ eilutėje trūksta modulio „{module}“ "
                     f"(laukiama bent žodžio „{needle}“)"
+                )
+                continue
+            # Antras signalas: artimiausias įrašas neturi turėti žodžių, kurių
+            # tikrame pavadinime nėra. `aligned` — sinonimas sąmoningai
+            # leidžiamas tik kaip poaibis (žr. docstring).
+            best = max(candidates, key=lambda item: title_similarity(item, module))
+            extra = title_words(best) - title_words(module)
+            if extra:
+                check.fail(
+                    f"{where}:{at}: „{title}“ eilutės įrašas „{best}“ neatitinka "
+                    f"modulio „{module}“ (seno vardo žodžiai: "
+                    f"{', '.join(sorted(extra))}) — tai pervardinto modulio pėdsakas"
                 )
 
 

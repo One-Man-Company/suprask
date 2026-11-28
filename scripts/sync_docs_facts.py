@@ -76,8 +76,8 @@ def align_items(listed: list[str], titles: list[str]) -> tuple[list[str], list[s
 
     1. **Esama tvarka ir formuluotė nekeičiama.** Dokumente esantys įrašai
        lieka savo vietoje su savo žodžiais („Figūros“ vietoje „Figūros aplink
-       mus“, „Bendradarbiavimo tiltas“ vietoj „Tiltas: kai dirbame kartu“) —
-       tai žmogaus parašytas tekstas, o ne pasenęs skaičius. Susiejimo sąlyga
+       mus“, „Bendradarbiavimo tiltas“ vietoj „Tiltas: kai dirbame kartu“) — tai
+       žmogaus parašytas tekstas, o ne pasenęs skaičius. Susiejimo sąlyga
        sąmoningai ta pati, kurią tikrina `check_docs_facts.py`
        (`key(title) in item.lower()`): jei vartas įrašą laikytų teisingu, o
        sinchronizavimas jį pervadintų, dokumentas būtų taisomas be priežasties.
@@ -85,6 +85,13 @@ def align_items(listed: list[str], titles: list[str]) -> tuple[list[str], list[s
        pavadinimu iš `index.json`.
     3. **Įrašas, kurio rakto tarp modulių nebėra, išimamas** (modulis
        pervadintas ar pašalintas) ir pasakomas ataskaitoje.
+
+    2026-11-28 (LL-227) taisyklė 1 turėjo išimtį, kuri nebuvo užrašyta:
+    jei įrašas turi žodį, kurio tikrame pavadinime nebėra („Bendradarbiavimo
+    tiltas“ → „Tiltas: kai dirbame kartu“), tai NE žmogaus formuluotė, o senas
+    vardas. Toks įrašas perrašomas tikruoju pavadinimu — kitaip
+    sinchronizatorius praneša „Dokumentai jau sutampa“, o wiki lieka
+    antruoju, nelyginamu pavadinimo šaltiniu.
 
     Grąžina (sąrašas, pridėti, išimti).
     """
@@ -101,7 +108,12 @@ def align_items(listed: list[str], titles: list[str]) -> tuple[list[str], list[s
         if hit is None:
             continue  # pasenęs įrašas — patenka į `dropped`
         used.add(hit)
-        kept.append(item)
+        title = wanted[hit][0]
+        # Seno vardo pėdsakas: įrašas turi žodį, kurio pavadinime nebėra.
+        if factsmod.title_words(item) - factsmod.title_words(title):
+            kept.append(title)
+        else:
+            kept.append(item)
     added = [title for i, (title, _) in enumerate(wanted) if i not in used]
     dropped = [item for item in listed if item not in kept]
     return kept + added, added, dropped

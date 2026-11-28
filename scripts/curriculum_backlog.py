@@ -571,6 +571,52 @@ def changed_sources(old: dict, now: dict) -> list[str]:
     return sorted(n for n in set(old) | set(now) if old.get(n) != now.get(n))
 
 
+def row_identity(row: dict) -> tuple[str, str, str]:
+    """Stabili eilutės tapatybė tarp dviejų generavimų.
+
+    `key` vienas nėra unikalus: žemėlapio eilutė gali turėti kodą, o spragų
+    lentelės tos pačios temos eilutė — ne. Todėl imama (sekcija, kodas, tema).
+    """
+    return (row.get("section") or "", row.get("key") or "", row.get("topic") or "")
+
+
+def derived_drift(old: dict, now: dict) -> list[str]:
+    """Laukai, kurie skaičiuojami iš `content/`, o ne iš `curriculum/*.md`.
+
+    Kodėl tai būtina: `--check` iki šiol lygino TIK `source_hash`, o tas maišas
+    imamas iš `research/wiki/curriculum/*.md`. Todėl `modules_now`, `counts` ir
+    `rows[].status/modules` galėjo atsilikti kiek nori — o `modules_now` yra
+    vienintelis šio failo kiekis, kurį `agents/run.py` `_backlog_brief()` įdeda
+    į kiekvieno agento promptą. Agentas gaudavo du skirtingus to paties kiekio
+    skaičius (paleidimo antraštė 87, backlog 84) ir negalėjo žinoti, kuris
+    teisingas (LL-21, LL-37). Vartai, kurių vienintelė paskirtis „eilė
+    suderinta“, negali tylėti apie išvestinį lauką, kuris nesuderintas.
+
+    Grąžina žmogiškus pranešimus; tuščias sąrašas — laukai sutampa.
+    """
+    out: list[str] = []
+    for field in ("modules_now", "curriculum_positions"):
+        if old.get(field) != now.get(field):
+            out.append(f"{field}: faile {old.get(field)!r}, dabar {now.get(field)!r}")
+    if old.get("counts") != now.get("counts"):
+        out.append(f"counts: faile {old.get('counts')!r}, dabar {now.get('counts')!r}")
+
+    was = {row_identity(r): r for r in (old.get("rows") or [])}
+    now_rows = {row_identity(r): r for r in (now.get("rows") or [])}
+    for ident in sorted(set(was) | set(now_rows)):
+        a, b = was.get(ident), now_rows.get(ident)
+        if a is None:
+            out.append(f"eilutė atsirado: {ident[1] or '—'} {ident[2]}")
+        elif b is None:
+            out.append(f"eilutė išnyko: {ident[1] or '—'} {ident[2]}")
+        else:
+            for field in ("status", "modules", "target"):
+                if a.get(field) != b.get(field):
+                    out.append(f"{ident[1] or '—'} {ident[2]} · {field}: "
+                               f"faile {a.get(field)!r}, dabar {b.get(field)!r}")
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--grade", type=int, default=GRADE)
@@ -587,6 +633,15 @@ def main() -> int:
             old = json.loads(OUT_JSON.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             print("KLAIDA: backlog.json nėra — paleisk be --check")
+            return 1
+        drift = derived_drift(old, data)
+        if drift:
+            print("KLAIDA: backlog.json išvestiniai laukai atsiliko nuo content/ —")
+            for line in drift[:12]:
+                print(f"       · {line}")
+            if len(drift) > 12:
+                print(f"       · … ir dar {len(drift) - 12}")
+            print("       Spręsk: python3 scripts/curriculum_backlog.py")
             return 1
         if old.get("source_hash") != data["source_hash"]:
             # Įvardyk KURIS failas pasikeitė: be to raudoni vartai praneša tik

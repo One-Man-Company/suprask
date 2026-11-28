@@ -40,7 +40,7 @@ jobs:
           # todėl raštas tinka ir `from './x.js'`, ir `from "./x.js"`,
           # ir `import('./x.js')`. Anksčiau buvo ieškoma tik dvigubų kabučių,
           # todėl viengubos likdavo be žymos (LL-38: vartai nemato standarto).
-          find _site/assets/js -name "*.js" -print0 | xargs -0 sed -i -E \
+          find _site/assets/js -name "*.js" -print0 | xargs -0 -r sed -i -E \
             "s#(from )(['\"])(\./[^'\"]+\.js)\2#\1\2\3?v=$SHA\2#g; s#(import\()(['\"])(\./[^'\"]+\.js)\2#\1\2\3?v=$SHA\2#g"
           # Vartai: jei bent vienas santykinis importas liko be žymos, publikavimas
           # stabdomas. Kitaip deploy būtų žalias, o vaikas iki ~10 min. matytų seną
@@ -51,6 +51,31 @@ jobs:
             echo "$leftover"
             exit 1
           fi
+          # Vartai `index.html` KODO NUORODOMS. Du `sed` aukščiau yra kietai
+          # įrašyti (`main.css`, `app.js`), o `assets/js` vartas aukščiau
+          # skaito tik JS **importus**. Todėl trečia nuoroda (naujas stilius,
+          # antras scenarijų failas, papildomas `<link>`) praeidavo be žymės:
+          # matuota 2026-11-28 (#595) — `print.css` liko be `?v=`, žingsnis
+          # praėjo rc 0. Vaikas tokiam failui iki ~10 min. gautų seną kopiją
+          # iš GitHub Pages tarpinės atminties.
+          #
+          # Sąmoningai skaitoma **visos** `assets/css` ir `assets/js` nuorodos,
+          # ne trys žinomos: kitaip tas pats defektas grįžtų su ketvirta.
+          python3 - <<'PY'
+          import re, pathlib, sys
+          html = pathlib.Path("_site/index.html").read_text(encoding="utf-8")
+          code = re.compile(r"assets/(?:css|js)/[^?#]+\.(?:css|js)$")
+          bad = []
+          for m in re.finditer(r"""(?:href|src)\s*=\s*(["'])([^"']+)\1""", html):
+              url = m.group(2).strip()
+              path = url.split("?", 1)[0].split("#", 1)[0]
+              if code.search(path) and not re.search(r"\?v=[0-9a-f]{6,40}", url):
+                  bad.append(url)
+          if bad:
+              print(f"::error::Kodo nuoroda be ?v= ({len(bad)}): {', '.join(bad)}")
+              sys.exit(1)
+          print("Kodo nuorodos: visos su ?v=")
+          PY
           echo "versija: $SHA"; grep -o "main.css?v=[a-f0-9]*" _site/index.html | head -1
 
       # Vidinės nuorodos — **surinktame artefakte**, ne repo. `check_published`

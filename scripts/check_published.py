@@ -2348,6 +2348,81 @@ def _version_of(blob: bytes | None) -> str:
     return match.group(0)[3:] if match else ""
 
 
+# `href="…"` / `src='…'` reikšmė — su kabute, kuri ją atidarė (kad nesugriebtų
+# kito atributo). Naudojama tik `index.html` kodo nuorodoms.
+REF_ATTR = re.compile(r"""(?:href|src)\s*=\s*(["'])([^"']+)\1""")
+# Nuoroda yra „svetainės kodas“, jei rodo į `assets/css/*.css` arba
+# `assets/js/*.js`. Paveikslai, `data:` URI ir garso manifestas čia neįeina:
+# jiems `pages.yml` žymos nededa ir nereikia — jie neimportuojami, o prašomi
+# tiesiogiai.
+CODE_REF = re.compile(r"assets/(?:css|js)/[^?#]+\.(?:css|js)$")
+
+
+def shell_version_stamps(blob: bytes | None) -> dict:
+    """Ar **kiekviena** kodo nuoroda `index.html` turi `?v=<commit>` (LL-233).
+
+    Kodėl to reikia. `_version_of()` grąžina **pirmą** rastą žymę ir vadina ją
+    „svetainės versija“. Tai tiesa tik tada, kai žymų tiek pat, kiek kodo
+    nuorodų. `.github/workflows/pages.yml` turi du **kietai įrašytus** `sed`
+    raštus (`main.css`, `app.js`), tad trečia nuoroda (naujas stilius, antras
+    scenarijų failas) lieka be žymės, o naršyklė jai taiko GitHub Pages
+    tarpinę atmintį (~10 min.) — vaikas mato seną failą.
+
+    Šitą defektą nematė nė vienas vartas, ir dviem atžvilgiais:
+      1. `_shell_state()` prieš lyginimą žymę **nuima**, tad trūkstama žymė
+         repo ir gyvo failo skirtumo nepadaro;
+      2. `_version_of()` perskaito tą žymę, kuri yra, tad `deploy_pending`
+         lieka `False`, o sėkmės eilutė rašo „versija <sha>“ — teiginį apie
+         **vieną** nuorodą, tarsi jis galiotų visoms.
+
+    Matuota 2026-11-28 (#595, laikinas veidrodis `…/mirror595`, tas pats
+    `pages.yml` `sed`): įdėjus antrą `<link href="./assets/css/print.css">`,
+    publikavimo žingsnis praėjo (`rc 0`, `leftover` tuščias — jis skaito tik
+    `assets/js` importus), o `check_published.py` toliau rašė „sutampa“ ir
+    „versija <sha>“, nors `print.css` nuoroda žymos neturėjo.
+
+    `versions` — visos skirtingos rastos žymės. Daugiau nei viena reiškia,
+    kad svetainė **mišri** (pusė failų iš vieno commit'o, pusė iš kito):
+    `_version_of()` tokios būsenos neįvardija, nes ima pirmą.
+    """
+    text = "" if blob is None else blob.decode("utf-8", "replace")
+    stamped: list[str] = []
+    unstamped: list[str] = []
+    versions: set[str] = set()
+    for match in REF_ATTR.finditer(text):
+        url = match.group(2).strip()
+        path = url.split("?", 1)[0].split("#", 1)[0]
+        if not CODE_REF.search(path):
+            continue
+        ver = VERSION_PARAM.search(url)
+        if ver:
+            stamped.append(path)
+            versions.add(ver.group(0)[3:])
+        else:
+            unstamped.append(path)
+    return {
+        "stamped": stamped,
+        "unstamped": unstamped,
+        "versions": sorted(versions),
+        "refs": len(stamped) + len(unstamped),
+    }
+
+
+def shell_version_check() -> dict:
+    """`shell_version_stamps()` prieš gyvą `index.html`; be tinklo — tuščia.
+
+    Skaitoma su keitimo žyme, nes būtent žymė yra matavimo objektas: be jos
+    kraštas gali atiduoti seną `index.html`, kuriame žymos dar nėra, ir
+    vartas praneštų apie publikavimo defektą, kurio priežastis — tarpinė
+    atmintis (LL-201 šeima).
+    """
+    status, blob = fetch_answer(cache_busted(LIVE_ROOT + "index.html"), attempts=1)
+    if status != "ok" or blob is None:
+        # Neišmatuota nėra „viskas pažymėta“ (LL-37).
+        return {"measured": False, **shell_version_stamps(None)}
+    return {"measured": True, **shell_version_stamps(blob)}
+
+
 def live_version(fresh: bool = True) -> str:
     """Commit'as, iš kurio sukurta gyva svetainė (`?v=` žymė `index.html`).
 
@@ -2843,6 +2918,13 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "shell_stale": [], "shell_unreachable": [], "shell_count": 0,
         "live_version": "", "repo_version": "", "skipped": True,
     }
+    # LL-233: ar **kiekviena** `index.html` kodo nuoroda turi `?v=`. `check_shell()`
+    # ir `_version_of()` šito nepasako: pirmas žymę nuima, antras ima pirmą
+    # rastą. Be šio matavimo nauja CSS/JS nuoroda publikavimo žingsnyje lieka
+    # be žymės, o vartai toliau rašo „sutampa, versija <sha>“.
+    version_stamps = shell_version_check() if live_bytes_ok else {
+        "measured": False, "stamped": [], "unstamped": [], "versions": [], "refs": 0,
+    }
 
     # Garsas: manifestas lyginamas aukščiau, bet failai — ne. Be šios dalies
     # „sutampa“ galėjo reikšti „manifestas teisingas, o mp3 svetainėje nėra“.
@@ -2942,6 +3024,14 @@ def report(grades: list[int] | None = None, compare_bytes: bool = True,
         "shell_gone": shell.get("shell_gone", []),
         "shell_unreachable": shell["shell_unreachable"],
         "shell_count": shell["shell_count"],
+        # LL-233 — atskiri raktai, nes tai ne „kodas pasenęs“ ir ne „deploy
+        # nepasivijo“, o trečias dalykas: žymė, kurios nėra, tad failas
+        # naršyklėje gali būti bet kurios versijos.
+        "shell_version_refs": version_stamps["refs"],
+        "shell_version_stamped": version_stamps["stamped"],
+        "shell_version_unstamped": version_stamps["unstamped"],
+        "shell_version_values": version_stamps["versions"],
+        "shell_version_measured": version_stamps["measured"],
         "live_version": shell["live_version"],
         "repo_version": shell["repo_version"],
         # Deploy'aus langas. `deploy_pending` reiškia: gyva svetainė pastatyta
@@ -3225,6 +3315,28 @@ def verdict(data: dict) -> dict:
                        f"{first['css_value']})")
     if data.get("shell_gone"):
         reasons.append(f"{len(data['shell_gone'])} svetainės kodo failo nėra")
+    # LL-233: kodo nuoroda be `?v=`. Tai ne „deploy nepasivijo“ (versija gali
+    # būti teisinga) ir ne „kodas pasenęs“ (baitai lygūs): žymės nėra, tad
+    # naršyklė to failo versiją renkasi pati iš GitHub Pages tarpinės atminties.
+    unstamped = data.get("shell_version_unstamped") or []
+    if unstamped:
+        reasons.append(
+            f"{len(unstamped)} svetainės kodo nuoroda be `?v=` "
+            f"({', '.join(unstamped[:3])}) — naršyklė gali imti seną failą")
+    elif (data.get("shell_version_measured") is False
+          and data.get("bytes_checked") and data.get("live_measured")):
+        # Svetainė atsakė, o šio vieno skaitymo nepavyko: ne „visos pažymėtos“
+        # (LL-37). Kai svetainė nepasiekiama apskritai, priežastis jau įvardyta
+        # aukščiau — antra eilutė tik atrodytų kaip antras defektas.
+        reasons.append("svetainės kodo žymų patikra neįvyko")
+    # Mišri versija: visos nuorodos pažymėtos, bet **skirtingais** commit'ais.
+    # Pusė svetainės iš vieno, pusė iš kito — `_version_of()` to nepasako, nes
+    # ima pirmą žymę ir skelbia ją visos svetainės versija.
+    ver_values = data.get("shell_version_values") or []
+    if len(ver_values) > 1:
+        reasons.append(
+            f"svetainės kodas mišrus — {len(ver_values)} skirtingos žymės "
+            f"({', '.join(ver_values[:3])})")
     if data.get("shell_unreachable"):
         reasons.append(f"{len(data['shell_unreachable'])} nepasiekiamas kodas")
     audio = data.get("audio") or {}
@@ -3671,6 +3783,12 @@ def main() -> int:
         # 404, ne laikinas gedimas: kodas nepaskelbtas, o ne ryšys nutrūkęs.
         print(f"SVETAINĖJE NĖRA KODO FAILO — svetainė atsakė 404 "
               f"({len(data['shell_gone'])}): {', '.join(data['shell_gone'])}")
+    if data.get("shell_version_unstamped"):
+        # LL-233: žymė, kurios nėra. Spausdinama po kodo failų eilutės, nes
+        # failas pats svetainėje yra — trūksta tik jo versijos nuorodoje.
+        print(f"KODO NUORODA BE `?v=` — naršyklė gali imti seną failą "
+              f"({len(data['shell_version_unstamped'])}): "
+              f"{', '.join(data['shell_version_unstamped'])}")
     audio = data.get("audio") or {}
     if audio.get("total"):
         kind = "mėginys" if audio.get("sampled") else "visi"
@@ -3832,7 +3950,8 @@ def main() -> int:
                   f"{order_tail}"
                   f"{', rėmas ' + str((data.get('coverage') or {}).get('published_count', 0)) + ' publikuojami failai visi matuoti' if (data.get('coverage') or {}).get('published_count') else ''}"
                   f"{', gylio nuorodos ' + str(data.get('depth_checked', 0)) + ' tikrintos, visos absoliučios' if data.get('depth_checked') and not data.get('depth_relative') and not data.get('depth_skipped') else ''}"
-                  f"{', versija ' + data['live_version'] if data.get('live_version') else ''}).")
+                  f"{', versija ' + data['live_version'] if data.get('live_version') else ''}"
+                  f"{', kodo nuorodos su `?v=`: ' + str(len(data.get('shell_version_stamped') or [])) + '/' + str(data.get('shell_version_refs', 0)) if data.get('shell_version_refs') else ''}).")
         else:
             # `--no-bytes` sąmoningai nelygina baitų, kodo ir garso. Iki #374
             # ši eilutė vis tiek sakydavo „baitai“ ir „svetainės kodas 0 failų“,

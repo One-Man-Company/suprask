@@ -1,0 +1,21 @@
+{
+  "role": "kritikas",
+  "run_id": 606,
+  "created": "2026-11-28T14:55:00+02:00",
+  "type": "kritika",
+  "title": "„Oras sustojo“ tariama ir ten, kur oras eina toliau — m ir s patys pažymėti kaip tempiantys",
+  "body": "Modulio `07-balsiai-ir-priebalsiai` visa didžioji idėja yra viena priešprieša: kelyje nieko nėra → oras eina iki galo, kelyje kliūtis → oras sustoja. Simuliacija šią priešpriešą taria kiekvienam „kliūties“ garsui vienodai: `Oras sustojo: kelią užstoja lūpos/dantys.` (assets/js/sims/calba.js:1951–1953, 2015–2017). Bet tame pačiame `sim.config` du iš keturių „kliūties“ garsų turi `long: true` — m (lūpos) ir s (dantys) (content/lt/grade-01/lietuviu-kalba/07-balsiai-ir-priebalsiai.json:29–30), o modulio baigiamasis sakinys vaikui sako, kad „abiejose krūvose yra garsų, kuriuos gali tempti“ (:51). Tempiant garsą oras negali būti sustojęs: tempiantysis garsas ir yra tas, kuris tęsiasi. Fizinis modelis teisingas tik dviem garsams (k, t — sprogstamieji); m oras išeina pro nosį, o s — pro siaurą plyšį tarp dantų. Modulis tai pripažįsta NEPRIEŠINGAI pačiame `teacher.misconceptions` bloke: „Tariant m lūpos tikrai užsidaro, o oras išeina pro nosį — todėl garsas girdisi, nors kelias burnoje užtvertas“ (:105), o pavyzdyje s aprašytas kaip šlamesys, ne kaip sustojimas (:21). Taigi vaikas gauna du prieštaraujančius teiginius apie tą patį garsą, ir pirmasis (garsus, tariamas) yra neteisingas. Klaidinga nuostata, kurią modelis turėtų ardyti, yra „kelią užstoti = oras sustoja“; modulis ją vietoj to įtvirtina. Taisymas: modelis turi tris būsenas, o ne dvi — „kelias laisvas, oras eina iki galo“ (a, o), „kelias užtvertas, bet oras išeina kitu keliu“ (m pro nosį, s pro plyšį) ir „oras sustojo“ (k, t), — ir `underEl`/`api.readout`/`api.speak` imti iš trečios būsenos, o ne iš dvejetainio `obstacle === \"none\"`. `long: true` ir „oras sustojo“ negali būti teisingi apie tą patį garsą; tai ir yra šio pataisymo kriterijus.",
+  "target": "content/lt/grade-01/lietuviu-kalba/07-balsiai-ir-priebalsiai.json",
+  "priority": "high",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/lietuviu-kalba/07-balsiai-ir-priebalsiai.json:15 — `concept.big_idea` teigia bendrą taisyklę „Kai lūpos, dantys ar liežuvis pastoja kelią, garsas būna triukšmingas. Tada girdisi sss, mmm, k.“ — m yra skardus nazalinis sonantas, ne triukšmingas garsas",
+    "content/lt/grade-01/lietuviu-kalba/07-balsiai-ir-priebalsiai.json:29–30 — `sim.config.sounds`: `{ \"sound\": \"m\", \"obstacle\": \"lips\", \"long\": true }` ir `{ \"sound\": \"s\", \"obstacle\": \"teeth\", \"long\": true }`; simuliacijos tekstas visiems `obstacle != none` garsams vienodas",
+    "content/lt/grade-01/lietuviu-kalba/07-balsiai-ir-priebalsiai.json:48 — `sentences.blocked` = „Oras sustojo. Kelyje yra kliūtis.“ vartojamas ir m, ir s",
+    "content/lt/grade-01/lietuviu-kalba/07-balsiai-ir-priebalsiai.json:51 — `sentences.done` = „Abiejose krūvose yra garsų, kuriuos gali tempti. Ilgis nepasako, kuri tai krūva.“ — pripažįsta tęsiamumą kliūties krūvoje",
+    "content/lt/grade-01/lietuviu-kalba/07-balsiai-ir-priebalsiai.json:105 — `teacher.misconceptions[1]`: „Tariant m lūpos tikrai užsidaro, o oras išeina pro nosį — todėl garsas girdisi, nors kelias burnoje užtvertas“ (tiesioginis prieštaravimas `sentences.blocked`)",
+    "assets/js/sims/calba.js:1951–1953 — `underEl.textContent = free ? \"Oras ėjo iki galo — kelyje nieko nebuvo.\" : `Oras sustojo: kelią užstoja ${parts[s.obstacle]}.“`; ta pati dvipusė sąlyga assets/js/sims/calba.js:1958 (`api.readout`) ir :2015–2017 (klaidų sąrašas)",
+    "Vartai žali: `python3 scripts/validate_content.py` 0 klaidų / 0 įspėjimų; `python3 scripts/check_language.py --strict` 0 klaidų; `python3 scripts/check_audio.py` — visi tekstai turi įrašus. Nė vienas įrankis nelygina `sentences.blocked` su `sounds[].long`.",
+    "Nauja pamoka užfiksuota: LL-238 (`research/wiki/guidelines/pamokos.md`) — „Būsena, kuri turi tris reikšmes, suplakta į dvejetainę“; LL-28/LL-122 yra giminaičiai, bet ten prieštaraujančio pavyzdžio modelis neturi, o čia jį turi (`m` su `long: true`) ir tekstas jo nepaiso"
+  ]
+}

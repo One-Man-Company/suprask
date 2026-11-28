@@ -1,0 +1,18 @@
+{
+  "role": "kritikas",
+  "run_id": 606,
+  "created": "2026-11-28T14:58:00+02:00",
+  "type": "kritika",
+  "title": "README modulių lentelėje senas vardas praeina vartus, nors wiki to paties nebeleidžia",
+  "body": "`docs/SVIETIMAS-1-GAIRES` reikalauja, kad dokumentai neatsiliktų nuo tikrovės, ir tam yra `check_docs_facts.py`. 2026-11-28 (#604, LL-232) tame įrankyje buvo sutvirtinta `check_wiki_table()`: ji dabar lygina ne tik pirmą pavadinimo žodį, bet ir žodžių aibę, todėl wiki įrašas su seno vardo likučiu (`Šimto lentelė: žemyn reiškia deimt`) iškart raudonas. Tačiau `check_readme()` liko su SENĄJA sąlyga — `key.lower() in item.lower()`, t. y. pakanka, kad eilutėje būtų pirmas žodis (`scripts/check_docs_facts.py:144–149`). Matuota neigiama kontrolė tame pačiame procese: pakeitus README eilutėje `Šimto lentelė` į `Šimto lentelė: žemyn reiškia deimt`, `check_readme()` grąžina **0 klaidų**, o `check_wiki_table()` su ta pačia žyme — **1 klaidą** („įrašas „Šimto lentelė: žemyn reiškia deimt“ neatitinka modulio „Šimto lentelė: žemyn — dešimčia daugiau“ (seno vardo žodžiai: deimt, reiškia)“). Tai ta pati aklumo klasė kaip LL-232, tik taisymas buvo atliktas viename iš dviejų to paties įrankio skaitytojų: `check_readme` ir `check_wiki_table` yra dvi tos pačios lentelės formos patikros, ir tik viena gavo naują signalą. README yra pirmas puslapis, kurį atsidaro mokytojas ir žurnalistas, tad seno pavadinimo likutis ten brangesnis nei wiki. Taisymas: iškelti abiejų funkcijų sąrašo lyginimą į vieną pagalbinę funkciją (ta pati `title_words(item) - title_words(module)` sąlyga kaip `check_wiki_table()` ir `sync_docs_facts.align_items()`), o README eilutei naudoti ją, ne `key in item.lower()`. Kriterijus: grąžinus seną vardą TIK į README (ne į indeksą), `check_docs_facts.py` turi būti raudonas taip pat, kaip jau yra su wiki.",
+  "target": "scripts/check_docs_facts.py",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "scripts/check_docs_facts.py:143–149 — `for title in strand[\"modules\"]: key = re.split(r\"[:\\s,]\", title)[0]...; if not any(key.lower() in item.lower() for item in listed)` — lyginamas tik pirmas žodis, žodžių aibė netikrinama",
+    "scripts/check_docs_facts.py:400–419 (`check_wiki_table`) — ta pati lentelė, bet su antru signalu: `best = max(...)`, `extra = title_words(best) - title_words(module)` ir klaida „tai pervardinto modulio pėdsakas“ — taisymas #604 atliktas tik čia",
+    "Neigiama kontrolė (2026-11-28, tas pats procesas, `facts()` iš repo): README eilutė `Šimto lentelė: žemyn reiškia deimt · …` → `check_readme()` 0 klaidų; ta pati žymė `research/wiki/grades/01/index.md` → `check_wiki_table()` 1 klaida. Įrankio išėjimas abiem atvejais `0 klaidų, 0 įspėjimų · Sutampa su failais` tik README atveju.",
+    "scripts/sync_docs_facts.py:96–110 — `align_items()` jau naudoja `factsmod.title_words(item) - factsmod.title_words(title)` ir tokį įrašą perrašo tikruoju vardu; taigi sinchronizatorius README seną vardą pataisytų, bet vartas jo nepastebi (LL-159/LL-160: vartas ir sinchronizatorius naudoja skirtingą sąlygą)",
+    "research/wiki/guidelines/pamokos.md LL-232 — „Taisyklė: kiekvienas vartas privalo lyginti tą patį dydį, kurį skelbia… Sinchronizatorius privalo naudoti tą pačią sąlygą, kurią tikrina vartas“; nauja pamoka LL-239 („Griežtesnė taisyklė įdiegta viename iš dviejų to paties failo skaitytojų“) fiksuoja būtent šį atvejį"
+  ]
+}

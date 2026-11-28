@@ -1,0 +1,21 @@
+{
+  "role": "kritikas",
+  "run_id": 606,
+  "created": "2026-11-28T15:00:00+02:00",
+  "type": "kritika",
+  "title": "1 klasei neleidžiama daugybos, o muzikos `why` sprendžia 3 × 2 × 1",
+  "body": "`research/wiki/curriculum/matematika-1-klase.md:70–75` formuluoja griežtą platformos apimties ribą: „Daugybos ir dalybos — pradedama 2 klasėje… Tai griežta platformos apimties riba: jokia daugybos užduotis 1 klasės turinyje neturi atsirasti, net ‚lengva' forma.“ Šaltinis tą patį sako du kartus (`sources/pradinio-bp-rekomendacijos-2024.txt:752–755`, `:786–789`). Modulio `content/lt/grade-01/muzika/04-dermes-garsai.json` tema yra teisėta: 1–2 kl. muzikos kūrybos programa prašo „tris skirtingas gaidas išdėstyti šešiais nepasikartojančiais būdais“ (`:3526–3536`), ir modelis tai daro išvardijant — `assets/js/sims/muzika.js:1264` žymi pažangą pagal `found.length >= TOTAL`, o `TOTAL` imamas iš `geFactorial`, bet vaikas eiles renka spausdamas vietas, ne daugindamas. Problema ta, kad užduoties paaiškinimas, kurį vaikas skaito po atsakymo, buvo parašytas kaip sandauga: `why` = „Trys gaidos duoda 3 × 2 × 1, tai yra šešias eiles“ (`:83`). 6–7 m. vaikas, kuriam daugyba dar nepradėta, gauna du simblius, kurių negali perskaityti, ir teiginį, kuris pasitvirtina daugyba, nors modelis eiles skaičiuoja kaip rastas. Taisymas: `why` formuluojama iš to, ką modelis rodo („kai pirma gaida sol — dar dvi eilės; kai mi — dar dvi… viso šešios“) arba tiesiog „šešios eilės, nes kiekvienai pirmai gaidai dar yra du būdai sudėlioti likusias“. Kriterijus: `grep -n \"×\" content/lt/grade-01/*/*.json` neturi rasti daugybos ženklo vaikui skaitomame lauke — dabar randa būtent šį. `hint` („Pirmą gaidą renkiesi iš trijų, antrą — iš dviejų“) yra ribinė: jis aprašo pasirinkimus, ne sandaugą, bet su `why` kartu sudaro daugybos taisyklę, tad taisant `why` verta jį atitaisyti į „po pirmos gaidos liko dvi“.",
+  "target": "content/lt/grade-01/muzika/04-dermes-garsai.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "content/lt/grade-01/muzika/04-dermes-garsai.json:83 — `why`: „Trys gaidos duoda 3 × 2 × 1, tai yra šešias eiles.“ — vaikui skaitomas laukas; `check_language.py` jį tikrina dėl sakinio ilgio, ne dėl matematikos lygio",
+    "content/lt/grade-01/muzika/04-dermes-garsai.json:82 — `hint`: „Pirmą gaidą renkiesi iš trijų, antrą — iš dviejų.“ — kartu su `why` sudaro daugybos taisyklę",
+    "content/lt/grade-01/muzika/04-dermes-garsai.json:10 — `outcomes[1]` „Suskaičiuoju, kiek skirtingų eilių duoda trys gaidos“; :113 `teacher.offline` „Pabaigoje suskaičiuokite, kiek eilių radote: turi išeiti šešios“",
+    "research/wiki/curriculum/matematika-1-klase.md:70–75 — „Daugybos ir dalybos — pradedama 2 klasėje… jokia daugybos užduotis 1 klasės turinyje neturi atsirasti, net „lengva“ forma“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:752–755 — „2 klasė • Mokysis daugybos ir dalybos“; :786–789 — „2-oje klasėje pradedama mokytis daugybos ir dalybos“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:3526–3536 — muzikos programos sąlyga: „tris skirtingas gaidas išdėstyti šešiais nepasikartojančiais būdais“ — tai išvardijimas, ne sandauga, todėl tema modulyje teisėta",
+    "assets/js/sims/muzika.js:1264 ir :1079 — pažanga žymima `found.length >= TOTAL`, `TOTAL = geFactorial(IDS.length)`; vaikas eiles randa spausdamas vietas, todėl `why` gali sakyti tą patį, ką matuoja kodas, be daugybos ženklo",
+    "Vartai žali: `python3 scripts/validate_content.py` 0 klaidų / 0 įspėjimų; `python3 scripts/check_language.py --grade 1 --strict` 0 klaidų (žodžių skaičius telpa; ar sąvoka priklauso 1 klasei — netikrinama); `python3 scripts/check_audio.py` — įrašas yra"
+  ]
+}

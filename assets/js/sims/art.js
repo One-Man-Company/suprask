@@ -458,6 +458,15 @@ export const art = {
     </g>`;
   },
 
+  /** Vėliavėlė ant kuolelio — tikslo žymė. `x` — kuolelio apačia. */
+  pin(x, baseY, s = 1, color = "#c8503f") {
+    return `<g transform="translate(${x} ${baseY}) scale(${s})" stroke-linejoin="round">
+      <line x1="0" y1="0" x2="0" y2="-26" stroke="#8a5c33" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M1.4 -25 L16 -21 L1.4 -16.6 Z" fill="${color}" stroke="#8f3530" stroke-width="1.6"/>
+      <ellipse cx="0" cy="1.4" rx="6" ry="1.8" fill="#5a3d16" opacity=".3"/>
+    </g>`;
+  },
+
   /** Paprastas vaiko figūrėlė — kad būtų aišku, kas kur stovi. */
   kid(x, baseY, s = 1, body = "#ff8a3d", skin = "#f2c9a0") {
     return `<g transform="translate(${x} ${baseY}) scale(${s})">
@@ -1212,6 +1221,77 @@ export const art = {
           <path d="M26 10 Q23.6 7.6 22.2 10.2" fill="#c0564a" opacity=".9"/>
           <ellipse cx="18.1" cy="18.4" rx="1.15" ry="1.7" fill="#5a4326" transform="rotate(-14 18.1 18.4)"/>
           <ellipse cx="21.6" cy="25.2" rx="1.05" ry="1.6" fill="#5a4326" transform="rotate(12 21.6 25.2)"/>
+        </g>`;
+      }
+      if (kind === "namas") {
+        /* Namas su dvišlaičiu stogu, durelėmis ir dviem langais. Stogas
+           trikampis, o ne stačiakampis — todėl namas neatrodo kaip dėžė
+           (LL-13), o vaikas jį atpažįsta be užrašo. */
+        return `<g stroke-linejoin="round">
+          <path d="M6.5 17 L20 6.5 L33.5 17 Z" fill="#c8503f" stroke="#8f3530" stroke-width="2"/>
+          <rect x="9.5" y="17" width="21" height="18" rx="1.2" fill="#f4e7cf" stroke="#8a6239" stroke-width="2"/>
+          <rect x="17.4" y="24.4" width="5.2" height="10.6" rx="1" fill="#8a6239"/>
+          <rect x="11.6" y="19.8" width="4.4" height="4.4" rx=".8" fill="#9fd0ea" stroke="#5b7f96" stroke-width="1.2"/>
+          <rect x="24" y="19.8" width="4.4" height="4.4" rx=".8" fill="#9fd0ea" stroke="#5b7f96" stroke-width="1.2"/>
+        </g>`;
+      }
+      if (kind === "miestas") {
+        /* Dvi skirtingo aukščio namų pora: miestas skiriasi nuo vieno namo
+           tuo, kad namų daugiau, o ne tuo, kad didesnis. */ 
+        return `<g stroke-linejoin="round">
+          <path d="M4 20 L12 13 L20 20 Z" fill="#c8503f" stroke="#8f3530" stroke-width="1.6"/>
+          <rect x="6.5" y="20" width="11" height="14" rx="1" fill="#f4e7cf" stroke="#8a6239" stroke-width="1.8"/>
+          <rect x="10.4" y="25" width="3.2" height="9" rx=".8" fill="#8a6239"/>
+          <path d="M20.5 25 L28.5 17.5 L36.5 25 Z" fill="#d98e3c" stroke="#8f5f24" stroke-width="1.6"/>
+          <rect x="23" y="25" width="11" height="9" rx="1" fill="#f4e7cf" stroke="#8a6239" stroke-width="1.8"/>
+          <rect x="26.8" y="28" width="3.2" height="6" rx=".8" fill="#8a6239"/>
+        </g>`;
+      }
+      if (kind === "dviratis") {
+        /* Du ratai, rėmas, sėdynė ir vairas. Ratai yra tai, kas skiria
+           dviratį nuo bet kurio kito daikto, todėl jie piešiami pirmi ir
+           lieka matomi (LL-13). */
+        return `<g stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <circle cx="10.5" cy="28" r="6.6" stroke="#3a4450" stroke-width="2.2"/>
+          <circle cx="29.5" cy="28" r="6.6" stroke="#3a4450" stroke-width="2.2"/>
+          <g stroke="#2f5d8a" stroke-width="2.1">
+            <path d="M10.5 28 L18.4 16.6 L26.6 17.8 L29.5 28"/>
+            <path d="M18.4 16.6 L16.2 26.4"/>
+          </g>
+          <g stroke="#2f5d8a" stroke-width="2.4">
+            <path d="M18.4 16.6 L15.6 13.6 H20.4"/>
+            <path d="M26.6 17.8 L28.2 13.4 L32.4 12.6"/>
+          </g>
+          <circle cx="10.5" cy="28" r="1.5" fill="#e8eef3" stroke="#3a4450" stroke-width="1"/>
+        </g>`;
+      }
+      if (kind === "valtis") {
+        /* Valtis su korpusu, stiebu ir buriaplokšte. Vandens linijos čia
+           NĖRA sąmoningai: scena pati piešia upę, o valtis, padėta ant
+           kiemo žolės, su vandens linija teigtų, kad kieme yra vandens
+           (LL-13 — piešinys ir užrašas turi sutarti). */
+        return `<g stroke-linejoin="round">
+          <path d="M5.6 24.5 Q20 35 34.4 24.5 L30.4 21.2 H9.6 Z" fill="#b07b4a" stroke="#8a5c33" stroke-width="2"/>
+          <path d="M20 21.2 V8" stroke="#8a5c33" stroke-width="2"/>
+          <path d="M21.6 8.6 L29.4 18.2 H21.6 Z" fill="#f6f8f9" stroke="#8a5c33" stroke-width="1.6"/>
+          <path d="M8.6 25.4 Q20 29.4 31.4 25.4" stroke="#8a5c33" stroke-opacity=".45"
+                stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        </g>`;
+      }
+      if (kind === "autobusas") {
+        /* Autobusas: ilgas stačiakampis su eile langų ir dviem ratais.
+           Nuo mašinėlės skiriasi ilgiu ir langu eile, o ne spalva (LL-13). */
+        return `<g stroke-linejoin="round">
+          <rect x="3.5" y="9" width="33" height="19" rx="3" fill="#f2b13c" stroke="#8a6a25" stroke-width="2"/>
+          <g fill="#dceef7" stroke="#8a6a25" stroke-width="1.2">
+            <rect x="6.5" y="12.6" width="6" height="5.4" rx="1"/>
+            <rect x="14.5" y="12.6" width="6" height="5.4" rx="1"/>
+            <rect x="22.5" y="12.6" width="6" height="5.4" rx="1"/>
+            <rect x="30" y="12.6" width="4" height="5.4" rx="1"/>
+          </g>
+          <path d="M3.5 22.4 H36.5" stroke="#8a6a25" stroke-width="1.6"/>
+          <circle cx="10.5" cy="29.4" r="3.2" fill="#3f4a52" stroke="#2a3238" stroke-width="1.3"/>
+          <circle cx="29.5" cy="29.4" r="3.2" fill="#3f4a52" stroke="#2a3238" stroke-width="1.3"/>
         </g>`;
       }
       if (kind === "baterija") {

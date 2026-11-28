@@ -7224,6 +7224,340 @@ const augaloDalys = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 42. Transporto priemonė maršrutui                                   */
+/* ------------------------------------------------------------------ */
+/* Modelis: priemonė pasirenkama pagal kelią, ne pagal greitį. Vieta turi
+   tris taškus — iš kur priemonė pajuda, kur ji sustoja, jei kelias per
+   ilgas, ir kur yra tikslas. Valtis per upę pradeda vandenyje, o kitos
+   priemonės — ant kranto, todėl pradžios taškas skiriasi pagal priemonę.
+   Kodėl vietos yra kode, o ne `sim.config`: tai geometrija, o turinys
+   nurodo tik pavadinimus ir sakinius (LL-33). */
+const TP_S = 1.25;
+const TP_ICON = { pesciomis: "kid", dviratis: "dviratis", valtis: "valtis", autobusas: "autobusas" };
+/* Kiek piktogramos vienetų (40 vienetų dėžėje) yra nuo dėžės viršaus iki
+   tos vietos, kuri liečia žemę ar vandenį. Skaičius NĖRA parenkamas akimis —
+   jis išvedamas iš `art.pictogram` kelio duomenų:
+     dviratis — ratų centras 28 + spindulys 6,6 = 34,6;
+     autobusas — ratų centras 29,4 + spindulys 3,2 = 32,6;
+     valtis — korpuso dugnas, kreivės `Q20 35` žemiausias taškas = 29,75,
+              pakeltas 2,5 vieneto, kad valtis plauktų, o ne gultų ant dugno.
+   Be šio skirtumo ratai grimzta 8 px į kelią arba priemonė „skrieja“ virš jo
+   (LL-03: piešinys turi rodyti būtent tai, ką sako modelis). */
+const TP_DROP = { dviratis: 34.6, autobusas: 32.6, valtis: 32.2 };
+/* Trys vietos. `none` — iš kur priemonė pajuda ir kur lieka, jei negali
+   judėti, `part` — kur sustoja priemonė, kuriai kelias per ilgas, `goal` —
+   kur ji pasiekia tikslą. Tikslo žymė (vėliavėlė) NĖRA atskira reikšmė:
+   ji piešiama `goal` taške (`terrain()`), todėl dviejų geometrijos kopijų
+   negali būti (LL-33).
+   Kodėl vietos yra kode, o ne `sim.config`: tai geometrija, o turinys
+   nurodo tik pavadinimus ir sakinius (LL-33). */
+const TP_SPOTS = {
+  kiemas: {
+    none: { x: 58, y: 252 }, boat: { x: 58, y: 252 },
+    part: { x: 116, y: 252 }, goal: { x: 214, y: 252 },
+  },
+  upe: {
+    /* Upė — vertikali vandens juosta per vidurį (x 152–248), todėl matomi
+       ABU krantai: kairysis (pradžia) ir dešinysis (tikslas). Valtis plaukia
+       vandenyje ir pasiekia kitą krantą; pėsčiasis, įbridęs, sustoja
+       vandenyje — tai ir yra „upė gili, o tilto nėra“.
+       `pin` skiriasi nuo `goal` tik čia ir sąmoningai: vėliavėlė stovi
+       KRANTE, o valtis negali išlipti į krantą, todėl ji lieka vandenyje
+       prie pat vėliavėlės. Kitur `pin` nerašomas ir vėliavėlė piešiama
+       `goal` taške — vienas geometrijos šaltinis (LL-33). */
+    none: { x: 52, y: 240 }, boat: { x: 196, y: 226 },
+    part: { x: 176, y: 250 }, goal: { x: 222, y: 240 },
+    pin: { x: 268, y: 240 },
+  },
+  miestas: {
+    none: { x: 40, y: 248 }, boat: { x: 40, y: 248 },
+    part: { x: 104, y: 248 }, goal: { x: 198, y: 248 },
+  },
+};
+
+const transportoPriemoneMarsrutui = {
+  mount({ stage, controls, api, config = {} }) {
+    const S = config.sentences || {};
+    const OUT = config.outcomes || {};
+    const TRIPS = (Array.isArray(config.trips) ? config.trips : []).filter(Boolean);
+    const VEH = (Array.isArray(config.vehicles) ? config.vehicles : []).filter(Boolean);
+    const esc = (t) => String(t ?? "").replace(/[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    /* --- Sutarties vartai: nesuderinta scena pasakoma žodžiais (LL-33) --- */
+    const problems = [];
+    if (TRIPS.length < 3) problems.push("reikia bent trijų tikslų");
+    if (VEH.length < 3) problems.push("reikia bent trijų priemonių");
+    TRIPS.forEach((t) => {
+      if (!t.id || !t.label) problems.push("tikslas be id ar užrašo");
+      else if (!TP_SPOTS[t.id]) problems.push(`tikslui „${t.id}“ nėra scenos vietos`);
+    });
+    VEH.forEach((v) => {
+      if (!v.id || !v.label || !v.word) problems.push("priemonė be id, užrašo ar žodžio");
+      else if (!TP_ICON[v.id]) problems.push(`priemonei „${v.id}“ nėra piešinio`);
+    });
+    const pairs = [];
+    TRIPS.forEach((t) => VEH.forEach((v) => {
+      const out = OUT[`${t.id}|${v.id}`];
+      if (!out || !["goal", "part", "none"].includes(out.reach)) {
+        problems.push(`nėra rezultato „${t.id}|${v.id}“`);
+        return;
+      }
+      if (!out.say || typeof S[out.say] !== "string" || !S[out.say].trim()) {
+        problems.push(`rezultato „${t.id}|${v.id}“ sakinio nėra`);
+      }
+      pairs.push({ t, v, out });
+    }));
+    /* Kiekvienas tikslas turi turėti tinkamą priemonę, o kiekviena priemonė —
+       bent vieną tikslą: kitaip modelis turėtų „visada netinkamą“ pinkles
+       (LL-28). */
+    TRIPS.forEach((t) => {
+      if (pairs.length && !pairs.some((p) => p.t.id === t.id && p.out.reach === "goal")) {
+        problems.push(`tikslui „${t.id}“ nėra nė vienos tinkamos priemonės`);
+      }
+    });
+    VEH.forEach((v) => {
+      if (pairs.length && !pairs.some((p) => p.v.id === v.id && p.out.reach === "goal")) {
+        problems.push(`priemonė „${v.id}“ netinka nė vienam tikslui`);
+      }
+    });
+    ["start", "startNote", "pickVehicle", "arrived", "partly", "blocked", "nextTrip",
+      "chooseAnother", "foundPrefix", "foundOf", "again", "broken"].forEach((k) => {
+      if (typeof S[k] !== "string" || !S[k].trim()) problems.push(`sakinio „${k}“ nėra`);
+    });
+    TRIPS.forEach((t) => {
+      const fact = (S.tripFacts || {})[t.id];
+      if (typeof fact !== "string" || !fact.trim()) {
+        problems.push(`tikslo „${t.id}“ aplinkos sakinio nėra`);
+      }
+    });
+    if (problems.length) {
+      console.error(`transporto-priemone-marsrutui: ${problems.join("; ")}`);
+      stage.innerHTML = `<p class="sim-note" style="margin:0">${esc(S.broken || "Scena nesuderinta.")}</p>`;
+      controls.innerHTML = "";
+      api.readout(S.broken || "Scena nesuderinta.");
+      return null;
+    }
+
+    let tripIdx = 0;
+    let vehIdx = -1;
+    let reported = false;
+    const solved = new Set();
+
+    stage.innerHTML = `
+      <div style="width:100%;max-width:30rem;margin:0 auto;min-width:0">
+        <svg id="tp-scene" viewBox="0 0 360 300" width="100%"
+             style="display:block;max-width:360px;height:auto;margin:0 auto"
+             role="img" aria-label="Kelio scena"></svg>
+        <p id="tp-fact" style="margin:.4rem 0 0;min-width:0;text-align:center;font-size:.92rem;
+           line-height:1.3;font-weight:700;overflow-wrap:anywhere"></p>
+        <p id="tp-found" style="margin:.15rem 0 0;min-width:0;text-align:center;font-size:.92rem;
+           line-height:1.3;color:var(--ink-soft);overflow-wrap:anywhere"></p>
+      </div>`;
+
+    controls.innerHTML = `
+      <div style="display:grid;gap:.55rem;width:100%;max-width:34rem;margin:0 auto;min-width:0">
+        <div id="tp-trips" role="group" aria-label="Tikslas"
+             style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,8rem),1fr));
+             gap:.4rem;min-width:0"></div>
+        <div id="tp-veh" role="group" aria-label="Priemonė"
+             style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+             gap:.4rem;min-width:0"></div>
+        <button class="btn ghost" id="tp-reset" type="button"
+                style="min-height:48px;font-size:.95rem">${esc(S.again)}</button>
+      </div>`;
+
+    const svg = stage.querySelector("#tp-scene");
+    const factEl = stage.querySelector("#tp-fact");
+    const foundEl = stage.querySelector("#tp-found");
+    const tripsBox = controls.querySelector("#tp-trips");
+    const vehBox = controls.querySelector("#tp-veh");
+    const resetBtn = controls.querySelector("#tp-reset");
+
+    tripsBox.innerHTML = TRIPS.map((t, i) => `<button class="btn secondary" type="button"
+      data-trip="${i}" aria-pressed="false"
+      style="min-height:52px;min-width:0;padding:.4rem .3rem;font-size:.95rem;font-weight:800;
+      line-height:1.15;overflow-wrap:anywhere">${esc(t.label)}</button>`).join("");
+    vehBox.innerHTML = VEH.map((v, i) => `<button class="btn secondary" type="button"
+      data-veh="${i}" aria-pressed="false"
+      style="min-height:56px;min-width:0;padding:.4rem .3rem;font-size:.95rem;font-weight:800;
+      line-height:1.15;overflow-wrap:anywhere">${esc(v.label)}</button>`).join("");
+
+    const trip = () => TRIPS[tripIdx] || TRIPS[0];
+    const veh = () => (vehIdx >= 0 ? VEH[vehIdx] : null);
+    const outcome = () => (veh() ? OUT[`${trip().id}|${veh().id}`] : null);
+
+    /* Priemonė, kuri negali pajudėti vietoje (`none`), lieka pradžios taške;
+       ta, kuriai kelias per ilgas (`part`), pajuda ir sustoja kelyje. */
+    function spotFor(which) {
+      const spots = TP_SPOTS[trip().id] || TP_SPOTS.kiemas;
+      if (which === "none") {
+        return veh() && veh().id === "valtis" ? spots.boat : spots.none;
+      }
+      return spots[which] || spots.none;
+    }
+
+    function vehicleArt(v, x, y, vx) {
+      /* `data-vx` — kur priemonė yra kelyje (`none` | `part` | `goal`).
+         Zondas perskaito būtent šitą, o ne spėlioja iš pikselių (LL-03). */
+      const attrs = `data-vx="${esc(vx)}"`;
+      if (v.id === "pesciomis") return `<g ${attrs}>${art.kid(x, y, 1.2)}</g>`;
+      /* `TP_DROP` — iš art.pictogram 40 vienetų dėžės geometrijos, todėl
+         dviračio ratai ir autobuso ratai liečia žemę, o valties korpusas —
+         vandenį; kitaip priemonė „skristų“ virš kelio (LL-03, LL-13). */
+      return `<g ${attrs}>${art.pictogram(TP_ICON[v.id], x - 20 * TP_S,
+        y - TP_DROP[v.id] * TP_S, TP_S)}</g>`;
+    }
+
+    function terrain() {
+      const spots = TP_SPOTS[trip().id];
+      /* Tikslo žymė pažymima `data-pin`, kad zondas galėtų išmatuoti, ar
+         priemonė tikrai atsiduria PRIE jos, o ne kur nors kitur (LL-40).
+         Vėliavėlė stovi `pin` taške, jei jis duotas (upėje — krante), o
+         kitu atveju — `goal` taške. */
+      const at = spots.pin || spots.goal;
+      const pin = `<g data-pin="${at.x},${at.y}">${art.pin(at.x, at.y, 1)}</g>`;
+      if (trip().id === "kiemas") {
+        return `${art.hills(360, 200)}
+          ${art.soil(0, 232, 360, 68, "tp")}
+          ${art.grass(24, 244, 1)}${art.grass(196, 248, 0.8)}${art.grass(330, 244, 0.9)}
+          ${art.pictogram("namas", 240, 190, 1.5)}
+          ${pin}
+          ${art.stroke("M34 252 L238 252", 3, "#8a6239", { dash: "9 8", opacity: 0.5 })}`;
+      }
+      if (trip().id === "upe") {
+        /* Tilto NĖRA sąmoningai: sakinys pasako, kad čia jo nėra, o
+           piešinys neturi teigti priešingai (LL-13, LL-33). Vanduo yra
+           VERTIKALI juosta per vidurį, kylanti iš tolio, todėl matomi abu
+           krantai ir tai, kad upė yra kliūtis kelyje, o ne puošmena šone. */
+        return `${art.hills(360, 226)}
+          ${art.soil(0, 232, 152, 68, "tp")}
+          ${art.soil(248, 232, 112, 68, "tp")}
+          ${art.river(152, 196, 96, 104, "tp")}
+          ${art.tree(30, 234, 0.28, "vasara")}
+          ${art.tree(330, 232, 0.22, "vasara")}
+          ${art.grass(36, 246, 0.8)}${art.grass(326, 248, 0.8)}
+          ${pin}`;
+      }
+      return `${art.hills(360, 192)}
+        ${art.soil(0, 222, 360, 78, "tp")}
+        ${art.pictogram("miestas", 238, 186, 1.6)}
+        ${pin}
+        ${art.stroke("M30 248 L240 248", 4, "#8a6239", { dash: "14 10", opacity: 0.45 })}
+        ${art.tree(18, 236, 0.3, "vasara")}${art.grass(88, 254, 0.85)}${art.grass(196, 256, 0.9)}`;
+    }
+
+    function scene() {
+      const out = outcome();
+      const which = !out ? "none" : out.reach;
+      const spot = spotFor(which);
+      return `${art.defs("tp")}
+        <rect x="0" y="0" width="360" height="300" rx="16" fill="url(#tp-sky)"/>
+        ${art.sun(320, 36, 11, "tp")}
+        ${art.cloud(58, 44, 0.8)}
+        ${terrain()}
+        ${veh() ? vehicleArt(veh(), spot.x, spot.y, which) : ""}`;
+    }
+
+    function sceneLabel() {
+      const t = trip();
+      if (!veh()) return `${t.label}. ${S.pickVehicle}`;
+      const out = outcome();
+      /* Trys galimi rezultatai, o ne du: priemonė gali įveikti DALĮ kelio
+         (dviračiu į kitą miestą). Jei „dalis“ būtų vadinama „netinka“,
+         vaikas negautų grįžtamojo ryšio apie tai, kas vis dėlto įvyko
+         (T2.3, T5.1). */
+      const where = out.reach === "goal" ? S.arrived
+        : out.reach === "part" ? S.partly : S.blocked;
+      return `${t.label} ${veh().word}. ${where}`;
+    }
+
+    function paint() {
+      tripsBox.querySelectorAll("[data-trip]").forEach((b) => {
+        const on = Number(b.dataset.trip) === tripIdx;
+        b.setAttribute("aria-pressed", String(on));
+        b.style.background = on ? "var(--ink)" : "var(--paper-2)";
+        b.style.color = on ? "var(--paper)" : "var(--ink)";
+        b.style.borderColor = on ? "var(--ink)" : "var(--line)";
+      });
+      vehBox.querySelectorAll("[data-veh]").forEach((b) => {
+        const on = Number(b.dataset.veh) === vehIdx;
+        b.setAttribute("aria-pressed", String(on));
+        b.className = on ? "btn" : "btn secondary";
+        b.style.minHeight = "56px";
+      });
+      svg.innerHTML = scene();
+      svg.setAttribute("aria-label", sceneLabel());
+      factEl.textContent = (S.tripFacts || {})[trip().id] || "";
+      foundEl.textContent = solved.size
+        ? `${S.foundPrefix} ${solved.size} ${S.foundOf} ${TRIPS.length}.`
+        : S.startNote;
+    }
+
+    function chooseVehicle(i) {
+      vehIdx = vehIdx === i ? -1 : i;
+      const v = veh();
+      if (!v) {
+        api.readout(S.start);
+        api.note(S.pickVehicle);
+        api.speak(S.pickVehicle);
+        paint();
+        return;
+      }
+      const out = outcome();
+      const ok = out.reach === "goal";
+      if (ok) solved.add(trip().id);
+      const where = ok ? S.arrived : out.reach === "part" ? S.partly : S.blocked;
+      api.readout(`${trip().label} ${v.word}. ${where}`);
+      /* Grįžtamasis ryšys: (1) kas įvyko, (2) kodėl, (3) ką daryti toliau
+         (T2.3). Klaida nebaudžiama — priemonę galima rinktis iš naujo. */
+      api.note(`${S[out.say]} ${ok ? S.nextTrip : S.chooseAnother}`);
+      api.speak(S[out.say]);
+      paint();
+      if (solved.size === TRIPS.length && !reported) {
+        reported = true;
+        api.progress({ correct: true });
+      }
+    }
+
+    tripsBox.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-trip]");
+      if (!b) return;
+      tripIdx = Number(b.dataset.trip);
+      vehIdx = -1;
+      api.readout(`${trip().label}. ${S.pickVehicle}`);
+      api.note((S.tripFacts || {})[trip().id] || "");
+      api.speak((S.tripFacts || {})[trip().id] || "");
+      paint();
+    });
+
+    vehBox.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-veh]");
+      if (b) chooseVehicle(Number(b.dataset.veh));
+    });
+
+    resetBtn.addEventListener("click", () => {
+      tripIdx = 0;
+      vehIdx = -1;
+      solved.clear();
+      reported = false;
+      api.readout(S.start);
+      api.note(S.startNote);
+      api.speak(S.again);
+      paint();
+      resetBtn.focus();
+    });
+
+    paint();
+    api.readout(S.start);
+    api.note(S.startNote);
+    api.speak(S.startNote);
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "gyvybes-zenklai": gyvybesZenklai,
   "energijos-saltiniai": energijosSaltiniai,
@@ -7248,4 +7582,5 @@ export const SIMS = {
   "stebejimo-zurnalas": stebejimoZurnalas,
   "kas-lieka-pievoje": kasLiekaPievoje,
   "augalo-dalys": augaloDalys,
+  "transporto-priemone-marsrutui": transportoPriemoneMarsrutui,
 };

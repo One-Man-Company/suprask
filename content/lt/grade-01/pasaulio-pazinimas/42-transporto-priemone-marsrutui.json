@@ -1,0 +1,228 @@
+{
+  "id": "42-transporto-priemone-marsrutui",
+  "grade": 1,
+  "strand": "pasaulio-pazinimas",
+  "title": "Transporto priemonė maršrutui",
+  "subtitle": "Per kiemą pėsčiomis, per upę valtimi",
+  "minutes": 10,
+  "outcomes": [
+    "Parinku priemonę pagal kelią, o ne pagal greitį.",
+    "Paaiškinu, kodėl greičiausia priemonė ne visada tinka.",
+    "Pasakau, kas nutinka, kai priemonė keliui netinka."
+  ],
+  "concept": {
+    "title": "Priemonė tinka keliui",
+    "big_idea": "Per kiemą gali eiti pėsčiomis. Per gilią upę reikia valties. Į kitą miestą važiuoja autobusas. Greičiausia priemonė ne visada tinka.",
+    "steps": [
+      "Pasirink tikslą: per kiemą, per upę ar į miestą.",
+      "Rinkis priemonę ir žiūrėk, ar ji pajuda. Valtis ant žolės nejuda.",
+      "Kai priemonė netinka, pasirink kitą. Kelias liks tas pats.",
+      "Surask po vieną tinkamą priemonę kiekvienam keliui."
+    ],
+    "example": "Į darželį per kiemą — pėsčiomis. Per upę — valtimi. Į kitą miestą — autobusu."
+  },
+  "sim": {
+    "component": "transporto-priemone-marsrutui",
+    "config": {
+      "trips": [
+        {
+          "id": "kiemas",
+          "label": "Per kiemą"
+        },
+        {
+          "id": "upe",
+          "label": "Per upę"
+        },
+        {
+          "id": "miestas",
+          "label": "Į miestą"
+        }
+      ],
+      "vehicles": [
+        {
+          "id": "pesciomis",
+          "label": "Pėsčiomis",
+          "word": "pėsčiomis"
+        },
+        {
+          "id": "dviratis",
+          "label": "Dviratis",
+          "word": "dviračiu"
+        },
+        {
+          "id": "valtis",
+          "label": "Valtis",
+          "word": "valtimi"
+        },
+        {
+          "id": "autobusas",
+          "label": "Autobusas",
+          "word": "autobusu"
+        }
+      ],
+      "outcomes": {
+        "kiemas|pesciomis": {
+          "reach": "goal",
+          "say": "kelias-kiemas-pesciomis"
+        },
+        "kiemas|dviratis": {
+          "reach": "goal",
+          "say": "kelias-kiemas-dviratis"
+        },
+        "kiemas|valtis": {
+          "reach": "none",
+          "say": "kelias-kiemas-valtis"
+        },
+        "kiemas|autobusas": {
+          "reach": "none",
+          "say": "kelias-kiemas-autobusas"
+        },
+        "upe|pesciomis": {
+          "reach": "part",
+          "say": "kelias-upe-pesciomis"
+        },
+        "upe|dviratis": {
+          "reach": "none",
+          "say": "kelias-upe-dviratis"
+        },
+        "upe|valtis": {
+          "reach": "goal",
+          "say": "kelias-upe-valtis"
+        },
+        "upe|autobusas": {
+          "reach": "none",
+          "say": "kelias-upe-autobusas"
+        },
+        "miestas|pesciomis": {
+          "reach": "none",
+          "say": "kelias-miestas-pesciomis"
+        },
+        "miestas|dviratis": {
+          "reach": "part",
+          "say": "kelias-miestas-dviratis"
+        },
+        "miestas|valtis": {
+          "reach": "none",
+          "say": "kelias-miestas-valtis"
+        },
+        "miestas|autobusas": {
+          "reach": "goal",
+          "say": "kelias-miestas-autobusas"
+        }
+      },
+      "sentences": {
+        "start": "Pasirink kelią ir priemonę.",
+        "startNote": "Rinkis priemonę ir žiūrėk, ar ji pajuda.",
+        "pickVehicle": "Pasirink priemonę.",
+        "arrived": "Priemonė tinka.",
+        "blocked": "Priemonė netinka.",
+        "nextTrip": "Dabar rinkis kitą tikslą.",
+        "chooseAnother": "Pasirink kitą priemonę.",
+        "foundPrefix": "Tinkamų kelių:",
+        "foundOf": "iš",
+        "again": "Iš naujo",
+        "broken": "Scena nesuderinta su keliais.",
+        "tripFacts": {
+          "kiemas": "Kiemas mažas, o kelias trumpas.",
+          "upe": "Upė gili, o tilto nėra.",
+          "miestas": "Iki miesto labai toli."
+        },
+        "kelias-kiemas-pesciomis": "Per kiemą nueini pėsčiomis. Kelias trumpas.",
+        "kelias-kiemas-dviratis": "Dviračiu per kiemą nuvažiuoji. Kelias trumpas.",
+        "kelias-kiemas-valtis": "Valčiai reikia vandens. Kieme vandens nėra.",
+        "kelias-kiemas-autobusas": "Autobusas važiuoja keliu, o ne per kiemą.",
+        "kelias-upe-pesciomis": "Pėsčiasis įbrido į vandenį ir sustojo. Upė gili.",
+        "kelias-upe-dviratis": "Dviračiu į vandenį neįvažiuosi. Upė gili.",
+        "kelias-upe-valtis": "Valtis plaukia vandeniu. Upė gili.",
+        "kelias-upe-autobusas": "Tilto nėra, todėl autobusas nepervažiuos.",
+        "kelias-miestas-pesciomis": "Pėsčiomis iki miesto per toli.",
+        "kelias-miestas-dviratis": "Dviračiu nuvažiuoji dalį kelio. Toliau per toli.",
+        "kelias-miestas-valtis": "Valtis plaukia vandeniu, o miestas sausumoje.",
+        "kelias-miestas-autobusas": "Autobusas važiuoja toli. Miestas toli.",
+        "partly": "Priemonė įveikia tik dalį kelio."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Reikia pereiti upę, o tilto nėra. Kuri priemonė tinka?",
+      "options": [
+        "Valtis",
+        "Dviratis",
+        "Autobusas"
+      ],
+      "answer": 0,
+      "hint": "Pagalvok, kur ta priemonė juda: ant žemės ar ant vandens.",
+      "why": "Per upę be tilto plaukiama valtimi."
+    },
+    {
+      "q": "Nori apvažiuoti visą miestą. Kuri priemonė netinka?",
+      "options": [
+        "Autobusas",
+        "Dviratis",
+        "Valtis"
+      ],
+      "answer": 2,
+      "hint": "Pažiūrėk, ar ta priemonė pajuda ant kelio.",
+      "why": "Valčiai reikia vandens, o miesto gatvėse vandens nėra."
+    },
+    {
+      "q": "Sode nuo vartų iki lysvės dešimt žingsnių. Kuri priemonė tinka?",
+      "options": [
+        "Autobusas",
+        "Pėsčiomis",
+        "Valtis"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, koks ilgas tas kelias.",
+      "why": "Trumpą kelią per kiemą nueini pėsčiomis."
+    },
+    {
+      "q": "Šeima nori nuvažiuoti į kitą miestą. Kuri priemonė tinka?",
+      "options": [
+        "Valtis",
+        "Pėsčiomis",
+        "Autobusas"
+      ],
+      "answer": 2,
+      "hint": "Kur ta priemonė gali judėti?",
+      "why": "Į kitą miestą toli, todėl važiuojama autobusu."
+    },
+    {
+      "q": "Lėktuvas greičiausias. Kodėl per kiemą jo nesirenki?",
+      "options": [
+        "Nes per kiemą jis nejuda",
+        "Nes jis juda per lėtai",
+        "Nes jis neturi ratų"
+      ],
+      "answer": 0,
+      "hint": "Pažiūrėk, kiek vietos reikia lėktuvui pakilti.",
+      "why": "Lėktuvui reikia oro, o kieme yra tik žolė.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kurį kelią tu nueini pėsčiomis, o kur važiuotum autobusu? Pasakyk savais žodžiais.",
+  "teacher": {
+    "goal": "Pasaulio pažinimas, 26.4.1 „Judėjimas“: parinkti transporto priemonę skirtingam atstumui įveikti ir pasirinkimą pagrįsti. Programa siūlo žaidimą „Kelionių agentūra“, kuriame poromis sudaromi maršruto įveikimo būdai. Modelyje kinta du dalykai — tikslas ir priemonė — o atsakymą lemia kliūtis (upė be tilto) ir atstumas, ne greitis.",
+    "prompt": "Kodėl per kiemą neplauki valtimi, nors ji greita?",
+    "offline": "Pasidėkite ant grindų tris vietas: kiemą, upę ir tolimą miestą (popieriaus lapai). Išdėliokite tris daiktus: mašinėlę, laivelį ir batą. Vaikas deda daiktą į vietą ir sako, ar jis ten juda. Paskui paklauskite, kuri priemonė tinka kiekvienam keliui ir kodėl. Veiklai ekrano nereikia.",
+    "misconceptions": [
+      "„Visur reikia greičiausios priemonės.“ Modelis turi lėtą valtį, kuri vis tiek tinka upei, ir greitą autobusą, kuris per kiemą nevažiuoja.",
+      "„Upė žemėlapyje — tik brūkšnys, per ją galima pėsčiomis.“ Per upę pėsčiasis pajuda ir sustoja vandenyje: tilto nėra, todėl kelias neįveikiamas.",
+      "„Jei priemonė netinka, kaltas vaikas.“ Kai priemonė netinka, modelis pasako, ko reikia (vandens, kelio, oro), ir leidžia rinktis iš naujo.",
+      "„Viena priemonė tinka visiems keliams.“ Kiekvienam tikslui modelis turi bent vieną tinkamą priemonę, bet ta pati priemonė tinka ne visiems trims kelių."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), Pasaulio pažinimas, 26.4.1 „Judėjimas“: „Nagrinėjant transporto priemonių rūšis siūloma žaisti žaidimą „Kelionių agentūra“. Mokiniai poromis turi sudaryti nurodyto maršruto įveikimo būdus (transporto priemones) … Siekiama, kad mokiniai transporto priemonės pasirinkimą pagrįstų“ (sources/pradinio-bp-rekomendacijos-2024.txt:1564–1567).",
+    "Ten pat, 1–2 klasių integracijos lentelė su gamtamokslinu ugdymu: „atpažinti ir įvardinti transporto priemones; parinkti transporto priemonę skirtingam atstumui įveikti“ (sources/pradinio-bp-rekomendacijos-2024.txt:22944–22946).",
+    "Ten pat, 1 klasės projektas „Atminties žaidimo TRANSPORTO PRIEMONĖS kūrimas“, tikslas — įtvirtinti oro, sausumos, vandens transporto priemones (sources/pradinio-bp-rekomendacijos-2024.txt:14985–14987).",
+    "Skirtumas nuo esamų modulių: 17-judejimas sprendžia, kas lemia riedėjimo greitį nuožulniąja plokštuma, o kelio tinkamumo neparodo. Nė vienas 1 klasės modulis nerenka priemonės pagal kliūtį ir atstumą."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (priemonė parenkama pagal kelią, ne pagal greitį), o ne oro, vandens ir sausumos priemonių sąrašas",
+    "2 žingsnis — vienodas vertinimas: užduotys kelia taisyklę į naujas situacijas (sodas, miestas, lėktuvas), o ne kartoja modelio sakinius",
+    "3 žingsnis — pagalba laiku: netinkama priemonė nebaudžiama — pasakoma, ko jai reikia, ir kelias lieka tas pats; yra praplėtimo užduotis, jokių laikmačių",
+    "5 žingsnis — pozityvi aplinka: grįžtamasis ryšys įvardija, kas įvyko kelyje (priemonė pajudėjo, sustojo ar nejudėjo), o ne vertina vaiko"
+  ]
+}

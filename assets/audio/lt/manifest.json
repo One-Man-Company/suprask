@@ -815,6 +815,18 @@
   "n": "n/8771ad44a23fe671-01bc7581.mp3",
   "s": "s/8771ad44a23fe671-dc120609.mp3"
  },
+ "Autobusas": {
+  "n": "n/2aafccf540cec4c7-7972ba49.mp3",
+  "s": "s/2aafccf540cec4c7-2cf108dd.mp3"
+ },
+ "Autobusas važiuoja keliu, o ne per kiemą.": {
+  "n": "n/f99ed71d8893fb88-6f2847ff.mp3",
+  "s": "s/f99ed71d8893fb88-f97b0f39.mp3"
+ },
+ "Autobusas važiuoja toli. Miestas toli.": {
+  "n": "n/f0f71986d3391a8a-6c532907.mp3",
+  "s": "s/f0f71986d3391a8a-3e2826ad.mp3"
+ },
  "Ačiū, kad padėjai": {
   "n": "n/3437475a63d3bcc2-5cc340b1.mp3",
   "s": "s/3437475a63d3bcc2-9631f0cc.mp3"
@@ -990,6 +1002,10 @@
  "Dabar pažymėk ir spalvą. Tiks tik tie, kurie turi abu.": {
   "n": "n/4089bb79fcaa54ee-87f0f69d.mp3",
   "s": "s/4089bb79fcaa54ee-fc2e32df.mp3"
+ },
+ "Dabar rinkis kitą tikslą.": {
+  "n": "n/02f4c218b1e7d131-e09e600e.mp3",
+  "s": "s/02f4c218b1e7d131-bb1066c2.mp3"
  },
  "Dabar rinkis vaikus ir paklausyk, ką jie sako.": {
   "n": "n/958924bc709163cf-6d4b8a03.mp3",
@@ -1295,6 +1311,22 @@
   "n": "n/908e68faac5b6eb7-3654cdc9.mp3",
   "s": "s/908e68faac5b6eb7-43667770.mp3"
  },
+ "Dviratis": {
+  "n": "n/e2b69ade1e7e9a8c-55e5d35d.mp3",
+  "s": "s/e2b69ade1e7e9a8c-747e77dc.mp3"
+ },
+ "Dviračiu nuvažiuoji dalį kelio. Toliau per toli.": {
+  "n": "n/dab683c52a0ed0fa-925dd3f3.mp3",
+  "s": "s/dab683c52a0ed0fa-1857ccf8.mp3"
+ },
+ "Dviračiu per kiemą nuvažiuoji. Kelias trumpas.": {
+  "n": "n/e3549dc587120f73-1c44fadf.mp3",
+  "s": "s/e3549dc587120f73-2e626a35.mp3"
+ },
+ "Dviračiu į vandenį neįvažiuosi. Upė gili.": {
+  "n": "n/aeea8572e34f5dce-d9fba492.mp3",
+  "s": "s/aeea8572e34f5dce-53f883ba.mp3"
+ },
  "Dydis masės nepasako. Masę parodė svarstyklės.": {
   "n": "n/3976dd6dfed8b434-3f0ea5fb.mp3",
   "s": "s/3976dd6dfed8b434-dc7f4a37.mp3"
@@ -1526,6 +1558,10 @@
  "Ieva yra Adomo mama. Močiutė yra aukščiau už mamą.": {
   "n": "n/e59b573da93fdeee-538a214d.mp3",
   "s": "s/e59b573da93fdeee-267c1965.mp3"
+ },
+ "Iki miesto labai toli.": {
+  "n": "n/21e964307bba38a2-29c52bf5.mp3",
+  "s": "s/21e964307bba38a2-623c83bd.mp3"
  },
  "Imk daugiau dėmių iš dešimtuko.": {
   "n": "n/10a19b6e1d0e9bf9-127d9958.mp3",
@@ -1894,6 +1930,10 @@
  "Kiemas": {
   "n": "n/9e92cf6af2b42ca8-f7f58338.mp3",
   "s": "s/9e92cf6af2b42ca8-9ef8915c.mp3"
+ },
+ "Kiemas mažas, o kelias trumpas.": {
+  "n": "n/5c5eff9aee67206b-85d00cb9.mp3",
+  "s": "s/5c5eff9aee67206b-bd5447cb.mp3"
  },
  "Kiemo takas": {
   "n": "n/37982dd4e99f8d05-d131cd5a.mp3",
@@ -2747,6 +2787,10 @@
   "n": "n/fe78452fdcc0fe98-7e85e9d4.mp3",
   "s": "s/fe78452fdcc0fe98-9602c9f7.mp3"
  },
+ "Pasirink kelią ir priemonę.": {
+  "n": "n/1ea2b2a8b791aa0a-2da660a6.mp3",
+  "s": "s/1ea2b2a8b791aa0a-8a360fcf.mp3"
+ },
  "Pasirink kitus skaičius ir pabandyk vėl.": {
   "n": "n/27b8c325e7898242-7b0be7c4.mp3",
   "s": "s/27b8c325e7898242-fcef8d60.mp3"
@@ -2754,6 +2798,10 @@
  "Pasirink kitą darbą.": {
   "n": "n/224d0173437f4dab-8b503c00.mp3",
   "s": "s/224d0173437f4dab-8343f95f.mp3"
+ },
+ "Pasirink kitą priemonę.": {
+  "n": "n/345ae69c04b318a7-ed21c276.mp3",
+  "s": "s/345ae69c04b318a7-c1738c87.mp3"
  },
  "Pasirink klausimą, paskui — ką darysi.": {
   "n": "n/f8b179f3979112b1-a8058e17.mp3",
@@ -2778,6 +2826,10 @@
  "Pasirink požymį: forma, spalva ar dydis.": {
   "n": "n/b64829f080002c81-ecd9f179.mp3",
   "s": "s/b64829f080002c81-004fe235.mp3"
+ },
+ "Pasirink priemonę.": {
+  "n": "n/8251927600a1bbaf-3dc75119.mp3",
+  "s": "s/8251927600a1bbaf-bbb05608.mp3"
  },
  "Pasirink vieną ir pažiūrėk.": {
   "n": "n/ad161d55c7544049-3fd8ad22.mp3",
@@ -2887,9 +2939,21 @@
   "n": "n/432afa070cceea11-9cf15bfe.mp3",
   "s": "s/432afa070cceea11-3e66e30b.mp3"
  },
+ "Per kiemą": {
+  "n": "n/8a8ce4f1b627e788-c8ea7ac1.mp3",
+  "s": "s/8a8ce4f1b627e788-257f3b97.mp3"
+ },
+ "Per kiemą nueini pėsčiomis. Kelias trumpas.": {
+  "n": "n/8c844894b13499fe-195a961c.mp3",
+  "s": "s/8c844894b13499fe-efb84e40.mp3"
+ },
  "Per ką pasakysi?": {
   "n": "n/7af2da16656022d6-87e5dfb3.mp3",
   "s": "s/7af2da16656022d6-807f607d.mp3"
+ },
+ "Per upę": {
+  "n": "n/e8b8a3e4cfd450eb-02291da8.mp3",
+  "s": "s/e8b8a3e4cfd450eb-90fc5625.mp3"
  },
  "Perkelk kubelį ir rask kitus užrašus.": {
   "n": "n/7e639dbefe9f2d6f-a4f2ba2e.mp3",
@@ -3207,6 +3271,18 @@
   "n": "n/9da815f3b1283795-624bc796.mp3",
   "s": "s/9da815f3b1283795-32877c86.mp3"
  },
+ "Priemonė netinka.": {
+  "n": "n/7bb8a5c5e36ba5ff-565f60e6.mp3",
+  "s": "s/7bb8a5c5e36ba5ff-f49d69e6.mp3"
+ },
+ "Priemonė tinka.": {
+  "n": "n/08ba34b04a3a949c-0cea5853.mp3",
+  "s": "s/08ba34b04a3a949c-af682588.mp3"
+ },
+ "Priemonė įveikia tik dalį kelio.": {
+  "n": "n/5578d6e70ccfa05f-f8231326.mp3",
+  "s": "s/5578d6e70ccfa05f-b3dcf935.mp3"
+ },
  "Prieš laikrodžio rodyklę žymė eina atbulai: kairė, apačia, dešinė.": {
   "n": "n/576b4a86c419c6c4-8b09a4ba.mp3",
   "s": "s/576b4a86c419c6c4-b31e52d1.mp3"
@@ -3259,6 +3335,18 @@
   "n": "n/87353ff8635b1855-41115b15.mp3",
   "s": "s/87353ff8635b1855-655047f3.mp3"
  },
+ "Pėsčiasis įbrido į vandenį ir sustojo. Upė gili.": {
+  "n": "n/890d11d049015e07-5a453f82.mp3",
+  "s": "s/890d11d049015e07-92d5751e.mp3"
+ },
+ "Pėsčiomis": {
+  "n": "n/b8c9dc7eccd91ac5-1c170666.mp3",
+  "s": "s/b8c9dc7eccd91ac5-76aa1160.mp3"
+ },
+ "Pėsčiomis iki miesto per toli.": {
+  "n": "n/ffa0df64413f686d-40d5582e.mp3",
+  "s": "s/ffa0df64413f686d-602c7547.mp3"
+ },
  "R": {
   "n": "n/8c2574892063f995-ce5b96a4.mp3",
   "s": "s/8c2574892063f995-df1ac2d4.mp3"
@@ -3290,6 +3378,10 @@
  "Re": {
   "n": "n/78f76459d525088a-96507997.mp3",
   "s": "s/78f76459d525088a-750f991d.mp3"
+ },
+ "Rinkis priemonę ir žiūrėk, ar ji pajuda.": {
+  "n": "n/57f1f8a64cc6ebe0-6af9df8b.mp3",
+  "s": "s/57f1f8a64cc6ebe0-ecad32aa.mp3"
  },
  "Ritinys iš priekio atrodo kaip stačiakampis.": {
   "n": "n/3cc41c23fdbd3079-7e46fd23.mp3",
@@ -3446,6 +3538,10 @@
  "Sausas": {
   "n": "n/8d3988b81979654c-726b894d.mp3",
   "s": "s/8d3988b81979654c-43b7f4bb.mp3"
+ },
+ "Scena nesuderinta su keliais.": {
+  "n": "n/f170f431cbb9294a-e4fdf390.mp3",
+  "s": "s/f170f431cbb9294a-4f5dff8f.mp3"
  },
  "Seka baigėsi ne prie vėliavos.": {
   "n": "n/6c592c218e675828-3cbab252.mp3",
@@ -3931,9 +4027,17 @@
   "n": "n/2e8cb9ac1abdb1f9-e3cafef7.mp3",
   "s": "s/2e8cb9ac1abdb1f9-df46d12c.mp3"
  },
+ "Tilto nėra, todėl autobusas nepervažiuos.": {
+  "n": "n/f6a9336447a74cd0-8d8ebb73.mp3",
+  "s": "s/f6a9336447a74cd0-71ce5d9c.mp3"
+ },
  "Tinka:": {
   "n": "n/bfdd3580d320f60e-f14b2dcd.mp3",
   "s": "s/bfdd3580d320f60e-9b787831.mp3"
+ },
+ "Tinkamų kelių:": {
+  "n": "n/f3f67c74119a04de-6069c03f.mp3",
+  "s": "s/f3f67c74119a04de-9fb7fb38.mp3"
  },
  "Tinklelis nesuderintas su daiktais.": {
   "n": "n/7e5270095ebd9751-8068ad9b.mp3",
@@ -4235,6 +4339,10 @@
   "n": "n/a25513c7e0f6eaa8-b4e039e2.mp3",
   "s": "s/a25513c7e0f6eaa8-cefa011a.mp3"
  },
+ "Upė gili, o tilto nėra.": {
+  "n": "n/7f84ccacd112152c-db6b4943.mp3",
+  "s": "s/7f84ccacd112152c-b85ce751.mp3"
+ },
  "Užrašas apie atšvaitą": {
   "n": "n/207e10a1ce1968f6-9717a853.mp3",
   "s": "s/207e10a1ce1968f6-0e34bf18.mp3"
@@ -4314,6 +4422,22 @@
  "Valom nuo pradžių. Abu jungikliai išjungti.": {
   "n": "n/387adda676a9323d-fe50718b.mp3",
   "s": "s/387adda676a9323d-27a416d6.mp3"
+ },
+ "Valtis": {
+  "n": "n/cbc6d415735ae6ca-881c6515.mp3",
+  "s": "s/cbc6d415735ae6ca-631ab2ce.mp3"
+ },
+ "Valtis plaukia vandeniu, o miestas sausumoje.": {
+  "n": "n/5ea5b7fb4b475590-a04f0f5f.mp3",
+  "s": "s/5ea5b7fb4b475590-11ecd28e.mp3"
+ },
+ "Valtis plaukia vandeniu. Upė gili.": {
+  "n": "n/c2ebfe2d5615b8f3-06b29625.mp3",
+  "s": "s/c2ebfe2d5615b8f3-8859df6c.mp3"
+ },
+ "Valčiai reikia vandens. Kieme vandens nėra.": {
+  "n": "n/ed96580df7c00cdb-149d365e.mp3",
+  "s": "s/ed96580df7c00cdb-166308ea.mp3"
  },
  "Vandens lygis puodeliuose pažymėtas linija.": {
   "n": "n/150b5f2232d16597-50dc6e7f.mp3",
@@ -4571,6 +4695,10 @@
   "n": "n/4b44f12928dd9900-4944486e.mp3",
   "s": "s/4b44f12928dd9900-b51f7548.mp3"
  },
+ "autobusu": {
+  "n": "n/4692b382f2112197-063e43c6.mp3",
+  "s": "s/4692b382f2112197-7aff5664.mp3"
+ },
  "b": {
   "n": "n/3e23e8160039594a-6a770dfd.mp3",
   "s": "s/3e23e8160039594a-fe75090f.mp3"
@@ -4610,6 +4738,10 @@
  "duona": {
   "n": "n/52c2e7cc9ff7a914-775ceba5.mp3",
   "s": "s/52c2e7cc9ff7a914-7e4fa48e.mp3"
+ },
+ "dviračiu": {
+  "n": "n/d593a6dd6a822778-4397973e.mp3",
+  "s": "s/d593a6dd6a822778-367bdaa5.mp3"
  },
  "e": {
   "n": "n/3f79bb7b435b0532-51b2286e.mp3",
@@ -4843,6 +4975,10 @@
   "n": "n/57eab3bff71d38ea-75d74857.mp3",
   "s": "s/57eab3bff71d38ea-a359ed2c.mp3"
  },
+ "pėsčiomis": {
+  "n": "n/d0d005866d6bf93d-fc646ae5.mp3",
+  "s": "s/d0d005866d6bf93d-39743bb9.mp3"
+ },
  "r": {
   "n": "n/454349e422f05297-fbf4a909.mp3",
   "s": "s/454349e422f05297-4700bde2.mp3"
@@ -4943,6 +5079,10 @@
   "n": "n/1e6f43ca03f499d1-c008dacd.mp3",
   "s": "s/1e6f43ca03f499d1-4bcdc3b0.mp3"
  },
+ "valtimi": {
+  "n": "n/282c12b74686c8cf-1c9b3a0f.mp3",
+  "s": "s/282c12b74686c8cf-1522fe9d.mp3"
+ },
  "varlytė": {
   "n": "n/fdb4ed1d5efe99f5-5864b6d2.mp3",
   "s": "s/fdb4ed1d5efe99f5-6ce1c94d.mp3"
@@ -5018,6 +5158,10 @@
  "Į": {
   "n": "n/36d6fa8ed74757e8-00157337.mp3",
   "s": "s/36d6fa8ed74757e8-ebc2064f.mp3"
+ },
+ "Į miestą": {
+  "n": "n/5b4f00cb074435a6-7ddbbbc1.mp3",
+  "s": "s/5b4f00cb074435a6-202180ac.mp3"
  },
  "Įdėklas": {
   "n": "n/0dc122424c37d3cf-3c5ebf6b.mp3",

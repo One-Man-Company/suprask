@@ -550,6 +550,14 @@
      "file": "grade-01/pasaulio-pazinimas/40-as-ir-mano-seima.json",
      "minutes": 9,
      "sim": "gimines-grandine"
+    },
+    {
+     "id": "42-transporto-priemone-marsrutui",
+     "title": "Transporto priemonė maršrutui",
+     "subtitle": "Per kiemą pėsčiomis, per upę valtimi",
+     "file": "grade-01/pasaulio-pazinimas/42-transporto-priemone-marsrutui.json",
+     "minutes": 10,
+     "sim": "transporto-priemone-marsrutui"
     }
    ]
   },

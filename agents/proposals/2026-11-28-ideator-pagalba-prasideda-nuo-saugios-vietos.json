@@ -1,0 +1,18 @@
+{
+  "role": "ideator",
+  "run_id": 597,
+  "created": "2026-11-28T08:25:00+02:00",
+  "type": "tema",
+  "title": "Pagalba prasideda nuo saugios vietos, o ne nuo skambučio",
+  "body": "Programos 26.1.1 projektas „Mano elgesys ištikus nelaimei“ prašo išsiaiškinti, „kur kreiptis pagalbos ištikus nelaimei“, o pirmosios pagalbos rekomendacijos pirmą žingsnį vadina būtent saugumo patikra: vaikas pirmiausia įsitikina, kad situacija saugi, nueina į saugią vietą ir tik tada kviečia suaugusįjį arba 112. Platformoje pagalbos kryptis neuždengta: `25-traumu-prevencija` ima priežastį vietoje, `38-traumu-prevencija` — apsaugos vietą, `19-dumai-ir-isejimas` — dūmų kelią, bet nė vienas modulis nesprendžia, nuo ko pagalba prasideda. Siūlau modulį, kuriame vaikas stata tris žingsnius (saugi vieta → suaugęs → 112) ir mato, kas nutinka, jei pirmą žingsnį praleidžia: jis pats atsiduria ten, iš kur reikėjo išeiti, todėl pagalbos pašaukti negali. Klaidinga nuostata: „padėti reikia pradėti iškart — kuo greičiau skambini, tuo geriau.“ Modelis keičia vieną dalyką — žingsnių tvarką — o vaikas, kiemas ir pavojus išlieka tie patys, todėl klaidą galima priskirti tvarkai, o ne vaikui. Telefono numeris 112 modelyje sakomas, bet nesirenkamas rinkimu: tai ne numerio atminties pratimas, o tvarkos supratimas.",
+  "target": "content/lt/grade-01/pasaulio-pazinimas/43-pagalba-prasideda-nuo-saugios-vietos.json",
+  "priority": "normal",
+  "status": "new",
+  "evidence": [
+    "sources/pradinio-bp-rekomendacijos-2024.txt:14958–14966 — 26.1.1 „Saugus elgesys“: „Projektas „Mano elgesys ištikus nelaimei“. Projekto tikslas: Išsiaiškinti, kur kreiptis pagalbos ištikus nelaimei, kaip elgtis kilus gaisrui“ (1 klasės temų lentelė)",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:22545–22550 — „Rekomendacijos mokant vaikus pirmosios pagalbos teikimo. Patikrinti situaciją. Pirmas žingsnis – prieš bandant padėti, vaikas turi įsitikinti, kad situacija yra saugi. Jei yra nors mažiausias pavojus, pavyzdžiui, suskilęs stiklas ar eismo kamščiai, patariame vaikams nueiti į saugią vietą ir pasikviesti pagalbą iš netoliese esančio suaugusiojo arba paskambinus telefonu 112“",
+    "sources/pradinio-bp-rekomendacijos-2024.txt:22600–22611 — „Kreipimas į greitąją pagalbą. Mokykitės iškviesti greitąją medicinos pagalbą: Surinkti telefono numerį 112. Aiškiai pasakyti operatoriui…“",
+    "research/wiki/curriculum/pasaulio-pazinimas-1-klase.md:124 — 26.1.1 aprašas: „Projektas „Mano elgesys ištikus nelaimei“ („kur kreiptis pagalbos ištikus nelaimei, kaip elgtis kilus gaisrui“, situacijų inscenizacija)“",
+    "Patikra, kad temos nėra: content/lt/grade-01/pasaulio-pazinimas/ — 23 moduliai, `grep -rin „112\\|greitoji\\|kreiptis pagalbos“ content/lt/grade-01/` → 0 modulių (trys „112“ atvejai yra bibliografinių šaltinių puslapių numeriai, o „skamba“ — muzikos simuliacijose); numeris 42 užimtas #59756 pasiūlymo `42-transporto-priemone-marsrutui`, todėl imtas 43"
+  ]
+}

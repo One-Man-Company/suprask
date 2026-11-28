@@ -983,6 +983,14 @@
   "n": "n/a931d3156caf116a-f207c787.mp3",
   "s": "s/a931d3156caf116a-021d9af1.mp3"
  },
+ "Dabar pažymėk ir dydį. Tiks tik tie, kurie turi abu.": {
+  "n": "n/e96340a1275241f8-78f3a611.mp3",
+  "s": "s/e96340a1275241f8-9577a5ae.mp3"
+ },
+ "Dabar pažymėk ir spalvą. Tiks tik tie, kurie turi abu.": {
+  "n": "n/4089bb79fcaa54ee-87f0f69d.mp3",
+  "s": "s/4089bb79fcaa54ee-fc2e32df.mp3"
+ },
  "Dabar rinkis vaikus ir paklausyk, ką jie sako.": {
   "n": "n/958924bc709163cf-6d4b8a03.mp3",
   "s": "s/958924bc709163cf-99bc827a.mp3"
@@ -1246,6 +1254,14 @@
  "Du plojimai: antras pusiaukelėje.": {
   "n": "n/43601bf7064ab95f-d9056be4.mp3",
   "s": "s/43601bf7064ab95f-b8a6ec6f.mp3"
+ },
+ "Du požymiai kartu — tinka tik tie, kurie turi abu.": {
+  "n": "n/2d707a5a9a7e371c-51c381c1.mp3",
+  "s": "s/2d707a5a9a7e371c-9baa2cec.mp3"
+ },
+ "Du požymiai:": {
+  "n": "n/be3b2b3533d7a2d7-a618384e.mp3",
+  "s": "s/be3b2b3533d7a2d7-7ab1d452.mp3"
  },
  "Du skaičiai iš dešimčių ir vienetų. Spėk, kiek bus.": {
   "n": "n/19febefa3c9434f9-8124c2da.mp3",
@@ -2019,9 +2035,17 @@
   "n": "n/b777877186bb09b6-37ab7c1e.mp3",
   "s": "s/b777877186bb09b6-7e079c1d.mp3"
  },
+ "Krūva nesuderinta su požymiais.": {
+  "n": "n/45e353f16a09f1af-82f5acba.mp3",
+  "s": "s/45e353f16a09f1af-c59cce61.mp3"
+ },
  "Krūva visą laiką ta pati. Keisis tik būriai.": {
   "n": "n/4244baa2256dc93a-4b18a9f0.mp3",
   "s": "s/4244baa2256dc93a-f27017d7.mp3"
+ },
+ "Krūva:": {
+  "n": "n/53c96bd272ce8318-b353c84d.mp3",
+  "s": "s/53c96bd272ce8318-04d8eb33.mp3"
  },
  "Kubas iš priekio atrodo kaip kvadratas.": {
   "n": "n/0a26471c3415e289-1355c62d.mp3",
@@ -2294,6 +2318,10 @@
  "Lietus ėjo nuo ryto iki vakaro.": {
   "n": "n/619cc7bcf801173a-9f827ac7.mp3",
   "s": "s/619cc7bcf801173a-d4815391.mp3"
+ },
+ "Liko mažiau, nes tinka abu požymiai.": {
+  "n": "n/f053dbd8c68ef5a2-f46aa050.mp3",
+  "s": "s/f053dbd8c68ef5a2-c692b293.mp3"
  },
  "Linija platesnė netapo.": {
   "n": "n/86ebce48ca85f9d9-46e8b929.mp3",
@@ -2823,6 +2851,10 @@
   "n": "n/91d5001bb77913fe-b2e9ab2f.mp3",
   "s": "s/91d5001bb77913fe-fa81c0a7.mp3"
  },
+ "Pažymėk spalvą. Pažiūrėk, kiek daiktų liks.": {
+  "n": "n/a82cce26bbc5a3bc-39300614.mp3",
+  "s": "s/a82cce26bbc5a3bc-47be11a2.mp3"
+ },
  "Pažymėk, kurie daiktai liks po metų.": {
   "n": "n/e4f0abcd75e8ef59-e6e40890.mp3",
   "s": "s/e4f0abcd75e8ef59-99fc6673.mp3"
@@ -2830,6 +2862,10 @@
  "Pažymėta.": {
   "n": "n/e77340f10dbcac24-40e71d23.mp3",
   "s": "s/e77340f10dbcac24-1d583ece.mp3"
+ },
+ "Pažymėta:": {
+  "n": "n/d147e63914b2efcc-d68523c9.mp3",
+  "s": "s/d147e63914b2efcc-bc218c85.mp3"
  },
  "Pelėda": {
   "n": "n/9f5897c7a3b79e29-125b8a6f.mp3",
@@ -3127,6 +3163,10 @@
   "n": "n/2189b66512ac0f1f-6ae070e1.mp3",
   "s": "s/2189b66512ac0f1f-47f3c433.mp3"
  },
+ "Pradedam iš naujo. Visi daiktai vėl pažymėti.": {
+  "n": "n/35a525b48d6b16e8-8cd1c154.mp3",
+  "s": "s/35a525b48d6b16e8-bce53718.mp3"
+ },
  "Pradedam iš naujo. Vėl spėk, kas bus atgal.": {
   "n": "n/b875e35c2d3350b1-0a1e5a42.mp3",
   "s": "s/b875e35c2d3350b1-e7374b1a.mp3"
@@ -3310,6 +3350,10 @@
  "Rodau dėmės kraštą. Dėmė visur ta pati.": {
   "n": "n/e1b1f2f7bdd77ee3-871188f5.mp3",
   "s": "s/e1b1f2f7bdd77ee3-09ca795b.mp3"
+ },
+ "Rodo:": {
+  "n": "n/0c543ad957b32586-5d4bbd99.mp3",
+  "s": "s/0c543ad957b32586-81a6c4c1.mp3"
  },
  "Rodyklės liko vietoje. Tas pats laikas turi antrą vardą.": {
   "n": "n/b350666d958dae16-e0d68324.mp3",
@@ -4323,6 +4367,10 @@
   "n": "n/9a42e38296157a8d-74837e91.mp3",
   "s": "s/9a42e38296157a8d-5d075e7d.mp3"
  },
+ "Viena krūva. Kol kas pažymėti visi daiktai.": {
+  "n": "n/110d1b266fd999c9-9038d00d.mp3",
+  "s": "s/110d1b266fd999c9-63468d67.mp3"
+ },
  "Viena krūva. Pažymėti du trikampiai.": {
   "n": "n/fa834c3ce5d82830-ec369dc8.mp3",
   "s": "s/fa834c3ce5d82830-a52b8c25.mp3"
@@ -4370,6 +4418,10 @@
  "Vienas plojimas ant pulso.": {
   "n": "n/f115762ac8ef6168-a8106622.mp3",
   "s": "s/f115762ac8ef6168-05c2def9.mp3"
+ },
+ "Vienas požymis:": {
+  "n": "n/4ff50897e38bbad7-0f09fcdc.mp3",
+  "s": "s/4ff50897e38bbad7-932166e7.mp3"
  },
  "Vienas trintukas": {
   "n": "n/99f866719c8f932d-00938715.mp3",
@@ -4571,6 +4623,10 @@
   "n": "n/cd0aa9856147b6c5-aa87afb1.mp3",
   "s": "s/cd0aa9856147b6c5-f5151f2c.mp3"
  },
+ "geltonas didelis apskritimas": {
+  "n": "n/4db91b510ce61793-7e189ea2.mp3",
+  "s": "s/4db91b510ce61793-67ed7e64.mp3"
+ },
  "geltonas didelis kvadratas": {
   "n": "n/d5028e7d57f4eb6d-40dd3c37.mp3",
   "s": "s/d5028e7d57f4eb6d-3b7e711b.mp3"
@@ -4582,6 +4638,10 @@
  "geltonas mažas apskritimas": {
   "n": "n/4372af87fffad7a6-9fee7124.mp3",
   "s": "s/4372af87fffad7a6-ccc0833b.mp3"
+ },
+ "geltonas mažas kvadratas": {
+  "n": "n/9059d3341cfe90a8-a72f6b8b.mp3",
+  "s": "s/9059d3341cfe90a8-4868e06f.mp3"
  },
  "geria": {
   "n": "n/ae87882bd34b6c51-e646447c.mp3",
@@ -4606,6 +4666,10 @@
  "ilgai": {
   "n": "n/79841565a3a7f127-a61342f6.mp3",
   "s": "s/79841565a3a7f127-85f630af.mp3"
+ },
+ "iš": {
+  "n": "n/58148d4f05a40dca-d9bf2547.mp3",
+  "s": "s/58148d4f05a40dca-aa3fcdef.mp3"
  },
  "j": {
   "n": "n/189f40034be7a199-fc703028.mp3",
@@ -4707,6 +4771,18 @@
   "n": "n/2fe959b01a142101-701bb5ae.mp3",
   "s": "s/2fe959b01a142101-c9e018e7.mp3"
  },
+ "mėlynas didelis kvadratas": {
+  "n": "n/fa0cb1366bf524b1-fda2be3e.mp3",
+  "s": "s/fa0cb1366bf524b1-f7db04fe.mp3"
+ },
+ "mėlynas didelis trikampis": {
+  "n": "n/de46aa1bd92871ec-8f62476c.mp3",
+  "s": "s/de46aa1bd92871ec-5b2d38ea.mp3"
+ },
+ "mėlynas mažas apskritimas": {
+  "n": "n/562e715b0c15d674-011f50ea.mp3",
+  "s": "s/562e715b0c15d674-c14ce319.mp3"
+ },
  "n": {
   "n": "n/1b16b1df538ba12d-e0be721a.mp3",
   "s": "s/1b16b1df538ba12d-d6eee406.mp3"
@@ -4775,6 +4851,10 @@
   "n": "n/4ee8ea600650230a-d0b30b97.mp3",
   "s": "s/4ee8ea600650230a-1e4d3305.mp3"
  },
+ "raudonas didelis apskritimas": {
+  "n": "n/fdd8b0e38b59e599-7d0e7eb8.mp3",
+  "s": "s/fdd8b0e38b59e599-729b9bdb.mp3"
+ },
  "raudonas didelis trikampis": {
   "n": "n/d70e0bdf95edfb6d-75019a14.mp3",
   "s": "s/d70e0bdf95edfb6d-c96307e7.mp3"
@@ -4782,6 +4862,10 @@
  "raudonas mažas apskritimas": {
   "n": "n/3018fea4d25d5c25-9320f08f.mp3",
   "s": "s/3018fea4d25d5c25-4e526a3d.mp3"
+ },
+ "raudonas mažas kvadratas": {
+  "n": "n/a6c9a70dbd71196c-95a75d64.mp3",
+  "s": "s/a6c9a70dbd71196c-5965f92b.mp3"
  },
  "raudonas mažas trikampis": {
   "n": "n/77cda1083ba02228-330da7a7.mp3",

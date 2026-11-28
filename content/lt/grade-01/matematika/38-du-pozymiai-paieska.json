@@ -1,0 +1,153 @@
+{
+  "id": "38-du-pozymiai-paieska",
+  "grade": 1,
+  "strand": "matematika",
+  "title": "Du požymiai iš karto",
+  "subtitle": "Raudona ir didelė kartu — lieka tik vienas daiktas",
+  "minutes": 9,
+  "outcomes": [
+    "Pažymiu du požymius ir suskaičiuoju, kiek daiktų liko.",
+    "Pasakau, kodėl po antro požymio daiktų mažiau.",
+    "Surandu daiktą, kuris tinka pagal abu požymius."
+  ],
+  "concept": {
+    "title": "Du požymiai atrenka kartu",
+    "big_idea": "Kai pažymi du požymius, tinka tik daiktas su abiem. Todėl daiktų lieka mažiau. Krūva nesikeičia — keičiasi tik tai, kiek jų pažymėta.",
+    "steps": [
+      "Suskaičiuok, kiek daiktų yra krūvoje. Kol kas pažymėti visi.",
+      "Pažymėk raudoną spalvą. Pažiūrėk, kiek daiktų liko ir kurie jie.",
+      "Dabar pažymėk ir didelį dydį. Liko tik tie, kurie raudoni ir dideli.",
+      "Nuspausk vieną požymį. Skaičius padidės, o krūva liks ta pati."
+    ],
+    "example": "Krepšyje yra raudonų ir mėlynų kamuolių, didelių ir mažų. Raudonų keturi, o raudonų didelių — vienas."
+  },
+  "sim": {
+    "component": "du-pozymiai-paieska",
+    "config": {
+      "items": [
+        { "id": "d1", "shape": "apskritimas", "color": "raudona", "size": "didelis", "label": "raudonas didelis apskritimas" },
+        { "id": "d2", "shape": "kvadratas", "color": "raudona", "size": "mazas", "label": "raudonas mažas kvadratas" },
+        { "id": "d3", "shape": "trikampis", "color": "raudona", "size": "mazas", "label": "raudonas mažas trikampis" },
+        { "id": "d4", "shape": "apskritimas", "color": "raudona", "size": "mazas", "label": "raudonas mažas apskritimas" },
+        { "id": "d5", "shape": "kvadratas", "color": "melyna", "size": "didelis", "label": "mėlynas didelis kvadratas" },
+        { "id": "d6", "shape": "trikampis", "color": "melyna", "size": "didelis", "label": "mėlynas didelis trikampis" },
+        { "id": "d7", "shape": "apskritimas", "color": "melyna", "size": "mazas", "label": "mėlynas mažas apskritimas" },
+        { "id": "d8", "shape": "apskritimas", "color": "geltona", "size": "didelis", "label": "geltonas didelis apskritimas" },
+        { "id": "d9", "shape": "kvadratas", "color": "geltona", "size": "mazas", "label": "geltonas mažas kvadratas" }
+      ],
+      "criteria": [
+        {
+          "id": "spalva",
+          "button": "Spalva",
+          "values": { "raudona": "raudona", "melyna": "mėlyna", "geltona": "geltona" }
+        },
+        {
+          "id": "dydis",
+          "button": "Dydis",
+          "values": { "didelis": "didelis", "mazas": "mažas" }
+        }
+      ],
+      "labels": {
+        "again": "Iš naujo"
+      },
+      "sentences": {
+        "start": "Viena krūva. Kol kas pažymėti visi daiktai.",
+        "startNote": "Pažymėk spalvą. Pažiūrėk, kiek daiktų liks.",
+        "pile": "Krūva:",
+        "shown": "Rodo:",
+        "marked": "Pažymėta:",
+        "of": "iš",
+        "critPrefix": "Vienas požymis:",
+        "critsPrefix": "Du požymiai:",
+        "afterColor": "Dabar pažymėk ir dydį. Tiks tik tie, kurie turi abu.",
+        "afterSize": "Dabar pažymėk ir spalvą. Tiks tik tie, kurie turi abu.",
+        "fewer": "Liko mažiau, nes tinka abu požymiai.",
+        "fewerNote": "Du požymiai kartu — tinka tik tie, kurie turi abu.",
+        "again": "Pradedam iš naujo. Visi daiktai vėl pažymėti.",
+        "broken": "Krūva nesuderinta su požymiais."
+      }
+    }
+  },
+  "tasks": [
+    {
+      "q": "Simuliacijoje pažymėjai raudoną spalvą. Kiek daiktų liko?",
+      "options": [
+        "Keturi",
+        "Devyni",
+        "Vienas"
+      ],
+      "answer": 0,
+      "hint": "Prisimink, kiek raudonų daiktų buvo krūvoje.",
+      "why": "Raudoni buvo keturi: vienas didelis ir trys maži."
+    },
+    {
+      "q": "Tada pažymėjai ir didelį dydį. Kodėl liko tik vienas daiktas?",
+      "options": [
+        "Nes krūvoje daiktų sumažėjo",
+        "Nes tinka tik raudoni ir dideli kartu",
+        "Nes maži daiktai dingo iš ekrano"
+      ],
+      "answer": 1,
+      "hint": "Pažiūrėk, ar krūvoje dar devyni daiktai, ar mažiau.",
+      "why": "Krūva liko ta pati. Du požymiai kartu atrenka, o ne prideda."
+    },
+    {
+      "q": "Kuris daiktas tinka pagal abu požymius: raudonas ir didelis?",
+      "options": [
+        "Raudonas mažas kvadratas",
+        "Mėlynas didelis trikampis",
+        "Raudonas didelis apskritimas"
+      ],
+      "answer": 2,
+      "hint": "Turi tikti abu: ir spalva, ir dydis. Vieno neužtenka.",
+      "why": "Tik raudonas didelis apskritimas yra ir raudonas, ir didelis."
+    },
+    {
+      "q": "Mėlyname maiše trys dideli kamuoliai ir du maži, visi mėlyni. Pažymėk mėlyną ir didelį. Kiek kamuolių tiks?",
+      "options": [
+        "Penki",
+        "Du",
+        "Trys"
+      ],
+      "answer": 2,
+      "hint": "Kiek kamuolių yra mėlyni ir dideli vienu metu?",
+      "why": "Mėlyni visi penki, bet dideli tik trys."
+    },
+    {
+      "q": "Lentynoje keturi geltoni daiktai, o didelių geltonų — trys. Kiek geltonų mažų daiktų?",
+      "options": [
+        "Vienas",
+        "Trys",
+        "Keturi"
+      ],
+      "answer": 0,
+      "hint": "Iš visų geltonų atimk tuos, kurie dideli.",
+      "why": "Keturi geltoni, trys iš jų dideli. Mažas lieka vienas.",
+      "optional": true
+    }
+  ],
+  "reflect": "Kaip draugui paaiškintum, kodėl po antro požymio daiktų liko mažiau?",
+  "teacher": {
+    "goal": "Suprasti, kad du požymiai veikia kartu: iš krūvos atrenkami tik tie daiktai, kurie turi abu požymius, todėl jų lieka mažiau. Tai ne grupavimas (visi daiktai lieka), o atranka (dalis iškrinta). Krūva visą laiką ta pati, todėl priežastis matoma be paaiškinimo.",
+    "prompt": "Kai pažymėjai raudoną, liko keturi. Kodėl pridėjus dydį liko vienas?",
+    "offline": "Išdėkite ant stalo devynis daiktus: kamuolius, kubelius ir trikampėlius, dviejų dydžių ir trijų spalvų. Vaikas pirmiausia atrenka visus raudonus ir juos suskaičiuoja. Tada paprašykite, kad iš jų atrinktų dar ir didelius. Paklauskite, ar daiktų stalo krašte padaugėjo, ar sumažėjo. Pabaigoje jūs pasakote du požymius, o vaikas suranda vienintelį daiktą, kuris tinka pagal abu.",
+    "misconceptions": [
+      "„Jei pažymėjau raudoną, tai visi raudoni tinka“ — vaikas pamato vieną požymį ir nebežiūri antro. Modelis antro požymio neleidžia pamiršti: pažymėjus dydį pažymėtų daiktų skaičius ekrane sumažėja nuo keturių iki vieno.",
+      "„Du požymiai prideda daiktų“ — vaikas mano, kad daugiau požymių reiškia daugiau paieškos. Todėl skaičius rodomas dideliu skaičiumi tame pačiame kadre, o krūva lieka devynių daiktų.",
+      "„Maži daiktai dingo iš ekrano“ — neatrinkti daiktai lieka krūvoje: jie piešiami mažesni ir nespalvoti, o ne ištrinami. Todėl vaikas mato, kad krūva nepakito.",
+      "„Požymis yra tai, kas gražu ar mėgstama“ — modelis turi tik matomus požymius (spalvą ir dydį), nes tik juos vaikas gali patikrinti akimis."
+    ]
+  },
+  "sources": [
+    "NŠA. Pradinio ugdymo bendrųjų programų įgyvendinimo rekomendacijos (2024), „Duomenų rinkimas ir tvarkymas“, 1–2 kl.: „Mokiniai atrinks duomenis pagal vieną ar du nurodytus požymius. Mokiniai mokės grupuoti (klasifikuoti) daiktus pagal vieną ar kelis nurodytus požymius (spalvą, dydį, formą, padėtį erdvėje, sunkumą…)“ (sources/pradinio-bp-rekomendacijos-2024.txt:22934–22938; bloko antraštė „Ilgalaikio plano pavyzdys su galima dalykų integracija 1–2 klasėms“ — :22614–22615).",
+    "Matematikos bendroji programa (2022), „Duomenys ir tikimybės“, 1–2 klasė: duomenų atranka pagal nurodytą požymį, grupavimas pagal vieną ar kelis požymius.",
+    "research/wiki/curriculum/matematika-1-klase.md §9.1 — 1 kl. metų plane „Duomenys 8“ (sources/pradinio-bp-rekomendacijos-2024.txt:17218–17312), todėl tema priklauso 1 klasei, o ne vyresnei.",
+    "Skirtumas nuo esamų modulių: 36-grupavimas-pagal-pozymi keičia VIENĄ požymį ir padalija tą pačią krūvą į būrius (visi daiktai lieka); 23-piktograma-ir-stulpelis skaičiuoja jau sudarytą grupę. Nė vienas neturi dviejų požymių, veikiančių kartu ir atrenkančių dalį krūvos."
+  ],
+  "svietimas1": [
+    "1 žingsnis — mažiau temų, daugiau gylio: viena sąvoka (du požymiai atrenka kartu); grupavimas pagal vieną požymį ir diagramos palikti moduliams 36 ir 23, nes tai kitos sąvokos",
+    "2 žingsnis — vienodas vertinimas: užduotys tikrina tą pačią taisyklę naujoje situacijoje (maišas su kamuoliais, lentyna su geltonais daiktais), o ne įsimintą devynių daiktų pavyzdį",
+    "3 žingsnis — pagalba laiku: pirmas požymis niekada neatlieka atrankos vienas — modelis pasako, ką daryti toliau, o ne „neteisingai“; kiekviena užduotis turi užuominą į modelį, yra praplėtimo užduotis, jokių laikmačių",
+    "5 žingsnis — pozityvi aplinka: grįžtamasis ryšys įvardija, kas pasikeitė ekrane (skaičius sumažėjo nuo keturių iki vieno), o ne vertina vaiką; neatrinkti daiktai lieka matomi, o ne ištrinami"
+  ]
+}

@@ -1713,10 +1713,281 @@ const tinklelioAdresas = {
   },
 };
 
+/* ------------------------------------------------------------------ */
+/* 6. Du požymiai kartu (1 klasė, matematika)                           */
+/*                                                                    */
+/* Viena sąvoka: DU požymiai atrenka, o ne prideda. Vaikas pažymi    */
+/* spalvą ir dydį; krūva lieka ta pati (devyni daiktai), keičiasi tik */
+/* tai, KIEK jų pažymėta: viena spalva — keturi, spalva IR dydis —    */
+/* vienas. Todėl sakinys „liko mažiau“ yra išvestis, o ne tekstas.    */
+/*                                                                    */
+/* Klaidinga nuostata, kurią modelis parodo: „jei pažymėjau raudoną,  */
+/* tai visi raudoni tinka“ (antras požymis lyg ir neveikia). Todėl    */
+/* spalva ir dydis niekada nekeičia krūvos dydžio ir kiekvieną kartą  */
+/* skaičius sumažėja matomai — tą patį skaičių vaikas perskaito      */
+/* ekrane, o ne pasitiki tekstu.                                      */
+/*                                                                    */
+/* Skirtumas nuo `36-grupavimas-pagal-pozymi`: ten keičiamas VIENAS   */
+/* požymis ir krūva PADALIJAMA į būrius (visi daiktai lieka). Čia du  */
+/* požymiai veikia KARTU ir iš krūvos ATRENKAMA dalis — kita sąvoka.  */
+/*                                                                    */
+/* Skirtumas nuo `23-piktograma-ir-stulpelis`: ten skaičiuojama jau   */
+/* sudaryta grupė. Scena surenkama iš `art.js` (LL-13): art.flatShape */
+/* su užpildu, kuris čia yra pats požymis.                            */
+/* ------------------------------------------------------------------ */
+const DP_VIEW = 132;
+const DP_COLOR = { raudona: "#e2695c", melyna: "#6d9bd8", geltona: "#f2c14e" };
+const DP_ATTR = { spalva: "color", dydis: "size" };
+const DP_SIZES = ["didelis", "mazas"];
+
+const duPozymiaiPaieska = {
+  mount({ stage, controls, api, config }) {
+    const S = config.sentences || {};
+    const L = config.labels || {};
+
+    /* Proza — tik iš `config.sentences` (LL-42): kode nėra nė vieno
+       sakinio, kurio negirdėtų balsas ir nematytų `check_audio.py`. */
+    const line = (key) => (typeof S[key] === "string" ? S[key].trim() : "");
+    const lab = (key, fallback) => {
+      const v = typeof L[key] === "string" ? L[key].trim() : "";
+      return v || fallback || "";
+    };
+    const tell = (key) => { const t = line(key); if (t) api.speak(t); };
+
+    const CRITERIA = (Array.isArray(config.criteria) ? config.criteria : [])
+      .filter((c) => c && DP_ATTR[c.id])
+      .map((c) => ({ id: c.id, button: String(c.button || ""), values: c.values || {} }));
+    const ITEMS = Array.isArray(config.items) ? config.items : [];
+
+    const valueLabel = (crit, v) => {
+      const map = crit.values || {};
+      return typeof map[v] === "string" ? map[v] : "";
+    };
+
+    /* --- duomenų vientisumas ---------------------------------------- */
+    /* Visus skaičius, kuriuos modelis taria, komponentas perskaičiuoja
+       iš tų pačių laukelių, kuriuos vaikas mato (M-07, M-10, LL-33). */
+    function integrity() {
+      if (CRITERIA.length !== 2) return "modeliui reikia lygiai dviejų požymių";
+      if (ITEMS.length < 6) return "per mažai daiktų krūvoje";
+      for (const c of CRITERIA) {
+        if (!c.button) return `požymiui „${c.id}“ trūksta mygtuko užrašo`;
+        const values = Object.keys(c.values || {});
+        if (values.length < 2) return `požymis „${c.id}“ turi mažiau nei dvi reikšmes`;
+      }
+      for (const it of ITEMS) {
+        if (!it || !it.id) return "daiktas be ID";
+        if (!DP_COLOR[it.color]) return `nežinoma spalva „${it && it.color}“`;
+        if (!DP_SIZES.includes(it.size)) return `nežinomas dydis „${it && it.size}“`;
+        for (const c of CRITERIA) {
+          const v = it[DP_ATTR[c.id]];
+          if (!valueLabel(c, v)) return `požymiui „${c.id}“ trūksta reikšmės „${v}“ pavadinimo`;
+        }
+      }
+      /* Teiginys „du požymiai pažymi mažiau“ turi būti tiesa KIEKVIENAI
+         porai, o ne vienai pasirinktai. Jei kuri pora nesusiaurina, modelis
+         nutylių, kad kai kada antras požymis nieko neatrenka — todėl tai
+         klaida, o ne tyliai kitokia eiga (LL-25, LL-37). */
+      for (const a of Object.keys(CRITERIA[0].values)) {
+        for (const b of Object.keys(CRITERIA[1].values)) {
+          const inOne = ITEMS.filter((it) => it[DP_ATTR[CRITERIA[0].id]] === a).length;
+          const inBoth = ITEMS.filter((it) => it[DP_ATTR[CRITERIA[0].id]] === a
+            && it[DP_ATTR[CRITERIA[1].id]] === b).length;
+          if (inBoth >= inOne || inBoth === 0) {
+            return `pora „${a} + ${b}“ nesusiaurina (${inOne} → ${inBoth}) — modelis teigtų netiesą`;
+          }
+        }
+      }
+      return "";
+    }
+
+    const problem = integrity();
+    if (problem) {
+      console.error(`du-pozymiai-paieska: ${problem}`);
+      stage.innerHTML = `<p class="sim-note" style="margin:0">${line("broken")}</p>`;
+      controls.innerHTML = "";
+      api.readout(line("broken"));
+      return null;
+    }
+
+    stage.innerHTML = `
+      <div id="dp-wrap" style="width:100%;max-width:100%;min-width:0;box-sizing:border-box">
+        <div id="dp-pile" role="img"
+             style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;align-items:center;
+                    min-height:3rem;padding:.5rem;border:2px dashed var(--line);
+                    border-radius:var(--r-s);background:var(--paper);box-sizing:border-box"></div>
+        <p id="dp-count" style="margin:.6rem 0 0;text-align:center;font-size:var(--fs-l);font-weight:800;line-height:1.25"></p>
+        <ul id="dp-found" style="margin:.5rem 0 0;padding-left:1.1rem;font-size:var(--fs-s);line-height:1.35"></ul>
+      </div>`;
+
+    controls.innerHTML = `
+      <div id="dp-groups" style="display:flex;flex-direction:column;gap:.55rem;width:100%"></div>
+      <button type="button" class="btn ghost" id="dp-reset" style="min-height:48px">${lab("again", "Iš naujo")}</button>`;
+
+    const pileEl = stage.querySelector("#dp-pile");
+    const countEl = stage.querySelector("#dp-count");
+    const foundEl = stage.querySelector("#dp-found");
+    const groupsEl = controls.querySelector("#dp-groups");
+    const resetBtn = controls.querySelector("#dp-reset");
+
+    groupsEl.innerHTML = CRITERIA.map((c) => `
+      <div role="group" aria-label="${c.button}"
+           style="min-width:0;border:2px solid var(--line);border-radius:var(--r-s);
+                  background:var(--paper-2);padding:.45rem .5rem">
+        <p style="margin:0 0 .35rem;font-size:var(--fs-s);font-weight:800;line-height:1.2">${c.button}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;min-width:0">${
+          Object.keys(c.values || {}).map((v) => `<button type="button" class="btn secondary"
+            data-crit="${c.id}" data-value="${v}" aria-pressed="false"
+            style="min-height:56px;min-width:0;flex:1 1 5.5rem;padding:.4rem .4rem;line-height:1.15">${valueLabel(c, v)}</button>`).join("")
+        }</div>
+      </div>`).join("");
+
+    /* Būsena: pasirinktos požymių reikšmės. `found` sąmoningai NEišvaloma
+       „Iš naujo“ (LL-16, LL-20): kitaip vaikas pamiršta, kad tas pats
+       daiktas jau buvo pažymėtas pagal vieną požymį, ir skaičius 4 → 1
+       dingsta iki galutinio dydžio. */
+    const state = { sel: {}, found: [], reported: false };
+
+    const chosen = () => CRITERIA.filter((c) => state.sel[c.id]);
+    const matches = (it) => chosen().every((c) => it[DP_ATTR[c.id]] === state.sel[c.id]);
+    const count = () => (chosen().length ? ITEMS.filter(matches).length : ITEMS.length);
+
+    function icon(it, px) {
+      const s = it.size === "didelis" ? 96 : 64;
+      return `<svg viewBox="0 0 ${DP_VIEW} ${DP_VIEW}" width="${px}" height="${px}" aria-hidden="true"
+                   focusable="false" style="display:block;overflow:visible">${
+        art.flatShape(it.shape, DP_VIEW / 2, DP_VIEW / 2, s, 4, DP_COLOR[it.color])
+      }</svg>`;
+    }
+
+    function paintPile() {
+      const any = chosen().length > 0;
+      pileEl.innerHTML = ITEMS.map((it) => {
+        const hit = any && matches(it);
+        const px = any ? (hit ? 46 : 30) : 34;
+        /* Žymėjimas neša ne tik spalvą: pažymėtas daiktas turi storą rėmą
+           ir yra didesnis, o nepažymėtas — mažesnis ir nespalvotas
+           (standartas §4.4, LL-13). */
+        const box = hit
+          ? "box-shadow:0 0 0 3px var(--ink);border-radius:12px;padding:2px;"
+          : "filter:grayscale(1);opacity:.32;padding:2px;";
+        return `<div data-item="${it.id}" style="${any ? box : "padding:2px;"}">${icon(it, px)}</div>`;
+      }).join("");
+
+      const labels = (any ? ITEMS.filter(matches) : ITEMS).map((it) => it.label || "").filter(Boolean);
+      pileEl.setAttribute("aria-label",
+        `${line("pile")} ${ITEMS.length}. ${line("shown")} ${labels.join(", ")}.`.replace(/\s+/g, " ").trim());
+    }
+
+    function paintCount() {
+      const n = count();
+      const chosenNow = chosen();
+      const values = chosenNow.map((c) => valueLabel(c, state.sel[c.id])).filter(Boolean).join(", ");
+      countEl.textContent = chosenNow.length
+        ? `${line("marked") || "Pažymėta:"} ${n} ${line("of") || "iš"} ${ITEMS.length}`
+        : "";
+      countEl.setAttribute("aria-label", chosenNow.length
+        ? `${values}. ${line("marked") || "Pažymėta:"} ${n} ${line("of") || "iš"} ${ITEMS.length}.`
+        : line("start"));
+      return { n, values };
+    }
+
+    function paintFound() {
+      foundEl.innerHTML = state.found.map((t) => `<li>${t}</li>`).join("");
+      foundEl.hidden = state.found.length === 0;
+    }
+
+    function paintButtons() {
+      groupsEl.querySelectorAll("[data-crit]").forEach((btn) => {
+        const on = state.sel[btn.dataset.crit] === btn.dataset.value;
+        btn.setAttribute("aria-pressed", String(on));
+        btn.className = on ? "btn" : "btn secondary";
+        btn.style.minHeight = "56px";
+      });
+    }
+
+    const paint = () => { paintPile(); paintCount(); paintFound(); paintButtons(); };
+
+    function toggle(critId, value) {
+      const crit = CRITERIA.find((c) => c.id === critId);
+      if (!crit) return;
+      const was = state.sel[critId] || "";
+      state.sel[critId] = was === value ? "" : value;
+
+      paintPile();
+
+      const n = count();
+      const chosenNow = chosen();
+      const values = chosenNow.map((c) => valueLabel(c, state.sel[c.id])).filter(Boolean);
+      if (chosenNow.length) {
+        const entry = `${values.join(", ")} — ${n}`;
+        if (!state.found.includes(entry)) state.found.push(entry);
+      }
+      paintFound();
+      paintButtons();
+
+      if (!chosenNow.length) {
+        paintCount();
+        api.readout(line("start"));
+        api.note(line("startNote"));
+        tell("startNote");
+        return;
+      }
+
+      const prefix = chosenNow.length > 1 ? line("critsPrefix") : line("critPrefix");
+      api.readout(`${prefix} ${values.join(", ")}. ${line("marked")} ${n} ${line("of")} ${ITEMS.length}.`
+        .replace(/\s+/g, " ").trim());
+      paintCount();
+
+      if (chosenNow.length > 1) {
+        api.note(line("fewerNote"));
+        tell("fewer");
+        if (!state.reported) {
+          /* Pažymima DABAR: abu požymiai pasirinkti ir atranka įvykusi, o ne
+             po pirmo požymio (LL-29). */
+          state.reported = true;
+          api.progress({ correct: true });
+        }
+        return;
+      }
+      /* Vienas požymis — dar ne atranka iš dviejų. Sakoma, ką daryti
+         toliau, o ne „neteisingai“ (T3.1, T5.1). */
+      const other = CRITERIA.find((c) => !state.sel[c.id]);
+      const key = other && other.id === "dydis" ? "afterColor" : "afterSize";
+      api.note(line(key));
+      tell(key);
+    }
+
+    function reset() {
+      state.sel = {};
+      paint();
+      api.readout(line("again"));
+      api.note(line("startNote"));
+      tell("again");
+      const first = groupsEl.querySelector("[data-crit]");
+      if (first) first.focus();
+    }
+
+    groupsEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-crit]");
+      if (btn) toggle(btn.dataset.crit, btn.dataset.value);
+    });
+    resetBtn.addEventListener("click", reset);
+
+    paint();
+    api.readout(line("start"));
+    api.note(line("startNote"));
+    tell("startNote");
+
+    return null;
+  },
+};
+
 export const SIMS = {
   "erdvines-figuros": erdvinesFiguros,
   "ilgis-ir-vienetas": ilgisIrVienetas,
   "dezute-ir-kilogramas": dezuteIrKilogramas,
   "kruva-ir-buriai": kruvaIrBuriai,
   "tinklelio-adresas": tinklelioAdresas,
+  "du-pozymiai-paieska": duPozymiaiPaieska,
 };

@@ -349,6 +349,14 @@
      "file": "grade-01/matematika/37-tinklelio-adresas.json",
      "minutes": 9,
      "sim": "tinklelio-adresas"
+    },
+    {
+     "id": "38-du-pozymiai-paieska",
+     "title": "Du požymiai iš karto",
+     "subtitle": "Raudona ir didelė kartu — lieka tik vienas daiktas",
+     "file": "grade-01/matematika/38-du-pozymiai-paieska.json",
+     "minutes": 9,
+     "sim": "du-pozymiai-paieska"
     }
    ]
   },

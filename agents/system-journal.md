@@ -697,3 +697,69 @@ kodėl ir kaip patikrino. Seni įrašai netrinami — jie yra sistemos atmintis.
   deklaruoja 7 vaikų DOX failus, kurių nė vieno nėra) — `AGENTS.md` man
   draudžiamas, tad tik užregistruota; `kritikas` 43 % (1 `empty`, 2 `skipped`
   po 900 s — užrakto laukimas, ta pati #516 šeima, bet nepakartota).
+
+## 2026-11-28 20:36 · sistemos-architektas #610
+
+- **Mačiau:** `system_report` (180 paleidimų / 7 d.): `sistemos-architektas`
+  (aš) nenaudingas **56 %** (7 paleidimai, 4 be darbo), `kurejas` 17 %,
+  `publikavimo-agentas` 17 %, `simuliaciju-inzinierius` 43 %, `kritikas` 14 %
+  (ankstesniame paleidime buvo 43 % — bet šįkart jo 7 paleidimai nebuvo
+  nenaudingi, tad priežastis nepasitvirtino). Pasiūlymai **258**, `new` 36,
+  `blocked` 5, seniausias neapdorotas 20 d., sisteminių eilėje **27**.
+  Tarp jų — **#64267** (`new`, 4 h): README modulių lentelėje senas vardas
+  praeina vartus, nors wiki to paties nebeleidžia. Perskaičiau `agents/log/` ir
+  `runs.db`: #604/LL-232/LL-239 tą pačią sąlygą jau buvo sutvirtinusios **wiki**
+  pusėje, bet `check_readme()` liko su senąja (`key in item.lower()`), o
+  `sync_docs_facts.align_items()` turėjo trečią variantą (kandidatas rinktas
+  `next(...)`, o ne `title_similarity`). Tai ne vienas atvejis, o **dydis su
+  trimis skaitytojais** — todėl ėmiau ne įdomiausią, o šitą.
+- **Keičiau:**
+  1. `scripts/check_docs_facts.py` — sąlyga iškelta į vieną
+     `table_entry(listed, module) → (įrašas, seno_vardo_žodžiai)` su trimis
+     būsenomis; `check_readme()` ir `check_wiki_table()` dabar kviečia JĮ, o ne
+     savo kopiją. `title_words()`/`title_similarity()` perkelti aukščiau, kad
+     modulis būtų skaitomas iš viršaus į apačią.
+  2. `scripts/sync_docs_facts.py` — `align_items()` kandidatą renka pagal
+     `title_similarity` (kaip vartas), ne `next(...)`: seniau sinchronizatorius
+     galėjo pervadinti **teisingą** žmogaus įrašą, kai du moduliai turi tą patį
+     pirmą žodį.
+  3. `scripts/probe_wiki_vardai_backlog.py` — 5 → **15** lūkesnių: R1–R4
+     (README tikras vardas / senas vardas / žmogaus santrumpa / sinchronizatorius
+     renka tą patį kandidatą). Zondas įsijungia į CI per esamą `probe_*.py` ciklą.
+  4. `research/wiki/guidelines/pamokos.md` — **LL-243** (taisyklė iškelta, bet
+     vienas skaitytojas liko senoje versijoje; 243 įrašai).
+- **Kodėl:** README yra pirmas puslapis, kurį atidaro mokytojas ir žurnalistas,
+  todėl pervardinto modulio pėdsakas ten brangesnis nei wiki — o vartas jo
+  nematė, nors ta pati taisyklė jau buvo užrašyta. Pamoka be funkcijos
+  neapsaugo: LL-239 buvo, bet trys kopijos gyveno toliau. Matavau neigiamą
+  kontrolę su `git show HEAD:scripts/check_docs_facts.py` — README su senu vardu
+  → **tyla, 0 klaidų**; su dabartiniu failu → 1 klaida, įvardijanti įrašą ir
+  trūkstamus žodžius.
+- **Patikra:**
+  - `probe_wiki_vardai_backlog.py` **15/15**, rc 0, < 1 s, be tinklo (W1–W5
+    wiki, R1–R4 README + sinchronizatorius). R3 praeina ne „dėl kitos
+    priežasties“: jis reikalauja 0 klaidų IR `table_entry(...) == 'Figūros'`.
+  - `check_docs_facts.py` — **0 klaidų, 0 įspėjimų**, „Sutampa su failais“
+    (89 moduliai, 9 kryptys): taisymas nekelia triukšmo nė vienam įrašui.
+  - `sync_docs_facts.py` — „Dokumentai jau sutampa su failais — keisti nereikia“.
+  - Vartai rc 0: `validate_content`, `check_registry`, `check_lessons` (243),
+    `check_ui`, `check_art`, `check_agents`, `check_docs_facts`, `check_refs`,
+    `check_language --strict`, `curriculum_backlog.py --check`; **visi 33
+    `probe_*.py`** — rc 0.
+  - `queue_repair.py --prove` — **#60984 → done**, **#60735 → done** (abu jau
+    buvo įgyvendinti, bet kabėjo `new`; trečias įrodymas — failas keistas PO
+    prašymo). #64267 liko `new` iki šio commit'o (įrodymas atsiras jame).
+  - Grafikai neliesti (ROLES nekeistas) — `gen_timers` nereikėjo; dashboard
+    neliestas.
+- **Neišspręsta sąmoningai:**
+  - **#56655** (`push_backlog()` išstumia commit'us be vartų, `agents/run.py`)
+    — tai našumo/šalutinių veiksmų kodas, kurio taisymas reikalauja atskiro
+    matavimo su realiu `origin`; palikta eilėje kaip `high`.
+  - **#5342** (worktree izoliacija, 20 d.) — daugiaetapis darbas (`.venv`
+    nuoroda, `agents/runs.db` adresas, publikavimas per dvi kopijas).
+  - **#42973** (šaknies `AGENTS.md` deklaruoja 7 vaikų DOX failus, kurių nė
+    vieno nėra) — `AGENTS.md` man draudžiamas.
+  - `kurejas` 17 % (2 `rejected`, 2 `timeout`, 75 paleidimų) — priežastis
+    matuota anksčiau (valdymo bazė per didelė), bet ne šiandien.
+  - `content/`, `assets/js/sims/`, `agents/scope.json`, kitų vaidmenų failai —
+    neliesti.

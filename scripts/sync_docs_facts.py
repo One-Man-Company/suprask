@@ -103,8 +103,19 @@ def align_items(listed: list[str], titles: list[str]) -> tuple[list[str], list[s
         hit = next((i for i, (title, _) in enumerate(wanted)
                     if i not in used and title.strip().lower() == low), None)
         if hit is None:
-            hit = next((i for i, (_, needle) in enumerate(wanted)
-                        if i not in used and needle in low), None)
+            # Ta pati sąlyga kaip `check_docs_facts.table_entry()`: iš kelių
+            # įrašų, kuriuose yra pirmas pavadinimo žodis, imamas
+            # ARTIMIAUSIAS, o ne pirmas dokumente. Prieš tai čia buvo
+            # `next(...)`, o vartas rinko pagal `title_similarity` — du
+            # skirtingi sprendimai tam pačiam dydžiui (LL-239, #64267).
+            best_i, best_score = None, -1.0
+            for i, (title, needle) in enumerate(wanted):
+                if i in used or needle not in low:
+                    continue
+                score = factsmod.title_similarity(item, title)
+                if score > best_score:
+                    best_i, best_score = i, score
+            hit = best_i
         if hit is None:
             continue  # pasenęs įrašas — patenka į `dropped`
         used.add(hit)

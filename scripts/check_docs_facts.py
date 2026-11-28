@@ -110,6 +110,53 @@ def line_of(text: str, needle: str) -> str:
     return "?"
 
 
+def title_words(title: str) -> set[str]:
+    """Pavadinimo žodžiai, lyginimui: be skyrybos, mažosiomis, be „lentelė“ tipo žodžių.
+
+    Imami žodžiai nuo 3 raidžių: 1 klasės pavadinimuose „ir“, „o“, „ne“, „kas“
+    nesiekia 3 raidžių, bet 3 raidžių žodžiai („kas“, „ne“) priklauso tekstui,
+    tad riba — 3. Skaičiai („2“, „14:00“) praleidžiami: jie yra laiko
+    užrašas, o ne pavadinimo turinys.
+    """
+    words = re.split(r"[^\wąčęėįšųūž]+", title.lower())
+    return {w for w in words if len(w) > 2 and not w.isdigit()}
+
+
+def title_similarity(item: str, module: str) -> float:
+    """Kiek wiki įrašas panašus į modulio pavadinimą (0…1).
+
+    Naudojamas tik tam, kad iš kelių kandidatų būtų pasirinktas artimiausias —
+    vienos krypties sąraše gali būti keli įrašai, kuriuose yra tas pats pirmas
+    žodis („Kas gyvena tvarte?“ ir „Kas gyvas: auga ir reaguoja…“).
+    """
+    return difflib.SequenceMatcher(None, item.lower(), module.lower()).ratio()
+
+
+def table_entry(listed: list[str], module: str) -> tuple[str | None, set[str]]:
+    """Modulio įrašas dokumento lentelėje → (įrašas, seno vardo žodžiai).
+
+    VIENAS šaltinis visiems to paties dydžio skaitytojams (`check_readme`,
+    `check_wiki_table`), nes jie lygina tą pačią `index.json` pavadinimų sąrašą
+    su tos pačios formos dokumento eilute (LL-239, #64267). Trys būsenos:
+
+      - `(None, set())` — įrašo nėra: dokumente trūksta modulio;
+      - `(įrašas, set())` — įrašas yra ir jis tikras (žmogaus santrumpa
+        „Figūros“ vietoje „Figūros aplink mus“ yra POAIBIS, tad praeina);
+      - `(įrašas, {žodžiai})` — įrašas turi žodį, kurio pavadinime nebėra:
+        tai seno vardo pėdsakas, ne žmogaus formuluotė.
+
+    Susiejimas eina pagal pirmą pavadinimo žodį (žmogus sąrašą rašo trumpai),
+    o iš kelių kandidatų imamas artimiausias — kitaip „Kas gyvena tvarte?“
+    būtų lyginamas su „Kas gyvas…“ vien todėl, kad eilėje pirmas.
+    """
+    key = re.split(r"[:\s,]", module)[0].rstrip(":").lower()
+    candidates = [item for item in listed if key in item.lower()]
+    if not candidates:
+        return None, set()
+    best = max(candidates, key=lambda item: title_similarity(item, module))
+    return best, title_words(best) - title_words(module)
+
+
 def check_readme(check: Check, text: str, f: dict) -> None:
     where = "README.md"
 
@@ -142,10 +189,22 @@ def check_readme(check: Check, text: str, f: dict) -> None:
         )
         for title in strand["modules"]:
             key = re.split(r"[:\s,]", title)[0].rstrip(":")
-            if not any(key.lower() in item.lower() for item in listed):
+            best, extra = table_entry(listed, title)
+            if best is None:
                 check.fail(
                     f"{where}:{line_of(text, strand['title'])}: „{strand['title']}“ eilutėje trūksta modulio "
                     f"„{title}“ (laukiama bent žodžio „{key}“)"
+                )
+            elif extra:
+                # Ta pati sąlyga kaip wiki lentelėje (#64267, LL-239): žmogaus
+                # santrumpa („Figūros“) yra tikro vardo POAIBIS ir praeina, o
+                # žodis, kurio pavadinime nebėra — seno vardo pėdsakas. Iki šio
+                # taisymo README eilutė buvo lyginama tik pagal pirmą žodį, tad
+                # pervardintas modulis ten likdavo amžinai.
+                check.fail(
+                    f"{where}:{line_of(text, strand['title'])}: „{strand['title']}“ eilutės įrašas "
+                    f"„{best}“ neatitinka modulio „{title}“ (seno vardo žodžiai: "
+                    f"{', '.join(sorted(extra))}) — tai pervardinto modulio pėdsakas"
                 )
 
     tasks = re.search(r"(\d+)[–-](\d+) užduotys", text) or re.search(r"(\d+) užduotys", text)
@@ -336,28 +395,6 @@ def check_wiki(check: Check, f: dict) -> None:
         check.expect(f"{list_page}:{line_of(text, '[[01/index')}", "modulių", int(found.group(1)), f["module_count"])
 
 
-def title_words(title: str) -> set[str]:
-    """Pavadinimo žodžiai, lyginimui: be skyrybos, mažosiomis, be „lentelė“ tipo žodžių.
-
-    Imami žodžiai nuo 3 raidžių: 1 klasės pavadinimuose „ir“, „o“, „ne“, „kas“
-    nesiekia 3 raidžių, bet 3 raidžių žodžiai („kas“, „ne“) priklauso tekstui,
-    tad riba — 3. Skaičiai („2“, „14:00“) praleidžiami: jie yra laiko
-    užrašas, o ne pavadinimo turinys.
-    """
-    words = re.split(r"[^\wąčęėįšųūž]+", title.lower())
-    return {w for w in words if len(w) > 2 and not w.isdigit()}
-
-
-def title_similarity(item: str, module: str) -> float:
-    """Kiek wiki įrašas panašus į modulio pavadinimą (0…1).
-
-    Naudojamas tik tam, kad iš kelių kandidatų būtų pasirinktas artimiausias —
-    vienos krypties sąraše gali būti keli įrašai, kuriuose yra tas pats pirmas
-    žodis („Kas gyvena tvarte?“ ir „Kas gyvas: auga ir reaguoja…“).
-    """
-    return difflib.SequenceMatcher(None, item.lower(), module.lower()).ratio()
-
-
 def check_wiki_table(check: Check, where: str, text: str, f: dict) -> None:
     """Wiki krypties lentelė: modulių sąrašas ir „N — gyva“ turi atitikti indeksą.
 
@@ -399,8 +436,10 @@ def check_wiki_table(check: Check, where: str, text: str, f: dict) -> None:
         check.expect(f"{where}:{at}", f"„{title}“ modulių lentelėje", count, len(strand["modules"]))
         for module in strand["modules"]:
             needle = re.split(r"[:\s,]", module)[0].rstrip(":").lower()
-            candidates = [item for item in listed if needle in item.lower()]
-            if not candidates:
+            best, extra = table_entry(listed, module)
+            if best is None:
+                # `table_entry` grąžina None tik tada, kai kandidatų nėra;
+                # žinom, kad ne — tad čia tik saugiklis, o ne kelias.
                 check.fail(
                     f"{where}:{at}: „{title}“ eilutėje trūksta modulio „{module}“ "
                     f"(laukiama bent žodžio „{needle}“)"
@@ -409,8 +448,6 @@ def check_wiki_table(check: Check, where: str, text: str, f: dict) -> None:
             # Antras signalas: artimiausias įrašas neturi turėti žodžių, kurių
             # tikrame pavadinime nėra. `aligned` — sinonimas sąmoningai
             # leidžiamas tik kaip poaibis (žr. docstring).
-            best = max(candidates, key=lambda item: title_similarity(item, module))
-            extra = title_words(best) - title_words(module)
             if extra:
                 check.fail(
                     f"{where}:{at}: „{title}“ eilutės įrašas „{best}“ neatitinka "

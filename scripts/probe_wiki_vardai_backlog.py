@@ -107,6 +107,93 @@ check("W5 artimiausias kandidatas pasirenkamas", not rep.errors,
       rep.errors[0][:110] if rep.errors else "0 klaidų")
 
 
+# ------------------------------------------------- 1b. README lentelė (#64267)
+# Ta pati lentelės forma, kitas dokumentas. Iki taisymo `check_readme()` lygino
+# TIK pirmą žodį, tad pervardinto modulio pėdsakas README likdavo amžinai
+# (LL-239). Sąlyga dabar iškelta į `docs.table_entry()` — vienas šaltinis
+# abiem skaitytojams, o lūkesniai privalo įrodyti, kad abu jį naudoja.
+
+README_FIXED = {
+    "strands": [STRAND],
+    "strand_count": 1, "module_count": 2, "sim_count": 1,
+    "task_count": 1, "task_min": 1, "task_max": 1,
+    "audio_texts": 1, "audio_files": 1, "audio_mb": 1,
+    # Vaidmenų skaičius turi sutapti su žodžiu (README rašo žodžiu), todėl
+    # imamas devynių vaidmenų sąrašas ir devynios lentelės eilutės.
+    "roles": ["kurejas", "metodininkas", "ideator", "kritikas", "tikrintojas",
+              "tyrejas", "leidejas", "dizaineris", "kuratorius"],
+}
+
+
+def readme_text(items: str, modules: str = "2") -> str:
+    return (
+        f"1 klasė — 1 kryptis, {modules} moduliai, 1 interaktyvi simuliacija\n"
+        "| Kryptis | Moduliai |\n|---|---|\n"
+        f"| Sąžiningumas ir žaidimai | {items} |\n"
+        "Modulio aprašymas: 1 užduotys\n"
+        f"| Parengta | 1 | {modules} | 1 | 1 |\n"
+        "Garso: 1 tekstų, 1 įrašų, ~1 MB · lt_LT-reginute1 · CC BY 4.0 · LIEPA · "
+        "Robertas Tarasevičius\n"
+        "Platformą nuolat vysto devyni agentų\n"
+        + "".join(f"| `{role}` |\n" for role in README_FIXED["roles"])
+    )
+
+
+def readme_report(items: str, modules: str = "2") -> docs.Check:
+    rep = docs.Check()
+    import contextlib
+    import io
+    with contextlib.redirect_stdout(io.StringIO()):
+        docs.check_readme(rep, readme_text(items, modules),
+                          {**README_FIXED, "module_count": int(modules)})
+    return rep
+
+
+# R1 — tikri vardai praeina (teigiama kontrolė: taisymas neturi kelti triukšmo).
+rep = readme_report("Sąžiningas dalijimasis · Tiltas: kai dirbame kartu")
+check("R1 README: tikri vardai praeina", not rep.errors,
+      rep.errors[0][:110] if rep.errors else "0 klaidų")
+
+# R2 — senas vardas README TURI būti pagautas. Iki #64267 buvo tyla.
+rep = readme_report("Sąžiningas dalijimasis · Bendradarbiavimo tiltas")
+check("R2 README: senas vardas „Bendradarbiavimo tiltas“ pagautas",
+      any("bendradarbiavimo" in e or "seno vardo" in e for e in rep.errors),
+      rep.errors[0][:110] if rep.errors else "tyla — README liko senas vardas")
+
+# R3 — žmogaus santrumpa (poaibis) ir README praeina. NEGALI praeiti dėl kitos
+# priežasties: jei eilutė nerasta, `check_readme()` praneša „lentelėje nėra
+# krypties“ — todėl lūkesnis reikalauja, kad klaidų būtų NULIS, o poaibio
+# įrašas būtų surastas (`table_entry` grąžina patį įrašą).
+STRAND_ONE = {"title": "Sąžiningumas ir žaidimai", "modules": ["Figūros aplink mus"]}
+rep = docs.Check()
+import contextlib
+import io
+with contextlib.redirect_stdout(io.StringIO()):
+    docs.check_readme(rep, readme_text("Figūros", "1"),
+                      {**README_FIXED, "strands": [STRAND_ONE],
+                       "module_count": 1, "strand_count": 1})
+entry, extra = docs.table_entry(["Figūros"], "Figūros aplink mus")
+check("R3 README: santrumpa „Figūros“ (poaibis) praeina",
+      not rep.errors and entry == "Figūros" and not extra,
+      "; ".join(rep.errors)[:110] if rep.errors else f"įrašas {entry!r}, 0 klaidų")
+
+# R4 — sinchronizatorius ir vartas renka TĄ PATĮ įrašą. Du moduliai su tuo
+# pačiu pirmu žodžiu (`kas`), o dokumente — trumpesnis įrašas. Senasis
+# `next(...)` ėmė PIRMĄ modulį („Kas gyvena tvarte?“) ir, matydamas, kad
+# įraše yra žodžių, kurių tame pavadinime nėra, pervadintų jį — t. y.
+# sinchronizatorius sugadintų teisingą eilutę. Dabar renkama pagal
+# `title_similarity`, kaip vartas.
+import sync_docs_facts as sync  # noqa: E402
+kept, added, dropped = sync.align_items(
+    ["Kas gyvas: auga ir reaguoja"],
+    ["Kas gyvena tvarte?", "Kas gyvas: auga ir reaguoja, ne tik juda"],
+)
+check("R4 sync renka artimiausią įrašą, o ne pirmą",
+      kept == ["Kas gyvas: auga ir reaguoja", "Kas gyvena tvarte?"]
+      and added == ["Kas gyvena tvarte?"],
+      f"{kept!r} + {added!r}")
+
+
 # ------------------------------------------------------- 2. backlog --check
 
 BASE = {
